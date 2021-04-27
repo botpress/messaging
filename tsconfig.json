@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "esModuleInterop": true,
     "target": "es2019",
-    "moduleResolution": "node",
+    "esModuleInterop": true,
     "sourceMap": true,
-    "incremental": true,
+    "composite": true,
     "tsBuildInfoFile": "dist/.tsbuildinfo",
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "strict": true
   },
+  "include": ["src/**/*"],
   "exclude": ["dist", "node_modules"]
 }
