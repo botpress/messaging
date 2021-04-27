@@ -24,8 +24,8 @@ export class ChannelService {
     return this.channels
   }
 
-  get(conversationId: string) {
-    return this.channels.find((x) => x.id === conversationId)
+  get(channelId: string) {
+    return this.channels.find((x) => x.id === channelId)
   }
 
   getConfig(channelId: string): ChannelConfig {
