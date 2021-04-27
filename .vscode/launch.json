@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach",
+      "type": "node",
+      "request": "attach",
+      "restart": true,
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
+    },
+    {
+      "name": "Debug Transpile",
+      "type": "node",
+      "request": "launch",
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
+      "args": ["--nolazy", "-r", "ts-node/register/transpile-only", "src/index"]
+    },
+    {
+      "name": "Debug Compiled",
+      "type": "node",
+      "request": "launch",
+      "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
+      "args": ["--nolazy", "dist/index"]
+    }
+  ]
+}

@@ -7,7 +7,7 @@
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch",
     "start": "node dist/index.js",
-    "dev": "yarn --silent && ts-node-dev src/index.ts",
+    "dev": "yarn --silent && ts-node-dev --inspect --inspect-publish-uid=http --transpile-only src/index.ts",
     "clean": "rimraf dist",
     "reset": "yarn clean && rimraf node_modules"
   },
