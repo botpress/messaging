@@ -1,16 +1,17 @@
 import express from 'express'
-import { createServer } from 'http'
+import { Api } from './api'
+import { App } from './app'
 
 const port = process.env.PORT || '4000'
-const app = express()
-const http = createServer(app)
-app.use(express.json())
+const exp = express()
+exp.use(express.json())
 
-app.get('/', (req, res) => {
-  const prop = req.body.prop
-  res.send(`This is the messaging server! ${prop}`)
-})
+const app = new App()
+app.setup()
 
-http.listen(port, () => {
+const api = new Api(app, exp)
+api.setup()
+
+exp.listen(port, () => {
   console.log(`Server is listening on ${port}`)
 })
