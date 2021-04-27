@@ -14,8 +14,9 @@ export class TwilioChannel extends Channel {
 
   setup(config: TwilioConfig, router: Router) {
     this.client = new TwilioClient(config)
-    this.router = new TwilioRouter(config, router, this.client)
+    this.client.setup()
 
+    this.router = new TwilioRouter(config, router, this.client)
     this.router.setup()
   }
 
