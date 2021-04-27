@@ -20,7 +20,8 @@
       "type": "node",
       "request": "launch",
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
-      "args": ["--nolazy", "dist/index"]
+      "args": ["--nolazy", "dist/index"],
+      "preLaunchTask": "build"
     }
   ]
 }
