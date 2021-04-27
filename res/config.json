@@ -1,0 +1,11 @@
+{
+  "externalUrl": "",
+  "channels": {
+    "twilio": {
+      "enabled": false,
+      "accountSID": "",
+      "authToken": "",
+      "botPhoneNumber": ""
+    }
+  }
+}

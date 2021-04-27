@@ -1,11 +1,10 @@
 
-@baseUrl = http://localhost:4000
+@baseUrl = YOUR_EXETNAL_URL
 
-GET {{baseUrl}}
+POST {{baseUrl}}/twilio/send
 Content-Type: application/json
 
 {
-  "prop": "json!"
+  "conversationId": "YOUR_PHONE_NUMBER",
+  "payload": {"type": "text", "text": "hello!"}
 }
-
-###
