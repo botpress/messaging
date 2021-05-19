@@ -1,5 +1,5 @@
-import { DatabaseService } from '../database/service'
 import { v4 as uuidv4 } from 'uuid'
+import { DatabaseService } from '../database/service'
 
 export class KvsService {
   constructor(private db: DatabaseService) {}

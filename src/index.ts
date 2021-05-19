@@ -15,7 +15,7 @@ const setup = async () => {
   await api.setup()
 }
 
-setup()
+void setup()
 
 exp.listen(port, () => {
   console.log(`Server is listening on ${port}`)

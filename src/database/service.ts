@@ -1,5 +1,5 @@
-import { ConfigService } from '../config/service'
 import * as Knex from 'knex'
+import { ConfigService } from '../config/service'
 
 export class DatabaseService {
   public knex!: Knex.Knex
