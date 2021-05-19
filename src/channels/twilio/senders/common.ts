@@ -2,20 +2,12 @@ import { ChannelSender } from '../../base/sender'
 import { TwilioContext } from '../context'
 
 export class TwilioCommonSender implements ChannelSender<TwilioContext> {
-  get channel(): string {
-    return 'twilio'
-  }
-
   get priority(): number {
     return 0
   }
 
-  get id() {
-    return TwilioCommonSender.name
-  }
-
   handles(context: TwilioContext): boolean {
-    return context.handlers?.length > 0
+    return context.handlers.length > 0
   }
 
   async send(context: TwilioContext) {

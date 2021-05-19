@@ -7,6 +7,7 @@ import { ChannelRenderer } from '../base/renderer'
 import { ChannelSender } from '../base/sender'
 import { TwilioConfig } from './config'
 import { TwilioContext } from './context'
+import { TwilioCardRenderer } from './renderers/card'
 import { TwilioCarouselRenderer } from './renderers/carousel'
 import { TwilioChoicesRenderer } from './renderers/choices'
 import { TwilioImageRenderer } from './renderers/image'
@@ -35,6 +36,7 @@ export class TwilioClient {
     this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
 
     this.renderers = [
+      new TwilioCardRenderer(),
       new TwilioTextRenderer(),
       new TwilioImageRenderer(),
       new TwilioCarouselRenderer(),
@@ -91,14 +93,17 @@ export class TwilioClient {
       payload: _.cloneDeep(payload),
       messages: [],
       botPhoneNumber,
-      targetPhoneNumber: conversation!.userId
+      targetPhoneNumber: conversation!.userId,
+      // TODO: bot url
+      botUrl: 'https://duckduckgo.com/'
       // prepareIndexResponse: this.prepareIndexResponse.bind(this)
     }
 
     for (const renderer of this.renderers) {
       if (renderer.handles(context)) {
         renderer.render(context)
-        context.handlers.push(renderer.id)
+        // TODO: do we need ids?
+        context.handlers.push('id')
       }
     }
 
