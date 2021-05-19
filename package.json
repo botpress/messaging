@@ -9,7 +9,8 @@
     "start": "node dist/index.js",
     "dev": "yarn --silent && ts-node-dev --inspect --inspect-publish-uid=http --transpile-only src/index.ts",
     "clean": "rimraf dist",
-    "reset": "yarn clean && rimraf node_modules"
+    "reset": "yarn clean && rimraf node_modules",
+    "eslint": "node_modules/.bin/eslint src --ext .ts"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.168",
