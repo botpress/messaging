@@ -1,8 +1,11 @@
 import { v4 as uuidv4 } from 'uuid'
+import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
 
-export class KvsService {
-  constructor(private db: DatabaseService) {}
+export class KvsService extends Service {
+  constructor(private db: DatabaseService) {
+    super()
+  }
 
   async setup() {
     await this.db.table('kvs', (table) => {

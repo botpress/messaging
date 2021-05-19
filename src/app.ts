@@ -21,10 +21,10 @@ export class App {
   }
 
   async setup() {
-    this.config.setup()
+    await this.config.setup()
     await this.database.setup()
     await this.kvs.setup()
     await this.conversations.setup()
-    this.channels.setup()
+    await this.channels.setup()
   }
 }

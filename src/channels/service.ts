@@ -1,17 +1,19 @@
 import { Router } from 'express'
+import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
 import { Channel } from './base/channel'
 import { ChannelConfig } from './base/config'
 import { TwilioChannel } from './twilio/channel'
 
-export class ChannelService {
+export class ChannelService extends Service {
   private channels: Channel[]
 
   constructor(private configService: ConfigService, private router: Router) {
+    super()
     this.channels = [new TwilioChannel()]
   }
 
-  setup() {
+  async setup() {
     for (const channel of this.channels) {
       const config = this.getConfig(channel.id)
       if (config.enabled) {

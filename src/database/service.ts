@@ -1,10 +1,13 @@
 import knex, { Knex } from 'knex'
+import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
 
-export class DatabaseService {
+export class DatabaseService extends Service {
   public knex!: Knex
 
-  constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) {
+    super()
+  }
 
   async setup() {
     this.knex = knex({ client: 'sqlite3', connection: { filename: 'dist/db.sqlite' }, useNullAsDefault: true })

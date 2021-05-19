@@ -1,4 +1,6 @@
-export abstract class ScopeableService<T> {
+import { Service } from './service'
+
+export abstract class ScopeableService<T> extends Service {
   private scopes: { [scopeId: string]: T } = {}
 
   public forBot(botId: string): T {
