@@ -1,4 +1,6 @@
+import fs from 'fs'
 import knex, { Knex } from 'knex'
+import path from 'path'
 import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
 
@@ -10,7 +12,16 @@ export class DatabaseService extends Service {
   }
 
   async setup() {
-    this.knex = knex({ client: 'sqlite3', connection: { filename: 'dist/db.sqlite' }, useNullAsDefault: true })
+    // TODO: this path will change in production mode
+    if (!fs.existsSync('dist')) {
+      fs.mkdirSync('dist')
+    }
+
+    this.knex = knex({
+      client: 'sqlite3',
+      connection: { filename: path.join('dist', 'db.sqlite') },
+      useNullAsDefault: true
+    })
   }
 
   async table(name: string, callback: (tableBuilder: Knex.CreateTableBuilder) => any) {
