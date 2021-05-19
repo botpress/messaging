@@ -1,16 +1,16 @@
-import * as Knex from 'knex'
+import knex, { Knex } from 'knex'
 import { ConfigService } from '../config/service'
 
 export class DatabaseService {
-  public knex!: Knex.Knex
+  public knex!: Knex
 
   constructor(private configService: ConfigService) {}
 
   async setup() {
-    this.knex = Knex.knex({ client: 'sqlite3', connection: { filename: 'dist/db.sqlite' }, useNullAsDefault: true })
+    this.knex = knex({ client: 'sqlite3', connection: { filename: 'dist/db.sqlite' }, useNullAsDefault: true })
   }
 
-  async table(name: string, callback: (tableBuilder: Knex.Knex.CreateTableBuilder) => any) {
+  async table(name: string, callback: (tableBuilder: Knex.CreateTableBuilder) => any) {
     if (!(await this.knex.schema.hasTable(name))) {
       await this.knex.schema.createTable(name, callback)
     }
@@ -22,5 +22,13 @@ export class DatabaseService {
 
   setJson(object: any) {
     return JSON.stringify(object)
+  }
+
+  getDate(string: string) {
+    return new Date(string)
+  }
+
+  setDate(date: Date | undefined) {
+    return date?.toISOString()
   }
 }
