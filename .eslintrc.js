@@ -4,16 +4,10 @@ module.exports = {
     es6: true,
     node: true
   },
-  extends: ['prettier', 'prettier/@typescript-eslint'],
+  extends: ['prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: [
-      './src/tsconfig.json',
-      './src/bp/ui-*/tsconfig.json',
-      './src/bp/admin/ui/tsconfig.json',
-      './modules/tsconfig*.eslint.json',
-      './build/module-builder/tsconfig.json'
-    ],
+    project: ['./tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module'
   },
