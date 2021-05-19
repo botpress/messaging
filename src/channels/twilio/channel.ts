@@ -1,4 +1,7 @@
 import { Router } from 'express'
+import { ConversationService } from '../../conversations/service'
+import { KvsService } from '../../kvs/service'
+import { MessageService } from '../../messages/service'
 import { Channel } from '../base/channel'
 import { TwilioClient } from './client'
 import { TwilioConfig } from './config'
@@ -12,8 +15,14 @@ export class TwilioChannel extends Channel {
     return 'twilio'
   }
 
-  setup(config: TwilioConfig, router: Router) {
-    this.client = new TwilioClient(config)
+  setup(
+    config: TwilioConfig,
+    kvsService: KvsService,
+    conversationService: ConversationService,
+    messagesService: MessageService,
+    router: Router
+  ) {
+    this.client = new TwilioClient(config, kvsService, conversationService, messagesService)
     this.client.setup()
 
     this.router = new TwilioRouter(config, router, this.client)

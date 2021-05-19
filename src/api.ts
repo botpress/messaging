@@ -9,6 +9,7 @@ export class Api {
       const { channel } = req.params
       const { conversationId, payload } = req.body
       await this.app.channels.get(channel)?.send(conversationId, payload)
+      res.sendStatus(204)
     })
   }
 }

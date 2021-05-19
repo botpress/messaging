@@ -1,6 +1,9 @@
 import { Router } from 'express'
 import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
+import { ConversationService } from '../conversations/service'
+import { KvsService } from '../kvs/service'
+import { MessageService } from '../messages/service'
 import { Channel } from './base/channel'
 import { ChannelConfig } from './base/config'
 import { TwilioChannel } from './twilio/channel'
@@ -8,7 +11,13 @@ import { TwilioChannel } from './twilio/channel'
 export class ChannelService extends Service {
   private channels: Channel[]
 
-  constructor(private configService: ConfigService, private router: Router) {
+  constructor(
+    private configService: ConfigService,
+    private kvsService: KvsService,
+    private conversationService: ConversationService,
+    private messagesService: MessageService,
+    private router: Router
+  ) {
     super()
     this.channels = [new TwilioChannel()]
   }
@@ -17,7 +26,7 @@ export class ChannelService extends Service {
     for (const channel of this.channels) {
       const config = this.getConfig(channel.id)
       if (config.enabled) {
-        channel.setup(config, this.router)
+        channel.setup(config, this.kvsService, this.conversationService, this.messagesService, this.router)
       }
     }
   }

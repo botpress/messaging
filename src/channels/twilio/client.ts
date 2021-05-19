@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import { Twilio } from 'twilio'
-import { v4 as uuidv4 } from 'uuid'
+import { ConversationService } from '../../conversations/service'
+import { KvsService } from '../../kvs/service'
+import { MessageService } from '../../messages/service'
 import { ChannelRenderer } from '../base/renderer'
 import { ChannelSender } from '../base/sender'
 import { TwilioConfig } from './config'
@@ -16,7 +18,14 @@ export class TwilioClient {
   private renderers!: ChannelRenderer<TwilioContext>[]
   private senders!: ChannelSender<TwilioContext>[]
 
-  constructor(private config: TwilioConfig) {}
+  private botId: string = 'default'
+
+  constructor(
+    private config: TwilioConfig,
+    private kvs: KvsService,
+    private conversations: ConversationService,
+    private messages: MessageService
+  ) {}
 
   setup() {
     if (!this.config.accountSID || !this.config.authToken) {
@@ -43,10 +52,10 @@ export class TwilioClient {
     const text = body.Body
 
     // TODO: map conversation to user
-    // const conversation = await this.bp.experimental.conversations.forBot(this.botId).recent(userId)
+    const conversation = await this.conversations.forBot(this.botId).recent(userId)
 
-    // TODO: kvs service
-    // await this.bp.kvs.forBot(this.botId).set(`twilio-number-${conversation.id}`, botPhoneNumber)
+    // TODO: scope per bot
+    await this.kvs.set(`twilio-number-${conversation.id}`, { botPhoneNumber })
 
     // TODO: make index response work
     /*
@@ -66,20 +75,15 @@ export class TwilioClient {
     // TODO: post to webhook
     // await this.bp.experimental.messages.forBot(this.botId).receive(conversation.id, payload, { channel: 'twilio' })
 
-    console.log('send webhook', {
-      id: uuidv4(),
-      conversationId: 'TODO',
-      authorId: userId,
-      sentOn: new Date(),
-      payload: { type: 'text', text }
-    })
+    const message = await this.messages.forBot(this.botId).create(conversation.id, { type: 'text', text }, userId)
+    console.log('send webhook', message)
   }
 
   async send(conversationId: string, payload: any) {
-    // TODO: kvs
-    // const botPhoneNumber = await this.bp.kvs.forBot(this.botId).get(`twilio-number-${event.threadId}`)
+    // TODO: scope per bot
+    const { botPhoneNumber } = await this.kvs.get(`twilio-number-${conversationId}`)
 
-    const botPhoneNumber = this.config.botPhoneNumber!
+    const conversation = await this.conversations.forBot(this.botId).get(conversationId)
 
     const context: TwilioContext = {
       client: this.twilio,
@@ -87,7 +91,7 @@ export class TwilioClient {
       payload: _.cloneDeep(payload),
       messages: [],
       botPhoneNumber,
-      targetPhoneNumber: conversationId
+      targetPhoneNumber: conversation!.userId
       // prepareIndexResponse: this.prepareIndexResponse.bind(this)
     }
 

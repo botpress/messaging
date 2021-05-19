@@ -20,7 +20,7 @@ export class App {
     this.kvs = new KvsService(this.database)
     this.conversations = new ConversationService(this.database)
     this.messages = new MessageService(this.database, this.conversations)
-    this.channels = new ChannelService(this.config, this.router)
+    this.channels = new ChannelService(this.config, this.kvs, this.conversations, this.messages, this.router)
   }
 
   async setup() {
