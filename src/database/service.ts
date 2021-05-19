@@ -15,4 +15,12 @@ export class DatabaseService {
       await this.knex.schema.createTable(name, callback)
     }
   }
+
+  getJson(string: string) {
+    return JSON.parse(string)
+  }
+
+  setJson(object: any) {
+    return JSON.stringify(object)
+  }
 }

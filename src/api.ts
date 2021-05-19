@@ -4,7 +4,7 @@ import { App } from './app'
 export class Api {
   constructor(private app: App, private router: Router) {}
 
-  setup() {
+  async setup() {
     this.router.post('/:channel/send', async (req, res) => {
       const { channel } = req.params
       const { conversationId, payload } = req.body
