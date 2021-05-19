@@ -106,8 +106,6 @@ export class ConversationRepo {
         'conversations.createdOn',
         'messages.id as messageId',
         'messages.authorId',
-        'messages.eventId',
-        'messages.incomingEventId',
         'messages.payload',
         'messages.sentOn'
       )
