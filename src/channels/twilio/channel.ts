@@ -3,6 +3,7 @@ import { ConversationService } from '../../conversations/service'
 import { KvsService } from '../../kvs/service'
 import { MessageService } from '../../messages/service'
 import { Channel } from '../base/channel'
+import { Routers } from '../types'
 import { TwilioClient } from './client'
 import { TwilioConfig } from './config'
 import { TwilioRouter } from './router'
@@ -15,17 +16,17 @@ export class TwilioChannel extends Channel {
     return 'twilio'
   }
 
-  setup(
+  async setup(
     config: TwilioConfig,
     kvsService: KvsService,
     conversationService: ConversationService,
     messagesService: MessageService,
-    router: Router
+    routers: Routers
   ) {
     this.client = new TwilioClient(config, kvsService, conversationService, messagesService)
     this.client.setup()
 
-    this.router = new TwilioRouter(config, router, this.client)
+    this.router = new TwilioRouter(config, routers, this.client)
     this.router.setup()
   }
 

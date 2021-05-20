@@ -1,17 +1,18 @@
 import { Router } from 'express'
 import { validateRequest } from 'twilio'
+import { Routers } from '../types'
 import { TwilioClient } from './client'
 import { TwilioConfig } from './config'
 
 export class TwilioRouter {
   private webhookUrl!: string
 
-  constructor(private config: TwilioConfig, private router: Router, private client: TwilioClient) {}
+  constructor(private config: TwilioConfig, private routers: Routers, private client: TwilioClient) {}
 
   setup() {
     const route = '/webhooks/twilio'
 
-    this.router.post(route, async (req, res) => {
+    this.routers.full.post(route, async (req, res) => {
       if (this.auth(req)) {
         await this.client.receive(req.body)
         res.sendStatus(204)

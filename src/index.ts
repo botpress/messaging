@@ -4,8 +4,6 @@ import { App } from './app'
 
 const port = process.env.PORT || '3000'
 const exp = express()
-exp.use(express.json())
-exp.use(express.urlencoded({ extended: true }))
 
 const setup = async () => {
   const app = new App(exp)

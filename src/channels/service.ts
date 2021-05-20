@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import express, { Router } from 'express'
 import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
 import { ConversationService } from '../conversations/service'
@@ -6,27 +6,39 @@ import { KvsService } from '../kvs/service'
 import { MessageService } from '../messages/service'
 import { Channel } from './base/channel'
 import { ChannelConfig } from './base/config'
+import { TelegramChannel } from './telegram/channel'
 import { TwilioChannel } from './twilio/channel'
+import { Routers } from './types'
 
 export class ChannelService extends Service {
   private channels: Channel[]
+  private routers: Routers
 
   constructor(
     private configService: ConfigService,
     private kvsService: KvsService,
     private conversationService: ConversationService,
     private messagesService: MessageService,
-    private router: Router
+    router: Router
   ) {
     super()
-    this.channels = [new TwilioChannel()]
+    this.channels = [new TwilioChannel(), new TelegramChannel()]
+
+    const fullRouter = Router()
+    fullRouter.use(express.json())
+    fullRouter.use(express.urlencoded({ extended: true }))
+
+    this.routers = {
+      full: fullRouter,
+      raw: router
+    }
   }
 
   async setup() {
     for (const channel of this.channels) {
       const config = this.getConfig(channel.id)
       if (config.enabled) {
-        channel.setup(config, this.kvsService, this.conversationService, this.messagesService, this.router)
+        await channel.setup(config, this.kvsService, this.conversationService, this.messagesService, this.routers)
       }
     }
   }
