@@ -3,13 +3,8 @@ import SlackEventAdapter from '@slack/events-api/dist/adapter'
 import { createMessageAdapter, SlackMessageAdapter } from '@slack/interactive-messages'
 import { WebClient } from '@slack/web-api'
 import axios from 'axios'
-import { Router } from 'express'
 import _ from 'lodash'
-import { ConversationService } from '../../conversations/service'
-import { KvsService } from '../../kvs/service'
-import { MessageService } from '../../messages/service'
 import { Channel } from '../base/channel'
-import { Routers } from '../types'
 import { SlackConfig } from './config'
 import { SlackContext } from './context'
 import { SlackCardRenderer } from './renderers/card'
@@ -21,7 +16,11 @@ import { SlackTextRenderer } from './renderers/text'
 import { SlackCommonSender } from './senders/common'
 import { SlackTypingSender } from './senders/typing'
 
-export class SlackChannel extends Channel {
+export class SlackChannel extends Channel<SlackConfig> {
+  get id(): string {
+    return 'slack'
+  }
+
   private renderers = [
     new SlackCardRenderer(),
     new SlackTextRenderer(),
@@ -31,42 +30,57 @@ export class SlackChannel extends Channel {
     new SlackFeedbackRenderer()
   ]
   private senders = [new SlackTypingSender(), new SlackCommonSender()]
-
-  private config!: SlackConfig
-  private kvs!: KvsService
-  private conversations!: ConversationService
-  private messages!: MessageService
-  private router!: Router
-
   private client!: WebClient
   private interactive!: SlackMessageAdapter
   private events!: SlackEventAdapter
-
   private botId: string = 'default'
 
-  get id(): string {
-    return 'slack'
-  }
-
-  async setup(
-    config: SlackConfig,
-    kvsService: KvsService,
-    conversationService: ConversationService,
-    messagesService: MessageService,
-    routers: Routers
-  ): Promise<void> {
-    this.config = config
-    this.kvs = kvsService
-    this.conversations = conversationService
-    this.messages = messagesService
-    this.router = routers.raw
-
+  async setup(): Promise<void> {
     this.client = new WebClient(this.config.botToken)
     this.events = createEventAdapter(this.config.signingSecret!)
     this.interactive = createMessageAdapter(this.config.signingSecret!)
 
     await this._setupRealtime()
     await this._setupInteractiveListener()
+  }
+
+  async receive(ctx: any, payload: any) {
+    const channelId = _.get(ctx, 'channel.id') || _.get(ctx, 'channel')
+    const userId = _.get(ctx, 'user.id') || _.get(ctx, 'user')
+
+    // TODO: mapping
+    const conversation = await this.conversations.forBot(this.botId).recent(channelId)
+    const message = await this.messages.forBot(this.botId).create(conversation.id, payload, userId)
+    console.log('slack send webhook', message)
+  }
+
+  async send(conversationId: string, payload: any): Promise<void> {
+    const conversation = await this.conversations.forBot(this.botId).get(conversationId)
+
+    const context: SlackContext = {
+      client: { web: this.client, events: this.events, interactive: this.interactive },
+      handlers: [],
+      payload: _.cloneDeep(payload),
+      // TODO: bot url
+      botUrl: 'https://duckduckgo.com/',
+      message: { blocks: [] },
+      channelId: conversation?.userId!
+    }
+
+    for (const renderer of this.renderers) {
+      if (renderer.handles(context)) {
+        renderer.render(context)
+
+        // TODO: do we need ids?
+        context.handlers.push('id')
+      }
+    }
+
+    for (const sender of this.senders) {
+      if (sender.handles(context)) {
+        await sender.send(context)
+      }
+    }
   }
 
   private async _setupInteractiveListener() {
@@ -114,13 +128,13 @@ export class SlackChannel extends Channel {
       // await this.bp.events.updateEvent(event.id, { feedback })
     })
 
-    this.router.use('/webhooks/slack/interactive', this.interactive.requestListener())
+    this.routers.raw.use('/webhooks/slack/interactive', this.interactive.requestListener())
     await this.displayUrl('interactive', '/webhooks/slack/interactive')
   }
 
   private async _setupRealtime() {
     this.listenMessages(this.events)
-    this.router.post('/webhooks/slack/events', this.events.requestListener())
+    this.routers.raw.post('/webhooks/slack/events', this.events.requestListener())
     await this.displayUrl('events', '/webhooks/slack/events')
   }
 
@@ -144,44 +158,5 @@ export class SlackChannel extends Channel {
   private async displayUrl(title: string, end: string) {
     const publicPath = await this.config.externalUrl
     console.log(`Slack ${title} webhook listening at ${publicPath + end}`)
-  }
-
-  async receive(ctx: any, payload: any) {
-    const channelId = _.get(ctx, 'channel.id') || _.get(ctx, 'channel')
-    const userId = _.get(ctx, 'user.id') || _.get(ctx, 'user')
-
-    // TODO: mapping
-    const conversation = await this.conversations.forBot(this.botId).recent(channelId)
-    const message = await this.messages.forBot(this.botId).create(conversation.id, payload, userId)
-    console.log('slack send webhook', message)
-  }
-
-  async send(conversationId: string, payload: any): Promise<void> {
-    const conversation = await this.conversations.forBot(this.botId).get(conversationId)
-
-    const context: SlackContext = {
-      client: { web: this.client, events: this.events, interactive: this.interactive },
-      handlers: [],
-      payload: _.cloneDeep(payload),
-      // TODO: bot url
-      botUrl: 'https://duckduckgo.com/',
-      message: { blocks: [] },
-      channelId: conversation?.userId!
-    }
-
-    for (const renderer of this.renderers) {
-      if (renderer.handles(context)) {
-        renderer.render(context)
-
-        // TODO: do we need ids?
-        context.handlers.push('id')
-      }
-    }
-
-    for (const sender of this.senders) {
-      if (sender.handles(context)) {
-        await sender.send(context)
-      }
-    }
   }
 }

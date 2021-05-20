@@ -1,10 +1,6 @@
 import { Activity, BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import _ from 'lodash'
-import { ConversationService } from '../../conversations/service'
-import { KvsService } from '../../kvs/service'
-import { MessageService } from '../../messages/service'
 import { Channel } from '../base/channel'
-import { Routers } from '../types'
 import { TeamsConfig } from './config'
 import { TeamsContext } from './context'
 import { TeamsCardRenderer } from './renderers/card'
@@ -16,7 +12,11 @@ import { TeamsTextRenderer } from './renderers/text'
 import { TeamsCommonSender } from './senders/common'
 import { TeamsTypingSender } from './senders/typing'
 
-export class TeamsChannel extends Channel {
+export class TeamsChannel extends Channel<TeamsConfig> {
+  get id(): string {
+    return 'teams'
+  }
+
   private renderers = [
     new TeamsCardRenderer(),
     new TeamsTextRenderer(),
@@ -26,33 +26,11 @@ export class TeamsChannel extends Channel {
     new TeamsChoicesRenderer()
   ]
   private senders = [new TeamsTypingSender(), new TeamsCommonSender()]
-
-  private config!: TeamsConfig
-  private kvs!: KvsService
-  private conversations!: ConversationService
-  private messages!: MessageService
-
   private inMemoryConversationRefs: _.Dictionary<Partial<ConversationReference>> = {}
   private adapter!: BotFrameworkAdapter
-
-  get id(): string {
-    return 'teams'
-  }
-
   private botId: string = 'default'
 
-  async setup(
-    config: TeamsConfig,
-    kvsService: KvsService,
-    conversationService: ConversationService,
-    messagesService: MessageService,
-    routers: Routers
-  ): Promise<void> {
-    this.config = config
-    this.kvs = kvsService
-    this.conversations = conversationService
-    this.messages = messagesService
-
+  async setup(): Promise<void> {
     this.adapter = new BotFrameworkAdapter({
       appId: this.config.appId,
       appPassword: this.config.appPassword,
@@ -60,7 +38,7 @@ export class TeamsChannel extends Channel {
     })
 
     const route = '/webhooks/teams'
-    routers.full.post(route, async (req, res) => {
+    this.routers.full.post(route, async (req, res) => {
       await this.receive(<any>req, <any>res)
     })
 
@@ -96,42 +74,6 @@ export class TeamsChannel extends Channel {
     })
   }
 
-  private async _getConversationRef(threadId: string): Promise<Partial<ConversationReference>> {
-    let convRef = this.inMemoryConversationRefs[threadId]
-    if (convRef) {
-      return convRef
-    }
-
-    // cache miss
-    // TODO: scope kvs
-    convRef = await this.kvs.get(threadId)
-    this.inMemoryConversationRefs[threadId] = convRef
-    return convRef
-  }
-
-  private async _setConversationRef(threadId: string, convRef: Partial<ConversationReference>): Promise<void> {
-    if (this.inMemoryConversationRefs[threadId]) {
-      return
-    }
-
-    this.inMemoryConversationRefs[threadId] = convRef
-    // TODO: scope kvs
-    return this.kvs.set(threadId, convRef)
-  }
-
-  async _sendIncomingEvent(activity: Activity, threadId: string) {
-    const {
-      text,
-      from: { id: userId },
-      type
-    } = activity
-
-    // TODO: mapping
-    const conversation = await this.conversations.forBot(this.botId).recent(threadId)
-    const message = await this.messages.forBot(this.botId).create(conversation.id, { type: 'text', text }, threadId)
-    console.log('teams send webhook', message)
-  }
-
   async send(conversationId: string, payload: any): Promise<void> {
     const conversation = await this.conversations.forBot(this.botId).get(conversationId)
     const convoRef = await this._getConversationRef(conversation!.userId)
@@ -160,5 +102,41 @@ export class TeamsChannel extends Channel {
         await sender.send(context)
       }
     }
+  }
+
+  private async _getConversationRef(threadId: string): Promise<Partial<ConversationReference>> {
+    let convRef = this.inMemoryConversationRefs[threadId]
+    if (convRef) {
+      return convRef
+    }
+
+    // cache miss
+    // TODO: scope kvs
+    convRef = await this.kvs.get(threadId)
+    this.inMemoryConversationRefs[threadId] = convRef
+    return convRef
+  }
+
+  private async _setConversationRef(threadId: string, convRef: Partial<ConversationReference>): Promise<void> {
+    if (this.inMemoryConversationRefs[threadId]) {
+      return
+    }
+
+    this.inMemoryConversationRefs[threadId] = convRef
+    // TODO: scope kvs
+    return this.kvs.set(threadId, convRef)
+  }
+
+  private async _sendIncomingEvent(activity: Activity, threadId: string) {
+    const {
+      text,
+      from: { id: userId },
+      type
+    } = activity
+
+    // TODO: mapping
+    const conversation = await this.conversations.forBot(this.botId).recent(threadId)
+    const message = await this.messages.forBot(this.botId).create(conversation.id, { type: 'text', text }, threadId)
+    console.log('teams send webhook', message)
   }
 }

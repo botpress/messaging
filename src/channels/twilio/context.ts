@@ -8,3 +8,9 @@ export type TwilioContext = ChannelContext<Twilio> & {
   targetPhoneNumber: string
   // prepareIndexResponse(event: sdk.IO.OutgoingEvent, options: MessageOption[]): Promise<void>
 }
+
+export interface TwilioRequestBody {
+  To: string
+  From: string
+  Body: string
+}

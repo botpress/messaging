@@ -4,16 +4,18 @@ import { MessageService } from '../../messages/service'
 import { Routers } from '../types'
 import { ChannelConfig } from './config'
 
-export abstract class Channel {
+export abstract class Channel<C extends ChannelConfig> {
   abstract get id(): string
 
-  abstract setup(
-    config: ChannelConfig,
-    kvsService: KvsService,
-    conversationService: ConversationService,
-    messagesService: MessageService,
-    routers: Routers
-  ): Promise<void>
+  constructor(
+    protected config: C,
+    protected kvs: KvsService,
+    protected conversations: ConversationService,
+    protected messages: MessageService,
+    protected routers: Routers
+  ) {}
+
+  abstract setup(): Promise<void>
 
   abstract send(conversationId: string, payload: any): Promise<void>
 }

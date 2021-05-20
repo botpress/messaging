@@ -1,11 +1,7 @@
 import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
-import { ConversationService } from '../../conversations/service'
-import { KvsService } from '../../kvs/service'
-import { MessageService } from '../../messages/service'
 import { Channel } from '../base/channel'
-import { Routers } from '../types'
 import { TelegramConfig } from './config'
 import { TelegramContext } from './context'
 import { TelegramCardRenderer } from './renderers/card'
@@ -16,7 +12,11 @@ import { TelegramTextRenderer } from './renderers/text'
 import { TelegramCommonSender } from './senders/common'
 import { TelegramTypingSender } from './senders/typing'
 
-export class TelegramChannel extends Channel {
+export class TelegramChannel extends Channel<TelegramConfig> {
+  get id() {
+    return 'telegram'
+  }
+
   private renderers = [
     new TelegramCardRenderer(),
     new TelegramTextRenderer(),
@@ -25,38 +25,17 @@ export class TelegramChannel extends Channel {
     new TelegramChoicesRenderer()
   ]
   private senders = [new TelegramTypingSender(), new TelegramCommonSender()]
-
   private telegraf!: Telegraf<TelegrafContext>
-  private config!: TelegramConfig
-  private kvs!: KvsService
-  private conversations!: ConversationService
-  private messages!: MessageService
-
   private botId: string = 'default'
 
-  get id() {
-    return 'telegram'
-  }
-
-  async setup(
-    config: TelegramConfig,
-    kvsService: KvsService,
-    conversationService: ConversationService,
-    messagesService: MessageService,
-    routers: Routers
-  ) {
-    this.config = config
-    this.kvs = kvsService
-    this.conversations = conversationService
-    this.messages = messagesService
-
-    this.telegraf = new Telegraf(<string>config.botToken)
+  async setup() {
+    this.telegraf = new Telegraf(<string>this.config.botToken)
     const route = '/webhooks/telegram'
 
-    await this.telegraf.telegram.setWebhook(`${config.externalUrl}${route}`)
-    routers.raw.use(route, this.telegraf.webhookCallback('/'))
+    await this.telegraf.telegram.setWebhook(`${this.config.externalUrl}${route}`)
+    this.routers.raw.use(route, this.telegraf.webhookCallback('/'))
 
-    const webhookUrl = config.externalUrl + route
+    const webhookUrl = this.config.externalUrl + route
     console.log(`Telegram webhook listening at ${webhookUrl}`)
 
     this.telegraf.start(async (ctx) => this.receive(ctx))

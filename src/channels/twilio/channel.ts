@@ -1,12 +1,8 @@
 import _ from 'lodash'
 import { Twilio, validateRequest } from 'twilio'
-import { ConversationService } from '../../conversations/service'
-import { KvsService } from '../../kvs/service'
-import { MessageService } from '../../messages/service'
 import { Channel } from '../base/channel'
-import { Routers } from '../types'
 import { TwilioConfig } from './config'
-import { TwilioContext } from './context'
+import { TwilioContext, TwilioRequestBody } from './context'
 import { TwilioCardRenderer } from './renderers/card'
 import { TwilioCarouselRenderer } from './renderers/carousel'
 import { TwilioChoicesRenderer } from './renderers/choices'
@@ -14,7 +10,11 @@ import { TwilioImageRenderer } from './renderers/image'
 import { TwilioTextRenderer } from './renderers/text'
 import { TwilioCommonSender } from './senders/common'
 
-export class TwilioChannel extends Channel {
+export class TwilioChannel extends Channel<TwilioConfig> {
+  get id() {
+    return 'twilio'
+  }
+
   private renderers = [
     new TwilioCardRenderer(),
     new TwilioTextRenderer(),
@@ -23,32 +23,11 @@ export class TwilioChannel extends Channel {
     new TwilioChoicesRenderer()
   ]
   private senders = [new TwilioCommonSender()]
-
-  private config!: TwilioConfig
-  private kvs!: KvsService
-  private conversations!: ConversationService
-  private messages!: MessageService
-
   private twilio!: Twilio
   private webhookUrl!: string
   private botId: string = 'default'
 
-  get id() {
-    return 'twilio'
-  }
-
-  async setup(
-    config: TwilioConfig,
-    kvsService: KvsService,
-    conversationService: ConversationService,
-    messagesService: MessageService,
-    routers: Routers
-  ) {
-    this.config = config
-    this.kvs = kvsService
-    this.conversations = conversationService
-    this.messages = messagesService
-
+  async setup() {
     if (!this.config.accountSID || !this.config.authToken) {
       throw new Error('The accountSID and authToken must be configured to use this channel.')
     }
@@ -57,7 +36,7 @@ export class TwilioChannel extends Channel {
 
     const route = '/webhooks/twilio'
 
-    routers.full.post(route, async (req, res) => {
+    this.routers.full.post(route, async (req, res) => {
       if (this.auth(req)) {
         await this.receive(req.body)
         res.sendStatus(204)
@@ -69,11 +48,6 @@ export class TwilioChannel extends Channel {
     this.webhookUrl = this.config.externalUrl + route
 
     console.log(`Twilio webhook listening at ${this.webhookUrl}`)
-  }
-
-  private auth(req: any): boolean {
-    const signature = req.headers['x-twilio-signature']
-    return validateRequest(this.config.authToken!, signature, this.webhookUrl, req.body)
   }
 
   async receive(body: TwilioRequestBody) {
@@ -143,10 +117,9 @@ export class TwilioChannel extends Channel {
       }
     }
   }
-}
 
-export interface TwilioRequestBody {
-  To: string
-  From: string
-  Body: string
+  private auth(req: any): boolean {
+    const signature = req.headers['x-twilio-signature']
+    return validateRequest(this.config.authToken!, signature, this.webhookUrl, req.body)
+  }
 }
