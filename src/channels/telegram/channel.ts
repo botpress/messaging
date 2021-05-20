@@ -32,6 +32,8 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
     this.telegraf.start(async (ctx) => this.receive(ctx))
     this.telegraf.help(async (ctx) => this.receive(ctx))
     this.telegraf.on('message', async (ctx) => this.receive(ctx))
+
+    // TODO: Postback works but say something doesn't
     this.telegraf.on('callback_query', async (ctx) => this.receive(ctx))
   }
 
