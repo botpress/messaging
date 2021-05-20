@@ -1,68 +1,64 @@
-import { AttachmentLayoutTypes, CardFactory } from 'botbuilder'
-import {
-  ActionOpenURL,
-  ActionPostback,
-  ActionSaySomething,
-  ButtonAction,
-  CarouselContent
-} from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
+import { Attachment, CardAction, CardFactory } from 'botbuilder'
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../../content/types'
+import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { TeamsContext } from '../context'
 
-export class TeamsCarouselRenderer implements ChannelRenderer<TeamsContext> {
-  get priority(): number {
-    return 0
+type Context = CarouselContext<TeamsContext> & {
+  attachements: Attachment[]
+  actions: CardAction[]
+}
+
+export class TeamsCarouselRenderer extends CarouselRenderer {
+  startRender(context: Context, carousel: CarouselContent) {
+    context.attachements = []
   }
 
-  handles(context: TeamsContext): boolean {
-    return !!context.payload.items?.length
+  startRenderCard(context: Context, card: CardContent) {
+    context.actions = []
   }
 
-  render(context: TeamsContext) {
-    const payload = context.payload as CarouselContent
+  renderButtonUrl(context: Context, button: ActionOpenURL) {
+    context.actions.push({
+      type: 'openUrl',
+      value: button.url,
+      title: button.title
+    })
+  }
 
-    context.messages.push({
+  renderButtonPostback(context: Context, button: ActionPostback) {
+    context.actions.push({
+      type: 'messageBack',
+      title: button.title,
+      value: button.payload,
+      text: button.payload
+    })
+  }
+
+  renderButtonSay(context: Context, button: ActionSaySomething) {
+    context.actions.push({
+      type: 'messageBack',
+      title: button.title,
+      value: button.text,
+      text: button.text,
+      displayText: button.text
+    })
+  }
+
+  endRenderCard(context: Context, card: CardContent) {
+    context.attachements.push(
+      CardFactory.heroCard(
+        // TODO: what about the subtitle?
+        card.title,
+        CardFactory.images([card.image!]),
+        CardFactory.actions(context.actions)
+      )
+    )
+  }
+
+  endRender(context: Context, carousel: CarouselContent) {
+    context.channel.messages.push({
       type: 'message',
-      attachments: payload.items.map((card: any) => {
-        const contentUrl = formatUrl(context.botUrl, card.image)
-
-        return CardFactory.heroCard(
-          // TODO: what about the subtitle?
-          card.title as string,
-          CardFactory.images([contentUrl!]),
-          CardFactory.actions(
-            card.actions.map((button: any) => {
-              if (button.action === ButtonAction.OpenUrl) {
-                const url = (button as ActionOpenURL).url.replace('BOT_URL', context.botUrl)
-                return {
-                  type: 'openUrl',
-                  value: url,
-                  title: button.title
-                }
-              } else if (button.action === ButtonAction.SaySomething) {
-                const say = (button as ActionSaySomething).text as string
-                return {
-                  type: 'messageBack',
-                  title: button.title,
-                  value: say,
-                  text: say,
-                  displayText: say
-                }
-              } else if (button.action === ButtonAction.Postback) {
-                const payload = (button as ActionPostback).payload
-                return {
-                  type: 'messageBack',
-                  title: button.title,
-                  value: payload,
-                  text: payload
-                }
-              }
-            })
-          )
-        )
-      }),
-      attachmentLayout: AttachmentLayoutTypes.Carousel
+      attachments: context.attachements
     })
   }
 }
