@@ -1,33 +1,29 @@
-export interface MultiLangText {
-  [lang: string]: string
-}
-
 export interface Content {
   type: string
 }
 
 export interface TextContent extends Content {
   type: 'text'
-  text: string | MultiLangText
+  text: string
   markdown?: boolean
 }
 
 export interface ImageContent extends Content {
   type: 'image'
   image: string
-  title?: string | MultiLangText
+  title?: string
 }
 
 export interface AudioContent extends Content {
   type: 'audio'
   audio: string
-  title?: string | MultiLangText
+  title?: string
 }
 
 export interface VideoContent extends Content {
   type: 'video'
   video: string
-  title?: string | MultiLangText
+  title?: string
 }
 
 export interface CarouselContent extends Content {
@@ -37,8 +33,8 @@ export interface CarouselContent extends Content {
 
 export interface CardContent extends Content {
   type: 'card'
-  title: string | MultiLangText
-  subtitle?: string | MultiLangText
+  title: string
+  subtitle?: string
   image?: string
   actions: ActionButton[]
 }
@@ -47,8 +43,8 @@ export interface LocationContent extends Content {
   type: 'location'
   latitude: number
   longitude: number
-  address?: string | MultiLangText
-  title?: string | MultiLangText
+  address?: string
+  title?: string
 }
 
 export enum ButtonAction {
@@ -63,7 +59,7 @@ export interface ActionButton {
 }
 
 export interface ActionSaySomething extends ActionButton {
-  text: string | MultiLangText
+  text: string
 }
 
 export interface ActionOpenURL extends ActionButton {
@@ -76,11 +72,11 @@ export interface ActionPostback extends ActionButton {
 
 export interface ChoiceContent extends Content {
   type: 'single-choice'
-  text: string | MultiLangText
+  text: string
   choices: ChoiceOption[]
 }
 
 export interface ChoiceOption {
-  title: string | MultiLangText
+  title: string
   value: string
 }
