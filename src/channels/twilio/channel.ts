@@ -10,24 +10,15 @@ import { TwilioImageRenderer } from './renderers/image'
 import { TwilioTextRenderer } from './renderers/text'
 import { TwilioCommonSender } from './senders/common'
 
-export class TwilioChannel extends Channel<TwilioConfig> {
+export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
   get id() {
     return 'twilio'
   }
 
-  private renderers = [
-    new TwilioCardRenderer(),
-    new TwilioTextRenderer(),
-    new TwilioImageRenderer(),
-    new TwilioCarouselRenderer(),
-    new TwilioChoicesRenderer()
-  ]
-  private senders = [new TwilioCommonSender()]
   private twilio!: Twilio
   private webhookUrl!: string
-  private botId: string = 'default'
 
-  async setup() {
+  protected async setupConnection() {
     if (!this.config.accountSID || !this.config.authToken) {
       throw new Error('The accountSID and authToken must be configured to use this channel.')
     }
@@ -48,6 +39,20 @@ export class TwilioChannel extends Channel<TwilioConfig> {
     this.webhookUrl = this.config.externalUrl + route
 
     console.log(`Twilio webhook listening at ${this.webhookUrl}`)
+  }
+
+  protected setupRenderers() {
+    return [
+      new TwilioCardRenderer(),
+      new TwilioTextRenderer(),
+      new TwilioImageRenderer(),
+      new TwilioCarouselRenderer(),
+      new TwilioChoicesRenderer()
+    ]
+  }
+
+  protected setupSenders() {
+    return [new TwilioCommonSender()]
   }
 
   async receive(body: TwilioRequestBody) {

@@ -12,25 +12,15 @@ import { TeamsTextRenderer } from './renderers/text'
 import { TeamsCommonSender } from './senders/common'
 import { TeamsTypingSender } from './senders/typing'
 
-export class TeamsChannel extends Channel<TeamsConfig> {
+export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
   get id(): string {
     return 'teams'
   }
 
-  private renderers = [
-    new TeamsCardRenderer(),
-    new TeamsTextRenderer(),
-    new TeamsImageRenderer(),
-    new TeamsCarouselRenderer(),
-    new TeamsDropdownRenderer(),
-    new TeamsChoicesRenderer()
-  ]
-  private senders = [new TeamsTypingSender(), new TeamsCommonSender()]
   private inMemoryConversationRefs: _.Dictionary<Partial<ConversationReference>> = {}
   private adapter!: BotFrameworkAdapter
-  private botId: string = 'default'
 
-  async setup(): Promise<void> {
+  protected async setupConnection() {
     this.adapter = new BotFrameworkAdapter({
       appId: this.config.appId,
       appPassword: this.config.appPassword,
@@ -43,6 +33,21 @@ export class TeamsChannel extends Channel<TeamsConfig> {
     })
 
     console.log(`Teams webhook listening at ${this.config.externalUrl + route}`)
+  }
+
+  protected setupRenderers() {
+    return [
+      new TeamsCardRenderer(),
+      new TeamsTextRenderer(),
+      new TeamsImageRenderer(),
+      new TeamsCarouselRenderer(),
+      new TeamsDropdownRenderer(),
+      new TeamsChoicesRenderer()
+    ]
+  }
+
+  protected setupSenders() {
+    return [new TeamsTypingSender(), new TeamsCommonSender()]
   }
 
   async receive(req: Request, res: Response) {

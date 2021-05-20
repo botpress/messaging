@@ -12,23 +12,14 @@ import { TelegramTextRenderer } from './renderers/text'
 import { TelegramCommonSender } from './senders/common'
 import { TelegramTypingSender } from './senders/typing'
 
-export class TelegramChannel extends Channel<TelegramConfig> {
+export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
   get id() {
     return 'telegram'
   }
 
-  private renderers = [
-    new TelegramCardRenderer(),
-    new TelegramTextRenderer(),
-    new TelegramImageRenderer(),
-    new TelegramCarouselRenderer(),
-    new TelegramChoicesRenderer()
-  ]
-  private senders = [new TelegramTypingSender(), new TelegramCommonSender()]
   private telegraf!: Telegraf<TelegrafContext>
-  private botId: string = 'default'
 
-  async setup() {
+  protected async setupConnection() {
     this.telegraf = new Telegraf(<string>this.config.botToken)
     const route = '/webhooks/telegram'
 
@@ -42,6 +33,20 @@ export class TelegramChannel extends Channel<TelegramConfig> {
     this.telegraf.help(async (ctx) => this.receive(ctx))
     this.telegraf.on('message', async (ctx) => this.receive(ctx))
     this.telegraf.on('callback_query', async (ctx) => this.receive(ctx))
+  }
+
+  protected setupRenderers() {
+    return [
+      new TelegramCardRenderer(),
+      new TelegramTextRenderer(),
+      new TelegramImageRenderer(),
+      new TelegramCarouselRenderer(),
+      new TelegramChoicesRenderer()
+    ]
+  }
+
+  protected setupSenders() {
+    return [new TelegramTypingSender(), new TelegramCommonSender()]
   }
 
   async receive(ctx: TelegrafContext) {

@@ -16,32 +16,37 @@ import { SlackTextRenderer } from './renderers/text'
 import { SlackCommonSender } from './senders/common'
 import { SlackTypingSender } from './senders/typing'
 
-export class SlackChannel extends Channel<SlackConfig> {
+export class SlackChannel extends Channel<SlackConfig, SlackContext> {
   get id(): string {
     return 'slack'
   }
 
-  private renderers = [
-    new SlackCardRenderer(),
-    new SlackTextRenderer(),
-    new SlackImageRenderer(),
-    new SlackCarouselRenderer(),
-    new SlackChoicesRenderer(),
-    new SlackFeedbackRenderer()
-  ]
-  private senders = [new SlackTypingSender(), new SlackCommonSender()]
   private client!: WebClient
   private interactive!: SlackMessageAdapter
   private events!: SlackEventAdapter
-  private botId: string = 'default'
 
-  async setup(): Promise<void> {
+  protected async setupConnection() {
     this.client = new WebClient(this.config.botToken)
     this.events = createEventAdapter(this.config.signingSecret!)
     this.interactive = createMessageAdapter(this.config.signingSecret!)
 
     await this._setupRealtime()
     await this._setupInteractiveListener()
+  }
+
+  protected setupRenderers() {
+    return [
+      new SlackCardRenderer(),
+      new SlackTextRenderer(),
+      new SlackImageRenderer(),
+      new SlackCarouselRenderer(),
+      new SlackChoicesRenderer(),
+      new SlackFeedbackRenderer()
+    ]
+  }
+
+  protected setupSenders() {
+    return [new SlackTypingSender(), new SlackCommonSender()]
   }
 
   async receive(ctx: any, payload: any) {

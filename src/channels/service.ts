@@ -13,7 +13,7 @@ import { TwilioChannel } from './twilio/channel'
 import { Routers } from './types'
 
 export class ChannelService extends Service {
-  private channels: Channel<any>[]
+  private channels: Channel<any, any>[]
   private routers: Routers
 
   constructor(
@@ -36,10 +36,10 @@ export class ChannelService extends Service {
     }
 
     this.channels = [
-      new TwilioChannel(this.getConfig('twilio'), kvsService, conversationService, messagesService, this.routers),
-      new TelegramChannel(this.getConfig('telegram'), kvsService, conversationService, messagesService, this.routers),
-      new SlackChannel(this.getConfig('slack'), kvsService, conversationService, messagesService, this.routers),
-      new TeamsChannel(this.getConfig('teams'), kvsService, conversationService, messagesService, this.routers)
+      new TwilioChannel(kvsService, conversationService, messagesService, this.routers),
+      new TelegramChannel(kvsService, conversationService, messagesService, this.routers),
+      new SlackChannel(kvsService, conversationService, messagesService, this.routers),
+      new TeamsChannel(kvsService, conversationService, messagesService, this.routers)
     ]
   }
 
@@ -47,6 +47,7 @@ export class ChannelService extends Service {
     for (const channel of this.channels) {
       const config = this.getConfig(channel.id)
       if (config.enabled) {
+        channel.config = config
         await channel.setup()
       }
     }
