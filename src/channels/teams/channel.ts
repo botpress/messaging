@@ -1,9 +1,9 @@
 import { Activity, BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import _ from 'lodash'
 import { Channel } from '../base/channel'
+import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TeamsConfig } from './config'
 import { TeamsContext } from './context'
-import { TeamsCardRenderer } from './renderers/card'
 import { TeamsCarouselRenderer } from './renderers/carousel'
 import { TeamsChoicesRenderer } from './renderers/choices'
 import { TeamsDropdownRenderer } from './renderers/dropdown'
@@ -37,7 +37,7 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
 
   protected setupRenderers() {
     return [
-      new TeamsCardRenderer(),
+      new CardToCarouselRenderer(),
       new TeamsTextRenderer(),
       new TeamsImageRenderer(),
       new TeamsCarouselRenderer(),

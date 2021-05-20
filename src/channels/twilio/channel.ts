@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import { Twilio, validateRequest } from 'twilio'
 import { Channel } from '../base/channel'
+import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TwilioConfig } from './config'
 import { TwilioContext, TwilioRequestBody } from './context'
-import { TwilioCardRenderer } from './renderers/card'
 import { TwilioCarouselRenderer } from './renderers/carousel'
 import { TwilioChoicesRenderer } from './renderers/choices'
 import { TwilioImageRenderer } from './renderers/image'
@@ -43,7 +43,7 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
 
   protected setupRenderers() {
     return [
-      new TwilioCardRenderer(),
+      new CardToCarouselRenderer(),
       new TwilioTextRenderer(),
       new TwilioImageRenderer(),
       new TwilioCarouselRenderer(),

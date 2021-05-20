@@ -1,17 +1,17 @@
 import { CardContent } from '../../../content/types'
 import { ChannelRenderer } from '../../base/renderer'
-import { TelegramContext } from '../context'
+import { ChannelContext } from '../context'
 
-export class TelegramCardRenderer implements ChannelRenderer<TelegramContext> {
+export class CardToCarouselRenderer implements ChannelRenderer<ChannelContext<any>> {
   get priority(): number {
     return -1
   }
 
-  handles(context: TelegramContext): boolean {
+  handles(context: ChannelContext<any>): boolean {
     return context.payload.type === 'card'
   }
 
-  render(context: TelegramContext) {
+  render(context: ChannelContext<any>) {
     const payload = context.payload as CardContent
 
     // we convert our card to a carousel

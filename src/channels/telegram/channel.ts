@@ -2,9 +2,9 @@ import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
 import { Channel } from '../base/channel'
+import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TelegramConfig } from './config'
 import { TelegramContext } from './context'
-import { TelegramCardRenderer } from './renderers/card'
 import { TelegramCarouselRenderer } from './renderers/carousel'
 import { TelegramChoicesRenderer } from './renderers/choices'
 import { TelegramImageRenderer } from './renderers/image'
@@ -37,7 +37,7 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
 
   protected setupRenderers() {
     return [
-      new TelegramCardRenderer(),
+      new CardToCarouselRenderer(),
       new TelegramTextRenderer(),
       new TelegramImageRenderer(),
       new TelegramCarouselRenderer(),

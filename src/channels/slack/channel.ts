@@ -5,9 +5,9 @@ import { WebClient } from '@slack/web-api'
 import axios from 'axios'
 import _ from 'lodash'
 import { Channel } from '../base/channel'
+import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SlackConfig } from './config'
 import { SlackContext } from './context'
-import { SlackCardRenderer } from './renderers/card'
 import { SlackCarouselRenderer } from './renderers/carousel'
 import { SlackChoicesRenderer } from './renderers/choices'
 import { SlackFeedbackRenderer } from './renderers/feedback'
@@ -36,7 +36,7 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
 
   protected setupRenderers() {
     return [
-      new SlackCardRenderer(),
+      new CardToCarouselRenderer(),
       new SlackTextRenderer(),
       new SlackImageRenderer(),
       new SlackCarouselRenderer(),
