@@ -1,53 +1,39 @@
-import {
-  ActionOpenURL,
-  ActionPostback,
-  ActionSaySomething,
-  ButtonAction,
-  CarouselContent,
-  ChoiceOption
-} from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, ChoiceOption } from '../../../content/types'
+import { CarouselRenderer, CarouselContext } from '../../base/renderers/carousel'
 import { formatUrl } from '../../url'
 import { TwilioContext } from '../context'
 
-export class TwilioCarouselRenderer implements ChannelRenderer<TwilioContext> {
-  get priority(): number {
-    return 0
+type Context = CarouselContext<TwilioContext> & {
+  options: ChoiceOption[]
+}
+
+export class TwilioCarouselRenderer extends CarouselRenderer {
+  startRenderCard(context: Context, card: CardContent) {
+    context.options = []
   }
 
-  handles(context: TwilioContext): boolean {
-    return !!context.payload.items?.length
+  renderButtonUrl(context: Context, button: ActionOpenURL) {
+    context.options.push({
+      title: `${button.title} : ${button.url.replace('BOT_URL', context.channel.botUrl)}`,
+      value: ''
+    })
   }
 
-  render(context: TwilioContext) {
-    const payload = context.payload as CarouselContent
+  renderButtonPostback(context: Context, button: ActionPostback) {
+    context.options.push({ title: button.title, value: button.payload })
+  }
 
-    // We down render carousel to text so it works with sms
-    for (const { subtitle, title, image, actions } of payload.items) {
-      const body = `${title}\n\n${subtitle || ''}`
-      const options: ChoiceOption[] = []
+  renderButtonSay(context: Context, button: ActionSaySomething) {
+    context.options.push({
+      title: button.title,
+      value: button.text
+    })
+  }
 
-      for (const button of actions || []) {
-        const title = button.title as string
+  endRenderCard(context: Context, card: CardContent) {
+    const body = `${card.title}\n\n${card.subtitle || ''}`
 
-        if (button.action === ButtonAction.OpenUrl) {
-          options.push({
-            title: `${title} : ${(button as ActionOpenURL).url.replace('BOT_URL', context.botUrl)}`,
-            value: ''
-          })
-        } else if (button.action === ButtonAction.Postback) {
-          options.push({ title, value: (button as ActionPostback).payload })
-        } else if (button.action === ButtonAction.SaySomething) {
-          options.push({
-            title,
-            value: (button as ActionSaySomething).text as string
-          })
-        }
-      }
-
-      // TODO fix any not working with medial url
-      context.messages.push(<any>{ body, mediaUrl: formatUrl(context.botUrl, image) })
-      context.payload.choices = options
-    }
+    context.channel.messages.push(<any>{ body, mediaUrl: formatUrl(context.channel.botUrl, card.image) })
+    context.channel.payload.choices = context.options
   }
 }
