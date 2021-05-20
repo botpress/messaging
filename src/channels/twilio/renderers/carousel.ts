@@ -1,6 +1,5 @@
 import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, ChoiceOption } from '../../../content/types'
 import { CarouselRenderer, CarouselContext } from '../../base/renderers/carousel'
-import { formatUrl } from '../../url'
 import { TwilioContext } from '../context'
 
 type Context = CarouselContext<TwilioContext> & {
@@ -14,7 +13,7 @@ export class TwilioCarouselRenderer extends CarouselRenderer {
 
   renderButtonUrl(context: Context, button: ActionOpenURL) {
     context.options.push({
-      title: `${button.title} : ${button.url.replace('BOT_URL', context.channel.botUrl)}`,
+      title: `${button.title} : ${button.url}`,
       value: ''
     })
   }
@@ -33,7 +32,7 @@ export class TwilioCarouselRenderer extends CarouselRenderer {
   endRenderCard(context: Context, card: CardContent) {
     const body = `${card.title}\n\n${card.subtitle || ''}`
 
-    context.channel.messages.push(<any>{ body, mediaUrl: formatUrl(context.channel.botUrl, card.image) })
+    context.channel.messages.push(<any>{ body, mediaUrl: card.image })
     context.channel.payload.choices = context.options
   }
 }

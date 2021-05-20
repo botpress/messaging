@@ -7,6 +7,7 @@ import {
   CarouselContent
 } from '../../../content/types'
 import { ChannelRenderer } from '../../base/renderer'
+import { formatUrl } from '../../url'
 import { ChannelContext } from '../context'
 
 export interface CarouselContext<T extends ChannelContext<any>> {
@@ -29,11 +30,15 @@ export class CarouselRenderer implements ChannelRenderer<any> {
     this.startRender(ctx, payload)
 
     for (const card of payload.items) {
+      card.image = formatUrl(context.botUrl, card.image)
+
       this.startRenderCard(ctx, card)
 
       for (const button of card.actions || []) {
         if (button.action === ButtonAction.OpenUrl) {
-          this.renderButtonUrl(ctx, button as ActionOpenURL)
+          const btn = button as ActionOpenURL
+          btn.url = btn.url.replace('BOT_URL', context.botUrl)
+          this.renderButtonUrl(ctx, btn)
         } else if (button.action === ButtonAction.Postback) {
           this.renderButtonPostback(ctx, button as ActionPostback)
         } else if (button.action === ButtonAction.SaySomething) {

@@ -3,7 +3,6 @@ import { Extra, Markup } from 'telegraf'
 import { InlineKeyboardButton } from 'telegraf/typings/markup'
 import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '../../../content/types'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
-import { formatUrl } from '../../url'
 import { TelegramContext } from '../context'
 
 type Context = CarouselContext<TelegramContext> & {
@@ -15,7 +14,7 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
     if (card.image) {
       context.channel.messages.push({ action: 'upload_photo' })
       context.channel.messages.push({
-        photo: { url: <string>formatUrl(context.channel.botUrl, card.image), filename: path.basename(card.image) }
+        photo: { url: card.image, filename: path.basename(card.image) }
       })
     }
 
@@ -23,7 +22,7 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
   }
 
   renderButtonUrl(context: Context, button: ActionOpenURL) {
-    context.buttons.push(Markup.urlButton(button.title, button.url.replace('BOT_URL', context.channel.botUrl)))
+    context.buttons.push(Markup.urlButton(button.title, button.url))
   }
 
   renderButtonPostback(context: Context, button: ActionPostback) {
