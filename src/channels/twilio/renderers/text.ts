@@ -11,7 +11,7 @@ export class TwilioTextRenderer implements ChannelRenderer<TwilioContext> {
     return context.payload.text
   }
 
-  async render(context: TwilioContext) {
+  render(context: TwilioContext) {
     const payload = context.payload as TextContent
 
     context.messages.push({ body: payload.text as string })
