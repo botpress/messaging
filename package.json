@@ -30,7 +30,12 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
+    "@slack/events-api": "^2.3.2",
+    "@slack/interactive-messages": "^1.5.0",
+    "@slack/rtm-api": "^5.0.3",
+    "@slack/web-api": "^5.8.0",
     "@types/express": "^4.17.11",
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "knex": "^0.95.4",
     "lodash": "^4.17.21",

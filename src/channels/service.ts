@@ -6,6 +6,7 @@ import { KvsService } from '../kvs/service'
 import { MessageService } from '../messages/service'
 import { Channel } from './base/channel'
 import { ChannelConfig } from './base/config'
+import { SlackChannel } from './slack/channel'
 import { TelegramChannel } from './telegram/channel'
 import { TwilioChannel } from './twilio/channel'
 import { Routers } from './types'
@@ -22,7 +23,7 @@ export class ChannelService extends Service {
     router: Router
   ) {
     super()
-    this.channels = [new TwilioChannel(), new TelegramChannel()]
+    this.channels = [new TwilioChannel(), new TelegramChannel(), new SlackChannel()]
 
     const fullRouter = Router()
     fullRouter.use(express.json())
