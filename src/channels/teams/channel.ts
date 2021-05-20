@@ -4,13 +4,8 @@ import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TeamsConfig } from './config'
 import { TeamsContext } from './context'
-import { TeamsCarouselRenderer } from './renderers/carousel'
-import { TeamsChoicesRenderer } from './renderers/choices'
-import { TeamsDropdownRenderer } from './renderers/dropdown'
-import { TeamsImageRenderer } from './renderers/image'
-import { TeamsTextRenderer } from './renderers/text'
-import { TeamsCommonSender } from './senders/common'
-import { TeamsTypingSender } from './senders/typing'
+import { TeamsRenderers } from './renderers'
+import { TeamsSenders } from './senders'
 
 export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
   get id(): string {
@@ -36,18 +31,11 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
   }
 
   protected setupRenderers() {
-    return [
-      new CardToCarouselRenderer(),
-      new TeamsTextRenderer(),
-      new TeamsImageRenderer(),
-      new TeamsCarouselRenderer(),
-      new TeamsDropdownRenderer(),
-      new TeamsChoicesRenderer()
-    ]
+    return [new CardToCarouselRenderer(), ...TeamsRenderers]
   }
 
   protected setupSenders() {
-    return [new TeamsTypingSender(), new TeamsCommonSender()]
+    return TeamsSenders
   }
 
   async receive(req: Request, res: Response) {

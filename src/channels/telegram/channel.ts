@@ -5,12 +5,8 @@ import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TelegramConfig } from './config'
 import { TelegramContext } from './context'
-import { TelegramCarouselRenderer } from './renderers/carousel'
-import { TelegramChoicesRenderer } from './renderers/choices'
-import { TelegramImageRenderer } from './renderers/image'
-import { TelegramTextRenderer } from './renderers/text'
-import { TelegramCommonSender } from './senders/common'
-import { TelegramTypingSender } from './senders/typing'
+import { TelegramRenderers } from './renderers'
+import { TelegramSenders } from './senders'
 
 export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
   get id() {
@@ -38,17 +34,11 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
   }
 
   protected setupRenderers() {
-    return [
-      new CardToCarouselRenderer(),
-      new TelegramTextRenderer(),
-      new TelegramImageRenderer(),
-      new TelegramCarouselRenderer(),
-      new TelegramChoicesRenderer()
-    ]
+    return [new CardToCarouselRenderer(), ...TelegramRenderers]
   }
 
   protected setupSenders() {
-    return [new TelegramTypingSender(), new TelegramCommonSender()]
+    return TelegramSenders
   }
 
   async receive(ctx: TelegrafContext) {

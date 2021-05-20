@@ -4,11 +4,8 @@ import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TwilioConfig } from './config'
 import { TwilioContext, TwilioRequestBody } from './context'
-import { TwilioCarouselRenderer } from './renderers/carousel'
-import { TwilioChoicesRenderer } from './renderers/choices'
-import { TwilioImageRenderer } from './renderers/image'
-import { TwilioTextRenderer } from './renderers/text'
-import { TwilioCommonSender } from './senders/common'
+import { TwilioRenderers } from './renderers'
+import { TwilioSenders } from './senders'
 
 export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
   get id() {
@@ -42,17 +39,11 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
   }
 
   protected setupRenderers() {
-    return [
-      new CardToCarouselRenderer(),
-      new TwilioTextRenderer(),
-      new TwilioImageRenderer(),
-      new TwilioCarouselRenderer(),
-      new TwilioChoicesRenderer()
-    ]
+    return [new CardToCarouselRenderer(), ...TwilioRenderers]
   }
 
   protected setupSenders() {
-    return [new TwilioCommonSender()]
+    return TwilioSenders
   }
 
   async receive(body: TwilioRequestBody) {

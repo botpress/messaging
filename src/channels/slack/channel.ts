@@ -8,13 +8,8 @@ import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SlackConfig } from './config'
 import { SlackContext } from './context'
-import { SlackCarouselRenderer } from './renderers/carousel'
-import { SlackChoicesRenderer } from './renderers/choices'
-import { SlackFeedbackRenderer } from './renderers/feedback'
-import { SlackImageRenderer } from './renderers/image'
-import { SlackTextRenderer } from './renderers/text'
-import { SlackCommonSender } from './senders/common'
-import { SlackTypingSender } from './senders/typing'
+import { SlackRenderers } from './renderers'
+import { SlackSenders } from './senders'
 
 export class SlackChannel extends Channel<SlackConfig, SlackContext> {
   get id(): string {
@@ -35,18 +30,11 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
   }
 
   protected setupRenderers() {
-    return [
-      new CardToCarouselRenderer(),
-      new SlackTextRenderer(),
-      new SlackImageRenderer(),
-      new SlackCarouselRenderer(),
-      new SlackChoicesRenderer(),
-      new SlackFeedbackRenderer()
-    ]
+    return [new CardToCarouselRenderer(), ...SlackRenderers]
   }
 
   protected setupSenders() {
-    return [new SlackTypingSender(), new SlackCommonSender()]
+    return SlackSenders
   }
 
   async receive(ctx: any, payload: any) {
