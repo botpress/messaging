@@ -1,70 +1,75 @@
+import { Button } from '@slack/web-api'
 import _ from 'lodash'
-import {
-  ActionOpenURL,
-  ActionPostback,
-  ActionSaySomething,
-  ButtonAction,
-  CarouselContent
-} from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
+import { v4 as uuidv4 } from 'uuid'
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '../../../content/types'
+import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { SlackContext } from '../context'
 
-export class SlackCarouselRenderer implements ChannelRenderer<SlackContext> {
-  get priority(): number {
-    return 0
+type Context = CarouselContext<SlackContext> & {
+  buttons: Button[]
+}
+
+export class SlackCarouselRenderer extends CarouselRenderer {
+  startRenderCard(context: Context, card: CardContent) {
+    context.buttons = []
   }
 
-  handles(context: SlackContext): boolean {
-    return !!context.payload.items?.length
+  renderButtonUrl(context: Context, button: ActionOpenURL) {
+    context.buttons.push({
+      type: 'button',
+      action_id: 'discard_action' + uuidv4(),
+      text: {
+        type: 'plain_text',
+        text: button.title
+      },
+      url: button.url
+    })
   }
 
-  render(context: SlackContext) {
-    const payload = context.payload as CarouselContent
+  renderButtonPostback(context: Context, button: ActionPostback) {
+    context.buttons.push({
+      type: 'button',
+      action_id: 'button_clicked' + uuidv4(),
+      text: {
+        type: 'plain_text',
+        text: button.title
+      },
+      value: button.payload
+    })
+  }
 
-    context?.message?.blocks?.push(
-      ..._.flatMap(payload.items, (card, cardIdx) => [
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: `*${card.title}*\n${card.subtitle}`
-          },
-          accessory: card.image && {
-            type: 'image',
-            image_url: formatUrl(context.botUrl, card.image),
-            alt_text: 'image'
-          }
+  renderButtonSay(context: Context, button: ActionSaySomething) {
+    context.buttons.push({
+      type: 'button',
+      action_id: 'button_clicked' + uuidv4(),
+      text: {
+        type: 'plain_text',
+        text: button.title
+      },
+      value: button.text
+    })
+  }
+
+  endRenderCard(context: Context, card: CardContent) {
+    context.channel.message.blocks?.push(
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `*${card.title}*\n${card.subtitle}`
         },
-        {
-          type: 'actions',
-          elements: (card.actions || []).map((btn, btnIdx) => {
-            if (btn.action === ButtonAction.SaySomething || btn.action === ButtonAction.Postback) {
-              return {
-                type: 'button',
-                action_id: 'button_clicked' + cardIdx + btnIdx,
-                text: {
-                  type: 'plain_text',
-                  text: btn.title
-                },
-                value: (btn as ActionSaySomething).text || (btn as ActionPostback).payload
-              }
-            } else if (btn.action === ButtonAction.OpenUrl) {
-              return {
-                type: 'button',
-                action_id: 'discard_action' + cardIdx + btnIdx,
-                text: {
-                  type: 'plain_text',
-                  text: btn.title
-                },
-                url: (btn as ActionOpenURL).url.replace('BOT_URL', context.botUrl)
-              }
-            } else {
-              throw new Error(`Slack carousel does not support "${btn.action}" action-buttons at the moment`)
+        accessory: card.image
+          ? {
+              type: 'image',
+              image_url: card.image,
+              alt_text: 'image'
             }
-          })
-        }
-      ])
+          : undefined
+      },
+      {
+        type: 'actions',
+        elements: context.buttons
+      }
     )
   }
 }
