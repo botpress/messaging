@@ -9,7 +9,8 @@ export abstract class ImageRenderer implements ChannelRenderer<any> {
   }
 
   handles(context: ChannelContext<any>): boolean {
-    return !!context.payload.image
+    const payload = context.payload as ImageContent
+    return !!payload.image
   }
 
   render(context: ChannelContext<any>) {

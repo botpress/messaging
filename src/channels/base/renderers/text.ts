@@ -8,7 +8,8 @@ export abstract class TextRenderer implements ChannelRenderer<any> {
   }
 
   handles(context: ChannelContext<any>): boolean {
-    return !!context.payload.text
+    const payload = context.payload as TextContent
+    return !!payload.text
   }
 
   render(context: ChannelContext<any>) {

@@ -20,7 +20,8 @@ export abstract class CarouselRenderer implements ChannelRenderer<any> {
   }
 
   handles(context: ChannelContext<any>): boolean {
-    return !!context.payload.items?.length
+    const payload = context.payload as CarouselContent
+    return !!payload.items?.length
   }
 
   render(context: ChannelContext<any>) {
