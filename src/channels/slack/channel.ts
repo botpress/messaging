@@ -4,6 +4,7 @@ import { createMessageAdapter, SlackMessageAdapter } from '@slack/interactive-me
 import { WebClient } from '@slack/web-api'
 import axios from 'axios'
 import _ from 'lodash'
+import { Conversation } from '../../conversations/types'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SlackConfig } from './config'
@@ -50,32 +51,11 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     }
   }
 
-  async send(conversationId: string, payload: any): Promise<void> {
-    const conversation = await this.conversations.forBot(this.botId).get(conversationId)
-
-    const context: SlackContext = {
+  protected async context(conversation: Conversation) {
+    return {
       client: { web: this.client, events: this.events, interactive: this.interactive },
-      handlers: [],
-      payload: _.cloneDeep(payload),
-      // TODO: bot url
-      botUrl: 'https://duckduckgo.com/',
       message: { blocks: [] },
-      channelId: conversation?.userId!
-    }
-
-    for (const renderer of this.renderers) {
-      if (renderer.handles(context)) {
-        renderer.render(context)
-
-        // TODO: do we need ids?
-        context.handlers.push('id')
-      }
-    }
-
-    for (const sender of this.senders) {
-      if (sender.handles(context)) {
-        await sender.send(context)
-      }
+      channelId: conversation.userId
     }
   }
 

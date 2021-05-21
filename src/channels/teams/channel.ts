@@ -1,5 +1,6 @@
 import { Activity, BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import _ from 'lodash'
+import { Conversation } from '../../conversations/types'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TeamsConfig } from './config'
@@ -70,33 +71,13 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
     }
   }
 
-  async send(conversationId: string, payload: any): Promise<void> {
-    const conversation = await this.conversations.forBot(this.botId).get(conversationId)
+  protected async context(conversation: Conversation) {
     const convoRef = await this._getConversationRef(conversation!.userId)
 
-    const context: TeamsContext = {
+    return {
       client: this.adapter,
-      handlers: [],
-      payload: _.cloneDeep(payload),
-      // TODO: bot url
-      botUrl: 'https://duckduckgo.com/',
       messages: [],
       convoRef
-    }
-
-    for (const renderer of this.renderers) {
-      if (renderer.handles(context)) {
-        renderer.render(context)
-
-        // TODO: do we need ids?
-        context.handlers.push('id')
-      }
-    }
-
-    for (const sender of this.senders) {
-      if (sender.handles(context)) {
-        await sender.send(context)
-      }
     }
   }
 

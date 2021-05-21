@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
+import { Conversation } from '../../conversations/types'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TelegramConfig } from './config'
@@ -51,32 +52,12 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
     }
   }
 
-  async send(conversationId: string, payload: any) {
-    const conversation = await this.conversations.forBot(this.botId).get(conversationId)
-
-    const context: TelegramContext = {
+  protected async context(conversation: Conversation) {
+    return {
       client: this.telegraf,
-      handlers: [],
-      payload: _.cloneDeep(payload),
-      // TODO: bot url
-      botUrl: 'https://duckduckgo.com/',
       messages: [],
       // TODO: mapping
-      chatId: conversation?.userId!
-    }
-
-    for (const renderer of this.renderers) {
-      if (renderer.handles(context)) {
-        renderer.render(context)
-        // TODO: do we need ids?
-        context.handlers.push('id')
-      }
-    }
-
-    for (const sender of this.senders) {
-      if (sender.handles(context)) {
-        await sender.send(context)
-      }
+      chatId: conversation.userId
     }
   }
 }

@@ -1,6 +1,9 @@
+import _ from 'lodash'
 import { ConversationService } from '../../conversations/service'
+import { Conversation } from '../../conversations/types'
 import { KvsService } from '../../kvs/service'
 import { MessageService } from '../../messages/service'
+import { Message } from '../../messages/types'
 import { Routers } from '../types'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
@@ -41,9 +44,43 @@ export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContex
     const conversation = await this.conversations.forBot(this.botId).recent(map.userId)
     const message = await this.messages.forBot(this.botId).create(conversation.id, map.content, map.userId)
 
+    await this.afterReceive(payload, conversation, message)
+
     console.log(`${this.id} send webhook`, message)
   }
 
+  protected async afterReceive(payload: any, conversation: Conversation, message: Message) {}
+
+  async send(conversationId: string, payload: any): Promise<void> {
+    const conversation = (await this.conversations.forBot(this.botId).get(conversationId))!
+
+    const context: CTX = {
+      handlers: [],
+      payload: _.cloneDeep(payload),
+      // TODO: bot url
+      botUrl: 'https://duckduckgo.com/',
+      ...(await this.context(conversation))
+    }
+
+    for (const renderer of this.renderers) {
+      if (renderer.handles(context)) {
+        renderer.render(context)
+
+        // TODO: do we need ids?
+        context.handlers.push('id')
+      }
+    }
+
+    for (const sender of this.senders) {
+      if (sender.handles(context)) {
+        await sender.send(context)
+      }
+    }
+
+    const message = await this.messages.forBot(this.botId).create(conversation.id, payload, conversation.userId)
+    console.log(`${this.id} message sent`, message)
+  }
+
+  protected abstract context(conversation: Conversation): Promise<any>
   protected abstract map(payload: any): { userId: string; content: any }
-  abstract send(conversationId: string, payload: any): Promise<void>
 }

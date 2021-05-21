@@ -1,5 +1,7 @@
 import _ from 'lodash'
 import { Twilio, validateRequest } from 'twilio'
+import { Conversation } from '../../conversations/types'
+import { Message } from '../../messages/types'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TwilioConfig } from './config'
@@ -25,7 +27,8 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
     const route = '/webhooks/twilio'
 
     this.routers.full.post(route, async (req, res) => {
-      if (this.auth(req)) {
+      const signature = req.headers['x-twilio-signature'] as string
+      if (validateRequest(this.config.authToken!, signature, this.webhookUrl, req.body)) {
         await this.receive(req.body)
         res.sendStatus(204)
       } else {
@@ -59,41 +62,20 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
     }
   }
 
-  async send(conversationId: string, payload: any) {
+  protected async afterReceive(payload: TwilioRequestBody, conversation: Conversation, message: Message) {
     // TODO: scope per bot
-    const { botPhoneNumber } = await this.kvs.get(`twilio-number-${conversationId}`)
-
-    const conversation = await this.conversations.forBot(this.botId).get(conversationId)
-
-    const context: TwilioContext = {
-      client: this.twilio,
-      handlers: [],
-      payload: _.cloneDeep(payload),
-      messages: [],
-      botPhoneNumber,
-      targetPhoneNumber: conversation!.userId,
-      // TODO: bot url
-      botUrl: 'https://duckduckgo.com/'
-      // prepareIndexResponse: this.prepareIndexResponse.bind(this)
-    }
-
-    for (const renderer of this.renderers) {
-      if (renderer.handles(context)) {
-        renderer.render(context)
-        // TODO: do we need ids?
-        context.handlers.push('id')
-      }
-    }
-
-    for (const sender of this.senders) {
-      if (sender.handles(context)) {
-        await sender.send(context)
-      }
-    }
+    await this.kvs.set(`twilio-number-${conversation.id}`, { botPhoneNumber: payload.To })
   }
 
-  private auth(req: any): boolean {
-    const signature = req.headers['x-twilio-signature']
-    return validateRequest(this.config.authToken!, signature, this.webhookUrl, req.body)
+  protected async context(conversation: Conversation) {
+    // TODO: scope per bot
+    const { botPhoneNumber } = await this.kvs.get(`twilio-number-${conversation.id}`)
+
+    return {
+      client: this.twilio,
+      messages: [],
+      botPhoneNumber,
+      targetPhoneNumber: conversation.userId
+    }
   }
 }
