@@ -8,7 +8,7 @@ export class TeamsCommonSender implements ChannelSender<TeamsContext> {
   }
 
   handles(context: TeamsContext): boolean {
-    return context.handlers.length > 0
+    return context.handlers > 0
   }
 
   async send(context: TeamsContext) {

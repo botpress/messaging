@@ -27,40 +27,11 @@ export class ChannelService extends Service {
   ) {
     super()
 
-    this.channels = [
-      new TwilioChannel(
-        kvsService,
-        conversationService,
-        messagesService,
-        mappingService,
-        loggerService.root.sub('twilio'),
-        router
-      ),
-      new TelegramChannel(
-        kvsService,
-        conversationService,
-        messagesService,
-        mappingService,
-        loggerService.root.sub('telegram'),
-        router
-      ),
-      new SlackChannel(
-        kvsService,
-        conversationService,
-        messagesService,
-        mappingService,
-        loggerService.root.sub('slack'),
-        router
-      ),
-      new TeamsChannel(
-        kvsService,
-        conversationService,
-        messagesService,
-        mappingService,
-        loggerService.root.sub('teams'),
-        router
-      )
-    ]
+    const types = [TwilioChannel, TelegramChannel, SlackChannel, TeamsChannel]
+
+    this.channels = types.map(
+      (Channel) => new Channel(kvsService, conversationService, messagesService, mappingService, loggerService, router)
+    )
   }
 
   async setup() {

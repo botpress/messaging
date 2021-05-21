@@ -12,7 +12,7 @@ export class TelegramTypingSender implements ChannelSender<TelegramContext> {
 
   handles(context: TelegramContext): boolean {
     const typing = context.payload.typing
-    return context.handlers.length > 0 && (typing === undefined || typing === true)
+    return context.handlers > 0 && (typing === undefined || typing === true)
   }
 
   async send(context: TelegramContext) {

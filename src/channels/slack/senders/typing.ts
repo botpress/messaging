@@ -8,7 +8,7 @@ export class SlackTypingSender implements ChannelSender<SlackContext> {
 
   handles(context: SlackContext): boolean {
     const typing = context.payload.typing
-    return context.handlers.length > 0 && (typing === undefined || typing === true)
+    return context.handlers > 0 && (typing === undefined || typing === true)
   }
 
   async send(context: SlackContext): Promise<void> {

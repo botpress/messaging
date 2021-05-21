@@ -7,7 +7,7 @@ export class TwilioCommonSender implements ChannelSender<TwilioContext> {
   }
 
   handles(context: TwilioContext): boolean {
-    return context.handlers.length > 0
+    return context.handlers > 0
   }
 
   async send(context: TwilioContext) {
