@@ -1,10 +1,34 @@
 
-@baseUrl = YOUR_EXETNAL_URL
+@baseUrl = http://localhost:3000/
+@channel= YOUR_CHANNEL
 
-POST {{baseUrl}}/twilio/send
+@convoId = YOUR_CONVO_ID
+
+# Send Text
+POST {{baseUrl}}/send
 Content-Type: application/json
 
 {
-  "conversationId": "YOUR_PHONE_NUMBER",
-  "payload": {"type": "text", "text": "hello!"}
+  "channel": "{{channel}}",
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "text",
+    "text": "Hello this is a text message!"
+  }
+}
+
+###
+
+# Send Image
+POST {{baseUrl}}/send
+Content-Type: application/json
+
+{
+  "channel": "{{channel}}",
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "image",
+    "title": "ducky duck duck",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Mallard2.jpg"
+  }
 }

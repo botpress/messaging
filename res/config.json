@@ -6,6 +6,20 @@
       "accountSID": "",
       "authToken": "",
       "botPhoneNumber": ""
+    },
+    "telegram": {
+      "enabled": false,
+      "botToken": ""
+    },
+    "slack": {
+      "enabled": false,
+      "signingSecret": "",
+      "botToken": ""
+    },
+    "teams": {
+      "enabled": false,
+      "appId": "",
+      "appPassword": "."
     }
   }
 }
