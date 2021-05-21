@@ -1,15 +1,7 @@
-import { ChannelSender } from '../../base/sender'
+import { CommonSender } from '../../base/senders/common'
 import { TwilioContext } from '../context'
 
-export class TwilioCommonSender implements ChannelSender<TwilioContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: TwilioContext): boolean {
-    return context.handlers > 0
-  }
-
+export class TwilioCommonSender extends CommonSender {
   async send(context: TwilioContext) {
     for (const message of context.messages) {
       await context.client.messages.create({

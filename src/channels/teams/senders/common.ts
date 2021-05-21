@@ -1,16 +1,8 @@
 import { TurnContext } from 'botbuilder'
-import { ChannelSender } from '../../base/sender'
+import { CommonSender } from '../../base/senders/common'
 import { TeamsContext } from '../context'
 
-export class TeamsCommonSender implements ChannelSender<TeamsContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: TeamsContext): boolean {
-    return context.handlers > 0
-  }
-
+export class TeamsCommonSender extends CommonSender {
   async send(context: TeamsContext) {
     for (const message of context.messages) {
       await context.client.continueConversation(context.convoRef, async (turnContext: TurnContext) => {

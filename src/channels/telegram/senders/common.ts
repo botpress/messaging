@@ -1,16 +1,8 @@
 import { ExtraPhoto } from 'telegraf/typings/telegram-types'
-import { ChannelSender } from '../../base/sender'
+import { CommonSender } from '../../base/senders/common'
 import { TelegramContext } from '../context'
 
-export class TelegramCommonSender implements ChannelSender<TelegramContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: TelegramContext): boolean {
-    return context.handlers > 0
-  }
-
+export class TelegramCommonSender extends CommonSender {
   async send(context: TelegramContext) {
     const { client } = context
     const chatId = context.foreignConversationId!

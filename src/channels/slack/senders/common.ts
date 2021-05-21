@@ -1,15 +1,7 @@
-import { ChannelSender } from '../../base/sender'
+import { CommonSender } from '../../base/senders/common'
 import { SlackContext } from '../context'
 
-export class SlackCommonSender implements ChannelSender<SlackContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: SlackContext): boolean {
-    return context.handlers > 0
-  }
-
+export class SlackCommonSender extends CommonSender {
   async send(context: SlackContext) {
     await context.client.web.chat.postMessage({
       channel: context.foreignConversationId!,
