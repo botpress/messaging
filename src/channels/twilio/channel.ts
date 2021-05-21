@@ -14,6 +14,10 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
     return 'twilio'
   }
 
+  get enableParsers(): boolean {
+    return true
+  }
+
   private twilio!: Twilio
   private webhookUrl!: string
 
@@ -23,10 +27,9 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
     }
 
     this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
+    this.webhookUrl = this.config.externalUrl + this.route()
 
-    const route = '/webhooks/twilio'
-
-    this.routers.full.post(route, async (req, res) => {
+    this.router.post('/', async (req, res) => {
       const signature = req.headers['x-twilio-signature'] as string
       if (validateRequest(this.config.authToken!, signature, this.webhookUrl, req.body)) {
         await this.receive(req.body)
@@ -35,8 +38,6 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
         res.status(401).send('Auth token invalid')
       }
     })
-
-    this.webhookUrl = this.config.externalUrl + route
 
     console.log(`Twilio webhook listening at ${this.webhookUrl}`)
   }

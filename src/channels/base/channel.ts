@@ -1,10 +1,10 @@
+import express, { Router } from 'express'
 import _ from 'lodash'
 import { ConversationService } from '../../conversations/service'
 import { Conversation } from '../../conversations/types'
 import { KvsService } from '../../kvs/service'
 import { MessageService } from '../../messages/service'
 import { Message } from '../../messages/types'
-import { Routers } from '../types'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
 import { ChannelRenderer } from './renderer'
@@ -12,6 +12,10 @@ import { ChannelSender } from './sender'
 
 export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContext<any>> {
   abstract get id(): string
+
+  get enableParsers(): boolean {
+    return false
+  }
 
   // TODO: keep this public?
   public config!: C
@@ -25,13 +29,25 @@ export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContex
     protected kvs: KvsService,
     protected conversations: ConversationService,
     protected messages: MessageService,
-    protected routers: Routers
+    protected router: Router
   ) {}
 
   async setup(): Promise<void> {
+    const oldRouter = this.router
+    this.router = Router()
+    if (this.enableParsers) {
+      this.router.use(express.json())
+      this.router.use(express.urlencoded({ extended: true }))
+    }
+    oldRouter.use(this.route(), this.router)
+
     await this.setupConnection()
     this.renderers = this.setupRenderers().sort((a, b) => a.priority - b.priority)
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
+  }
+
+  protected route(path?: string) {
+    return `/webhooks/${this.id}${path ? `/${path}` : ''}`
   }
 
   protected abstract setupConnection(): Promise<void>

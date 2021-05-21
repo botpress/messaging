@@ -26,8 +26,9 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     this.events = createEventAdapter(this.config.signingSecret!)
     this.interactive = createMessageAdapter(this.config.signingSecret!)
 
-    await this._setupRealtime()
-    await this._setupInteractiveListener()
+    // TODO: refactor these functions
+    await this.setupRealtime()
+    await this.setupInteractiveListener()
   }
 
   protected setupRenderers() {
@@ -38,28 +39,7 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     return SlackSenders
   }
 
-  protected map(payload: { ctx: any; content: any }) {
-    const { user, channel } = payload.ctx
-
-    // TODO: are the || really necessary?
-    const channelId = channel?.id || channel
-    const userId = user?.id || user
-
-    return {
-      content: payload.content,
-      userId: channelId
-    }
-  }
-
-  protected async context(conversation: Conversation) {
-    return {
-      client: { web: this.client, events: this.events, interactive: this.interactive },
-      message: { blocks: [] },
-      channelId: conversation.userId
-    }
-  }
-
-  private async _setupInteractiveListener() {
+  private async setupInteractiveListener() {
     this.interactive.action({ type: 'button' }, async (payload) => {
       // debugIncoming('Received interactive message %o', payload)
 
@@ -104,14 +84,14 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
       // await this.bp.events.updateEvent(event.id, { feedback })
     })
 
-    this.routers.raw.use('/webhooks/slack/interactive', this.interactive.requestListener())
-    await this.displayUrl('interactive', '/webhooks/slack/interactive')
+    this.router.use('/interactive', this.interactive.requestListener())
+    console.log(`Slack interactive webhook listening at ${this.config.externalUrl + this.route('interactive')}`)
   }
 
-  private async _setupRealtime() {
+  private async setupRealtime() {
     this.listenMessages(this.events)
-    this.routers.raw.post('/webhooks/slack/events', this.events.requestListener())
-    await this.displayUrl('events', '/webhooks/slack/events')
+    this.router.post('/events', this.events.requestListener())
+    console.log(`Slack events webhook listening at ${this.config.externalUrl + this.route('events')}`)
   }
 
   private listenMessages(com: SlackEventAdapter) {
@@ -134,8 +114,24 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     // com.on('error', (err) => this.bp.logger.attachError(err).error('An error occurred'))
   }
 
-  private async displayUrl(title: string, end: string) {
-    const publicPath = await this.config.externalUrl
-    console.log(`Slack ${title} webhook listening at ${publicPath + end}`)
+  protected map(payload: { ctx: any; content: any }) {
+    const { user, channel } = payload.ctx
+
+    // TODO: are the || really necessary?
+    const channelId = channel?.id || channel
+    const userId = user?.id || user
+
+    return {
+      content: payload.content,
+      userId: channelId
+    }
+  }
+
+  protected async context(conversation: Conversation) {
+    return {
+      client: { web: this.client, events: this.events, interactive: this.interactive },
+      message: { blocks: [] },
+      channelId: conversation.userId
+    }
   }
 }

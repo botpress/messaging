@@ -18,18 +18,16 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
 
   protected async setupConnection() {
     this.telegraf = new Telegraf(<string>this.config.botToken)
-    const route = '/webhooks/telegram'
+    const webhookUrl = this.config.externalUrl + this.route()
 
-    await this.telegraf.telegram.setWebhook(`${this.config.externalUrl}${route}`)
-    this.routers.raw.use(route, this.telegraf.webhookCallback('/'))
+    await this.telegraf.telegram.setWebhook(webhookUrl)
+    this.router.use('/', this.telegraf.webhookCallback('/'))
 
-    const webhookUrl = this.config.externalUrl + route
     console.log(`Telegram webhook listening at ${webhookUrl}`)
 
     this.telegraf.start(async (ctx) => this.receive(ctx))
     this.telegraf.help(async (ctx) => this.receive(ctx))
     this.telegraf.on('message', async (ctx) => this.receive(ctx))
-
     // TODO: Postback works but say something doesn't
     this.telegraf.on('callback_query', async (ctx) => this.receive(ctx))
   }

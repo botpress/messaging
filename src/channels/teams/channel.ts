@@ -23,8 +23,7 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
       channelAuthTenant: this.config.tenantId
     })
 
-    const route = '/webhooks/teams'
-    this.routers.full.post(route, async (req, res) => {
+    this.router.post('/', async (req, res) => {
       await this.adapter.processActivity(req, <any>res, async (turnContext) => {
         const { activity } = turnContext
 
@@ -53,7 +52,7 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
       })
     })
 
-    console.log(`Teams webhook listening at ${this.config.externalUrl + route}`)
+    console.log(`Teams webhook listening at ${this.config.externalUrl + this.route()}`)
   }
 
   protected setupRenderers() {

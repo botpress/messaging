@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import { Router } from 'express'
 import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
 import { ConversationService } from '../conversations/service'
@@ -10,11 +10,9 @@ import { SlackChannel } from './slack/channel'
 import { TeamsChannel } from './teams/channel'
 import { TelegramChannel } from './telegram/channel'
 import { TwilioChannel } from './twilio/channel'
-import { Routers } from './types'
 
 export class ChannelService extends Service {
   private channels: Channel<any, any>[]
-  private routers: Routers
 
   constructor(
     private configService: ConfigService,
@@ -25,21 +23,11 @@ export class ChannelService extends Service {
   ) {
     super()
 
-    const fullRouter = Router()
-    fullRouter.use(express.json())
-    fullRouter.use(express.urlencoded({ extended: true }))
-    router.use('/', fullRouter)
-
-    this.routers = {
-      full: fullRouter,
-      raw: router
-    }
-
     this.channels = [
-      new TwilioChannel(kvsService, conversationService, messagesService, this.routers),
-      new TelegramChannel(kvsService, conversationService, messagesService, this.routers),
-      new SlackChannel(kvsService, conversationService, messagesService, this.routers),
-      new TeamsChannel(kvsService, conversationService, messagesService, this.routers)
+      new TwilioChannel(kvsService, conversationService, messagesService, router),
+      new TelegramChannel(kvsService, conversationService, messagesService, router),
+      new SlackChannel(kvsService, conversationService, messagesService, router),
+      new TeamsChannel(kvsService, conversationService, messagesService, router)
     ]
   }
 
