@@ -1,30 +1,25 @@
-import { ChannelRenderer } from '../../base/renderer'
+import { v4 as uuidv4 } from 'uuid'
+import { ChoiceContent } from '../../../content/types'
+import { ChoicesRenderer } from '../../base/renderers/choices'
 import { SlackContext } from '../context'
 
-export class SlackChoicesRenderer implements ChannelRenderer<SlackContext> {
-  get priority(): number {
-    return 1
-  }
-
-  handles(context: SlackContext): boolean {
-    return !!context.payload.choices?.length
-  }
-
-  render(context: SlackContext) {
+export class SlackChoicesRenderer extends ChoicesRenderer {
+  renderChoice(context: SlackContext, payload: ChoiceContent) {
+    // TODO: this is kind of bizarre?
     if (context.message.text) {
       context?.message?.blocks?.push({ type: 'section', text: { type: 'mrkdwn', text: context.message.text } })
     }
 
     context?.message?.blocks?.push({
       type: 'actions',
-      elements: context.payload.choices.map((q: any, idx: any) => ({
+      elements: payload.choices.map((x) => ({
         type: 'button',
-        action_id: `replace_buttons${idx}`,
+        action_id: `replace_buttons${uuidv4()}`,
         text: {
           type: 'plain_text',
-          text: q.title
+          text: x.title
         },
-        value: q.value.toUpperCase()
+        value: x.value
       }))
     })
   }

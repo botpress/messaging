@@ -1,37 +1,34 @@
 import { CardFactory } from 'botbuilder'
 import { ChoiceContent } from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
+import { ChoicesRenderer } from '../../base/renderers/choices'
 import { TeamsContext } from '../context'
 
-export class TeamsChoicesRenderer implements ChannelRenderer<TeamsContext> {
-  get priority(): number {
-    return 1
-  }
+export class TeamsChoicesRenderer extends ChoicesRenderer {
+  renderChoice(context: TeamsContext, payload: ChoiceContent) {
+    if (!context.messages.length) {
+      context.messages.push({})
+    }
 
-  handles(context: TeamsContext): boolean {
-    return !!(context.payload.choices?.length && context.messages.length > 0)
-  }
+    if (!context.messages[0].attachments) {
+      context.messages[0].attachments = []
+    }
 
-  render(context: TeamsContext) {
-    const payload = context.payload as ChoiceContent
-    const message = context.messages[0]
-
-    message.attachments = [
+    context.messages[0].attachments?.push(
       CardFactory.heroCard(
         '',
         CardFactory.images([]),
         CardFactory.actions(
-          payload.choices.map((reply) => {
+          payload.choices.map((x) => {
             return {
-              title: reply.title as string,
+              title: x.title,
               type: 'messageBack',
-              value: reply.value,
-              text: reply.value,
-              displayText: reply.title as string
+              value: x.value,
+              text: x.value,
+              displayText: x.title
             }
           })
         )
       )
-    ]
+    )
   }
 }

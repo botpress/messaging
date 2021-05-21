@@ -1,20 +1,17 @@
-import { ChannelRenderer } from '../../base/renderer'
+import { ChoiceContent } from '../../../content/types'
+import { ChoicesRenderer } from '../../base/renderers/choices'
 import { TwilioContext } from '../context'
 
-export class TwilioChoicesRenderer implements ChannelRenderer<TwilioContext> {
-  get priority(): number {
-    return 1
-  }
+export class TwilioChoicesRenderer extends ChoicesRenderer {
+  renderChoice(context: TwilioContext, payload: ChoiceContent) {
+    if (!context.messages.length) {
+      context.messages.push({})
+    }
 
-  handles(context: TwilioContext): boolean {
-    return !!(context.payload.choices?.length && context.messages.length > 0)
-  }
-
-  render(context: TwilioContext) {
     const message = context.messages[0]
 
-    message.body = `${message.body}\n\n${context.payload.choices
-      .map(({ title }: any, idx: number) => `${idx + 1}. ${title}`)
+    message.body = `${message.body || ''}\n\n${payload.choices
+      .map(({ title }, idx) => `${idx + 1}. ${title}`)
       .join('\n')}`
 
     // context.prepareIndexResponse(context.event, context.payload.choices)
