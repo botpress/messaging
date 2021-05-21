@@ -48,7 +48,7 @@ export class Launcher {
     let disabledText = ''
     let enabled = 0
     for (const channel of this.app.channels.list()) {
-      if (channel.config.enabled) {
+      if (channel.config?.enabled) {
         enabled++
         enabledText += `\n${padding}${clc.green('⦿')} ${channel.id}`
       } else {

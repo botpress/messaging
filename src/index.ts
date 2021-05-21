@@ -3,7 +3,7 @@ import { Api } from './api'
 import { App } from './app'
 import { Launcher } from './launcher'
 
-const port = process.env.PORT || '3000'
+const port = process.env.PORT || '3200'
 const exp = express()
 
 const app = new App(exp)
