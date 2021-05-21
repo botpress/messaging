@@ -30,6 +30,23 @@ Content-Type: application/json
   }
 }
 
+### Send Choices
+POST {{baseUrl}}/send
+Content-Type: application/json
+
+{
+  "channel": "{{channel}}",
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "single-choice",
+    "text": "Make a choice :",
+    "choices": [
+      { "title": "Yay", "value": "YES" },
+      { "title": "Nay", "value": "NO" }
+    ]
+  }
+}
+
 ### Send Card
 POST {{baseUrl}}/send
 Content-Type: application/json
