@@ -12,14 +12,14 @@ export class DatabaseService extends Service {
   }
 
   async setup() {
-    // TODO: this path will change in production mode
-    if (!fs.existsSync('dist')) {
-      fs.mkdirSync('dist')
-    }
-
     const provider = this.configService.current.database.type
 
     if (provider === 'sqlite') {
+      // TODO: this path will change in production mode
+      if (!fs.existsSync('dist')) {
+        fs.mkdirSync('dist')
+      }
+
       this.knex = knex({
         client: 'sqlite3',
         connection: { filename: path.join('dist', 'db.sqlite') },
