@@ -61,3 +61,63 @@ Content-Type: application/json
     ]
   }
 }
+
+### Send Carousel
+POST {{baseUrl}}/send
+Content-Type: application/json
+
+{
+  "channel": "{{channel}}",
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "carousel",
+    "items": [
+      {
+        "title": "Dinosaurs",
+        "subtitle": "A bunch of dinosaurs",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/2/28/Macronaria_scrubbed_enh.jpg",
+        "actions": [
+          {
+            "action": "Open URL",
+            "title": "Learn more",
+            "url": "https://en.wikipedia.org/wiki/Dinosaur"
+          },
+          {
+            "action": "Postback",
+            "title": "Cool",
+            "payload": "COOL"
+          }
+        ]
+      },
+      {
+        "title": "T-Rex",
+        "subtitle": "A big dinosaur",
+        "image": "https://d.newsweek.com/en/full/986534/gettyimages-967254666.jpg",
+        "actions": [
+          {
+            "action": "Say something",
+            "title": "Roar",
+            "text": "Woof woof"
+          }
+        ]
+      },
+      {
+        "title": "T-Bone",
+        "subtitle": "A big steak",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/9/91/T-bone-raw-MCB.jpg",
+        "actions": [
+          {
+            "action": "Open URL",
+            "title": "Learn more",
+            "url": "https://en.wikipedia.org/wiki/T-bone_steak"
+          },
+          {
+            "action": "Say something",
+            "title": "Miam",
+            "text": "Miam Miam"
+          }
+        ]
+      }
+    ]
+  }
+}
