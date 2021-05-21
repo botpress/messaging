@@ -24,7 +24,32 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
 
     const route = '/webhooks/teams'
     this.routers.full.post(route, async (req, res) => {
-      await this.receive(<any>req, <any>res)
+      await this.adapter.processActivity(req, <any>res, async (turnContext) => {
+        const { activity } = turnContext
+
+        const conversationReference = TurnContext.getConversationReference(activity)
+        const threadId = conversationReference!.conversation!.id
+
+        if (activity.value?.text) {
+          activity.text = activity.value.text
+        }
+
+        // TODO: read proactive message
+        /*
+        if (this._botAddedToConversation(activity)) {
+          // Locale format: {lang}-{subtag1}-{subtag2}-... https://en.wikipedia.org/wiki/IETF_language_tag
+          // TODO: Use Intl.Locale().language once its types are part of TS. See: https://github.com/microsoft/TypeScript/issues/37326
+          const lang = activity.locale?.split('-')[0]
+          await this._sendProactiveMessage(activity, conversationReference, lang)
+        }
+        */
+
+        if (activity.text) {
+          await this.receive({ activity, threadId })
+        }
+
+        await this._setConversationRef(threadId, conversationReference)
+      })
     })
 
     console.log(`Teams webhook listening at ${this.config.externalUrl + route}`)
@@ -38,33 +63,11 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
     return TeamsSenders
   }
 
-  async receive(req: Request, res: Response) {
-    await this.adapter.processActivity(req, <any>res, async (turnContext) => {
-      const { activity } = turnContext
-
-      const conversationReference = TurnContext.getConversationReference(activity)
-      const threadId = conversationReference!.conversation!.id
-
-      if (activity.value?.text) {
-        activity.text = activity.value.text
-      }
-
-      // TODO: read proactive message
-      /*
-      if (this._botAddedToConversation(activity)) {
-        // Locale format: {lang}-{subtag1}-{subtag2}-... https://en.wikipedia.org/wiki/IETF_language_tag
-        // TODO: Use Intl.Locale().language once its types are part of TS. See: https://github.com/microsoft/TypeScript/issues/37326
-        const lang = activity.locale?.split('-')[0]
-        await this._sendProactiveMessage(activity, conversationReference, lang)
-      }
-      */
-
-      if (activity.text) {
-        await this._sendIncomingEvent(activity, threadId)
-      }
-
-      await this._setConversationRef(threadId, conversationReference)
-    })
+  protected map(payload: { activity: Activity; threadId: string }) {
+    return {
+      content: { type: 'text', text: payload.activity.text },
+      userId: payload.threadId
+    }
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
@@ -118,18 +121,5 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
     this.inMemoryConversationRefs[threadId] = convRef
     // TODO: scope kvs
     return this.kvs.set(threadId, convRef)
-  }
-
-  private async _sendIncomingEvent(activity: Activity, threadId: string) {
-    const {
-      text,
-      from: { id: userId },
-      type
-    } = activity
-
-    // TODO: mapping
-    const conversation = await this.conversations.forBot(this.botId).recent(threadId)
-    const message = await this.messages.forBot(this.botId).create(conversation.id, { type: 'text', text }, threadId)
-    console.log('teams send webhook', message)
   }
 }

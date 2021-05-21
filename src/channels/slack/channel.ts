@@ -37,14 +37,17 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     return SlackSenders
   }
 
-  async receive(ctx: any, payload: any) {
-    const channelId = _.get(ctx, 'channel.id') || _.get(ctx, 'channel')
-    const userId = _.get(ctx, 'user.id') || _.get(ctx, 'user')
+  protected map(payload: { ctx: any; content: any }) {
+    const { user, channel } = payload.ctx
 
-    // TODO: mapping
-    const conversation = await this.conversations.forBot(this.botId).recent(channelId)
-    const message = await this.messages.forBot(this.botId).create(conversation.id, payload, userId)
-    console.log('slack send webhook', message)
+    // TODO: are the || really necessary?
+    const channelId = channel?.id || channel
+    const userId = user?.id || user
+
+    return {
+      content: payload.content,
+      userId: channelId
+    }
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
@@ -93,7 +96,7 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
           await axios.post(payload.response_url, { delete_original: true })
         }
 
-        await this.receive(payload, { type: 'quick_reply', text: label, payload: value })
+        await this.receive({ ctx: payload, content: { type: 'quick_reply', text: label, payload: value } })
       }
     })
 
@@ -102,7 +105,7 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
       const value = _.get(payload, 'actions[0].selected_option.value', '')
 
       //  await axios.post(payload.response_url, { text: `*${label}*` })
-      await this.receive(payload, { type: 'quick_reply', text: label, payload: value })
+      await this.receive({ ctx: payload, content: { type: 'quick_reply', text: label, payload: value } })
     })
 
     this.interactive.action({ actionId: 'feedback-overflow' }, async (payload) => {
@@ -138,9 +141,12 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
       // debugIncoming('Received real time payload %o', payload)
 
       if (!discardedSubtypes.includes(payload.subtype) && !payload.bot_id) {
-        await this.receive(payload, {
-          type: 'text',
-          text: _.find(_.at(payload, ['text', 'files.0.name', 'files.0.title']), (x) => x && x.length) || 'N/A'
+        await this.receive({
+          ctx: payload,
+          content: {
+            type: 'text',
+            text: _.find(_.at(payload, ['text', 'files.0.name', 'files.0.title']), (x) => x && x.length) || 'N/A'
+          }
         })
       }
     })

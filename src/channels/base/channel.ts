@@ -35,5 +35,15 @@ export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContex
   protected abstract setupRenderers(): ChannelRenderer<CTX>[]
   protected abstract setupSenders(): ChannelSender<CTX>[]
 
+  async receive(payload: any) {
+    const map = this.map(payload)
+
+    const conversation = await this.conversations.forBot(this.botId).recent(map.userId)
+    const message = await this.messages.forBot(this.botId).create(conversation.id, map.content, map.userId)
+
+    console.log(`${this.id} send webhook`, message)
+  }
+
+  protected abstract map(payload: any): { userId: string; content: any }
   abstract send(conversationId: string, payload: any): Promise<void>
 }

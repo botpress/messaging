@@ -41,13 +41,14 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
     return TelegramSenders
   }
 
-  async receive(ctx: TelegrafContext) {
-    const userId = `${ctx.from?.id || ctx.message?.from?.id}`
-    const text = ctx.message?.text || ctx.callbackQuery?.data
+  protected map(payload: TelegrafContext) {
+    const userId = payload.from?.id || payload.message?.from?.id
+    const text = payload.message?.text || payload.callbackQuery?.data
 
-    const conversation = await this.conversations.forBot(this.botId).recent(userId)
-    const message = await this.messages.forBot(this.botId).create(conversation.id, { type: 'text', text }, userId)
-    console.log('telegram send webhook', message)
+    return {
+      content: { type: 'text', text },
+      userId: userId!.toString()
+    }
   }
 
   async send(conversationId: string, payload: any) {
