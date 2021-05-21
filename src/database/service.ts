@@ -17,11 +17,21 @@ export class DatabaseService extends Service {
       fs.mkdirSync('dist')
     }
 
-    this.knex = knex({
-      client: 'sqlite3',
-      connection: { filename: path.join('dist', 'db.sqlite') },
-      useNullAsDefault: true
-    })
+    const provider = this.configService.current.database.type
+
+    if (provider === 'sqlite') {
+      this.knex = knex({
+        client: 'sqlite3',
+        connection: { filename: path.join('dist', 'db.sqlite') },
+        useNullAsDefault: true
+      })
+    } else if (provider === 'postgres') {
+      this.knex = knex({
+        client: 'postgres',
+        connection: this.configService.current.database.connection,
+        useNullAsDefault: true
+      })
+    }
   }
 
   async table(name: string, callback: (tableBuilder: Knex.CreateTableBuilder) => any) {
