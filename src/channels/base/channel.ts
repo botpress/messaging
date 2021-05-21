@@ -10,7 +10,7 @@ import { ChannelContext } from './context'
 import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 
-export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContext<any>> {
+export abstract class Channel<TConfig extends ChannelConfig, TContext extends ChannelContext<any>> {
   abstract get id(): string
 
   get enableParsers(): boolean {
@@ -18,9 +18,9 @@ export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContex
   }
 
   // TODO: keep this public?
-  public config!: C
-  protected renderers: ChannelRenderer<CTX>[] = []
-  protected senders: ChannelSender<CTX>[] = []
+  public config!: TConfig
+  protected renderers: ChannelRenderer<TContext>[] = []
+  protected senders: ChannelSender<TContext>[] = []
 
   // TODO: change this
   protected botId = 'default'
@@ -46,14 +46,6 @@ export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContex
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
   }
 
-  protected route(path?: string) {
-    return `/webhooks/${this.id}${path ? `/${path}` : ''}`
-  }
-
-  protected abstract setupConnection(): Promise<void>
-  protected abstract setupRenderers(): ChannelRenderer<CTX>[]
-  protected abstract setupSenders(): ChannelSender<CTX>[]
-
   async receive(payload: any) {
     const map = this.map(payload)
 
@@ -65,12 +57,10 @@ export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContex
     console.log(`${this.id} send webhook`, message)
   }
 
-  protected async afterReceive(payload: any, conversation: Conversation, message: Message) {}
-
   async send(conversationId: string, payload: any): Promise<void> {
     const conversation = (await this.conversations.forBot(this.botId).get(conversationId))!
 
-    const context: CTX = {
+    const context: TContext = {
       handlers: [],
       payload: _.cloneDeep(payload),
       // TODO: bot url
@@ -97,6 +87,14 @@ export abstract class Channel<C extends ChannelConfig, CTX extends ChannelContex
     console.log(`${this.id} message sent`, message)
   }
 
+  protected route(path?: string) {
+    return `/webhooks/${this.id}${path ? `/${path}` : ''}`
+  }
+
+  protected async afterReceive(payload: any, conversation: Conversation, message: Message) {}
+  protected abstract setupConnection(): Promise<void>
+  protected abstract setupRenderers(): ChannelRenderer<TContext>[]
+  protected abstract setupSenders(): ChannelSender<TContext>[]
   protected abstract context(conversation: Conversation): Promise<any>
   protected abstract map(payload: any): { userId: string; content: any }
 }

@@ -1,8 +1,8 @@
 import { ChannelContext } from './context'
 
-export interface ChannelRenderer<Context extends ChannelContext<any>> {
+export interface ChannelRenderer<TContext extends ChannelContext<any>> {
   priority: number
 
-  handles(context: Context): boolean
-  render(context: Context): void
+  handles(context: TContext): boolean
+  render(context: TContext): void
 }

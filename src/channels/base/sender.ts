@@ -1,8 +1,8 @@
 import { ChannelContext } from './context'
 
-export interface ChannelSender<Context extends ChannelContext<any>> {
+export interface ChannelSender<TContext extends ChannelContext<any>> {
   priority: number
 
-  handles(context: Context): boolean
-  send(context: Context): Promise<void>
+  handles(context: TContext): boolean
+  send(context: TContext): Promise<void>
 }
