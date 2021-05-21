@@ -1,10 +1,9 @@
 
 @baseUrl = http://localhost:3000
 @channel= YOUR_CHANNEL
-
 @convoId = YOUR_CONVO_ID
 
-# Send Text
+### Send Text
 POST {{baseUrl}}/send
 Content-Type: application/json
 
@@ -17,9 +16,7 @@ Content-Type: application/json
   }
 }
 
-###
-
-# Send Image
+### Send Image
 POST {{baseUrl}}/send
 Content-Type: application/json
 
@@ -30,5 +27,37 @@ Content-Type: application/json
     "type": "image",
     "title": "ducky duck duck",
     "image": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Mallard2.jpg"
+  }
+}
+
+### Send Card
+POST {{baseUrl}}/send
+Content-Type: application/json
+
+{
+  "channel": "{{channel}}",
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "card",
+    "title": "A banana card",
+    "subtitle": "This is a banana",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg",
+    "actions": [
+      {
+        "action": "Open URL",
+        "title": "Learn more",
+        "url": "https://en.wikipedia.org/wiki/Banana"
+      },
+      {
+        "action": "Say something",
+        "title": "Say Banana!",
+        "text": "Banana!!!"
+      },
+      {
+        "action": "Postback",
+        "title": "Post banana",
+        "payload": "BANANA"
+      }
+    ]
   }
 }
