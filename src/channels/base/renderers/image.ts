@@ -20,5 +20,5 @@ export abstract class ImageRenderer implements ChannelRenderer<any> {
     this.renderImage(context, payload)
   }
 
-  renderImage(context: ChannelContext<any>, image: ImageContent) {}
+  abstract renderImage(context: ChannelContext<any>, image: ImageContent): void
 }

@@ -1,19 +1,9 @@
 import { TextContent } from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
+import { TextRenderer } from '../../base/renderers/text'
 import { TwilioContext } from '../context'
 
-export class TwilioTextRenderer implements ChannelRenderer<TwilioContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: TwilioContext): boolean {
-    return context.payload.text
-  }
-
-  render(context: TwilioContext) {
-    const payload = context.payload as TextContent
-
-    context.messages.push({ body: payload.text as string })
+export class TwilioTextRenderer extends TextRenderer {
+  renderText(context: TwilioContext, payload: TextContent) {
+    context.messages.push({ body: payload.text })
   }
 }
