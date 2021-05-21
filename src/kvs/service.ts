@@ -19,7 +19,7 @@ export class KvsService extends Service {
   async get(key: string): Promise<any> {
     const rows = await this.query().where({ key })
     if (rows?.length) {
-      return this.db.getJson(rows[0].value)
+      return rows[0].value
     } else {
       return undefined
     }
@@ -27,9 +27,7 @@ export class KvsService extends Service {
 
   async set(key: string, value: any): Promise<void> {
     if (await this.get(key)) {
-      await this.query()
-        .where({ key })
-        .update({ value: this.db.setJson(value) })
+      await this.query().where({ key }).update({ value })
     } else {
       await this.query().insert({ id: uuidv4(), key, value: this.db.setJson(value) })
     }

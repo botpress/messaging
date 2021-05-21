@@ -1,5 +1,7 @@
-import { Activity, BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
+import { BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import _ from 'lodash'
+import LRU from 'lru-cache'
+import ms from 'ms'
 import { Mapping } from '../../mapping/service'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -13,8 +15,8 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
     return 'teams'
   }
 
-  private inMemoryConversationRefs: _.Dictionary<Partial<ConversationReference>> = {}
   private adapter!: BotFrameworkAdapter
+  private convoRefs!: LRU<string, Partial<ConversationReference>>
 
   protected async setupConnection() {
     this.adapter = new BotFrameworkAdapter({
@@ -23,32 +25,11 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
       channelAuthTenant: this.config.tenantId
     })
 
+    this.convoRefs = new LRU({ max: 10000, maxAge: ms('10m') })
+
     this.router.post('/', async (req, res) => {
       await this.adapter.processActivity(req, <any>res, async (turnContext) => {
-        const { activity } = turnContext
-
-        const conversationReference = TurnContext.getConversationReference(activity)
-        const threadId = conversationReference!.conversation!.id
-
-        if (activity.value?.text) {
-          activity.text = activity.value.text
-        }
-
-        // TODO: read proactive message
-        /*
-        if (this._botAddedToConversation(activity)) {
-          // Locale format: {lang}-{subtag1}-{subtag2}-... https://en.wikipedia.org/wiki/IETF_language_tag
-          // TODO: Use Intl.Locale().language once its types are part of TS. See: https://github.com/microsoft/TypeScript/issues/37326
-          const lang = activity.locale?.split('-')[0]
-          await this._sendProactiveMessage(activity, conversationReference, lang)
-        }
-        */
-
-        if (activity.text) {
-          await this.receive({ activity, threadId })
-        }
-
-        await this._setConversationRef(threadId, conversationReference)
+        await this.receive(turnContext)
       })
     })
 
@@ -63,44 +44,44 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
     return TeamsSenders
   }
 
-  protected map(payload: { activity: Activity; threadId: string }) {
+  protected async map(payload: TurnContext) {
+    const { activity } = payload
+    const convoRef = TurnContext.getConversationReference(activity)
+
+    await this.setConvoRef(convoRef!.conversation!.id, convoRef)
+
     return {
-      content: { type: 'text', text: payload.activity.text },
-      foreignUserId: payload.activity.from.id,
-      foreignConversationId: payload.threadId
+      content: { type: 'text', text: activity.value?.text || activity.text },
+      foreignUserId: activity.from.id,
+      foreignConversationId: convoRef!.conversation!.id
     }
   }
 
   protected async context(mapping: Mapping) {
-    const convoRef = await this._getConversationRef(mapping.foreignConversationId!)
-
     return {
       client: this.adapter,
       messages: [],
-      convoRef
+      convoRef: await this.getConvoRef(mapping.foreignConversationId!)
     }
   }
 
-  private async _getConversationRef(threadId: string): Promise<Partial<ConversationReference>> {
-    let convRef = this.inMemoryConversationRefs[threadId]
-    if (convRef) {
-      return convRef
+  private async getConvoRef(threadId: string): Promise<Partial<ConversationReference>> {
+    let convoRef = this.convoRefs.get(threadId)
+    if (convoRef) {
+      return convoRef
     }
 
-    // cache miss
-    // TODO: scope kvs
-    convRef = await this.kvs.get(threadId)
-    this.inMemoryConversationRefs[threadId] = convRef
-    return convRef
+    convoRef = await this.kvs.get(threadId)
+    this.convoRefs.set(threadId, convoRef!)
+    return convoRef!
   }
 
-  private async _setConversationRef(threadId: string, convRef: Partial<ConversationReference>): Promise<void> {
-    if (this.inMemoryConversationRefs[threadId]) {
+  private async setConvoRef(threadId: string, convoRef: Partial<ConversationReference>): Promise<void> {
+    if (this.convoRefs.get(threadId)) {
       return
     }
 
-    this.inMemoryConversationRefs[threadId] = convRef
-    // TODO: scope kvs
-    return this.kvs.set(threadId, convRef)
+    this.convoRefs.set(threadId, convoRef)
+    return this.kvs.set(threadId, convoRef)
   }
 }

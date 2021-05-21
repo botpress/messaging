@@ -54,7 +54,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   }
 
   async receive(payload: any) {
-    const endpoint = this.map(payload)
+    const endpoint = await this.map(payload)
     let mapping = await this.mapping.conversation(this.id, endpoint)
 
     if (!mapping) {
@@ -108,5 +108,5 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]
   protected abstract context(mapping: Mapping): Promise<any>
-  protected abstract map(payload: any): Endpoint & { content: any }
+  protected abstract map(payload: any): Promise<Endpoint & { content: any }>
 }
