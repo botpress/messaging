@@ -3,11 +3,11 @@ import { ImageRenderer } from '../../base/renderers/image'
 import { TelegramContext } from '../context'
 
 export class TelegramImageRenderer extends ImageRenderer {
-  renderImage(context: TelegramContext, image: ImageContent) {
-    if (image.image.toLowerCase().endsWith('.gif')) {
-      context.messages.push({ animation: image.image })
+  renderImage(context: TelegramContext, payload: ImageContent) {
+    if (payload.image.toLowerCase().endsWith('.gif')) {
+      context.messages.push({ animation: payload.image })
     } else {
-      context.messages.push({ photo: image.image })
+      context.messages.push({ photo: payload.image })
     }
   }
 }
