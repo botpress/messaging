@@ -14,7 +14,7 @@ export interface CarouselContext<T extends ChannelContext<any>> {
   channel: T
 }
 
-export class CarouselRenderer implements ChannelRenderer<any> {
+export abstract class CarouselRenderer implements ChannelRenderer<any> {
   get priority(): number {
     return 0
   }

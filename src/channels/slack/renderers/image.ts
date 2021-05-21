@@ -1,27 +1,16 @@
 import { ImageContent } from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
+import { ImageRenderer } from '../../base/renderers/image'
 import { SlackContext } from '../context'
 
-export class SlackImageRenderer implements ChannelRenderer<SlackContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: SlackContext): boolean {
-    return !!context.payload.image
-  }
-
-  render(context: SlackContext) {
-    const payload = context.payload as ImageContent
-
+export class SlackImageRenderer extends ImageRenderer {
+  renderImage(context: SlackContext, image: ImageContent) {
     context?.message?.blocks?.push({
       type: 'image',
       title: {
         type: 'plain_text',
-        text: payload.title as string
+        text: image.title!
       },
-      image_url: <any>formatUrl(context.botUrl, payload.image),
+      image_url: image.image,
       alt_text: 'image'
     })
   }

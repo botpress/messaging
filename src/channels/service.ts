@@ -18,9 +18,9 @@ export class ChannelService extends Service {
 
   constructor(
     private configService: ConfigService,
-    private kvsService: KvsService,
-    private conversationService: ConversationService,
-    private messagesService: MessageService,
+    kvsService: KvsService,
+    conversationService: ConversationService,
+    messagesService: MessageService,
     router: Router
   ) {
     super()
