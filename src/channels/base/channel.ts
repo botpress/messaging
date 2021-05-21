@@ -1,11 +1,10 @@
 import express, { Router } from 'express'
 import _ from 'lodash'
 import { ConversationService } from '../../conversations/service'
-import { Conversation } from '../../conversations/types'
 import { KvsService } from '../../kvs/service'
 import { Logger } from '../../logger/service'
+import { Endpoint, Mapping, MappingService } from '../../mapping/service'
 import { MessageService } from '../../messages/service'
-import { Message } from '../../messages/types'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
 import { ChannelRenderer } from './renderer'
@@ -32,6 +31,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
     protected kvs: KvsService,
     protected conversations: ConversationService,
     protected messages: MessageService,
+    protected mapping: MappingService,
     protected logger: Logger,
     protected router: Router
   ) {
@@ -54,25 +54,31 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   }
 
   async receive(payload: any) {
-    const map = this.map(payload)
+    const endpoint = this.map(payload)
+    let mapping = await this.mapping.conversation(this.id, endpoint)
 
-    const conversation = await this.conversations.forBot(this.botId).recent(map.userId)
-    const message = await this.messages.forBot(this.botId).create(conversation.id, map.content, map.userId)
+    if (!mapping) {
+      const conversation = await this.conversations.forBot(this.botId).create(endpoint.foreignConversationId!)
+      mapping = await this.mapping.create(this.id, conversation.id, endpoint)
+    }
 
-    await this.afterReceive(payload, conversation, message)
+    const message = await this.messages
+      .forBot(this.botId)
+      .create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
 
     this.inLogger.debug('Received message', message)
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
-    const conversation = (await this.conversations.forBot(this.botId).get(conversationId))!
+    const mapping = await this.mapping.endpoint(this.id, conversationId)
 
     const context: TContext = {
       handlers: [],
       payload: _.cloneDeep(payload),
       // TODO: bot url
       botUrl: 'https://duckduckgo.com/',
-      ...(await this.context(conversation))
+      ...mapping,
+      ...(await this.context(mapping))
     }
 
     for (const renderer of this.renderers) {
@@ -90,7 +96,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
       }
     }
 
-    const message = await this.messages.forBot(this.botId).create(conversation.id, payload, conversation.userId)
+    const message = await this.messages.forBot(this.botId).create(conversationId, payload, mapping.foreignUserId)
     this.outLogger.debug('Sending message', message)
   }
 
@@ -98,10 +104,9 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
     return `/webhooks/${this.id}${path ? `/${path}` : ''}`
   }
 
-  protected async afterReceive(payload: any, conversation: Conversation, message: Message) {}
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]
-  protected abstract context(conversation: Conversation): Promise<any>
-  protected abstract map(payload: any): { userId: string; content: any }
+  protected abstract context(mapping: Mapping): Promise<any>
+  protected abstract map(payload: any): Endpoint & { content: any }
 }

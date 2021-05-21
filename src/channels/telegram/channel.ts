@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
-import { Conversation } from '../../conversations/types'
+import { Mapping } from '../../mapping/service'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TelegramConfig } from './config'
@@ -41,21 +41,21 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
   }
 
   protected map(payload: TelegrafContext) {
+    const chatId = payload.chat?.id || payload.message?.chat.id
     const userId = payload.from?.id || payload.message?.from?.id
     const text = payload.message?.text || payload.callbackQuery?.data
 
     return {
       content: { type: 'text', text },
-      userId: userId!.toString()
+      foreignUserId: userId!.toString(),
+      foreignConversationId: chatId!.toString()
     }
   }
 
-  protected async context(conversation: Conversation) {
+  protected async context(mapping: Mapping) {
     return {
       client: this.telegraf,
-      messages: [],
-      // TODO: mapping
-      chatId: conversation.userId
+      messages: []
     }
   }
 }

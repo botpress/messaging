@@ -4,7 +4,7 @@ import { createMessageAdapter, SlackMessageAdapter } from '@slack/interactive-me
 import { WebClient } from '@slack/web-api'
 import axios from 'axios'
 import _ from 'lodash'
-import { Conversation } from '../../conversations/types'
+import { Mapping } from '../../mapping/service'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SlackConfig } from './config'
@@ -123,15 +123,15 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
 
     return {
       content: payload.content,
-      userId: channelId
+      foreignUserId: userId,
+      foreignConversationId: channelId
     }
   }
 
-  protected async context(conversation: Conversation) {
+  protected async context(mapping: Mapping) {
     return {
       client: { web: this.client, events: this.events, interactive: this.interactive },
-      message: { blocks: [] },
-      channelId: conversation.userId
+      message: { blocks: [] }
     }
   }
 }

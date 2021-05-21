@@ -17,7 +17,7 @@ export class TelegramTypingSender implements ChannelSender<TelegramContext> {
 
   async send(context: TelegramContext) {
     const delay = context.payload.delay ?? 1000
-    await context.client.telegram.sendChatAction(context.chatId, 'typing')
+    await context.client.telegram.sendChatAction(context.foreignConversationId!, 'typing')
 
     // TODO: doesn't work??
     // await Promise.delay(delay)

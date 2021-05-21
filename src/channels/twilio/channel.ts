@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { Twilio, validateRequest } from 'twilio'
-import { Conversation } from '../../conversations/types'
-import { Message } from '../../messages/types'
+import { Mapping } from '../../mapping/service'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TwilioConfig } from './config'
@@ -59,24 +58,15 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
 
     return {
       content: { type: 'text', text },
-      userId
+      foreignAppId: botPhoneNumber,
+      foreignUserId: userId
     }
   }
 
-  protected async afterReceive(payload: TwilioRequestBody, conversation: Conversation, message: Message) {
-    // TODO: scope per bot
-    await this.kvs.set(`twilio-number-${conversation.id}`, { botPhoneNumber: payload.To })
-  }
-
-  protected async context(conversation: Conversation) {
-    // TODO: scope per bot
-    const { botPhoneNumber } = await this.kvs.get(`twilio-number-${conversation.id}`)
-
+  protected async context(mapping: Mapping) {
     return {
       client: this.twilio,
-      messages: [],
-      botPhoneNumber,
-      targetPhoneNumber: conversation.userId
+      messages: []
     }
   }
 }

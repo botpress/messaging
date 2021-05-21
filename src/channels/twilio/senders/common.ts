@@ -14,8 +14,8 @@ export class TwilioCommonSender implements ChannelSender<TwilioContext> {
     for (const message of context.messages) {
       await context.client.messages.create({
         ...message,
-        from: context.botPhoneNumber,
-        to: context.targetPhoneNumber
+        from: context.foreignAppId,
+        to: context.foreignUserId!
       })
     }
   }

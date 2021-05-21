@@ -11,5 +11,4 @@ export interface SlackEndpoints {
 
 export type SlackContext = ChannelContext<SlackEndpoints> & {
   message: Partial<ChatPostMessageArguments>
-  channelId: string
 }

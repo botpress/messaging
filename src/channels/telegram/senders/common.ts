@@ -12,7 +12,8 @@ export class TelegramCommonSender implements ChannelSender<TelegramContext> {
   }
 
   async send(context: TelegramContext) {
-    const { client, chatId } = context
+    const { client } = context
+    const chatId = context.foreignConversationId!
 
     for (const message of context.messages) {
       if (message.action) {

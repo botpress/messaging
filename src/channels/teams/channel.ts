@@ -1,6 +1,6 @@
 import { Activity, BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import _ from 'lodash'
-import { Conversation } from '../../conversations/types'
+import { Mapping } from '../../mapping/service'
 import { Channel } from '../base/channel'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TeamsConfig } from './config'
@@ -66,12 +66,13 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
   protected map(payload: { activity: Activity; threadId: string }) {
     return {
       content: { type: 'text', text: payload.activity.text },
-      userId: payload.threadId
+      foreignUserId: payload.activity.from.id,
+      foreignConversationId: payload.threadId
     }
   }
 
-  protected async context(conversation: Conversation) {
-    const convoRef = await this._getConversationRef(conversation!.userId)
+  protected async context(mapping: Mapping) {
+    const convoRef = await this._getConversationRef(mapping.foreignConversationId!)
 
     return {
       client: this.adapter,

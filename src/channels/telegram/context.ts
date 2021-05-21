@@ -4,7 +4,6 @@ import { ChatAction, ExtraReplyMessage, InputFile } from 'telegraf/typings/teleg
 import { ChannelContext } from '../base/context'
 
 export type TelegramContext = ChannelContext<Telegraf<TelegrafContext>> & {
-  chatId: string
   messages: TelegramMessage[]
 }
 
