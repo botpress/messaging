@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Twilio, validateRequest } from 'twilio'
-import { Mapping } from '../../mapping/service'
-import { Channel } from '../base/channel'
+import { Channel, EndpointContent } from '../base/channel'
+import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TwilioConfig } from './config'
 import { TwilioContext, TwilioRequestBody } from './context'
@@ -49,7 +49,7 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
     return TwilioSenders
   }
 
-  protected map(payload: TwilioRequestBody) {
+  protected async map(payload: TwilioRequestBody): Promise<EndpointContent> {
     const botPhoneNumber = payload.To
     const userId = payload.From
     const text = payload.Body
@@ -63,8 +63,9 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
     }
   }
 
-  protected async context(mapping: Mapping) {
+  protected async context(base: ChannelContext<any>): Promise<TwilioContext> {
     return {
+      ...base,
       client: this.twilio,
       messages: []
     }

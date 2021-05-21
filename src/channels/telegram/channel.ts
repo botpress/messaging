@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
-import { Mapping } from '../../mapping/service'
-import { Channel } from '../base/channel'
+import { Channel, EndpointContent } from '../base/channel'
+import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TelegramConfig } from './config'
 import { TelegramContext } from './context'
@@ -18,18 +18,15 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
 
   protected async setupConnection() {
     this.telegraf = new Telegraf(<string>this.config.botToken)
-    const webhookUrl = this.config.externalUrl + this.route()
-
-    await this.telegraf.telegram.setWebhook(webhookUrl)
-    this.router.use('/', this.telegraf.webhookCallback('/'))
-
-    console.log(`Telegram webhook listening at ${webhookUrl}`)
-
     this.telegraf.start(async (ctx) => this.receive(ctx))
     this.telegraf.help(async (ctx) => this.receive(ctx))
     this.telegraf.on('message', async (ctx) => this.receive(ctx))
-    // TODO: Postback works but say something doesn't
     this.telegraf.on('callback_query', async (ctx) => this.receive(ctx))
+
+    await this.telegraf.telegram.setWebhook(this.config.externalUrl + this.route())
+    this.router.use('/', this.telegraf.webhookCallback('/'))
+
+    console.log(`Telegram webhook listening at ${this.config.externalUrl + this.route()}`)
   }
 
   protected setupRenderers() {
@@ -40,7 +37,7 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
     return TelegramSenders
   }
 
-  protected map(payload: TelegrafContext) {
+  protected async map(payload: TelegrafContext): Promise<EndpointContent> {
     const chatId = payload.chat?.id || payload.message?.chat.id
     const userId = payload.from?.id || payload.message?.from?.id
     const text = payload.message?.text || payload.callbackQuery?.data
@@ -52,8 +49,9 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
     }
   }
 
-  protected async context(mapping: Mapping) {
+  protected async context(base: ChannelContext<any>): Promise<TelegramContext> {
     return {
+      ...base,
       client: this.telegraf,
       messages: []
     }

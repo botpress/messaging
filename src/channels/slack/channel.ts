@@ -4,8 +4,8 @@ import { createMessageAdapter, SlackMessageAdapter } from '@slack/interactive-me
 import { WebClient } from '@slack/web-api'
 import axios from 'axios'
 import _ from 'lodash'
-import { Mapping } from '../../mapping/service'
-import { Channel } from '../base/channel'
+import { Channel, EndpointContent } from '../base/channel'
+import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SlackConfig } from './config'
 import { SlackContext } from './context'
@@ -114,7 +114,7 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     // com.on('error', (err) => this.bp.logger.attachError(err).error('An error occurred'))
   }
 
-  protected map(payload: { ctx: any; content: any }) {
+  protected async map(payload: { ctx: any; content: any }): Promise<EndpointContent> {
     const { user, channel } = payload.ctx
 
     // TODO: are the || really necessary?
@@ -128,8 +128,9 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     }
   }
 
-  protected async context(mapping: Mapping) {
+  protected async context(base: ChannelContext<any>): Promise<SlackContext> {
     return {
+      ...base,
       client: { web: this.client, events: this.events, interactive: this.interactive },
       message: { blocks: [] }
     }

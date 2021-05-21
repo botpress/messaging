@@ -2,8 +2,8 @@ import { BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuil
 import _ from 'lodash'
 import LRU from 'lru-cache'
 import ms from 'ms'
-import { Mapping } from '../../mapping/service'
-import { Channel } from '../base/channel'
+import { Channel, EndpointContent } from '../base/channel'
+import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TeamsConfig } from './config'
 import { TeamsContext } from './context'
@@ -44,7 +44,7 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
     return TeamsSenders
   }
 
-  protected async map(payload: TurnContext) {
+  protected async map(payload: TurnContext): Promise<EndpointContent> {
     const { activity } = payload
     const convoRef = TurnContext.getConversationReference(activity)
 
@@ -57,11 +57,12 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
     }
   }
 
-  protected async context(mapping: Mapping) {
+  protected async context(base: ChannelContext<any>): Promise<TeamsContext> {
     return {
+      ...base,
       client: this.adapter,
       messages: [],
-      convoRef: await this.getConvoRef(mapping.foreignConversationId!)
+      convoRef: await this.getConvoRef(base.foreignConversationId!)
     }
   }
 

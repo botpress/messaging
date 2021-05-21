@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { ConversationService } from '../../conversations/service'
 import { KvsService } from '../../kvs/service'
 import { Logger } from '../../logger/service'
-import { Endpoint, Mapping, MappingService } from '../../mapping/service'
+import { Endpoint, MappingService } from '../../mapping/service'
 import { MessageService } from '../../messages/service'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
@@ -72,14 +72,14 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   async send(conversationId: string, payload: any): Promise<void> {
     const mapping = await this.mapping.endpoint(this.id, conversationId)
 
-    const context: TContext = {
+    const context = await this.context({
+      client: undefined,
       handlers: [],
       payload: _.cloneDeep(payload),
       // TODO: bot url
       botUrl: 'https://duckduckgo.com/',
-      ...mapping,
-      ...(await this.context(mapping))
-    }
+      ...mapping
+    })
 
     for (const renderer of this.renderers) {
       if (renderer.handles(context)) {
@@ -107,6 +107,10 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]
-  protected abstract context(mapping: Mapping): Promise<any>
-  protected abstract map(payload: any): Promise<Endpoint & { content: any }>
+  protected abstract context(base: ChannelContext<any>): Promise<TContext>
+  protected abstract map(payload: any): Promise<EndpointContent>
 }
+
+export type EndpointContent = {
+  content: any
+} & Endpoint
