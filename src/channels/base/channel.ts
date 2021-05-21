@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { ConversationService } from '../../conversations/service'
 import { Conversation } from '../../conversations/types'
 import { KvsService } from '../../kvs/service'
+import { Logger } from '../../logger/service'
 import { MessageService } from '../../messages/service'
 import { Message } from '../../messages/types'
 import { ChannelConfig } from './config'
@@ -21,6 +22,8 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   public config!: TConfig
   protected renderers: ChannelRenderer<TContext>[] = []
   protected senders: ChannelSender<TContext>[] = []
+  protected inLogger: Logger
+  protected outLogger: Logger
 
   // TODO: change this
   protected botId = 'default'
@@ -29,8 +32,12 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
     protected kvs: KvsService,
     protected conversations: ConversationService,
     protected messages: MessageService,
+    protected logger: Logger,
     protected router: Router
-  ) {}
+  ) {
+    this.inLogger = logger.sub('incoming')
+    this.outLogger = logger.sub('outgoing')
+  }
 
   async setup(): Promise<void> {
     const oldRouter = this.router
@@ -54,7 +61,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
 
     await this.afterReceive(payload, conversation, message)
 
-    console.log(`${this.id} send webhook`, message)
+    this.inLogger.debug('Received message', message)
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
@@ -84,7 +91,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
     }
 
     const message = await this.messages.forBot(this.botId).create(conversation.id, payload, conversation.userId)
-    console.log(`${this.id} message sent`, message)
+    this.outLogger.debug('Sending message', message)
   }
 
   protected route(path?: string) {

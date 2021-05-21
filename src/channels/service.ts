@@ -3,6 +3,7 @@ import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
 import { ConversationService } from '../conversations/service'
 import { KvsService } from '../kvs/service'
+import { LoggerService } from '../logger/service'
 import { MessageService } from '../messages/service'
 import { Channel } from './base/channel'
 import { ChannelConfig } from './base/config'
@@ -19,15 +20,16 @@ export class ChannelService extends Service {
     kvsService: KvsService,
     conversationService: ConversationService,
     messagesService: MessageService,
+    loggerService: LoggerService,
     router: Router
   ) {
     super()
 
     this.channels = [
-      new TwilioChannel(kvsService, conversationService, messagesService, router),
-      new TelegramChannel(kvsService, conversationService, messagesService, router),
-      new SlackChannel(kvsService, conversationService, messagesService, router),
-      new TeamsChannel(kvsService, conversationService, messagesService, router)
+      new TwilioChannel(kvsService, conversationService, messagesService, loggerService.root.sub('twilio'), router),
+      new TelegramChannel(kvsService, conversationService, messagesService, loggerService.root.sub('telegram'), router),
+      new SlackChannel(kvsService, conversationService, messagesService, loggerService.root.sub('slack'), router),
+      new TeamsChannel(kvsService, conversationService, messagesService, loggerService.root.sub('teams'), router)
     ]
   }
 

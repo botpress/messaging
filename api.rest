@@ -4,7 +4,7 @@
 @convoId = YOUR_CONVO_ID
 
 ### Send Text
-POST {{baseUrl}}/send
+POST {{baseUrl}}/api/send
 Content-Type: application/json
 
 {
@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ### Send Image
-POST {{baseUrl}}/send
+POST {{baseUrl}}/api/send
 Content-Type: application/json
 
 {
@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 ### Send Choices
-POST {{baseUrl}}/send
+POST {{baseUrl}}/api/send
 Content-Type: application/json
 
 {
@@ -48,7 +48,7 @@ Content-Type: application/json
 }
 
 ### Send Card
-POST {{baseUrl}}/send
+POST {{baseUrl}}/api/send
 Content-Type: application/json
 
 {
@@ -80,7 +80,7 @@ Content-Type: application/json
 }
 
 ### Send Carousel
-POST {{baseUrl}}/send
+POST {{baseUrl}}/api/send
 Content-Type: application/json
 
 {
