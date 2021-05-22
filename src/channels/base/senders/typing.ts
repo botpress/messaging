@@ -16,7 +16,10 @@ export class TypingSender implements ChannelSender<any> {
 
     const delay = context.payload.delay ?? 1000
     await new Promise((resolve) => setTimeout(resolve, delay))
+
+    await this.stopIndicator(context)
   }
 
   async sendIndicator(context: ChannelContext<any>): Promise<void> {}
+  async stopIndicator(context: ChannelContext<any>): Promise<void> {}
 }

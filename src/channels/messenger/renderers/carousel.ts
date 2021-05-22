@@ -1,56 +1,57 @@
-import { ActionOpenURL, ActionPostback, ButtonAction, CarouselContent } from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../../content/types'
+import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { MessengerContext } from '../context'
 
-export class MessengerCarouselRenderer implements ChannelRenderer<MessengerContext> {
-  get priority(): number {
-    return 0
+type Context = CarouselContext<MessengerContext> & {
+  cards: any[]
+  buttons: any[]
+}
+
+export class MessengerCarouselRenderer extends CarouselRenderer {
+  startRender(context: Context, carousel: CarouselContent) {
+    context.cards = []
   }
 
-  handles(context: MessengerContext): boolean {
-    return !!context.payload.items?.length
+  startRenderCard(context: Context, card: CardContent) {
+    context.buttons = []
   }
 
-  render(context: MessengerContext) {
-    const payload = context.payload as CarouselContent
-    const cards = []
+  renderButtonUrl(context: Context, button: ActionOpenURL) {
+    context.buttons.push({
+      type: 'web_url',
+      url: button.url,
+      title: button.title
+    })
+  }
 
-    for (const card of payload.items) {
-      const buttons = []
+  renderButtonPostback(context: Context, button: ActionPostback) {
+    context.buttons.push({
+      type: 'postback',
+      title: button.title,
+      payload: button.payload
+    })
+  }
 
-      for (const action of card.actions || []) {
-        if (action.action === ButtonAction.OpenUrl) {
-          buttons.push({
-            type: 'web_url',
-            url: (action as ActionOpenURL).url.replace('BOT_URL', context.botUrl),
-            title: action.title
-          })
-        } else if (action.action === ButtonAction.Postback) {
-          buttons.push({
-            type: 'postback',
-            title: action.title,
-            payload: (action as ActionPostback).payload
-          })
-        } else if (action.action === ButtonAction.SaySomething) {
-          // TODO: not supported yet
-        }
-      }
+  renderButtonSay(context: Context, button: ActionSaySomething) {
+    // TODO: not supported
+  }
 
-      cards.push({
-        title: card.title,
-        image_url: card.image ? formatUrl(context.botUrl, card.image) : null,
-        subtitle: card.subtitle,
-        buttons
-      })
-    }
+  endRenderCard(context: Context, card: CardContent) {
+    context.cards.push({
+      title: card.title,
+      image_url: card.image ? card.image : null,
+      subtitle: card.subtitle,
+      buttons: context.buttons
+    })
+  }
 
-    context.messages.push({
+  endRender(context: Context, carousel: CarouselContent) {
+    context.channel.messages.push({
       attachment: {
         type: 'template',
         payload: {
           template_type: 'generic',
-          elements: cards
+          elements: context.cards
         }
       }
     })
