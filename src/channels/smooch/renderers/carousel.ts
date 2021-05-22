@@ -1,69 +1,67 @@
-import { ActionOpenURL, ActionPostback, ButtonAction, CarouselContent } from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
-import { Card, SmoochContext } from '../context'
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../../content/types'
+import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
+import { SmoochCard, SmoochAction, SmoochContext } from '../context'
 
-export class SmoochCarouselRenderer implements ChannelRenderer<SmoochContext> {
-  get priority(): number {
-    return 0
+type Context = CarouselContext<SmoochContext> & {
+  items: SmoochCard[]
+  actions: SmoochAction[]
+}
+
+export class SmoochCarouselRenderer extends CarouselRenderer {
+  startRender(context: Context, carousel: CarouselContent) {
+    context.items = []
   }
 
-  handles(context: SmoochContext): boolean {
-    return !!context.payload.items?.length
+  startRenderCard(context: Context, card: CardContent) {
+    context.actions = []
   }
 
-  async render(context: SmoochContext) {
-    const payload = context.payload as CarouselContent
+  renderButtonUrl(context: Context, button: ActionOpenURL) {
+    context.actions.push({
+      text: button.title,
+      type: 'link',
+      uri: button.url
+    })
+  }
 
-    const cards = []
-    for (const bpCard of payload.items) {
-      const card: Card = {
-        title: bpCard.title as string,
-        description: bpCard.subtitle as string,
-        actions: []
-      }
+  renderButtonPostback(context: Context, button: ActionPostback) {
+    context.actions.push({
+      text: button.title,
+      type: 'postback',
+      payload: button.payload
+    })
+  }
 
-      // Smooch crashes if mediaUrl is defined but has no value
-      if (bpCard.image) {
-        card.mediaUrl = formatUrl(context.botUrl, bpCard.image)
-      }
+  renderButtonSay(context: Context, button: ActionSaySomething) {
+    // TODO: not supported?
+  }
 
-      for (const button of bpCard.actions || []) {
-        if (button.action === ButtonAction.OpenUrl) {
-          card.actions.push({
-            text: button.title,
-            type: 'link',
-            uri: (button as ActionOpenURL).url.replace('BOT_URL', context.botUrl)
-          })
-        } else if (button.action === ButtonAction.Postback) {
-          // This works but postback doesn't do anything
-          card.actions.push({
-            text: button.title,
-            type: 'postback',
-            payload: (button as ActionPostback).payload
-          })
-        } /* else if (bpAction.type === 'say_something') {
-          card.actions.push({
-            text: bpAction.title,
-            type: 'reply',
-            payload: bpAction.text
-          })
-        }*/
-      }
-
-      if (card.actions.length === 0) {
-        // Smooch crashes if this list is empty or undefined. However putting this dummy
-        // card in seems to produce the expected result (that is seeing 0 actions)
-        card.actions.push({
-          text: '',
-          type: 'postback',
-          payload: ''
-        })
-      }
-
-      cards.push(card)
+  endRenderCard(context: Context, card: CardContent) {
+    const scard: SmoochCard = {
+      title: card.title,
+      description: card.subtitle!,
+      actions: context.actions
     }
 
-    context.messages.push({ type: 'carousel', items: cards })
+    // Smooch crashes if mediaUrl is defined but has no value
+    if (card.image) {
+      scard.mediaUrl = card.image
+    }
+
+    if (scard.actions.length === 0) {
+      // Smooch crashes if this list is empty or undefined. However putting this dummy
+      // card in seems to produce the expected result (that is seeing 0 actions)
+      scard.actions.push({
+        text: '',
+        type: 'postback',
+        payload: ''
+      })
+    }
+
+    context.items.push(scard)
+  }
+
+  endRender(context: Context, carousel: CarouselContent) {
+    context.channel.messages.push({ type: 'carousel', items: context.items })
   }
 }

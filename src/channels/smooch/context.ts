@@ -4,7 +4,7 @@ export type SmoochContext = ChannelContext<any> & {
   messages: any[]
 }
 
-export interface Webhook {
+export interface SmoochWebhook {
   _id: string
   /** Include client in payload */
   includeClient: boolean
@@ -19,16 +19,16 @@ export interface Webhook {
   version: '1.1'
 }
 
-export interface MessagePayload {
+export interface SmoochPayload {
   trigger: 'message:appUser' | 'message:appMaker'
   app: { _id: string }
   version: '1.1'
-  messages: Message[]
-  appUser: AppUser
+  messages: SmoochMessage[]
+  appUser: SmoochAppUser
   conversation: { _id: string }
 }
 
-export interface AppUser {
+export interface SmoochAppUser {
   _id: string
   conversationStarted: boolean
   signedUpAt: Date
@@ -38,7 +38,7 @@ export interface AppUser {
   email?: string
 }
 
-export interface Message {
+export interface SmoochMessage {
   _id: string
   type: 'text' | 'image' | 'file' | 'carousel' | 'location' | 'list' | 'form' | 'formResponse'
   text: string
@@ -53,14 +53,16 @@ export interface Message {
   }
 }
 
-export interface Card {
+export interface SmoochCard {
   title: string
   description: string
-  actions: {
-    text: string
-    type: string
-    uri?: string
-    payload?: string
-  }[]
+  actions: SmoochAction[]
   mediaUrl?: string
+}
+
+export interface SmoochAction {
+  text: string
+  type: string
+  uri?: string
+  payload?: string
 }

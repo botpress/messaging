@@ -1,24 +1,10 @@
 import { ImageContent } from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
+import { ImageRenderer } from '../../base/renderers/image'
 import { formatUrl } from '../../url'
 import { SmoochContext } from '../context'
 
-export class SmoochImageRenderer implements ChannelRenderer<SmoochContext> {
-  get priority(): number {
-    return 0
-  }
-
-  get id(): string {
-    return SmoochImageRenderer.name
-  }
-
-  handles(context: SmoochContext): boolean {
-    return !!context.payload.image
-  }
-
-  async render(context: SmoochContext) {
-    const payload = context.payload as ImageContent
-
+export class SmoochImageRenderer extends ImageRenderer {
+  renderImage(context: SmoochContext, payload: ImageContent): void {
     context.messages.push({ type: 'image', mediaUrl: formatUrl(context.botUrl, payload.image) })
   }
 }

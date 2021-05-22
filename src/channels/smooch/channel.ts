@@ -3,7 +3,7 @@ import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SmoochConfig } from './config'
-import { Message, MessagePayload, SmoochContext, Webhook } from './context'
+import { SmoochMessage, SmoochPayload, SmoochContext, SmoochWebhook } from './context'
 import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
 
@@ -28,7 +28,7 @@ export class ChannelSmooch extends Channel<SmoochConfig, SmoochContext> {
 
     this.router.post('/', async (req, res) => {
       if (req.headers['x-api-key'] === this.secret) {
-        const body = req.body as MessagePayload
+        const body = req.body as SmoochPayload
         for (const message of body.messages) {
           await this.receive({ context: body, message })
         }
@@ -38,7 +38,7 @@ export class ChannelSmooch extends Channel<SmoochConfig, SmoochContext> {
       }
     })
 
-    const { webhook }: { webhook: Webhook } = await this.smooch.webhooks.create({
+    const { webhook }: { webhook: SmoochWebhook } = await this.smooch.webhooks.create({
       target: this.config.externalUrl + this.route(),
       triggers: ['message:appUser']
     })
@@ -55,7 +55,7 @@ export class ChannelSmooch extends Channel<SmoochConfig, SmoochContext> {
     return SmoochSenders
   }
 
-  protected async map(payload: { context: MessagePayload; message: Message }): Promise<EndpointContent> {
+  protected async map(payload: { context: SmoochPayload; message: SmoochMessage }): Promise<EndpointContent> {
     return {
       content: { type: 'text', text: payload.message.text },
       foreignConversationId: payload.context.conversation._id,

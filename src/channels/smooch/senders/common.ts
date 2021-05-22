@@ -1,15 +1,7 @@
-import { ChannelSender } from '../../base/sender'
+import { CommonSender } from '../../base/senders/common'
 import { SmoochContext } from '../context'
 
-export class SmoochCommonSender implements ChannelSender<SmoochContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: SmoochContext): boolean {
-    return context.handlers > 0
-  }
-
+export class SmoochCommonSender extends CommonSender {
   async send(context: SmoochContext) {
     for (const message of context.messages) {
       await context.client.appUsers.sendMessage({
