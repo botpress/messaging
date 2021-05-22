@@ -24,7 +24,8 @@ export class Launcher {
     this.printChannels()
     await this.app.channels.setup()
 
-    this.logger.info(`Server is exposed on port ${this.port}`)
+    this.logger.info(`Server is listening at: http://localhost:${this.port}`)
+    this.logger.info(`Server is exposed at: ${this.app.config.current.externalUrl}`)
   }
 
   private printLogo() {
