@@ -46,6 +46,6 @@ export class App {
     await this.conversations.setup()
     await this.messages.setup()
     await this.mapping.setup()
-    await this.channels.setup()
+    // await this.channels.setup()
   }
 }

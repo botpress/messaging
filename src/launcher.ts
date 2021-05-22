@@ -18,11 +18,13 @@ export class Launcher {
     await this.app.setup()
     await this.api.setup()
 
-    this.printChannels()
-
     this.express.listen(this.port, () => {
       this.logger.info(`Server is listening on ${this.port}`)
     })
+
+    // TODO: should channels be in api instead?
+    await this.app.channels.setup()
+    this.printChannels()
   }
 
   private printLogo() {

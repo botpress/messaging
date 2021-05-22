@@ -105,8 +105,8 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]
-  protected abstract context(base: ChannelContext<any>): Promise<TContext>
   protected abstract map(payload: any): Promise<EndpointContent>
+  protected abstract context(base: ChannelContext<any>): Promise<TContext>
 }
 
 export type EndpointContent = {
