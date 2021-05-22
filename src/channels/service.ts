@@ -8,6 +8,7 @@ import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { Channel } from './base/channel'
 import { ChannelConfig } from './base/config'
+import { MessengerChannel } from './messenger/channel'
 import { SlackChannel } from './slack/channel'
 import { ChannelSmooch as SmoochChannel } from './smooch/channel'
 import { TeamsChannel } from './teams/channel'
@@ -28,7 +29,7 @@ export class ChannelService extends Service {
   ) {
     super()
 
-    const types = [TwilioChannel, TelegramChannel, SlackChannel, TeamsChannel, SmoochChannel]
+    const types = [MessengerChannel, TwilioChannel, TelegramChannel, SlackChannel, TeamsChannel, SmoochChannel]
 
     this.channels = types.map(
       (Channel) => new Channel(kvsService, conversationService, messagesService, mappingService, loggerService, router)
