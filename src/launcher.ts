@@ -18,13 +18,13 @@ export class Launcher {
     await this.app.setup()
     await this.api.setup()
 
-    this.express.listen(this.port, () => {
-      this.logger.info(`Server is listening on ${this.port}`)
-    })
+    this.express.listen(this.port)
 
     // TODO: should channels be in api instead?
-    await this.app.channels.setup()
     this.printChannels()
+    await this.app.channels.setup()
+
+    this.logger.info(`Server is exposed on port ${this.port}`)
   }
 
   private printLogo() {
@@ -50,7 +50,8 @@ export class Launcher {
     let disabledText = ''
     let enabled = 0
     for (const channel of this.app.channels.list()) {
-      if (channel.config?.enabled) {
+      // if (channel.config?.enabled) {
+      if (this.app.config.current.channels[channel.id].enabled) {
         enabled++
         enabledText += `\n${padding}${clc.green('⦿')} ${channel.id}`
       } else {

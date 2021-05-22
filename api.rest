@@ -1,5 +1,5 @@
 
-@baseUrl = http://localhost:3200
+@baseUrl = http://localhost:3100
 @channel= YOUR_CHANNEL
 @convoId = YOUR_CONVO_ID
 

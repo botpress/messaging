@@ -33,7 +33,7 @@ export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
       })
     })
 
-    console.log(`Teams webhook listening at ${this.config.externalUrl + this.route()}`)
+    this.printWebhook()
   }
 
   protected setupRenderers() {

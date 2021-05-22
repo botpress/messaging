@@ -1,3 +1,4 @@
+import clc from 'cli-color'
 import express, { Router } from 'express'
 import _ from 'lodash'
 import { ConversationService } from '../../conversations/service'
@@ -107,6 +108,14 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   protected abstract setupSenders(): ChannelSender<TContext>[]
   protected abstract map(payload: any): Promise<EndpointContent>
   protected abstract context(base: ChannelContext<any>): Promise<TContext>
+
+  protected printWebhook(route?: string) {
+    this.logger.info(
+      `${clc.bold(this.id.charAt(0).toUpperCase() + this.id.slice(1))}` +
+        `${route ? ' ' + route : ''}` +
+        ` webhook ${clc.blackBright(this.route(route))}`
+    )
+  }
 }
 
 export type EndpointContent = {

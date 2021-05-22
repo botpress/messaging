@@ -45,7 +45,7 @@ export class ChannelSmooch extends Channel<SmoochConfig, SmoochContext> {
     })
     this.secret = webhook.secret
 
-    console.log(`Smooch webhook listening at ${this.config.externalUrl + this.route()}`)
+    this.printWebhook()
   }
 
   protected setupRenderers() {

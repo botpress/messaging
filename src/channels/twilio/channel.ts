@@ -39,7 +39,7 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
       }
     })
 
-    console.log(`Twilio webhook listening at ${this.webhookUrl}`)
+    this.printWebhook()
   }
 
   protected setupRenderers() {

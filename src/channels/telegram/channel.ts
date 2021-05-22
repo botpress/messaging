@@ -26,7 +26,7 @@ export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
     this.router.use('/', this.telegraf.webhookCallback('/'))
     await this.telegraf.telegram.setWebhook(this.config.externalUrl + this.route())
 
-    console.log(`Telegram webhook listening at ${this.config.externalUrl + this.route()}`)
+    this.printWebhook()
   }
 
   protected setupRenderers() {

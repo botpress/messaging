@@ -86,13 +86,13 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
     })
 
     this.router.use('/interactive', this.interactive.requestListener())
-    console.log(`Slack interactive webhook listening at ${this.config.externalUrl + this.route('interactive')}`)
+    this.printWebhook('interactive')
   }
 
   private async setupRealtime() {
     this.listenMessages(this.events)
     this.router.post('/events', this.events.requestListener())
-    console.log(`Slack events webhook listening at ${this.config.externalUrl + this.route('events')}`)
+    this.printWebhook('events')
   }
 
   private listenMessages(com: SlackEventAdapter) {
