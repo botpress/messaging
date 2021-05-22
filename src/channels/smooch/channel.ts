@@ -1,3 +1,4 @@
+// @ts-ignore
 import Smooch from 'smooch-core'
 import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
