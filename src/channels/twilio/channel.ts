@@ -3,6 +3,7 @@ import { Twilio, validateRequest } from 'twilio'
 import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { TypingSender } from '../base/senders/typing'
 import { TwilioConfig } from './config'
 import { TwilioContext, TwilioRequestBody } from './context'
 import { TwilioRenderers } from './renderers'
@@ -46,7 +47,7 @@ export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
   }
 
   protected setupSenders() {
-    return TwilioSenders
+    return [new TypingSender(), ...TwilioSenders]
   }
 
   protected async map(payload: TwilioRequestBody): Promise<EndpointContent> {

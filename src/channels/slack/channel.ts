@@ -7,6 +7,7 @@ import _ from 'lodash'
 import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { TypingSender } from '../base/senders/typing'
 import { SlackConfig } from './config'
 import { SlackContext } from './context'
 import { SlackRenderers } from './renderers'
@@ -36,7 +37,7 @@ export class SlackChannel extends Channel<SlackConfig, SlackContext> {
   }
 
   protected setupSenders() {
-    return SlackSenders
+    return [new TypingSender(), ...SlackSenders]
   }
 
   private async setupInteractiveListener() {

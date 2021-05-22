@@ -1,25 +1,8 @@
-import { ChannelSender } from '../../base/sender'
+import { TypingSender } from '../../base/senders/typing'
 import { TelegramContext } from '../context'
 
-export class TelegramTypingSender implements ChannelSender<TelegramContext> {
-  get priority(): number {
-    return -1
-  }
-
-  get id(): string {
-    return TelegramTypingSender.name
-  }
-
-  handles(context: TelegramContext): boolean {
-    const typing = context.payload.typing
-    return context.handlers > 0 && (typing === undefined || typing === true)
-  }
-
-  async send(context: TelegramContext) {
-    const delay = context.payload.delay ?? 1000
+export class TelegramTypingSender extends TypingSender {
+  async sendIndicator(context: TelegramContext) {
     await context.client.telegram.sendChatAction(context.foreignConversationId!, 'typing')
-
-    // TODO: doesn't work??
-    // await Promise.delay(delay)
   }
 }
