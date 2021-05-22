@@ -5,6 +5,12 @@
     "connection": "postgres://user:password@localhost:5432/dbname"
   },
   "channels": {
+    "messenger": {
+      "enabled": false,
+      "appSecret": "",
+      "verifyToken": "",
+      "accessToken": ""
+    },
     "twilio": {
       "enabled": false,
       "accountSID": "",
@@ -24,6 +30,11 @@
       "enabled": false,
       "appId": "",
       "appPassword": "."
+    },
+    "smooch": {
+      "enabled": true,
+      "keyId": "",
+      "secret": ""
     }
   }
 }
