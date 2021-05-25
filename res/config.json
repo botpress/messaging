@@ -31,12 +31,12 @@
       "appPassword": "."
     },
     "smooch": {
-      "enabled": true,
+      "enabled": false,
       "keyId": "",
       "secret": ""
     },
     "vonage": {
-      "enabled": true,
+      "enabled": false,
       "apiKey": "",
       "apiSecret": "",
       "signatureSecret": "",
