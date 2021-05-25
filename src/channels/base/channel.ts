@@ -79,6 +79,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
       payload: _.cloneDeep(payload),
       // TODO: bot url
       botUrl: 'https://duckduckgo.com/',
+      logger: this.logger,
       ...mapping
     })
 
