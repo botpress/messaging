@@ -59,7 +59,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
     let mapping = await this.mapping.conversation(this.id, endpoint)
 
     if (!mapping) {
-      const conversation = await this.conversations.forBot(this.botId).create(endpoint.foreignConversationId!)
+      const conversation = await this.conversations.forBot(this.botId).create(endpoint.foreignUserId!)
       mapping = await this.mapping.create(this.id, conversation.id, endpoint)
     }
 
