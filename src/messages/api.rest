@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:3100
+
+@convoId = YOUR_CONVO_ID
+@messageId = YOUR_MESSAGE_ID
+@userId = YOUR_USER_ID
+
+### Create message
+POST {{baseUrl}}/api/messages
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "authorId": "{{userId}}",
+  "payload": {
+    "type": "text",
+    "text": "hello"
+  }
+}
+
+### Delete message
+DELETE {{baseUrl}}/api/messages?id={{messageId}}
+
+### Get message
+GET {{baseUrl}}/api/messages/{{messageId}}
+
+### List messages
+GET {{baseUrl}}/api/messages?conversationId={{convoId}}&limit=100

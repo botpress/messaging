@@ -40,12 +40,14 @@ export class DatabaseService extends Service {
     }
   }
 
-  getJson(string: string) {
-    return JSON.parse(string)
+  getJson(val: any): any {
+    // TODO: does this work with sqlite as well?
+    return val // JSON.parse(string)
   }
 
-  setJson(object: any) {
-    return JSON.stringify(object)
+  setJson(object: any): any {
+    // TODO: does this work with sqlite as well?
+    return object // JSON.stringify(object)
   }
 
   getDate(string: string) {
