@@ -1,19 +1,9 @@
 import { TextContent } from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
+import { TextRenderer } from '../../base/renderers/text'
 import { VonageContext } from '../context'
 
-export class VonageTextRenderer implements ChannelRenderer<VonageContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: VonageContext): boolean {
-    return !!context.payload.text
-  }
-
-  async render(context: VonageContext) {
-    const payload = context.payload as TextContent
-
+export class VonageTextRenderer extends TextRenderer {
+  renderText(context: VonageContext, payload: TextContent): void {
     context.messages.push({ content: { type: 'text', text: payload.text as string } })
   }
 }

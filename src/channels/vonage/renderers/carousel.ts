@@ -1,81 +1,57 @@
-import {
-  ActionOpenURL,
-  ActionPostback,
-  ActionSaySomething,
-  ButtonAction,
-  CarouselContent,
-  ChoiceOption
-} from '../../../content/types'
-import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, ChoiceOption } from '../../../content/types'
+import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { VonageContext } from '../context'
 
-export class VonageCarouselRenderer implements ChannelRenderer<VonageContext> {
-  get priority(): number {
-    return 0
+type Context = CarouselContext<VonageContext> & {
+  options: ChoiceOption[]
+}
+
+export class VonageCarouselRenderer extends CarouselRenderer {
+  startRenderCard(context: Context, card: CardContent) {
+    context.options = []
   }
 
-  handles(context: VonageContext): boolean {
-    return !!context.payload.items?.length
+  renderButtonUrl(context: Context, button: ActionOpenURL) {
+    context.options.push({
+      title: `${button.title} : ${button.url}`,
+      value: undefined!
+    })
   }
 
-  render(context: VonageContext) {
-    const payload = context.payload as CarouselContent
-    let lastOptions: ChoiceOption[]
+  renderButtonPostback(context: Context, button: ActionPostback) {
+    context.options.push({ title: button.title, value: button.payload })
+  }
 
-    // We down render carousel to text so it works with whatsapp
-    for (const { subtitle, title, image, actions } of payload.items) {
-      let body = `${title}\n\n${subtitle || ''}`
-      const options: ChoiceOption[] = []
+  renderButtonSay(context: Context, button: ActionSaySomething) {
+    context.options.push({
+      title: button.title,
+      value: button.text
+    })
+  }
 
-      for (const button of actions || []) {
-        const title = button.title as string
+  endRenderCard(context: Context, card: CardContent) {
+    const body = `${card.title}\n\n${card.subtitle}\n\n${context.options
+      .map(({ title }, idx) => `*(${idx + 1})* ${title}`)
+      .join('\n')}`
 
-        if (button.action === ButtonAction.OpenUrl) {
-          options.push({
-            title: `${title} : ${(button as ActionOpenURL).url.replace('BOT_URL', context.botUrl)}`,
-            value: undefined!
-          })
-        } else if (button.action === ButtonAction.Postback) {
-          options.push({ title, value: (button as ActionPostback).payload })
-        } else if (button.action === ButtonAction.SaySomething) {
-          options.push({
-            title,
-            value: (button as ActionSaySomething).text as string
-          })
+    if (card.image) {
+      context.channel.messages.push({
+        content: {
+          type: 'image',
+          text: undefined!,
+          image: {
+            url: card.image,
+            caption: body
+          }
         }
-      }
-
-      body = `${body}\n\n${options.map(({ title }, idx) => `*(${idx + 1})* ${title}`).join('\n')}`
-
-      if (image) {
-        context.messages.push({
-          content: {
-            type: 'image',
-            text: undefined!,
-            image: {
-              url: formatUrl(context.botUrl, image)!,
-              caption: body
-            }
-          }
-        })
-      } else {
-        context.messages.push({
-          content: {
-            type: 'text',
-            text: body
-          }
-        })
-      }
-
-      lastOptions = options
+      })
+    } else {
+      context.channel.messages.push({
+        content: {
+          type: 'text',
+          text: body
+        }
+      })
     }
-
-    // TODO: reimpl
-    /*
-    if (lastOptions) {
-      context.prepareIndexResponse(context.event, lastOptions)
-    }
-    */
   }
 }

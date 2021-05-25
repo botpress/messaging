@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { TypingSender } from '../base/senders/typing'
 import { VonageConfig } from './config'
 import { VonageContext } from './context'
 import { VonageRenderers } from './renderers'
@@ -54,7 +55,7 @@ export class VonageChannel extends Channel<VonageConfig, VonageContext> {
   }
 
   protected setupSenders() {
-    return VonageSenders
+    return [new TypingSender(), ...VonageSenders]
   }
 
   protected async map(payload: any): Promise<EndpointContent> {

@@ -1,19 +1,9 @@
-import { ChannelSender } from '../../base/sender'
+import { CommonSender } from '../../base/senders/common'
 import { VonageContext } from '../context'
 
-export class VonageCommonSender implements ChannelSender<VonageContext> {
-  get priority(): number {
-    return 0
-  }
-
-  handles(context: VonageContext): boolean {
-    return context.handlers > 0
-  }
-
+export class VonageCommonSender extends CommonSender {
   async send(context: VonageContext) {
     for (const message of context.messages) {
-      // context.debug('Sending message', JSON.stringify(message, null, 2))
-
       await new Promise((resolve) => {
         context.client.channel.send(
           { type: 'whatsapp', number: context.foreignUserId! },
@@ -24,8 +14,6 @@ export class VonageCommonSender implements ChannelSender<VonageContext> {
           message,
           (err, data) => {
             if (err) {
-              // fixes typings
-
               const errBody = (err as any).body
               let reasons: string = ''
               if (errBody) {
@@ -50,8 +38,7 @@ export class VonageCommonSender implements ChannelSender<VonageContext> {
 
       if (context.isSandbox) {
         // sandbox is limited to 1 msg / sec
-        // TODO: reimpl
-        // await Promise.delay(1000)
+        await new Promise((resolve) => setTimeout(resolve, 1000))
       }
     }
   }
