@@ -14,8 +14,7 @@
     "twilio": {
       "enabled": false,
       "accountSID": "",
-      "authToken": "",
-      "botPhoneNumber": ""
+      "authToken": ""
     },
     "telegram": {
       "enabled": false,
