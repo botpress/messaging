@@ -14,6 +14,7 @@ import { ChannelSmooch as SmoochChannel } from './smooch/channel'
 import { TeamsChannel } from './teams/channel'
 import { TelegramChannel } from './telegram/channel'
 import { TwilioChannel } from './twilio/channel'
+import { VonageChannel } from './vonage/channel'
 
 export class ChannelService extends Service {
   private channels: Channel<any, any>[]
@@ -29,7 +30,15 @@ export class ChannelService extends Service {
   ) {
     super()
 
-    const types = [MessengerChannel, TwilioChannel, TelegramChannel, SlackChannel, TeamsChannel, SmoochChannel]
+    const types = [
+      MessengerChannel,
+      TwilioChannel,
+      TelegramChannel,
+      SlackChannel,
+      TeamsChannel,
+      SmoochChannel,
+      VonageChannel
+    ]
 
     this.channels = types.map(
       (Channel) => new Channel(kvsService, conversationService, messagesService, mappingService, loggerService, router)
