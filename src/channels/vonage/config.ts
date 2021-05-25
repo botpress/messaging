@@ -7,5 +7,4 @@ export class VonageConfig extends ChannelConfig {
   signatureSecret?: string
   applicationId?: string
   privateKey?: string
-  botPhoneNumber?: string
 }
