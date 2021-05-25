@@ -1,4 +1,4 @@
-import Vonage, { ChannelType } from '@vonage/server-sdk'
+import Vonage from '@vonage/server-sdk'
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import { Channel, EndpointContent } from '../base/channel'
@@ -8,13 +8,6 @@ import { VonageConfig } from './config'
 import { VonageContext } from './context'
 import { VonageRenderers } from './renderers'
 import { VonageSenders } from './senders'
-
-enum ApiBaseUrl {
-  TEST = 'https://messages-sandbox.nexmo.com',
-  PROD = 'https://api.nexmo.com'
-}
-const SUPPORTED_CHANNEL_TYPE: ChannelType = 'whatsapp'
-const sha256 = (str: string) => crypto.createHash('sha256').update(str).digest('hex')
 
 export class VonageChannel extends Channel<VonageConfig, VonageContext> {
   get id() {
@@ -37,7 +30,7 @@ export class VonageChannel extends Channel<VonageConfig, VonageContext> {
         signatureSecret: this.config.signatureSecret
       },
       {
-        apiHost: this.config.useTestingApi ? ApiBaseUrl.TEST : ApiBaseUrl.PROD
+        apiHost: this.config.useTestingApi ? 'https://messages-sandbox.nexmo.com' : 'https://api.nexmo.com'
       }
     )
 
@@ -85,19 +78,17 @@ export class VonageChannel extends Channel<VonageConfig, VonageContext> {
     const body = <any>req.body
     const [scheme, token] = (<any>req.headers).authorization.split(' ')
 
-    if (
-      body.from.type !== SUPPORTED_CHANNEL_TYPE ||
-      body.to.type !== SUPPORTED_CHANNEL_TYPE ||
-      scheme.toLowerCase() !== 'bearer' ||
-      !token
-    ) {
+    if (body.from.type !== 'whatsapp' || body.to.type !== 'whatsapp' || scheme.toLowerCase() !== 'bearer' || !token) {
       return false
     }
 
     try {
       const decoded = <any>jwt.verify(token, this.config.signatureSecret!, { algorithms: ['HS256'] })
 
-      return decoded.api_key === this.config.apiKey && sha256(JSON.stringify(body)) === decoded.payload_hash
+      return (
+        decoded.api_key === this.config.apiKey &&
+        crypto.createHash('sha256').update(JSON.stringify(body)).digest('hex') === decoded.payload_hash
+      )
     } catch (err) {
       return false
     }
