@@ -35,6 +35,15 @@
       "enabled": true,
       "keyId": "",
       "secret": ""
+    },
+    "vonage": {
+      "enabled": true,
+      "apiKey": "",
+      "apiSecret": "",
+      "signatureSecret": "",
+      "applicationId": "",
+      "privateKey": "",
+      "useTestingApi": true
     }
   }
 }
