@@ -4,8 +4,8 @@ import { createMessageAdapter, SlackMessageAdapter } from '@slack/interactive-me
 import { WebClient } from '@slack/web-api'
 import axios from 'axios'
 import _ from 'lodash'
-import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
+import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TypingSender } from '../base/senders/typing'
 import { SlackConfig } from './config'
@@ -13,7 +13,7 @@ import { SlackContext } from './context'
 import { SlackRenderers } from './renderers'
 import { SlackSenders } from './senders'
 
-export class SlackChannel extends Channel<SlackConfig, SlackContext> {
+export class SlackInstance extends Instance<SlackConfig, SlackContext> {
   get id(): string {
     return 'slack'
   }

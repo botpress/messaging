@@ -7,17 +7,17 @@ import { LoggerService } from '../logger/service'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
-import { Channel } from './base/channel'
-import { MessengerChannel } from './messenger/channel'
-import { SlackChannel } from './slack/channel'
-import { ChannelSmooch as SmoochChannel } from './smooch/channel'
-import { TeamsChannel } from './teams/channel'
-import { TelegramChannel } from './telegram/channel'
-import { TwilioChannel } from './twilio/channel'
-import { VonageChannel } from './vonage/channel'
+import { Instance } from './base/instance'
+import { MessengerInstance } from './messenger/instance'
+import { SlackInstance } from './slack/instance'
+import { SmoochInstance } from './smooch/instance'
+import { TeamsInstance } from './teams/instance'
+import { TelegramInstance } from './telegram/instance'
+import { TwilioInstance } from './twilio/instance'
+import { VonageInstance } from './vonage/instance'
 
 export class ChannelService extends Service {
-  private channels: { [providerId: string]: Channel<any, any>[] } = {}
+  private channels: { [providerId: string]: Instance<any, any>[] } = {}
 
   constructor(
     private configService: ConfigService,
@@ -34,20 +34,20 @@ export class ChannelService extends Service {
 
   async setup() {
     const types = [
-      MessengerChannel,
-      TwilioChannel,
-      TelegramChannel,
-      SlackChannel,
-      TeamsChannel,
-      SmoochChannel,
-      VonageChannel
+      MessengerInstance,
+      TwilioInstance,
+      TelegramInstance,
+      SlackInstance,
+      TeamsInstance,
+      SmoochInstance,
+      VonageInstance
     ]
 
     for (const provider of this.providerService.list()) {
       this.channels[provider.name] = []
 
-      for (const ChannelType of types) {
-        const channel = new ChannelType(
+      for (const ChannelInstanceType of types) {
+        const channel = new ChannelInstanceType(
           provider.name,
           provider.client?.id,
           this.kvsService,

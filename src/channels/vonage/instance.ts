@@ -1,8 +1,8 @@
 import Vonage from '@vonage/server-sdk'
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
-import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
+import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TypingSender } from '../base/senders/typing'
 import { VonageConfig } from './config'
@@ -10,7 +10,7 @@ import { VonageContext } from './context'
 import { VonageRenderers } from './renderers'
 import { VonageSenders } from './senders'
 
-export class VonageChannel extends Channel<VonageConfig, VonageContext> {
+export class VonageInstance extends Instance<VonageConfig, VonageContext> {
   get id() {
     return 'vonage'
   }

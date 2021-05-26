@@ -1,14 +1,14 @@
 // @ts-ignore
 import Smooch from 'smooch-core'
-import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
+import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SmoochConfig } from './config'
 import { SmoochMessage, SmoochPayload, SmoochContext, SmoochWebhook } from './context'
 import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
 
-export class ChannelSmooch extends Channel<SmoochConfig, SmoochContext> {
+export class SmoochInstance extends Instance<SmoochConfig, SmoochContext> {
   get id() {
     return 'smooch'
   }

@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import express from 'express'
-import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
+import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { MessengerClient } from './client'
 import { MessengerConfig } from './config'
@@ -9,7 +9,7 @@ import { MessengerContext } from './context'
 import { MessengerRenderers } from './renderers'
 import { MessengerSenders } from './senders'
 
-export class MessengerChannel extends Channel<MessengerConfig, MessengerContext> {
+export class MessengerInstance extends Instance<MessengerConfig, MessengerContext> {
   get id(): string {
     return 'messenger'
   }

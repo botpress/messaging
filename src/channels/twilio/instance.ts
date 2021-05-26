@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Twilio, validateRequest } from 'twilio'
-import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
+import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TypingSender } from '../base/senders/typing'
 import { TwilioConfig } from './config'
@@ -9,7 +9,7 @@ import { TwilioContext, TwilioRequestBody } from './context'
 import { TwilioRenderers } from './renderers'
 import { TwilioSenders } from './senders'
 
-export class TwilioChannel extends Channel<TwilioConfig, TwilioContext> {
+export class TwilioInstance extends Instance<TwilioConfig, TwilioContext> {
   get id() {
     return 'twilio'
   }

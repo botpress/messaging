@@ -2,15 +2,15 @@ import { BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuil
 import _ from 'lodash'
 import LRU from 'lru-cache'
 import ms from 'ms'
-import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
+import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TeamsConfig } from './config'
 import { TeamsContext } from './context'
 import { TeamsRenderers } from './renderers'
 import { TeamsSenders } from './senders'
 
-export class TeamsChannel extends Channel<TeamsConfig, TeamsContext> {
+export class TeamsInstance extends Instance<TeamsConfig, TeamsContext> {
   get id(): string {
     return 'teams'
   }

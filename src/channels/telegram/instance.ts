@@ -1,15 +1,15 @@
 import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
-import { Channel, EndpointContent } from '../base/channel'
 import { ChannelContext } from '../base/context'
+import { EndpointContent, Instance } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TelegramConfig } from './config'
 import { TelegramContext } from './context'
 import { TelegramRenderers } from './renderers'
 import { TelegramSenders } from './senders'
 
-export class TelegramChannel extends Channel<TelegramConfig, TelegramContext> {
+export class TelegramInstance extends Instance<TelegramConfig, TelegramContext> {
   get id() {
     return 'telegram'
   }
