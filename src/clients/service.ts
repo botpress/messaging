@@ -12,8 +12,9 @@ export class ClientService extends Service {
 
   async setup() {
     await this.db.table('clients', (table) => {
-      table.string('providerId')
       table.uuid('id').primary()
+      // TODO: provider table?
+      table.string('providerId')
       table.string('token').unique()
     })
   }
