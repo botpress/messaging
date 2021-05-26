@@ -21,7 +21,7 @@ export class Launcher {
     this.express.listen(this.port)
 
     // TODO: should channels be in api instead?
-    this.printChannels()
+    // this.printChannels()
     await this.app.channels.setup()
 
     this.logger.info(`Server is listening at: http://localhost:${this.port}`)
@@ -45,6 +45,8 @@ export class Launcher {
   }
 
   private printChannels() {
+    // TODO: reimplement this
+    /*
     const padding = _.repeat(' ', 24)
 
     let enabledText = ''
@@ -61,5 +63,6 @@ export class Launcher {
     }
 
     this.logger.info(`Using ${clc.bold(enabled)} channels` + enabledText + disabledText)
+    */
   }
 }

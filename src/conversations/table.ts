@@ -8,9 +8,9 @@ export class ConversationTable extends Table {
 
   create(table: Knex.CreateTableBuilder): void {
     table.uuid('id').primary()
+    table.uuid('clientId').references('id').inTable('clients')
     table.string('userId')
-    table.string('botId')
     table.timestamp('createdOn')
-    table.index(['userId', 'botId'], 'cub_idx')
+    table.index(['userId', 'clientId'], 'cub_idx')
   }
 }

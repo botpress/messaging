@@ -21,8 +21,8 @@ export class ConversationService extends ScopeableService<ScopedConversationServ
     await this.db.table(this.table.id, this.table.create)
   }
 
-  protected createScope(botId: string) {
-    return new ScopedConversationService(botId, this.repo, <any>undefined)
+  protected createScope(clientId: string) {
+    return new ScopedConversationService(clientId, this.repo, <any>undefined)
   }
 }
 
@@ -30,7 +30,7 @@ export class ScopedConversationService {
   private mostRecentCache: LRU<string, Conversation>
 
   constructor(
-    private botId: string,
+    private clientId: string,
     private repo: ConversationRepo,
     public invalidateMostRecent: (userId: string, mostRecentConvoId?: uuid) => void
   ) {
@@ -41,7 +41,7 @@ export class ScopedConversationService {
   }
 
   public async list(filters: ConversationListFilters): Promise<RecentConversation[]> {
-    return this.repo.list(this.botId, filters)
+    return this.repo.list(this.clientId, filters)
   }
 
   public async delete(filters: ConversationDeleteFilters): Promise<number> {
@@ -53,12 +53,12 @@ export class ScopedConversationService {
     } else {
       this.invalidateMostRecent(filters.userId!)
 
-      return this.repo.deleteAll(this.botId, filters.userId!)
+      return this.repo.deleteAll(this.clientId, filters.userId!)
     }
   }
 
   public async create(userId: uuid): Promise<Conversation> {
-    return this.repo.create(this.botId, userId)
+    return this.repo.create(this.clientId, userId)
   }
 
   public async recent(userId: uuid): Promise<Conversation> {
@@ -67,9 +67,9 @@ export class ScopedConversationService {
       return cached
     }
 
-    let conversation = await this.repo.recent(this.botId, userId)
+    let conversation = await this.repo.recent(this.clientId, userId)
     if (!conversation) {
-      conversation = await this.repo.create(this.botId, userId)
+      conversation = await this.repo.create(this.clientId, userId)
     }
 
     this.mostRecentCache.set(userId, conversation)

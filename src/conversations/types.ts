@@ -1,9 +1,9 @@
 import { uuid } from '../base/types'
 
 export interface Conversation {
+  clientId: uuid
   id: uuid
   userId: string
-  botId: string
   createdOn: Date
 }
 

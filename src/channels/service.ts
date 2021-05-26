@@ -6,8 +6,8 @@ import { KvsService } from '../kvs/service'
 import { LoggerService } from '../logger/service'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
+import { ProviderService } from '../providers/service'
 import { Channel } from './base/channel'
-import { ChannelConfig } from './base/config'
 import { MessengerChannel } from './messenger/channel'
 import { SlackChannel } from './slack/channel'
 import { ChannelSmooch as SmoochChannel } from './smooch/channel'
@@ -17,19 +17,22 @@ import { TwilioChannel } from './twilio/channel'
 import { VonageChannel } from './vonage/channel'
 
 export class ChannelService extends Service {
-  private channels: Channel<any, any>[]
+  private channels: { [providerId: string]: Channel<any, any>[] } = {}
 
   constructor(
     private configService: ConfigService,
-    kvsService: KvsService,
-    conversationService: ConversationService,
-    messagesService: MessageService,
-    mappingService: MappingService,
-    loggerService: LoggerService,
-    router: Router
+    private providerService: ProviderService,
+    private kvsService: KvsService,
+    private conversationService: ConversationService,
+    private messagesService: MessageService,
+    private mappingService: MappingService,
+    private loggerService: LoggerService,
+    private router: Router
   ) {
     super()
+  }
 
+  async setup() {
     const types = [
       MessengerChannel,
       TwilioChannel,
@@ -40,33 +43,40 @@ export class ChannelService extends Service {
       VonageChannel
     ]
 
-    this.channels = types.map(
-      (Channel) => new Channel(kvsService, conversationService, messagesService, mappingService, loggerService, router)
-    )
-  }
+    for (const provider of this.providerService.list()) {
+      this.channels[provider.name] = []
 
-  async setup() {
-    for (const channel of this.channels) {
-      const config = this.getConfig(channel.id)
-      if (config.enabled) {
-        channel.config = config
-        await channel.setup()
+      for (const ChannelType of types) {
+        const channel = new ChannelType(
+          provider.name,
+          provider.client?.id,
+          this.kvsService,
+          this.conversationService,
+          this.messagesService,
+          this.mappingService,
+          this.loggerService,
+          this.router
+        )
+
+        const config = {
+          ...provider.channels[channel.id],
+          externalUrl: this.configService.current.externalUrl
+        }
+
+        if (config.enabled) {
+          await channel.setup(config)
+        }
+
+        this.channels[provider.name].push(channel)
       }
     }
   }
 
+  get(providerId: string, channelId: string) {
+    return this.channels[providerId].find((x) => x.id === channelId)
+  }
+
   list() {
     return this.channels
-  }
-
-  get(channelId: string) {
-    return this.channels.find((x) => x.id === channelId)
-  }
-
-  getConfig(channelId: string): ChannelConfig {
-    return {
-      ...(this.configService.current.channels?.[channelId] || {}),
-      externalUrl: this.configService.current.externalUrl
-    }
   }
 }

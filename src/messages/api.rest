@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3100
-
+@token = YOUR_TOKEN
 @convoId = YOUR_CONVO_ID
 @messageId = YOUR_MESSAGE_ID
 @userId = YOUR_USER_ID
@@ -7,6 +7,7 @@
 ### Create message
 POST {{baseUrl}}/api/messages
 Content-Type: application/json
+token: {{token}}
 
 {
   "conversationId": "{{convoId}}",
@@ -19,9 +20,12 @@ Content-Type: application/json
 
 ### Delete message
 DELETE {{baseUrl}}/api/messages?id={{messageId}}
+token: {{token}}
 
 ### Get message
 GET {{baseUrl}}/api/messages/{{messageId}}
+token: {{token}}
 
 ### List messages
 GET {{baseUrl}}/api/messages?conversationId={{convoId}}&limit=100
+token: {{token}}

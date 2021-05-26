@@ -12,10 +12,10 @@ export class ConversationRepo {
 
   constructor(private db: DatabaseService, private table: ConversationTable) {}
 
-  public async list(botId: string, filters: ConversationListFilters): Promise<RecentConversation[]> {
+  public async list(clientId: string, filters: ConversationListFilters): Promise<RecentConversation[]> {
     const { userId, limit, offset } = filters
 
-    let query = this.queryRecents(botId, userId)
+    let query = this.queryRecents(clientId, userId)
 
     if (limit) {
       query = query.limit(limit)
@@ -36,11 +36,11 @@ export class ConversationRepo {
     })
   }
 
-  public async deleteAll(botId: string, userId: string): Promise<number> {
-    const deletedIds = (await this.query().select('id').where({ botId, userId })).map((x: any) => x.id)
+  public async deleteAll(clientId: string, userId: string): Promise<number> {
+    const deletedIds = (await this.query().select('id').where({ clientId, userId })).map((x: any) => x.id)
 
     if (deletedIds.length) {
-      await this.query().where({ botId, userId }).del()
+      await this.query().where({ clientId, userId }).del()
 
       this.invalidateConvCache(deletedIds)
     }
@@ -48,11 +48,11 @@ export class ConversationRepo {
     return deletedIds.length
   }
 
-  public async create(botId: string, userId: uuid): Promise<Conversation> {
+  public async create(clientId: string, userId: uuid): Promise<Conversation> {
     const conversation = {
       id: uuidv4(),
       userId,
-      botId,
+      clientId,
       createdOn: new Date()
     }
 
@@ -62,8 +62,8 @@ export class ConversationRepo {
     return conversation
   }
 
-  public async recent(botId: string, userId: string): Promise<Conversation | undefined> {
-    let query = this.queryRecents(botId, userId)
+  public async recent(clientId: string, userId: string): Promise<Conversation | undefined> {
+    let query = this.queryRecents(clientId, userId)
     query = query.limit(1)
 
     return this.deserialize((await query)[0])
@@ -97,12 +97,12 @@ export class ConversationRepo {
     return numberOfDeletedRows > 0
   }
 
-  private queryRecents(botId: string, userId: string) {
+  private queryRecents(clientId: string, userId: string) {
     return this.query()
       .select(
         'conversations.id',
         'conversations.userId',
-        'conversations.botId',
+        'conversations.clientId',
         'conversations.createdOn',
         'messages.id as messageId',
         'messages.authorId',
@@ -111,7 +111,7 @@ export class ConversationRepo {
       )
       .leftJoin('messages', 'messages.conversationId', 'conversations.id')
       .where({
-        botId,
+        clientId,
         userId
       })
       .andWhere((builder: any) => {
@@ -133,11 +133,11 @@ export class ConversationRepo {
   }
 
   public serialize(conversation: Partial<Conversation>) {
-    const { id, userId, botId, createdOn } = conversation
+    const { id, userId, clientId, createdOn } = conversation
     return {
       id,
       userId,
-      botId,
+      clientId,
       createdOn: this.db.setDate(createdOn)
     }
   }
@@ -147,11 +147,11 @@ export class ConversationRepo {
       return undefined
     }
 
-    const { id, userId, botId, createdOn } = conversation
+    const { id, userId, clientId, createdOn } = conversation
     return {
       id,
       userId,
-      botId,
+      clientId,
       createdOn: this.db.getDate(createdOn)
     }
   }

@@ -1,35 +1,39 @@
 import { Router } from 'express'
+import { ClientService } from '../clients/service'
 import { MessageService } from './service'
 
 export class MessageApi {
-  // TODO: replace botId by appId
-  private botId: string = 'default'
-
-  constructor(private router: Router, private messages: MessageService) {}
+  constructor(private router: Router, private clients: ClientService, private messages: MessageService) {}
 
   async setup() {
     this.router.post('/messages', async (req, res) => {
+      const { token } = req.headers
       const { conversationId, payload, authorId } = req.body
 
-      const message = await this.messages.forBot(this.botId).create(conversationId, payload, authorId)
+      const client = (await this.clients.get(token as string))!
+      const message = await this.messages.forClient(client.id).create(conversationId, payload, authorId)
 
       res.send(message)
     })
 
     this.router.delete('/messages', async (req, res) => {
+      const { token } = req.headers
       const { id, conversationId } = req.query
 
+      const client = (await this.clients.get(token as string))!
       const deleted = await this.messages
-        .forBot(this.botId)
+        .forClient(client.id)
         .delete({ id: id as string, conversationId: conversationId as string })
 
       res.send({ count: deleted })
     })
 
     this.router.get('/messages/:messageId', async (req, res) => {
+      const { token } = req.headers
       const { messageId } = req.params
 
-      const message = await this.messages.forBot(this.botId).get(messageId)
+      const client = (await this.clients.get(token as string))!
+      const message = await this.messages.forClient(client.id).get(messageId)
 
       if (message) {
         res.send(message)
@@ -39,10 +43,12 @@ export class MessageApi {
     })
 
     this.router.get('/messages/', async (req, res) => {
+      const { token } = req.headers
       const { conversationId, limit } = req.query
 
+      const client = (await this.clients.get(token as string))!
       const conversations = await this.messages
-        .forBot(this.botId)
+        .forClient(client.id)
         .list({ conversationId: conversationId as string, limit: +limit! })
 
       res.send(conversations)

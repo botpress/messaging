@@ -20,14 +20,14 @@ export class MessageService extends ScopeableService<ScopedMessageService> {
     await this.db.table(this.table.id, this.table.create)
   }
 
-  protected createScope(botId: string) {
-    return new ScopedMessageService(botId, this.repo, this.conversationService.forBot(botId))
+  protected createScope(clientId: string) {
+    return new ScopedMessageService(clientId, this.repo, this.conversationService.forClient(clientId))
   }
 }
 
 export class ScopedMessageService {
   constructor(
-    private botId: string,
+    private clientId: string,
     private repo: MessageRepository,
     private conversations: ScopedConversationService
   ) {}

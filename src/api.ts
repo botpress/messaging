@@ -9,7 +9,7 @@ export class Api {
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
-    this.messages = new MessageApi(this.router, app.messages)
+    this.messages = new MessageApi(this.router, app.clients, app.messages)
   }
 
   async setup() {
@@ -18,8 +18,12 @@ export class Api {
     this.root.use('/api', this.router)
 
     this.router.post('/send', async (req, res) => {
+      const { token } = req.headers
       const { channel, conversationId, payload } = req.body
-      await this.app.channels.get(channel)?.send(conversationId, payload)
+
+      const client = (await this.app.clients.get(token as string))!
+      await this.app.channels.get(client.providerId, channel)?.send(conversationId, payload)
+
       res.sendStatus(204)
     })
 

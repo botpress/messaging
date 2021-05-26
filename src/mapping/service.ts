@@ -10,18 +10,21 @@ export class MappingService extends Service {
 
   async setup() {
     await this.db.table('mapping', (table) => {
+      // TODO: reference a channel table
+      table.uuid('clientId').references('id').inTable('clients')
       table.string('channel')
       table.string('foreignAppId').nullable()
       table.string('foreignUserId').nullable()
       table.string('foreignConversationId').nullable()
       table.uuid('conversationId').references('id').inTable('conversations')
-      table.primary(['channel', 'conversationId'])
-      table.index(['channel', 'foreignAppId', 'foreignUserId', 'foreignConversationId'])
+      table.primary(['clientId', 'channel', 'conversationId'])
+      table.index(['clientId', 'channel', 'foreignAppId', 'foreignUserId', 'foreignConversationId'])
     })
   }
 
-  async create(channel: string, conversationId: uuid, endpoint: Endpoint): Promise<Mapping> {
+  async create(clientId: uuid, channel: string, conversationId: uuid, endpoint: Endpoint): Promise<Mapping> {
     const mapping = {
+      clientId,
       channel,
       foreignAppId: endpoint.foreignAppId,
       foreignUserId: endpoint.foreignUserId,
@@ -34,16 +37,17 @@ export class MappingService extends Service {
     return mapping
   }
 
-  async delete(channel: string, conversationId: uuid): Promise<boolean> {
-    const deletedRows = await this.query().where({ channel, conversationId }).del()
+  async delete(clientId: uuid, channel: string, conversationId: uuid): Promise<boolean> {
+    const deletedRows = await this.query().where({ clientId, channel, conversationId }).del()
 
     // this.invalidateCache(local, foreign)
 
     return deletedRows > 0
   }
 
-  async conversation(channel: string, endpoint: Endpoint): Promise<Mapping> {
+  async conversation(clientId: uuid, channel: string, endpoint: Endpoint): Promise<Mapping> {
     const rows = await this.query().where({
+      clientId,
       channel,
       foreignAppId: endpoint.foreignAppId ?? null,
       foreignUserId: endpoint.foreignUserId ?? null,
@@ -53,8 +57,9 @@ export class MappingService extends Service {
     return rows[0]
   }
 
-  async endpoint(channel: string, conversationId: uuid): Promise<Mapping> {
+  async endpoint(clientId: uuid, channel: string, conversationId: uuid): Promise<Mapping> {
     const rows = await this.query().where({
+      clientId,
       channel,
       conversationId
     })
@@ -68,6 +73,7 @@ export class MappingService extends Service {
 }
 
 export type Mapping = {
+  clientId: uuid
   channel: string
   conversationId: string
 } & Endpoint

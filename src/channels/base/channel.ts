@@ -1,6 +1,7 @@
 import clc from 'cli-color'
 import express, { Router } from 'express'
 import _ from 'lodash'
+import { uuid } from '../../base/types'
 import { ConversationService } from '../../conversations/service'
 import { KvsService } from '../../kvs/service'
 import { Logger, LoggerService } from '../../logger/service'
@@ -18,9 +19,7 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
     return false
   }
 
-  public config!: TConfig
-  // TODO: change this
-  protected botId = 'default'
+  protected config!: TConfig
   protected renderers!: ChannelRenderer<TContext>[]
   protected senders!: ChannelSender<TContext>[]
   protected logger!: Logger
@@ -28,6 +27,8 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
   protected loggerOut!: Logger
 
   constructor(
+    protected providerId: string,
+    protected clientId: uuid | undefined,
     protected kvs: KvsService,
     protected conversations: ConversationService,
     protected messages: MessageService,
@@ -36,7 +37,9 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
     protected router: Router
   ) {}
 
-  async setup(): Promise<void> {
+  async setup(config: TConfig): Promise<void> {
+    this.config = config
+
     this.logger = this.loggers.root.sub(this.id)
     this.loggerIn = this.logger.sub('incoming')
     this.loggerOut = this.logger.sub('outgoing')
@@ -56,22 +59,22 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
 
   async receive(payload: any) {
     const endpoint = await this.map(payload)
-    let mapping = await this.mapping.conversation(this.id, endpoint)
+    let mapping = await this.mapping.conversation(this.clientId!, this.id, endpoint)
 
     if (!mapping) {
-      const conversation = await this.conversations.forBot(this.botId).create(endpoint.foreignUserId!)
-      mapping = await this.mapping.create(this.id, conversation.id, endpoint)
+      const conversation = await this.conversations.forClient(this.clientId!).create(endpoint.foreignUserId!)
+      mapping = await this.mapping.create(this.clientId!, this.id, conversation.id, endpoint)
     }
 
     const message = await this.messages
-      .forBot(this.botId)
+      .forClient(this.clientId!)
       .create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
 
-    this.loggerIn.debug('Received message', message)
+    this.loggerIn.debug('Received message', { providerId: this.providerId, clientId: this.clientId, message })
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
-    const mapping = await this.mapping.endpoint(this.id, conversationId)
+    const mapping = await this.mapping.endpoint(this.clientId!, this.id, conversationId)
 
     const context = await this.context({
       client: undefined,
@@ -96,12 +99,12 @@ export abstract class Channel<TConfig extends ChannelConfig, TContext extends Ch
       }
     }
 
-    const message = await this.messages.forBot(this.botId).create(conversationId, payload, mapping.foreignUserId)
-    this.loggerOut.debug('Sending message', message)
+    const message = await this.messages.forClient(this.clientId!).create(conversationId, payload, mapping.foreignUserId)
+    this.loggerOut.debug('Sending message', { providerId: this.providerId, clientId: this.clientId, message })
   }
 
   protected route(path?: string) {
-    return `/webhooks/${this.id}${path ? `/${path}` : ''}`
+    return `/webhooks/${this.providerId}/${this.id}${path ? `/${path}` : ''}`
   }
 
   protected abstract setupConnection(): Promise<void>
