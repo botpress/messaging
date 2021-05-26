@@ -15,6 +15,7 @@ export class ClientService extends Service {
       table.uuid('id').primary()
       // TODO: provider table?
       table.string('providerId')
+      // TODO: temporary. probably shouldn't store plain tokens like that
       table.string('token').unique()
     })
   }
