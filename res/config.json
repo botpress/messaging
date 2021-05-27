@@ -48,6 +48,10 @@
           "applicationId": "",
           "privateKey": "",
           "useTestingApi": true
+        },
+        "discord": {
+          "enabled": false,
+          "token": ""
         }
       }
     }
