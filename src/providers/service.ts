@@ -34,6 +34,8 @@ export class ProviderService extends Service {
         if (config.client && !(await this.clientService.getByToken(config.client?.token))) {
           await this.clientService.create(provider.id, config.client?.token)
         }
+      } else {
+        await this.update((await this.getByName(config.name))?.id!, { config: config.channels })
       }
     }
   }
@@ -71,6 +73,10 @@ export class ProviderService extends Service {
 
   async create(values: Provider) {
     return this.query().insert(values)
+  }
+
+  async update(id: uuid, values: Partial<Provider>) {
+    return this.query().where({ id }).update(values)
   }
 
   private query() {
