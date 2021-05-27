@@ -10,6 +10,7 @@ import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
 import { Channel } from './base/channel'
+import { DiscordChannel } from './discord/channel'
 import { MessengerChannel } from './messenger/channel'
 import { SlackChannel } from './slack/channel'
 import { SmoochChannel } from './smooch/channel'
@@ -42,6 +43,7 @@ export class ChannelService extends Service {
       TeamsChannel,
       TelegramChannel,
       TwilioChannel,
+      DiscordChannel,
       SmoochChannel,
       VonageChannel
     ]
