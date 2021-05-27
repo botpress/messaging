@@ -40,6 +40,8 @@
     "axios": "^0.21.1",
     "botbuilder": "^4.5.2",
     "cli-color": "^2.0.0",
+    "discord-buttons": "^2.4.1",
+    "discord.js": "^12.5.3",
     "express": "^4.17.1",
     "knex": "^0.95.4",
     "lodash": "^4.17.21",
