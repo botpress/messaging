@@ -1,3 +1,5 @@
+import LRU from 'lru-cache'
+import ms from 'ms'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
@@ -6,8 +8,13 @@ import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 
 export class ProviderService extends Service {
+  private cache: LRU<uuid, Provider>
+  private nameCache: LRU<string, Provider>
+
   constructor(private db: DatabaseService, private configService: ConfigService, private clientService: ClientService) {
     super()
+    this.cache = new LRU({ maxAge: ms('5min'), max: 50000 })
+    this.nameCache = new LRU({ maxAge: ms('5min'), max: 50000 })
   }
 
   async setup() {
@@ -41,28 +48,51 @@ export class ProviderService extends Service {
   }
 
   async getByName(name: string) {
-    // TODO: caching
+    const cached = this.nameCache.get(name)
+    if (cached) {
+      return cached
+    }
 
     const rows = await this.query().where({ name })
     if (rows?.length) {
-      return rows[0] as Provider
-    } else {
-      return undefined
+      const provider = rows[0] as Provider
+
+      this.cache.set(provider.id, provider)
+      this.nameCache.set(provider.name, provider)
+
+      return provider
     }
+
+    return undefined
+  }
+
+  async getById(id: uuid) {
+    const cached = this.cache.get(id)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ id })
+    if (rows?.length) {
+      const provider = rows[0] as Provider
+
+      this.cache.set(id, provider)
+      this.nameCache.set(provider.name, provider)
+
+      return provider
+    }
+
+    return undefined
   }
 
   async getName(id: uuid) {
-    // TODO: caching
-
-    const rows = await this.query().select('name').where({ id })
-    if (rows?.length) {
-      return rows[0].name as string
-    } else {
-      return undefined
-    }
+    return (await this.getById(id))?.name
   }
 
   async getClientId(id: uuid) {
+    // TODO: this function shouldn't be here
+    // TODO: cache this
+
     const rows = await this.db.knex('clients').select('id').where({ providerId: id })
     if (rows?.length) {
       return rows[0].id as string
@@ -76,6 +106,12 @@ export class ProviderService extends Service {
   }
 
   async update(id: uuid, values: Partial<Provider>) {
+    const cached = this.cache.get(id)
+    if (cached) {
+      this.cache.del(id)
+      this.nameCache.del(cached.id)
+    }
+
     return this.query().where({ id }).update(values)
   }
 
