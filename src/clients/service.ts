@@ -1,13 +1,17 @@
+import LRU from 'lru-cache'
+import ms from 'ms'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { DatabaseService } from '../database/service'
 
-// TODO: caching
-
 export class ClientService extends Service {
+  private cache: LRU<string, Client>
+
   constructor(private db: DatabaseService) {
     super()
+
+    this.cache = new LRU({ maxAge: ms('5min'), max: 50000 })
   }
 
   async setup() {
@@ -32,8 +36,14 @@ export class ClientService extends Service {
   }
 
   async getByToken(token: string): Promise<Client | undefined> {
+    const cached = this.cache.get(token)
+    if (cached) {
+      return cached
+    }
+
     const rows = await this.query().where({ token: token ?? null })
     if (rows?.length) {
+      this.cache.set(token, rows[0])
       return rows[0]
     } else {
       return undefined
