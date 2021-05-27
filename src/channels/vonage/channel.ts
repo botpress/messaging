@@ -15,14 +15,14 @@ export class VonageChannel extends Channel<VonageInstance> {
 
   protected createInstance(providerId: string, clientId: string): VonageInstance {
     return new VonageInstance(
+      this,
       providerId,
       clientId,
       this.kvs,
       this.conversations,
       this.messages,
       this.mapping,
-      this.loggers,
-      this.router
+      this.loggers
     )
   }
 

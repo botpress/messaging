@@ -8,10 +8,6 @@ import { MessengerRenderers } from './renderers'
 import { MessengerSenders } from './senders'
 
 export class MessengerInstance extends Instance<MessengerConfig, MessengerContext> {
-  get id(): string {
-    return 'messenger'
-  }
-
   private client!: MessengerClient
 
   protected async setupConnection() {

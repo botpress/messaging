@@ -15,10 +15,6 @@ import { SlackRenderers } from './renderers'
 import { SlackSenders } from './senders'
 
 export class SlackInstance extends Instance<SlackConfig, SlackContext> {
-  get id(): string {
-    return 'slack'
-  }
-
   private client!: WebClient
   private interactive!: SlackMessageAdapter
   private events!: SlackEventAdapter

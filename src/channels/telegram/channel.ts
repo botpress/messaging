@@ -12,14 +12,14 @@ export class TelegramChannel extends Channel<TelegramInstance> {
 
   protected createInstance(providerId: string, clientId: string): TelegramInstance {
     return new TelegramInstance(
+      this,
       providerId,
       clientId,
       this.kvs,
       this.conversations,
       this.messages,
       this.mapping,
-      this.loggers,
-      this.router
+      this.loggers
     )
   }
 

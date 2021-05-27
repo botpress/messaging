@@ -10,10 +10,6 @@ import { TwilioRenderers } from './renderers'
 import { TwilioSenders } from './senders'
 
 export class TwilioInstance extends Instance<TwilioConfig, TwilioContext> {
-  get id() {
-    return 'twilio'
-  }
-
   private twilio!: Twilio
   public webhookUrl!: string
 

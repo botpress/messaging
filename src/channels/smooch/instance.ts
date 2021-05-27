@@ -9,10 +9,6 @@ import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
 
 export class SmoochInstance extends Instance<SmoochConfig, SmoochContext> {
-  get id() {
-    return 'smooch'
-  }
-
   get enableParsers() {
     return true
   }

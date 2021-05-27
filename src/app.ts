@@ -34,6 +34,7 @@ export class App {
     this.messages = new MessageService(this.database, this.conversations)
     this.mapping = new MappingService(this.database)
     this.channels = new ChannelService(
+      this.database,
       this.config,
       this.providers,
       this.kvs,
@@ -53,7 +54,8 @@ export class App {
     await this.clients.setup()
     await this.providers.setup()
     await this.conversations.setup()
-    await this.messages.setup()
+    // TODO: mapping is out of order
     await this.mapping.setup()
+    await this.messages.setup()
   }
 }

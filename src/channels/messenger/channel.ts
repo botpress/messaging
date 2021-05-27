@@ -14,14 +14,14 @@ export class MessengerChannel extends Channel<MessengerInstance> {
 
   protected createInstance(providerId: string, clientId: string): MessengerInstance {
     return new MessengerInstance(
+      this,
       providerId,
       clientId,
       this.kvs,
       this.conversations,
       this.messages,
       this.mapping,
-      this.loggers,
-      this.router
+      this.loggers
     )
   }
 

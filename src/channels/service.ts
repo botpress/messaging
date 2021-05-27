@@ -1,14 +1,15 @@
 import { Router } from 'express'
 import { Service } from '../base/service'
+import { uuid } from '../base/types'
 import { ConfigService } from '../config/service'
 import { ConversationService } from '../conversations/service'
+import { DatabaseService } from '../database/service'
 import { KvsService } from '../kvs/service'
 import { LoggerService } from '../logger/service'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
 import { Channel } from './base/channel'
-import { Instance } from './base/instance'
 import { MessengerChannel } from './messenger/channel'
 import { SlackChannel } from './slack/channel'
 import { SmoochChannel } from './smooch/channel'
@@ -18,10 +19,10 @@ import { TwilioChannel } from './twilio/channel'
 import { VonageChannel } from './vonage/channel'
 
 export class ChannelService extends Service {
-  private channels: Channel<any>[]
-  private instances: { [providerId: string]: Instance<any, any>[] } = {}
+  private channels!: Channel<any>[]
 
   constructor(
+    private db: DatabaseService,
     private configService: ConfigService,
     private providerService: ProviderService,
     private kvsService: KvsService,
@@ -32,7 +33,9 @@ export class ChannelService extends Service {
     private router: Router
   ) {
     super()
+  }
 
+  async setup() {
     const types = [
       MessengerChannel,
       SlackChannel,
@@ -46,21 +49,29 @@ export class ChannelService extends Service {
     this.channels = types.map(
       (x) =>
         new x(
-          configService,
-          providerService,
-          kvsService,
-          conversationService,
-          messagesService,
-          mappingService,
-          router,
-          loggerService
+          this.configService,
+          this.providerService,
+          this.kvsService,
+          this.conversationService,
+          this.messagesService,
+          this.mappingService,
+          this.router,
+          this.loggerService
         )
     )
-  }
 
-  async setup() {
+    await this.db.table('channels', (table) => {
+      table.uuid('id').primary()
+      table.string('name').unique()
+    })
+
     for (const channel of this.channels) {
       await channel.setup()
+
+      const dbChannel = await this.getInDb(channel.name)
+      if (!dbChannel) {
+        await this.createInDb(channel.id, channel.name)
+      }
     }
   }
 
@@ -69,6 +80,24 @@ export class ChannelService extends Service {
   }
 
   list() {
-    return this.instances
+    return this.channels
   }
+
+  private async getInDb(name: string) {
+    const rows = await this.db.knex('channels').where({ name })
+    if (rows?.length) {
+      return rows[0] as DbChannel
+    } else {
+      return undefined
+    }
+  }
+
+  private async createInDb(id: uuid, name: string) {
+    await this.db.knex('channels').insert({ id, name })
+  }
+}
+
+interface DbChannel {
+  id: uuid
+  name: string
 }

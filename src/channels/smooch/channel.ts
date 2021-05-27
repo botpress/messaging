@@ -14,14 +14,14 @@ export class SmoochChannel extends Channel<SmoochInstance> {
 
   protected createInstance(providerId: string, clientId: string): SmoochInstance {
     return new SmoochInstance(
+      this,
       providerId,
       clientId,
       this.kvs,
       this.conversations,
       this.messages,
       this.mapping,
-      this.loggers,
-      this.router
+      this.loggers
     )
   }
 

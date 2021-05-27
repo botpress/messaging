@@ -11,10 +11,6 @@ import { TeamsRenderers } from './renderers'
 import { TeamsSenders } from './senders'
 
 export class TeamsInstance extends Instance<TeamsConfig, TeamsContext> {
-  get id(): string {
-    return 'teams'
-  }
-
   public adapter!: BotFrameworkAdapter
   private convoRefs!: LRU<string, Partial<ConversationReference>>
 

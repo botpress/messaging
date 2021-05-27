@@ -12,14 +12,14 @@ export class TeamsChannel extends Channel<TeamsInstance> {
 
   protected createInstance(providerId: string, clientId: string): TeamsInstance {
     return new TeamsInstance(
+      this,
       providerId,
       clientId,
       this.kvs,
       this.conversations,
       this.messages,
       this.mapping,
-      this.loggers,
-      this.router
+      this.loggers
     )
   }
 

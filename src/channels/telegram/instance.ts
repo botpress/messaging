@@ -10,10 +10,6 @@ import { TelegramRenderers } from './renderers'
 import { TelegramSenders } from './senders'
 
 export class TelegramInstance extends Instance<TelegramConfig, TelegramContext> {
-  get id() {
-    return 'telegram'
-  }
-
   private telegraf!: Telegraf<TelegrafContext>
   public callback!: (req: any, res: any) => void
 

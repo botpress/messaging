@@ -14,14 +14,14 @@ export class TwilioChannel extends Channel<TwilioInstance> {
 
   protected createInstance(providerId: string, clientId: string): TwilioInstance {
     return new TwilioInstance(
+      this,
       providerId,
       clientId,
       this.kvs,
       this.conversations,
       this.messages,
       this.mapping,
-      this.loggers,
-      this.router
+      this.loggers
     )
   }
 

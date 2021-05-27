@@ -9,10 +9,6 @@ import { VonageRenderers } from './renderers'
 import { VonageSenders } from './senders'
 
 export class VonageInstance extends Instance<VonageConfig, VonageContext> {
-  get id() {
-    return 'vonage'
-  }
-
   private vonage!: Vonage
 
   protected async setupConnection() {

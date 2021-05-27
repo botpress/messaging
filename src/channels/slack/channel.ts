@@ -12,14 +12,14 @@ export class SlackChannel extends Channel<SlackInstance> {
 
   protected createInstance(providerId: string, clientId: string): SlackInstance {
     return new SlackInstance(
+      this,
       providerId,
       clientId,
       this.kvs,
       this.conversations,
       this.messages,
       this.mapping,
-      this.loggers,
-      this.router
+      this.loggers
     )
   }
 
