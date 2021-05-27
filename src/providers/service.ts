@@ -24,6 +24,10 @@ export class ProviderService extends Service {
     }
   }
 
+  get(id: string) {
+    return this.providers.find((x) => x.name === id)
+  }
+
   list() {
     return this.providers
   }

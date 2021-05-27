@@ -19,7 +19,7 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
     return false
   }
 
-  protected config!: TConfig
+  public config!: TConfig
   protected renderers!: ChannelRenderer<TContext>[]
   protected senders!: ChannelSender<TContext>[]
   protected logger!: Logger
