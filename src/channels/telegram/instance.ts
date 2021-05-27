@@ -15,6 +15,7 @@ export class TelegramInstance extends Instance<TelegramConfig, TelegramContext> 
   }
 
   private telegraf!: Telegraf<TelegrafContext>
+  public callback!: (req: any, res: any) => void
 
   protected async setupConnection() {
     this.telegraf = new Telegraf(<string>this.config.botToken)
@@ -23,10 +24,11 @@ export class TelegramInstance extends Instance<TelegramConfig, TelegramContext> 
     this.telegraf.on('message', async (ctx) => this.receive(ctx))
     this.telegraf.on('callback_query', async (ctx) => this.receive(ctx))
 
-    this.router.use('/', this.telegraf.webhookCallback('/'))
-    await this.telegraf.telegram.setWebhook(this.config.externalUrl + this.route())
+    this.callback = this.telegraf.webhookCallback('/')
 
-    this.printWebhook()
+    // We can't set webhooks with lazy loading!!
+    // TODO: should keep track of which providers have had their webhooks set
+    // await this.telegraf.telegram.setWebhook(this.config.externalUrl + this.route())
   }
 
   protected setupRenderers() {
