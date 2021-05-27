@@ -15,7 +15,7 @@ export class TeamsInstance extends Instance<TeamsConfig, TeamsContext> {
     return 'teams'
   }
 
-  private adapter!: BotFrameworkAdapter
+  public adapter!: BotFrameworkAdapter
   private convoRefs!: LRU<string, Partial<ConversationReference>>
 
   protected async setupConnection() {
@@ -26,14 +26,6 @@ export class TeamsInstance extends Instance<TeamsConfig, TeamsContext> {
     })
 
     this.convoRefs = new LRU({ max: 10000, maxAge: ms('10m') })
-
-    this.router.post('/', async (req, res) => {
-      await this.adapter.processActivity(req, <any>res, async (turnContext) => {
-        await this.receive(turnContext)
-      })
-    })
-
-    this.printWebhook()
   }
 
   protected setupRenderers() {
