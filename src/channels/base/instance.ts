@@ -21,7 +21,7 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
 
   constructor(
     protected channel: Channel<any>,
-    protected providerId: string,
+    protected providerName: string,
     protected clientId: uuid | undefined,
     protected kvs: KvsService,
     protected conversations: ConversationService,
@@ -55,7 +55,7 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
       .forClient(this.clientId!)
       .create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
 
-    this.loggerIn.debug('Received message', { providerId: this.providerId, clientId: this.clientId, message })
+    this.loggerIn.debug('Received message', { providerName: this.providerName, clientId: this.clientId, message })
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
@@ -85,11 +85,11 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
     }
 
     const message = await this.messages.forClient(this.clientId!).create(conversationId, payload, mapping.foreignUserId)
-    this.loggerOut.debug('Sending message', { providerId: this.providerId, clientId: this.clientId, message })
+    this.loggerOut.debug('Sending message', { providerName: this.providerName, clientId: this.clientId, message })
   }
 
   protected route(path?: string) {
-    return `/webhooks/${this.providerId}/${this.channel.name}${path ? `/${path}` : ''}`
+    return `/webhooks/${this.providerName}/${this.channel.name}${path ? `/${path}` : ''}`
   }
 
   protected abstract setupConnection(): Promise<void>

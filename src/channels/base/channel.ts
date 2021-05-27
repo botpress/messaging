@@ -49,20 +49,20 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     await this.setupRoutes()
   }
 
-  public async getInstance(providerId: string) {
-    let instance = this.cache.get(providerId)
+  public async getInstance(providerName: string) {
+    let instance = this.cache.get(providerName)
     if (instance) {
       return instance
     }
 
-    const provider = this.providers.get(providerId)!
-    instance = this.createInstance(providerId, provider.client?.id!)
+    const provider = (await this.providers.getByName(providerName))!
+    instance = this.createInstance(providerName, provider.clientId!)
     await instance.setup({
-      ...provider.channels[this.name],
+      ...provider.config[this.name],
       externalUrl: this.configs.current.externalUrl
     })
 
-    this.cache.set(providerId, instance)
+    this.cache.set(providerName, instance)
 
     return instance
   }
@@ -79,6 +79,6 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     )
   }
 
-  protected abstract createInstance(providerId: string, clientId: string): TInstance
+  protected abstract createInstance(providerName: string, clientId: string): TInstance
   protected abstract setupRoutes(): Promise<void>
 }

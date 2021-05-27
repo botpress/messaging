@@ -13,18 +13,18 @@ export class ClientService extends Service {
   async setup() {
     await this.db.table('clients', (table) => {
       table.uuid('id').primary()
-      // TODO: provider table?
-      table.string('providerId')
+      // TODO: fix circular dependency
+      table.uuid('providerId') //.references('id').inTable('providers')
       // TODO: temporary. probably shouldn't store plain tokens like that
       table.string('token').unique()
     })
   }
 
-  async create(providerId: string, token: string): Promise<Client> {
+  async create(providerId: uuid, token: string): Promise<Client> {
     const client: Client = {
       id: uuidv4(),
-      token,
-      providerId
+      providerId,
+      token
     }
 
     await this.query().insert(client)
@@ -32,7 +32,7 @@ export class ClientService extends Service {
     return client
   }
 
-  async get(token: string): Promise<Client | undefined> {
+  async getByToken(token: string): Promise<Client | undefined> {
     const rows = await this.query().where({ token: token ?? null })
     if (rows?.length) {
       return rows[0]
@@ -48,6 +48,6 @@ export class ClientService extends Service {
 
 export interface Client {
   id: uuid
+  providerId: uuid
   token?: string
-  providerId: string
 }

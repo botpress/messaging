@@ -12,10 +12,10 @@ export class MessengerChannel extends Channel<MessengerInstance> {
     return 'c4bb1487-b3bd-49b3-a3dd-36db908d165d'
   }
 
-  protected createInstance(providerId: string, clientId: string): MessengerInstance {
+  protected createInstance(providerName: string, clientId: string): MessengerInstance {
     return new MessengerInstance(
       this,
-      providerId,
+      providerName,
       clientId,
       this.kvs,
       this.conversations,

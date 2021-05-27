@@ -12,10 +12,10 @@ export class SmoochChannel extends Channel<SmoochInstance> {
     return '3c5c160f-d673-4ef8-8b6f-75448af048ce'
   }
 
-  protected createInstance(providerId: string, clientId: string): SmoochInstance {
+  protected createInstance(providerName: string, clientId: string): SmoochInstance {
     return new SmoochInstance(
       this,
-      providerId,
+      providerName,
       clientId,
       this.kvs,
       this.conversations,

@@ -10,10 +10,10 @@ export class SlackChannel extends Channel<SlackInstance> {
     return 'd6111009-712d-485e-a62d-1540f966f4f3'
   }
 
-  protected createInstance(providerId: string, clientId: string): SlackInstance {
+  protected createInstance(providerName: string, clientId: string): SlackInstance {
     return new SlackInstance(
       this,
-      providerId,
+      providerName,
       clientId,
       this.kvs,
       this.conversations,

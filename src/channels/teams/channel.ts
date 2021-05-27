@@ -10,10 +10,10 @@ export class TeamsChannel extends Channel<TeamsInstance> {
     return '0491806d-ceb4-4397-8ebf-b8e6deb038da'
   }
 
-  protected createInstance(providerId: string, clientId: string): TeamsInstance {
+  protected createInstance(providerName: string, clientId: string): TeamsInstance {
     return new TeamsInstance(
       this,
-      providerId,
+      providerName,
       clientId,
       this.kvs,
       this.conversations,

@@ -10,10 +10,10 @@ export class TelegramChannel extends Channel<TelegramInstance> {
     return '0198f4f5-6100-4549-92e5-da6cc31b4ad1'
   }
 
-  protected createInstance(providerId: string, clientId: string): TelegramInstance {
+  protected createInstance(providerName: string, clientId: string): TelegramInstance {
     return new TelegramInstance(
       this,
-      providerId,
+      providerName,
       clientId,
       this.kvs,
       this.conversations,

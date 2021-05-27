@@ -21,7 +21,7 @@ export class Api {
       const { token } = req.headers
       const { channel, conversationId, payload } = req.body
 
-      const client = (await this.app.clients.get(token as string))!
+      const client = (await this.app.clients.getByToken(token as string))!
       const instance = await this.app.channels.get(client.providerId, channel)
       instance.send(conversationId, payload)
 

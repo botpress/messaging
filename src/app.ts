@@ -29,7 +29,7 @@ export class App {
     this.database = new DatabaseService(this.config)
     this.kvs = new KvsService(this.database)
     this.clients = new ClientService(this.database)
-    this.providers = new ProviderService(this.config, this.clients)
+    this.providers = new ProviderService(this.database, this.config, this.clients)
     this.conversations = new ConversationService(this.database)
     this.messages = new MessageService(this.database, this.conversations)
     this.mapping = new MappingService(this.database)
@@ -54,8 +54,7 @@ export class App {
     await this.clients.setup()
     await this.providers.setup()
     await this.conversations.setup()
-    // TODO: mapping is out of order
-    await this.mapping.setup()
     await this.messages.setup()
+    await this.mapping.setup()
   }
 }

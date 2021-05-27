@@ -13,10 +13,10 @@ export class VonageChannel extends Channel<VonageInstance> {
     return 'bf045a3c-5627-416d-974d-5cfeb277a23f'
   }
 
-  protected createInstance(providerId: string, clientId: string): VonageInstance {
+  protected createInstance(providerName: string, clientId: string): VonageInstance {
     return new VonageInstance(
       this,
-      providerId,
+      providerName,
       clientId,
       this.kvs,
       this.conversations,
