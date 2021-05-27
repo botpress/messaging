@@ -1,6 +1,4 @@
 import Vonage from '@vonage/server-sdk'
-import crypto from 'crypto'
-import jwt from 'jsonwebtoken'
 import { ChannelContext } from '../base/context'
 import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -13,10 +11,6 @@ import { VonageSenders } from './senders'
 export class VonageInstance extends Instance<VonageConfig, VonageContext> {
   get id() {
     return 'vonage'
-  }
-
-  get enableParsers() {
-    return true
   }
 
   private vonage!: Vonage
@@ -34,20 +28,6 @@ export class VonageInstance extends Instance<VonageConfig, VonageContext> {
         apiHost: this.config.useTestingApi ? 'https://messages-sandbox.nexmo.com' : 'https://api.nexmo.com'
       }
     )
-
-    this.router.post('/inbound', async (req, res) => {
-      if (this.validate(<any>req)) {
-        await this.receive(req.body)
-      }
-
-      res.sendStatus(200)
-    })
-    this.router.post('/status', async (req, res) => {
-      res.sendStatus(200)
-    })
-
-    this.printWebhook('inbound')
-    this.printWebhook('status')
   }
 
   protected setupRenderers() {
@@ -72,26 +52,6 @@ export class VonageInstance extends Instance<VonageConfig, VonageContext> {
       client: this.vonage,
       messages: [],
       isSandbox: this.config.useTestingApi!
-    }
-  }
-
-  private validate(req: Request): boolean {
-    const body = <any>req.body
-    const [scheme, token] = (<any>req.headers).authorization.split(' ')
-
-    if (body.from.type !== 'whatsapp' || body.to.type !== 'whatsapp' || scheme.toLowerCase() !== 'bearer' || !token) {
-      return false
-    }
-
-    try {
-      const decoded = <any>jwt.verify(token, this.config.signatureSecret!, { algorithms: ['HS256'] })
-
-      return (
-        decoded.api_key === this.config.apiKey &&
-        crypto.createHash('sha256').update(JSON.stringify(body)).digest('hex') === decoded.payload_hash
-      )
-    } catch (err) {
-      return false
     }
   }
 }
