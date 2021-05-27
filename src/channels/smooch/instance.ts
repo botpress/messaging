@@ -18,7 +18,7 @@ export class SmoochInstance extends Instance<SmoochConfig, SmoochContext> {
   }
 
   private smooch: any
-  private secret!: string
+  // private secret!: string
 
   protected async setupConnection() {
     this.smooch = new Smooch({
@@ -27,25 +27,14 @@ export class SmoochInstance extends Instance<SmoochConfig, SmoochContext> {
       scope: 'app'
     })
 
-    this.router.post('/', async (req, res) => {
-      if (req.headers['x-api-key'] === this.secret) {
-        const body = req.body as SmoochPayload
-        for (const message of body.messages) {
-          await this.receive({ context: body, message })
-        }
-        res.sendStatus(200)
-      } else {
-        res.status(401).send('Auth token invalid')
-      }
-    })
-
+    // TODO: on the fly webhook creation doesn't work with lazy loading
+    /*
     const { webhook }: { webhook: SmoochWebhook } = await this.smooch.webhooks.create({
       target: this.config.externalUrl + this.route(),
       triggers: ['message:appUser']
     })
     this.secret = webhook.secret
-
-    this.printWebhook()
+    */
   }
 
   protected setupRenderers() {
