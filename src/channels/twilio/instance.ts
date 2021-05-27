@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { Twilio, validateRequest } from 'twilio'
+import { Twilio } from 'twilio'
 import { ChannelContext } from '../base/context'
 import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -14,32 +14,12 @@ export class TwilioInstance extends Instance<TwilioConfig, TwilioContext> {
     return 'twilio'
   }
 
-  get enableParsers(): boolean {
-    return true
-  }
-
   private twilio!: Twilio
-  private webhookUrl!: string
+  public webhookUrl!: string
 
   protected async setupConnection() {
-    if (!this.config.accountSID || !this.config.authToken) {
-      throw new Error('The accountSID and authToken must be configured to use this channel.')
-    }
-
-    this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
+    this.twilio = new Twilio(this.config.accountSID!, this.config.authToken!)
     this.webhookUrl = this.config.externalUrl + this.route()
-
-    this.router.post('/', async (req, res) => {
-      const signature = req.headers['x-twilio-signature'] as string
-      if (validateRequest(this.config.authToken!, signature, this.webhookUrl, req.body)) {
-        await this.receive(req.body)
-        res.sendStatus(204)
-      } else {
-        res.status(401).send('Auth token invalid')
-      }
-    })
-
-    this.printWebhook()
   }
 
   protected setupRenderers() {
