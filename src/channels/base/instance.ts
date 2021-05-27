@@ -44,7 +44,7 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
 
   async receive(payload: any) {
     const endpoint = await this.map(payload)
-    let mapping = await this.mapping.conversation(this.clientId!, this.channel.id, endpoint)
+    let mapping = await this.mapping.getByEndpoint(this.clientId!, this.channel.id, endpoint)
 
     if (!mapping) {
       const conversation = await this.conversations.forClient(this.clientId!).create(endpoint.foreignUserId!)
@@ -59,7 +59,7 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
-    const mapping = await this.mapping.endpoint(this.clientId!, this.channel.id, conversationId)
+    const mapping = await this.mapping.getByConversationId(this.clientId!, this.channel.id, conversationId)
 
     const context = await this.context({
       client: undefined,

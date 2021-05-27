@@ -1,16 +1,21 @@
+import LRUCache from 'lru-cache'
+import ms from 'ms'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { DatabaseService } from '../database/service'
 
-// TODO: caching
 export class MappingService extends Service {
+  private convCache: LRUCache<string, Mapping>
+  private endpointCache: LRUCache<string, Mapping>
+
   constructor(private db: DatabaseService) {
     super()
+    this.convCache = new LRUCache({ maxAge: ms('5min'), max: 50000 })
+    this.endpointCache = new LRUCache({ maxAge: ms('5min'), max: 50000 })
   }
 
   async setup() {
     await this.db.table('mapping', (table) => {
-      // TODO: reference a channel table
       table.uuid('clientId').references('id').inTable('clients')
       table.uuid('channelId').references('id').inTable('channels')
       table.uuid('conversationId').references('id').inTable('conversations')
@@ -34,41 +39,66 @@ export class MappingService extends Service {
 
     await this.query().insert(mapping)
 
+    this.convCache.set(this.getConvCacheKey(mapping), mapping)
+    this.endpointCache.set(this.getEndpointCacheKey(mapping), mapping)
+
     return mapping
   }
 
-  async delete(clientId: uuid, channelId: string, conversationId: uuid): Promise<boolean> {
-    const deletedRows = await this.query().where({ clientId, channelId, conversationId }).del()
-
-    // this.invalidateCache(local, foreign)
-
-    return deletedRows > 0
-  }
-
-  async conversation(clientId: uuid, channelId: string, endpoint: Endpoint): Promise<Mapping> {
-    const rows = await this.query().where({
+  async getByEndpoint(clientId: uuid, channelId: string, endpoint: Endpoint): Promise<Mapping> {
+    const condition = {
       clientId,
       channelId,
       foreignAppId: endpoint.foreignAppId ?? null,
       foreignUserId: endpoint.foreignUserId ?? null,
       foreignConversationId: endpoint.foreignConversationId ?? null
-    })
+    }
 
-    return rows[0]
+    const key = this.getEndpointCacheKey(<any>condition)
+    const cached = this.endpointCache.get(key)
+    if (cached) {
+      return cached
+    }
+
+    const mapping = (await this.query().where(condition))[0] as Mapping
+    this.endpointCache.set(key, mapping)
+
+    return mapping
   }
 
-  async endpoint(clientId: uuid, channelId: string, conversationId: uuid): Promise<Mapping> {
-    const rows = await this.query().where({
+  async getByConversationId(clientId: uuid, channelId: string, conversationId: uuid): Promise<Mapping> {
+    const condition = {
       clientId,
       channelId,
       conversationId
-    })
+    }
 
-    return rows[0]
+    const key = this.getConvCacheKey(condition)
+    const cached = this.convCache.get(key)
+    if (cached) {
+      return cached
+    }
+
+    const mapping = (await this.query().where(condition))[0] as Mapping
+    this.convCache.set(key, mapping)
+
+    return mapping
   }
 
   private query() {
     return this.db.knex('mapping')
+  }
+
+  private getConvCacheKey(mapping: Partial<Mapping>) {
+    return `${mapping.clientId}-${mapping.channelId}-${mapping.foreignAppId ?? '*'}-${mapping.foreignUserId ?? '*'}-${
+      mapping.foreignConversationId ?? '*'
+    }`
+  }
+
+  private getEndpointCacheKey(mapping: Partial<Mapping>) {
+    return `${mapping.clientId}-${mapping.channelId}-${mapping.foreignAppId ?? '*'}-${mapping.foreignUserId ?? '*'}-${
+      mapping.foreignConversationId ?? '*'
+    }`
   }
 }
 
