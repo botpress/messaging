@@ -44,9 +44,22 @@ export class ProviderService extends Service {
   }
 
   async getByName(name: string) {
+    // TODO: caching
+
     const rows = await this.query().where({ name })
     if (rows?.length) {
       return rows[0] as Provider
+    } else {
+      return undefined
+    }
+  }
+
+  async getName(id: uuid) {
+    // TODO: caching
+
+    const rows = await this.query().select('name').where({ id })
+    if (rows?.length) {
+      return rows[0].name as string
     } else {
       return undefined
     }

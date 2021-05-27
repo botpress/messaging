@@ -76,7 +76,8 @@ export class ChannelService extends Service {
   }
 
   async get(providerId: string, channelId: string) {
-    return this.channels.find((x) => x.name === channelId)!.getInstance(providerId)
+    const providerName = (await this.providerService.getName(providerId))!
+    return this.channels.find((x) => x.name === channelId)!.getInstance(providerName)
   }
 
   list() {
