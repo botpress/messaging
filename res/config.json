@@ -37,7 +37,8 @@
         "smooch": {
           "enabled": false,
           "keyId": "",
-          "secret": ""
+          "secret": "",
+          "webhookSecret": ""
         },
         "vonage": {
           "enabled": false,
