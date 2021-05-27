@@ -89,13 +89,13 @@ export class MappingService extends Service {
     return this.db.knex('mapping')
   }
 
-  private getConvCacheKey(mapping: Partial<Mapping>) {
+  private getConvCacheKey(mapping: Partial<Mapping>): string {
     return `${mapping.clientId}-${mapping.channelId}-${mapping.foreignAppId ?? '*'}-${mapping.foreignUserId ?? '*'}-${
       mapping.foreignConversationId ?? '*'
     }`
   }
 
-  private getEndpointCacheKey(mapping: Partial<Mapping>) {
+  private getEndpointCacheKey(mapping: Partial<Mapping>): string {
     return `${mapping.clientId}-${mapping.channelId}-${mapping.foreignAppId ?? '*'}-${mapping.foreignUserId ?? '*'}-${
       mapping.foreignConversationId ?? '*'
     }`

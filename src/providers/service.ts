@@ -25,6 +25,7 @@ export class ProviderService extends Service {
     })
   }
 
+  // TODO: this needs to be moved somewhere else
   async loadConfig() {
     for (const config of this.configService.current.providers) {
       const inDb = await this.getByName(config.name)
@@ -47,7 +48,7 @@ export class ProviderService extends Service {
     }
   }
 
-  async getByName(name: string) {
+  async getByName(name: string): Promise<Provider | undefined> {
     const cached = this.nameCache.get(name)
     if (cached) {
       return cached
@@ -66,7 +67,7 @@ export class ProviderService extends Service {
     return undefined
   }
 
-  async getById(id: uuid) {
+  async getById(id: uuid): Promise<Provider | undefined> {
     const cached = this.cache.get(id)
     if (cached) {
       return cached
