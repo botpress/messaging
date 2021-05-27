@@ -21,7 +21,7 @@ export class Launcher {
     this.express.listen(this.port)
 
     // TODO: should channels be in api instead?
-    // this.printChannels()
+    this.printChannels()
     await this.app.channels.setupChannels()
 
     this.logger.info(`Server is listening at: http://localhost:${this.port}`)
@@ -45,24 +45,21 @@ export class Launcher {
   }
 
   private printChannels() {
-    // TODO: reimplement this
-    /*
     const padding = _.repeat(' ', 24)
 
     let enabledText = ''
-    let disabledText = ''
+    const disabledText = ''
     let enabled = 0
     for (const channel of this.app.channels.list()) {
-      // if (channel.config?.enabled) {
-      if (this.app.config.current.channels[channel.id].enabled) {
+      // TODO: should it be possible to disable channels globally?
+      if (true) {
         enabled++
-        enabledText += `\n${padding}${clc.green('⦿')} ${channel.id}`
+        enabledText += `\n${padding}${clc.green('⦿')} ${channel.name}`
       } else {
-        disabledText += `\n${padding}${clc.blackBright('⊝')} ${channel.id} ${clc.blackBright('(disabled)')}`
+        // disabledText += `\n${padding}${clc.blackBright('⊝')} ${channel.id} ${clc.blackBright('(disabled)')}`
       }
     }
 
     this.logger.info(`Using ${clc.bold(enabled)} channels` + enabledText + disabledText)
-    */
   }
 }
