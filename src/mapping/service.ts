@@ -12,7 +12,7 @@ export class MappingService extends Service {
     await this.db.table('mapping', (table) => {
       // TODO: reference a channel table
       table.uuid('clientId').references('id').inTable('clients')
-      table.string('channelId').references('id').inTable('channels')
+      table.uuid('channelId').references('id').inTable('channels')
       table.uuid('conversationId').references('id').inTable('conversations')
       table.string('foreignAppId').nullable()
       table.string('foreignUserId').nullable()

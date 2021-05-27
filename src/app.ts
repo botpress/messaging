@@ -51,10 +51,17 @@ export class App {
     await this.config.setup()
     await this.database.setup()
     await this.kvs.setup()
-    await this.clients.setup()
+
+    // TODO: loading config requires both table be setup
     await this.providers.setup()
+    await this.clients.setup()
+    await this.providers.loadConfig()
+
     await this.conversations.setup()
     await this.messages.setup()
+
+    // TODO: We need to setup channels before to have the channels table
+    await this.channels.setup()
     await this.mapping.setup()
   }
 }

@@ -39,10 +39,10 @@ export class ChannelService extends Service {
     const types = [
       MessengerChannel,
       SlackChannel,
+      TeamsChannel,
       TelegramChannel,
       TwilioChannel,
       SmoochChannel,
-      TeamsChannel,
       VonageChannel
     ]
 
@@ -64,7 +64,9 @@ export class ChannelService extends Service {
       table.uuid('id').primary()
       table.string('name').unique()
     })
+  }
 
+  async setupChannels() {
     for (const channel of this.channels) {
       await channel.setup()
 

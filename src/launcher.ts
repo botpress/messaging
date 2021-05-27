@@ -22,7 +22,7 @@ export class Launcher {
 
     // TODO: should channels be in api instead?
     // this.printChannels()
-    await this.app.channels.setup()
+    await this.app.channels.setupChannels()
 
     this.logger.info(`Server is listening at: http://localhost:${this.port}`)
     this.logger.info(`Server is exposed at: ${this.app.config.current.externalUrl}`)

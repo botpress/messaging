@@ -56,7 +56,8 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     }
 
     const provider = (await this.providers.getByName(providerName))!
-    instance = this.createInstance(providerName, provider.clientId!)
+    const clientId = await this.providers.getClientId(provider.id)
+    instance = this.createInstance(providerName, clientId!)
     await instance.setup({
       ...provider.config[this.name],
       externalUrl: this.configs.current.externalUrl

@@ -13,8 +13,7 @@ export class ClientService extends Service {
   async setup() {
     await this.db.table('clients', (table) => {
       table.uuid('id').primary()
-      // TODO: fix circular dependency
-      table.uuid('providerId') //.references('id').inTable('providers')
+      table.uuid('providerId').references('id').inTable('providers')
       // TODO: temporary. probably shouldn't store plain tokens like that
       table.string('token').unique()
     })

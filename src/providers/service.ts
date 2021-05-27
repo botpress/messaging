@@ -14,30 +14,25 @@ export class ProviderService extends Service {
     await this.db.table('providers', (table) => {
       table.uuid('id').primary()
       table.string('name').unique()
-      // TODO: solve this circular dependency
-      table.uuid('clientId')
       table.jsonb('config')
     })
+  }
 
+  async loadConfig() {
     for (const config of this.configService.current.providers) {
       const inDb = await this.getByName(config.name)
+
       if (!inDb) {
         const provider = {
           id: uuidv4(),
           name: config.name,
-          clientId: <any>null,
           config: config.channels
         }
 
         await this.create(provider)
 
-        const client = config.client
-          ? (await this.clientService.getByToken(config.client?.token)) ??
-            (await this.clientService.create(provider.id, config.client?.token))
-          : undefined
-
-        if (client) {
-          await this.update(provider.id, { clientId: client.id })
+        if (config.client && !(await this.clientService.getByToken(config.client?.token))) {
+          await this.clientService.create(provider.id, config.client?.token)
         }
       }
     }
@@ -65,12 +60,17 @@ export class ProviderService extends Service {
     }
   }
 
-  async create(values: Provider) {
-    return this.query().insert(values)
+  async getClientId(id: uuid) {
+    const rows = await this.db.knex('clients').select('id').where({ providerId: id })
+    if (rows?.length) {
+      return rows[0].id as string
+    } else {
+      return undefined
+    }
   }
 
-  async update(id: uuid, values: Partial<Provider>) {
-    return this.query().where({ id }).update(values)
+  async create(values: Provider) {
+    return this.query().insert(values)
   }
 
   private query() {
@@ -81,6 +81,5 @@ export class ProviderService extends Service {
 export interface Provider {
   id: uuid
   name: string
-  clientId?: string
   config: any
 }
