@@ -14,8 +14,8 @@ export class TwilioInstance extends Instance<TwilioConfig, TwilioContext> {
   public webhookUrl!: string
 
   protected async setupConnection() {
-    this.twilio = new Twilio(this.config.accountSID!, this.config.authToken!)
-    this.webhookUrl = this.config.externalUrl + this.route()
+    this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
+    this.webhookUrl = this.config.externalUrl + this.channel.getRoute()
   }
 
   protected setupRenderers() {

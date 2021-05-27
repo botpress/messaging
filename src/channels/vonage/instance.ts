@@ -14,10 +14,10 @@ export class VonageInstance extends Instance<VonageConfig, VonageContext> {
   protected async setupConnection() {
     this.vonage = new Vonage(
       {
-        apiKey: this.config.apiKey!,
-        apiSecret: this.config.apiSecret!,
+        apiKey: this.config.apiKey,
+        apiSecret: this.config.apiSecret,
         applicationId: this.config.applicationId,
-        privateKey: <any>Buffer.from(this.config.privateKey!),
+        privateKey: <any>Buffer.from(this.config.privateKey),
         signatureSecret: this.config.signatureSecret
       },
       {
@@ -47,7 +47,7 @@ export class VonageInstance extends Instance<VonageConfig, VonageContext> {
       ...base,
       client: this.vonage,
       messages: [],
-      isSandbox: this.config.useTestingApi!
+      isSandbox: this.config.useTestingApi
     }
   }
 }

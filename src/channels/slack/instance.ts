@@ -24,8 +24,8 @@ export class SlackInstance extends Instance<SlackConfig, SlackContext> {
 
   protected async setupConnection() {
     this.client = new WebClient(this.config.botToken)
-    this.events = createEventAdapter(this.config.signingSecret!)
-    this.interactive = createMessageAdapter(this.config.signingSecret!)
+    this.events = createEventAdapter(this.config.signingSecret)
+    this.interactive = createMessageAdapter(this.config.signingSecret)
 
     // TODO: refactor these functions
     await this.setupRealtime()

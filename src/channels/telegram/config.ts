@@ -1,5 +1,5 @@
 import { ChannelConfig } from '../base/config'
 
-export class TelegramConfig extends ChannelConfig {
-  botToken?: string
+export type TelegramConfig = ChannelConfig & {
+  botToken: string
 }

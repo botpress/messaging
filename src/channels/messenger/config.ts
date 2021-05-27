@@ -1,7 +1,7 @@
 import { ChannelConfig } from '../base/config'
 
-export class MessengerConfig extends ChannelConfig {
-  accessToken?: string
-  appSecret?: string
-  verifyToken?: string
+export type MessengerConfig = ChannelConfig & {
+  accessToken: string
+  appSecret: string
+  verifyToken: string
 }

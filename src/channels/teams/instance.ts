@@ -36,12 +36,12 @@ export class TeamsInstance extends Instance<TeamsConfig, TeamsContext> {
     const { activity } = payload
     const convoRef = TurnContext.getConversationReference(activity)
 
-    await this.setConvoRef(convoRef!.conversation!.id, convoRef)
+    await this.setConvoRef(convoRef.conversation!.id, convoRef)
 
     return {
       content: { type: 'text', text: activity.value?.text || activity.text },
       foreignUserId: activity.from.id,
-      foreignConversationId: convoRef!.conversation!.id
+      foreignConversationId: convoRef.conversation!.id
     }
   }
 

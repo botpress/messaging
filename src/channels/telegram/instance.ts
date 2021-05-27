@@ -14,7 +14,7 @@ export class TelegramInstance extends Instance<TelegramConfig, TelegramContext> 
   public callback!: (req: any, res: any) => void
 
   protected async setupConnection() {
-    this.telegraf = new Telegraf(<string>this.config.botToken)
+    this.telegraf = new Telegraf(this.config.botToken)
     this.telegraf.start(async (ctx) => this.receive(ctx))
     this.telegraf.help(async (ctx) => this.receive(ctx))
     this.telegraf.on('message', async (ctx) => this.receive(ctx))

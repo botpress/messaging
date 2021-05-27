@@ -37,7 +37,7 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     const oldRouter = this.router
     this.router = Router()
     oldRouter.use(
-      this.route(),
+      this.getRoute(),
       async (req, res, next) => {
         const { provider } = req.params
         res.locals.instance = await this.getInstance(provider)
@@ -49,7 +49,7 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     await this.setupRoutes()
   }
 
-  public async getInstance(providerName: string) {
+  async getInstance(providerName: string) {
     let instance = this.cache.get(providerName)
     if (instance) {
       return instance
@@ -57,7 +57,9 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
 
     const provider = (await this.providers.getByName(providerName))!
     const clientId = await this.providers.getClientId(provider.id)
+
     instance = this.createInstance(providerName, clientId!)
+
     await instance.setup({
       ...provider.config[this.name],
       externalUrl: this.configs.current.externalUrl
@@ -68,7 +70,7 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     return instance
   }
 
-  protected route(path?: string) {
+  getRoute(path?: string) {
     return `/webhooks/:provider/${this.name}${path ? `/${path}` : ''}`
   }
 
@@ -76,7 +78,7 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     this.logger.info(
       `${clc.bold(this.name.charAt(0).toUpperCase() + this.name.slice(1))}` +
         `${route ? ' ' + route : ''}` +
-        ` webhook ${clc.blackBright(this.route(route))}`
+        ` webhook ${clc.blackBright(this.getRoute(route))}`
     )
   }
 
