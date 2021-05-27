@@ -4,6 +4,7 @@ import { createMessageAdapter, SlackMessageAdapter } from '@slack/interactive-me
 import { WebClient } from '@slack/web-api'
 import axios from 'axios'
 import _ from 'lodash'
+import { RequestListener } from 'node:http'
 import { ChannelContext } from '../base/context'
 import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -21,6 +22,9 @@ export class SlackInstance extends Instance<SlackConfig, SlackContext> {
   private client!: WebClient
   private interactive!: SlackMessageAdapter
   private events!: SlackEventAdapter
+
+  public interactiveListener!: RequestListener
+  public eventsListener!: RequestListener
 
   protected async setupConnection() {
     this.client = new WebClient(this.config.botToken)
@@ -85,14 +89,12 @@ export class SlackInstance extends Instance<SlackConfig, SlackContext> {
       // await this.bp.events.updateEvent(event.id, { feedback })
     })
 
-    this.router.use('/interactive', this.interactive.requestListener())
-    this.printWebhook('interactive')
+    this.interactiveListener = this.interactive.requestListener()
   }
 
   private async setupRealtime() {
     this.listenMessages(this.events)
-    this.router.post('/events', this.events.requestListener())
-    this.printWebhook('events')
+    this.eventsListener = this.events.requestListener()
   }
 
   private listenMessages(com: SlackEventAdapter) {
