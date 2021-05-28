@@ -4,10 +4,10 @@
     "type": "postgres",
     "connection": "postgres://user:password@localhost:5432/dbname"
   },
+  "clients": [{ "provider": "test", "token": "test-token-123" }],
   "providers": [
     {
       "name": "test",
-      "client": { "token": "test-token-123" },
       "channels": {
         "messenger": {
           "enabled": false,
