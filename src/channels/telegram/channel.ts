@@ -10,7 +10,7 @@ export class TelegramChannel extends Channel<TelegramConduit> {
     return '0198f4f5-6100-4549-92e5-da6cc31b4ad1'
   }
 
-  protected createConduit() {
+  createConduit() {
     return new TelegramConduit()
   }
 

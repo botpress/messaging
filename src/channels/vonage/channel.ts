@@ -13,7 +13,7 @@ export class VonageChannel extends Channel<VonageConduit> {
     return 'bf045a3c-5627-416d-974d-5cfeb277a23f'
   }
 
-  protected createConduit(): VonageConduit {
+  createConduit() {
     return new VonageConduit()
   }
 

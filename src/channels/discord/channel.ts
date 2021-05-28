@@ -10,7 +10,7 @@ export class DiscordChannel extends Channel<DiscordConduit> {
     return '51e500dc-2649-49cf-be31-5b63884fd9a6'
   }
 
-  protected createConduit() {
+  createConduit() {
     return new DiscordConduit()
   }
 

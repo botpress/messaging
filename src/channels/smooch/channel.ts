@@ -12,7 +12,7 @@ export class SmoochChannel extends Channel<SmoochConduit> {
     return '3c5c160f-d673-4ef8-8b6f-75448af048ce'
   }
 
-  protected createConduit() {
+  createConduit() {
     return new SmoochConduit()
   }
 

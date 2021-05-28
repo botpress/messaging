@@ -12,7 +12,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
     return '330ca935-6441-4159-8969-d0a0d3f188a1'
   }
 
-  protected createConduit() {
+  createConduit() {
     return new TwilioConduit()
   }
 

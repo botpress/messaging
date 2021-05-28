@@ -10,7 +10,7 @@ export class TeamsChannel extends Channel<TeamsConduit> {
     return '0491806d-ceb4-4397-8ebf-b8e6deb038da'
   }
 
-  protected createConduit() {
+  createConduit() {
     return new TeamsConduit()
   }
 

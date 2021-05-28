@@ -18,6 +18,7 @@ export class ChannelService extends Service {
 
   private channels: Channel<Conduit<any, any>>[]
   private channelsByName: { [name: string]: Channel<Conduit<any, any>> }
+  private channelsById: { [id: string]: Channel<Conduit<any, any>> }
 
   constructor(private db: DatabaseService) {
     super()
@@ -36,8 +37,11 @@ export class ChannelService extends Service {
     ]
 
     this.channelsByName = {}
+    this.channelsById = {}
+
     for (const channel of this.channels) {
       this.channelsByName[channel.name] = channel
+      this.channelsById[channel.id] = channel
     }
   }
 
@@ -53,6 +57,10 @@ export class ChannelService extends Service {
 
   getByName(name: string) {
     return this.channelsByName[name]
+  }
+
+  getById(id: uuid) {
+    return this.channelsById[id]
   }
 
   list() {

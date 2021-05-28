@@ -10,7 +10,7 @@ export class SlackChannel extends Channel<SlackConduit> {
     return 'd6111009-712d-485e-a62d-1540f966f4f3'
   }
 
-  protected createConduit() {
+  createConduit() {
     return new SlackConduit()
   }
 

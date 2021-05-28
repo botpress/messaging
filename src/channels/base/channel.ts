@@ -1,6 +1,5 @@
 import clc from 'cli-color'
 import { Router } from 'express'
-import LRU from 'lru-cache'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
@@ -10,70 +9,26 @@ export abstract class Channel<TConduit extends Conduit<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
 
-  private app!: App
-  protected router!: Router
-
-  private cacheByName!: LRU<string, TConduit>
-  private cacheById!: LRU<uuid, TConduit>
+  protected app!: App
   protected logger!: Logger
+  protected router!: Router
 
   async setup(app: App, root: Router): Promise<void> {
     this.app = app
-    // TODO: remove unused conduits
-    this.cacheByName = new LRU()
-    this.cacheById = new LRU()
     this.logger = this.app.logger.root.sub(this.name)
-
     this.router = Router()
+
     root.use(
       this.getRoute(),
       async (req, res, next) => {
         const { provider } = req.params
-        res.locals.conduit = await this.getConduitByProviderName(provider)
+        res.locals.conduit = await this.app.conduits.getInstanceByProviderName(provider, this.id)
         next()
       },
       this.router
     )
 
     await this.setupRoutes()
-  }
-
-  async getConduitByProviderName(providerName: string): Promise<TConduit> {
-    const cached = this.cacheByName.get(providerName)
-    if (cached) {
-      return cached
-    }
-
-    const provider = (await this.app.providers.getByName(providerName))!
-    return this.getConduitByProviderId(provider.id)
-  }
-
-  async getConduitByProviderId(providerId: uuid): Promise<TConduit> {
-    const cached = this.cacheById.get(providerId)
-    if (cached) {
-      return cached
-    }
-
-    const provider = (await this.app.providers.getById(providerId))!
-    const clientId = (await this.app.providers.getClientId(providerId))!
-    const dbConduit = await this.app.conduits.get(provider.id, this.id)
-    const conduit = this.createConduit()
-
-    await conduit.setup(
-      this.app,
-      {
-        ...dbConduit?.config,
-        externalUrl: this.app.config.current.externalUrl
-      },
-      this,
-      provider.name,
-      clientId
-    )
-
-    this.cacheById.set(provider.id, conduit)
-    this.cacheByName.set(provider.name, conduit)
-
-    return conduit
   }
 
   getRoute(path?: string) {
@@ -88,6 +43,6 @@ export abstract class Channel<TConduit extends Conduit<any, any>> {
     )
   }
 
-  protected abstract createConduit(): TConduit
+  abstract createConduit(): TConduit
   protected abstract setupRoutes(): Promise<void>
 }
