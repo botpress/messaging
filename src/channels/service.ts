@@ -80,7 +80,7 @@ export class ChannelService extends Service {
   }
 
   async get(providerId: string, channelId: string) {
-    const providerName = (await this.providerService.getName(providerId))!
+    const providerName = (await this.providerService.getById(providerId))!.name
     return this.channels.find((x) => x.name === channelId)!.getInstance(providerName)
   }
 

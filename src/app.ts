@@ -16,8 +16,8 @@ export class App {
   config: ConfigService
   database: DatabaseService
   kvs: KvsService
-  clients: ClientService
   providers: ProviderService
+  clients: ClientService
   conversations: ConversationService
   messages: MessageService
   mapping: MappingService
@@ -28,8 +28,8 @@ export class App {
     this.config = new ConfigService()
     this.database = new DatabaseService(this.config)
     this.kvs = new KvsService(this.database)
-    this.clients = new ClientService(this.database)
-    this.providers = new ProviderService(this.database, this.config, this.clients)
+    this.providers = new ProviderService(this.database, this.config)
+    this.clients = new ClientService(this.database, this.config, this.providers)
     this.conversations = new ConversationService(this.database)
     this.messages = new MessageService(this.database, this.conversations)
     this.mapping = new MappingService(this.database)
@@ -51,12 +51,8 @@ export class App {
     await this.config.setup()
     await this.database.setup()
     await this.kvs.setup()
-
-    // TODO: loading config requires both table be setup
     await this.providers.setup()
     await this.clients.setup()
-    await this.providers.loadConfig()
-
     await this.conversations.setup()
     await this.messages.setup()
 
