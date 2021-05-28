@@ -1,8 +1,8 @@
 import LRU from 'lru-cache'
-import ms from 'ms'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { CachingService } from '../caching/service'
 import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { ProviderService } from '../providers/service'
@@ -14,11 +14,16 @@ export class ClientService extends Service {
   private cacheByToken: LRU<string, Client>
   private cacheByProvider: LRU<uuid, Client>
 
-  constructor(private db: DatabaseService, private configService: ConfigService, private providers: ProviderService) {
+  constructor(
+    private db: DatabaseService,
+    private configService: ConfigService,
+    private cachingService: CachingService,
+    private providers: ProviderService
+  ) {
     super()
     this.table = new ClientTable()
-    this.cacheByToken = new LRU({ maxAge: ms('5min'), max: 50000 })
-    this.cacheByProvider = new LRU({ maxAge: ms('5min'), max: 50000 })
+    this.cacheByToken = this.cachingService.newLRU()
+    this.cacheByProvider = this.cachingService.newLRU()
   }
 
   async setup() {

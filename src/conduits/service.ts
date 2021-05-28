@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { App } from '../app'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { CachingService } from '../caching/service'
 import { Conduit as ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
@@ -22,6 +23,7 @@ export class ConduitService extends Service {
   constructor(
     private db: DatabaseService,
     private configService: ConfigService,
+    private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
     private clientService: ClientService,
@@ -29,9 +31,9 @@ export class ConduitService extends Service {
   ) {
     super()
     this.table = new ConduitTable()
-    this.cache = new LRU({ maxAge: ms('5min'), max: 50000 })
-    this.cacheByName = new LRU({ maxAge: ms('5min'), max: 50000 })
-    this.cacheById = new LRU({ maxAge: ms('5min'), max: 50000 })
+    this.cache = this.cachingService.newLRU()
+    this.cacheByName = this.cachingService.newLRU()
+    this.cacheById = this.cachingService.newLRU()
   }
 
   async setup() {

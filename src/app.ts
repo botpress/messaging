@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { CachingService } from './caching/service'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
@@ -15,6 +16,7 @@ export class App {
   logger: LoggerService
   config: ConfigService
   database: DatabaseService
+  caching: CachingService
   kvs: KvsService
   channels: ChannelService
   providers: ProviderService
@@ -28,20 +30,30 @@ export class App {
     this.logger = new LoggerService()
     this.config = new ConfigService()
     this.database = new DatabaseService(this.config)
-    this.kvs = new KvsService(this.database)
+    this.caching = new CachingService()
+    this.kvs = new KvsService(this.database, this.caching)
     this.channels = new ChannelService(this.database)
-    this.providers = new ProviderService(this.database, this.config)
-    this.clients = new ClientService(this.database, this.config, this.providers)
-    this.conduits = new ConduitService(this.database, this.config, this.channels, this.providers, this.clients, this)
+    this.providers = new ProviderService(this.database, this.config, this.caching)
+    this.clients = new ClientService(this.database, this.config, this.caching, this.providers)
+    this.conduits = new ConduitService(
+      this.database,
+      this.config,
+      this.caching,
+      this.channels,
+      this.providers,
+      this.clients,
+      this
+    )
     this.conversations = new ConversationService(this.database)
     this.messages = new MessageService(this.database, this.conversations)
-    this.mapping = new MappingService(this.database)
+    this.mapping = new MappingService(this.database, this.caching)
   }
 
   async setup() {
     await this.logger.setup()
     await this.config.setup()
     await this.database.setup()
+    await this.caching.setup()
     await this.kvs.setup()
     await this.channels.setup()
     await this.providers.setup()

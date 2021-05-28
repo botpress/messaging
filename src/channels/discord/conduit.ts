@@ -18,7 +18,7 @@ export class DiscordConduit extends Conduit<DiscordConfig, DiscordContext> {
     this.client = new Discord.Client()
     disbut(this.client)
 
-    this.convoCache = new LRU()
+    this.convoCache = this.app.caching.newLRU()
 
     this.client.on('ready', () => {
       this.logger.info(

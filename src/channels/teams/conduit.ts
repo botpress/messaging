@@ -21,7 +21,7 @@ export class TeamsConduit extends Conduit<TeamsConfig, TeamsContext> {
       channelAuthTenant: this.config.tenantId
     })
 
-    this.convoRefs = new LRU({ max: 10000, maxAge: ms('10m') })
+    this.convoRefs = this.app.caching.newLRU()
   }
 
   protected setupRenderers() {
