@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
+import { ConduitService } from './conduits/service'
 import { ConfigService } from './config/service'
 import { ConversationService } from './conversations/service'
 import { DatabaseService } from './database/service'
@@ -18,6 +19,7 @@ export class App {
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
+  conduits: ConduitService
   conversations: ConversationService
   messages: MessageService
   mapping: MappingService
@@ -30,6 +32,7 @@ export class App {
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.config)
     this.clients = new ClientService(this.database, this.config, this.providers)
+    this.conduits = new ConduitService(this.database, this.config, this.channels, this.providers)
     this.conversations = new ConversationService(this.database)
     this.messages = new MessageService(this.database, this.conversations)
     this.mapping = new MappingService(this.database)
@@ -43,6 +46,7 @@ export class App {
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
+    await this.conduits.setup()
     await this.conversations.setup()
     await this.messages.setup()
     await this.mapping.setup()
