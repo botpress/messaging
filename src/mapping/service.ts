@@ -4,6 +4,7 @@ import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { DatabaseService } from '../database/service'
 import { MappingTable } from './table'
+import { Endpoint, Mapping } from './types'
 
 export class MappingService extends Service {
   private table: MappingTable
@@ -94,16 +95,4 @@ export class MappingService extends Service {
       mapping.foreignConversationId ?? '*'
     }`
   }
-}
-
-export type Mapping = {
-  clientId: uuid
-  channelId: string
-  conversationId: string
-} & Endpoint
-
-export interface Endpoint {
-  foreignAppId?: string
-  foreignUserId?: string
-  foreignConversationId?: string
 }

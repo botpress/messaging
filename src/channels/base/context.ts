@@ -1,5 +1,5 @@
-import { Logger } from '../../logger/service'
-import { Mapping } from '../../mapping/service'
+import { Logger } from '../../logger/types'
+import { Mapping } from '../../mapping/types'
 
 export type ChannelContext<TClient> = {
   client: TClient

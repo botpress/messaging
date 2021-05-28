@@ -91,7 +91,7 @@ export class ChannelService extends Service {
   private async getInDb(name: string) {
     const rows = await this.db.knex('channels').where({ name })
     if (rows?.length) {
-      return rows[0] as DbChannel
+      return rows[0]
     } else {
       return undefined
     }
@@ -100,9 +100,4 @@ export class ChannelService extends Service {
   private async createInDb(id: uuid, name: string) {
     await this.db.knex('channels').insert({ id, name })
   }
-}
-
-interface DbChannel {
-  id: uuid
-  name: string
 }

@@ -6,6 +6,7 @@ import { uuid } from '../base/types'
 import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { ProviderTable } from './table'
+import { Provider } from './types'
 
 export class ProviderService extends Service {
   private table: ProviderTable
@@ -91,10 +92,4 @@ export class ProviderService extends Service {
   private query() {
     return this.db.knex(this.table.id)
   }
-}
-
-export interface Provider {
-  id: uuid
-  name: string
-  config: any
 }

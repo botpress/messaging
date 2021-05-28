@@ -3,7 +3,7 @@ import { Express } from 'express'
 import _ from 'lodash'
 import { Api } from './api'
 import { App } from './app'
-import { Logger } from './logger/service'
+import { Logger } from './logger/types'
 
 export class Launcher {
   private logger: Logger
