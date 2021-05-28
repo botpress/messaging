@@ -1,7 +1,7 @@
 import { Channel } from '../base/channel'
-import { SlackInstance } from './instance'
+import { SlackConduit } from './conduit'
 
-export class SlackChannel extends Channel<SlackInstance> {
+export class SlackChannel extends Channel<SlackConduit> {
   get name() {
     return 'slack'
   }
@@ -10,20 +10,20 @@ export class SlackChannel extends Channel<SlackInstance> {
     return 'd6111009-712d-485e-a62d-1540f966f4f3'
   }
 
-  protected createInstance() {
-    return new SlackInstance()
+  protected createConduit() {
+    return new SlackConduit()
   }
 
   async setupRoutes() {
     this.router.use('/interactive', (req, res) => {
-      const instance = res.locals.instance as SlackInstance
-      instance.interactiveListener(req, res)
+      const conduit = res.locals.conduit as SlackConduit
+      conduit.interactiveListener(req, res)
     })
     this.printWebhook('interactive')
 
     this.router.use('/events', (req, res) => {
-      const instance = res.locals.instance as SlackInstance
-      instance.eventsListener(req, res)
+      const conduit = res.locals.conduit as SlackConduit
+      conduit.eventsListener(req, res)
     })
     this.printWebhook('events')
   }

@@ -2,15 +2,15 @@ import clc from 'cli-color'
 import disbut from 'discord-buttons'
 import Discord from 'discord.js'
 import LRU from 'lru-cache'
+import { Conduit, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
-import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { DiscordConfig } from './config'
 import { DiscordContext } from './context'
 import { DiscordRenderers } from './renderers'
 import { DiscordSenders } from './senders'
 
-export class DiscordInstance extends Instance<DiscordConfig, DiscordContext> {
+export class DiscordConduit extends Conduit<DiscordConfig, DiscordContext> {
   private client!: Discord.Client
   private convoCache!: LRU<string, Discord.Channel>
 

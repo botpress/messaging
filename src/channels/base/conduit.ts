@@ -9,7 +9,7 @@ import { ChannelContext } from './context'
 import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 
-export abstract class Instance<TConfig extends ChannelConfig, TContext extends ChannelContext<any>> {
+export abstract class Conduit<TConfig extends ChannelConfig, TContext extends ChannelContext<any>> {
   protected app!: App
   public config!: TConfig
   protected channel!: Channel<any>

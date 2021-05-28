@@ -1,7 +1,7 @@
 import { Channel } from '../base/channel'
-import { DiscordInstance } from './instance'
+import { DiscordConduit } from './conduit'
 
-export class DiscordChannel extends Channel<DiscordInstance> {
+export class DiscordChannel extends Channel<DiscordConduit> {
   get name() {
     return 'discord'
   }
@@ -10,8 +10,8 @@ export class DiscordChannel extends Channel<DiscordInstance> {
     return '51e500dc-2649-49cf-be31-5b63884fd9a6'
   }
 
-  protected createInstance() {
-    return new DiscordInstance()
+  protected createConduit() {
+    return new DiscordConduit()
   }
 
   async setupRoutes() {}

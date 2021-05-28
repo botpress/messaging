@@ -1,9 +1,9 @@
 import express from 'express'
 import { Channel } from '../base/channel'
+import { SmoochConduit } from './conduit'
 import { SmoochPayload } from './context'
-import { SmoochInstance } from './instance'
 
-export class SmoochChannel extends Channel<SmoochInstance> {
+export class SmoochChannel extends Channel<SmoochConduit> {
   get name() {
     return 'smooch'
   }
@@ -12,20 +12,20 @@ export class SmoochChannel extends Channel<SmoochInstance> {
     return '3c5c160f-d673-4ef8-8b6f-75448af048ce'
   }
 
-  protected createInstance() {
-    return new SmoochInstance()
+  protected createConduit() {
+    return new SmoochConduit()
   }
 
   async setupRoutes() {
     this.router.use(express.json())
 
     this.router.post('/', async (req, res) => {
-      const instance = res.locals.instance as SmoochInstance
+      const conduit = res.locals.conduit as SmoochConduit
 
-      if (req.headers['x-api-key'] === instance.config.webhookSecret) {
+      if (req.headers['x-api-key'] === conduit.config.webhookSecret) {
         const body = req.body as SmoochPayload
         for (const message of body.messages) {
-          await instance.receive({ context: body, message })
+          await conduit.receive({ context: body, message })
         }
         res.sendStatus(200)
       } else {

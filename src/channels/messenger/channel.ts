@@ -1,9 +1,9 @@
 import crypto from 'crypto'
 import express from 'express'
 import { Channel } from '../base/channel'
-import { MessengerInstance } from './instance'
+import { MessengerConduit } from './conduit'
 
-export class MessengerChannel extends Channel<MessengerInstance> {
+export class MessengerChannel extends Channel<MessengerConduit> {
   get name() {
     return 'messenger'
   }
@@ -12,21 +12,21 @@ export class MessengerChannel extends Channel<MessengerInstance> {
     return 'c4bb1487-b3bd-49b3-a3dd-36db908d165d'
   }
 
-  protected createInstance() {
-    return new MessengerInstance()
+  protected createConduit() {
+    return new MessengerConduit()
   }
 
   async setupRoutes() {
     this.router.use(express.json({ verify: this.auth.bind(this) }))
 
     this.router.get('/', async (req, res) => {
-      const instance = res.locals.instance as MessengerInstance
+      const conduit = res.locals.conduit as MessengerConduit
 
       const mode = req.query['hub.mode']
       const token = req.query['hub.verify_token']
       const challenge = req.query['hub.challenge']
 
-      if (mode && token && mode === 'subscribe' && token === instance.config.verifyToken) {
+      if (mode && token && mode === 'subscribe' && token === conduit.config.verifyToken) {
         this.logger.debug('Webhook Verified')
         res.send(challenge)
       } else {
@@ -35,7 +35,7 @@ export class MessengerChannel extends Channel<MessengerInstance> {
     })
 
     this.router.post('/', async (req, res) => {
-      const instance = res.locals.instance as MessengerInstance
+      const conduit = res.locals.conduit as MessengerConduit
       const body = req.body
 
       for (const entry of body.entry) {
@@ -45,7 +45,7 @@ export class MessengerChannel extends Channel<MessengerInstance> {
           if (!webhookEvent.sender) {
             continue
           }
-          await instance.receive(webhookEvent)
+          await conduit.receive(webhookEvent)
         }
       }
 
@@ -56,11 +56,11 @@ export class MessengerChannel extends Channel<MessengerInstance> {
   }
 
   private auth(req: any, res: any, buffer: any) {
-    const instance = res.locals.instance as MessengerInstance
+    const conduit = res.locals.conduit as MessengerConduit
 
     const signature = req.headers['x-hub-signature']
     const [, hash] = signature.split('=')
-    const expectedHash = crypto.createHmac('sha1', instance.config.appSecret!).update(buffer).digest('hex')
+    const expectedHash = crypto.createHmac('sha1', conduit.config.appSecret!).update(buffer).digest('hex')
     if (hash !== expectedHash) {
       throw new Error("Couldn't validate the request signature.")
     }

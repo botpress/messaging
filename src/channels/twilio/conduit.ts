@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Twilio } from 'twilio'
+import { Conduit, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
-import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TypingSender } from '../base/senders/typing'
 import { TwilioConfig } from './config'
@@ -9,7 +9,7 @@ import { TwilioContext, TwilioRequestBody } from './context'
 import { TwilioRenderers } from './renderers'
 import { TwilioSenders } from './senders'
 
-export class TwilioInstance extends Instance<TwilioConfig, TwilioContext> {
+export class TwilioConduit extends Conduit<TwilioConfig, TwilioContext> {
   private twilio!: Twilio
   public webhookUrl!: string
 

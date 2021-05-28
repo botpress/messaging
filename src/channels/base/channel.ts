@@ -4,24 +4,24 @@ import LRU from 'lru-cache'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
-import { Instance } from './instance'
+import { Conduit } from './conduit'
 
-export abstract class Channel<TInstance extends Instance<any, any>> {
+export abstract class Channel<TConduit extends Conduit<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
 
   private app!: App
   protected router!: Router
 
-  private cacheByName!: LRU<string, TInstance>
-  private cacheById!: LRU<uuid, TInstance>
+  private cacheByName!: LRU<string, TConduit>
+  private cacheById!: LRU<uuid, TConduit>
   protected logger!: Logger
 
   async setup(app: App, router: Router): Promise<void> {
     this.app = app
     this.router = router
 
-    // TODO: remove unused instances
+    // TODO: remove unused conduits
     this.cacheByName = new LRU()
     this.cacheById = new LRU()
     this.logger = this.app.logger.root.sub(this.name)
@@ -32,7 +32,7 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
       this.getRoute(),
       async (req, res, next) => {
         const { provider } = req.params
-        res.locals.instance = await this.getInstanceByProviderName(provider)
+        res.locals.conduit = await this.getConduitByProviderName(provider)
         next()
       },
       this.router
@@ -41,17 +41,17 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     await this.setupRoutes()
   }
 
-  async getInstanceByProviderName(providerName: string): Promise<TInstance> {
+  async getConduitByProviderName(providerName: string): Promise<TConduit> {
     const cached = this.cacheByName.get(providerName)
     if (cached) {
       return cached
     }
 
     const provider = (await this.app.providers.getByName(providerName))!
-    return this.getInstanceByProviderId(provider.id)
+    return this.getConduitByProviderId(provider.id)
   }
 
-  async getInstanceByProviderId(providerId: uuid): Promise<TInstance> {
+  async getConduitByProviderId(providerId: uuid): Promise<TConduit> {
     const cached = this.cacheById.get(providerId)
     if (cached) {
       return cached
@@ -59,9 +59,9 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
 
     const provider = (await this.app.providers.getById(providerId))!
     const clientId = (await this.app.providers.getClientId(providerId))!
-    const instance = this.createInstance()
+    const conduit = this.createConduit()
 
-    await instance.setup(
+    await conduit.setup(
       this.app,
       {
         ...provider.config[this.name],
@@ -72,10 +72,10 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
       clientId
     )
 
-    this.cacheById.set(provider.id, instance)
-    this.cacheByName.set(provider.name, instance)
+    this.cacheById.set(provider.id, conduit)
+    this.cacheByName.set(provider.name, conduit)
 
-    return instance
+    return conduit
   }
 
   getRoute(path?: string) {
@@ -90,6 +90,6 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     )
   }
 
-  protected abstract createInstance(): TInstance
+  protected abstract createConduit(): TConduit
   protected abstract setupRoutes(): Promise<void>
 }

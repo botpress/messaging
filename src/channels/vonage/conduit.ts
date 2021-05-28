@@ -1,6 +1,6 @@
 import Vonage from '@vonage/server-sdk'
+import { Conduit, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
-import { Instance, EndpointContent } from '../base/instance'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TypingSender } from '../base/senders/typing'
 import { VonageConfig } from './config'
@@ -8,7 +8,7 @@ import { VonageContext } from './context'
 import { VonageRenderers } from './renderers'
 import { VonageSenders } from './senders'
 
-export class VonageInstance extends Instance<VonageConfig, VonageContext> {
+export class VonageConduit extends Conduit<VonageConfig, VonageContext> {
   private vonage!: Vonage
 
   protected async setupConnection() {

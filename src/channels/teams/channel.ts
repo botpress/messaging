@@ -1,7 +1,7 @@
 import { Channel } from '../base/channel'
-import { TeamsInstance } from './instance'
+import { TeamsConduit } from './conduit'
 
-export class TeamsChannel extends Channel<TeamsInstance> {
+export class TeamsChannel extends Channel<TeamsConduit> {
   get name() {
     return 'teams'
   }
@@ -10,16 +10,16 @@ export class TeamsChannel extends Channel<TeamsInstance> {
     return '0491806d-ceb4-4397-8ebf-b8e6deb038da'
   }
 
-  protected createInstance() {
-    return new TeamsInstance()
+  protected createConduit() {
+    return new TeamsConduit()
   }
 
   async setupRoutes() {
     this.router.use('/', async (req, res) => {
-      const instance = res.locals.instance as TeamsInstance
+      const conduit = res.locals.conduit as TeamsConduit
 
-      await instance.adapter.processActivity(req, <any>res, async (turnContext) => {
-        await instance.receive(turnContext)
+      await conduit.adapter.processActivity(req, <any>res, async (turnContext) => {
+        await conduit.receive(turnContext)
       })
     })
 
