@@ -20,6 +20,11 @@ export class Launcher {
       this.logger.error('Unhandled Rejection', err)
       process.exit(1)
     })
+
+    process.on('SIGINT', async () => {
+      await this.shutDown()
+      process.exit()
+    })
   }
 
   async launch() {
@@ -32,6 +37,13 @@ export class Launcher {
 
     this.logger.info(`Server is listening at: http://localhost:${this.port}`)
     this.logger.info(`Server is exposed at: ${this.app.config.current.externalUrl}`)
+  }
+
+  async shutDown() {
+    await this.app.destroy()
+    // eslint-disable-next-line no-console
+    console.log()
+    this.logger.info('Shut down')
   }
 
   private printLogo() {

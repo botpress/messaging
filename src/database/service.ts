@@ -42,6 +42,10 @@ export class DatabaseService extends Service {
     }
   }
 
+  async destroy() {
+    await this.knex.destroy()
+  }
+
   async registerTable(table: Table) {
     if (!(await this.knex.schema.hasTable(table.id))) {
       this.logger.debug(`Created table '${table.id}'`)

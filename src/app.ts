@@ -63,4 +63,8 @@ export class App {
     await this.messages.setup()
     await this.mapping.setup()
   }
+
+  async destroy() {
+    await this.database.destroy()
+  }
 }
