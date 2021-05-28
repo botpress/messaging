@@ -36,7 +36,7 @@ export class ProviderService extends Service {
   }
 
   async create(values: Provider): Promise<Provider> {
-    return this.query().insert(values)
+    return this.query().insert(this.serialize(values))
   }
 
   async getByName(name: string): Promise<Provider | undefined> {
@@ -47,7 +47,7 @@ export class ProviderService extends Service {
 
     const rows = await this.query().where({ name })
     if (rows?.length) {
-      const provider = rows[0] as Provider
+      const provider = this.deserialize(rows[0])
 
       this.cacheById.set(provider.id, provider)
       this.cacheByName.set(provider.name, provider)
@@ -66,7 +66,7 @@ export class ProviderService extends Service {
 
     const rows = await this.query().where({ id })
     if (rows?.length) {
-      const provider = rows[0] as Provider
+      const provider = this.deserialize(rows[0])
 
       this.cacheById.set(id, provider)
       this.cacheByName.set(provider.name, provider)
@@ -86,6 +86,20 @@ export class ProviderService extends Service {
       return rows[0].id as string
     } else {
       return undefined
+    }
+  }
+
+  private serialize(provider: Partial<Provider>) {
+    return {
+      ...provider,
+      config: this.db.setJson(provider.config)
+    }
+  }
+
+  private deserialize(provider: any): Provider {
+    return {
+      ...provider,
+      config: this.db.getJson(provider.config)
     }
   }
 

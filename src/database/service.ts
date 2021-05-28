@@ -7,6 +7,7 @@ import { ConfigService } from '../config/service'
 
 export class DatabaseService extends Service {
   public knex!: Knex
+  private isLite!: boolean
 
   constructor(private configService: ConfigService) {
     super()
@@ -21,12 +22,14 @@ export class DatabaseService extends Service {
         fs.mkdirSync('dist')
       }
 
+      this.isLite = true
       this.knex = knex({
         client: 'sqlite3',
         connection: { filename: path.join('dist', 'db.sqlite') },
         useNullAsDefault: true
       })
     } else if (provider === 'postgres') {
+      this.isLite = false
       this.knex = knex({
         client: 'postgres',
         connection: this.configService.current.database.connection,
@@ -42,13 +45,17 @@ export class DatabaseService extends Service {
   }
 
   getJson(val: any): any {
-    // TODO: does this work with sqlite as well?
-    return val // JSON.parse(string)
+    if (this.isLite) {
+      return val ? JSON.parse(val) : undefined
+    }
+    return val
   }
 
   setJson(object: any): any {
-    // TODO: does this work with sqlite as well?
-    return object // JSON.stringify(object)
+    if (this.isLite) {
+      return object ? JSON.stringify(object) : undefined
+    }
+    return object
   }
 
   getDate(string: string) {
