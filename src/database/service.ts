@@ -4,13 +4,17 @@ import path from 'path'
 import { Service } from '../base/service'
 import { Table } from '../base/table'
 import { ConfigService } from '../config/service'
+import { LoggerService } from '../logger/service'
+import { Logger } from '../logger/types'
 
 export class DatabaseService extends Service {
   public knex!: Knex
   private isLite!: boolean
+  private logger: Logger
 
   constructor(private configService: ConfigService) {
     super()
+    this.logger = new Logger('Database')
   }
 
   async setup() {
@@ -40,6 +44,8 @@ export class DatabaseService extends Service {
 
   async registerTable(table: Table) {
     if (!(await this.knex.schema.hasTable(table.id))) {
+      this.logger.debug(`Created table '${table.id}'`)
+
       await this.knex.schema.createTable(table.id, table.create)
     }
   }

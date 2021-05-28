@@ -13,9 +13,8 @@ export class Launcher {
   }
 
   async launch() {
-    this.printLogo()
-
     await this.app.setup()
+    this.printLogo()
     this.printChannels()
 
     await this.api.setup()
