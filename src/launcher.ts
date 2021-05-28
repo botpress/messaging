@@ -10,6 +10,16 @@ export class Launcher {
 
   constructor(private express: Express, private port: string, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
+
+    process.on('uncaughtException', (err) => {
+      this.logger.error('Uncaught Exception', err)
+      process.exit(1)
+    })
+
+    process.on('unhandledRejection', (err) => {
+      this.logger.error('Unhandled Rejection', err)
+      process.exit(1)
+    })
   }
 
   async launch() {
