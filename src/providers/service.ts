@@ -28,15 +28,14 @@ export class ProviderService extends Service {
       if (!provider) {
         await this.create({
           id: uuidv4(),
-          name: config.name,
-          config: config.channels
+          name: config.name
         })
       }
     }
   }
 
   async create(values: Provider): Promise<Provider> {
-    return this.query().insert(this.serialize(values))
+    return this.query().insert(values)
   }
 
   async getByName(name: string): Promise<Provider | undefined> {
@@ -47,7 +46,7 @@ export class ProviderService extends Service {
 
     const rows = await this.query().where({ name })
     if (rows?.length) {
-      const provider = this.deserialize(rows[0])
+      const provider = rows[0] as Provider
 
       this.cacheById.set(provider.id, provider)
       this.cacheByName.set(provider.name, provider)
@@ -66,7 +65,7 @@ export class ProviderService extends Service {
 
     const rows = await this.query().where({ id })
     if (rows?.length) {
-      const provider = this.deserialize(rows[0])
+      const provider = rows[0] as Provider
 
       this.cacheById.set(id, provider)
       this.cacheByName.set(provider.name, provider)
@@ -86,20 +85,6 @@ export class ProviderService extends Service {
       return rows[0].id as string
     } else {
       return undefined
-    }
-  }
-
-  private serialize(provider: Partial<Provider>) {
-    return {
-      ...provider,
-      config: this.db.setJson(provider.config)
-    }
-  }
-
-  private deserialize(provider: any): Provider {
-    return {
-      ...provider,
-      config: this.db.getJson(provider.config)
     }
   }
 

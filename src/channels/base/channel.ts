@@ -59,12 +59,13 @@ export abstract class Channel<TConduit extends Conduit<any, any>> {
 
     const provider = (await this.app.providers.getById(providerId))!
     const clientId = (await this.app.providers.getClientId(providerId))!
+    const dbConduit = await this.app.conduits.get(provider.id, this.id)
     const conduit = this.createConduit()
 
     await conduit.setup(
       this.app,
       {
-        ...provider.config[this.name],
+        ...dbConduit?.config,
         externalUrl: this.app.config.current.externalUrl
       },
       this,
