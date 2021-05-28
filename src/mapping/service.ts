@@ -3,28 +3,22 @@ import ms from 'ms'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { DatabaseService } from '../database/service'
+import { MappingTable } from './table'
 
 export class MappingService extends Service {
+  private table: MappingTable
   private convCache: LRUCache<string, Mapping>
   private endpointCache: LRUCache<string, Mapping>
 
   constructor(private db: DatabaseService) {
     super()
+    this.table = new MappingTable()
     this.convCache = new LRUCache({ maxAge: ms('5min'), max: 50000 })
     this.endpointCache = new LRUCache({ maxAge: ms('5min'), max: 50000 })
   }
 
   async setup() {
-    await this.db.table('mapping', (table) => {
-      table.uuid('clientId').references('id').inTable('clients')
-      table.uuid('channelId').references('id').inTable('channels')
-      table.uuid('conversationId').references('id').inTable('conversations')
-      table.string('foreignAppId').nullable()
-      table.string('foreignUserId').nullable()
-      table.string('foreignConversationId').nullable()
-      table.primary(['clientId', 'channelId', 'conversationId'])
-      table.index(['clientId', 'channelId', 'foreignAppId', 'foreignUserId', 'foreignConversationId'])
-    })
+    await this.db.table(this.table.id, this.table.create)
   }
 
   async create(clientId: uuid, channelId: string, conversationId: uuid, endpoint: Endpoint): Promise<Mapping> {
@@ -86,7 +80,7 @@ export class MappingService extends Service {
   }
 
   private query() {
-    return this.db.knex('mapping')
+    return this.db.knex(this.table.id)
   }
 
   private getConvCacheKey(mapping: Partial<Mapping>): string {

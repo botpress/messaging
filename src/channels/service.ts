@@ -14,12 +14,14 @@ import { DiscordChannel } from './discord/channel'
 import { MessengerChannel } from './messenger/channel'
 import { SlackChannel } from './slack/channel'
 import { SmoochChannel } from './smooch/channel'
+import { ChannelTable } from './table'
 import { TeamsChannel } from './teams/channel'
 import { TelegramChannel } from './telegram/channel'
 import { TwilioChannel } from './twilio/channel'
 import { VonageChannel } from './vonage/channel'
 
 export class ChannelService extends Service {
+  private table: ChannelTable
   private channels!: Channel<any>[]
 
   constructor(
@@ -34,9 +36,12 @@ export class ChannelService extends Service {
     private router: Router
   ) {
     super()
+    this.table = new ChannelTable()
   }
 
   async setup() {
+    await this.db.table(this.table.id, this.table.create)
+
     const types = [
       MessengerChannel,
       SlackChannel,
@@ -61,11 +66,6 @@ export class ChannelService extends Service {
           this.loggerService
         )
     )
-
-    await this.db.table('channels', (table) => {
-      table.uuid('id').primary()
-      table.string('name').unique()
-    })
   }
 
   async setupChannels() {
@@ -79,13 +79,13 @@ export class ChannelService extends Service {
     }
   }
 
-  async get(providerId: string, channelId: string) {
-    const providerName = (await this.providerService.getById(providerId))!.name
-    return this.channels.find((x) => x.name === channelId)!.getInstance(providerName)
-  }
-
   list() {
     return this.channels
+  }
+
+  async getInstance(providerId: string, channelId: string) {
+    const providerName = (await this.providerService.getById(providerId))!.name
+    return this.channels.find((x) => x.name === channelId)!.getInstance(providerName)
   }
 
   private async getInDb(name: string) {

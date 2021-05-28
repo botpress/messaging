@@ -6,23 +6,21 @@ import { uuid } from '../base/types'
 import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { ProviderService } from '../providers/service'
+import { ClientTable } from './table'
 
 export class ClientService extends Service {
+  private table: ClientTable
   private cache: LRU<string, Client>
 
   constructor(private db: DatabaseService, private configService: ConfigService, private providers: ProviderService) {
     super()
 
+    this.table = new ClientTable()
     this.cache = new LRU({ maxAge: ms('5min'), max: 50000 })
   }
 
   async setup() {
-    await this.db.table('clients', (table) => {
-      table.uuid('id').primary()
-      table.uuid('providerId').references('id').inTable('providers')
-      // TODO: temporary. probably shouldn't store plain tokens like that
-      table.string('token').unique()
-    })
+    await this.db.table(this.table.id, this.table.create)
 
     for (const config of this.configService.current.clients) {
       const client = await this.getByToken(config.token)
@@ -61,7 +59,7 @@ export class ClientService extends Service {
   }
 
   private query() {
-    return this.db.knex('clients')
+    return this.db.knex(this.table.id)
   }
 }
 

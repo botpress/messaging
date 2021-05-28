@@ -1,19 +1,18 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
+import { KvsTable } from './table'
 
 export class KvsService extends Service {
+  private table: KvsTable
+
   constructor(private db: DatabaseService) {
     super()
+    this.table = new KvsTable()
   }
 
   async setup() {
-    await this.db.table('kvs', (table) => {
-      table.uuid('id').primary()
-      table.string('key').unique()
-      table.jsonb('value')
-      table.index('key')
-    })
+    await this.db.table(this.table.id, this.table.create)
   }
 
   async get(key: string): Promise<any> {
@@ -34,6 +33,6 @@ export class KvsService extends Service {
   }
 
   private query() {
-    return this.db.knex('kvs')
+    return this.db.knex(this.table.id)
   }
 }

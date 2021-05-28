@@ -5,23 +5,22 @@ import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
+import { ProviderTable } from './table'
 
 export class ProviderService extends Service {
+  private table: ProviderTable
   private cacheById: LRU<uuid, Provider>
   private cacheByName: LRU<string, Provider>
 
   constructor(private db: DatabaseService, private configService: ConfigService) {
     super()
+    this.table = new ProviderTable()
     this.cacheById = new LRU({ maxAge: ms('5min'), max: 50000 })
     this.cacheByName = new LRU({ maxAge: ms('5min'), max: 50000 })
   }
 
   async setup() {
-    await this.db.table('providers', (table) => {
-      table.uuid('id').primary()
-      table.string('name').unique()
-      table.jsonb('config')
-    })
+    await this.db.table(this.table.id, this.table.create)
 
     for (const config of this.configService.current.providers) {
       const provider = await this.getByName(config.name)
@@ -90,7 +89,7 @@ export class ProviderService extends Service {
   }
 
   private query() {
-    return this.db.knex('providers')
+    return this.db.knex(this.table.id)
   }
 }
 
