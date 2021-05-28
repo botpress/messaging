@@ -69,12 +69,12 @@ export class DiscordConduit extends Conduit<DiscordConfig, DiscordContext> {
   }
 
   private async getChannel(channelId: string): Promise<Discord.Channel> {
-    let channel = this.convoCache.get(channelId)
-    if (channel) {
-      return channel
+    const cached = this.convoCache.get(channelId)
+    if (cached) {
+      return cached
     }
 
-    channel = await this.client.channels.fetch(channelId, true)
+    const channel = await this.client.channels.fetch(channelId, true)
     this.convoCache.set(channelId, channel!)
     return channel!
   }
