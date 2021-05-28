@@ -2,6 +2,7 @@ import fs from 'fs'
 import knex, { Knex } from 'knex'
 import path from 'path'
 import { Service } from '../base/service'
+import { Table } from '../base/table'
 import { ConfigService } from '../config/service'
 
 export class DatabaseService extends Service {
@@ -34,9 +35,9 @@ export class DatabaseService extends Service {
     }
   }
 
-  async table(name: string, callback: (tableBuilder: Knex.CreateTableBuilder) => any) {
-    if (!(await this.knex.schema.hasTable(name))) {
-      await this.knex.schema.createTable(name, callback)
+  async registerTable(table: Table) {
+    if (!(await this.knex.schema.hasTable(table.id))) {
+      await this.knex.schema.createTable(table.id, table.create)
     }
   }
 

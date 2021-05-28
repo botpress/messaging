@@ -18,7 +18,7 @@ export class MappingService extends Service {
   }
 
   async setup() {
-    await this.db.table(this.table.id, this.table.create)
+    await this.db.registerTable(this.table)
   }
 
   async create(clientId: uuid, channelId: string, conversationId: uuid, endpoint: Endpoint): Promise<Mapping> {

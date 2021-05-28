@@ -12,7 +12,7 @@ export class KvsService extends Service {
   }
 
   async setup() {
-    await this.db.table(this.table.id, this.table.create)
+    await this.db.registerTable(this.table)
   }
 
   async get(key: string): Promise<any> {

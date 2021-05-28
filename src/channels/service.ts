@@ -40,7 +40,7 @@ export class ChannelService extends Service {
   }
 
   async setup() {
-    await this.db.table(this.table.id, this.table.create)
+    await this.db.registerTable(this.table)
 
     const types = [
       MessengerChannel,

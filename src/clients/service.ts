@@ -20,7 +20,7 @@ export class ClientService extends Service {
   }
 
   async setup() {
-    await this.db.table(this.table.id, this.table.create)
+    await this.db.registerTable(this.table)
 
     for (const config of this.configService.current.clients) {
       const client = await this.getByToken(config.token)

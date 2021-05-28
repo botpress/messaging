@@ -17,7 +17,7 @@ export class MessageService extends ScopeableService<ScopedMessageService> {
   }
 
   async setup() {
-    await this.db.table(this.table.id, this.table.create)
+    await this.db.registerTable(this.table)
   }
 
   protected createScope(clientId: string) {

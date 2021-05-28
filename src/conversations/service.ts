@@ -18,7 +18,7 @@ export class ConversationService extends ScopeableService<ScopedConversationServ
   }
 
   async setup() {
-    await this.db.table(this.table.id, this.table.create)
+    await this.db.registerTable(this.table)
   }
 
   protected createScope(clientId: string) {
