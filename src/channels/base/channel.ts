@@ -17,18 +17,15 @@ export abstract class Channel<TConduit extends Conduit<any, any>> {
   private cacheById!: LRU<uuid, TConduit>
   protected logger!: Logger
 
-  async setup(app: App, router: Router): Promise<void> {
+  async setup(app: App, root: Router): Promise<void> {
     this.app = app
-    this.router = router
-
     // TODO: remove unused conduits
     this.cacheByName = new LRU()
     this.cacheById = new LRU()
     this.logger = this.app.logger.root.sub(this.name)
 
-    const oldRouter = this.router
     this.router = Router()
-    oldRouter.use(
+    root.use(
       this.getRoute(),
       async (req, res, next) => {
         const { provider } = req.params
