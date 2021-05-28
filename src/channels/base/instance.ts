@@ -1,12 +1,8 @@
 import _ from 'lodash'
+import { App } from '../../app'
 import { uuid } from '../../base/types'
-import { ConversationService } from '../../conversations/service'
-import { KvsService } from '../../kvs/service'
-import { LoggerService } from '../../logger/service'
 import { Logger } from '../../logger/types'
-import { MappingService } from '../../mapping/service'
 import { Endpoint } from '../../mapping/types'
-import { MessageService } from '../../messages/service'
 import { Channel } from './channel'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
@@ -14,28 +10,26 @@ import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 
 export abstract class Instance<TConfig extends ChannelConfig, TContext extends ChannelContext<any>> {
+  protected app!: App
   public config!: TConfig
+  protected channel!: Channel<any>
+  protected providerName!: string
+  protected clientId!: uuid
+
   protected renderers!: ChannelRenderer<TContext>[]
   protected senders!: ChannelSender<TContext>[]
   protected logger!: Logger
   protected loggerIn!: Logger
   protected loggerOut!: Logger
 
-  constructor(
-    protected channel: Channel<any>,
-    protected providerName: string,
-    protected clientId: uuid | undefined,
-    protected kvs: KvsService,
-    protected conversations: ConversationService,
-    protected messages: MessageService,
-    protected mapping: MappingService,
-    protected loggers: LoggerService
-  ) {}
-
-  async setup(config: TConfig): Promise<void> {
+  async setup(app: App, config: TConfig, channel: Channel<any>, providerName: string, clientId: string): Promise<void> {
+    this.app = app
     this.config = config
+    this.channel = channel
+    this.providerName = providerName
+    this.clientId = clientId
 
-    this.logger = this.loggers.root.sub(this.channel.name)
+    this.logger = this.app.logger.root.sub(this.channel.name)
     this.loggerIn = this.logger.sub('incoming')
     this.loggerOut = this.logger.sub('outgoing')
 
@@ -46,14 +40,14 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
 
   async receive(payload: any) {
     const endpoint = await this.map(payload)
-    let mapping = await this.mapping.getByEndpoint(this.clientId!, this.channel.id, endpoint)
+    let mapping = await this.app.mapping.getByEndpoint(this.clientId!, this.channel.id, endpoint)
 
     if (!mapping) {
-      const conversation = await this.conversations.forClient(this.clientId!).create(endpoint.foreignUserId!)
-      mapping = await this.mapping.create(this.clientId!, this.channel.id, conversation.id, endpoint)
+      const conversation = await this.app.conversations.forClient(this.clientId!).create(endpoint.foreignUserId!)
+      mapping = await this.app.mapping.create(this.clientId!, this.channel.id, conversation.id, endpoint)
     }
 
-    const message = await this.messages
+    const message = await this.app.messages
       .forClient(this.clientId!)
       .create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
 
@@ -61,7 +55,7 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
-    const mapping = await this.mapping.getByConversationId(this.clientId!, this.channel.id, conversationId)
+    const mapping = await this.app.mapping.getByConversationId(this.clientId!, this.channel.id, conversationId)
 
     const context = await this.context({
       client: undefined,
@@ -86,12 +80,10 @@ export abstract class Instance<TConfig extends ChannelConfig, TContext extends C
       }
     }
 
-    const message = await this.messages.forClient(this.clientId!).create(conversationId, payload, mapping.foreignUserId)
+    const message = await this.app.messages
+      .forClient(this.clientId!)
+      .create(conversationId, payload, mapping.foreignUserId)
     this.loggerOut.debug('Sending message', { providerName: this.providerName, clientId: this.clientId, message })
-  }
-
-  protected route(path?: string) {
-    return `/webhooks/${this.providerName}/${this.channel.name}${path ? `/${path}` : ''}`
   }
 
   protected abstract setupConnection(): Promise<void>

@@ -16,13 +16,10 @@ export class Launcher {
     this.printLogo()
 
     await this.app.setup()
-    await this.api.setup()
-
-    this.express.listen(this.port)
-
-    // TODO: should channels be in api instead?
     this.printChannels()
-    await this.app.channels.setupChannels()
+
+    await this.api.setup()
+    this.express.listen(this.port)
 
     this.logger.info(`Server is listening at: http://localhost:${this.port}`)
     this.logger.info(`Server is exposed at: ${this.app.config.current.externalUrl}`)

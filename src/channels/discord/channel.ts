@@ -10,17 +10,8 @@ export class DiscordChannel extends Channel<DiscordInstance> {
     return '51e500dc-2649-49cf-be31-5b63884fd9a6'
   }
 
-  protected createInstance(providerName: string, clientId: string): DiscordInstance {
-    return new DiscordInstance(
-      this,
-      providerName,
-      clientId,
-      this.kvs,
-      this.conversations,
-      this.messages,
-      this.mapping,
-      this.loggers
-    )
+  protected createInstance() {
+    return new DiscordInstance()
   }
 
   async setupRoutes() {}

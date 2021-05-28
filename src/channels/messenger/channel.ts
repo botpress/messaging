@@ -12,17 +12,8 @@ export class MessengerChannel extends Channel<MessengerInstance> {
     return 'c4bb1487-b3bd-49b3-a3dd-36db908d165d'
   }
 
-  protected createInstance(providerName: string, clientId: string): MessengerInstance {
-    return new MessengerInstance(
-      this,
-      providerName,
-      clientId,
-      this.kvs,
-      this.conversations,
-      this.messages,
-      this.mapping,
-      this.loggers
-    )
+  protected createInstance() {
+    return new MessengerInstance()
   }
 
   async setupRoutes() {

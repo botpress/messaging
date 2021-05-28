@@ -10,17 +10,8 @@ export class TeamsChannel extends Channel<TeamsInstance> {
     return '0491806d-ceb4-4397-8ebf-b8e6deb038da'
   }
 
-  protected createInstance(providerName: string, clientId: string): TeamsInstance {
-    return new TeamsInstance(
-      this,
-      providerName,
-      clientId,
-      this.kvs,
-      this.conversations,
-      this.messages,
-      this.mapping,
-      this.loggers
-    )
+  protected createInstance() {
+    return new TeamsInstance()
   }
 
   async setupRoutes() {

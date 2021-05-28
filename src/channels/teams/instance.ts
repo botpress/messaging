@@ -60,7 +60,7 @@ export class TeamsInstance extends Instance<TeamsConfig, TeamsContext> {
       return convoRef
     }
 
-    convoRef = await this.kvs.get(threadId)
+    convoRef = await this.app.kvs.get(threadId)
     this.convoRefs.set(threadId, convoRef!)
     return convoRef!
   }
@@ -71,6 +71,6 @@ export class TeamsInstance extends Instance<TeamsConfig, TeamsContext> {
     }
 
     this.convoRefs.set(threadId, convoRef)
-    return this.kvs.set(threadId, convoRef)
+    return this.app.kvs.set(threadId, convoRef)
   }
 }

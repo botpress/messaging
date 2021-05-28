@@ -12,17 +12,8 @@ export class SmoochChannel extends Channel<SmoochInstance> {
     return '3c5c160f-d673-4ef8-8b6f-75448af048ce'
   }
 
-  protected createInstance(providerName: string, clientId: string): SmoochInstance {
-    return new SmoochInstance(
-      this,
-      providerName,
-      clientId,
-      this.kvs,
-      this.conversations,
-      this.messages,
-      this.mapping,
-      this.loggers
-    )
+  protected createInstance() {
+    return new SmoochInstance()
   }
 
   async setupRoutes() {

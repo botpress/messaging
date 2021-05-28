@@ -12,17 +12,8 @@ export class TwilioChannel extends Channel<TwilioInstance> {
     return '330ca935-6441-4159-8969-d0a0d3f188a1'
   }
 
-  protected createInstance(providerName: string, clientId: string): TwilioInstance {
-    return new TwilioInstance(
-      this,
-      providerName,
-      clientId,
-      this.kvs,
-      this.conversations,
-      this.messages,
-      this.mapping,
-      this.loggers
-    )
+  protected createInstance() {
+    return new TwilioInstance()
   }
 
   async setupRoutes() {

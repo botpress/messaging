@@ -1,39 +1,27 @@
 import clc from 'cli-color'
 import { Router } from 'express'
 import LRU from 'lru-cache'
+import { App } from '../../app'
 import { uuid } from '../../base/types'
-import { ConfigService } from '../../config/service'
-import { ConversationService } from '../../conversations/service'
-import { KvsService } from '../../kvs/service'
-import { LoggerService } from '../../logger/service'
 import { Logger } from '../../logger/types'
-import { MappingService } from '../../mapping/service'
-import { MessageService } from '../../messages/service'
-import { ProviderService } from '../../providers/service'
 import { Instance } from './instance'
 
 export abstract class Channel<TInstance extends Instance<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
 
+  private app!: App
+  protected router!: Router
+
   private cache!: LRU<string, TInstance>
   protected logger!: Logger
 
-  constructor(
-    protected configs: ConfigService,
-    protected providers: ProviderService,
-    protected kvs: KvsService,
-    protected conversations: ConversationService,
-    protected messages: MessageService,
-    protected mapping: MappingService,
-    protected router: Router,
-    protected loggers: LoggerService
-  ) {}
+  async setup(app: App, router: Router): Promise<void> {
+    this.app = app
+    this.router = router
 
-  async setup(): Promise<void> {
-    // TODO clear cache progressively
     this.cache = new LRU()
-    this.logger = this.loggers.root.sub(this.name)
+    this.logger = this.app.logger.root.sub(this.name)
 
     const oldRouter = this.router
     this.router = Router()
@@ -56,15 +44,21 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
       return instance
     }
 
-    const provider = (await this.providers.getByName(providerName))!
-    const clientId = await this.providers.getClientId(provider.id)
+    const provider = (await this.app.providers.getByName(providerName))!
+    const clientId = (await this.app.providers.getClientId(provider.id))!
 
-    instance = this.createInstance(providerName, clientId!)
+    instance = this.createInstance()
 
-    await instance.setup({
-      ...provider.config[this.name],
-      externalUrl: this.configs.current.externalUrl
-    })
+    await instance.setup(
+      this.app,
+      {
+        ...provider.config[this.name],
+        externalUrl: this.app.config.current.externalUrl
+      },
+      this,
+      provider.name,
+      clientId
+    )
 
     this.cache.set(providerName, instance)
 
@@ -83,6 +77,6 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     )
   }
 
-  protected abstract createInstance(providerName: string, clientId: string): TInstance
+  protected abstract createInstance(): TInstance
   protected abstract setupRoutes(): Promise<void>
 }

@@ -13,17 +13,8 @@ export class VonageChannel extends Channel<VonageInstance> {
     return 'bf045a3c-5627-416d-974d-5cfeb277a23f'
   }
 
-  protected createInstance(providerName: string, clientId: string): VonageInstance {
-    return new VonageInstance(
-      this,
-      providerName,
-      clientId,
-      this.kvs,
-      this.conversations,
-      this.messages,
-      this.mapping,
-      this.loggers
-    )
+  protected createInstance(): VonageInstance {
+    return new VonageInstance()
   }
 
   async setupRoutes() {

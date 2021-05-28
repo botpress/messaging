@@ -10,17 +10,8 @@ export class SlackChannel extends Channel<SlackInstance> {
     return 'd6111009-712d-485e-a62d-1540f966f4f3'
   }
 
-  protected createInstance(providerName: string, clientId: string): SlackInstance {
-    return new SlackInstance(
-      this,
-      providerName,
-      clientId,
-      this.kvs,
-      this.conversations,
-      this.messages,
-      this.mapping,
-      this.loggers
-    )
+  protected createInstance() {
+    return new SlackInstance()
   }
 
   async setupRoutes() {

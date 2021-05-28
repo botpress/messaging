@@ -4,10 +4,10 @@ import { App } from './app'
 import { Launcher } from './launcher'
 
 const port = process.env.PORT || '3100'
-const exp = express()
+const router = express()
 
-const app = new App(exp)
-const api = new Api(app, exp)
+const app = new App()
+const api = new Api(app, router)
 
-const launcher = new Launcher(exp, port, app, api)
+const launcher = new Launcher(router, port, app, api)
 void launcher.launch()
