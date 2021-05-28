@@ -32,7 +32,7 @@ export class App {
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.config)
     this.clients = new ClientService(this.database, this.config, this.providers)
-    this.conduits = new ConduitService(this.database, this.config, this.channels, this.providers, this)
+    this.conduits = new ConduitService(this.database, this.config, this.channels, this.providers, this.clients, this)
     this.conversations = new ConversationService(this.database)
     this.messages = new MessageService(this.database, this.conversations)
     this.mapping = new MappingService(this.database)

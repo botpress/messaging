@@ -11,13 +11,14 @@ import { Client } from './types'
 
 export class ClientService extends Service {
   private table: ClientTable
-  private cache: LRU<string, Client>
+  private cacheByToken: LRU<string, Client>
+  private cacheByProvider: LRU<uuid, Client>
 
   constructor(private db: DatabaseService, private configService: ConfigService, private providers: ProviderService) {
     super()
-
     this.table = new ClientTable()
-    this.cache = new LRU({ maxAge: ms('5min'), max: 50000 })
+    this.cacheByToken = new LRU({ maxAge: ms('5min'), max: 50000 })
+    this.cacheByProvider = new LRU({ maxAge: ms('5min'), max: 50000 })
   }
 
   async setup() {
@@ -45,15 +46,32 @@ export class ClientService extends Service {
   }
 
   async getByToken(token: string): Promise<Client | undefined> {
-    const cached = this.cache.get(token)
+    const cached = this.cacheByToken.get(token)
     if (cached) {
       return cached
     }
 
     const rows = await this.query().where({ token: token ?? null })
     if (rows?.length) {
-      this.cache.set(token, rows[0])
-      return rows[0]
+      const client = rows[0] as Client
+      this.cacheByToken.set(token, client)
+      return client
+    } else {
+      return undefined
+    }
+  }
+
+  async getByProviderId(providerId: string): Promise<Client | undefined> {
+    const cached = this.cacheByProvider.get(providerId)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ providerId })
+    if (rows?.length === 1) {
+      const client = rows[0] as Client
+      this.cacheByProvider.set(providerId, client)
+      return client
     } else {
       return undefined
     }

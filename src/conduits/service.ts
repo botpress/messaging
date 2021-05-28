@@ -6,6 +6,7 @@ import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { Conduit as ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
+import { ClientService } from '../clients/service'
 import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { ProviderService } from '../providers/service'
@@ -22,7 +23,8 @@ export class ConduitService extends Service {
     private db: DatabaseService,
     private configService: ConfigService,
     private channelService: ChannelService,
-    private providerServie: ProviderService,
+    private providerService: ProviderService,
+    private clientService: ClientService,
     private app: App
   ) {
     super()
@@ -36,7 +38,7 @@ export class ConduitService extends Service {
     await this.db.registerTable(this.table)
 
     for (const config of this.configService.current.providers) {
-      const provider = (await this.providerServie.getByName(config.name))!
+      const provider = (await this.providerService.getByName(config.name))!
 
       for (const channelName of Object.keys(config.channels)) {
         const channel = this.channelService.getByName(channelName)
@@ -76,7 +78,7 @@ export class ConduitService extends Service {
       return cached
     }
 
-    const provider = (await this.providerServie.getByName(providerName))!
+    const provider = (await this.providerService.getByName(providerName))!
     return this.getInstanceByProviderId(provider.id, channelId)
   }
 
@@ -86,8 +88,8 @@ export class ConduitService extends Service {
       return cached
     }
 
-    const provider = (await this.providerServie.getById(providerId))!
-    const clientId = (await this.providerServie.getClientId(providerId))!
+    const provider = (await this.providerService.getById(providerId))!
+    const client = (await this.clientService.getByProviderId(providerId))!
     const dbConduit = await this.get(provider.id, channelId)
     const channel = this.channelService.getById(channelId)
     const conduit = channel.createConduit()
@@ -100,7 +102,7 @@ export class ConduitService extends Service {
       },
       channel,
       provider.name,
-      clientId
+      client.id
     )
 
     this.cacheById.set(this.getCacheKey(provider.id, channelId), conduit)

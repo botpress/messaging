@@ -76,18 +76,6 @@ export class ProviderService extends Service {
     return undefined
   }
 
-  async getClientId(id: uuid): Promise<string | undefined> {
-    // TODO: this function shouldn't be here
-    // TODO: cache this
-
-    const rows = await this.db.knex('clients').select('id').where({ providerId: id })
-    if (rows?.length) {
-      return rows[0].id as string
-    } else {
-      return undefined
-    }
-  }
-
   private query() {
     return this.db.knex(this.table.id)
   }
