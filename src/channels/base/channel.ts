@@ -13,14 +13,17 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
   private app!: App
   protected router!: Router
 
-  private cache!: LRU<string, TInstance>
+  private cacheByName!: LRU<string, TInstance>
+  private cacheById!: LRU<uuid, TInstance>
   protected logger!: Logger
 
   async setup(app: App, router: Router): Promise<void> {
     this.app = app
     this.router = router
 
-    this.cache = new LRU()
+    // TODO: remove unused instances
+    this.cacheByName = new LRU()
+    this.cacheById = new LRU()
     this.logger = this.app.logger.root.sub(this.name)
 
     const oldRouter = this.router
@@ -29,7 +32,7 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
       this.getRoute(),
       async (req, res, next) => {
         const { provider } = req.params
-        res.locals.instance = await this.getInstance(provider)
+        res.locals.instance = await this.getInstanceByProviderName(provider)
         next()
       },
       this.router
@@ -38,16 +41,25 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
     await this.setupRoutes()
   }
 
-  async getInstance(providerName: string) {
-    let instance = this.cache.get(providerName)
-    if (instance) {
-      return instance
+  async getInstanceByProviderName(providerName: string): Promise<TInstance> {
+    const cached = this.cacheByName.get(providerName)
+    if (cached) {
+      return cached
     }
 
     const provider = (await this.app.providers.getByName(providerName))!
-    const clientId = (await this.app.providers.getClientId(provider.id))!
+    return this.getInstanceByProviderId(provider.id)
+  }
 
-    instance = this.createInstance()
+  async getInstanceByProviderId(providerId: uuid): Promise<TInstance> {
+    const cached = this.cacheById.get(providerId)
+    if (cached) {
+      return cached
+    }
+
+    const provider = (await this.app.providers.getById(providerId))!
+    const clientId = (await this.app.providers.getClientId(providerId))!
+    const instance = this.createInstance()
 
     await instance.setup(
       this.app,
@@ -60,7 +72,8 @@ export abstract class Channel<TInstance extends Instance<any, any>> {
       clientId
     )
 
-    this.cache.set(providerName, instance)
+    this.cacheById.set(provider.id, instance)
+    this.cacheByName.set(provider.name, instance)
 
     return instance
   }
