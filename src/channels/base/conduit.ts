@@ -47,9 +47,7 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
       mapping = await this.app.mapping.create(this.clientId!, this.channel.id, conversation.id, endpoint)
     }
 
-    const message = await this.app.messages
-      .forClient(this.clientId!)
-      .create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
+    const message = await this.app.messages.create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
 
     this.loggerIn.debug('Received message', { providerName: this.providerName, clientId: this.clientId, message })
   }
@@ -80,9 +78,7 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
       }
     }
 
-    const message = await this.app.messages
-      .forClient(this.clientId!)
-      .create(conversationId, payload, mapping.foreignUserId)
+    const message = await this.app.messages.create(conversationId, payload, mapping.foreignUserId)
     this.loggerOut.debug('Sending message', { providerName: this.providerName, clientId: this.clientId, message })
   }
 

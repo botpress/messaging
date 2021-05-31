@@ -7,14 +7,3 @@ export interface Message {
   sentOn: Date
   payload: any
 }
-
-export interface MessageDeleteFilters {
-  id?: uuid
-  conversationId?: uuid
-}
-
-export interface MessageListFilters {
-  conversationId: uuid
-  limit?: number
-  offset?: number
-}

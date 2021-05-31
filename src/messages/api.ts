@@ -11,7 +11,7 @@ export class MessageApi {
       const { conversationId, payload, authorId } = req.body
 
       const client = (await this.clients.getByToken(token as string))!
-      const message = await this.messages.forClient(client.id).create(conversationId, payload, authorId)
+      const message = await this.messages.create(conversationId, payload, authorId)
 
       res.send(message)
     })
@@ -21,9 +21,12 @@ export class MessageApi {
       const { id, conversationId } = req.query
 
       const client = (await this.clients.getByToken(token as string))!
-      const deleted = await this.messages
-        .forClient(client.id)
-        .delete({ id: id as string, conversationId: conversationId as string })
+      let deleted: number
+      if (id) {
+        deleted = await this.messages.delete(id as string)
+      } else {
+        deleted = await this.messages.deleteByConversationId(conversationId as string)
+      }
 
       res.send({ count: deleted })
     })
@@ -33,7 +36,7 @@ export class MessageApi {
       const { messageId } = req.params
 
       const client = (await this.clients.getByToken(token as string))!
-      const message = await this.messages.forClient(client.id).get(messageId)
+      const message = await this.messages.get(messageId)
 
       if (message) {
         res.send(message)
@@ -47,9 +50,7 @@ export class MessageApi {
       const { conversationId, limit } = req.query
 
       const client = (await this.clients.getByToken(token as string))!
-      const conversations = await this.messages
-        .forClient(client.id)
-        .list({ conversationId: conversationId as string, limit: +limit! })
+      const conversations = await this.messages.listByConversationId(conversationId as string, +limit!)
 
       res.send(conversations)
     })

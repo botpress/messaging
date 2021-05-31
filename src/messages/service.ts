@@ -1,67 +1,111 @@
-import { ScopeableService } from '../base/scopeable'
+import LRU from 'lru-cache'
+import { v4 as uuidv4 } from 'uuid'
+import { Service } from '../base/service'
 import { uuid } from '../base/types'
-import { ConversationService, ScopedConversationService } from '../conversations/service'
+import { CachingService } from '../caching/service'
+import { ConversationService } from '../conversations/service'
 import { DatabaseService } from '../database/service'
-import { MessageRepository } from './repo'
 import { MessageTable } from './table'
-import { Message, MessageDeleteFilters, MessageListFilters } from './types'
+import { Message } from './types'
 
-export class MessageService extends ScopeableService<ScopedMessageService> {
+export class MessageService extends Service {
   private table: MessageTable
-  private repo: MessageRepository
+  private cache: LRU<uuid, Message>
 
-  constructor(private db: DatabaseService, private conversationService: ConversationService) {
+  constructor(
+    private db: DatabaseService,
+    private cachingService: CachingService,
+    private conversationService: ConversationService
+  ) {
     super()
     this.table = new MessageTable()
-    this.repo = new MessageRepository(this.db, this.table)
+    this.cache = this.cachingService.newLRU()
   }
 
   async setup() {
     await this.db.registerTable(this.table)
   }
 
-  protected createScope(clientId: string) {
-    return new ScopedMessageService(clientId, this.repo, this.conversationService.forClient(clientId))
-  }
-}
-
-export class ScopedMessageService {
-  constructor(
-    private clientId: string,
-    private repo: MessageRepository,
-    private conversations: ScopedConversationService
-  ) {}
-
-  public async list(filters: MessageListFilters): Promise<Message[]> {
-    return this.repo.list(filters)
-  }
-
-  public async delete(filters: MessageDeleteFilters): Promise<number> {
-    if (filters.id) {
-      const message = await this.repo.get(filters.id)
-
-      if (message) {
-        const conversation = (await this.conversations.get(message.conversationId))!
-        this.conversations.invalidateMostRecent(conversation.userId)
-      }
-
-      return (await this.repo.delete(filters.id)) ? 1 : 0
-    } else {
-      const conversation = (await this.conversations.get(filters.conversationId!))!
-      this.conversations.invalidateMostRecent(conversation.userId)
-
-      return this.repo.deleteAll(filters.conversationId!)
-    }
-  }
-
   public async create(conversationId: uuid, payload: any, authorId?: string): Promise<Message> {
-    const message = await this.repo.create(conversationId, payload, authorId)
-    const conversation = (await this.conversations.get(conversationId))!
-    await this.conversations.setAsMostRecent(conversation)
+    const message = {
+      id: uuidv4(),
+      conversationId,
+      authorId,
+      sentOn: new Date(),
+      payload
+    }
+
+    await this.query().insert(this.serialize(message))
+
     return message
   }
 
+  public async delete(id: uuid): Promise<number> {
+    const numberOfDeletedRows = await this.query().where({ id }).del()
+
+    this.cache.del(id)
+
+    return numberOfDeletedRows
+  }
+
   public async get(id: uuid): Promise<Message | undefined> {
-    return this.repo.get(id)
+    const cached = this.cache.get(id)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ name })
+    if (rows?.length) {
+      const message = this.deserialize(rows[0])
+      this.cache.set(id, message)
+      return message
+    }
+
+    return undefined
+  }
+
+  public async listByConversationId(conversationId: uuid, limit?: number, offset?: number): Promise<Message[]> {
+    let query = this.query().where({ conversationId }).orderBy('sentOn', 'desc')
+
+    if (limit) {
+      query = query.limit(limit)
+    }
+    if (offset) {
+      query = query.offset(offset)
+    }
+
+    const rows = await query
+    return rows.map((x: any) => this.deserialize(x)!)
+  }
+
+  public async deleteByConversationId(conversationId: uuid): Promise<number> {
+    const deletedIds = (await this.query().select('id').where({ conversationId })).map((x) => x.id)
+
+    if (deletedIds.length) {
+      await this.query().where({ conversationId }).del()
+      deletedIds.forEach((x) => this.cache.del(x))
+    }
+
+    return deletedIds.length
+  }
+
+  public serialize(message: Partial<Message>) {
+    return {
+      ...message,
+      sentOn: this.db.setDate(message.sentOn),
+      payload: this.db.setJson(message.payload)
+    }
+  }
+
+  public deserialize(message: any): Message {
+    return {
+      ...message,
+      sentOn: this.db.getDate(message.sentOn),
+      payload: this.db.getJson(message.payload)
+    }
+  }
+
+  private query() {
+    return this.db.knex(this.table.id)
   }
 }
