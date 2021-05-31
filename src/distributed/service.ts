@@ -1,14 +1,16 @@
 import redis, { Redis } from 'ioredis'
 import { Service } from '../base/service'
+import { PingPong } from './pings'
 
 export class DistributedService extends Service {
   private nodeId!: number
   private pub!: Redis
   private sub!: Redis
-  private callbacks: { [channel: string]: (message: object) => Promise<void> } = {}
+  private callbacks: { [channel: string]: (message: any) => Promise<void> } = {}
+  private pings!: PingPong
 
   async setup() {
-    this.nodeId = Math.random() * 1000000
+    this.nodeId = Math.round(Math.random() * 1000000)
     this.pub = new redis()
     this.sub = new redis()
 
@@ -22,6 +24,9 @@ export class DistributedService extends Service {
         }
       }
     })
+
+    this.pings = new PingPong(this.nodeId, this)
+    await this.pings.setup()
   }
 
   async destroy() {
@@ -29,12 +34,12 @@ export class DistributedService extends Service {
     await this.sub.quit()
   }
 
-  async listen(channel: string, callback: (message: object) => Promise<void>) {
+  async listen(channel: string, callback: (message: any) => Promise<void>) {
     await this.sub.subscribe(channel)
     this.callbacks[channel] = callback
   }
 
-  async send(channel: string, message: object) {
+  async send(channel: string, message: any) {
     await this.pub.publish(channel, JSON.stringify({ nodeId: this.nodeId, ...message }))
   }
 }
