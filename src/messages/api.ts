@@ -10,6 +10,7 @@ export class MessageApi {
       const { token } = req.headers
       const { conversationId, payload, authorId } = req.body
 
+      // TODO: validate ownership
       const client = (await this.clients.getByToken(token as string))!
       const message = await this.messages.create(conversationId, payload, authorId)
 
@@ -20,6 +21,7 @@ export class MessageApi {
       const { token } = req.headers
       const { id, conversationId } = req.query
 
+      // TODO: validate ownership
       const client = (await this.clients.getByToken(token as string))!
       let deleted: number
       if (id) {
@@ -35,6 +37,7 @@ export class MessageApi {
       const { token } = req.headers
       const { messageId } = req.params
 
+      // TODO: validate ownership
       const client = (await this.clients.getByToken(token as string))!
       const message = await this.messages.get(messageId)
 
@@ -49,6 +52,7 @@ export class MessageApi {
       const { token } = req.headers
       const { conversationId, limit } = req.query
 
+      // TODO: validate ownership
       const client = (await this.clients.getByToken(token as string))!
       const conversations = await this.messages.listByConversationId(conversationId as string, +limit!)
 
