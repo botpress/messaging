@@ -48,7 +48,7 @@ export class ServerCache<K, V> {
   }
 }
 
-export interface ServerCacheEvent<K, V> {
+interface ServerCacheEvent<K, V> {
   key?: K
   value?: V
 }
