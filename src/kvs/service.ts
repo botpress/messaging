@@ -20,8 +20,8 @@ export class KvsService extends Service {
     await this.db.registerTable(this.table)
   }
 
-  async get(key: string): Promise<any> {
-    const cached = this.cache.get(key)
+  async get(clientId: string, key: string): Promise<any> {
+    const cached = this.cache.get(this.getCacheKey(clientId, key))
     if (cached) {
       return cached
     }
@@ -29,21 +29,25 @@ export class KvsService extends Service {
     const rows = await this.query().where({ key })
     if (rows?.length) {
       const value = this.db.getJson(rows[0].value)
-      this.cache.set(key, value)
+      this.cache.set(this.getCacheKey(clientId, key), value)
       return value
     } else {
       return undefined
     }
   }
 
-  async set(key: string, value: any): Promise<void> {
-    if (await this.get(key)) {
-      this.cache.set(key, value)
+  async set(clientId: string, key: string, value: any): Promise<void> {
+    if (await this.get(clientId, key)) {
+      this.cache.set(this.getCacheKey(clientId, key), value)
       await this.query().where({ key }).update({ value })
     } else {
-      this.cache.set(key, value)
+      this.cache.set(this.getCacheKey(clientId, key), value)
       await this.query().insert({ id: uuidv4(), key, value: this.db.setJson(value) })
     }
+  }
+
+  private getCacheKey(clientId: string, key: string) {
+    return `${clientId}-${key}`
   }
 
   private query() {

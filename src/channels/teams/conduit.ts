@@ -60,7 +60,7 @@ export class TeamsConduit extends Conduit<TeamsConfig, TeamsContext> {
       return convoRef
     }
 
-    convoRef = await this.app.kvs.get(threadId)
+    convoRef = await this.app.kvs.get(this.clientId, threadId)
     this.convoRefs.set(threadId, convoRef!)
     return convoRef!
   }
@@ -71,6 +71,6 @@ export class TeamsConduit extends Conduit<TeamsConfig, TeamsContext> {
     }
 
     this.convoRefs.set(threadId, convoRef)
-    return this.app.kvs.set(threadId, convoRef)
+    return this.app.kvs.set(this.clientId, threadId, convoRef)
   }
 }

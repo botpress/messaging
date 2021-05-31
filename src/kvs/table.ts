@@ -8,6 +8,7 @@ export class KvsTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
+    table.uuid('clientId').references('id').inTable('clients')
     table.string('key').unique()
     table.jsonb('value')
     table.index('key')
