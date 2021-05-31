@@ -33,7 +33,7 @@ export class App {
     this.config = new ConfigService()
     this.database = new DatabaseService(this.config)
     this.distributed = new DistributedService()
-    this.caching = new CachingService()
+    this.caching = new CachingService(this.distributed)
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.config, this.caching)
     this.clients = new ClientService(this.database, this.config, this.caching, this.providers)

@@ -1,7 +1,7 @@
-import LRU from 'lru-cache'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
 import { ConversationTable } from './table'
@@ -9,15 +9,16 @@ import { Conversation, RecentConversation } from './types'
 
 export class ConversationService extends Service {
   private table: ConversationTable
-  private cache: LRU<uuid, Conversation>
+  private cache!: ServerCache<uuid, Conversation>
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
     this.table = new ConversationTable()
-    this.cache = this.cachingService.newLRU()
   }
 
   async setup() {
+    this.cache = await this.cachingService.newServerCache('cache_conversation_by_id')
+
     await this.db.registerTable(this.table)
   }
 

@@ -1,22 +1,22 @@
-import LRU from 'lru-cache'
-import ms from 'ms'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
+import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
 import { KvsTable } from './table'
 
 export class KvsService extends Service {
   private table: KvsTable
-  private cache: LRU<string, any>
+  private cache!: ServerCache<string, any>
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
     this.table = new KvsTable()
-    this.cache = this.cachingService.newLRU()
   }
 
   async setup() {
+    this.cache = await this.cachingService.newServerCache('cache_kvs')
+
     await this.db.registerTable(this.table)
   }
 

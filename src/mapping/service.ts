@@ -1,6 +1,6 @@
-import LRUCache from 'lru-cache'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
 import { MappingTable } from './table'
@@ -8,17 +8,18 @@ import { Endpoint, Mapping } from './types'
 
 export class MappingService extends Service {
   private table: MappingTable
-  private convCache: LRUCache<string, Mapping>
-  private endpointCache: LRUCache<string, Mapping>
+  private convCache!: ServerCache<string, Mapping>
+  private endpointCache!: ServerCache<string, Mapping>
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
     this.table = new MappingTable()
-    this.convCache = this.cachingService.newLRU()
-    this.endpointCache = this.cachingService.newLRU()
   }
 
   async setup() {
+    this.convCache = await this.cachingService.newServerCache('cache_mapping_by_conversation_id')
+    this.endpointCache = await this.cachingService.newServerCache('cache_mapping_by_endpoint')
+
     await this.db.registerTable(this.table)
   }
 

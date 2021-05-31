@@ -1,7 +1,7 @@
-import LRU from 'lru-cache'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
@@ -10,8 +10,8 @@ import { Provider } from './types'
 
 export class ProviderService extends Service {
   private table: ProviderTable
-  private cacheById: LRU<uuid, Provider>
-  private cacheByName: LRU<string, Provider>
+  private cacheById!: ServerCache<uuid, Provider>
+  private cacheByName!: ServerCache<string, Provider>
 
   constructor(
     private db: DatabaseService,
@@ -20,11 +20,12 @@ export class ProviderService extends Service {
   ) {
     super()
     this.table = new ProviderTable()
-    this.cacheById = this.cachingService.newLRU()
-    this.cacheByName = this.cachingService.newLRU()
   }
 
   async setup() {
+    this.cacheById = await this.cachingService.newServerCache('cache_provider_by_id')
+    this.cacheByName = await this.cachingService.newServerCache('cache_provider_by_name')
+
     await this.db.registerTable(this.table)
 
     for (const config of this.configService.current.providers) {

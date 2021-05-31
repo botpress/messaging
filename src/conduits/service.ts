@@ -1,9 +1,8 @@
-import LRU from 'lru-cache'
-import ms from 'ms'
 import { v4 as uuidv4 } from 'uuid'
 import { App } from '../app'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { Conduit as ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
@@ -16,9 +15,9 @@ import { Conduit } from './types'
 
 export class ConduitService extends Service {
   private table: ConduitTable
-  private cache: LRU<string, Conduit>
-  private cacheByName!: LRU<string, ConduitInstance<any, any>>
-  private cacheById!: LRU<uuid, ConduitInstance<any, any>>
+  private cache!: ServerCache<string, Conduit>
+  private cacheByName!: ServerCache<string, ConduitInstance<any, any>>
+  private cacheById!: ServerCache<uuid, ConduitInstance<any, any>>
 
   constructor(
     private db: DatabaseService,
@@ -31,12 +30,13 @@ export class ConduitService extends Service {
   ) {
     super()
     this.table = new ConduitTable()
-    this.cache = this.cachingService.newLRU()
-    this.cacheByName = this.cachingService.newLRU()
-    this.cacheById = this.cachingService.newLRU()
   }
 
   async setup() {
+    this.cache = await this.cachingService.newServerCache('cache_conduit_by_id')
+    this.cacheByName = await this.cachingService.newServerCache('cache_conduit_by_provider_name')
+    this.cacheById = await this.cachingService.newServerCache('cache_conduit_by_provider_id')
+
     await this.db.registerTable(this.table)
 
     for (const config of this.configService.current.providers) {
