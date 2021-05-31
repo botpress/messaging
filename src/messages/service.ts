@@ -41,11 +41,8 @@ export class MessageService extends Service {
   }
 
   public async delete(id: uuid): Promise<number> {
-    const numberOfDeletedRows = await this.query().where({ id }).del()
-
     this.cache.del(id)
-
-    return numberOfDeletedRows
+    return this.query().where({ id }).del()
   }
 
   public async get(id: uuid): Promise<Message | undefined> {
@@ -57,7 +54,9 @@ export class MessageService extends Service {
     const rows = await this.query().where({ name })
     if (rows?.length) {
       const message = this.deserialize(rows[0])
+
       this.cache.set(id, message)
+
       return message
     }
 

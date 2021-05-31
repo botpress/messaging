@@ -43,7 +43,7 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
     let mapping = await this.app.mapping.getByEndpoint(this.clientId!, this.channel.id, endpoint)
 
     if (!mapping) {
-      const conversation = await this.app.conversations.forClient(this.clientId!).create(endpoint.foreignUserId!)
+      const conversation = await this.app.conversations.create(this.clientId, endpoint.foreignUserId!)
       mapping = await this.app.mapping.create(this.clientId!, this.channel.id, conversation.id, endpoint)
     }
 

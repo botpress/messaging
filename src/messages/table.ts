@@ -12,6 +12,6 @@ export class MessageTable extends Table {
     table.string('authorId')
     table.timestamp('sentOn')
     table.jsonb('payload')
-    table.index(['conversationId', 'sentOn'], 'mcs_idx')
+    table.index(['conversationId', 'sentOn'])
   }
 }

@@ -1,23 +1,13 @@
 import { uuid } from '../base/types'
+import { Message } from '../messages/types'
 
 export interface Conversation {
-  clientId: uuid
   id: uuid
+  clientId: uuid
   userId: string
   createdOn: Date
 }
 
 export interface RecentConversation extends Conversation {
-  // lastMessage?: Message
-}
-
-export interface ConversationDeleteFilters {
-  id?: uuid
-  userId?: string
-}
-
-export interface ConversationListFilters {
-  userId: string
-  limit?: number
-  offset?: number
+  lastMessage?: Message
 }

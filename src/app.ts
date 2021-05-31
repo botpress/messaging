@@ -44,7 +44,7 @@ export class App {
       this.clients,
       this
     )
-    this.conversations = new ConversationService(this.database)
+    this.conversations = new ConversationService(this.database, this.caching)
     this.messages = new MessageService(this.database, this.caching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching)
   }

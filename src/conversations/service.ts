@@ -1,101 +1,143 @@
 import LRU from 'lru-cache'
-import ms from 'ms'
-import { ScopeableService } from '../base/scopeable'
+import { v4 as uuidv4 } from 'uuid'
+import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
-import { ConversationRepo } from './repo'
 import { ConversationTable } from './table'
-import { Conversation, ConversationDeleteFilters, ConversationListFilters, RecentConversation } from './types'
+import { Conversation, RecentConversation } from './types'
 
-export class ConversationService extends ScopeableService<ScopedConversationService> {
+export class ConversationService extends Service {
   private table: ConversationTable
-  private repo: ConversationRepo
+  private cache: LRU<uuid, Conversation>
 
-  constructor(private db: DatabaseService) {
+  constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
     this.table = new ConversationTable()
-    this.repo = new ConversationRepo(this.db, this.table)
+    this.cache = this.cachingService.newLRU()
   }
 
   async setup() {
     await this.db.registerTable(this.table)
   }
 
-  protected createScope(clientId: string) {
-    return new ScopedConversationService(clientId, this.repo, <any>undefined)
-  }
-}
-
-export class ScopedConversationService {
-  private mostRecentCache: LRU<string, Conversation>
-
-  constructor(
-    private clientId: string,
-    private repo: ConversationRepo,
-    public invalidateMostRecent: (userId: string, mostRecentConvoId?: uuid) => void
-  ) {
-    this.mostRecentCache = new LRU<string, Conversation>({ max: 10000, maxAge: ms('5min') })
-
-    // TODO: distributed
-    this.invalidateMostRecent = this.localInvalidateMostRecent
-  }
-
-  public async list(filters: ConversationListFilters): Promise<RecentConversation[]> {
-    return this.repo.list(this.clientId, filters)
-  }
-
-  public async delete(filters: ConversationDeleteFilters): Promise<number> {
-    if (filters.id) {
-      const conversation = (await this.repo.get(filters.id))!
-      this.invalidateMostRecent(conversation.userId)
-
-      return (await this.repo.delete(filters.id)) ? 1 : 0
-    } else {
-      this.invalidateMostRecent(filters.userId!)
-
-      return this.repo.deleteAll(this.clientId, filters.userId!)
-    }
-  }
-
-  public async create(userId: uuid): Promise<Conversation> {
-    return this.repo.create(this.clientId, userId)
-  }
-
-  public async recent(userId: uuid): Promise<Conversation> {
-    const cached = this.mostRecentCache.get(userId)
-    if (cached) {
-      return cached
+  public async create(clientId: uuid, userId: uuid): Promise<Conversation> {
+    const conversation = {
+      id: uuidv4(),
+      userId,
+      clientId,
+      createdOn: new Date()
     }
 
-    let conversation = await this.repo.recent(this.clientId, userId)
-    if (!conversation) {
-      conversation = await this.repo.create(this.clientId, userId)
-    }
-
-    this.mostRecentCache.set(userId, conversation)
+    await this.query().insert(this.serialize(conversation))
 
     return conversation
   }
 
+  public async delete(id: uuid): Promise<number> {
+    this.cache.del(id)
+    return this.query().where({ id }).del()
+  }
+
   public async get(id: uuid): Promise<Conversation | undefined> {
-    return this.repo.get(id)
-  }
-
-  public async setAsMostRecent(conversation: Conversation) {
-    const currentMostRecent = this.mostRecentCache.peek(conversation.userId)
-
-    if (currentMostRecent?.id !== conversation.id) {
-      this.invalidateMostRecent(conversation.userId, conversation.id)
-      this.mostRecentCache.set(conversation.userId, conversation)
+    const cached = this.cache.get(id)
+    if (cached) {
+      return cached
     }
+
+    const rows = await this.query().where({ name })
+    if (rows?.length) {
+      const conversation = this.deserialize(rows[0])
+
+      this.cache.set(id, conversation)
+
+      return conversation
+    }
+
+    return undefined
   }
 
-  public localInvalidateMostRecent(userId: string, mostRecentConvoId?: uuid) {
-    if (userId) {
-      const cachedMostRecent = this.mostRecentCache.peek(userId)
-      if (cachedMostRecent?.id !== mostRecentConvoId) {
-        this.mostRecentCache.del(userId)
+  public async listByUserId(
+    clientId: uuid,
+    userId: string,
+    limit?: number,
+    offset?: number
+  ): Promise<RecentConversation[]> {
+    let query = this.queryRecents(clientId, userId)
+
+    if (limit) {
+      query = query.limit(limit)
+    }
+    if (offset) {
+      query = query.offset(offset)
+    }
+
+    return (await query).map((row: any) => {
+      const conversation = this.deserialize({
+        id: row.id,
+        client: row.clientId,
+        userId: row.userId,
+        createdOn: row.createdOn
+      })
+
+      const message = {
+        id: row.messageId,
+        conversationId: conversation.id,
+        authorId: row.authorId,
+        sentOn: this.db.getDate(row.sentOn),
+        payload: this.db.getJson(row.payload)
       }
+
+      return { ...conversation, lastMessage: message }
+    })
+  }
+
+  private queryRecents(clientId: string, userId: string) {
+    return this.query()
+      .select(
+        'conversations.id',
+        'conversations.userId',
+        'conversations.clientId',
+        'conversations.createdOn',
+        'messages.id as messageId',
+        'messages.authorId',
+        'messages.payload',
+        'messages.sentOn'
+      )
+      .leftJoin('messages', 'messages.conversationId', 'conversations.id')
+      .where({
+        clientId,
+        userId
+      })
+      .andWhere((builder: any) => {
+        void builder
+          .where({
+            sentOn: this.db.knex
+              .max('sentOn')
+              .from('messages')
+              .where('messages.conversationId', this.db.knex.ref('conversations.id'))
+          })
+          .orWhereNull('sentOn')
+      })
+      .groupBy('conversations.id', 'messages.id')
+      .orderBy('sentOn', 'desc')
+  }
+
+  private serialize(conversation: Partial<Conversation>) {
+    return {
+      ...conversation,
+      createdOn: this.db.setDate(conversation.createdOn)
     }
+  }
+
+  private deserialize(conversation: any): Conversation {
+    return {
+      ...conversation,
+      createdOn: this.db.getDate(conversation.createdOn)
+    }
+  }
+
+  private query() {
+    return this.db.knex(this.table.id)
   }
 }
