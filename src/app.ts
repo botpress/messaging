@@ -6,6 +6,7 @@ import { ConduitService } from './conduits/service'
 import { ConfigService } from './config/service'
 import { ConversationService } from './conversations/service'
 import { DatabaseService } from './database/service'
+import { DistributedService } from './distributed/service'
 import { KvsService } from './kvs/service'
 import { LoggerService } from './logger/service'
 import { MappingService } from './mapping/service'
@@ -16,6 +17,7 @@ export class App {
   logger: LoggerService
   config: ConfigService
   database: DatabaseService
+  distributed: DistributedService
   caching: CachingService
   channels: ChannelService
   providers: ProviderService
@@ -30,6 +32,7 @@ export class App {
     this.logger = new LoggerService()
     this.config = new ConfigService()
     this.database = new DatabaseService(this.config)
+    this.distributed = new DistributedService(this.logger)
     this.caching = new CachingService()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.config, this.caching)
@@ -53,6 +56,7 @@ export class App {
     await this.logger.setup()
     await this.config.setup()
     await this.database.setup()
+    await this.distributed.setup()
     await this.caching.setup()
     await this.channels.setup()
     await this.providers.setup()
@@ -65,6 +69,7 @@ export class App {
   }
 
   async destroy() {
+    await this.distributed.destroy()
     await this.database.destroy()
   }
 }

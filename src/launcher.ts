@@ -1,6 +1,7 @@
 import clc from 'cli-color'
 import { Express } from 'express'
 import _ from 'lodash'
+import portfinder from 'portfinder'
 import { Api } from './api'
 import { App } from './app'
 import { Logger } from './logger/types'
@@ -8,7 +9,7 @@ import { Logger } from './logger/types'
 export class Launcher {
   private logger: Logger
 
-  constructor(private express: Express, private port: string, private app: App, private api: Api) {
+  constructor(private express: Express, private port: string | undefined, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
 
     process.on('uncaughtException', (err) => {
@@ -33,6 +34,11 @@ export class Launcher {
     this.printChannels()
 
     await this.api.setup()
+
+    if (!this.port) {
+      portfinder.basePort = 3100
+      this.port = (await portfinder.getPortPromise()).toString()
+    }
     this.express.listen(this.port)
 
     this.logger.info(`Server is listening at: http://localhost:${this.port}`)
