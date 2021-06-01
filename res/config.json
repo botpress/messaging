@@ -4,6 +4,10 @@
     "type": "postgres",
     "connection": "postgres://user:password@localhost:5432/dbname"
   },
+  "redis": {
+    "enabled": false,
+    "url": null
+  },
   "clients": [{ "provider": "test", "token": "test-token-123" }],
   "providers": [
     {
