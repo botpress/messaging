@@ -1,8 +1,9 @@
+import clc from 'cli-color'
 import redis, { Redis } from 'ioredis'
 import { Logger } from '../../logger/types'
 import { DistributedSubservice } from '../base/subservice'
 import { RedisConfig } from './config'
-import { PingPong } from './pings'
+import { PingPong } from './ping'
 
 export class RedisSubservice implements DistributedSubservice {
   private logger: Logger = new Logger('Redis')
@@ -16,7 +17,7 @@ export class RedisSubservice implements DistributedSubservice {
 
   async setup() {
     this.nodeId = Math.round(Math.random() * 1000000)
-    this.logger.info(`Id is ${this.nodeId}`)
+    this.logger.info(`Id is ${clc.bold(this.nodeId)}`)
 
     this.pub = new redis(this.config.url)
     this.sub = new redis(this.config.url)
@@ -32,7 +33,7 @@ export class RedisSubservice implements DistributedSubservice {
       }
     })
 
-    this.pings = new PingPong(this.nodeId, this)
+    this.pings = new PingPong(this.nodeId, this, this.logger)
     await this.pings.setup()
   }
 

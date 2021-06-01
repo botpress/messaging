@@ -1,9 +1,11 @@
+import clc from 'cli-color'
+import { Logger } from '../../logger/types'
 import { RedisSubservice } from './subservice'
 
 export class PingPong {
   private known: { [foreignNodeId: number]: boolean } = {}
 
-  constructor(private nodeId: number, private distributed: RedisSubservice) {}
+  constructor(private nodeId: number, private distributed: RedisSubservice, private logger: Logger) {}
 
   async setup() {
     await this.distributed.listen('ping', async (ping: PingEvent) => {
@@ -30,7 +32,7 @@ export class PingPong {
 
   acknowledge(foreignNodeId: number) {
     if (!this.known[foreignNodeId]) {
-      console.log('Registered foreign node', foreignNodeId)
+      this.logger.info(`Registered foreign node ${clc.bold(foreignNodeId)}`)
       this.known[foreignNodeId] = true
     }
   }
