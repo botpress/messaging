@@ -1,45 +1,38 @@
-import redis, { Redis } from 'ioredis'
 import { Service } from '../base/service'
-import { PingPong } from './pings'
+import { ConfigService } from '../config/service'
+import { DistributedSubservice } from './base/subservice'
+import { LocalSubservice } from './local/subservice'
+import { RedisConfig } from './redis/config'
+import { RedisSubservice } from './redis/subservice'
 
 export class DistributedService extends Service {
-  private nodeId!: number
-  private pub!: Redis
-  private sub!: Redis
-  private callbacks: { [channel: string]: (message: any) => Promise<void> } = {}
-  private pings!: PingPong
+  private subservice!: DistributedSubservice
+
+  constructor(private configService: ConfigService) {
+    super()
+  }
 
   async setup() {
-    this.nodeId = Math.round(Math.random() * 1000000)
-    this.pub = new redis()
-    this.sub = new redis()
+    const config = (this.configService.current.redis || {}) as RedisConfig
 
-    this.sub.on('message', (channel, message) => {
-      const callback = this.callbacks[channel]
-      if (callback) {
-        const parsed = JSON.parse(message)
-        if (parsed.nodeId !== this.nodeId) {
-          delete parsed.nodeId
-          void callback(parsed)
-        }
-      }
-    })
+    if (config.enabled) {
+      this.subservice = new RedisSubservice(config)
+    } else {
+      this.subservice = new LocalSubservice()
+    }
 
-    this.pings = new PingPong(this.nodeId, this)
-    await this.pings.setup()
+    await this.subservice.setup()
   }
 
   async destroy() {
-    await this.pub.quit()
-    await this.sub.quit()
+    await this.subservice.destroy()
   }
 
   async listen(channel: string, callback: (message: any) => Promise<void>) {
-    await this.sub.subscribe(channel)
-    this.callbacks[channel] = callback
+    return this.subservice.listen(channel, callback)
   }
 
   async send(channel: string, message: any) {
-    await this.pub.publish(channel, JSON.stringify({ nodeId: this.nodeId, ...message }))
+    return this.subservice.send(channel, message)
   }
 }

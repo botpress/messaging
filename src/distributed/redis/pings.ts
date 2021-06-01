@@ -1,9 +1,9 @@
-import { DistributedService } from './service'
+import { RedisSubservice } from './subservice'
 
 export class PingPong {
   private known: { [foreignNodeId: number]: boolean } = {}
 
-  constructor(private nodeId: number, private distributed: DistributedService) {}
+  constructor(private nodeId: number, private distributed: RedisSubservice) {}
 
   async setup() {
     await this.distributed.listen('ping', async (ping: PingEvent) => {
