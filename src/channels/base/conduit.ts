@@ -1,3 +1,4 @@
+import axios from 'axios'
 import _ from 'lodash'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
@@ -49,7 +50,16 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
 
     const message = await this.app.messages.create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
 
-    this.loggerIn.debug('Received message', { providerName: this.providerName, clientId: this.clientId, message })
+    // TODO: use app.webhooks
+    const post = {
+      channel: { id: this.channel.id, name: this.channel.name },
+      user: { id: mapping.foreignUserId },
+      conversation: { id: mapping.conversationId },
+      message
+    }
+    this.loggerIn.debug('Received message', post)
+
+    await axios.post('http://localhost:3000/messaging/receive', post)
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
