@@ -46,11 +46,32 @@ export class ConversationService extends Service {
       return cached
     }
 
-    const rows = await this.query().where({ name })
+    const rows = await this.query().where({ id })
     if (rows?.length) {
       const conversation = this.deserialize(rows[0])
 
       this.cache.set(id, conversation)
+
+      return conversation
+    }
+
+    return undefined
+  }
+
+  public async getMostRecent(clientId: uuid, userId: string): Promise<Conversation | undefined> {
+    // TODO: cache
+
+    const query = this.queryRecents(clientId, userId).limit(1)
+    const rows = await query
+
+    if (rows?.length) {
+      const row = rows[0]
+      const conversation = this.deserialize({
+        id: row.id,
+        client: row.clientId,
+        userId: row.userId,
+        createdOn: row.createdOn
+      })
 
       return conversation
     }
