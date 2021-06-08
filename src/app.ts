@@ -12,6 +12,7 @@ import { LoggerService } from './logger/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { ProviderService } from './providers/service'
+import { WebhookService } from './webhooks/service'
 
 export class App {
   logger: LoggerService
@@ -22,6 +23,7 @@ export class App {
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
+  webhooks: WebhookService
   kvs: KvsService
   conduits: ConduitService
   conversations: ConversationService
@@ -37,6 +39,7 @@ export class App {
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.config, this.caching)
     this.clients = new ClientService(this.database, this.config, this.caching, this.providers)
+    this.webhooks = new WebhookService(this.database)
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(
       this.database,
@@ -61,6 +64,7 @@ export class App {
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
+    await this.webhooks.setup()
     await this.kvs.setup()
     await this.conduits.setup()
     await this.conversations.setup()
