@@ -1,16 +1,19 @@
 import express, { Router } from 'express'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
+import { ConversationApi } from './conversations/api'
 import { MessageApi } from './messages/api'
 
 export class Api {
   private router!: Router
 
+  conversations: ConversationApi
   messages: MessageApi
   channels: ChannelApi
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
+    this.conversations = new ConversationApi(this.router, app.clients, app.conversations)
     this.messages = new MessageApi(this.router, app.clients, app.messages)
     this.channels = new ChannelApi(this.root, this.app)
   }
@@ -32,6 +35,7 @@ export class Api {
       res.sendStatus(200)
     })
 
+    await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
   }
