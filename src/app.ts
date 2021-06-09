@@ -36,7 +36,7 @@ export class App {
     this.logger = new LoggerService()
     this.config = new ConfigService()
     this.database = new DatabaseService(this.config)
-    this.crypto = new CryptoService()
+    this.crypto = new CryptoService(this.config)
     this.distributed = new DistributedService(this.config)
     this.caching = new CachingService(this.distributed)
     this.channels = new ChannelService(this.database)
@@ -46,6 +46,7 @@ export class App {
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(
       this.database,
+      this.crypto,
       this.config,
       this.caching,
       this.channels,

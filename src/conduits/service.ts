@@ -8,6 +8,7 @@ import { Conduit as ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConfigService } from '../config/service'
+import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
 import { ProviderService } from '../providers/service'
 import { ConduitTable } from './table'
@@ -21,6 +22,7 @@ export class ConduitService extends Service {
 
   constructor(
     private db: DatabaseService,
+    private cryptoService: CryptoService,
     private configService: ConfigService,
     private cachingService: CachingService,
     private channelService: ChannelService,
@@ -54,7 +56,7 @@ export class ConduitService extends Service {
   }
 
   async create(providerId: uuid, channelId: uuid, config: any): Promise<Conduit> {
-    return this.query().insert(this.serialize({ id: uuidv4(), providerId, channelId, config }))
+    return this.query().insert(await this.serialize({ id: uuidv4(), providerId, channelId, config }))
   }
 
   async get(providerId: uuid, channelId: uuid): Promise<Conduit | undefined> {
@@ -66,7 +68,7 @@ export class ConduitService extends Service {
 
     const rows = await this.query().where({ providerId, channelId })
     if (rows?.length) {
-      const conduit = this.deserialize(rows[0])
+      const conduit = await this.deserialize(rows[0])
       this.cache.set(key, conduit)
       return conduit
     }
@@ -117,17 +119,17 @@ export class ConduitService extends Service {
     return `${providerId}-${channelId}`
   }
 
-  private serialize(conduit: Partial<Conduit>) {
+  private async serialize(conduit: Partial<Conduit>) {
     return {
       ...conduit,
-      config: this.db.setJson(conduit.config)
+      config: await this.cryptoService.encrypt(JSON.stringify(conduit.config || {}))
     }
   }
 
-  private deserialize(conduit: any): Conduit {
+  private async deserialize(conduit: any): Promise<Conduit> {
     return {
       ...conduit,
-      config: this.db.getJson(conduit.config)
+      config: JSON.parse(await this.cryptoService.decrypt(conduit.config))
     }
   }
 

@@ -10,7 +10,7 @@ export class ConduitTable extends Table {
     table.uuid('id').primary()
     table.uuid('providerId').references('id').inTable('providers')
     table.uuid('channelId').references('id').inTable('channels')
-    table.jsonb('config')
+    table.text('config')
     table.unique(['providerId', 'channelId'])
   }
 }
