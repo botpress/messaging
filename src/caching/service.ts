@@ -17,11 +17,15 @@ export class CachingService extends Service {
     return new LRU<K, V>({ max: 50000, maxAge: ms('5min') })
   }
 
-  async newServerCache<K, V>(id: string) {
-    const cache = new ServerCache<K, V>(id, this.distributedService, {
-      max: 50000,
-      maxAge: ms('5min')
-    })
+  async newServerCache<K, V>(id: string, options?: LRU.Options<K, V>) {
+    const cache = new ServerCache<K, V>(
+      id,
+      this.distributedService,
+      options ?? {
+        max: 50000,
+        maxAge: ms('5min')
+      }
+    )
 
     this.caches[id] = cache
 

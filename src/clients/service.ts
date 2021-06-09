@@ -14,6 +14,7 @@ export class ClientService extends Service {
   private table: ClientTable
   private cacheById!: ServerCache<uuid, Client>
   private cacheByProvider!: ServerCache<uuid, Client>
+  private cacheTokens!: ServerCache<uuid, string>
 
   constructor(
     private db: DatabaseService,
@@ -29,6 +30,7 @@ export class ClientService extends Service {
   async setup() {
     this.cacheById = await this.cachingService.newServerCache('cache_client_by_id')
     this.cacheByProvider = await this.cachingService.newServerCache('cache_client_by_provider')
+    this.cacheTokens = await this.cachingService.newServerCache('cache_client_tokens')
 
     await this.db.registerTable(this.table)
 
@@ -75,7 +77,17 @@ export class ClientService extends Service {
       return undefined
     }
 
+    const cachedToken = this.cacheTokens.get(id)
+    if (cachedToken) {
+      if (token === cachedToken) {
+        return client
+      } else {
+        return undefined
+      }
+    }
+
     if (await this.cryptoService.compareHash(client.token!, token)) {
+      this.cacheTokens.set(id, token)
       return client
     } else {
       return undefined
