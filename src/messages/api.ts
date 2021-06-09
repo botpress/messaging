@@ -7,22 +7,18 @@ export class MessageApi {
 
   async setup() {
     this.router.post('/messages', async (req, res) => {
-      const { token } = req.headers
       const { conversationId, payload, authorId } = req.body
 
       // TODO: validate ownership
-      const client = (await this.clients.getByToken(token as string))!
       const message = await this.messages.create(conversationId, payload, authorId)
 
       res.send(message)
     })
 
     this.router.delete('/messages', async (req, res) => {
-      const { token } = req.headers
       const { id, conversationId } = req.query
 
       // TODO: validate ownership
-      const client = (await this.clients.getByToken(token as string))!
       let deleted: number
       if (id) {
         deleted = await this.messages.delete(id as string)
@@ -34,11 +30,9 @@ export class MessageApi {
     })
 
     this.router.get('/messages/:messageId', async (req, res) => {
-      const { token } = req.headers
       const { messageId } = req.params
 
       // TODO: validate ownership
-      const client = (await this.clients.getByToken(token as string))!
       const message = await this.messages.get(messageId)
 
       if (message) {
@@ -49,11 +43,9 @@ export class MessageApi {
     })
 
     this.router.get('/messages/', async (req, res) => {
-      const { token } = req.headers
       const { conversationId, limit } = req.query
 
       // TODO: validate ownership
-      const client = (await this.clients.getByToken(token as string))!
       const conversations = await this.messages.listByConversationId(conversationId as string, +limit!)
 
       res.send(conversations)

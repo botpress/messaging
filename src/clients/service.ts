@@ -1,10 +1,10 @@
-import LRU from 'lru-cache'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConfigService } from '../config/service'
+import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
 import { ProviderService } from '../providers/service'
 import { ClientTable } from './table'
@@ -12,11 +12,12 @@ import { Client } from './types'
 
 export class ClientService extends Service {
   private table: ClientTable
-  private cacheByToken!: ServerCache<string, Client>
+  private cacheById!: ServerCache<uuid, Client>
   private cacheByProvider!: ServerCache<uuid, Client>
 
   constructor(
     private db: DatabaseService,
+    private cryptoService: CryptoService,
     private configService: ConfigService,
     private cachingService: CachingService,
     private providers: ProviderService
@@ -26,25 +27,25 @@ export class ClientService extends Service {
   }
 
   async setup() {
-    this.cacheByToken = await this.cachingService.newServerCache('cache_client_by_token')
+    this.cacheById = await this.cachingService.newServerCache('cache_client_by_id')
     this.cacheByProvider = await this.cachingService.newServerCache('cache_client_by_provider')
 
     await this.db.registerTable(this.table)
 
     for (const config of this.configService.current.clients) {
-      const client = await this.getByToken(config.token)
+      const client = await this.getById(config.id)
       if (!client) {
         const provider = await this.providers.getByName(config.provider)
-        await this.create(provider!.id, config.token)
+        await this.create(provider!.id, config.token, config.id)
       }
     }
   }
 
-  async create(providerId: uuid, token: string): Promise<Client> {
+  async create(providerId: uuid, token: string, forceId?: string): Promise<Client> {
     const client: Client = {
-      id: uuidv4(),
+      id: forceId ?? uuidv4(),
       providerId,
-      token
+      token: await this.cryptoService.hash(token)
     }
 
     await this.query().insert(client)
@@ -52,16 +53,29 @@ export class ClientService extends Service {
     return client
   }
 
-  async getByToken(token: string): Promise<Client | undefined> {
-    const cached = this.cacheByToken.get(token)
+  async getById(id: string): Promise<Client | undefined> {
+    const cached = this.cacheById.get(id)
     if (cached) {
       return cached
     }
 
-    const rows = await this.query().where({ token: token ?? null })
+    const rows = await this.query().where({ id })
     if (rows?.length) {
       const client = rows[0] as Client
-      this.cacheByToken.set(token, client)
+      this.cacheById.set(id, client)
+      return client
+    } else {
+      return undefined
+    }
+  }
+
+  async getByIdAndToken(id: string, token: string): Promise<Client | undefined> {
+    const client = await this.getById(id)
+    if (!client) {
+      return undefined
+    }
+
+    if (await this.cryptoService.compareHash(client.token!, token)) {
       return client
     } else {
       return undefined

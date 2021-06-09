@@ -5,6 +5,7 @@ import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConfigService } from './config/service'
 import { ConversationService } from './conversations/service'
+import { CryptoService } from './crypto/service'
 import { DatabaseService } from './database/service'
 import { DistributedService } from './distributed/service'
 import { KvsService } from './kvs/service'
@@ -18,6 +19,7 @@ export class App {
   logger: LoggerService
   config: ConfigService
   database: DatabaseService
+  crypto: CryptoService
   distributed: DistributedService
   caching: CachingService
   channels: ChannelService
@@ -34,11 +36,12 @@ export class App {
     this.logger = new LoggerService()
     this.config = new ConfigService()
     this.database = new DatabaseService(this.config)
+    this.crypto = new CryptoService()
     this.distributed = new DistributedService(this.config)
     this.caching = new CachingService(this.distributed)
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.config, this.caching)
-    this.clients = new ClientService(this.database, this.config, this.caching, this.providers)
+    this.clients = new ClientService(this.database, this.crypto, this.config, this.caching, this.providers)
     this.webhooks = new WebhookService(this.database)
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(
@@ -59,6 +62,7 @@ export class App {
     await this.logger.setup()
     await this.config.setup()
     await this.database.setup()
+    await this.crypto.setup()
     await this.distributed.setup()
     await this.caching.setup()
     await this.channels.setup()
