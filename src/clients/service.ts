@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
@@ -41,6 +42,10 @@ export class ClientService extends Service {
         await this.create(provider!.id, config.token, config.id)
       }
     }
+  }
+
+  async generateToken(): Promise<string> {
+    return crypto.randomBytes(66).toString('base64')
   }
 
   async create(providerId: uuid, token: string, forceId?: string): Promise<Client> {

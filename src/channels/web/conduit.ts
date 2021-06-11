@@ -9,6 +9,7 @@ export class WebConduit extends Conduit<any, any> {
     const message = await this.app.messages.create(payload.conversationId, payload.content, payload.userId)
 
     const post = {
+      client: { id: this.clientId },
       channel: { id: this.channel.id, name: this.channel.name },
       user: { id: payload.userId },
       conversation: await this.app.conversations.get(payload.conversationId),
@@ -24,6 +25,7 @@ export class WebConduit extends Conduit<any, any> {
     const message = await this.app.messages.create(conversationId, payload, payload.userId)
 
     const post = {
+      client: { id: this.clientId },
       channel: { id: this.channel.id, name: this.channel.name },
       user: { id: payload.userId },
       conversation: await this.app.conversations.get(conversationId),

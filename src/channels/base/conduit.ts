@@ -52,6 +52,7 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
 
     // TODO: use app.webhooks
     const post = {
+      client: { id: this.clientId },
       channel: { id: this.channel.id, name: this.channel.name },
       user: { id: mapping.foreignUserId },
       conversation: { id: mapping.conversationId },

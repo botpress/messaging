@@ -1,3 +1,4 @@
+import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
@@ -31,16 +32,18 @@ export class ProviderService extends Service {
     for (const config of this.configService.current.providers) {
       const provider = await this.getByName(config.name)
       if (!provider) {
-        await this.create({
-          id: uuidv4(),
-          name: config.name
-        })
+        await this.create(undefined, config.name)
       }
     }
   }
 
-  async create(values: Provider): Promise<Provider> {
-    return this.query().insert(values)
+  async create(forceId?: string, forceName?: string): Promise<Provider> {
+    const id = forceId ?? uuidv4()
+    const provider = { id, name: forceName ?? crypto.randomBytes(18).toString('base64') }
+
+    await this.query().insert(provider)
+
+    return provider
   }
 
   async getByName(name: string): Promise<Provider | undefined> {
