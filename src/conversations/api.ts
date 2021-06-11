@@ -1,12 +1,16 @@
 import { Router } from 'express'
-import { ApiRequest } from '../api'
+import { ApiRequest, ClientApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { ConversationService } from './service'
 
-export class ConversationApi {
-  constructor(private router: Router, private clients: ClientService, private conversations: ConversationService) {}
+export class ConversationApi extends ClientApi {
+  constructor(router: Router, clients: ClientService, private conversations: ConversationService) {
+    super(router, clients)
+  }
 
   async setup() {
+    this.router.use('/conversations', this.extractClient.bind(this))
+
     this.router.post('/conversations', async (req: ApiRequest, res) => {
       const { userId } = req.body
 

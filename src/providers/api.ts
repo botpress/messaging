@@ -1,13 +1,14 @@
-import express, { Router } from 'express'
+import { Router } from 'express'
+import { BaseApi } from '../base/api'
 import { ProviderService } from '../providers/service'
 import { Provider } from './types'
 
-export class ProviderApi {
-  constructor(private router: Router, private providers: ProviderService) {}
+export class ProviderApi extends BaseApi {
+  constructor(router: Router, private providers: ProviderService) {
+    super(router)
+  }
 
   async setup() {
-    this.router.use('/providers', express.json())
-
     this.router.get('/providers', async (req, res) => {
       const { name, id } = req.query
 

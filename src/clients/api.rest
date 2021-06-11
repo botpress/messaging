@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3100
 
 ### Create client
-POST {{baseUrl}}/clients
+POST {{baseUrl}}/api/clients
 Content-Type: application/json

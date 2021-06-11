@@ -1,19 +1,20 @@
-import express, { Router } from 'express'
+import { Router } from 'express'
+import { BaseApi } from '../base/api'
 import { ChannelService } from '../channels/service'
 import { ProviderService } from '../providers/service'
 import { ConduitService } from './service'
 
-export class ConduitApi {
+export class ConduitApi extends BaseApi {
   constructor(
-    private router: Router,
+    router: Router,
     private channels: ChannelService,
     private providers: ProviderService,
     private conduits: ConduitService
-  ) {}
+  ) {
+    super(router)
+  }
 
   async setup() {
-    this.router.use('/conduits', express.json())
-
     this.router.post('/conduits', async (req, res) => {
       const { providerId, channel, config } = req.body
 

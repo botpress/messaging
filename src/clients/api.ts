@@ -1,13 +1,14 @@
-import express, { Router } from 'express'
+import { Router } from 'express'
+import { BaseApi } from '../base/api'
 import { ProviderService } from '../providers/service'
 import { ClientService } from './service'
 
-export class ClientApi {
-  constructor(private router: Router, private providers: ProviderService, private clients: ClientService) {}
+export class ClientApi extends BaseApi {
+  constructor(router: Router, private providers: ProviderService, private clients: ClientService) {
+    super(router)
+  }
 
   async setup() {
-    this.router.use('/clients', express.json())
-
     this.router.post('/clients', async (req, res) => {
       const { providerId } = req.body
 
