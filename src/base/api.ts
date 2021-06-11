@@ -8,7 +8,7 @@ export abstract class BaseApi {
   abstract setup(): Promise<void>
 }
 
-export abstract class ClientApi extends BaseApi {
+export abstract class ClientScopedApi extends BaseApi {
   constructor(router: Router, private clients: ClientService) {
     super(router)
   }

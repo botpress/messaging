@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { ApiRequest, ClientApi } from '../base/api'
+import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { MessageService } from './service'
 
-export class MessageApi extends ClientApi {
+export class MessageApi extends ClientScopedApi {
   constructor(
     router: Router,
     clients: ClientService,

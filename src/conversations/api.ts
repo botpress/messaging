@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { ApiRequest, ClientApi } from '../base/api'
+import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { ConversationService } from './service'
 
-export class ConversationApi extends ClientApi {
+export class ConversationApi extends ClientScopedApi {
   constructor(router: Router, clients: ClientService, private conversations: ConversationService) {
     super(router, clients)
   }
