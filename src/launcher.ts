@@ -47,9 +47,6 @@ export class Launcher {
 
   async shutDown() {
     await this.app.destroy()
-    // eslint-disable-next-line no-console
-    console.log()
-    this.logger.info('Shut down')
   }
 
   private printLogo() {

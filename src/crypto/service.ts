@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
@@ -11,7 +11,9 @@ export class CryptoService extends Service {
   }
 
   async setup() {
-    this.key = Buffer.from(this.configService.current.security.key, 'base64')
+    if (this.configService.current.security) {
+      this.key = Buffer.from(this.configService.current.security.key, 'base64')
+    }
   }
 
   async hash(plainText: string): Promise<string> {
@@ -23,6 +25,10 @@ export class CryptoService extends Service {
   }
 
   async encrypt(text: string) {
+    if (!this.key) {
+      return text
+    }
+
     const iv = crypto.randomBytes(16)
 
     const cipher = crypto.createCipheriv('aes-256-ctr', this.key, iv)
@@ -33,6 +39,10 @@ export class CryptoService extends Service {
   }
 
   async decrypt(encrypted: string) {
+    if (!this.key) {
+      return encrypted
+    }
+
     const [iv, content] = encrypted.split('$')
 
     const decipher = crypto.createDecipheriv('aes-256-ctr', this.key, Buffer.from(iv, 'base64'))

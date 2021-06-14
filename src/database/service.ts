@@ -4,7 +4,6 @@ import path from 'path'
 import { Service } from '../base/service'
 import { Table } from '../base/table'
 import { ConfigService } from '../config/service'
-import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 
 export class DatabaseService extends Service {
@@ -18,9 +17,16 @@ export class DatabaseService extends Service {
   }
 
   async setup() {
-    const provider = this.configService.current.database.type
+    const provider = this.configService.current.database?.type
 
-    if (provider === 'sqlite') {
+    if (provider === 'postgres') {
+      this.isLite = false
+      this.knex = knex({
+        client: 'postgres',
+        connection: this.configService.current.database.connection,
+        useNullAsDefault: true
+      })
+    } else {
       // TODO: this path will change in production mode
       if (!fs.existsSync('dist')) {
         fs.mkdirSync('dist')
@@ -30,13 +36,6 @@ export class DatabaseService extends Service {
       this.knex = knex({
         client: 'sqlite3',
         connection: { filename: path.join('dist', 'db.sqlite') },
-        useNullAsDefault: true
-      })
-    } else if (provider === 'postgres') {
-      this.isLite = false
-      this.knex = knex({
-        client: 'postgres',
-        connection: this.configService.current.database.connection,
         useNullAsDefault: true
       })
     }

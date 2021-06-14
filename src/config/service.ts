@@ -27,7 +27,11 @@ export class ConfigService extends Service {
       configPath = path.resolve(process.cwd(), 'config', 'config.json')
     }
 
-    const file = fs.readFileSync(configPath)
-    this.current = JSON.parse(file.toString())
+    if (fs.existsSync(configPath)) {
+      const file = fs.readFileSync(configPath)
+      this.current = JSON.parse(file.toString())
+    } else {
+      this.current = {}
+    }
   }
 }

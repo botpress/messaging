@@ -35,7 +35,7 @@ export class ClientService extends Service {
 
     await this.db.registerTable(this.table)
 
-    for (const config of this.configService.current.clients) {
+    for (const config of this.configService.current.clients || []) {
       const client = await this.getById(config.id)
       if (!client) {
         const provider = await this.providers.getByName(config.provider)

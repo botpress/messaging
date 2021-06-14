@@ -29,7 +29,7 @@ export class ProviderService extends Service {
 
     await this.db.registerTable(this.table)
 
-    for (const config of this.configService.current.providers) {
+    for (const config of this.configService.current.providers || []) {
       const provider = await this.getByName(config.name)
       if (!provider) {
         await this.create(undefined, config.name)
