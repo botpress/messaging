@@ -59,6 +59,18 @@ export class ConduitService extends Service {
     return this.query().insert(await this.serialize({ id: uuidv4(), providerId, channelId, config }))
   }
 
+  async updateConfig(providerId: uuid, channelId: uuid, config: any) {
+    const provider = (await this.providerService.getById(providerId))!
+
+    this.cache.del(this.getCacheKey(providerId, channelId))
+    this.cacheById.del(this.getCacheKey(providerId, channelId))
+    this.cacheByName.del(this.getCacheKey(provider.name, channelId))
+
+    return this.query()
+      .where({ providerId, channelId })
+      .update({ config: await this.cryptoService.encrypt(JSON.stringify(config || {})) })
+  }
+
   async get(providerId: uuid, channelId: uuid): Promise<Conduit | undefined> {
     const key = this.getCacheKey(providerId, channelId)
     const cached = this.cache.get(key)

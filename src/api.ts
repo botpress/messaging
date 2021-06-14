@@ -22,7 +22,7 @@ export class Api {
 
     this.providers = new ProviderApi(this.router, app.providers)
     this.conduits = new ConduitApi(this.router, app.channels, app.providers, app.conduits)
-    this.clients = new ClientApi(this.router, app.providers, app.clients)
+    this.clients = new ClientApi(this.router, app.channels, app.providers, app.conduits, app.clients)
     this.conversations = new ConversationApi(this.router, app.clients, app.conversations)
     this.messages = new MessageApi(this.router, app.clients, app.channels, app.conduits, app.messages)
     this.channels = new ChannelApi(this.root, this.app)

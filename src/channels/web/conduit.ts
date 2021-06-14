@@ -18,7 +18,7 @@ export class WebConduit extends Conduit<any, any> {
     this.loggerIn.debug('Web received message', post)
 
     // TODO: don't hardcode this
-    await axios.post('http://localhost:3000/messaging/receive', post)
+    await axios.post('http://localhost:3000/api/v1/messaging/receive', post)
   }
 
   async send(conversationId: string, payload: any): Promise<void> {

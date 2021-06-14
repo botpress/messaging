@@ -115,6 +115,21 @@ export class ClientService extends Service {
     }
   }
 
+  async unlinkAllFromProvider(providerId: string): Promise<void> {
+    this.cacheByProvider.del(providerId)
+
+    // TODO: del cacheById for all affected
+
+    await this.query().where({ providerId }).update({ providerId: null })
+  }
+
+  async updateProvider(clientId: uuid, providerId: uuid) {
+    this.cacheByProvider.del(providerId)
+    this.cacheById.del(clientId)
+
+    await this.query().where({ clientId }).update({ providerId })
+  }
+
   private query() {
     return this.db.knex(this.table.id)
   }

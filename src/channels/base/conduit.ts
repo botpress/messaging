@@ -60,7 +60,7 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
     }
     this.loggerIn.debug('Received message', post)
 
-    await axios.post('http://localhost:3000/messaging/receive', post)
+    await axios.post('http://localhost:3000/api/v1/messaging/receive', post)
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
