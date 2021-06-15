@@ -16,6 +16,9 @@ export class TelegramChannel extends Channel<TelegramConduit> {
 
   async setupRoutes() {
     this.router.use('/', (req, res) => {
+      // This is done to make forwarding work
+      req.url = '/'
+
       const conduit = res.locals.conduit as TelegramConduit
       conduit.callback(req, res)
     })
