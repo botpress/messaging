@@ -50,7 +50,6 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
 
     const message = await this.app.messages.create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
 
-    // TODO: use app.webhooks
     const post = {
       client: { id: this.clientId },
       channel: { id: this.channel.id, name: this.channel.name },
@@ -60,7 +59,10 @@ export abstract class Conduit<TConfig extends ChannelConfig, TContext extends Ch
     }
     this.loggerIn.debug('Received message', post)
 
-    await axios.post('http://localhost:3000/api/v1/messaging/receive', post)
+    const webhooks = await this.app.webhooks.list(this.clientId)
+    for (const webhook of webhooks) {
+      await axios.post(webhook.url, post)
+    }
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
