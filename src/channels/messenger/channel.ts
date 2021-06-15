@@ -19,37 +19,38 @@ export class MessengerChannel extends Channel<MessengerConduit> {
   async setupRoutes() {
     this.router.use(express.json({ verify: this.auth.bind(this) }))
 
-    this.router.get('/', async (req, res) => {
-      const conduit = res.locals.conduit as MessengerConduit
+    this.router.use('/', async (req, res) => {
+      // For some reason proxy doesn't work with .post and .get so get need to check req.method manually
+      if (req.method === 'GET') {
+        const conduit = res.locals.conduit as MessengerConduit
 
-      const mode = req.query['hub.mode']
-      const token = req.query['hub.verify_token']
-      const challenge = req.query['hub.challenge']
+        const mode = req.query['hub.mode']
+        const token = req.query['hub.verify_token']
+        const challenge = req.query['hub.challenge']
 
-      if (mode && token && mode === 'subscribe' && token === conduit.config.verifyToken) {
-        this.logger.debug('Webhook Verified')
-        res.send(challenge)
-      } else {
-        res.sendStatus(403)
-      }
-    })
-
-    this.router.post('/', async (req, res) => {
-      const conduit = res.locals.conduit as MessengerConduit
-      const body = req.body
-
-      for (const entry of body.entry) {
-        const messages = entry.messaging
-
-        for (const webhookEvent of messages) {
-          if (!webhookEvent.sender) {
-            continue
-          }
-          await conduit.receive(webhookEvent)
+        if (mode && token && mode === 'subscribe' && token === conduit.config.verifyToken) {
+          this.logger.debug('Webhook Verified')
+          res.send(challenge)
+        } else {
+          res.sendStatus(403)
         }
-      }
+      } else if (req.method === 'POST') {
+        const conduit = res.locals.conduit as MessengerConduit
+        const body = req.body
 
-      res.send('EVENT_RECEIVED')
+        for (const entry of body.entry) {
+          const messages = entry.messaging
+
+          for (const webhookEvent of messages) {
+            if (!webhookEvent.sender) {
+              continue
+            }
+            await conduit.receive(webhookEvent)
+          }
+        }
+
+        res.send('EVENT_RECEIVED')
+      }
     })
 
     this.printWebhook()
