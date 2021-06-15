@@ -20,7 +20,7 @@ export class VonageChannel extends Channel<VonageConduit> {
   async setupRoutes() {
     this.router.use(express.json())
 
-    this.router.post('/inbound', async (req, res) => {
+    this.router.use('/inbound', async (req, res) => {
       const conduit = res.locals.conduit as VonageConduit
 
       if (this.validate(conduit, <any>req)) {
@@ -29,7 +29,7 @@ export class VonageChannel extends Channel<VonageConduit> {
 
       res.sendStatus(200)
     })
-    this.router.post('/status', async (req, res) => {
+    this.router.use('/status', async (req, res) => {
       res.sendStatus(200)
     })
 
