@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { App } from '../app'
 import { Service } from '../base/service'
@@ -59,6 +60,16 @@ export class ConduitService extends Service {
     return this.query().insert(await this.serialize({ id: uuidv4(), providerId, channelId, config }))
   }
 
+  async delete(providerId: uuid, channelId: uuid) {
+    const provider = (await this.providerService.getById(providerId))!
+
+    this.cache.del(this.getCacheKey(providerId, channelId))
+    this.cacheById.del(this.getCacheKey(providerId, channelId))
+    this.cacheByName.del(this.getCacheKey(provider.name, channelId))
+
+    return this.query().where({ providerId, channelId }).del()
+  }
+
   async updateConfig(providerId: uuid, channelId: uuid, config: any) {
     const provider = (await this.providerService.getById(providerId))!
 
@@ -86,6 +97,11 @@ export class ConduitService extends Service {
     }
 
     return undefined
+  }
+
+  async list(providerId: uuid): Promise<Conduit[]> {
+    const rows = await this.query().where({ providerId })
+    return rows.map((x) => _.omit(x, 'config')) as Conduit[]
   }
 
   async getInstanceByProviderName(providerName: string, channelId: uuid): Promise<ConduitInstance<any, any>> {

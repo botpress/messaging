@@ -35,15 +35,22 @@ export class ClientApi extends BaseApi {
         provider = await this.providers.create(undefined, name)
       }
 
+      const oldConduits = await this.conduits.list(provider.id)
+
       for (const [channel, config] of Object.entries(conduits)) {
         const channelId = this.channels.getByName(channel).id
-        const conduit = await this.conduits.get(provider.id, channelId)
+        const conduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
-        if (conduit) {
+        if (conduitIndex >= 0) {
+          oldConduits.splice(conduitIndex, 1)
           await this.conduits.updateConfig(provider.id, channelId, config)
         } else {
           await this.conduits.create(provider.id, channelId, config)
         }
+      }
+
+      for (const unusedConduit of oldConduits) {
+        await this.conduits.delete(provider.id, unusedConduit.channelId)
       }
 
       let client: Client | undefined = undefined
