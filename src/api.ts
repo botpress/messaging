@@ -6,6 +6,7 @@ import { ConduitApi } from './conduits/api'
 import { ConversationApi } from './conversations/api'
 import { MessageApi } from './messages/api'
 import { ProviderApi } from './providers/api'
+import { SyncApi } from './sync/api'
 
 export class Api {
   private router!: Router
@@ -13,6 +14,7 @@ export class Api {
   providers: ProviderApi
   conduits: ConduitApi
   clients: ClientApi
+  syncs: SyncApi
   conversations: ConversationApi
   messages: MessageApi
   channels: ChannelApi
@@ -22,7 +24,8 @@ export class Api {
 
     this.providers = new ProviderApi(this.router, app.providers)
     this.conduits = new ConduitApi(this.router, app.channels, app.providers, app.conduits)
-    this.clients = new ClientApi(this.router, app.channels, app.providers, app.conduits, app.clients, app.webhooks)
+    this.clients = new ClientApi(this.router, app.clients)
+    this.syncs = new SyncApi(this.router, app.syncs)
     this.conversations = new ConversationApi(this.router, app.clients, app.conversations)
     this.messages = new MessageApi(this.router, app.clients, app.channels, app.conduits, app.messages)
     this.channels = new ChannelApi(this.root, this.app)
@@ -36,6 +39,7 @@ export class Api {
     await this.providers.setup()
     await this.conduits.setup()
     await this.clients.setup()
+    await this.syncs.setup()
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
