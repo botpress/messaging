@@ -1,6 +1,6 @@
 {
-  "name": "bp-messaging",
-  "version": "1.0.0",
+  "name": "@botpress/messaging",
+  "version": "0.0.1",
   "main": "index.ts",
   "license": "MIT",
   "bin": "./dist/index.js",
@@ -9,7 +9,12 @@
     "assets": [
       "./node_modules/sqlite3/lib/binding/**/*"
     ],
-    "outputPath": "bin"
+    "targets": [
+      "node12-win32-x64",
+      "node12-linux-x64",
+      "node12-macos-x64"
+    ],
+    "outputPath": "./bin"
   },
   "scripts": {
     "build": "yarn --silent && tsc --build",
@@ -19,7 +24,10 @@
     "clean": "rimraf dist bin",
     "reset": "yarn clean && rimraf node_modules",
     "eslint": "node_modules/.bin/eslint src --ext .ts",
-    "package": "yarn --silent && yarn clean && yarn build && yarn pkg package.json"
+    "prettier": "cross-env prettier --check './src/**/*.ts'",
+    "package": "yarn --silent && yarn clean && yarn build && yarn pkg package.json",
+    "release": "node ./scripts/release",
+    "package2": "node ./scripts/package"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -32,15 +40,20 @@
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
+    "conventional-changelog": "^3.1.24",
     "cross-env": "^7.0.3",
     "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-jsdoc": "^34.8.1",
-    "pkg": "^5.2.1",
+    "fs-extra": "^10.0.0",
+    "pkg": "^4.3.7",
+    "prettier": "^2.3.1",
     "rimraf": "^3.0.2",
+    "semver": "^7.3.5",
     "ts-node-dev": "^1.1.6",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "yargs": "^17.0.1"
   },
   "dependencies": {
     "@slack/events-api": "^2.3.2",
@@ -51,6 +64,8 @@
     "@vonage/server-sdk": "2.10.7-beta-2",
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
+    "bluebird": "^3.7.2",
+    "bluebird-global": "^1.0.1",
     "botbuilder": "^4.5.2",
     "cli-color": "^2.0.0",
     "discord-buttons": "^2.4.1",

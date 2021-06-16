@@ -1,0 +1,33 @@
+name: Codestyle
+on: [pull_request]
+jobs:
+  run_prettier:
+    name: Run Prettier on codebase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.13.0'
+      - name: Install Dependencies
+        run: |
+          yarn
+      - name: Run Prettier
+        run: |
+          yarn prettier
+  eslint:
+    name: Run ESLint on codebase
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.13.0'
+      - name: Install Dependencies
+        run: |
+          yarn
+      - name: Run ESLint
+        run: |
+          yarn eslint
