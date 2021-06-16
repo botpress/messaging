@@ -44,21 +44,6 @@ export class SyncService extends Service {
       await this.conduits.delete(provider.id, unusedConduit.channelId)
     }
 
-    const oldWebhooks = await this.webhooks.list(sync.clientId)
-
-    for (const webhook of sync.webhooks) {
-      const webhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
-      if (webhookIndex >= 0) {
-        oldWebhooks.splice(webhookIndex, 1)
-      } else {
-        await this.webhooks.create(sync.clientId, webhook.url)
-      }
-    }
-
-    for (const unusedWebhook of oldWebhooks) {
-      await this.webhooks.delete(unusedWebhook.id)
-    }
-
     let client: Client | undefined = undefined
     let token: string | undefined = undefined
 
@@ -72,6 +57,21 @@ export class SyncService extends Service {
       client = await this.clients.create(provider.id, token)
     } else if (client.providerId !== provider.id) {
       await this.clients.updateProvider(sync.clientId, provider.id)
+    }
+
+    const oldWebhooks = await this.webhooks.list(client.id)
+
+    for (const webhook of sync.webhooks) {
+      const webhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
+      if (webhookIndex >= 0) {
+        oldWebhooks.splice(webhookIndex, 1)
+      } else {
+        await this.webhooks.create(client.id, webhook.url)
+      }
+    }
+
+    for (const unusedWebhook of oldWebhooks) {
+      await this.webhooks.delete(unusedWebhook.id)
     }
 
     return { clientId: client.id, clientToken: token, providerName: provider.name }
