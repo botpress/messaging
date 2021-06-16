@@ -25,9 +25,8 @@
     "reset": "yarn clean && rimraf node_modules",
     "eslint": "node_modules/.bin/eslint src --ext .ts",
     "prettier": "cross-env prettier --check './src/**/*.ts'",
-    "package": "yarn --silent && yarn clean && yarn build && yarn pkg package.json",
-    "release": "node ./scripts/release",
-    "package2": "node ./scripts/package"
+    "package": "yarn --silent && yarn clean && yarn build && node ./scripts/package",
+    "release": "node ./scripts/release"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
