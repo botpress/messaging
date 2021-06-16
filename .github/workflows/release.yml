@@ -43,7 +43,7 @@ jobs:
       - name: 'Build and Package'
         if: ${{ steps.validate_semver.outputs.valid_latest_tag != steps.validate_semver.outputs.valid_current_version }}
         run: |
-          yarn build --prod
+          yarn build
           yarn package
       - name: 'Release'
         if: ${{ steps.validate_semver.outputs.valid_latest_tag != steps.validate_semver.outputs.valid_current_version }}
