@@ -25,6 +25,18 @@ export class Launcher {
     process.on('SIGINT', async () => {
       await this.shutDown()
     })
+
+    process.on('SIGHUP', async () => {
+      await this.shutDown()
+    })
+
+    process.on('SIGUSR2', async () => {
+      await this.shutDown()
+    })
+
+    process.on('SIGTERM', async () => {
+      await this.shutDown()
+    })
   }
 
   async launch() {
