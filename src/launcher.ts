@@ -8,6 +8,7 @@ import { Logger } from './logger/types'
 
 export class Launcher {
   private logger: Logger
+  private shuttingDown: boolean = false
 
   constructor(private express: Express, private port: string | undefined, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
@@ -57,7 +58,10 @@ export class Launcher {
   }
 
   async shutDown(code?: number) {
-    await this.app.destroy()
+    if (!this.shuttingDown) {
+      this.shuttingDown = true
+      await this.app.destroy()
+    }
     process.exit(code)
   }
 

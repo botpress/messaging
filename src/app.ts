@@ -84,7 +84,7 @@ export class App {
   }
 
   async destroy() {
-    await this.distributed.destroy()
-    await this.database.destroy()
+    await this.distributed?.destroy()
+    await this.database?.destroy()
   }
 }
