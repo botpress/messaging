@@ -17,25 +17,33 @@ export class DatabaseService extends Service {
   }
 
   async setup() {
-    const provider = this.configService.current.database?.type
+    const databaseUrl = process.env.DATABASE_URL || this.configService.current.database.connection
 
-    if (provider === 'postgres') {
+    if (databaseUrl?.startsWith('postgres')) {
       this.isLite = false
       this.knex = knex({
         client: 'postgres',
-        connection: this.configService.current.database.connection,
+        connection: databaseUrl,
         useNullAsDefault: true
       })
     } else {
-      // TODO: this path will change in production mode
-      if (!fs.existsSync('dist')) {
-        fs.mkdirSync('dist')
+      let filename = databaseUrl
+      if (!filename) {
+        if (process.env.NODE_ENV === 'production') {
+          filename = path.join(process.cwd(), 'data', 'db.sqlite')
+        } else {
+          filename = path.join(process.cwd(), 'dist', 'db.sqlite')
+        }
+      }
+
+      if (!fs.existsSync(path.dirname(filename))) {
+        fs.mkdirSync(path.dirname(filename))
       }
 
       this.isLite = true
       this.knex = knex({
         client: 'sqlite3',
-        connection: { filename: path.join('dist', 'db.sqlite') },
+        connection: { filename },
         useNullAsDefault: true
       })
     }
