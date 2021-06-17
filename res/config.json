@@ -1,8 +1,7 @@
 {
   "externalUrl": "",
   "database": {
-    "type": "postgres",
-    "connection": "postgres://user:password@localhost:5432/dbname"
+    "connection": null
   },
   "redis": {
     "enabled": false,
