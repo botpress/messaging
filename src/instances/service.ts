@@ -66,14 +66,14 @@ export class InstanceService extends Service {
 
     const provider = (await this.providerService.getById(providerId))!
     const client = (await this.clientService.getByProviderId(providerId))!
-    const dbConduit = await this.conduitService.get(provider.id, channelId)
+    const conduit = await this.conduitService.get(provider.id, channelId)
     const channel = this.channelService.getById(channelId)
-    const conduit = channel.createConduit()
+    const instance = channel.createConduit()
 
-    await conduit.setup(
+    await instance.setup(
       this.app,
       {
-        ...dbConduit?.config,
+        ...conduit?.config,
         externalUrl: this.app.config.current.externalUrl
       },
       channel,
@@ -81,10 +81,10 @@ export class InstanceService extends Service {
       client.id
     )
 
-    this.cacheById.set(this.getCacheKey(provider.id, channelId), conduit)
-    this.cacheByName.set(this.getCacheKey(provider.name, channelId), conduit)
+    this.cacheById.set(this.getCacheKey(provider.id, channelId), instance)
+    this.cacheByName.set(this.getCacheKey(provider.name, channelId), instance)
 
-    return conduit
+    return instance
   }
 
   private getCacheKey(providerId: uuid, channelId: uuid) {
