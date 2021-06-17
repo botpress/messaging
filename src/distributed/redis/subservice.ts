@@ -1,5 +1,6 @@
 import clc from 'cli-color'
-import redis, { Redis } from 'ioredis'
+import redis, { ClusterOptions, Redis, RedisOptions } from 'ioredis'
+import _ from 'lodash'
 import { Logger } from '../../logger/types'
 import { DistributedSubservice } from '../base/subservice'
 import { RedisConfig } from './config'
@@ -19,8 +20,8 @@ export class RedisSubservice implements DistributedSubservice {
     this.nodeId = Math.round(Math.random() * 1000000)
     this.logger.info(`Id is ${clc.bold(this.nodeId)}`)
 
-    this.pub = new redis(this.config.url)
-    this.sub = new redis(this.config.url)
+    this.pub = this.setupClient()
+    this.sub = this.setupClient()
 
     this.sub.on('message', (channel, message) => {
       const callback = this.callbacks[channel]
@@ -35,6 +36,47 @@ export class RedisSubservice implements DistributedSubservice {
 
     this.pings = new PingPong(this.nodeId, this, this.logger)
     await this.pings.setup()
+  }
+
+  private setupClient(): Redis {
+    let connection = this.config.connection
+    let options = this.config.options || {}
+
+    if (process.env.REDIS_URL) {
+      try {
+        connection = JSON.parse(process.env.REDIS_URL)
+      } catch {
+        connection = process.env.REDIS_URL
+      }
+    }
+
+    if (process.env.REDIS_OPTIONS) {
+      try {
+        options = JSON.parse(process.env.REDIS_OPTIONS) || {}
+      } catch {}
+    }
+
+    const retryStrategy = (times: number) => {
+      if (times > 10) {
+        throw new Error('Unable to connect to the Redis cluster after multiple attempts.')
+      }
+      return Math.min(times * 200, 5000)
+    }
+
+    const redisOptions: RedisOptions = {
+      retryStrategy
+    }
+
+    if (_.isArray(connection)) {
+      const clusterOptions: ClusterOptions = {
+        clusterRetryStrategy: retryStrategy,
+        redisOptions
+      }
+
+      return <any>new redis.Cluster(connection, _.merge(clusterOptions, options))
+    } else {
+      return new redis(connection, _.merge(redisOptions, options))
+    }
   }
 
   async destroy() {

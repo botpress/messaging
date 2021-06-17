@@ -1,6 +1,9 @@
 export interface MessagingEnv {
-  DATABASE_URL: string | undefined
-  NODE_ENV: 'production' | undefined
+  PORT?: string
+  NODE_ENV?: 'production'
+  DATABASE_URL?: string
+  REDIS_URL?: string
+  REDIS_OPTIONS?: string
 }
 
 declare global {

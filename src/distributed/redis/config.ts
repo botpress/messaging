@@ -1,4 +1,7 @@
+import { ClusterNode, ClusterOptions, RedisOptions } from 'ioredis'
+
 export interface RedisConfig {
   enabled: boolean
-  url: string
+  connection: string | ClusterNode[]
+  options: RedisOptions | ClusterOptions
 }

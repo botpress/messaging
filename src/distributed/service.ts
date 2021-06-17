@@ -15,7 +15,8 @@ export class DistributedService extends Service {
   async setup() {
     const config = (this.configService.current.redis || {}) as RedisConfig
 
-    if (config.enabled) {
+    const enabled = process.env.REDIS_URL ? process.env.REDIS_URL.length : config.enabled
+    if (enabled) {
       this.subservice = new RedisSubservice(config)
     } else {
       this.subservice = new LocalSubservice()
