@@ -8,6 +8,7 @@ import { ConversationService } from './conversations/service'
 import { CryptoService } from './crypto/service'
 import { DatabaseService } from './database/service'
 import { DistributedService } from './distributed/service'
+import { InstanceService } from './instances/service'
 import { KvsService } from './kvs/service'
 import { LoggerService } from './logger/service'
 import { MappingService } from './mapping/service'
@@ -33,6 +34,7 @@ export class App {
   conversations: ConversationService
   messages: MessageService
   mapping: MappingService
+  instances: InstanceService
 
   constructor() {
     this.logger = new LoggerService()
@@ -52,14 +54,13 @@ export class App {
       this.config,
       this.caching,
       this.channels,
-      this.providers,
-      this.clients,
-      this
+      this.providers
     )
     this.syncs = new SyncService(this.channels, this.providers, this.conduits, this.clients, this.webhooks)
     this.conversations = new ConversationService(this.database, this.caching)
     this.messages = new MessageService(this.database, this.caching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching)
+    this.instances = new InstanceService(this.caching, this.channels, this.providers, this.conduits, this.clients, this)
   }
 
   async setup() {
@@ -79,6 +80,7 @@ export class App {
     await this.conversations.setup()
     await this.messages.setup()
     await this.mapping.setup()
+    await this.instances.setup()
   }
 
   async destroy() {

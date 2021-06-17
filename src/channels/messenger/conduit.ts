@@ -1,4 +1,4 @@
-import { Conduit, EndpointContent } from '../base/conduit'
+import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { MessengerClient } from './client'
@@ -7,7 +7,7 @@ import { MessengerContext } from './context'
 import { MessengerRenderers } from './renderers'
 import { MessengerSenders } from './senders'
 
-export class MessengerConduit extends Conduit<MessengerConfig, MessengerContext> {
+export class MessengerConduit extends ConduitInstance<MessengerConfig, MessengerContext> {
   private client!: MessengerClient
 
   protected async setupConnection() {

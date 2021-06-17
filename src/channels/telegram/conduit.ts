@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
-import { EndpointContent, Conduit } from '../base/conduit'
+import { EndpointContent, ConduitInstance } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TelegramConfig } from './config'
@@ -9,7 +9,7 @@ import { TelegramContext } from './context'
 import { TelegramRenderers } from './renderers'
 import { TelegramSenders } from './senders'
 
-export class TelegramConduit extends Conduit<TelegramConfig, TelegramContext> {
+export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramContext> {
   private telegraf!: Telegraf<TelegrafContext>
   public callback!: (req: any, res: any) => void
 

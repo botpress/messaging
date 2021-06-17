@@ -5,7 +5,7 @@ import { WebClient } from '@slack/web-api'
 import axios from 'axios'
 import _ from 'lodash'
 import { RequestListener } from 'node:http'
-import { Conduit, EndpointContent } from '../base/conduit'
+import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { TypingSender } from '../base/senders/typing'
@@ -14,7 +14,7 @@ import { SlackContext } from './context'
 import { SlackRenderers } from './renderers'
 import { SlackSenders } from './senders'
 
-export class SlackConduit extends Conduit<SlackConfig, SlackContext> {
+export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
   private client!: WebClient
   private interactive!: SlackMessageAdapter
   private events!: SlackEventAdapter

@@ -1,6 +1,6 @@
 // @ts-ignore
 import Smooch from 'smooch-core'
-import { Conduit, EndpointContent } from '../base/conduit'
+import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { SmoochConfig } from './config'
@@ -8,7 +8,7 @@ import { SmoochMessage, SmoochPayload, SmoochContext, SmoochWebhook } from './co
 import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
 
-export class SmoochConduit extends Conduit<SmoochConfig, SmoochContext> {
+export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> {
   get enableParsers() {
     return true
   }

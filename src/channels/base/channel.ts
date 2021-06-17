@@ -3,9 +3,9 @@ import { Router } from 'express'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
-import { Conduit } from './conduit'
+import { ConduitInstance } from './conduit'
 
-export abstract class Channel<TConduit extends Conduit<any, any>> {
+export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
 
@@ -22,7 +22,7 @@ export abstract class Channel<TConduit extends Conduit<any, any>> {
       this.getRoute(),
       async (req, res, next) => {
         const { provider } = req.params
-        res.locals.conduit = await this.app.conduits.getInstanceByProviderName(provider, this.id)
+        res.locals.conduit = await this.app.instances.getInstanceByProviderName(provider, this.id)
         next()
       },
       this.router

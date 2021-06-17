@@ -1,25 +1,26 @@
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { App } from '../app'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
-import { Conduit as ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
-import { ClientService } from '../clients/service'
 import { ConfigService } from '../config/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
 import { ProviderService } from '../providers/service'
+import { ConduitEmitter, ConduitEvents, ConduitWatcher } from './events'
 import { ConduitTable } from './table'
 import { Conduit } from './types'
 
 export class ConduitService extends Service {
+  public events(): ConduitWatcher {
+    return this.emitter
+  }
+
+  private emitter: ConduitEmitter
   private table: ConduitTable
   private cache!: ServerCache<string, Conduit>
-  private cacheByName!: ServerCache<string, ConduitInstance<any, any>>
-  private cacheById!: ServerCache<uuid, ConduitInstance<any, any>>
 
   constructor(
     private db: DatabaseService,
@@ -27,18 +28,15 @@ export class ConduitService extends Service {
     private configService: ConfigService,
     private cachingService: CachingService,
     private channelService: ChannelService,
-    private providerService: ProviderService,
-    private clientService: ClientService,
-    private app: App
+    private providerService: ProviderService
   ) {
     super()
+    this.emitter = new ConduitEmitter()
     this.table = new ConduitTable()
   }
 
   async setup() {
     this.cache = await this.cachingService.newServerCache('cache_conduit_by_id')
-    this.cacheByName = await this.cachingService.newServerCache('cache_conduit_by_provider_name')
-    this.cacheById = await this.cachingService.newServerCache('cache_conduit_by_provider_id')
 
     await this.db.registerTable(this.table)
 
@@ -61,21 +59,15 @@ export class ConduitService extends Service {
   }
 
   async delete(providerId: uuid, channelId: uuid) {
-    const provider = (await this.providerService.getById(providerId))!
-
     this.cache.del(this.getCacheKey(providerId, channelId))
-    this.cacheById.del(this.getCacheKey(providerId, channelId))
-    this.cacheByName.del(this.getCacheKey(provider.name, channelId))
+    await this.emitter.emit(ConduitEvents.Deleting, { providerId, channelId })
 
     return this.query().where({ providerId, channelId }).del()
   }
 
   async updateConfig(providerId: uuid, channelId: uuid, config: any) {
-    const provider = (await this.providerService.getById(providerId))!
-
     this.cache.del(this.getCacheKey(providerId, channelId))
-    this.cacheById.del(this.getCacheKey(providerId, channelId))
-    this.cacheByName.del(this.getCacheKey(provider.name, channelId))
+    await this.emitter.emit(ConduitEvents.Updating, { providerId, channelId })
 
     return this.query()
       .where({ providerId, channelId })
@@ -102,45 +94,6 @@ export class ConduitService extends Service {
   async list(providerId: uuid): Promise<Conduit[]> {
     const rows = await this.query().where({ providerId })
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
-  }
-
-  async getInstanceByProviderName(providerName: string, channelId: uuid): Promise<ConduitInstance<any, any>> {
-    const cached = this.cacheByName.get(this.getCacheKey(providerName, channelId))
-    if (cached) {
-      return cached
-    }
-
-    const provider = (await this.providerService.getByName(providerName))!
-    return this.getInstanceByProviderId(provider.id, channelId)
-  }
-
-  async getInstanceByProviderId(providerId: uuid, channelId: uuid): Promise<ConduitInstance<any, any>> {
-    const cached = this.cacheById.get(providerId)
-    if (cached) {
-      return cached
-    }
-
-    const provider = (await this.providerService.getById(providerId))!
-    const client = (await this.clientService.getByProviderId(providerId))!
-    const dbConduit = await this.get(provider.id, channelId)
-    const channel = this.channelService.getById(channelId)
-    const conduit = channel.createConduit()
-
-    await conduit.setup(
-      this.app,
-      {
-        ...dbConduit?.config,
-        externalUrl: this.app.config.current.externalUrl
-      },
-      channel,
-      provider.name,
-      client.id
-    )
-
-    this.cacheById.set(this.getCacheKey(provider.id, channelId), conduit)
-    this.cacheByName.set(this.getCacheKey(provider.name, channelId), conduit)
-
-    return conduit
   }
 
   private getCacheKey(providerId: uuid, channelId: uuid) {

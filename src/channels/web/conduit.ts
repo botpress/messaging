@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Conduit, EndpointContent } from '../base/conduit'
+import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 
-export class WebConduit extends Conduit<any, any> {
+export class WebConduit extends ConduitInstance<any, any> {
   protected async setupConnection() {}
 
   async receive(payload: any) {

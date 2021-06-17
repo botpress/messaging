@@ -2,7 +2,7 @@ import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { DatabaseService } from '../database/service'
 import { Channel } from './base/channel'
-import { Conduit } from './base/conduit'
+import { ConduitInstance } from './base/conduit'
 import { DiscordChannel } from './discord/channel'
 import { MessengerChannel } from './messenger/channel'
 import { SlackChannel } from './slack/channel'
@@ -17,9 +17,9 @@ import { WebChannel } from './web/channel'
 export class ChannelService extends Service {
   private table: ChannelTable
 
-  private channels: Channel<Conduit<any, any>>[]
-  private channelsByName: { [name: string]: Channel<Conduit<any, any>> }
-  private channelsById: { [id: string]: Channel<Conduit<any, any>> }
+  private channels: Channel<ConduitInstance<any, any>>[]
+  private channelsByName: { [name: string]: Channel<ConduitInstance<any, any>> }
+  private channelsById: { [id: string]: Channel<ConduitInstance<any, any>> }
 
   constructor(private db: DatabaseService) {
     super()
