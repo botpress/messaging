@@ -4,6 +4,7 @@ export interface MessagingEnv {
   DATABASE_URL?: string
   REDIS_URL?: string
   REDIS_OPTIONS?: string
+  ENCRYPTION_KEY?: string
 }
 
 declare global {

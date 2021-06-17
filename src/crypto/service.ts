@@ -11,8 +11,10 @@ export class CryptoService extends Service {
   }
 
   async setup() {
-    if (this.configService.current.security?.key?.length) {
-      this.key = Buffer.from(this.configService.current.security.key, 'base64')
+    const key = process.env.ENCRYPTION_KEY || this.configService.current.security?.key
+
+    if (key?.length) {
+      this.key = Buffer.from(key, 'base64')
     }
   }
 
