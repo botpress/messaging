@@ -26,7 +26,7 @@ export class SyncService extends Service {
       provider = await this.providers.create(undefined, sync.providerName)
     }
 
-    const oldConduits = await this.conduits.list(provider.id)
+    const oldConduits = [...(await this.conduits.list(provider.id))]
 
     for (const [channel, config] of Object.entries(sync.conduits)) {
       const channelId = this.channels.getByName(channel).id
@@ -59,7 +59,7 @@ export class SyncService extends Service {
       await this.clients.updateProvider(sync.clientId, provider.id)
     }
 
-    const oldWebhooks = await this.webhooks.list(client.id)
+    const oldWebhooks = [...(await this.webhooks.list(client.id))]
 
     for (const webhook of sync.webhooks) {
       const webhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
