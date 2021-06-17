@@ -5,7 +5,8 @@
   },
   "redis": {
     "enabled": false,
-    "url": null
+    "connection": null,
+    "options": null
   },
   "security": {
     "key": "this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w="
