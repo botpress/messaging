@@ -12,19 +12,18 @@ export class Launcher {
   constructor(private express: Express, private port: string | undefined, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
 
-    process.on('uncaughtException', (err) => {
+    process.on('uncaughtException', async (err) => {
       this.logger.error('Uncaught Exception', err)
-      process.exit(1)
+      await this.shutDown(1)
     })
 
-    process.on('unhandledRejection', (err) => {
+    process.on('unhandledRejection', async (err) => {
       this.logger.error('Unhandled Rejection', err)
-      process.exit(1)
+      await this.shutDown(1)
     })
 
     process.on('SIGINT', async () => {
       await this.shutDown()
-      process.exit()
     })
   }
 
@@ -45,8 +44,9 @@ export class Launcher {
     this.logger.info(`Server is exposed at: ${this.app.config.current.externalUrl}`)
   }
 
-  async shutDown() {
+  async shutDown(code?: number) {
     await this.app.destroy()
+    process.exit(code)
   }
 
   private printLogo() {
