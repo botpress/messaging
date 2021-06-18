@@ -1,6 +1,7 @@
 import dotenv from 'dotenv'
 import fs from 'fs'
 import path from 'path'
+import yn from 'yn'
 import { Service } from '../base/service'
 
 export class ConfigService extends Service {
@@ -12,6 +13,10 @@ export class ConfigService extends Service {
   }
 
   async setupEnv() {
+    if (yn(process.env.SKIP_LOAD_ENV)) {
+      return
+    }
+
     if (process.env.NODE_ENV !== 'production') {
       dotenv.config({ path: path.resolve(process.cwd(), 'dist', '.env') })
     } else {
@@ -20,6 +25,11 @@ export class ConfigService extends Service {
   }
 
   async setupConfig() {
+    if (yn(process.env.SKIP_LOAD_CONFIG)) {
+      this.current = {}
+      return
+    }
+
     let configPath: string
     if (process.env.NODE_ENV !== 'production') {
       configPath = path.resolve(process.cwd(), 'res', 'config.json')
