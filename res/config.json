@@ -9,6 +9,7 @@
     "options": null
   },
   "security": {
+    "password": null,
     "key": "this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w="
   },
   "clients": [{ "id": "7bf3b2b2-72ad-4557-bbd6-b5c72d561d2f", "provider": "test", "token": "test-token-123" }],
