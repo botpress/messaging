@@ -3,7 +3,7 @@ import { Table } from '../base/table'
 
 export class ChannelTable extends Table {
   get id() {
-    return 'channels'
+    return 'msg_channels'
   }
 
   create(table: Knex.CreateTableBuilder) {

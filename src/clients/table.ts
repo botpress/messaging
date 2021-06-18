@@ -3,12 +3,12 @@ import { Table } from '../base/table'
 
 export class ClientTable extends Table {
   get id() {
-    return 'clients'
+    return 'msg_clients'
   }
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('providerId').references('id').inTable('providers')
+    table.uuid('providerId').references('id').inTable('msg_providers')
     table.string('token').unique()
   }
 }

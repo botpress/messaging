@@ -3,7 +3,7 @@ import { Table } from '../base/table'
 
 export class ProviderTable extends Table {
   get id() {
-    return 'providers'
+    return 'msg_providers'
   }
 
   create(table: Knex.CreateTableBuilder) {

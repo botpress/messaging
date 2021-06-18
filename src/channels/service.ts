@@ -70,7 +70,7 @@ export class ChannelService extends Service {
   }
 
   private async getInDb(name: string) {
-    const rows = await this.db.knex('channels').where({ name })
+    const rows = await this.query().where({ name })
     if (rows?.length) {
       return rows[0]
     } else {
@@ -79,6 +79,10 @@ export class ChannelService extends Service {
   }
 
   private async createInDb(id: uuid, name: string) {
-    await this.db.knex('channels').insert({ id, name })
+    await this.query().insert({ id, name })
+  }
+
+  private query() {
+    return this.db.knex(this.table.id)
   }
 }
