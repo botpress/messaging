@@ -32,6 +32,18 @@ export class Api {
   }
 
   async setup() {
+    const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
+
+    if (password) {
+      this.root.use('/api', (req, res, next) => {
+        if (req.headers.password === password) {
+          next()
+        } else {
+          res.sendStatus(403)
+        }
+      })
+    }
+
     this.root.use('/api', this.router)
     this.router.use(express.json())
     this.router.use(express.urlencoded({ extended: true }))
