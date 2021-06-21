@@ -20,6 +20,9 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     this.telegraf.on('message', async (ctx) => this.receive(ctx))
     this.telegraf.on('callback_query', async (ctx) => this.receive(ctx))
 
+    // TODO: THIS ISN'T SAFE. Telegram doesn't verify incoming requests
+    // using the botToken, but instead verifies that the request path is correct.
+    // This means that the webhook path must contain a secret (can't be just '/').
     this.callback = this.telegraf.webhookCallback('/')
 
     // We can't set webhooks with lazy loading!!
