@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
-import { Endpoint } from '../../mapping/types'
+import { Endpoint, Mapping } from '../../mapping/types'
 import { Channel } from './channel'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
@@ -41,20 +41,26 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
   async receive(payload: any) {
     const endpoint = await this.map(payload)
-    let mapping = await this.app.mapping.getByEndpoint(this.clientId!, this.channel.id, endpoint)
 
-    if (!mapping) {
-      const conversation = await this.app.conversations.create(this.clientId, endpoint.foreignUserId!)
-      mapping = await this.app.mapping.create(this.clientId!, this.channel.id, conversation.id, endpoint)
+    const tunnel = await this.app.mapping.tunnels.map(this.clientId, this.channel.id)
+    const identity = await this.app.mapping.identities.map(tunnel.id, endpoint.foreignAppId || '*')
+    const sender = await this.app.mapping.senders.map(identity.id, endpoint.foreignConversationId || '*')
+    const thread = await this.app.mapping.threads.map(sender.id, endpoint.foreignConversationId || '*')
+
+    const convmap = await this.app.mapping.convmap.getByThreadId(tunnel.id, thread.id)
+    let conversationId = convmap?.conversationId
+    if (!conversationId) {
+      conversationId = (await this.app.conversations.create(this.clientId, endpoint.foreignUserId!)).id
+      await this.app.mapping.convmap.create(tunnel.id, conversationId, thread.id)
     }
 
-    const message = await this.app.messages.create(mapping.conversationId, endpoint.content, endpoint.foreignUserId)
+    const message = await this.app.messages.create(conversationId, endpoint.content, endpoint.foreignUserId)
 
     const post = {
       client: { id: this.clientId },
       channel: { id: this.channel.id, name: this.channel.name },
-      user: { id: mapping.foreignUserId },
-      conversation: { id: mapping.conversationId },
+      user: { id: endpoint.foreignUserId },
+      conversation: { id: conversationId },
       message
     }
     this.loggerIn.debug('Received message', post)
@@ -66,7 +72,21 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
-    const mapping = await this.app.mapping.getByConversationId(this.clientId!, this.channel.id, conversationId)
+    const tunnel = await this.app.mapping.tunnels.map(this.clientId, this.channel.id)
+    const convmap = await this.app.mapping.convmap.getByConversationId(tunnel.id, conversationId)
+
+    const thread = await this.app.mapping.threads.get(convmap!.threadId)
+    const sender = await this.app.mapping.senders.get(thread!.senderId)
+    const identity = await this.app.mapping.identities.get(sender!.identityId)
+
+    const mapping: Mapping = {
+      foreignAppId: identity?.name,
+      foreignConversationId: thread?.name,
+      foreignUserId: sender?.name,
+      clientId: this.clientId,
+      channelId: this.channel.id,
+      conversationId
+    }
 
     const context = await this.context({
       client: undefined,

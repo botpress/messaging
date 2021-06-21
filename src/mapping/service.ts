@@ -1,99 +1,34 @@
 import { Service } from '../base/service'
-import { uuid } from '../base/types'
-import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
-import { MappingTable } from './table'
-import { Endpoint, Mapping } from './types'
+import { ConvmapService } from './convmap/service'
+import { IdentityService } from './identities/service'
+import { SenderService } from './senders/service'
+import { ThreadService } from './threads/service'
+import { TunnelService } from './tunnels/service'
 
 export class MappingService extends Service {
-  private table: MappingTable
-  private convCache!: ServerCache<string, Mapping>
-  private endpointCache!: ServerCache<string, Mapping>
+  public tunnels: TunnelService
+  public identities: IdentityService
+  public senders: SenderService
+  public threads: ThreadService
+  public convmap: ConvmapService
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
-    this.table = new MappingTable()
+
+    this.tunnels = new TunnelService(this.db)
+    this.identities = new IdentityService(this.db)
+    this.senders = new SenderService(this.db)
+    this.threads = new ThreadService(this.db)
+    this.convmap = new ConvmapService(this.db)
   }
 
   async setup() {
-    this.convCache = await this.cachingService.newServerCache('cache_mapping_by_conversation_id')
-    this.endpointCache = await this.cachingService.newServerCache('cache_mapping_by_endpoint')
-
-    await this.db.registerTable(this.table)
-  }
-
-  async create(clientId: uuid, channelId: string, conversationId: uuid, endpoint: Endpoint): Promise<Mapping> {
-    const mapping = {
-      clientId,
-      channelId,
-      foreignAppId: endpoint.foreignAppId,
-      foreignUserId: endpoint.foreignUserId,
-      foreignConversationId: endpoint.foreignConversationId,
-      conversationId
-    }
-
-    await this.query().insert(mapping)
-
-    this.convCache.set(this.getConvCacheKey(mapping), mapping)
-    this.endpointCache.set(this.getEndpointCacheKey(mapping), mapping)
-
-    return mapping
-  }
-
-  async getByEndpoint(clientId: uuid, channelId: string, endpoint: Endpoint): Promise<Mapping> {
-    const condition = {
-      clientId,
-      channelId,
-      foreignAppId: endpoint.foreignAppId ?? null,
-      foreignUserId: endpoint.foreignUserId ?? null,
-      foreignConversationId: endpoint.foreignConversationId ?? null
-    }
-
-    const key = this.getEndpointCacheKey(<any>condition)
-    const cached = this.endpointCache.get(key)
-    if (cached) {
-      return cached
-    }
-
-    const mapping = (await this.query().where(condition))[0] as Mapping
-    this.endpointCache.set(key, mapping)
-
-    return mapping
-  }
-
-  async getByConversationId(clientId: uuid, channelId: string, conversationId: uuid): Promise<Mapping> {
-    const condition = {
-      clientId,
-      channelId,
-      conversationId
-    }
-
-    const key = this.getConvCacheKey(condition)
-    const cached = this.convCache.get(key)
-    if (cached) {
-      return cached
-    }
-
-    const mapping = (await this.query().where(condition))[0] as Mapping
-    this.convCache.set(key, mapping)
-
-    return mapping
-  }
-
-  private query() {
-    return this.db.knex(this.table.id)
-  }
-
-  private getConvCacheKey(mapping: Partial<Mapping>): string {
-    return `${mapping.clientId}-${mapping.channelId}-${mapping.foreignAppId ?? '*'}-${mapping.foreignUserId ?? '*'}-${
-      mapping.foreignConversationId ?? '*'
-    }`
-  }
-
-  private getEndpointCacheKey(mapping: Partial<Mapping>): string {
-    return `${mapping.clientId}-${mapping.channelId}-${mapping.foreignAppId ?? '*'}-${mapping.foreignUserId ?? '*'}-${
-      mapping.foreignConversationId ?? '*'
-    }`
+    await this.tunnels.setup()
+    await this.identities.setup()
+    await this.senders.setup()
+    await this.threads.setup()
+    await this.convmap.setup()
   }
 }
