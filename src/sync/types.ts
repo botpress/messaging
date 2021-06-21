@@ -1,11 +1,9 @@
-import { Conduit } from '../conduits/types'
-import { Webhook } from '../webhooks/types'
-
 export interface SyncRequest {
-  clientId: string
-  webhooks: Webhook[]
-  conduits: { [channel: string]: Conduit }
-  providerName: string
+  clientId?: string
+  clientToken?: string
+  webhooks?: { url: string }[]
+  conduits?: { [channel: string]: any }
+  providerName?: string
 }
 
 export interface SyncResult {

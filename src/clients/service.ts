@@ -4,10 +4,8 @@ import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
-import { ConfigService } from '../config/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
-import { ProviderService } from '../providers/service'
 import { ClientTable } from './table'
 import { Client } from './types'
 
@@ -20,9 +18,7 @@ export class ClientService extends Service {
   constructor(
     private db: DatabaseService,
     private cryptoService: CryptoService,
-    private configService: ConfigService,
-    private cachingService: CachingService,
-    private providers: ProviderService
+    private cachingService: CachingService
   ) {
     super()
     this.table = new ClientTable()
@@ -34,14 +30,6 @@ export class ClientService extends Service {
     this.cacheTokens = await this.cachingService.newServerCache('cache_client_tokens')
 
     await this.db.registerTable(this.table)
-
-    for (const config of this.configService.current.clients || []) {
-      const client = await this.getById(config.id)
-      if (!client) {
-        const provider = await this.providers.getByName(config.provider)
-        await this.create(provider!.id, config.token, config.id)
-      }
-    }
   }
 
   async generateToken(): Promise<string> {

@@ -44,19 +44,12 @@ export class App {
     this.distributed = new DistributedService(this.config)
     this.caching = new CachingService(this.distributed)
     this.channels = new ChannelService(this.database)
-    this.providers = new ProviderService(this.database, this.config, this.caching)
-    this.clients = new ClientService(this.database, this.crypto, this.config, this.caching, this.providers)
+    this.providers = new ProviderService(this.database, this.caching)
+    this.clients = new ClientService(this.database, this.crypto, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching)
     this.kvs = new KvsService(this.database, this.caching)
-    this.conduits = new ConduitService(
-      this.database,
-      this.crypto,
-      this.config,
-      this.caching,
-      this.channels,
-      this.providers
-    )
-    this.syncs = new SyncService(this.channels, this.providers, this.conduits, this.clients, this.webhooks)
+    this.conduits = new ConduitService(this.database, this.crypto, this.caching)
+    this.syncs = new SyncService(this.config, this.channels, this.providers, this.conduits, this.clients, this.webhooks)
     this.conversations = new ConversationService(this.database, this.caching)
     this.messages = new MessageService(this.database, this.caching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching)

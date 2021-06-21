@@ -4,11 +4,8 @@ import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
-import { ChannelService } from '../channels/service'
-import { ConfigService } from '../config/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
-import { ProviderService } from '../providers/service'
 import { ConduitEmitter, ConduitEvents, ConduitWatcher } from './events'
 import { ConduitTable } from './table'
 import { Conduit } from './types'
@@ -25,10 +22,7 @@ export class ConduitService extends Service {
   constructor(
     private db: DatabaseService,
     private cryptoService: CryptoService,
-    private configService: ConfigService,
-    private cachingService: CachingService,
-    private channelService: ChannelService,
-    private providerService: ProviderService
+    private cachingService: CachingService
   ) {
     super()
     this.emitter = new ConduitEmitter()
@@ -39,19 +33,6 @@ export class ConduitService extends Service {
     this.cache = await this.cachingService.newServerCache('cache_conduit_by_id')
 
     await this.db.registerTable(this.table)
-
-    for (const config of this.configService.current.providers || []) {
-      const provider = (await this.providerService.getByName(config.name))!
-
-      for (const channelName of Object.keys(config.channels)) {
-        const channel = this.channelService.getByName(channelName)
-        const conduitConfig = config.channels[channelName]
-
-        if (!(await this.get(provider.id, channel.id))) {
-          await this.create(provider.id, channel.id, conduitConfig)
-        }
-      }
-    }
   }
 
   async create(providerId: uuid, channelId: uuid, config: any): Promise<Conduit> {

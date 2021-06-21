@@ -4,7 +4,6 @@ import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
-import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { ProviderTable } from './table'
 import { Provider } from './types'
@@ -14,11 +13,7 @@ export class ProviderService extends Service {
   private cacheById!: ServerCache<uuid, Provider>
   private cacheByName!: ServerCache<string, Provider>
 
-  constructor(
-    private db: DatabaseService,
-    private configService: ConfigService,
-    private cachingService: CachingService
-  ) {
+  constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
     this.table = new ProviderTable()
   }
@@ -28,13 +23,6 @@ export class ProviderService extends Service {
     this.cacheByName = await this.cachingService.newServerCache('cache_provider_by_name')
 
     await this.db.registerTable(this.table)
-
-    for (const config of this.configService.current.providers || []) {
-      const provider = await this.getByName(config.name)
-      if (!provider) {
-        await this.create(undefined, config.name)
-      }
-    }
   }
 
   async create(forceId?: string, forceName?: string): Promise<Provider> {
