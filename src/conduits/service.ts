@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
-import { ServerCache } from '../caching/cache'
+import { ServerCache2D } from '../caching/cache2D'
 import { CachingService } from '../caching/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
@@ -17,7 +17,7 @@ export class ConduitService extends Service {
 
   private emitter: ConduitEmitter
   private table: ConduitTable
-  private cache!: ServerCache<string, Conduit>
+  private cache!: ServerCache2D<Conduit>
 
   constructor(
     private db: DatabaseService,
@@ -30,7 +30,7 @@ export class ConduitService extends Service {
   }
 
   async setup() {
-    this.cache = await this.cachingService.newServerCache('cache_conduit_by_id')
+    this.cache = await this.cachingService.newServerCache2D('cache_conduit_by_id')
 
     await this.db.registerTable(this.table)
   }
@@ -40,14 +40,14 @@ export class ConduitService extends Service {
   }
 
   async delete(providerId: uuid, channelId: uuid) {
-    this.cache.del(this.getCacheKey(providerId, channelId))
+    this.cache.del(providerId, channelId)
     await this.emitter.emit(ConduitEvents.Deleting, { providerId, channelId })
 
     return this.query().where({ providerId, channelId }).del()
   }
 
   async updateConfig(providerId: uuid, channelId: uuid, config: any) {
-    this.cache.del(this.getCacheKey(providerId, channelId))
+    this.cache.del(providerId, channelId)
     await this.emitter.emit(ConduitEvents.Updating, { providerId, channelId })
 
     return this.query()
@@ -56,8 +56,7 @@ export class ConduitService extends Service {
   }
 
   async get(providerId: uuid, channelId: uuid): Promise<Conduit | undefined> {
-    const key = this.getCacheKey(providerId, channelId)
-    const cached = this.cache.get(key)
+    const cached = this.cache.get(providerId, channelId)
     if (cached) {
       return cached
     }
@@ -65,7 +64,7 @@ export class ConduitService extends Service {
     const rows = await this.query().where({ providerId, channelId })
     if (rows?.length) {
       const conduit = await this.deserialize(rows[0])
-      this.cache.set(key, conduit)
+      this.cache.set(providerId, channelId, conduit)
       return conduit
     }
 
@@ -75,10 +74,6 @@ export class ConduitService extends Service {
   async list(providerId: uuid): Promise<Conduit[]> {
     const rows = await this.query().where({ providerId })
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
-  }
-
-  private getCacheKey(providerId: uuid, channelId: uuid) {
-    return `${providerId}-${channelId}`
   }
 
   private async serialize(conduit: Partial<Conduit>) {

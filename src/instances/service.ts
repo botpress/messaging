@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { App } from '../app'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
-import { ServerCache } from '../caching/cache'
+import { ServerCache2D } from '../caching/cache2D'
 import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
@@ -12,8 +12,8 @@ import { ConduitService } from '../conduits/service'
 import { ProviderService } from '../providers/service'
 
 export class InstanceService extends Service {
-  private cacheByName!: ServerCache<string, ConduitInstance<any, any>>
-  private cacheById!: ServerCache<uuid, ConduitInstance<any, any>>
+  private cacheByName!: ServerCache2D<ConduitInstance<any, any>>
+  private cacheById!: ServerCache2D<ConduitInstance<any, any>>
 
   constructor(
     private cachingService: CachingService,
@@ -27,8 +27,8 @@ export class InstanceService extends Service {
   }
 
   async setup() {
-    this.cacheByName = await this.cachingService.newServerCache('cache_instance_by_provider_name')
-    this.cacheById = await this.cachingService.newServerCache('cache_instance_by_provider_id')
+    this.cacheByName = await this.cachingService.newServerCache2D('cache_instance_by_provider_name')
+    this.cacheById = await this.cachingService.newServerCache2D('cache_instance_by_provider_id')
 
     this.conduitService.events().on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
     this.conduitService.events().on(ConduitEvents.Updating, this.onConduitUpdating.bind(this))
@@ -37,19 +37,19 @@ export class InstanceService extends Service {
   async onConduitDeleting({ providerId, channelId }: ConduitDeletingEvent) {
     const provider = await this.providerService.getById(providerId)
 
-    this.cacheById.del(this.getCacheKey(providerId, channelId))
-    this.cacheByName.del(this.getCacheKey(provider!.name, channelId))
+    this.cacheById.del(providerId, channelId)
+    this.cacheByName.del(provider!.name, channelId)
   }
 
   async onConduitUpdating({ providerId, channelId }: ConduitUpdatingEvent) {
     const provider = await this.providerService.getById(providerId)
 
-    this.cacheById.del(this.getCacheKey(providerId, channelId))
-    this.cacheByName.del(this.getCacheKey(provider!.name, channelId))
+    this.cacheById.del(providerId, channelId)
+    this.cacheByName.del(provider!.name, channelId)
   }
 
   async getInstanceByProviderName(providerName: string, channelId: uuid): Promise<ConduitInstance<any, any>> {
-    const cached = this.cacheByName.get(this.getCacheKey(providerName, channelId))
+    const cached = this.cacheByName.get(providerName, channelId)
     if (cached) {
       return cached
     }
@@ -59,7 +59,7 @@ export class InstanceService extends Service {
   }
 
   async getInstanceByProviderId(providerId: uuid, channelId: uuid): Promise<ConduitInstance<any, any>> {
-    const cached = this.cacheById.get(providerId)
+    const cached = this.cacheById.get(providerId, channelId)
     if (cached) {
       return cached
     }
@@ -81,13 +81,9 @@ export class InstanceService extends Service {
       client.id
     )
 
-    this.cacheById.set(this.getCacheKey(provider.id, channelId), instance)
-    this.cacheByName.set(this.getCacheKey(provider.name, channelId), instance)
+    this.cacheById.set(provider.id, channelId, instance)
+    this.cacheByName.set(provider.name, channelId, instance)
 
     return instance
-  }
-
-  private getCacheKey(providerId: uuid, channelId: uuid) {
-    return `${providerId}-${channelId}`
   }
 }

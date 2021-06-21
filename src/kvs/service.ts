@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
-import { ServerCache } from '../caching/cache'
+import { ServerCache2D } from '../caching/cache2D'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
 import { KvsTable } from './table'
 
 export class KvsService extends Service {
   private table: KvsTable
-  private cache!: ServerCache<string, any>
+  private cache!: ServerCache2D<any>
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
@@ -15,13 +15,13 @@ export class KvsService extends Service {
   }
 
   async setup() {
-    this.cache = await this.cachingService.newServerCache('cache_kvs')
+    this.cache = await this.cachingService.newServerCache2D('cache_kvs')
 
     await this.db.registerTable(this.table)
   }
 
   async get(clientId: string, key: string): Promise<any> {
-    const cached = this.cache.get(this.getCacheKey(clientId, key))
+    const cached = this.cache.get(clientId, key)
     if (cached) {
       return cached
     }
@@ -29,7 +29,7 @@ export class KvsService extends Service {
     const rows = await this.query().where({ key })
     if (rows?.length) {
       const value = this.db.getJson(rows[0].value)
-      this.cache.set(this.getCacheKey(clientId, key), value)
+      this.cache.set(clientId, key, value)
       return value
     } else {
       return undefined
@@ -38,16 +38,12 @@ export class KvsService extends Service {
 
   async set(clientId: string, key: string, value: any): Promise<void> {
     if (await this.get(clientId, key)) {
-      this.cache.set(this.getCacheKey(clientId, key), value)
+      this.cache.set(clientId, key, value)
       await this.query().where({ key }).update({ value })
     } else {
-      this.cache.set(this.getCacheKey(clientId, key), value)
+      this.cache.set(clientId, key, value)
       await this.query().insert({ id: uuidv4(), key, value: this.db.setJson(value) })
     }
-  }
-
-  private getCacheKey(clientId: string, key: string) {
-    return `${clientId}-${key}`
   }
 
   private query() {
