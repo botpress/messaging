@@ -1,12 +1,13 @@
 @baseUrl = http://localhost:3100
-@token = YOUR_TOKEN
+@clientId = YOUR_CLIENT_ID
+@clientToken = YOUR_TOKEN
 @channel= YOUR_CHANNEL
 @convoId = YOUR_CONVO_ID
 
 ### Send Text
-POST {{baseUrl}}/api/send
+POST {{baseUrl}}/api/messages/send
+Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
-token: {{token}}
 
 {
   "channel": "{{channel}}",
@@ -18,9 +19,9 @@ token: {{token}}
 }
 
 ### Send Image
-POST {{baseUrl}}/api/send
+POST {{baseUrl}}/api/messages/send
+Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
-token: {{token}}
 
 {
   "channel": "{{channel}}",
@@ -33,9 +34,9 @@ token: {{token}}
 }
 
 ### Send Choices
-POST {{baseUrl}}/api/send
+POST {{baseUrl}}/api/messages/send
+Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
-token: {{token}}
 
 {
   "channel": "{{channel}}",
@@ -51,9 +52,9 @@ token: {{token}}
 }
 
 ### Send Card
-POST {{baseUrl}}/api/send
+POST {{baseUrl}}/api/messages/send
+Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
-token: {{token}}
 
 {
   "channel": "{{channel}}",
@@ -84,9 +85,9 @@ token: {{token}}
 }
 
 ### Send Carousel
-POST {{baseUrl}}/api/send
+POST {{baseUrl}}/api/messages/send
+Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
-token: {{token}}
 
 {
   "channel": "{{channel}}",
