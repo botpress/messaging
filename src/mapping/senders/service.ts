@@ -1,37 +1,59 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../../base/service'
 import { uuid } from '../../base/types'
+import { ServerCache } from '../../caching/cache'
+import { ServerCache2D } from '../../caching/cache2D'
+import { CachingService } from '../../caching/service'
 import { DatabaseService } from '../../database/service'
 import { SenderTable } from './table'
 import { Sender } from './types'
 
 export class SenderService extends Service {
   private table: SenderTable
+  private cacheById!: ServerCache<uuid, Sender>
+  private cacheByName!: ServerCache2D<Sender>
 
-  constructor(private db: DatabaseService) {
+  constructor(private db: DatabaseService, private caching: CachingService) {
     super()
     this.table = new SenderTable()
   }
 
   async setup() {
+    this.cacheById = await this.caching.newServerCache('cache_sender_by_id')
+    this.cacheByName = await this.caching.newServerCache2D('cache_sender_by_name')
+
     await this.db.registerTable(this.table)
   }
 
   async get(id: uuid): Promise<Sender | undefined> {
+    const cached = this.cacheById.get(id)
+    if (cached) {
+      return cached
+    }
+
     const rows = await this.query().where({ id })
 
     if (rows?.length) {
-      return rows[0]
+      const sender = rows[0] as Sender
+      this.cacheById.set(id, sender)
+      return sender
     } else {
       return undefined
     }
   }
 
   async map(identityId: uuid, name: string): Promise<Sender> {
+    const cached = this.cacheByName.get(identityId, name)
+    if (cached) {
+      return cached
+    }
+
     const rows = await this.query().where({ identityId, name })
 
     if (rows?.length) {
-      return rows[0]
+      const sender = rows[0] as Sender
+      this.cacheByName.set(identityId, name, sender)
+      return sender
     } else {
       const sender = {
         id: uuidv4(),
@@ -40,6 +62,8 @@ export class SenderService extends Service {
       }
 
       await this.query().insert(sender)
+      this.cacheByName.set(identityId, name, sender)
+      this.cacheById.set(sender.id, sender)
 
       return sender
     }

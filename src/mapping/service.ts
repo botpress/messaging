@@ -14,14 +14,14 @@ export class MappingService extends Service {
   public threads: ThreadService
   public convmap: ConvmapService
 
-  constructor(private db: DatabaseService, private cachingService: CachingService) {
+  constructor(private db: DatabaseService, private caching: CachingService) {
     super()
 
-    this.tunnels = new TunnelService(this.db)
-    this.identities = new IdentityService(this.db)
-    this.senders = new SenderService(this.db)
-    this.threads = new ThreadService(this.db)
-    this.convmap = new ConvmapService(this.db)
+    this.tunnels = new TunnelService(this.db, this.caching)
+    this.identities = new IdentityService(this.db, this.caching)
+    this.senders = new SenderService(this.db, this.caching)
+    this.threads = new ThreadService(this.db, this.caching)
+    this.convmap = new ConvmapService(this.db, this.caching)
   }
 
   async setup() {
