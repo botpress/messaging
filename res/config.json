@@ -12,56 +12,18 @@
     "password": null,
     "key": "this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w="
   },
-  "clients": [{ "id": "7bf3b2b2-72ad-4557-bbd6-b5c72d561d2f", "provider": "test", "token": "test-token-123" }],
-  "providers": [
+  "sync": [
     {
-      "name": "test",
-      "channels": {
-        "messenger": {
-          "enabled": false,
-          "appSecret": "",
-          "verifyToken": "",
-          "accessToken": ""
-        },
-        "twilio": {
-          "enabled": false,
-          "accountSID": "",
-          "authToken": ""
-        },
+      "providerName": "test",
+      "conduits": {
         "telegram": {
-          "enabled": false,
+          "enabled": true,
           "botToken": ""
-        },
-        "slack": {
-          "enabled": false,
-          "signingSecret": "",
-          "botToken": ""
-        },
-        "teams": {
-          "enabled": false,
-          "appId": "",
-          "appPassword": "."
-        },
-        "smooch": {
-          "enabled": false,
-          "keyId": "",
-          "secret": "",
-          "webhookSecret": ""
-        },
-        "vonage": {
-          "enabled": false,
-          "apiKey": "",
-          "apiSecret": "",
-          "signatureSecret": "",
-          "applicationId": "",
-          "privateKey": "",
-          "useTestingApi": true
-        },
-        "discord": {
-          "enabled": false,
-          "token": ""
         }
-      }
+      },
+      "clientId": "96af5294-46f1-4a85-a17f-6863fa4d77d7",
+      "clientToken": "test-token-123",
+      "webhooks": []
     }
   ]
 }
