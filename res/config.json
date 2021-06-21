@@ -16,9 +16,49 @@
     {
       "providerName": "test",
       "conduits": {
+        "messenger": {
+          "enabled": false,
+          "appSecret": "",
+          "verifyToken": "",
+          "accessToken": ""
+        },
+        "twilio": {
+          "enabled": false,
+          "accountSID": "",
+          "authToken": ""
+        },
         "telegram": {
-          "enabled": true,
+          "enabled": false,
           "botToken": ""
+        },
+        "slack": {
+          "enabled": false,
+          "signingSecret": "",
+          "botToken": ""
+        },
+        "teams": {
+          "enabled": false,
+          "appId": "",
+          "appPassword": "."
+        },
+        "smooch": {
+          "enabled": false,
+          "keyId": "",
+          "secret": "",
+          "webhookSecret": ""
+        },
+        "vonage": {
+          "enabled": false,
+          "apiKey": "",
+          "apiSecret": "",
+          "signatureSecret": "",
+          "applicationId": "",
+          "privateKey": "",
+          "useTestingApi": true
+        },
+        "discord": {
+          "enabled": false,
+          "token": ""
         }
       },
       "clientId": "96af5294-46f1-4a85-a17f-6863fa4d77d7",
