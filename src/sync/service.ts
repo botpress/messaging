@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { Service } from '../base/service'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
@@ -31,6 +32,8 @@ export class SyncService extends Service {
     // TODO: refactor this whole function
 
     let provider: Provider | undefined = undefined
+    let client: Client | undefined = undefined
+    let token: string | undefined = undefined
 
     if (sync.providerName) {
       provider = await this.providers.getByName(sync.providerName)
@@ -39,31 +42,9 @@ export class SyncService extends Service {
       provider = await this.providers.create(undefined, sync.providerName)
     }
 
-    const oldConduits = [...(await this.conduits.list(provider.id))]
-
-    for (const [channel, config] of Object.entries(sync.conduits || {})) {
-      const channelId = this.channels.getByName(channel).id
-      const conduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
-
-      if (conduitIndex >= 0) {
-        oldConduits.splice(conduitIndex, 1)
-        await this.conduits.updateConfig(provider.id, channelId, config)
-      } else {
-        await this.conduits.create(provider.id, channelId, config)
-      }
-    }
-
-    for (const unusedConduit of oldConduits) {
-      await this.conduits.delete(provider.id, unusedConduit.channelId)
-    }
-
-    let client: Client | undefined = undefined
-    let token: string | undefined = undefined
-
     if (sync.clientId) {
       client = await this.clients.getById(sync.clientId)
     }
-
     if (!client) {
       await this.clients.unlinkAllFromProvider(provider.id)
 
@@ -76,6 +57,27 @@ export class SyncService extends Service {
       client = await this.clients.create(provider.id, token, force ? sync.clientId : undefined)
     } else if (client.providerId !== provider.id) {
       await this.clients.updateProvider(client.id, provider.id)
+    }
+
+    const oldConduits = [...(await this.conduits.list(provider.id))]
+
+    for (const [channel, config] of Object.entries(sync.conduits || {})) {
+      const channelId = this.channels.getByName(channel).id
+      const conduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
+
+      if (conduitIndex >= 0) {
+        const oldConduit = await this.conduits.get(provider.id, channelId)
+        if (!_.isEqual(config, oldConduit!.config)) {
+          await this.conduits.updateConfig(provider.id, channelId, config)
+        }
+        oldConduits.splice(conduitIndex, 1)
+      } else {
+        await this.conduits.create(provider.id, channelId, config)
+      }
+    }
+
+    for (const unusedConduit of oldConduits) {
+      await this.conduits.delete(provider.id, unusedConduit.channelId)
     }
 
     const oldWebhooks = [...(await this.webhooks.list(client.id))]

@@ -9,6 +9,10 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
 
+  get requiresInitialization() {
+    return false
+  }
+
   protected app!: App
   protected logger!: Logger
   protected router!: Router

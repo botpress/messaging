@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import ms from 'ms'
 import { App } from '../app'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
@@ -7,7 +8,7 @@ import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
-import { ConduitDeletingEvent, ConduitEvents, ConduitUpdatingEvent } from '../conduits/events'
+import { ConduitCreatedEvent, ConduitDeletingEvent, ConduitEvents, ConduitUpdatingEvent } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
 import { ProviderService } from '../providers/service'
 
@@ -30,22 +31,19 @@ export class InstanceService extends Service {
     this.cacheByName = await this.cachingService.newServerCache2D('cache_instance_by_provider_name')
     this.cacheById = await this.cachingService.newServerCache2D('cache_instance_by_provider_id')
 
-    this.conduitService.events().on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
-    this.conduitService.events().on(ConduitEvents.Updating, this.onConduitUpdating.bind(this))
+    this.conduitService.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
+    this.conduitService.events.on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
+    this.conduitService.events.on(ConduitEvents.Updated, this.onConduitUpdated.bind(this))
+    // TODO: we need to do something when to providerId property of a client changes aswell...
+
+    setInterval(() => this.initializeOutdatedConduits(), ms('15s'))
   }
 
-  async onConduitDeleting({ providerId, channelId }: ConduitDeletingEvent) {
-    const provider = await this.providerService.getById(providerId)
+  async initializeInstance(providerId: uuid, channelId: uuid) {
+    const instance = await this.getInstanceByProviderId(providerId, channelId)
+    await instance.initialize()
 
-    this.cacheById.del(providerId, channelId)
-    this.cacheByName.del(provider!.name, channelId)
-  }
-
-  async onConduitUpdating({ providerId, channelId }: ConduitUpdatingEvent) {
-    const provider = await this.providerService.getById(providerId)
-
-    this.cacheById.del(providerId, channelId)
-    this.cacheByName.del(provider!.name, channelId)
+    await this.conduitService.updateInitialized(providerId, channelId)
   }
 
   async getInstanceByProviderName(providerName: string, channelId: uuid): Promise<ConduitInstance<any, any>> {
@@ -85,5 +83,37 @@ export class InstanceService extends Service {
     this.cacheByName.set(provider.name, channelId, instance)
 
     return instance
+  }
+
+  private async initializeOutdatedConduits() {
+    const outdateds = await this.conduitService.listOutdated(ms('10h'), 1000)
+
+    for (const outdated of outdateds) {
+      void this.initializeInstance(outdated.providerId, outdated.channelId)
+    }
+  }
+
+  private async onConduitCreated({ providerId, channelId }: ConduitCreatedEvent) {
+    if (this.channelService.getById(channelId).requiresInitialization) {
+      await this.initializeInstance(providerId, channelId)
+    }
+  }
+
+  private async onConduitDeleting({ providerId, channelId }: ConduitDeletingEvent) {
+    const provider = await this.providerService.getById(providerId)
+
+    this.cacheById.del(providerId, channelId)
+    this.cacheByName.del(provider!.name, channelId)
+  }
+
+  private async onConduitUpdated({ providerId, channelId }: ConduitUpdatingEvent) {
+    const provider = await this.providerService.getById(providerId)
+
+    this.cacheById.del(providerId, channelId)
+    this.cacheByName.del(provider!.name, channelId)
+
+    if (this.channelService.getById(channelId).requiresInitialization) {
+      await this.initializeInstance(providerId, channelId)
+    }
   }
 }

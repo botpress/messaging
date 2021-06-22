@@ -30,11 +30,11 @@ export class App {
   webhooks: WebhookService
   kvs: KvsService
   conduits: ConduitService
-  syncs: SyncService
   conversations: ConversationService
   messages: MessageService
   mapping: MappingService
   instances: InstanceService
+  syncs: SyncService
 
   constructor() {
     this.logger = new LoggerService()
@@ -49,11 +49,11 @@ export class App {
     this.webhooks = new WebhookService(this.database, this.caching)
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching)
-    this.syncs = new SyncService(this.config, this.channels, this.providers, this.conduits, this.clients, this.webhooks)
     this.conversations = new ConversationService(this.database, this.caching)
     this.messages = new MessageService(this.database, this.caching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching)
     this.instances = new InstanceService(this.caching, this.channels, this.providers, this.conduits, this.clients, this)
+    this.syncs = new SyncService(this.config, this.channels, this.providers, this.conduits, this.clients, this.webhooks)
   }
 
   async setup() {
@@ -69,11 +69,11 @@ export class App {
     await this.webhooks.setup()
     await this.kvs.setup()
     await this.conduits.setup()
-    await this.syncs.setup()
     await this.conversations.setup()
     await this.messages.setup()
     await this.mapping.setup()
     await this.instances.setup()
+    await this.syncs.setup()
   }
 
   async destroy() {

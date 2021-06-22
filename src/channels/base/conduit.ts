@@ -115,6 +115,8 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     this.loggerOut.debug('Sending message', { providerName: this.providerName, clientId: this.clientId, message })
   }
 
+  async initialize() {}
+
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]

@@ -11,7 +11,7 @@ import { ConduitTable } from './table'
 import { Conduit } from './types'
 
 export class ConduitService extends Service {
-  public events(): ConduitWatcher {
+  get events(): ConduitWatcher {
     return this.emitter
   }
 
@@ -36,7 +36,18 @@ export class ConduitService extends Service {
   }
 
   async create(providerId: uuid, channelId: uuid, config: any): Promise<Conduit> {
-    return this.query().insert(await this.serialize({ id: uuidv4(), providerId, channelId, config }))
+    const conduit = {
+      id: uuidv4(),
+      providerId,
+      channelId,
+      config,
+      initialized: undefined
+    }
+
+    await this.query().insert(await this.serialize(conduit))
+    await this.emitter.emit(ConduitEvents.Created, { providerId, channelId })
+
+    return conduit
   }
 
   async delete(providerId: uuid, channelId: uuid) {
@@ -48,11 +59,20 @@ export class ConduitService extends Service {
 
   async updateConfig(providerId: uuid, channelId: uuid, config: any) {
     this.cache.del(providerId, channelId)
-    await this.emitter.emit(ConduitEvents.Updating, { providerId, channelId })
 
-    return this.query()
+    await this.query()
       .where({ providerId, channelId })
-      .update({ config: await this.cryptoService.encrypt(JSON.stringify(config || {})) })
+      .update({ initialized: null, config: await this.cryptoService.encrypt(JSON.stringify(config || {})) })
+
+    await this.emitter.emit(ConduitEvents.Updated, { providerId, channelId })
+  }
+
+  async updateInitialized(providerId: uuid, channelId: uuid) {
+    this.cache.del(providerId, channelId)
+
+    await this.query()
+      .where({ providerId, channelId })
+      .update({ initialized: this.db.setDate(new Date()) })
   }
 
   async get(providerId: uuid, channelId: uuid): Promise<Conduit | undefined> {
@@ -76,9 +96,18 @@ export class ConduitService extends Service {
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
   }
 
+  async listOutdated(tolerance: number, limit: number): Promise<Conduit[]> {
+    const rows = await this.query()
+      .where('initialized', '<=', this.db.setDate(new Date(Date.now() - tolerance))!)
+      .limit(limit)
+
+    return rows.map((x) => _.omit(x, 'config')) as Conduit[]
+  }
+
   private async serialize(conduit: Partial<Conduit>) {
     return {
       ...conduit,
+      initialized: this.db.setDate(conduit.initialized),
       config: await this.cryptoService.encrypt(JSON.stringify(conduit.config || {}))
     }
   }
@@ -86,6 +115,7 @@ export class ConduitService extends Service {
   private async deserialize(conduit: any): Promise<Conduit> {
     return {
       ...conduit,
+      initialized: this.db.getDate(conduit.initialized),
       config: JSON.parse(await this.cryptoService.decrypt(conduit.config))
     }
   }

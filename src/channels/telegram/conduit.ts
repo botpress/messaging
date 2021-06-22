@@ -13,6 +13,12 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   private telegraf!: Telegraf<TelegrafContext>
   public callback!: (req: any, res: any) => void
 
+  async initialize() {
+    await this.telegraf.telegram.setWebhook(
+      this.config.externalUrl + this.channel.getRoute().replace(':provider', this.providerName)
+    )
+  }
+
   protected async setupConnection() {
     this.telegraf = new Telegraf(this.config.botToken)
     this.telegraf.start(async (ctx) => this.receive(ctx))
@@ -24,10 +30,6 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     // using the botToken, but instead verifies that the request path is correct.
     // This means that the webhook path must contain a secret (can't be just '/').
     this.callback = this.telegraf.webhookCallback('/')
-
-    // We can't set webhooks with lazy loading!!
-    // TODO: should keep track of which providers have had their webhooks set
-    // await this.telegraf.telegram.setWebhook(this.config.externalUrl + this.route())
   }
 
   protected setupRenderers() {
