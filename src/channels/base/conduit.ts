@@ -54,6 +54,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
     let clientId = this.clientId!
 
+    // TODO: refactor this whole thing
     if (this.sandbox) {
       const provider = await this.app.providers.getByName(this.providerName)
       const conduit = await this.app.conduits.get(provider!.id, this.channel.id)
@@ -87,14 +88,31 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
             clientId = client.id
           } else {
-            this.logger.info('Wrong passphrase')
+            await this.sendToEndpoint(
+              endpoint.foreignAppId!,
+              endpoint.foreignUserId!,
+              endpoint.foreignConversationId!,
+              {
+                type: 'text',
+                text: 'Sandbox client not found'
+              }
+            )
+            this.logger.info('Sandbox client not found')
             return
           }
         } else {
+          await this.sendToEndpoint(endpoint.foreignAppId!, endpoint.foreignUserId!, endpoint.foreignConversationId!, {
+            type: 'text',
+            text: 'Wrong passphrase'
+          })
           this.logger.info('Wrong passphrase')
           return
         }
       } else {
+        await this.sendToEndpoint(endpoint.foreignAppId!, endpoint.foreignUserId!, endpoint.foreignConversationId!, {
+          type: 'text',
+          text: 'Please join the sandbox using by sending : !join your_passphrase'
+        })
         this.logger.info('This endpoint is unknown to the sandbox')
         return
       }
@@ -139,13 +157,22 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     const sender = await this.app.mapping.senders.get(thread!.senderId)
     const identity = await this.app.mapping.identities.get(sender!.identityId)
 
-    const mapping: Mapping = {
-      foreignAppId: identity?.name,
-      foreignConversationId: thread?.name,
-      foreignUserId: sender?.name,
+    await this.sendToEndpoint(identity!.name, sender!.name, thread!.name, payload)
+
+    const message = await this.app.messages.create(conversationId, payload, sender?.name)
+
+    this.loggerOut.debug('Sending message', {
+      providerName: this.providerName,
       clientId: conversation!.clientId,
-      channelId: this.channel.id,
-      conversationId
+      message
+    })
+  }
+
+  async sendToEndpoint(identity: string, sender: string, thread: string, payload: any) {
+    const endpoint: Endpoint = {
+      foreignAppId: identity,
+      foreignUserId: sender,
+      foreignConversationId: thread
     }
 
     const context = await this.context({
@@ -155,7 +182,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
       // TODO: bot url
       botUrl: 'https://duckduckgo.com/',
       logger: this.logger,
-      ...mapping
+      ...endpoint
     })
 
     for (const renderer of this.renderers) {
@@ -170,13 +197,6 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
         await sender.send(context)
       }
     }
-
-    const message = await this.app.messages.create(conversationId, payload, mapping.foreignUserId)
-    this.loggerOut.debug('Sending message', {
-      providerName: this.providerName,
-      clientId: conversation!.clientId,
-      message
-    })
   }
 
   async initialize() {}

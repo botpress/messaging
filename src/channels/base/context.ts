@@ -1,5 +1,5 @@
 import { Logger } from '../../logger/types'
-import { Mapping } from '../../mapping/types'
+import { Endpoint } from '../../mapping/types'
 
 export type ChannelContext<TClient> = {
   client: TClient
@@ -7,4 +7,4 @@ export type ChannelContext<TClient> = {
   payload: any
   botUrl: string
   logger: Logger
-} & Mapping
+} & Endpoint
