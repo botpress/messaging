@@ -1,6 +1,7 @@
 import { BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import _ from 'lodash'
 import LRU from 'lru-cache'
+import { uuid } from '../../base/types'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -49,17 +50,17 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
       ...base,
       client: this.adapter,
       messages: [],
-      convoRef: await this.getConvoRef(base.foreignConversationId!)
+      convoRef: await this.getConvoRef(base.clientId, base.foreignConversationId!)
     }
   }
 
-  private async getConvoRef(threadId: string): Promise<Partial<ConversationReference>> {
+  private async getConvoRef(clientId: uuid, threadId: string): Promise<Partial<ConversationReference>> {
     let convoRef = this.convoRefs.get(threadId)
     if (convoRef) {
       return convoRef
     }
 
-    convoRef = await this.app.kvs.get(this.clientId, threadId)
+    convoRef = await this.app.kvs.get(clientId, threadId)
     this.convoRefs.set(threadId, convoRef!)
     return convoRef!
   }
@@ -70,6 +71,7 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
     }
 
     this.convoRefs.set(threadId, convoRef)
-    return this.app.kvs.set(this.clientId, threadId, convoRef)
+    // TODO: fix this clientId doesn't work in sandbox
+    return this.app.kvs.set(this.clientId!, threadId, convoRef)
   }
 }

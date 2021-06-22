@@ -39,13 +39,15 @@ export class SyncService extends Service {
       provider = await this.providers.getByName(sync.providerName)
     }
     if (!provider) {
-      provider = await this.providers.create(undefined, sync.providerName)
+      provider = await this.providers.create(undefined, sync.providerName, sync.sandbox)
+    } else {
+      await this.providers.updateSandbox(provider.id, sync.sandbox === undefined ? false : sync.sandbox)
     }
 
     if (sync.clientId) {
       client = await this.clients.getById(sync.clientId)
     }
-    if (!client) {
+    if (!client && !sync.sandbox) {
       await this.clients.unlinkAllFromProvider(provider.id)
 
       if (force && sync.clientToken) {
@@ -55,7 +57,7 @@ export class SyncService extends Service {
       }
 
       client = await this.clients.create(provider.id, token, force ? sync.clientId : undefined)
-    } else if (client.providerId !== provider.id) {
+    } else if (client && client.providerId !== provider.id) {
       await this.clients.updateProvider(client.id, provider.id)
     }
 
@@ -80,21 +82,23 @@ export class SyncService extends Service {
       await this.conduits.delete(provider.id, unusedConduit.channelId)
     }
 
-    const oldWebhooks = [...(await this.webhooks.list(client.id))]
+    if (client) {
+      const oldWebhooks = [...(await this.webhooks.list(client.id))]
 
-    for (const webhook of sync.webhooks || []) {
-      const webhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
-      if (webhookIndex >= 0) {
-        oldWebhooks.splice(webhookIndex, 1)
-      } else {
-        await this.webhooks.create(client.id, webhook.url)
+      for (const webhook of sync.webhooks || []) {
+        const webhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
+        if (webhookIndex >= 0) {
+          oldWebhooks.splice(webhookIndex, 1)
+        } else {
+          await this.webhooks.create(client.id, webhook.url)
+        }
+      }
+
+      for (const unusedWebhook of oldWebhooks) {
+        await this.webhooks.delete(unusedWebhook.id)
       }
     }
 
-    for (const unusedWebhook of oldWebhooks) {
-      await this.webhooks.delete(unusedWebhook.id)
-    }
-
-    return { clientId: client.id, clientToken: token, providerName: provider.name }
+    return { clientId: client?.id, clientToken: token, providerName: provider.name }
   }
 }

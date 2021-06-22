@@ -4,10 +4,11 @@ export interface SyncRequest {
   webhooks?: { url: string }[]
   conduits?: { [channel: string]: any }
   providerName?: string
+  sandbox?: boolean
 }
 
 export interface SyncResult {
-  clientId: string
+  clientId?: string
   clientToken?: string
   providerName: string
 }

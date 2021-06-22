@@ -62,7 +62,7 @@ export class InstanceService extends Service {
     }
 
     const provider = (await this.providerService.getById(providerId))!
-    const client = (await this.clientService.getByProviderId(providerId))!
+    const client = provider.sandbox ? undefined : await this.clientService.getByProviderId(providerId)
     const conduit = await this.conduitService.get(provider.id, channelId)
     const channel = this.channelService.getById(channelId)
     const instance = channel.createConduit()
@@ -75,7 +75,8 @@ export class InstanceService extends Service {
       },
       channel,
       provider.name,
-      client.id
+      client?.id,
+      provider.sandbox
     )
 
     this.cache.set(provider.id, channelId, instance, channel.lazy ? undefined : Infinity)

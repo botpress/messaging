@@ -17,7 +17,7 @@ export class WebConduit extends ConduitInstance<any, any> {
     }
     this.loggerIn.debug('Web received message', post)
 
-    const webhooks = await this.app.webhooks.list(this.clientId)
+    const webhooks = await this.app.webhooks.list(this.clientId!)
     for (const webhook of webhooks) {
       await axios.post(webhook.url, post)
     }

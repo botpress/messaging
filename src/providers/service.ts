@@ -25,9 +25,13 @@ export class ProviderService extends Service {
     await this.db.registerTable(this.table)
   }
 
-  async create(forceId?: string, forceName?: string): Promise<Provider> {
+  async create(forceId?: string, forceName?: string, sandbox?: boolean): Promise<Provider> {
     const id = forceId ?? uuidv4()
-    const provider = { id, name: forceName ?? crypto.randomBytes(18).toString('base64') }
+    const provider = {
+      id,
+      name: forceName ?? crypto.randomBytes(18).toString('base64'),
+      sandbox: sandbox === undefined ? false : sandbox
+    }
 
     await this.query().insert(provider)
 
@@ -70,6 +74,15 @@ export class ProviderService extends Service {
     }
 
     return undefined
+  }
+
+  async updateSandbox(id: uuid, sandbox: boolean) {
+    const provider = (await this.getById(id))!
+
+    await this.query().where({ id }).update({ sandbox })
+
+    this.cacheById.del(id)
+    this.cacheByName.del(provider.name)
   }
 
   private query() {
