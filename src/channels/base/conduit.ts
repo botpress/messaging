@@ -117,6 +117,8 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
   async initialize() {}
 
+  async destroy() {}
+
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]

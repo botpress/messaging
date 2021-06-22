@@ -11,12 +11,18 @@ import { DiscordRenderers } from './renderers'
 import { DiscordSenders } from './senders'
 
 export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContext> {
+  private static patched = false
+
   private client!: Discord.Client
   private convoCache!: LRU<string, Discord.Channel>
 
   protected async setupConnection() {
     this.client = new Discord.Client()
-    disbut(this.client)
+
+    if (!DiscordConduit.patched) {
+      disbut(this.client)
+      DiscordConduit.patched = true
+    }
 
     this.convoCache = this.app.caching.newLRU()
 
@@ -85,5 +91,9 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
     }
 
     this.convoCache.set(channelId, channel)
+  }
+
+  async destroy() {
+    this.client.destroy()
   }
 }

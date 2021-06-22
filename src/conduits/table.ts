@@ -14,5 +14,6 @@ export class ConduitTable extends Table {
     table.text('config')
     table.unique(['providerId', 'channelId'])
     table.index(['initialized'])
+    table.index(['channelId'])
   }
 }

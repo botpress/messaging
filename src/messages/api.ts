@@ -69,7 +69,7 @@ export class MessageApi extends ClientScopedApi {
       const { channel, conversationId, payload } = req.body
 
       const channelId = this.channels.getByName(channel).id
-      const conduit = await this.instances.getInstanceByProviderId(req.client!.providerId, channelId)
+      const conduit = await this.instances.get(req.client!.providerId, channelId)
       await conduit.send(conversationId, payload)
 
       res.sendStatus(200)

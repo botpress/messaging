@@ -104,6 +104,11 @@ export class ConduitService extends Service {
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
   }
 
+  async listByChannel(channelId: uuid): Promise<Conduit[]> {
+    const rows = await this.query().where({ channelId })
+    return rows.map((x) => _.omit(x, 'config')) as Conduit[]
+  }
+
   private async serialize(conduit: Partial<Conduit>) {
     return {
       ...conduit,

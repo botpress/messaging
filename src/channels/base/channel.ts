@@ -13,6 +13,10 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
     return false
   }
 
+  get lazy() {
+    return true
+  }
+
   protected app!: App
   protected logger!: Logger
   protected router!: Router
@@ -26,7 +30,8 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
       this.getRoute(),
       async (req, res, next) => {
         const { provider } = req.params
-        res.locals.conduit = await this.app.instances.getInstanceByProviderName(provider, this.id)
+        const providerId = (await this.app.providers.getByName(provider))!.id
+        res.locals.conduit = await this.app.instances.get(providerId, this.id)
         next()
       },
       this.router
