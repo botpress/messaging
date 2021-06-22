@@ -90,8 +90,10 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
             this.logger.info('Wrong passphrase')
             return
           }
+        } else {
+          this.logger.info('Wrong passphrase')
+          return
         }
-        return
       } else {
         this.logger.info('This endpoint is unknown to the sandbox')
         return
