@@ -9,7 +9,7 @@ import { ConfigService } from '../config/service'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
 import { WebhookService } from '../webhooks/service'
-import { SyncConduits, SyncRequest, SyncResult, SyncWebhook } from './types'
+import { SyncConduits, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook } from './types'
 
 export class SyncService extends Service {
   constructor(
@@ -24,32 +24,29 @@ export class SyncService extends Service {
   }
 
   async setup() {
-    for (const sync of this.config.current.sync || []) {
-      await this.syncForce(sync)
+    for (const req of this.config.current.sync || []) {
+      req.sandbox ? await this.syncSandbox(req) : await this.sync(req, true)
     }
   }
 
-  async sync(req: SyncRequest): Promise<SyncResult> {
-    const provider = await this.syncProvider(req.providerName, !!req.sandbox)
+  async sync(req: SyncRequest, force: boolean): Promise<SyncResult> {
+    const provider = await this.syncProvider(req.providerName, false)
     await this.syncConduits(provider.id, req.conduits || {})
 
-    const client = await this.syncClient(req.clientId, provider.id)
+    const client = await this.syncClient(
+      req.clientId,
+      provider.id,
+      force ? req.clientId : undefined,
+      force ? req.clientToken : undefined
+    )
     await this.syncWebhooks(client.id, req.webhooks || [])
 
     return { providerName: provider.name, clientId: client.id, clientToken: client.token }
   }
 
-  async syncForce(req: SyncRequest): Promise<SyncResult> {
-    const provider = await this.syncProvider(req.providerName, !!req.sandbox)
+  async syncSandbox(req: SyncSandboxRequest) {
+    const provider = await this.syncProvider(req.providerName, true)
     await this.syncConduits(provider.id, req.conduits || {})
-
-    if (req.sandbox) {
-      return { providerName: provider.name }
-    } else {
-      const client = await this.syncClient(req.clientId, provider.id, req.clientId, req.clientToken)
-
-      return { providerName: provider.name, clientId: client.id, clientToken: client.token }
-    }
   }
 
   private async syncProvider(name: string, sandbox: boolean): Promise<Provider> {

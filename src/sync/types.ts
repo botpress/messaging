@@ -1,20 +1,24 @@
 export interface SyncRequest {
+  providerName: string
+  conduits?: SyncConduits
   clientId?: string
   clientToken?: string
   webhooks?: SyncWebhook[]
-  conduits?: SyncConduits
+}
+
+export interface SyncResult {
   providerName: string
-  sandbox?: boolean
+  clientId: string
+  clientToken?: string
+}
+
+export interface SyncSandboxRequest {
+  providerName: string
+  conduits?: SyncConduits
 }
 
 export interface SyncConduits {
   [channel: string]: any
-}
-
-export interface SyncResult {
-  clientId?: string
-  clientToken?: string
-  providerName: string
 }
 
 export interface SyncWebhook {
