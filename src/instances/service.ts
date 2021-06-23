@@ -7,13 +7,15 @@ import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
-import { ClientEvents, ClientUpdatedEvent } from '../clients/events'
 import { ClientService } from '../clients/service'
-import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
 import { ProviderService } from '../providers/service'
+import { InstanceInvalidator } from './invalidator'
+import { InstanceMonitoring } from './monitoring'
 
 export class InstanceService extends Service {
+  private invalidator: InstanceInvalidator
+  private monitoring: InstanceMonitoring
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
 
   constructor(
@@ -25,6 +27,14 @@ export class InstanceService extends Service {
     private app: App
   ) {
     super()
+    this.invalidator = new InstanceInvalidator(
+      this.channelService,
+      this.providerService,
+      this.conduitService,
+      this.clientService,
+      this
+    )
+    this.monitoring = new InstanceMonitoring(this.channelService, this.conduitService, this)
   }
 
   async setup() {
@@ -36,17 +46,8 @@ export class InstanceService extends Service {
       maxAge: ms('30min')
     })
 
-    this.conduitService.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
-    this.conduitService.events.on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
-    this.conduitService.events.on(ConduitEvents.Updated, this.onConduitUpdated.bind(this))
-    this.clientService.events.on(ClientEvents.Updated, this.onClientUpdated.bind(this))
-
-    setInterval(() => {
-      void this.initializeOutdatedConduits()
-      void this.loadNonLazyConduits()
-    }, ms('15s'))
-
-    void this.loadNonLazyConduits()
+    await this.invalidator.setup(this.cache)
+    await this.monitoring.setup()
   }
 
   async initialize(conduitId: uuid) {
@@ -83,69 +84,5 @@ export class InstanceService extends Service {
     this.cache.set(conduitId, instance, channel.lazy ? undefined : Infinity)
 
     return instance
-  }
-
-  private async initializeOutdatedConduits() {
-    const outdateds = await this.conduitService.listOutdated(ms('10h'), 1000)
-
-    for (const outdated of outdateds) {
-      void this.initialize(outdated.id)
-    }
-  }
-
-  private async loadNonLazyConduits() {
-    for (const channel of this.channelService.list()) {
-      if (channel.lazy) {
-        continue
-      }
-
-      const conduits = await this.conduitService.listByChannel(channel.id)
-      for (const conduit of conduits) {
-        const cached = this.cache.get(conduit.id)
-        if (!cached) {
-          void this.get(conduit.id)
-        }
-      }
-    }
-  }
-
-  private async onConduitCreated(conduitId: uuid) {
-    const conduit = (await this.conduitService.get(conduitId))!
-
-    if (this.channelService.getById(conduit.channelId).requiresInitialization) {
-      await this.initialize(conduitId)
-    }
-  }
-
-  private async onConduitDeleting(conduitId: uuid) {
-    this.cache.del(conduitId)
-  }
-
-  private async onConduitUpdated(conduitId: uuid) {
-    this.cache.del(conduitId)
-
-    const conduit = (await this.conduitService.get(conduitId))!
-
-    if (this.channelService.getById(conduit.channelId).requiresInitialization) {
-      await this.initialize(conduitId)
-    }
-  }
-
-  private async onClientUpdated({ clientId, oldClient }: ClientUpdatedEvent) {
-    const client = (await this.clientService.getById(clientId))!
-
-    if (client.providerId === oldClient.providerId) {
-      return
-    }
-
-    const oldProvider = await this.providerService.getById(oldClient.providerId)
-    if (oldProvider?.sandbox) {
-      return
-    }
-
-    const conduits = await this.conduitService.listByProvider(oldClient.providerId)
-    for (const conduit of conduits) {
-      this.cache.del(conduit.id)
-    }
   }
 }
