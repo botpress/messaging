@@ -32,7 +32,7 @@ export class ConvmapService extends Service {
     }
 
     await this.query().insert(convmap)
-    this.cacheByThreadId.set(tunnelId, conversationId, convmap)
+    this.cacheByThreadId.set(tunnelId, threadId, convmap)
     this.cacheByConversationId.set(tunnelId, conversationId, convmap)
 
     return convmap
