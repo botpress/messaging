@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { Service } from '../base/service'
+import { uuid } from '../base/types'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
@@ -8,7 +9,7 @@ import { ConfigService } from '../config/service'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
 import { WebhookService } from '../webhooks/service'
-import { SyncRequest, SyncResult } from './types'
+import { SyncConduits, SyncRequest, SyncResult, SyncWebhook } from './types'
 
 export class SyncService extends Service {
   constructor(
@@ -24,81 +25,114 @@ export class SyncService extends Service {
 
   async setup() {
     for (const sync of this.config.current.sync || []) {
-      await this.sync(sync, true)
+      await this.syncForce(sync)
     }
   }
 
-  async sync(sync: SyncRequest, force: boolean): Promise<SyncResult> {
-    // TODO: refactor this whole function
+  async sync(req: SyncRequest): Promise<SyncResult> {
+    const provider = await this.syncProvider(req.providerName, !!req.sandbox)
+    await this.syncConduits(provider.id, req.conduits || {})
 
-    let provider: Provider | undefined = undefined
-    let client: Client | undefined = undefined
-    let token: string | undefined = undefined
+    const client = await this.syncClient(req.clientId, provider.id)
+    await this.syncWebhooks(client.id, req.webhooks || [])
 
-    if (sync.providerName) {
-      provider = await this.providers.getByName(sync.providerName)
-    }
-    if (!provider) {
-      provider = await this.providers.create(undefined, sync.providerName, sync.sandbox)
+    return { providerName: provider.name, clientId: client.id, clientToken: client.token }
+  }
+
+  async syncForce(req: SyncRequest): Promise<SyncResult> {
+    const provider = await this.syncProvider(req.providerName, !!req.sandbox)
+    await this.syncConduits(provider.id, req.conduits || {})
+
+    if (req.sandbox) {
+      return { providerName: provider.name }
     } else {
-      await this.providers.updateSandbox(provider.id, sync.sandbox === undefined ? false : sync.sandbox)
+      const client = await this.syncClient(req.clientId, provider.id, req.clientId, req.clientToken)
+
+      return { providerName: provider.name, clientId: client.id, clientToken: client.token }
+    }
+  }
+
+  private async syncProvider(name: string, sandbox: boolean): Promise<Provider> {
+    let provider = await this.providers.getByName(name)
+
+    if (!provider) {
+      provider = await this.providers.create(undefined, name, sandbox)
     }
 
-    if (sync.clientId) {
-      client = await this.clients.getById(sync.clientId)
-    }
-    if (!client && !sync.sandbox) {
-      await this.clients.unlinkAllFromProvider(provider.id)
-
-      if (force && sync.clientToken) {
-        token = sync.clientToken
-      } else {
-        token = await this.clients.generateToken()
-      }
-
-      client = await this.clients.create(provider.id, token, force ? sync.clientId : undefined)
-    } else if (client && client.providerId !== provider.id) {
-      await this.clients.updateProvider(client.id, provider.id)
+    if (provider.sandbox !== sandbox) {
+      await this.providers.updateSandbox(provider.id, sandbox)
     }
 
-    const oldConduits = [...(await this.conduits.listByProvider(provider.id))]
+    return provider
+  }
 
-    for (const [channel, config] of Object.entries(sync.conduits || {})) {
+  private async syncConduits(providerId: uuid, conduits: SyncConduits) {
+    const oldConduits = [...(await this.conduits.listByProvider(providerId))]
+
+    for (const [channel, config] of Object.entries(conduits)) {
       const channelId = this.channels.getByName(channel).id
-      const conduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
+      const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
-      if (conduitIndex >= 0) {
-        const oldConduit = (await this.conduits.getByProviderAndChannel(provider.id, channelId))!
+      if (oldConduitIndex < 0) {
+        await this.conduits.create(providerId, channelId, config)
+      } else {
+        const oldConduit = (await this.conduits.getByProviderAndChannel(providerId, channelId))!
+
         if (!_.isEqual(config, oldConduit.config)) {
           await this.conduits.updateConfig(oldConduit.id, config)
         }
-        oldConduits.splice(conduitIndex, 1)
-      } else {
-        await this.conduits.create(provider.id, channelId, config)
+
+        oldConduits.splice(oldConduitIndex, 1)
       }
     }
 
     for (const unusedConduit of oldConduits) {
       await this.conduits.delete(unusedConduit.id)
     }
+  }
 
-    if (client) {
-      const oldWebhooks = [...(await this.webhooks.list(client.id))]
+  private async syncClient(
+    clientId: uuid | undefined,
+    providerId: uuid,
+    forceClientId?: uuid,
+    forceToken?: string
+  ): Promise<Client & { token?: string }> {
+    let client: Client | undefined = undefined
+    let token: string | undefined = undefined
 
-      for (const webhook of sync.webhooks || []) {
-        const webhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
-        if (webhookIndex >= 0) {
-          oldWebhooks.splice(webhookIndex, 1)
-        } else {
-          await this.webhooks.create(client.id, webhook.url)
-        }
-      }
+    if (clientId) {
+      client = await this.clients.getById(clientId)
+    }
 
-      for (const unusedWebhook of oldWebhooks) {
-        await this.webhooks.delete(unusedWebhook.id)
+    if (!client) {
+      await this.clients.unlinkAllFromProvider(providerId)
+
+      token = forceToken || (await this.clients.generateToken())
+      client = await this.clients.create(providerId, token, forceClientId)
+    }
+
+    if (client.providerId !== providerId) {
+      await this.clients.updateProvider(client.id, client.providerId)
+    }
+
+    return { ...client, token }
+  }
+
+  private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]) {
+    const oldWebhooks = [...(await this.webhooks.list(clientId))]
+
+    for (const webhook of webhooks) {
+      const oldWebhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
+
+      if (oldWebhookIndex < 0) {
+        await this.webhooks.create(clientId, webhook.url)
+      } else {
+        oldWebhooks.splice(oldWebhookIndex, 1)
       }
     }
 
-    return { clientId: client?.id, clientToken: token, providerName: provider.name }
+    for (const unusedWebhook of oldWebhooks) {
+      await this.webhooks.delete(unusedWebhook.id)
+    }
   }
 }

@@ -12,7 +12,7 @@ export class SyncApi extends BaseApi {
     this.router.post('/sync', async (req, res) => {
       const sync = req.body as SyncRequest
 
-      const result = await this.syncs.sync(sync, false)
+      const result = await this.syncs.sync(sync)
 
       res.send(result)
     })
