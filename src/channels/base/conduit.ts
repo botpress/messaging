@@ -88,7 +88,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
             clientId = client.id
           } else {
-            await this.sendToEndpoint(endpoint.identity!, endpoint.sender!, endpoint.thread!, {
+            await this.sendToEndpoint(endpoint, {
               type: 'text',
               text: 'Sandbox client not found'
             })
@@ -96,7 +96,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
             return
           }
         } else {
-          await this.sendToEndpoint(endpoint.identity!, endpoint.sender!, endpoint.thread!, {
+          await this.sendToEndpoint(endpoint, {
             type: 'text',
             text: 'Wrong passphrase'
           })
@@ -104,7 +104,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
           return
         }
       } else {
-        await this.sendToEndpoint(endpoint.identity!, endpoint.sender!, endpoint.thread!, {
+        await this.sendToEndpoint(endpoint, {
           type: 'text',
           text: 'Please join the sandbox using by sending : !join your_passphrase'
         })
@@ -113,25 +113,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
       }
     }
 
-    const tunnel = await this.app.mapping.tunnels.map(clientId, this.channel.id)
-    const identity = await this.app.mapping.identities.map(tunnel.id, endpoint.identity || '*')
-    const sender = await this.app.mapping.senders.map(identity.id, endpoint.sender || '*')
-    const thread = await this.app.mapping.threads.map(sender.id, endpoint.thread || '*')
-
-    const usermap = await this.app.mapping.usermap.getBySenderId(tunnel.id, sender.id)
-    let userId = usermap?.userId
-    if (!userId) {
-      userId = (await this.app.users.create(clientId)).id
-      await this.app.mapping.usermap.create(tunnel.id, userId, sender.id)
-    }
-
-    const convmap = await this.app.mapping.convmap.getByThreadId(tunnel.id, thread.id)
-    let conversationId = convmap?.conversationId
-    if (!conversationId) {
-      conversationId = (await this.app.conversations.create(clientId, userId)).id
-      await this.app.mapping.convmap.create(tunnel.id, conversationId, thread.id)
-    }
-
+    const { userId, conversationId } = await this.app.mapping.getMapping(clientId, this.channel.id, endpoint)
     const message = await this.app.messages.create(conversationId, endpoint.content, userId)
 
     const post = {
@@ -151,15 +133,8 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
   async send(conversationId: string, payload: any): Promise<void> {
     const conversation = await this.app.conversations.get(conversationId)
-
-    const tunnel = await this.app.mapping.tunnels.map(conversation!.clientId, this.channel.id)
-    const convmap = await this.app.mapping.convmap.getByConversationId(tunnel.id, conversationId)
-
-    const thread = await this.app.mapping.threads.get(convmap!.threadId)
-    const sender = await this.app.mapping.senders.get(thread!.senderId)
-    const identity = await this.app.mapping.identities.get(sender!.identityId)
-
-    await this.sendToEndpoint(identity!.name, sender!.name, thread!.name, payload)
+    const endpoint = await this.app.mapping.getEndpoint(conversation!.clientId, this.channel.id, conversation!.clientId)
+    await this.sendToEndpoint(endpoint, payload)
 
     const message = await this.app.messages.create(conversationId, payload, conversation!.userId)
 
@@ -170,13 +145,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     })
   }
 
-  async sendToEndpoint(identity: string, sender: string, thread: string, payload: any) {
-    const endpoint: Endpoint = {
-      identity,
-      sender,
-      thread
-    }
-
+  async sendToEndpoint(endpoint: Endpoint, payload: any) {
     const context = await this.context({
       client: undefined,
       handlers: 0,

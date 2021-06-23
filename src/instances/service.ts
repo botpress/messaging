@@ -38,7 +38,7 @@ export class InstanceService extends Service {
   }
 
   async setup() {
-    this.cache = await this.cachingService.newServerCache('cache_instance_by_provider_id', {
+    this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
       dispose: async (k, v) => {
         await v.destroy()
       },
