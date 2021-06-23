@@ -7,6 +7,7 @@ import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
+import { ClientEvents, ClientUpdatedEvent } from '../clients/events'
 import { ClientService } from '../clients/service'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
@@ -38,7 +39,7 @@ export class InstanceService extends Service {
     this.conduitService.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
     this.conduitService.events.on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
     this.conduitService.events.on(ConduitEvents.Updated, this.onConduitUpdated.bind(this))
-    // TODO: we need to do something when to providerId property of a client changes aswell...
+    this.clientService.events.on(ClientEvents.Updated, this.onClientUpdated.bind(this))
 
     setInterval(() => {
       void this.initializeOutdatedConduits()
@@ -127,6 +128,24 @@ export class InstanceService extends Service {
 
     if (this.channelService.getById(conduit.channelId).requiresInitialization) {
       await this.initialize(conduitId)
+    }
+  }
+
+  private async onClientUpdated({ clientId, oldClient }: ClientUpdatedEvent) {
+    const client = (await this.clientService.getById(clientId))!
+
+    if (client.providerId === oldClient.providerId) {
+      return
+    }
+
+    const oldProvider = await this.providerService.getById(oldClient.providerId)
+    if (oldProvider?.sandbox) {
+      return
+    }
+
+    const conduits = await this.conduitService.listByProvider(oldClient.providerId)
+    for (const conduit of conduits) {
+      this.cache.del(conduit.id)
     }
   }
 }

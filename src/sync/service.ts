@@ -102,7 +102,10 @@ export class SyncService extends Service {
     }
 
     if (!client) {
-      await this.clients.unlinkAllFromProvider(providerId)
+      const oldClients = await this.clients.listByProviderId(providerId)
+      for (const oldClient of oldClients) {
+        await this.clients.updateProvider(oldClient.id, null)
+      }
 
       token = forceToken || (await this.clients.generateToken())
       client = await this.clients.create(providerId, token, forceClientId)

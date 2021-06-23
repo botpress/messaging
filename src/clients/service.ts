@@ -6,10 +6,16 @@ import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
+import { ClientEmitter, ClientEvents, ClientWatcher } from './events'
 import { ClientTable } from './table'
 import { Client } from './types'
 
 export class ClientService extends Service {
+  get events(): ClientWatcher {
+    return this.emitter
+  }
+
+  private emitter: ClientEmitter
   private table: ClientTable
   private cacheById!: ServerCache<uuid, Client>
   private cacheByProvider!: ServerCache<uuid, Client>
@@ -21,6 +27,7 @@ export class ClientService extends Service {
     private cachingService: CachingService
   ) {
     super()
+    this.emitter = new ClientEmitter()
     this.table = new ClientTable()
   }
 
@@ -103,19 +110,18 @@ export class ClientService extends Service {
     }
   }
 
-  async unlinkAllFromProvider(providerId: string): Promise<void> {
-    this.cacheByProvider.del(providerId)
+  async updateProvider(clientId: uuid, providerId: uuid | null) {
+    const oldClient = (await this.getById(clientId))!
 
-    // TODO: del cacheById for all affected
-
-    await this.query().where({ providerId }).update({ providerId: null })
-  }
-
-  async updateProvider(clientId: uuid, providerId: uuid) {
-    this.cacheByProvider.del(providerId)
+    this.cacheByProvider.del(oldClient.providerId)
     this.cacheById.del(clientId)
 
     await this.query().where({ clientId }).update({ providerId })
+    await this.emitter.emit(ClientEvents.Updated, { clientId, oldClient })
+  }
+
+  async listByProviderId(providerId: uuid): Promise<Client[]> {
+    return this.query().where({ providerId })
   }
 
   private query() {
