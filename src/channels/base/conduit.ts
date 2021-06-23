@@ -57,7 +57,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     // TODO: refactor this whole thing
     if (this.sandbox) {
       const provider = await this.app.providers.getByName(this.providerName)
-      const conduit = await this.app.conduits.get(provider!.id, this.channel.id)
+      const conduit = await this.app.conduits.getByProviderAndChannel(provider!.id, this.channel.id)
 
       const sandboxmap = await this.app.mapping.sandboxmap.get(
         conduit!.id,

@@ -27,7 +27,7 @@ export class Api {
     this.clients = new ClientApi(this.router, app.clients)
     this.syncs = new SyncApi(this.router, app.syncs)
     this.conversations = new ConversationApi(this.router, app.clients, app.conversations)
-    this.messages = new MessageApi(this.router, app.clients, app.channels, app.instances, app.messages)
+    this.messages = new MessageApi(this.router, app.clients, app.channels, app.conduits, app.instances, app.messages)
     this.channels = new ChannelApi(this.root, this.app)
   }
 

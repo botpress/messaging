@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
+import { ConduitService } from '../conduits/service'
 import { InstanceService } from '../instances/service'
 import { MessageService } from './service'
 
@@ -10,6 +11,7 @@ export class MessageApi extends ClientScopedApi {
     router: Router,
     clients: ClientService,
     private channels: ChannelService,
+    private conduits: ConduitService,
     private instances: InstanceService,
     private messages: MessageService
   ) {
@@ -69,8 +71,9 @@ export class MessageApi extends ClientScopedApi {
       const { channel, conversationId, payload } = req.body
 
       const channelId = this.channels.getByName(channel).id
-      const conduit = await this.instances.get(req.client!.providerId, channelId)
-      await conduit.send(conversationId, payload)
+      const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
+      const instance = await this.instances.get(conduit.id)
+      await instance.send(conversationId, payload)
 
       res.sendStatus(200)
     })

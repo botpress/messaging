@@ -61,16 +61,16 @@ export class SyncService extends Service {
       await this.clients.updateProvider(client.id, provider.id)
     }
 
-    const oldConduits = [...(await this.conduits.list(provider.id))]
+    const oldConduits = [...(await this.conduits.listByProvider(provider.id))]
 
     for (const [channel, config] of Object.entries(sync.conduits || {})) {
       const channelId = this.channels.getByName(channel).id
       const conduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (conduitIndex >= 0) {
-        const oldConduit = await this.conduits.get(provider.id, channelId)
-        if (!_.isEqual(config, oldConduit!.config)) {
-          await this.conduits.updateConfig(provider.id, channelId, config)
+        const oldConduit = (await this.conduits.getByProviderAndChannel(provider.id, channelId))!
+        if (!_.isEqual(config, oldConduit.config)) {
+          await this.conduits.updateConfig(oldConduit.id, config)
         }
         oldConduits.splice(conduitIndex, 1)
       } else {
@@ -79,7 +79,7 @@ export class SyncService extends Service {
     }
 
     for (const unusedConduit of oldConduits) {
-      await this.conduits.delete(provider.id, unusedConduit.channelId)
+      await this.conduits.delete(unusedConduit.id)
     }
 
     if (client) {

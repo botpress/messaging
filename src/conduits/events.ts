@@ -8,25 +8,10 @@ export enum ConduitEvents {
   Updated = -4333216986594445
 }
 
-export interface ConduitCreatedEvent {
-  providerId: uuid
-  channelId: uuid
-}
-
-export interface ConduitDeletingEvent {
-  providerId: uuid
-  channelId: uuid
-}
-
-export interface ConduitUpdatingEvent {
-  providerId: uuid
-  channelId: uuid
-}
-
 export class ConduitEmitter extends Emitter<{
-  [ConduitEvents.Created]: ConduitCreatedEvent
-  [ConduitEvents.Deleting]: ConduitDeletingEvent
-  [ConduitEvents.Updated]: ConduitUpdatingEvent
+  [ConduitEvents.Created]: uuid
+  [ConduitEvents.Deleting]: uuid
+  [ConduitEvents.Updated]: uuid
 }> {}
 
 export type ConduitWatcher = Omit<ConduitEmitter, 'emit'>

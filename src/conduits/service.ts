@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { ServerCache } from '../caching/cache'
 import { ServerCache2D } from '../caching/cache2D'
 import { CachingService } from '../caching/service'
 import { CryptoService } from '../crypto/service'
@@ -17,7 +18,8 @@ export class ConduitService extends Service {
 
   private emitter: ConduitEmitter
   private table: ConduitTable
-  private cache!: ServerCache2D<Conduit>
+  private cacheById!: ServerCache<uuid, Conduit>
+  private cacheByProviderAndChannel!: ServerCache2D<Conduit>
 
   constructor(
     private db: DatabaseService,
@@ -30,7 +32,8 @@ export class ConduitService extends Service {
   }
 
   async setup() {
-    this.cache = await this.cachingService.newServerCache2D('cache_conduit_by_id')
+    this.cacheById = await this.cachingService.newServerCache('cache_conduit_by_id')
+    this.cacheByProviderAndChannel = await this.cachingService.newServerCache2D('cache_conduit_by_provider_and_channel')
 
     await this.db.registerTable(this.table)
   }
@@ -45,53 +48,78 @@ export class ConduitService extends Service {
     }
 
     await this.query().insert(await this.serialize(conduit))
-    await this.emitter.emit(ConduitEvents.Created, { providerId, channelId })
+    await this.emitter.emit(ConduitEvents.Created, conduit.id)
 
     return conduit
   }
 
-  async delete(providerId: uuid, channelId: uuid) {
-    this.cache.del(providerId, channelId)
-    await this.emitter.emit(ConduitEvents.Deleting, { providerId, channelId })
+  async delete(id: uuid) {
+    const conduit = (await this.get(id))!
+    this.cacheById.del(id)
+    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId)
 
-    return this.query().where({ providerId, channelId }).del()
+    await this.emitter.emit(ConduitEvents.Deleting, id)
+
+    return this.query().where({ id }).del()
   }
 
-  async updateConfig(providerId: uuid, channelId: uuid, config: any) {
-    this.cache.del(providerId, channelId)
+  async updateConfig(id: uuid, config: any) {
+    const conduit = (await this.get(id))!
+    this.cacheById.del(id)
+    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId)
 
     await this.query()
-      .where({ providerId, channelId })
+      .where({ id })
       .update({ initialized: null, config: await this.cryptoService.encrypt(JSON.stringify(config || {})) })
 
-    await this.emitter.emit(ConduitEvents.Updated, { providerId, channelId })
+    await this.emitter.emit(ConduitEvents.Updated, id)
   }
 
-  async updateInitialized(providerId: uuid, channelId: uuid) {
-    this.cache.del(providerId, channelId)
+  async updateInitialized(id: uuid) {
+    const conduit = (await this.get(id))!
+    this.cacheById.del(id)
+    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId)
 
     await this.query()
-      .where({ providerId, channelId })
+      .where({ id })
       .update({ initialized: this.db.setDate(new Date()) })
   }
 
-  async get(providerId: uuid, channelId: uuid): Promise<Conduit | undefined> {
-    const cached = this.cache.get(providerId, channelId)
+  async get(id: uuid): Promise<Conduit | undefined> {
+    const cached = this.cacheById.get(id)
     if (cached) {
       return cached
     }
 
-    const rows = await this.query().where({ providerId, channelId })
+    const rows = await this.query().where({ id })
+
     if (rows?.length) {
       const conduit = await this.deserialize(rows[0])
-      this.cache.set(providerId, channelId, conduit)
+      this.cacheById.set(id, conduit)
       return conduit
     }
 
     return undefined
   }
 
-  async list(providerId: uuid): Promise<Conduit[]> {
+  async getByProviderAndChannel(providerId: uuid, channelId: uuid) {
+    const cached = this.cacheByProviderAndChannel.get(providerId, channelId)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ providerId, channelId })
+
+    if (rows?.length) {
+      const conduit = await this.deserialize(rows[0])
+      this.cacheByProviderAndChannel.set(providerId, channelId, conduit)
+      return conduit
+    }
+
+    return undefined
+  }
+
+  async listByProvider(providerId: uuid): Promise<Conduit[]> {
     const rows = await this.query().where({ providerId })
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
   }

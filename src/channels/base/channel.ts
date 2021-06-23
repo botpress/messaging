@@ -31,7 +31,8 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
       async (req, res, next) => {
         const { provider } = req.params
         const providerId = (await this.app.providers.getByName(provider))!.id
-        res.locals.conduit = await this.app.instances.get(providerId, this.id)
+        const conduit = (await this.app.conduits.getByProviderAndChannel(providerId, this.id))!
+        res.locals.conduit = await this.app.instances.get(conduit.id)
         next()
       },
       this.router

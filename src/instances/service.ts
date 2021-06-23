@@ -3,17 +3,17 @@ import ms from 'ms'
 import { App } from '../app'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
-import { ServerCache2D } from '../caching/cache2D'
+import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
-import { ConduitCreatedEvent, ConduitDeletingEvent, ConduitEvents, ConduitUpdatingEvent } from '../conduits/events'
+import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
 import { ProviderService } from '../providers/service'
 
 export class InstanceService extends Service {
-  private cache!: ServerCache2D<ConduitInstance<any, any>>
+  private cache!: ServerCache<uuid, ConduitInstance<any, any>>
 
   constructor(
     private cachingService: CachingService,
@@ -27,7 +27,7 @@ export class InstanceService extends Service {
   }
 
   async setup() {
-    this.cache = await this.cachingService.newServerCache2D('cache_instance_by_provider_id', {
+    this.cache = await this.cachingService.newServerCache('cache_instance_by_provider_id', {
       dispose: async (k, v) => {
         await v.destroy()
       },
@@ -48,23 +48,23 @@ export class InstanceService extends Service {
     void this.loadNonLazyConduits()
   }
 
-  async initialize(providerId: uuid, channelId: uuid) {
-    const instance = await this.get(providerId, channelId)
+  async initialize(conduitId: uuid) {
+    const instance = await this.get(conduitId)
     await instance.initialize()
 
-    await this.conduitService.updateInitialized(providerId, channelId)
+    await this.conduitService.updateInitialized(conduitId)
   }
 
-  async get(providerId: uuid, channelId: uuid): Promise<ConduitInstance<any, any>> {
-    const cached = this.cache.get(providerId, channelId)
+  async get(conduitId: uuid): Promise<ConduitInstance<any, any>> {
+    const cached = this.cache.get(conduitId)
     if (cached) {
       return cached
     }
 
-    const provider = (await this.providerService.getById(providerId))!
-    const client = provider.sandbox ? undefined : await this.clientService.getByProviderId(providerId)
-    const conduit = await this.conduitService.get(provider.id, channelId)
-    const channel = this.channelService.getById(channelId)
+    const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
+    const channel = this.channelService.getById(conduit.channelId)
+    const client = provider.sandbox ? undefined : await this.clientService.getByProviderId(provider.id)
     const instance = channel.createConduit()
 
     await instance.setup(
@@ -79,7 +79,7 @@ export class InstanceService extends Service {
       provider.sandbox
     )
 
-    this.cache.set(provider.id, channelId, instance, channel.lazy ? undefined : Infinity)
+    this.cache.set(conduitId, instance, channel.lazy ? undefined : Infinity)
 
     return instance
   }
@@ -88,7 +88,7 @@ export class InstanceService extends Service {
     const outdateds = await this.conduitService.listOutdated(ms('10h'), 1000)
 
     for (const outdated of outdateds) {
-      void this.initialize(outdated.providerId, outdated.channelId)
+      void this.initialize(outdated.id)
     }
   }
 
@@ -100,29 +100,33 @@ export class InstanceService extends Service {
 
       const conduits = await this.conduitService.listByChannel(channel.id)
       for (const conduit of conduits) {
-        const cached = this.cache.get(conduit.providerId, channel.id)
+        const cached = this.cache.get(conduit.id)
         if (!cached) {
-          void this.get(conduit.providerId, channel.id)
+          void this.get(conduit.id)
         }
       }
     }
   }
 
-  private async onConduitCreated({ providerId, channelId }: ConduitCreatedEvent) {
-    if (this.channelService.getById(channelId).requiresInitialization) {
-      await this.initialize(providerId, channelId)
+  private async onConduitCreated(conduitId: uuid) {
+    const conduit = (await this.conduitService.get(conduitId))!
+
+    if (this.channelService.getById(conduit.channelId).requiresInitialization) {
+      await this.initialize(conduitId)
     }
   }
 
-  private async onConduitDeleting({ providerId, channelId }: ConduitDeletingEvent) {
-    this.cache.del(providerId, channelId)
+  private async onConduitDeleting(conduitId: uuid) {
+    this.cache.del(conduitId)
   }
 
-  private async onConduitUpdated({ providerId, channelId }: ConduitUpdatingEvent) {
-    this.cache.del(providerId, channelId)
+  private async onConduitUpdated(conduitId: uuid) {
+    this.cache.del(conduitId)
 
-    if (this.channelService.getById(channelId).requiresInitialization) {
-      await this.initialize(providerId, channelId)
+    const conduit = (await this.conduitService.get(conduitId))!
+
+    if (this.channelService.getById(conduit.channelId).requiresInitialization) {
+      await this.initialize(conduitId)
     }
   }
 }
