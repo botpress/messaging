@@ -4,7 +4,7 @@ import { SlackContext } from '../context'
 export class SlackCommonSender extends CommonSender {
   async send(context: SlackContext) {
     await context.client.web.chat.postMessage({
-      channel: context.foreignConversationId!,
+      channel: context.thread!,
       text: <any>undefined,
       ...context.message
     })

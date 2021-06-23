@@ -5,7 +5,7 @@ export class SmoochTypingSender extends TypingSender {
   async sendIndicator(context: SmoochContext) {
     await context.client.appUsers.conversationActivity({
       appId: context.client.keyId,
-      userId: context.foreignUserId,
+      userId: context.sender,
       activityProps: {
         role: 'appMaker',
         type: 'typing:start'

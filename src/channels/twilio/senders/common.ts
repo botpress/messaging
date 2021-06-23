@@ -6,8 +6,8 @@ export class TwilioCommonSender extends CommonSender {
     for (const message of context.messages) {
       await context.client.messages.create({
         ...message,
-        from: context.foreignAppId,
-        to: context.foreignUserId!
+        from: context.identity,
+        to: context.sender!
       })
     }
   }

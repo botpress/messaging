@@ -37,8 +37,8 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
 
     return {
       content: { type: 'text', text },
-      foreignAppId: botPhoneNumber,
-      foreignUserId: userId
+      identity: botPhoneNumber,
+      sender: userId
     }
   }
 

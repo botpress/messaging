@@ -25,8 +25,8 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
   protected async map(payload: any): Promise<EndpointContent> {
     return {
       content: { type: 'text', text: payload.message.text },
-      foreignAppId: payload.recipient.id,
-      foreignUserId: payload.sender.id
+      identity: payload.recipient.id,
+      sender: payload.sender.id
     }
   }
 

@@ -47,8 +47,8 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
 
     return {
       content: { type: 'text', text },
-      foreignUserId: userId!.toString(),
-      foreignConversationId: chatId!.toString()
+      sender: userId!.toString(),
+      thread: chatId!.toString()
     }
   }
 

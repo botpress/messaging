@@ -44,8 +44,8 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
   protected async map(payload: { context: SmoochPayload; message: SmoochMessage }): Promise<EndpointContent> {
     return {
       content: { type: 'text', text: payload.message.text },
-      foreignConversationId: payload.context.conversation._id,
-      foreignUserId: payload.context.appUser._id
+      thread: payload.context.conversation._id,
+      sender: payload.context.appUser._id
     }
   }
 

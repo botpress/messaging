@@ -6,7 +6,7 @@ export class SmoochCommonSender extends CommonSender {
     for (const message of context.messages) {
       await context.client.appUsers.sendMessage({
         appId: context.client.keyId,
-        userId: context.foreignUserId,
+        userId: context.sender,
         message: { ...message, role: 'appMaker' }
       })
     }

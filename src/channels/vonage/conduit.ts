@@ -37,8 +37,8 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
   protected async map(payload: any): Promise<EndpointContent> {
     return {
       content: { type: 'text', text: payload.message.content.text },
-      foreignAppId: payload.to.number,
-      foreignUserId: payload.from.number
+      identity: payload.to.number,
+      sender: payload.from.number
     }
   }
 

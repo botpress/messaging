@@ -40,8 +40,8 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
 
     return {
       content: { type: 'text', text: activity.value?.text || activity.text },
-      foreignUserId: activity.from.id,
-      foreignConversationId: convoRef.conversation!.id
+      sender: activity.from.id,
+      thread: convoRef.conversation!.id
     }
   }
 
@@ -50,17 +50,18 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
       ...base,
       client: this.adapter,
       messages: [],
-      convoRef: await this.getConvoRef(base.clientId, base.foreignConversationId!)
+      convoRef: await this.getConvoRef(base.thread!)
     }
   }
 
-  private async getConvoRef(clientId: uuid, threadId: string): Promise<Partial<ConversationReference>> {
+  private async getConvoRef(threadId: string): Promise<Partial<ConversationReference>> {
     let convoRef = this.convoRefs.get(threadId)
     if (convoRef) {
       return convoRef
     }
 
-    convoRef = await this.app.kvs.get(clientId, threadId)
+    // TODO: fix this clientId doesn't work in sandbox
+    convoRef = await this.app.kvs.get(this.clientId!, threadId)
     this.convoRefs.set(threadId, convoRef!)
     return convoRef!
   }

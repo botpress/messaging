@@ -122,8 +122,8 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
 
     return {
       content: payload.content,
-      foreignUserId: userId,
-      foreignConversationId: channelId
+      sender: userId,
+      thread: channelId
     }
   }
 

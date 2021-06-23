@@ -4,7 +4,7 @@ import { validate as uuidValidate } from 'uuid'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
-import { Endpoint, Mapping } from '../../mapping/types'
+import { Endpoint } from '../../mapping/types'
 import { Channel } from './channel'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
@@ -61,9 +61,9 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
       const sandboxmap = await this.app.mapping.sandboxmap.get(
         conduit!.id,
-        endpoint.foreignAppId || '*',
-        endpoint.foreignUserId || '*',
-        endpoint.foreignConversationId || '*'
+        endpoint.identity || '*',
+        endpoint.sender || '*',
+        endpoint.thread || '*'
       )
 
       if (sandboxmap) {
@@ -80,28 +80,23 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
             await this.app.mapping.sandboxmap.create(
               conduit!.id,
-              endpoint.foreignAppId || '*',
-              endpoint.foreignUserId || '*',
-              endpoint.foreignConversationId || '*',
+              endpoint.identity || '*',
+              endpoint.sender || '*',
+              endpoint.thread || '*',
               client.id
             )
 
             clientId = client.id
           } else {
-            await this.sendToEndpoint(
-              endpoint.foreignAppId!,
-              endpoint.foreignUserId!,
-              endpoint.foreignConversationId!,
-              {
-                type: 'text',
-                text: 'Sandbox client not found'
-              }
-            )
+            await this.sendToEndpoint(endpoint.identity!, endpoint.sender!, endpoint.thread!, {
+              type: 'text',
+              text: 'Sandbox client not found'
+            })
             this.logger.info('Sandbox client not found')
             return
           }
         } else {
-          await this.sendToEndpoint(endpoint.foreignAppId!, endpoint.foreignUserId!, endpoint.foreignConversationId!, {
+          await this.sendToEndpoint(endpoint.identity!, endpoint.sender!, endpoint.thread!, {
             type: 'text',
             text: 'Wrong passphrase'
           })
@@ -109,7 +104,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
           return
         }
       } else {
-        await this.sendToEndpoint(endpoint.foreignAppId!, endpoint.foreignUserId!, endpoint.foreignConversationId!, {
+        await this.sendToEndpoint(endpoint.identity!, endpoint.sender!, endpoint.thread!, {
           type: 'text',
           text: 'Please join the sandbox using by sending : !join your_passphrase'
         })
@@ -119,23 +114,23 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     }
 
     const tunnel = await this.app.mapping.tunnels.map(clientId, this.channel.id)
-    const identity = await this.app.mapping.identities.map(tunnel.id, endpoint.foreignAppId || '*')
-    const sender = await this.app.mapping.senders.map(identity.id, endpoint.foreignUserId || '*')
-    const thread = await this.app.mapping.threads.map(sender.id, endpoint.foreignConversationId || '*')
+    const identity = await this.app.mapping.identities.map(tunnel.id, endpoint.identity || '*')
+    const sender = await this.app.mapping.senders.map(identity.id, endpoint.sender || '*')
+    const thread = await this.app.mapping.threads.map(sender.id, endpoint.thread || '*')
 
     const convmap = await this.app.mapping.convmap.getByThreadId(tunnel.id, thread.id)
     let conversationId = convmap?.conversationId
     if (!conversationId) {
-      conversationId = (await this.app.conversations.create(clientId, endpoint.foreignUserId!)).id
+      conversationId = (await this.app.conversations.create(clientId, endpoint.sender!)).id
       await this.app.mapping.convmap.create(tunnel.id, conversationId, thread.id)
     }
 
-    const message = await this.app.messages.create(conversationId, endpoint.content, endpoint.foreignUserId)
+    const message = await this.app.messages.create(conversationId, endpoint.content, endpoint.sender)
 
     const post = {
       client: { id: clientId },
       channel: { id: this.channel.id, name: this.channel.name },
-      user: { id: endpoint.foreignUserId },
+      user: { id: endpoint.sender },
       conversation: { id: conversationId },
       message
     }
@@ -170,9 +165,9 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
   async sendToEndpoint(identity: string, sender: string, thread: string, payload: any) {
     const endpoint: Endpoint = {
-      foreignAppId: identity,
-      foreignUserId: sender,
-      foreignConversationId: thread
+      identity,
+      sender,
+      thread
     }
 
     const context = await this.context({

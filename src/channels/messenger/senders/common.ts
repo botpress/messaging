@@ -4,7 +4,7 @@ import { MessengerContext } from '../context'
 export class MessengerCommonSender extends CommonSender {
   async send(context: MessengerContext) {
     for (const message of context.messages) {
-      await context.client.sendMessage(context.foreignUserId!, message)
+      await context.client.sendMessage(context.sender!, message)
     }
   }
 }

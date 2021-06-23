@@ -60,8 +60,8 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
 
     return {
       content: { type: 'text', text: msg.content },
-      foreignUserId: msg.author.id,
-      foreignConversationId: msg.channel.id
+      sender: msg.author.id,
+      thread: msg.channel.id
     }
   }
 
@@ -69,7 +69,7 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
     return {
       ...base,
       client: this.client,
-      channel: <any>await this.getChannel(base.foreignConversationId!),
+      channel: <any>await this.getChannel(base.thread!),
       messages: []
     }
   }
