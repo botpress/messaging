@@ -15,6 +15,7 @@ import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { ProviderService } from './providers/service'
 import { SyncService } from './sync/service'
+import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
 export class App {
@@ -30,6 +31,7 @@ export class App {
   webhooks: WebhookService
   kvs: KvsService
   conduits: ConduitService
+  users: UserService
   conversations: ConversationService
   messages: MessageService
   mapping: MappingService
@@ -49,6 +51,7 @@ export class App {
     this.webhooks = new WebhookService(this.database, this.caching)
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching)
+    this.users = new UserService(this.database)
     this.conversations = new ConversationService(this.database, this.caching)
     this.messages = new MessageService(this.database, this.caching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching)
@@ -69,6 +72,7 @@ export class App {
     await this.webhooks.setup()
     await this.kvs.setup()
     await this.conduits.setup()
+    await this.users.setup()
     await this.conversations.setup()
     await this.messages.setup()
     await this.mapping.setup()

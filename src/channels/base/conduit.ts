@@ -118,19 +118,26 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     const sender = await this.app.mapping.senders.map(identity.id, endpoint.sender || '*')
     const thread = await this.app.mapping.threads.map(sender.id, endpoint.thread || '*')
 
+    const usermap = await this.app.mapping.usermap.getBySenderId(tunnel.id, sender.id)
+    let userId = usermap?.userId
+    if (!userId) {
+      userId = (await this.app.users.create(clientId)).id
+      await this.app.mapping.usermap.create(tunnel.id, userId, sender.id)
+    }
+
     const convmap = await this.app.mapping.convmap.getByThreadId(tunnel.id, thread.id)
     let conversationId = convmap?.conversationId
     if (!conversationId) {
-      conversationId = (await this.app.conversations.create(clientId, endpoint.sender!)).id
+      conversationId = (await this.app.conversations.create(clientId, userId)).id
       await this.app.mapping.convmap.create(tunnel.id, conversationId, thread.id)
     }
 
-    const message = await this.app.messages.create(conversationId, endpoint.content, endpoint.sender)
+    const message = await this.app.messages.create(conversationId, endpoint.content, userId)
 
     const post = {
       client: { id: clientId },
       channel: { id: this.channel.id, name: this.channel.name },
-      user: { id: endpoint.sender },
+      user: { id: userId },
       conversation: { id: conversationId },
       message
     }
@@ -154,7 +161,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
     await this.sendToEndpoint(identity!.name, sender!.name, thread!.name, payload)
 
-    const message = await this.app.messages.create(conversationId, payload, sender?.name)
+    const message = await this.app.messages.create(conversationId, payload, conversation!.userId)
 
     this.loggerOut.debug('Sending message', {
       providerName: this.providerName,

@@ -58,7 +58,7 @@ export class ConversationService extends Service {
     return undefined
   }
 
-  public async getMostRecent(clientId: uuid, userId: string): Promise<Conversation | undefined> {
+  public async getMostRecent(clientId: uuid, userId: uuid): Promise<Conversation | undefined> {
     // TODO: cache
 
     const query = this.queryRecents(clientId, userId).limit(1)

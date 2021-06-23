@@ -27,7 +27,7 @@ export class MessageService extends Service {
     await this.db.registerTable(this.table)
   }
 
-  public async create(conversationId: uuid, payload: any, authorId?: string): Promise<Message> {
+  public async create(conversationId: uuid, payload: any, authorId?: uuid): Promise<Message> {
     const message = {
       id: uuidv4(),
       conversationId,
