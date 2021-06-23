@@ -31,9 +31,14 @@ export class InstanceInvalidator {
 
   private async onConduitCreated(conduitId: uuid) {
     const conduit = (await this.conduits.get(conduitId))!
+    const channel = this.channels.getById(conduit.channelId)
 
-    if (this.channels.getById(conduit.channelId).requiresInitialization) {
+    if (channel.requiresInitialization) {
       await this.instances.initialize(conduitId)
+    }
+
+    if (!channel.lazy) {
+      await this.instances.get(conduit.id)
     }
   }
 
@@ -45,9 +50,14 @@ export class InstanceInvalidator {
     this.cache.del(conduitId)
 
     const conduit = (await this.conduits.get(conduitId))!
+    const channel = this.channels.getById(conduit.channelId)
 
-    if (this.channels.getById(conduit.channelId).requiresInitialization) {
+    if (channel.requiresInitialization) {
       await this.instances.initialize(conduitId)
+    }
+
+    if (!channel.lazy) {
+      await this.instances.get(conduit.id)
     }
   }
 

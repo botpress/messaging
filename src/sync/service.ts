@@ -31,14 +31,14 @@ export class SyncService extends Service {
 
   async sync(req: SyncRequest, force: boolean): Promise<SyncResult> {
     const provider = await this.syncProvider(req.providerName, false)
-    await this.syncConduits(provider.id, req.conduits || {})
-
     const client = await this.syncClient(
       req.clientId,
       provider.id,
       force ? req.clientId : undefined,
       force ? req.clientToken : undefined
     )
+
+    await this.syncConduits(provider.id, req.conduits || {})
     await this.syncWebhooks(client.id, req.webhooks || [])
 
     return { providerName: provider.name, clientId: client.id, clientToken: client.token }
