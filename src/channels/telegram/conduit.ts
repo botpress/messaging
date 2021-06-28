@@ -19,7 +19,7 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     const channel = this.app.channels.getById(conduit!.channelId)
 
     await this.telegraf.telegram.setWebhook(
-      this.config.externalUrl + channel.getRoute().replace(':provider', provider!.name)
+      this.config.webhookUrl || this.config.externalUrl + channel.getRoute().replace(':provider', provider!.name)
     )
   }
 
