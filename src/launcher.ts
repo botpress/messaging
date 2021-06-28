@@ -75,7 +75,7 @@ export class Launcher {
       '========================================\n' +
         clc.bold(centerText('Botpress Messaging', 40, 33)) +
         '\n' +
-        clc.blackBright(centerText('Version 0.0.1', 40, 33)) +
+        clc.blackBright(centerText('Version 0.0.5', 40, 33)) +
         '\n' +
         centerText('========================================', 40, 33)
     )
