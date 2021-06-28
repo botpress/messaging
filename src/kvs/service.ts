@@ -39,7 +39,7 @@ export class KvsService extends Service {
 
   async set(key: string, value: any): Promise<void> {
     if (await this.get(key)) {
-      this.cache.set(key, value)
+      this.cache.set(key, value, undefined, true)
       await this.query().where({ key }).update({ value })
     } else {
       this.cache.set(key, value)

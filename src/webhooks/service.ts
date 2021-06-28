@@ -31,7 +31,7 @@ export class WebhookService extends Service {
 
     await this.query().insert(webhook)
 
-    this.cacheListByClient.del(clientId)
+    this.cacheListByClient.del(clientId, true)
 
     return webhook
   }
@@ -47,7 +47,7 @@ export class WebhookService extends Service {
 
   async delete(id: uuid) {
     const webhook = await this.get(id)
-    this.cacheListByClient.del(webhook!.clientId)
+    this.cacheListByClient.del(webhook!.clientId, true)
 
     return this.query().where({ id }).del()
   }

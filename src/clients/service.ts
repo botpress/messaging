@@ -113,8 +113,8 @@ export class ClientService extends Service {
   async updateProvider(id: uuid, providerId: uuid | null) {
     const oldClient = (await this.getById(id))!
 
-    this.cacheByProvider.del(oldClient.providerId)
-    this.cacheById.del(id)
+    this.cacheByProvider.del(oldClient.providerId, true)
+    this.cacheById.del(id, true)
 
     await this.query().where({ id }).update({ providerId })
     await this.emitter.emit(ClientEvents.Updated, { clientId: id, oldClient })

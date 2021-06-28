@@ -6,7 +6,7 @@ export class ServerCache<K, V> {
 
   constructor(private id: string, private distributed: DistributedService, options: LRU.Options<K, V>) {
     this.lru = new LRU(options)
-    void this.distributed.listen(this.id, this.process)
+    void this.distributed.listen(this.id, this.process.bind(this))
   }
 
   async process(event: ServerCacheEvent<K, V>) {
@@ -27,8 +27,14 @@ export class ServerCache<K, V> {
     void this.distributed.send(this.id, { key })
   }
 
-  set(key: K, value: V, maxAge?: number): boolean {
-    return this.lru.set(key, value, maxAge)
+  set(key: K, value: V, maxAge?: number, invalidate?: boolean): boolean {
+    const res = this.lru.set(key, value, maxAge)
+
+    if (invalidate) {
+      this.invalidate(key)
+    }
+
+    return res
   }
 
   get(key: K): V | undefined {
@@ -43,8 +49,12 @@ export class ServerCache<K, V> {
     return this.lru.has(key)
   }
 
-  del(key: K): void {
+  del(key: K, invalidate?: boolean): void {
     this.lru.del(key)
+
+    if (invalidate) {
+      this.invalidate(key)
+    }
   }
 }
 

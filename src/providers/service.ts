@@ -81,8 +81,8 @@ export class ProviderService extends Service {
 
     await this.query().where({ id }).update({ sandbox })
 
-    this.cacheById.del(id)
-    this.cacheByName.del(provider.name)
+    this.cacheById.del(id, true)
+    this.cacheByName.del(provider.name, true)
   }
 
   private query() {

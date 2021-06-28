@@ -6,7 +6,7 @@ export class ServerCache2D<V> {
 
   constructor(private id: string, private distributed: DistributedService, options: LRU.Options<string, V>) {
     this.lru = new LRU(options)
-    void this.distributed.listen(this.id, this.process)
+    void this.distributed.listen(this.id, this.process.bind(this))
   }
 
   async process(event: ServerCacheEvent<string, V>) {
@@ -27,8 +27,14 @@ export class ServerCache2D<V> {
     void this.distributed.send(this.id, { key: this.getKey(keyX, keyY) })
   }
 
-  set(keyX: string, keyY: string, value: V, maxAge?: number): boolean {
-    return this.lru.set(this.getKey(keyX, keyY), value, maxAge)
+  set(keyX: string, keyY: string, value: V, maxAge?: number, invalidate?: boolean): boolean {
+    const res = this.lru.set(this.getKey(keyX, keyY), value, maxAge)
+
+    if (invalidate) {
+      this.invalidate(keyX, keyY)
+    }
+
+    return res
   }
 
   get(keyX: string, keyY: string): V | undefined {
@@ -43,8 +49,12 @@ export class ServerCache2D<V> {
     return this.lru.has(this.getKey(keyX, keyY))
   }
 
-  del(keyX: string, keyY: string): void {
+  del(keyX: string, keyY: string, invalidate?: boolean): void {
     this.lru.del(this.getKey(keyX, keyY))
+
+    if (invalidate) {
+      this.invalidate(keyX, keyY)
+    }
   }
 
   private getKey(keyX: string, keyY: string) {

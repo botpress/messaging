@@ -55,8 +55,8 @@ export class ConduitService extends Service {
 
   async delete(id: uuid) {
     const conduit = (await this.get(id))!
-    this.cacheById.del(id)
-    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId)
+    this.cacheById.del(id, true)
+    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
     await this.emitter.emit(ConduitEvents.Deleting, id)
 
@@ -65,8 +65,8 @@ export class ConduitService extends Service {
 
   async updateConfig(id: uuid, config: any) {
     const conduit = (await this.get(id))!
-    this.cacheById.del(id)
-    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId)
+    this.cacheById.del(id, true)
+    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
     await this.query()
       .where({ id })
@@ -77,8 +77,8 @@ export class ConduitService extends Service {
 
   async updateInitialized(id: uuid) {
     const conduit = (await this.get(id))!
-    this.cacheById.del(id)
-    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId)
+    this.cacheById.del(id, true)
+    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
     await this.query()
       .where({ id })

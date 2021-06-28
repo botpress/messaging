@@ -36,7 +36,7 @@ export class ConversationService extends Service {
   }
 
   public async delete(id: uuid): Promise<number> {
-    this.cache.del(id)
+    this.cache.del(id, true)
     return this.query().where({ id }).del()
   }
 

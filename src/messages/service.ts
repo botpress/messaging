@@ -42,7 +42,7 @@ export class MessageService extends Service {
   }
 
   public async delete(id: uuid): Promise<number> {
-    this.cache.del(id)
+    this.cache.del(id, true)
     return this.query().where({ id }).del()
   }
 
@@ -83,7 +83,7 @@ export class MessageService extends Service {
 
     if (deletedIds.length) {
       await this.query().where({ conversationId }).del()
-      deletedIds.forEach((x) => this.cache.del(x))
+      deletedIds.forEach((x) => this.cache.del(x, true))
     }
 
     return deletedIds.length

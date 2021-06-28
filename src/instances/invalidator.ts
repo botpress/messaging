@@ -43,11 +43,11 @@ export class InstanceInvalidator {
   }
 
   private async onConduitDeleting(conduitId: uuid) {
-    this.cache.del(conduitId)
+    this.cache.del(conduitId, true)
   }
 
   private async onConduitUpdated(conduitId: uuid) {
-    this.cache.del(conduitId)
+    this.cache.del(conduitId, true)
 
     const conduit = (await this.conduits.get(conduitId))!
     const channel = this.channels.getById(conduit.channelId)
@@ -75,7 +75,7 @@ export class InstanceInvalidator {
 
     const conduits = await this.conduits.listByProvider(oldClient.providerId)
     for (const conduit of conduits) {
-      this.cache.del(conduit.id)
+      this.cache.del(conduit.id, true)
     }
   }
 }
