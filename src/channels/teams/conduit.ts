@@ -59,8 +59,7 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
       return convoRef
     }
 
-    // TODO: fix this clientId doesn't work in sandbox
-    convoRef = await this.app.kvs.get('TODOCLIENTID', threadId)
+    convoRef = await this.app.kvs.get(threadId)
     this.convoRefs.set(threadId, convoRef!)
     return convoRef!
   }
@@ -71,7 +70,6 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
     }
 
     this.convoRefs.set(threadId, convoRef)
-    // TODO: fix this clientId doesn't work in sandbox
-    return this.app.kvs.set('TODOCLIENTID', threadId, convoRef)
+    return this.app.kvs.set(threadId, convoRef)
   }
 }

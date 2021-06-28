@@ -48,7 +48,7 @@ export class InstanceService extends Service {
       this
     )
     this.monitoring = new InstanceMonitoring(this.channelService, this.conduitService, this)
-    this.sandbox = new InstanceSandbox()
+    this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
   }
 
   async setup() {
@@ -117,8 +117,12 @@ export class InstanceService extends Service {
     const endpoint = await instance.extractEndpoint(payload)
 
     const clientId = provider.sandbox
-      ? await this.sandbox.getClientId(endpoint)
+      ? await this.sandbox.getClientId(conduitId, endpoint)
       : (await this.clientService.getByProviderId(provider.id))!.id
+
+    if (!clientId) {
+      return
+    }
 
     const { userId, conversationId } = await this.mappingService.getMapping(clientId, conduit.channelId, endpoint)
     const message = await this.messageService.create(conversationId, endpoint.content, userId)

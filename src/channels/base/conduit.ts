@@ -36,16 +36,19 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
   }
 
-  async sendToEndpoint(endpoint: Endpoint, payload: any) {
-    const context = await this.context({
-      client: undefined,
-      handlers: 0,
-      payload: _.cloneDeep(payload),
-      // TODO: bot url
-      botUrl: 'https://duckduckgo.com/',
-      logger: this.logger,
-      ...endpoint
-    })
+  async sendToEndpoint(endpoint: Endpoint, payload: any, clientId?: uuid) {
+    const context = await this.context(
+      {
+        client: undefined,
+        handlers: 0,
+        payload: _.cloneDeep(payload),
+        // TODO: bot url
+        botUrl: 'https://duckduckgo.com/',
+        logger: this.logger,
+        ...endpoint
+      },
+      clientId
+    )
 
     for (const renderer of this.renderers) {
       if (renderer.handles(context)) {
@@ -70,7 +73,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]
-  protected abstract context(base: ChannelContext<any>): Promise<TContext>
+  protected abstract context(base: ChannelContext<any>, clientId?: uuid): Promise<TContext>
 }
 
 export type EndpointContent = {
