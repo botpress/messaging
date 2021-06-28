@@ -9,7 +9,7 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
 
-  get requiresInitialization() {
+  get initable() {
     return false
   }
 

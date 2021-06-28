@@ -52,7 +52,7 @@ export class ChannelService extends Service {
 
     for (const channel of this.channels) {
       if (!(await this.getInDb(channel.name))) {
-        await this.createInDb(channel.id, channel.name)
+        await this.createInDb(channel)
       }
     }
   }
@@ -78,8 +78,8 @@ export class ChannelService extends Service {
     }
   }
 
-  private async createInDb(id: uuid, name: string) {
-    await this.query().insert({ id, name })
+  private async createInDb(channel: Channel<ConduitInstance<any, any>>) {
+    await this.query().insert({ id: channel.id, name: channel.name, lazy: channel.lazy, initable: channel.initable })
   }
 
   private query() {

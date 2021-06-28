@@ -33,7 +33,7 @@ export class InstanceInvalidator {
     const conduit = (await this.conduits.get(conduitId))!
     const channel = this.channels.getById(conduit.channelId)
 
-    if (channel.requiresInitialization) {
+    if (channel.initable) {
       await this.instances.initialize(conduitId)
     }
 
@@ -52,7 +52,7 @@ export class InstanceInvalidator {
     const conduit = (await this.conduits.get(conduitId))!
     const channel = this.channels.getById(conduit.channelId)
 
-    if (channel.requiresInitialization) {
+    if (channel.initable) {
       await this.instances.initialize(conduitId)
     }
 

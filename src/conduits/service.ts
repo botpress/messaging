@@ -126,10 +126,17 @@ export class ConduitService extends Service {
 
   async listOutdated(tolerance: number, limit: number): Promise<Conduit[]> {
     const rows = await this.query()
-      .where('initialized', '<=', this.db.setDate(new Date(Date.now() - tolerance))!)
+      .select(['msg_conduits.id', 'providerId', 'channelId', 'initialized'])
+      .where({ initable: true })
+      .andWhere((k) => {
+        return k
+          .where('initialized', '<=', this.db.setDate(new Date(Date.now() - tolerance))!)
+          .orWhereNull('initialized')
+      })
+      .innerJoin('msg_channels', 'msg_channels.id', 'msg_conduits.channelId')
       .limit(limit)
 
-    return rows.map((x) => _.omit(x, 'config')) as Conduit[]
+    return rows as Conduit[]
   }
 
   async listByChannel(channelId: uuid): Promise<Conduit[]> {
