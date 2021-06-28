@@ -6,6 +6,7 @@ export class WebConduit extends ConduitInstance<any, any> {
   protected async setupConnection() {}
 
   async receive(payload: any) {
+    /*
     const message = await this.app.messages.create(payload.conversationId, payload.content, payload.userId)
 
     const post = {
@@ -21,9 +22,11 @@ export class WebConduit extends ConduitInstance<any, any> {
     for (const webhook of webhooks) {
       await axios.post(webhook.url, post)
     }
+    */
   }
 
   async send(conversationId: string, payload: any): Promise<void> {
+    /*
     const message = await this.app.messages.create(conversationId, payload, payload.userId)
 
     const post = {
@@ -37,6 +40,7 @@ export class WebConduit extends ConduitInstance<any, any> {
 
     // TODO: don't hardcode this
     await axios.post('http://localhost:3000/api/v1/bots/gggg/mod/channel-web/webhook', post)
+    */
   }
 
   protected setupRenderers() {
@@ -47,7 +51,7 @@ export class WebConduit extends ConduitInstance<any, any> {
     return []
   }
 
-  protected async map(payload: any): Promise<EndpointContent> {
+  public async extractEndpoint(payload: any): Promise<EndpointContent> {
     return <any>{}
   }
 

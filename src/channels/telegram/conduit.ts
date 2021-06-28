@@ -14,17 +14,21 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   public callback!: (req: any, res: any) => void
 
   async initialize() {
+    const conduit = await this.app.conduits.get(this.conduitId)
+    const provider = await this.app.providers.getById(conduit!.providerId)
+    const channel = this.app.channels.getById(conduit!.channelId)
+
     await this.telegraf.telegram.setWebhook(
-      this.config.externalUrl + this.channel.getRoute().replace(':provider', this.providerName)
+      this.config.externalUrl + channel.getRoute().replace(':provider', provider!.name)
     )
   }
 
   protected async setupConnection() {
     this.telegraf = new Telegraf(this.config.botToken)
-    this.telegraf.start(async (ctx) => this.receive(ctx))
-    this.telegraf.help(async (ctx) => this.receive(ctx))
-    this.telegraf.on('message', async (ctx) => this.receive(ctx))
-    this.telegraf.on('callback_query', async (ctx) => this.receive(ctx))
+    this.telegraf.start(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
+    this.telegraf.help(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
+    this.telegraf.on('message', async (ctx) => this.app.instances.receive(this.conduitId, ctx))
+    this.telegraf.on('callback_query', async (ctx) => this.app.instances.receive(this.conduitId, ctx))
 
     // TODO: THIS ISN'T SAFE. Telegram doesn't verify incoming requests
     // using the botToken, but instead verifies that the request path is correct.
@@ -40,7 +44,7 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     return TelegramSenders
   }
 
-  protected async map(payload: TelegrafContext): Promise<EndpointContent> {
+  public async extractEndpoint(payload: TelegrafContext): Promise<EndpointContent> {
     const chatId = payload.chat?.id || payload.message?.chat.id
     const userId = payload.from?.id || payload.message?.from?.id
     const text = payload.message?.text || payload.callbackQuery?.data

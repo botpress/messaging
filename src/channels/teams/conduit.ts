@@ -1,7 +1,6 @@
 import { BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import _ from 'lodash'
 import LRU from 'lru-cache'
-import { uuid } from '../../base/types'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -32,7 +31,7 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
     return TeamsSenders
   }
 
-  protected async map(payload: TurnContext): Promise<EndpointContent> {
+  public async extractEndpoint(payload: TurnContext): Promise<EndpointContent> {
     const { activity } = payload
     const convoRef = TurnContext.getConversationReference(activity)
 
@@ -61,7 +60,7 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
     }
 
     // TODO: fix this clientId doesn't work in sandbox
-    convoRef = await this.app.kvs.get(this.clientId!, threadId)
+    convoRef = await this.app.kvs.get('TODOCLIENTID', threadId)
     this.convoRefs.set(threadId, convoRef!)
     return convoRef!
   }
@@ -73,6 +72,6 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
 
     this.convoRefs.set(threadId, convoRef)
     // TODO: fix this clientId doesn't work in sandbox
-    return this.app.kvs.set(this.clientId!, threadId, convoRef)
+    return this.app.kvs.set('TODOCLIENTID', threadId, convoRef)
   }
 }

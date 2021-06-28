@@ -25,7 +25,7 @@ export class SmoochChannel extends Channel<SmoochConduit> {
       if (req.headers['x-api-key'] === conduit.config.webhookSecret) {
         const body = req.body as SmoochPayload
         for (const message of body.messages) {
-          await conduit.receive({ context: body, message })
+          await this.app.instances.receive(conduit.conduitId, { context: body, message })
         }
         res.sendStatus(200)
       } else {

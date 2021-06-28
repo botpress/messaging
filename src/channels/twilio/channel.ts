@@ -23,7 +23,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
       const conduit = res.locals.conduit as TwilioConduit
       const signature = req.headers['x-twilio-signature'] as string
       if (validateRequest(conduit.config.authToken!, signature, conduit.webhookUrl, req.body)) {
-        await conduit.receive(req.body)
+        await this.app.instances.receive(conduit.conduitId, req.body)
         res.sendStatus(204)
       } else {
         res.status(401).send('Auth token invalid')

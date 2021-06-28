@@ -55,7 +55,19 @@ export class App {
     this.conversations = new ConversationService(this.database, this.caching)
     this.messages = new MessageService(this.database, this.caching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching, this.users, this.conversations)
-    this.instances = new InstanceService(this.caching, this.channels, this.providers, this.conduits, this.clients, this)
+    this.instances = new InstanceService(
+      this.config,
+      this.caching,
+      this.channels,
+      this.providers,
+      this.conduits,
+      this.clients,
+      this.webhooks,
+      this.conversations,
+      this.messages,
+      this.mapping,
+      this
+    )
     this.syncs = new SyncService(this.config, this.channels, this.providers, this.conduits, this.clients, this.webhooks)
   }
 

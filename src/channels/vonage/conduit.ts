@@ -34,7 +34,7 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
     return [new TypingSender(), ...VonageSenders]
   }
 
-  protected async map(payload: any): Promise<EndpointContent> {
+  public async extractEndpoint(payload: any): Promise<EndpointContent> {
     return {
       content: { type: 'text', text: payload.message.content.text },
       identity: payload.to.number,

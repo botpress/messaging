@@ -9,10 +9,6 @@ import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
 
 export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> {
-  get enableParsers() {
-    return true
-  }
-
   private smooch: any
   // private secret!: string
 
@@ -41,7 +37,7 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
     return SmoochSenders
   }
 
-  protected async map(payload: { context: SmoochPayload; message: SmoochMessage }): Promise<EndpointContent> {
+  public async extractEndpoint(payload: { context: SmoochPayload; message: SmoochMessage }): Promise<EndpointContent> {
     return {
       content: { type: 'text', text: payload.message.text },
       thread: payload.context.conversation._id,

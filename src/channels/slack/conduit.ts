@@ -57,7 +57,10 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
           await axios.post(payload.response_url, { delete_original: true })
         }
 
-        await this.receive({ ctx: payload, content: { type: 'quick_reply', text: label, payload: value } })
+        await this.app.instances.receive(this.conduitId, {
+          ctx: payload,
+          content: { type: 'quick_reply', text: label, payload: value }
+        })
       }
     })
 
@@ -66,7 +69,10 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
       const value = _.get(payload, 'actions[0].selected_option.value', '')
 
       //  await axios.post(payload.response_url, { text: `*${label}*` })
-      await this.receive({ ctx: payload, content: { type: 'quick_reply', text: label, payload: value } })
+      await this.app.instances.receive(this.conduitId, {
+        ctx: payload,
+        content: { type: 'quick_reply', text: label, payload: value }
+      })
     })
 
     this.interactive.action({ actionId: 'feedback-overflow' }, async (payload) => {
@@ -100,7 +106,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
       // debugIncoming('Received real time payload %o', payload)
 
       if (!discardedSubtypes.includes(payload.subtype) && !payload.bot_id) {
-        await this.receive({
+        await this.app.instances.receive(this.conduitId, {
           ctx: payload,
           content: {
             type: 'text',
@@ -113,7 +119,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
     // com.on('error', (err) => this.bp.logger.attachError(err).error('An error occurred'))
   }
 
-  protected async map(payload: { ctx: any; content: any }): Promise<EndpointContent> {
+  public async extractEndpoint(payload: { ctx: any; content: any }): Promise<EndpointContent> {
     const { user, channel } = payload.ctx
 
     // TODO: are the || really necessary?

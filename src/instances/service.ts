@@ -1,3 +1,4 @@
+import axios from 'axios'
 import _ from 'lodash'
 import ms from 'ms'
 import { App } from '../app'
@@ -9,21 +10,33 @@ import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
+import { ConfigService } from '../config/service'
+import { ConversationService } from '../conversations/service'
+import { MappingService } from '../mapping/service'
+import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
+import { WebhookService } from '../webhooks/service'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
+import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
+  private sandbox: InstanceSandbox
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
 
   constructor(
+    private configService: ConfigService,
     private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
     private conduitService: ConduitService,
     private clientService: ClientService,
+    private webhookService: WebhookService,
+    private conversationService: ConversationService,
+    private messageService: MessageService,
+    private mappingService: MappingService,
     private app: App
   ) {
     super()
@@ -35,6 +48,7 @@ export class InstanceService extends Service {
       this
     )
     this.monitoring = new InstanceMonitoring(this.channelService, this.conduitService, this)
+    this.sandbox = new InstanceSandbox()
   }
 
   async setup() {
@@ -64,25 +78,63 @@ export class InstanceService extends Service {
     }
 
     const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
+    const config = {
+      ...conduit.config,
+      externalUrl: this.configService.current.externalUrl
+    }
+
     const channel = this.channelService.getById(conduit.channelId)
-    const client = provider.sandbox ? undefined : await this.clientService.getByProviderId(provider.id)
     const instance = channel.createConduit()
 
-    await instance.setup(
-      this.app,
-      {
-        ...conduit?.config,
-        externalUrl: this.app.config.current.externalUrl
-      },
-      channel,
-      provider.name,
-      client?.id,
-      provider.sandbox
-    )
-
+    await instance.setup(conduitId, config, this.app)
     this.cache.set(conduitId, instance, channel.lazy ? undefined : Infinity)
 
     return instance
+  }
+
+  async send(conduitId: uuid, conversationId: uuid, payload: any): Promise<void> {
+    const conduit = (await this.conduitService.get(conduitId))!
+    const conversation = (await this.conversationService.get(conversationId))!
+
+    const endpoint = await this.mappingService.getEndpoint(conversation.clientId, conduit.channelId, conversation.id)
+
+    const instance = await this.get(conduitId)
+    await instance.sendToEndpoint(endpoint, payload)
+
+    const message = await this.messageService.create(conversationId, payload, conversation!.userId)
+
+    instance.loggerOut.debug('Sending message', {
+      clientId: conversation!.clientId,
+      message
+    })
+  }
+
+  async receive(conduitId: uuid, payload: any) {
+    const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
+
+    const instance = await this.get(conduitId)
+    const endpoint = await instance.extractEndpoint(payload)
+
+    const clientId = provider.sandbox
+      ? await this.sandbox.getClientId(endpoint)
+      : (await this.clientService.getByProviderId(provider.id))!.id
+
+    const { userId, conversationId } = await this.mappingService.getMapping(clientId, conduit.channelId, endpoint)
+    const message = await this.messageService.create(conversationId, endpoint.content, userId)
+
+    const post = {
+      client: { id: clientId },
+      channel: { id: conduit.channelId, name: this.channelService.getById(conduit.channelId).name },
+      user: { id: userId },
+      conversation: { id: conversationId },
+      message
+    }
+    instance.loggerIn.debug('Received message', post)
+
+    const webhooks = await this.webhookService.list(clientId)
+    for (const webhook of webhooks) {
+      await axios.post(webhook.url, post)
+    }
   }
 }

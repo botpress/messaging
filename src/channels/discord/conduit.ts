@@ -24,18 +24,21 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
       DiscordConduit.patched = true
     }
 
+    const conduit = (await this.app.conduits.get(this.conduitId))!
+    const channel = this.app.channels.getById(conduit.channelId)
+
     this.convoCache = this.app.caching.newLRU()
 
     this.client.on('ready', () => {
       this.logger.info(
-        `${clc.bold(this.channel.name.charAt(0).toUpperCase() + this.channel.name.slice(1))}` +
+        `${clc.bold(channel.name.charAt(0).toUpperCase() + channel.name.slice(1))}` +
           ` logged in as ${clc.blackBright(this.client.user?.tag)}`
       )
     })
 
     this.client.on('message', async (msg) => {
       if (!msg.author.bot) {
-        await this.receive(msg)
+        await this.app.instances.receive(this.conduitId, msg)
       }
     })
 
@@ -55,7 +58,7 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
     return DiscordSenders
   }
 
-  protected async map(msg: Discord.Message): Promise<EndpointContent> {
+  public async extractEndpoint(msg: Discord.Message): Promise<EndpointContent> {
     await this.setChannel(msg.channel.id, msg.channel)
 
     return {

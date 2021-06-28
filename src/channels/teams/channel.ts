@@ -19,7 +19,7 @@ export class TeamsChannel extends Channel<TeamsConduit> {
       const conduit = res.locals.conduit as TeamsConduit
 
       await conduit.adapter.processActivity(req, <any>res, async (turnContext) => {
-        await conduit.receive(turnContext)
+        await this.app.instances.receive(conduit.conduitId, turnContext)
       })
     })
 

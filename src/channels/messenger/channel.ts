@@ -45,7 +45,7 @@ export class MessengerChannel extends Channel<MessengerConduit> {
             if (!webhookEvent.sender) {
               continue
             }
-            await conduit.receive(webhookEvent)
+            await this.app.instances.receive(conduit.conduitId, webhookEvent)
           }
         }
 

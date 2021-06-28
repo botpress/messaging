@@ -1,11 +1,8 @@
-import axios from 'axios'
 import _ from 'lodash'
-import { validate as uuidValidate } from 'uuid'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
 import { Endpoint } from '../../mapping/types'
-import { Channel } from './channel'
 import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
 import { ChannelRenderer } from './renderer'
@@ -13,136 +10,30 @@ import { ChannelSender } from './sender'
 
 export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext extends ChannelContext<any>> {
   protected app!: App
+  public conduitId!: uuid
   public config!: TConfig
-  protected channel!: Channel<any>
-  protected providerName!: string
-  protected clientId?: uuid
-  protected sandbox!: boolean
 
   protected renderers!: ChannelRenderer<TContext>[]
   protected senders!: ChannelSender<TContext>[]
-  protected logger!: Logger
-  protected loggerIn!: Logger
-  protected loggerOut!: Logger
+  public logger!: Logger
+  public loggerIn!: Logger
+  public loggerOut!: Logger
 
-  async setup(
-    app: App,
-    config: TConfig,
-    channel: Channel<any>,
-    providerName: string,
-    clientId: string | undefined,
-    sandbox: boolean
-  ): Promise<void> {
+  async setup(conduitId: uuid, config: TConfig, app: App): Promise<void> {
     this.app = app
     this.config = config
-    this.channel = channel
-    this.providerName = providerName
-    this.clientId = clientId
-    this.sandbox = sandbox
+    this.conduitId = conduitId
 
-    this.logger = this.app.logger.root.sub(this.channel.name)
+    const conduit = await this.app.conduits.get(conduitId)
+    const channel = this.app.channels.getById(conduit!.channelId)
+
+    this.logger = this.app.logger.root.sub(channel.name)
     this.loggerIn = this.logger.sub('incoming')
     this.loggerOut = this.logger.sub('outgoing')
 
     await this.setupConnection()
     this.renderers = this.setupRenderers().sort((a, b) => a.priority - b.priority)
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
-  }
-
-  async receive(payload: any) {
-    const endpoint = await this.map(payload)
-
-    let clientId = this.clientId!
-
-    // TODO: refactor this whole thing
-    if (this.sandbox) {
-      const provider = await this.app.providers.getByName(this.providerName)
-      const conduit = await this.app.conduits.getByProviderAndChannel(provider!.id, this.channel.id)
-
-      const sandboxmap = await this.app.mapping.sandboxmap.get(
-        conduit!.id,
-        endpoint.identity || '*',
-        endpoint.sender || '*',
-        endpoint.thread || '*'
-      )
-
-      if (sandboxmap) {
-        clientId = sandboxmap.clientId
-      } else if (endpoint.content?.text?.startsWith('!join')) {
-        const text = endpoint.content.text as string
-        const passphrase = text.replace('!join ', '')
-        this.logger.info('Attempting to join sandbox with passphrase', passphrase)
-
-        if (uuidValidate(passphrase)) {
-          const client = await this.app.clients.getById(passphrase)
-          if (client) {
-            this.logger.info('Joined sandbox!', client.id)
-
-            await this.app.mapping.sandboxmap.create(
-              conduit!.id,
-              endpoint.identity || '*',
-              endpoint.sender || '*',
-              endpoint.thread || '*',
-              client.id
-            )
-
-            clientId = client.id
-          } else {
-            await this.sendToEndpoint(endpoint, {
-              type: 'text',
-              text: 'Sandbox client not found'
-            })
-            this.logger.info('Sandbox client not found')
-            return
-          }
-        } else {
-          await this.sendToEndpoint(endpoint, {
-            type: 'text',
-            text: 'Wrong passphrase'
-          })
-          this.logger.info('Wrong passphrase')
-          return
-        }
-      } else {
-        await this.sendToEndpoint(endpoint, {
-          type: 'text',
-          text: 'Please join the sandbox using by sending : !join your_passphrase'
-        })
-        this.logger.info('This endpoint is unknown to the sandbox')
-        return
-      }
-    }
-
-    const { userId, conversationId } = await this.app.mapping.getMapping(clientId, this.channel.id, endpoint)
-    const message = await this.app.messages.create(conversationId, endpoint.content, userId)
-
-    const post = {
-      client: { id: clientId },
-      channel: { id: this.channel.id, name: this.channel.name },
-      user: { id: userId },
-      conversation: { id: conversationId },
-      message
-    }
-    this.loggerIn.debug('Received message', post)
-
-    const webhooks = await this.app.webhooks.list(clientId)
-    for (const webhook of webhooks) {
-      await axios.post(webhook.url, post)
-    }
-  }
-
-  async send(conversationId: string, payload: any): Promise<void> {
-    const conversation = await this.app.conversations.get(conversationId)
-    const endpoint = await this.app.mapping.getEndpoint(conversation!.clientId, this.channel.id, conversation!.clientId)
-    await this.sendToEndpoint(endpoint, payload)
-
-    const message = await this.app.messages.create(conversationId, payload, conversation!.userId)
-
-    this.loggerOut.debug('Sending message', {
-      providerName: this.providerName,
-      clientId: conversation!.clientId,
-      message
-    })
   }
 
   async sendToEndpoint(endpoint: Endpoint, payload: any) {
@@ -174,10 +65,11 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
   async destroy() {}
 
+  public abstract extractEndpoint(payload: any): Promise<EndpointContent>
+
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]
-  protected abstract map(payload: any): Promise<EndpointContent>
   protected abstract context(base: ChannelContext<any>): Promise<TContext>
 }
 

@@ -14,10 +14,13 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
   public webhookUrl!: string
 
   protected async setupConnection() {
+    const conduit = await this.app.conduits.get(this.conduitId)
+    const provider = await this.app.providers.getById(conduit!.providerId)
+    const channel = this.app.channels.getById(conduit!.channelId)
+
     this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
     this.webhookUrl =
-      this.config.webhookUrl ||
-      this.config.externalUrl + this.channel.getRoute().replace(':provider', this.providerName)
+      this.config.webhookUrl || this.config.externalUrl + channel.getRoute().replace(':provider', provider!.name)
   }
 
   protected setupRenderers() {
@@ -28,7 +31,7 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
     return [new TypingSender(), ...TwilioSenders]
   }
 
-  protected async map(payload: TwilioRequestBody): Promise<EndpointContent> {
+  public async extractEndpoint(payload: TwilioRequestBody): Promise<EndpointContent> {
     const botPhoneNumber = payload.To
     const userId = payload.From
     const text = payload.Body
