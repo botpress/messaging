@@ -30,14 +30,17 @@ export class DatabaseService extends Service {
   }
 
   async loadPoolConfig() {
-    const config = process.env.DATABASE_POOL || this.configService.current.database.pool
+    let config = this.configService.current.database.pool
 
-    try {
-      const options = config ? JSON.parse(config) : {}
-      this.pool = { log: (message: any) => this.logger.warn(`[pool] ${message}`), ...options }
-    } catch (err) {
-      this.logger.warn('Database pool option is not valid json')
+    if (process.env.DATABASE_POOL) {
+      try {
+        config = JSON.parse(process.env.DATABASE_POOL) || {}
+      } catch {
+        this.logger.warn('DATABASE_POOL is not valid json')
+      }
     }
+
+    this.pool = { log: (message: any) => this.logger.warn(`[pool] ${message}`), ...config }
   }
 
   async setupPostgres() {
