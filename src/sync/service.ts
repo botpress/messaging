@@ -67,6 +67,10 @@ export class SyncService extends Service {
     const oldConduits = [...(await this.conduits.listByProvider(providerId))]
 
     for (const [channel, config] of Object.entries(conduits)) {
+      if (!config.enabled) {
+        continue
+      }
+
       const channelId = this.channels.getByName(channel).id
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 

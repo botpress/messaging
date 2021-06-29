@@ -1,6 +1,7 @@
 export interface MessagingEnv {
-  PORT?: string
   NODE_ENV?: 'production' | 'development'
+  PORT?: string
+  EXTERNAL_URL?: string
   INTERNAL_PASSWORD?: string
   ENCRYPTION_KEY?: string
   DATABASE_URL?: string

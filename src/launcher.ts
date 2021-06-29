@@ -10,7 +10,7 @@ export class Launcher {
   private logger: Logger
   private shuttingDown: boolean = false
 
-  constructor(private express: Express, private port: string | undefined, private app: App, private api: Api) {
+  constructor(private express: Express, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
 
     process.on('uncaughtException', async (err) => {
@@ -47,14 +47,20 @@ export class Launcher {
 
     await this.api.setup()
 
-    if (!this.port) {
+    let port = process.env.PORT || this.app.config.current.server?.port
+    if (!port) {
       portfinder.basePort = 3100
-      this.port = (await portfinder.getPortPromise()).toString()
+      port = (await portfinder.getPortPromise()).toString()
     }
-    this.express.listen(this.port)
 
-    this.logger.info(`Server is listening at: http://localhost:${this.port}`)
-    this.logger.info(`Server is exposed at: ${this.app.config.current.externalUrl}`)
+    this.express.listen(port)
+
+    this.logger.info(`Server is listening at: http://localhost:${port}`)
+
+    const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+    if (externalUrl?.length) {
+      this.logger.info(`Server is exposed at: ${externalUrl}`)
+    }
   }
 
   async shutDown(code?: number) {

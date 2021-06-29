@@ -80,7 +80,7 @@ export class InstanceService extends Service {
     const conduit = (await this.conduitService.get(conduitId))!
     const config = {
       ...conduit.config,
-      externalUrl: this.configService.current.externalUrl
+      externalUrl: process.env.EXTERNAL_URL || this.configService.current.server?.externalUrl
     }
 
     const channel = this.channelService.getById(conduit.channelId)

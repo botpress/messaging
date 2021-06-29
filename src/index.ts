@@ -8,5 +8,5 @@ const router = express()
 const app = new App()
 const api = new Api(app, router)
 
-const launcher = new Launcher(router, process.env.PORT, app, api)
+const launcher = new Launcher(router, app, api)
 void launcher.launch()
