@@ -8,6 +8,8 @@ import { Logger } from '../logger/types'
 
 export class DatabaseService extends Service {
   public knex!: Knex
+  private url!: string
+  private pool!: Knex.PoolConfig
   private isLite!: boolean
   private logger: Logger
 
@@ -17,36 +19,63 @@ export class DatabaseService extends Service {
   }
 
   async setup() {
-    const databaseUrl = process.env.DATABASE_URL || this.configService.current.database.connection
+    this.url = process.env.DATABASE_URL || this.configService.current.database.connection
+    this.loadPoolConfig()
 
-    if (databaseUrl?.startsWith('postgres')) {
-      this.isLite = false
-      this.knex = knex({
-        client: 'postgres',
-        connection: databaseUrl,
-        useNullAsDefault: true
-      })
+    if (this.url?.startsWith('postgres')) {
+      await this.setupPostgres()
     } else {
-      let filename = databaseUrl
-      if (!filename) {
-        if (process.env.NODE_ENV === 'production') {
-          filename = path.join(process.cwd(), 'data', 'db.sqlite')
-        } else {
-          filename = path.join(process.cwd(), 'dist', 'db.sqlite')
-        }
-      }
-
-      if (!fs.existsSync(path.dirname(filename))) {
-        fs.mkdirSync(path.dirname(filename))
-      }
-
-      this.isLite = true
-      this.knex = knex({
-        client: 'sqlite3',
-        connection: { filename },
-        useNullAsDefault: true
-      })
+      await this.setupSqlite()
     }
+  }
+
+  async loadPoolConfig() {
+    const config = process.env.DATABASE_POOL || this.configService.current.database.pool
+
+    try {
+      const options = config ? JSON.parse(config) : {}
+      this.pool = { log: (message: any) => this.logger.warn(`[pool] ${message}`), ...options }
+    } catch (err) {
+      this.logger.warn('Database pool option is not valid json')
+    }
+  }
+
+  async setupPostgres() {
+    this.isLite = false
+    this.knex = knex({
+      client: 'postgres',
+      connection: this.url,
+      useNullAsDefault: true,
+      pool: this.pool
+    })
+  }
+
+  async setupSqlite() {
+    let filename = this.url
+    if (!filename) {
+      if (process.env.NODE_ENV === 'production') {
+        filename = path.join(process.cwd(), 'data', 'db.sqlite')
+      } else {
+        filename = path.join(process.cwd(), 'dist', 'db.sqlite')
+      }
+    }
+
+    if (!fs.existsSync(path.dirname(filename))) {
+      fs.mkdirSync(path.dirname(filename))
+    }
+
+    this.isLite = true
+    this.knex = knex({
+      client: 'sqlite3',
+      connection: { filename },
+      useNullAsDefault: true,
+      pool: {
+        afterCreate: (conn: any, cb: any) => {
+          conn.run('PRAGMA foreign_keys = ON', cb)
+        },
+        ...this.pool
+      }
+    })
   }
 
   async destroy() {

@@ -1,7 +1,8 @@
 {
   "externalUrl": "",
   "database": {
-    "connection": null
+    "connection": null,
+    "pool": null
   },
   "redis": {
     "enabled": false,
