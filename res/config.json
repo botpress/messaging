@@ -1,5 +1,8 @@
 {
-  "externalUrl": "",
+  "server": {
+    "port": null,
+    "externalUrl": null
+  },
   "database": {
     "connection": null,
     "pool": null
