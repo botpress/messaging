@@ -9,3 +9,8 @@ The botpress messaging server provides a standarized messaging api to communicat
 - Twilio
 - Smooch
 - Vonage
+- Discord
+
+## Documentation
+
+You can read the documentation [here](./doc/readme.md)
