@@ -4,6 +4,7 @@ export interface MessagingEnv {
   INTERNAL_PASSWORD?: string
   ENCRYPTION_KEY?: string
   DATABASE_URL?: string
+  DATABASE_POOL?: string
   CLUSTER_ENABLED?: string
   REDIS_URL?: string
   REDIS_OPTIONS?: string
