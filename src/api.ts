@@ -6,7 +6,7 @@ import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
 
 export class Api {
-  private router!: Router
+  private router: Router
 
   syncs: SyncApi
   conversations: ConversationApi
@@ -15,7 +15,6 @@ export class Api {
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
-
     this.syncs = new SyncApi(this.router, app.syncs)
     this.conversations = new ConversationApi(this.router, app.clients, app.conversations)
     this.messages = new MessageApi(this.router, app.clients, app.channels, app.conduits, app.instances, app.messages)
@@ -23,17 +22,7 @@ export class Api {
   }
 
   async setup() {
-    const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
-
-    if (password) {
-      this.root.use('/api', (req, res, next) => {
-        if (req.headers.password === password) {
-          next()
-        } else {
-          res.sendStatus(403)
-        }
-      })
-    }
+    await this.setupPassword()
 
     this.root.use('/api', this.router)
     this.router.use(express.json())
@@ -43,5 +32,20 @@ export class Api {
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
+  }
+
+  async setupPassword() {
+    const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
+    if (password) {
+      return
+    }
+
+    this.root.use('/api', (req, res, next) => {
+      if (req.headers.password === password) {
+        next()
+      } else {
+        res.sendStatus(403)
+      }
+    })
   }
 }
