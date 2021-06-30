@@ -3,6 +3,10 @@
     "port": null,
     "externalUrl": null
   },
+  "security": {
+    "password": null,
+    "key": "this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w="
+  },
   "database": {
     "connection": null,
     "pool": null
@@ -11,10 +15,6 @@
     "enabled": false,
     "connection": null,
     "options": null
-  },
-  "security": {
-    "password": null,
-    "key": "this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w="
   },
   "sync": [
     {
