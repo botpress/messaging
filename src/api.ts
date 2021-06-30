@@ -40,7 +40,7 @@ export class Api {
 
   async setupPassword() {
     const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
-    if (password) {
+    if (!password) {
       return
     }
 
