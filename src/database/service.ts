@@ -19,7 +19,7 @@ export class DatabaseService extends Service {
   }
 
   async setup() {
-    this.url = process.env.DATABASE_URL || this.configService.current.database.connection
+    this.url = process.env.DATABASE_URL || this.configService.current.database?.connection
     this.loadPoolConfig()
 
     if (this.url?.startsWith('postgres')) {
@@ -30,7 +30,7 @@ export class DatabaseService extends Service {
   }
 
   private loadPoolConfig() {
-    let config = this.configService.current.database.pool
+    let config = this.configService.current.database?.pool
 
     if (process.env.DATABASE_POOL) {
       try {
