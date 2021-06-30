@@ -18,7 +18,7 @@ Environmnent variables have priority over settings configured in the `config.jso
 | INTERNAL_PASSWORD | security.password   | Internal password to add an additional security requirement to requests. When a password is set, every api request to the server must supply the internal password in their headers (`password`: `the_internal_password`). The internal password only affects the `/api` routes (channel webhooks are not affected)                                                                                                            |
 | ENCRYPTION_KEY    | security.key        | Encryption key used to encrypt channel configurations in the database (with aes-256). This must be a 32 byte key encoded using Base64 (encoding a 32 byte key using Base64 should result in a 44 character long string ). Leaving this setting unset will disable encryption for all channel configurations. This setting cannot be changed once you have created data using this key (as the old data will become unreadable) |
 | DATABASE_URL      | database.connection | Connection string to the database. Can either be a connection to a PosgresSQL database (ex: postgres://login:password@your-db-host.com:5432/your-db-name) or a sqlite file path. If left unset, the server will create an sqlite database named `db.sqlite` in the `data` directory (or in the `dist/data` directory if in `development` mode)                                                                                 |
-| DATABASE_POOL     | database.pool       | Configuration option for connection pool. Example: `{"min": 3, "max": 10}`                                                                                                                                                                                                                                                                                                                                                     |
+| DATABASE_POOL     | database.pool       | Configuration option for connection pool. Example: `{"min":3,"max":10}`                                                                                                                                                                                                                                                                                                                                                        |
 | CLUSTER_ENABLED   | redis.enabled       | This setting determines if redis is enabled or not. The other redis settings will have no effect if this value is set to false                                                                                                                                                                                                                                                                                                 |
 | REDIS_URL         | redis.connection    | Connection string to a redis instance (ex: `redis://:your-password@127.0.0.1:6379`). If you want to configure redis for clustering, you can supply an array of connections instead (ex: `[{"host":"localhost","port":7004},{"host":"localhost","port":7001},{"host":"localhost","port":7002}]`)                                                                                                                                |
 | REDIS_OPTIONS     | redis.options       | Advances options for redis. Refer to the [ioredis documentation](https://github.com/luin/ioredis/blob/master/API.md) (ex: `{"password":"admin123", "connectTimeout": 20000})`                                                                                                                                                                                                                                                  |
@@ -39,12 +39,12 @@ Environmnent variables have priority over settings configured in the `config.jso
   },
   "database": {
     "connection": "postgres://user:password@localhost:5432/myDb",
-    "pool": null
+    "pool": { "min": 3, "max": 10 }
   },
   "redis": {
     "enabled": true,
     "connection": "redis://:my-redis-password@127.0.0.1:6379",
-    "options": null
+    "options": { "connectTimeout": 20000 }
   }
 }
 ```
@@ -56,8 +56,10 @@ NODE_ENV=production
 PORT=3000
 EXTERNAL_URL=https://my-hosted-messaging.com
 DATABASE_URL=postgres://user:password@localhost:5432/mydbname
+DATABASE_POOL={"min":3,"max":10}
 INTERNAL_PASSWORD=my-super-secret-internal-password123*
 ENCRYPTION_KEY=this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w=
 CLUSTER_ENABLED=true
 REDIS_URL=redis://:my-redis-password@127.0.0.1:6379
+REDIS_OPTIONS={"connectTimeout":20000}
 ```

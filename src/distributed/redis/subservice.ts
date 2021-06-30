@@ -53,7 +53,9 @@ export class RedisSubservice implements DistributedSubservice {
     if (process.env.REDIS_OPTIONS) {
       try {
         options = JSON.parse(process.env.REDIS_OPTIONS) || {}
-      } catch {}
+      } catch {
+        this.logger.warn('REDIS_OPTIONS is not valid json')
+      }
     }
 
     const retryStrategy = (times: number) => {
