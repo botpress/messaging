@@ -29,7 +29,7 @@ export class DatabaseService extends Service {
     }
   }
 
-  async loadPoolConfig() {
+  private loadPoolConfig() {
     let config = this.configService.current.database.pool
 
     if (process.env.DATABASE_POOL) {
@@ -43,7 +43,7 @@ export class DatabaseService extends Service {
     this.pool = { log: (message: any) => this.logger.warn(`[pool] ${message}`), ...config }
   }
 
-  async setupPostgres() {
+  private async setupPostgres() {
     this.isLite = false
     this.knex = knex({
       client: 'postgres',
@@ -53,18 +53,18 @@ export class DatabaseService extends Service {
     })
   }
 
-  async setupSqlite() {
+  private async setupSqlite() {
     let filename = this.url
     if (!filename) {
       if (process.env.NODE_ENV === 'production') {
         filename = path.join(process.cwd(), 'data', 'db.sqlite')
       } else {
-        filename = path.join(process.cwd(), 'dist', 'db.sqlite')
+        filename = path.join(process.cwd(), path.join('dist', 'data'), 'db.sqlite')
       }
     }
 
     if (!fs.existsSync(path.dirname(filename))) {
-      fs.mkdirSync(path.dirname(filename))
+      fs.mkdirSync(path.dirname(filename), { recursive: true })
     }
 
     this.isLite = true
