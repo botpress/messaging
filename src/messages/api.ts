@@ -1,20 +1,10 @@
 import { Router } from 'express'
-import { ApiRequest, ClientScopedApi } from '../base/api'
-import { ChannelService } from '../channels/service'
+import { ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
-import { ConduitService } from '../conduits/service'
-import { InstanceService } from '../instances/service'
 import { MessageService } from './service'
 
 export class MessageApi extends ClientScopedApi {
-  constructor(
-    router: Router,
-    clients: ClientService,
-    private channels: ChannelService,
-    private conduits: ConduitService,
-    private instances: InstanceService,
-    private messages: MessageService
-  ) {
+  constructor(router: Router, clients: ClientService, private messages: MessageService) {
     super(router, clients)
   }
 
@@ -64,17 +54,6 @@ export class MessageApi extends ClientScopedApi {
       const conversations = await this.messages.listByConversationId(conversationId as string, +limit!)
 
       res.send(conversations)
-    })
-
-    // TODO: probably should be in a "Chat" api instead
-    this.router.post('/messages/send', async (req: ApiRequest, res) => {
-      const { channel, conversationId, payload } = req.body
-
-      const channelId = this.channels.getByName(channel).id
-      const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
-      await this.instances.send(conduit.id, conversationId, payload)
-
-      res.sendStatus(200)
     })
   }
 }

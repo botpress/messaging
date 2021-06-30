@@ -1,6 +1,7 @@
 import express, { Router } from 'express'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
+import { ChatApi } from './chat/api'
 import { ConversationApi } from './conversations/api'
 import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
@@ -9,15 +10,17 @@ export class Api {
   private router: Router
 
   syncs: SyncApi
+  chat: ChatApi
   conversations: ConversationApi
   messages: MessageApi
   channels: ChannelApi
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
-    this.syncs = new SyncApi(this.router, app.syncs)
-    this.conversations = new ConversationApi(this.router, app.clients, app.conversations)
-    this.messages = new MessageApi(this.router, app.clients, app.channels, app.conduits, app.instances, app.messages)
+    this.syncs = new SyncApi(this.router, this.app.syncs)
+    this.chat = new ChatApi(this.router, this.app.clients, this.app.channels, this.app.conduits, this.app.instances)
+    this.conversations = new ConversationApi(this.router, this.app.clients, this.app.conversations)
+    this.messages = new MessageApi(this.router, this.app.clients, this.app.messages)
     this.channels = new ChannelApi(this.root, this.app)
   }
 
@@ -29,6 +32,7 @@ export class Api {
     this.router.use(express.urlencoded({ extended: true }))
 
     await this.syncs.setup()
+    await this.chat.setup()
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
