@@ -24,3 +24,40 @@ Environmnent variables have priority over settings configured in the `config.jso
 | REDIS_OPTIONS     | redis.options       | Advances options for redis. Refer to the [ioredis documentation](https://github.com/luin/ioredis/blob/master/API.md) (ex: `{"password":"admin123", "connectTimeout": 20000})`                                                                                                                                                                                                                                                  |
 | SKIP_LOAD_CONFIG  | none                | If set to `true`, the server will skip loading any config from the `config.json` file                                                                                                                                                                                                                                                                                                                                          |
 | SKIP_LOAD_ENV     | none                | If set to `true`, the server will skip loading any config from the `.env` file                                                                                                                                                                                                                                                                                                                                                 |
+
+## Example `config.json` file
+
+```json
+{
+  "server": {
+    "port": 3100,
+    "externalUrl": "https://my-hosted-messaging.com"
+  },
+  "security": {
+    "password": "my-super-secret-internal-password123*",
+    "key": "this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w="
+  },
+  "database": {
+    "connection": "postgres://user:password@localhost:5432/myDb",
+    "pool": null
+  },
+  "redis": {
+    "enabled": true,
+    "connection": "redis://:my-redis-password@127.0.0.1:6379",
+    "options": null
+  }
+}
+```
+
+## Example `.env` file
+
+```
+NODE_ENV=production
+PORT=3000
+EXTERNAL_URL=https://my-hosted-messaging.com
+DATABASE_URL=postgres://user:password@localhost:5432/mydbname
+INTERNAL_PASSWORD=my-super-secret-internal-password123*
+ENCRYPTION_KEY=this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w=
+CLUSTER_ENABLED=true
+REDIS_URL=redis://:my-redis-password@127.0.0.1:6379
+```
