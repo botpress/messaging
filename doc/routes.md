@@ -43,7 +43,8 @@ const config = {
   webhooks: [{ url: 'https://mywebsite.com/mycallback' }]
 }
 
-// This request creates a new client and token because a client id wasn't supplied. It will also configure the telegram and slack channel, as well as return a token for the provided webhook
+// This request creates a new client and token because a client id wasn't supplied.
+// It will also configure the telegram and slack channel, as well as return a token for the provided webhook
 const { id, token, webhooks } = (await axios.post('MESSAGING_URL/api/sync', config)).data
 
 const newConfig = {
@@ -63,7 +64,9 @@ const newConfig = {
   webhooks: [{ url: 'https://mywebsite.com/mycallback' }]
 }
 
-// This request won't create a new client because we gave it our previously obtained client id along with the correct token. It will however update the configuration of our existing client. In this case the twilio channel will be configured, and the slack channel will be unconfigured
+// This request won't create a new client because we gave it our previously obtained client id along with
+// the correct token. It will however update the configuration of our existing client. In this case the
+// twilio channel will be configured, and the slack channel will be unconfigured
 await axios.post('MESSAGING_URL/api/sync', newConfig))
 
 router.post('/mycallbackroute', (req, req) => {})
