@@ -1,0 +1,11 @@
+node_modules/
+dist/
+bin/
+*.log
+
+.git
+.github
+.vscode
+doc
+res
+scripts
