@@ -4,8 +4,24 @@
 @channel= YOUR_CHANNEL
 @convoId = YOUR_CONVO_ID
 
+### Sync
+POST {{baseUrl}}/api/sync
+Content-Type: application/json
+
+{
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "botToken": "my-telegram-token"
+    }
+  },
+  "webhooks": [{"url": "https://mywebsite.com/mycallbackurl"}],
+  "id": null,
+  "token": null
+}
+
 ### Send Text
-POST {{baseUrl}}/api/messages/send
+POST {{baseUrl}}/api/chat/reply
 Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
 
@@ -19,7 +35,7 @@ Content-Type: application/json
 }
 
 ### Send Image
-POST {{baseUrl}}/api/messages/send
+POST {{baseUrl}}/api/chat/reply
 Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
 
@@ -34,7 +50,7 @@ Content-Type: application/json
 }
 
 ### Send Choices
-POST {{baseUrl}}/api/messages/send
+POST {{baseUrl}}/api/chat/reply
 Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
 
@@ -52,7 +68,7 @@ Content-Type: application/json
 }
 
 ### Send Card
-POST {{baseUrl}}/api/messages/send
+POST {{baseUrl}}/api/chat/reply
 Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
 
@@ -85,7 +101,7 @@ Content-Type: application/json
 }
 
 ### Send Carousel
-POST {{baseUrl}}/api/messages/send
+POST {{baseUrl}}/api/chat/reply
 Authorization: Basic {{clientId}}:{{clientToken}}
 Content-Type: application/json
 
