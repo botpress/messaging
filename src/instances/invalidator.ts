@@ -6,6 +6,7 @@ import { ClientEvents, ClientUpdatedEvent } from '../clients/events'
 import { ClientService } from '../clients/service'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
+import { ProviderEvents, ProviderUpdatedEvent } from '../providers/events'
 import { ProviderService } from '../providers/service'
 import { InstanceService } from './service'
 
@@ -27,6 +28,7 @@ export class InstanceInvalidator {
     this.conduits.events.on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
     this.conduits.events.on(ConduitEvents.Updated, this.onConduitUpdated.bind(this))
     this.clients.events.on(ClientEvents.Updated, this.onClientUpdated.bind(this))
+    this.providers.events.on(ProviderEvents.Updated, this.onProviderUpdated.bind(this))
   }
 
   private async onConduitCreated(conduitId: uuid) {
@@ -69,11 +71,19 @@ export class InstanceInvalidator {
     }
 
     const oldProvider = await this.providers.getById(oldClient.providerId)
-    if (oldProvider?.sandbox) {
+    if (!oldProvider || oldProvider?.sandbox) {
       return
     }
 
     const conduits = await this.conduits.listByProvider(oldClient.providerId)
+    for (const conduit of conduits) {
+      this.cache.del(conduit.id, true)
+    }
+  }
+
+  private async onProviderUpdated({ providerId, oldProvider }: ProviderUpdatedEvent) {
+    const conduits = await this.conduits.listByProvider(providerId)
+
     for (const conduit of conduits) {
       this.cache.del(conduit.id, true)
     }

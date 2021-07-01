@@ -1,20 +1,26 @@
-import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
+import { ProviderEmitter, ProviderEvents, ProviderWatcher } from './events'
 import { ProviderTable } from './table'
 import { Provider } from './types'
 
 export class ProviderService extends Service {
+  get events(): ProviderWatcher {
+    return this.emitter
+  }
+
+  private emitter: ProviderEmitter
   private table: ProviderTable
   private cacheById!: ServerCache<uuid, Provider>
   private cacheByName!: ServerCache<string, Provider>
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
+    this.emitter = new ProviderEmitter()
     this.table = new ProviderTable()
   }
 
@@ -76,21 +82,23 @@ export class ProviderService extends Service {
   }
 
   async updateSandbox(id: uuid, sandbox: boolean) {
-    const provider = (await this.getById(id))!
-
-    await this.query().where({ id }).update({ sandbox })
+    const oldProvider = (await this.getById(id))!
 
     this.cacheById.del(id, true)
-    this.cacheByName.del(provider.name, true)
+    this.cacheByName.del(oldProvider.name, true)
+
+    await this.query().where({ id }).update({ sandbox })
+    await this.emitter.emit(ProviderEvents.Updated, { providerId: id, oldProvider })
   }
 
   async updateName(id: uuid, name: string) {
-    const provider = (await this.getById(id))!
-
-    await this.query().where({ id }).update({ name })
+    const oldProvider = (await this.getById(id))!
 
     this.cacheById.del(id, true)
-    this.cacheByName.del(provider.name, true)
+    this.cacheByName.del(oldProvider.name, true)
+
+    await this.query().where({ id }).update({ name })
+    await this.emitter.emit(ProviderEvents.Updated, { providerId: id, oldProvider })
   }
 
   private query() {
