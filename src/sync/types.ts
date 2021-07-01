@@ -1,26 +1,29 @@
+import { uuid } from '../base/types'
+
 export interface SyncRequest {
-  providerName: string
-  conduits?: SyncConduits
-  clientId?: string
-  clientToken?: string
+  channels?: SyncChannels
   webhooks?: SyncWebhook[]
+  id?: uuid
+  token?: string
+  name?: string
 }
 
 export interface SyncResult {
-  providerName: string
-  clientId: string
-  clientToken?: string
+  id: uuid
+  token: uuid
+  webhooks: SyncWebhook[]
 }
 
 export interface SyncSandboxRequest {
   providerName: string
-  conduits?: SyncConduits
+  conduits?: SyncChannels
 }
 
-export interface SyncConduits {
+export interface SyncChannels {
   [channel: string]: any
 }
 
 export interface SyncWebhook {
   url: string
+  token?: string
 }

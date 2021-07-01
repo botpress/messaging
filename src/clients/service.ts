@@ -120,10 +120,6 @@ export class ClientService extends Service {
     await this.emitter.emit(ClientEvents.Updated, { clientId: id, oldClient })
   }
 
-  async listByProviderId(providerId: uuid): Promise<Client[]> {
-    return this.query().where({ providerId })
-  }
-
   private query() {
     return this.db.knex(this.table.id)
   }

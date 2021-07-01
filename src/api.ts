@@ -17,7 +17,7 @@ export class Api {
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
-    this.syncs = new SyncApi(this.router, this.app.syncs)
+    this.syncs = new SyncApi(this.router, this.app.config, this.app.syncs, this.app.clients)
     this.chat = new ChatApi(this.router, this.app.clients, this.app.channels, this.app.conduits, this.app.instances)
     this.conversations = new ConversationApi(this.router, this.app.clients, this.app.conversations)
     this.messages = new MessageApi(this.router, this.app.clients, this.app.messages)

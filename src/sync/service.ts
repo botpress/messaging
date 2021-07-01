@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ChannelService } from '../channels/service'
@@ -9,7 +10,7 @@ import { ConfigService } from '../config/service'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
 import { WebhookService } from '../webhooks/service'
-import { SyncConduits, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook } from './types'
+import { SyncChannels, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook } from './types'
 
 export class SyncService extends Service {
   constructor(
@@ -30,18 +31,17 @@ export class SyncService extends Service {
   }
 
   async sync(req: SyncRequest, force: boolean): Promise<SyncResult> {
-    const provider = await this.syncProvider(req.providerName, false)
     const client = await this.syncClient(
-      req.clientId,
-      provider.id,
-      force ? req.clientId : undefined,
-      force ? req.clientToken : undefined
+      req.id,
+      force ? req.name : undefined,
+      force ? req.id : undefined,
+      force ? req.token : undefined
     )
 
-    await this.syncConduits(provider.id, req.conduits || {})
+    await this.syncConduits(client.providerId, req.channels || {})
     await this.syncWebhooks(client.id, req.webhooks || [])
 
-    return { providerName: provider.name, clientId: client.id, clientToken: client.token }
+    return { id: client.id, token: client.token || req.token!, webhooks: req.webhooks || [] }
   }
 
   async syncSandbox(req: SyncSandboxRequest) {
@@ -53,7 +53,7 @@ export class SyncService extends Service {
     let provider = await this.providers.getByName(name)
 
     if (!provider) {
-      provider = await this.providers.create(undefined, name, sandbox)
+      provider = await this.providers.create(name, sandbox)
     }
 
     if (provider.sandbox !== sandbox) {
@@ -63,7 +63,7 @@ export class SyncService extends Service {
     return provider
   }
 
-  private async syncConduits(providerId: uuid, conduits: SyncConduits) {
+  private async syncConduits(providerId: uuid, conduits: SyncChannels) {
     const oldConduits = [...(await this.conduits.listByProvider(providerId))]
 
     for (const [channel, config] of Object.entries(conduits)) {
@@ -94,29 +94,38 @@ export class SyncService extends Service {
 
   private async syncClient(
     clientId: uuid | undefined,
-    providerId: uuid,
+    forceProviderName?: string,
     forceClientId?: uuid,
     forceToken?: string
   ): Promise<Client & { token?: string }> {
     let client: Client | undefined = undefined
     let token: string | undefined = undefined
+    let provider: Provider | undefined = undefined
 
     if (clientId) {
       client = await this.clients.getById(clientId)
     }
 
     if (!client) {
-      const oldClients = await this.clients.listByProviderId(providerId)
-      for (const oldClient of oldClients) {
-        await this.clients.updateProvider(oldClient.id, null)
-      }
+      const clientId = forceClientId || uuidv4()
+      provider = await this.providers.create(clientId, false)
 
       token = forceToken || (await this.clients.generateToken())
-      client = await this.clients.create(providerId, token, forceClientId)
+      client = await this.clients.create(provider.id, token, clientId)
+    } else {
+      provider = await this.providers.getById(client.providerId)
+
+      if (!provider) {
+        provider = await this.providers.create(client.id, false)
+
+        await this.clients.updateProvider(client.id, provider.id)
+        client = (await this.clients.getById(client.id))!
+      }
     }
 
-    if (client.providerId !== providerId) {
-      await this.clients.updateProvider(client.id, client.providerId)
+    const targetName = forceProviderName || client.id
+    if (provider.name !== targetName) {
+      await this.providers.updateName(provider.id, targetName)
     }
 
     return { ...client, token }
