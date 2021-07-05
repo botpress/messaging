@@ -18,8 +18,10 @@
   },
   "sync": [
     {
-      "providerName": "test",
-      "conduits": {
+      "id": "96af5294-46f1-4a85-a17f-6863fa4d77d7",
+      "token": "test-token-123",
+      "namr": "test",
+      "channels": {
         "messenger": {
           "enabled": false,
           "appSecret": "",
@@ -65,8 +67,6 @@
           "token": ""
         }
       },
-      "clientId": "96af5294-46f1-4a85-a17f-6863fa4d77d7",
-      "clientToken": "test-token-123",
       "webhooks": []
     }
   ]
