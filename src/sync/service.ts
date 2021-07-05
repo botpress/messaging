@@ -45,8 +45,8 @@ export class SyncService extends Service {
   }
 
   async syncSandbox(req: SyncSandboxRequest) {
-    const provider = await this.syncProvider(req.providerName, true)
-    await this.syncConduits(provider.id, req.conduits || {})
+    const provider = await this.syncProvider(req.name, true)
+    await this.syncConduits(provider.id, req.channels || {})
   }
 
   private async syncProvider(name: string, sandbox: boolean): Promise<Provider> {

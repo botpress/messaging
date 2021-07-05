@@ -18,6 +18,16 @@
   },
   "sync": [
     {
+      "name": "sandbox",
+      "sandbox": true,
+      "channels": {
+        "telegram": {
+          "enabled": false,
+          "botToken": ""
+        }
+      }
+    },
+    {
       "id": "96af5294-46f1-4a85-a17f-6863fa4d77d7",
       "token": "test-token-123",
       "name": "test",
