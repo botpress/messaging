@@ -15,8 +15,8 @@ export interface SyncResult {
 }
 
 export interface SyncSandboxRequest {
-  providerName: string
-  conduits?: SyncChannels
+  name: string
+  channels?: SyncChannels
 }
 
 export interface SyncChannels {
