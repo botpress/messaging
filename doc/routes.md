@@ -84,7 +84,23 @@ POST `/api/chat/reply/`
 
 ## Conversations
 
-Documentation coming
+POST `/api/conversations`
+
+- `userId`: Id of the user who owns this conversation
+
+Creates a new conversation
+
+GET `/api/conversations/:id`
+
+Gets a conversation by id
+
+GET `/api/conversations?userId=&limit=`
+
+Lists the conversations of a user
+
+GET `/api/conversations/:userId/recent`
+
+Gets the most recent conversation of a user
 
 ## Messages
 
