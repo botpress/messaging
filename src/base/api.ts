@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction, Router } from 'express'
+import { validate as validateUuid } from 'uuid'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
 
@@ -6,6 +7,12 @@ export abstract class BaseApi {
   constructor(protected router: Router) {}
 
   abstract setup(): Promise<void>
+
+  protected asyncMiddleware(fn: (req: ApiRequest, res: Response, next: NextFunction) => Promise<any>) {
+    return (req: ApiRequest, res: Response, next: NextFunction) => {
+      fn(req, res, next).catch(() => res.sendStatus(500))
+    }
+  }
 }
 
 export abstract class ClientScopedApi extends BaseApi {
@@ -14,17 +21,25 @@ export abstract class ClientScopedApi extends BaseApi {
   }
 
   async extractClient(req: ApiRequest, res: Response, next: NextFunction) {
-    const authorization = req.headers.authorization
-    const [_, auth] = authorization!.split(' ')
-    const [clientId, clientToken] = Buffer.from(auth, 'base64').toString('utf-8').split(':')
+    try {
+      const authorization = req.headers.authorization
+      const [_, auth] = authorization!.split(' ')
+      const [clientId, clientToken] = Buffer.from(auth, 'base64').toString('utf-8').split(':')
 
-    const client = await this.clients.getByIdAndToken(clientId, clientToken)
+      if (!validateUuid(clientId)) {
+        return res.sendStatus(403)
+      }
 
-    if (!client) {
+      const client = await this.clients.getByIdAndToken(clientId, clientToken)
+
+      if (!client) {
+        return res.sendStatus(403)
+      } else {
+        req.client = client
+        next()
+      }
+    } catch {
       return res.sendStatus(403)
-    } else {
-      req.client = client
-      next()
     }
   }
 }

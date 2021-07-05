@@ -4,6 +4,7 @@ import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { InstanceService } from '../instances/service'
+import { ChatReplySchema } from './schema'
 
 export class ChatApi extends ClientScopedApi {
   constructor(
@@ -19,14 +20,22 @@ export class ChatApi extends ClientScopedApi {
   async setup() {
     this.router.use('/chat', this.extractClient.bind(this))
 
-    this.router.post('/chat/reply', async (req: ApiRequest, res) => {
-      const { channel, conversationId, payload } = req.body
+    this.router.post(
+      '/chat/reply',
+      this.asyncMiddleware(async (req: ApiRequest, res) => {
+        const { error } = ChatReplySchema.validate(req.body)
+        if (error) {
+          return res.status(400).send(error.message)
+        }
 
-      const channelId = this.channels.getByName(channel).id
-      const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
-      await this.instances.send(conduit.id, conversationId, payload)
+        const { channel, conversationId, payload } = req.body
 
-      res.sendStatus(200)
-    })
+        const channelId = this.channels.getByName(channel).id
+        const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
+        await this.instances.send(conduit.id, conversationId, payload)
+
+        res.sendStatus(200)
+      })
+    )
   }
 }
