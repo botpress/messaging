@@ -102,13 +102,15 @@ export class ConversationService extends Service {
         createdOn: row.createdOn
       })
 
-      const message = {
-        id: row.messageId,
-        conversationId: conversation.id,
-        authorId: row.authorId,
-        sentOn: this.db.getDate(row.sentOn),
-        payload: this.db.getJson(row.payload)
-      }
+      const message = row.messageId
+        ? {
+            id: row.messageId,
+            conversationId: conversation.id,
+            authorId: row.authorId,
+            sentOn: this.db.getDate(row.sentOn),
+            payload: this.db.getJson(row.payload)
+          }
+        : undefined
 
       return { ...conversation, lastMessage: message }
     })
