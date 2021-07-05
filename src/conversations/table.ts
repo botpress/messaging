@@ -9,7 +9,7 @@ export class ConversationTable extends Table {
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
     table.uuid('clientId').references('id').inTable('msg_clients')
-    table.uuid('userId').references('id').inTable('msg_users')
+    table.string('userId') //.references('id').inTable('msg_users')
     table.timestamp('createdOn')
     table.index(['userId', 'clientId'])
   }
