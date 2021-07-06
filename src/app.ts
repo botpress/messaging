@@ -69,7 +69,15 @@ export class App {
       this.mapping,
       this
     )
-    this.syncs = new SyncService(this.config, this.channels, this.providers, this.conduits, this.clients, this.webhooks)
+    this.syncs = new SyncService(
+      this.logger,
+      this.config,
+      this.channels,
+      this.providers,
+      this.conduits,
+      this.clients,
+      this.webhooks
+    )
   }
 
   async setup() {

@@ -7,13 +7,18 @@ import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
 import { ConfigService } from '../config/service'
+import { LoggerService } from '../logger/service'
+import { Logger } from '../logger/types'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
 import { WebhookService } from '../webhooks/service'
 import { SyncChannels, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook } from './types'
 
 export class SyncService extends Service {
+  private logger: Logger
+
   constructor(
+    private loggers: LoggerService,
     private config: ConfigService,
     private channels: ChannelService,
     private providers: ProviderService,
@@ -22,10 +27,21 @@ export class SyncService extends Service {
     private webhooks: WebhookService
   ) {
     super()
+    this.logger = this.loggers.root.sub('sync')
   }
 
   async setup() {
-    for (const req of this.config.current.sync || []) {
+    let config = this.config.current.sync
+
+    if (process.env.SYNC) {
+      try {
+        config = JSON.parse(process.env.SYNC) || {}
+      } catch {
+        this.logger.warn('SYNC is not valid json')
+      }
+    }
+
+    for (const req of config) {
       req.sandbox ? await this.syncSandbox(req) : await this.sync(req, true)
     }
   }
