@@ -3,6 +3,7 @@ import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
+import { ConversationService } from '../conversations/service'
 import { InstanceService } from '../instances/service'
 import { ChatReplySchema } from './schema'
 
@@ -12,7 +13,8 @@ export class ChatApi extends ClientScopedApi {
     clients: ClientService,
     private channels: ChannelService,
     private conduits: ConduitService,
-    private instances: InstanceService
+    private instances: InstanceService,
+    private conversations: ConversationService
   ) {
     super(router, clients)
   }
@@ -29,6 +31,13 @@ export class ChatApi extends ClientScopedApi {
         }
 
         const { channel, conversationId, payload } = req.body
+        const conversation = await this.conversations.get(conversationId)
+
+        if (!conversation) {
+          return res.sendStatus(400)
+        } else if (conversation.clientId !== req.client!.id) {
+          return res.sendStatus(403)
+        }
 
         const channelId = this.channels.getByName(channel).id
         const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
