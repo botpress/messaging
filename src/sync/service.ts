@@ -41,7 +41,7 @@ export class SyncService extends Service {
       }
     }
 
-    for (const req of config) {
+    for (const req of config || []) {
       req.sandbox ? await this.syncSandbox(req) : await this.sync(req, true)
     }
   }
