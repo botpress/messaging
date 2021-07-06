@@ -10,6 +10,7 @@ import { Conversation, RecentConversation } from './types'
 export class ConversationService extends Service {
   private table: ConversationTable
   private cache!: ServerCache<uuid, Conversation>
+  private cacheMostRecent!: ServerCache<uuid, Conversation>
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
@@ -18,6 +19,7 @@ export class ConversationService extends Service {
 
   async setup() {
     this.cache = await this.cachingService.newServerCache('cache_conversation_by_id')
+    this.cacheMostRecent = await this.cachingService.newServerCache('cache_conversation_most_recent_by_user_id')
 
     await this.db.registerTable(this.table)
   }
@@ -31,12 +33,17 @@ export class ConversationService extends Service {
     }
 
     await this.query().insert(this.serialize(conversation))
+    this.cache.set(conversation.id, conversation)
 
     return conversation
   }
 
   public async delete(id: uuid): Promise<number> {
+    const conversation = await this.get(id)
+
     this.cache.del(id, true)
+    this.cacheMostRecent.del(conversation!.userId, true)
+
     return this.query().where({ id }).del()
   }
 
@@ -59,7 +66,10 @@ export class ConversationService extends Service {
   }
 
   public async getMostRecent(clientId: uuid, userId: uuid): Promise<Conversation | undefined> {
-    // TODO: cache
+    const cached = this.cacheMostRecent.get(userId)
+    if (cached) {
+      return cached
+    }
 
     const query = this.queryRecents(clientId, userId).limit(1)
     const rows = await query
@@ -72,6 +82,8 @@ export class ConversationService extends Service {
         userId: row.userId,
         createdOn: row.createdOn
       })
+
+      this.cacheMostRecent.set(userId, conversation)
 
       return conversation
     }
@@ -114,6 +126,19 @@ export class ConversationService extends Service {
 
       return { ...conversation, lastMessage: message }
     })
+  }
+
+  public invalidateMostRecent(userId: uuid) {
+    this.cacheMostRecent.del(userId, true)
+  }
+
+  public async setMostRecent(userId: uuid, conversationId: uuid) {
+    const currentMostRecent = this.cacheMostRecent.peek(userId)
+
+    if (currentMostRecent?.id !== conversationId) {
+      const conversation = await this.get(conversationId)
+      this.cacheMostRecent.set(userId, conversation!)
+    }
   }
 
   private queryRecents(clientId: string, userId: string) {

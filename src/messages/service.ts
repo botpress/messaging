@@ -38,11 +38,19 @@ export class MessageService extends Service {
 
     await this.query().insert(this.serialize(message))
 
+    const conversation = await this.conversationService.get(conversationId)
+    await this.conversationService.setMostRecent(conversation!.userId, conversation!.id)
+
     return message
   }
 
   public async delete(id: uuid): Promise<number> {
+    const message = await this.get(id)
+    const conversation = await this.conversationService.get(message!.conversationId)
+
     this.cache.del(id, true)
+    this.conversationService.invalidateMostRecent(conversation!.userId)
+
     return this.query().where({ id }).del()
   }
 
@@ -84,6 +92,9 @@ export class MessageService extends Service {
     if (deletedIds.length) {
       await this.query().where({ conversationId }).del()
       deletedIds.forEach((x) => this.cache.del(x, true))
+
+      const conversation = await this.conversationService.get(conversationId)
+      this.conversationService.invalidateMostRecent(conversation!.userId)
     }
 
     return deletedIds.length
