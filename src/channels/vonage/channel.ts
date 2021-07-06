@@ -20,18 +20,24 @@ export class VonageChannel extends Channel<VonageConduit> {
   async setupRoutes() {
     this.router.use(express.json())
 
-    this.router.use('/inbound', async (req, res) => {
-      const conduit = res.locals.conduit as VonageConduit
+    this.router.use(
+      '/inbound',
+      this.asyncMiddleware(async (req, res) => {
+        const conduit = res.locals.conduit as VonageConduit
 
-      if (this.validate(conduit, <any>req)) {
-        await this.app.instances.receive(conduit.conduitId, req.body)
-      }
+        if (this.validate(conduit, <any>req)) {
+          await this.app.instances.receive(conduit.conduitId, req.body)
+        }
 
-      res.sendStatus(200)
-    })
-    this.router.use('/status', async (req, res) => {
-      res.sendStatus(200)
-    })
+        res.sendStatus(200)
+      })
+    )
+    this.router.use(
+      '/status',
+      this.asyncMiddleware(async (req, res) => {
+        res.sendStatus(200)
+      })
+    )
 
     this.printWebhook('inbound')
     this.printWebhook('status')

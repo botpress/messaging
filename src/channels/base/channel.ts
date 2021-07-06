@@ -1,5 +1,5 @@
 import clc from 'cli-color'
-import { Router } from 'express'
+import { NextFunction, Request, Response, Router } from 'express'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
@@ -28,13 +28,13 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
 
     root.use(
       this.getRoute(),
-      async (req, res, next) => {
+      this.asyncMiddleware(async (req, res, next) => {
         const { provider } = req.params
         const providerId = (await this.app.providers.getByName(provider))!.id
         const conduit = (await this.app.conduits.getByProviderAndChannel(providerId, this.id))!
         res.locals.conduit = await this.app.instances.get(conduit.id)
         next()
-      },
+      }),
       this.router
     )
 
@@ -43,6 +43,15 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
 
   getRoute(path?: string) {
     return `/webhooks/:provider/${this.name}${path ? `/${path}` : ''}`
+  }
+
+  protected asyncMiddleware(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) {
+    return (req: Request, res: Response, next: NextFunction) => {
+      fn(req, res, next).catch((e) => {
+        this.logger.error(`Error occured calling route ${req.originalUrl}:`, e)
+        return res.sendStatus(500)
+      })
+    }
   }
 
   protected printWebhook(route?: string) {

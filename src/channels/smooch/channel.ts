@@ -19,19 +19,22 @@ export class SmoochChannel extends Channel<SmoochConduit> {
   async setupRoutes() {
     this.router.use(express.json())
 
-    this.router.post('/', async (req, res) => {
-      const conduit = res.locals.conduit as SmoochConduit
+    this.router.post(
+      '/',
+      this.asyncMiddleware(async (req, res) => {
+        const conduit = res.locals.conduit as SmoochConduit
 
-      if (req.headers['x-api-key'] === conduit.config.webhookSecret) {
-        const body = req.body as SmoochPayload
-        for (const message of body.messages) {
-          await this.app.instances.receive(conduit.conduitId, { context: body, message })
+        if (req.headers['x-api-key'] === conduit.config.webhookSecret) {
+          const body = req.body as SmoochPayload
+          for (const message of body.messages) {
+            await this.app.instances.receive(conduit.conduitId, { context: body, message })
+          }
+          res.sendStatus(200)
+        } else {
+          res.status(401).send('Auth token invalid')
         }
-        res.sendStatus(200)
-      } else {
-        res.status(401).send('Auth token invalid')
-      }
-    })
+      })
+    )
 
     this.printWebhook()
   }

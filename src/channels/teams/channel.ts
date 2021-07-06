@@ -15,13 +15,16 @@ export class TeamsChannel extends Channel<TeamsConduit> {
   }
 
   async setupRoutes() {
-    this.router.use('/', async (req, res) => {
-      const conduit = res.locals.conduit as TeamsConduit
+    this.router.use(
+      '/',
+      this.asyncMiddleware(async (req, res) => {
+        const conduit = res.locals.conduit as TeamsConduit
 
-      await conduit.adapter.processActivity(req, <any>res, async (turnContext) => {
-        await this.app.instances.receive(conduit.conduitId, turnContext)
+        await conduit.adapter.processActivity(req, <any>res, async (turnContext) => {
+          await this.app.instances.receive(conduit.conduitId, turnContext)
+        })
       })
-    })
+    )
 
     this.printWebhook()
   }

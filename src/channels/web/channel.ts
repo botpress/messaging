@@ -16,14 +16,17 @@ export class WebChannel extends Channel<WebConduit> {
 
   async setupRoutes() {
     // TODO: does this make sense?
-    this.router.post('/', async (req, res) => {
-      const conduit = res.locals.conduit as WebConduit
+    this.router.post(
+      '/',
+      this.asyncMiddleware(async (req, res) => {
+        const conduit = res.locals.conduit as WebConduit
 
-      // TODO: validation
-      await conduit.receive(req.body)
+        // TODO: validation
+        await conduit.receive(req.body)
 
-      res.sendStatus(200)
-    })
+        res.sendStatus(200)
+      })
+    )
 
     this.printWebhook()
   }

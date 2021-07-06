@@ -15,16 +15,22 @@ export class SlackChannel extends Channel<SlackConduit> {
   }
 
   async setupRoutes() {
-    this.router.use('/interactive', (req, res) => {
-      const conduit = res.locals.conduit as SlackConduit
-      conduit.interactiveListener(req, res)
-    })
+    this.router.use(
+      '/interactive',
+      this.asyncMiddleware(async (req, res) => {
+        const conduit = res.locals.conduit as SlackConduit
+        conduit.interactiveListener(req, res)
+      })
+    )
     this.printWebhook('interactive')
 
-    this.router.use('/events', (req, res) => {
-      const conduit = res.locals.conduit as SlackConduit
-      conduit.eventsListener(req, res)
-    })
+    this.router.use(
+      '/events',
+      this.asyncMiddleware(async (req, res) => {
+        const conduit = res.locals.conduit as SlackConduit
+        conduit.eventsListener(req, res)
+      })
+    )
     this.printWebhook('events')
   }
 }
