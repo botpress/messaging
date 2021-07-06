@@ -5,12 +5,14 @@ import { ChatApi } from './chat/api'
 import { ConversationApi } from './conversations/api'
 import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
+import { UserApi } from './users/api'
 
 export class Api {
   private router: Router
 
   syncs: SyncApi
   chat: ChatApi
+  users: UserApi
   conversations: ConversationApi
   messages: MessageApi
   channels: ChannelApi
@@ -26,6 +28,7 @@ export class Api {
       this.app.instances,
       this.app.conversations
     )
+    this.users = new UserApi(this.router, this.app.clients, this.app.users)
     this.conversations = new ConversationApi(this.router, this.app.clients, this.app.conversations)
     this.messages = new MessageApi(this.router, this.app.clients, this.app.conversations, this.app.messages)
     this.channels = new ChannelApi(this.root, this.app)
@@ -40,6 +43,7 @@ export class Api {
 
     await this.syncs.setup()
     await this.chat.setup()
+    await this.users.setup()
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()

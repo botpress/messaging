@@ -9,7 +9,7 @@ export class MessageTable extends Table {
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
     table.uuid('conversationId').references('id').inTable('msg_conversations').notNullable().onDelete('cascade')
-    table.string('authorId').notNullable() // .references('id').inTable('msg_users').notNullable()
+    table.string('authorId').references('id').inTable('msg_users').nullable()
     table.timestamp('sentOn').notNullable()
     table.jsonb('payload').notNullable()
     table.index(['conversationId', 'sentOn'])

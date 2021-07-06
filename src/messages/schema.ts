@@ -2,8 +2,7 @@ import Joi from 'joi'
 
 export const CreateMsgSchema = Joi.object({
   conversationId: Joi.string().guid().required(),
-  // TODO: should be uuid
-  authorId: Joi.string().optional(),
+  authorId: Joi.string().guid().optional(),
   payload: Joi.object().required()
 })
 

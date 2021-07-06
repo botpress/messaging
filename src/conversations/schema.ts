@@ -1,8 +1,7 @@
 import Joi from 'joi'
 
 export const CreateConvoSchema = Joi.object({
-  // TODO: should be uuid
-  userId: Joi.string().required()
+  userId: Joi.string().guid().required()
 })
 
 export const GetConvoSchema = Joi.object({
@@ -10,12 +9,10 @@ export const GetConvoSchema = Joi.object({
 })
 
 export const ListConvosSchema = Joi.object({
-  // TODO: should be uuid
-  userId: Joi.string().required(),
+  userId: Joi.string().guid().required(),
   limit: Joi.number().required()
 })
 
 export const RecentConvoSchema = Joi.object({
-  // TODO: should be uuid
-  userId: Joi.string().required()
+  userId: Joi.string().guid().required()
 })
