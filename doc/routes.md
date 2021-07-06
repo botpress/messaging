@@ -112,4 +112,30 @@ Gets the most recent conversation of a user
 
 ## Messages
 
-Documentation coming
+POST `/api/messages`
+
+Authorization: Basic clientId:clientToken
+
+- `conversationId`: Id of the conversation
+- `authorId`: Id of the writer of the message (null for bot)
+- `payload`: Content of the message
+
+Creates a new message
+
+GET `/api/messages/:id`
+
+Authorization: Basic clientId:clientToken
+
+Gets a message by id
+
+GET `/api/messages?conversationId=&limit=`
+
+Authorization: Basic clientId:clientToken
+
+List messages of a conversation
+
+DELETE `/api/messages?id=&conversationId=`
+
+Authorization: Basic clientId:clientToken
+
+Deletes messages. Can filter by id or by conversation id.
