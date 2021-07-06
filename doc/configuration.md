@@ -22,6 +22,7 @@ Environmnent variables have priority over settings configured in the `config.jso
 | CLUSTER_ENABLED   | redis.enabled       | This setting determines if redis is enabled or not. The other redis settings will have no effect if this value is set to false                                                                                                                                                                                                                                                                                                |
 | REDIS_URL         | redis.connection    | Connection string to a redis instance (ex: `redis://:your-password@127.0.0.1:6379`). If you want to configure redis for clustering, you can supply an array of connections instead (ex: `[{"host":"localhost","port":7004},{"host":"localhost","port":7001},{"host":"localhost","port":7002}]`)                                                                                                                               |
 | REDIS_OPTIONS     | redis.options       | Advances options for redis. Refer to the [ioredis documentation](https://github.com/luin/ioredis/blob/master/API.md) (ex: `{"password":"admin123", "connectTimeout": 20000})`                                                                                                                                                                                                                                                 |
+| SYNC              | sync                | Array of sync requests to be executed when the server starts. This can be used to configure sandboxes, or test clients                                                                                                                                                                                                                                                                                                        |
 | SKIP_LOAD_CONFIG  | none                | If set to `true`, the server will skip loading any config from the `config.json` file                                                                                                                                                                                                                                                                                                                                         |
 | SKIP_LOAD_ENV     | none                | If set to `true`, the server will skip loading any config from the `.env` file                                                                                                                                                                                                                                                                                                                                                |
 
@@ -45,7 +46,36 @@ Environmnent variables have priority over settings configured in the `config.jso
     "enabled": true,
     "connection": "redis://:my-redis-password@127.0.0.1:6379",
     "options": { "connectTimeout": 20000 }
-  }
+  },
+  "sync": [
+    {
+      "name": "sandbox",
+      "sandbox": true,
+      "channels": {
+        "telegram": {
+          "enabled": true,
+          "botToken": "my-bot-token"
+        }
+      }
+    },
+    {
+      "id": "96af5294-46f1-4a85-a17f-6863fa4d77d7",
+      "token": "test-token-123",
+      "name": "test",
+      "channels": {
+        "twilio": {
+          "enabled": true,
+          "accountSID": "my-account-sid",
+          "authToken": "my-auth-token"
+        },
+        "telegram": {
+          "enabled": true,
+          "botToken": "my-bot-token"
+        }
+      },
+      "webhooks": []
+    }
+  ]
 }
 ```
 
@@ -62,4 +92,5 @@ ENCRYPTION_KEY=this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w=
 CLUSTER_ENABLED=true
 REDIS_URL=redis://:my-redis-password@127.0.0.1:6379
 REDIS_OPTIONS={"connectTimeout":20000}
+SYNC=[{"name":"sandbox","sandbox":true,"channels":{"telegram":{"enabled":true,"botToken":"my-bot-token"}}},{"id":"96af5294-46f1-4a85-a17f-6863fa4d77d7","token":"test-token-123","name":"test","channels":{"twilio":{"enabled":true,"accountSID":"my-account-sid","authToken":"my-auth-token"},"telegram":{"enabled":true,"botToken":"my-bot-token"}},"webhooks":[]}]
 ```
