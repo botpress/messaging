@@ -82,6 +82,14 @@ POST `/api/chat/reply/`
 - `conversationId`: Id of conversation to send the message to
 - `payload`: Content of the message to send (ex: `{ "type": "text", "text": "Hello!" }`)
 
+## Users
+
+POST `/api/users`
+
+Authorization: Basic clientId:clientToken
+
+Creates a new users
+
 ## Conversations
 
 POST `/api/conversations`
