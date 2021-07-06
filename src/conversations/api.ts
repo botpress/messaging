@@ -74,7 +74,10 @@ export class ConversationApi extends ClientScopedApi {
         }
 
         const { userId } = req.params
-        const conversation = await this.conversations.getMostRecent(req.client!.id, userId)
+        let conversation = await this.conversations.getMostRecent(req.client!.id, userId)
+        if (!conversation) {
+          conversation = await this.conversations.create(req.client!.id, userId)
+        }
 
         res.send(conversation)
       })
