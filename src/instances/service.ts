@@ -101,7 +101,7 @@ export class InstanceService extends Service {
     const instance = await this.get(conduitId)
     await instance.sendToEndpoint(endpoint, payload)
 
-    const message = await this.messageService.create(conversationId, payload, conversation!.userId)
+    const message = await this.messageService.create(conversationId, conversation!.userId, payload)
 
     instance.loggerOut.debug('Sending message', {
       clientId: conversation!.clientId,
@@ -125,7 +125,7 @@ export class InstanceService extends Service {
     }
 
     const { userId, conversationId } = await this.mappingService.getMapping(clientId, conduit.channelId, endpoint)
-    const message = await this.messageService.create(conversationId, endpoint.content, userId)
+    const message = await this.messageService.create(conversationId, userId, endpoint.content)
 
     const post = {
       client: { id: clientId },
