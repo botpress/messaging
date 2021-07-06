@@ -7,9 +7,9 @@ export class UsermapTable extends Table {
   }
 
   create(table: Knex.CreateTableBuilder) {
-    table.uuid('tunnelId').references('id').inTable('msg_tunnels')
-    table.uuid('userId').references('id').inTable('msg_users')
-    table.uuid('senderId').references('id').inTable('msg_senders')
+    table.uuid('tunnelId').references('id').inTable('msg_tunnels').notNullable()
+    table.uuid('userId').references('id').inTable('msg_users').notNullable()
+    table.uuid('senderId').references('id').inTable('msg_senders').notNullable()
     table.unique(['tunnelId', 'userId'])
     table.unique(['tunnelId', 'senderId'])
   }

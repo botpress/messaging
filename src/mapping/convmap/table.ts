@@ -7,9 +7,9 @@ export class ConvmapTable extends Table {
   }
 
   create(table: Knex.CreateTableBuilder) {
-    table.uuid('tunnelId').references('id').inTable('msg_tunnels')
-    table.uuid('conversationId').references('id').inTable('msg_conversations')
-    table.uuid('threadId').references('id').inTable('msg_threads')
+    table.uuid('tunnelId').references('id').inTable('msg_tunnels').notNullable()
+    table.uuid('conversationId').references('id').inTable('msg_conversations').notNullable()
+    table.uuid('threadId').references('id').inTable('msg_threads').notNullable()
     table.unique(['tunnelId', 'conversationId'])
     table.unique(['tunnelId', 'threadId'])
   }

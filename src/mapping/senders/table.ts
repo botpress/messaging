@@ -8,8 +8,8 @@ export class SenderTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('identityId').references('id').inTable('msg_identities')
-    table.string('name')
+    table.uuid('identityId').references('id').inTable('msg_identities').notNullable()
+    table.string('name').notNullable()
     table.unique(['identityId', 'name'])
   }
 }

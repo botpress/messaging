@@ -8,7 +8,7 @@ export class ProviderTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.string('name').unique()
-    table.boolean('sandbox')
+    table.string('name').unique().notNullable()
+    table.boolean('sandbox').notNullable()
   }
 }

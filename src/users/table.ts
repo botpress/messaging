@@ -8,6 +8,6 @@ export class UserTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('clientId').references('id').inTable('msg_clients')
+    table.uuid('clientId').references('id').inTable('msg_clients').notNullable()
   }
 }

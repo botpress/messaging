@@ -8,8 +8,8 @@ export class TunnelTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('clientId').references('id').inTable('msg_clients')
-    table.uuid('channelId').references('id').inTable('msg_channels')
+    table.uuid('clientId').references('id').inTable('msg_clients').notNullable()
+    table.uuid('channelId').references('id').inTable('msg_channels').notNullable()
     table.unique(['clientId', 'channelId'])
   }
 }

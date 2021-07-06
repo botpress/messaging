@@ -8,8 +8,8 @@ export class IdentityTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('tunnelId').references('id').inTable('msg_tunnels')
-    table.string('name')
+    table.uuid('tunnelId').references('id').inTable('msg_tunnels').notNullable()
+    table.string('name').notNullable()
     table.unique(['tunnelId', 'name'])
   }
 }

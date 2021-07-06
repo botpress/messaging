@@ -8,10 +8,10 @@ export class ConduitTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('providerId').references('id').inTable('msg_providers')
-    table.uuid('channelId').references('id').inTable('msg_channels')
-    table.timestamp('initialized')
-    table.text('config')
+    table.uuid('providerId').references('id').inTable('msg_providers').notNullable()
+    table.uuid('channelId').references('id').inTable('msg_channels').notNullable()
+    table.timestamp('initialized').nullable()
+    table.text('config').notNullable()
     table.unique(['providerId', 'channelId'])
     table.index(['initialized'])
     table.index(['channelId'])

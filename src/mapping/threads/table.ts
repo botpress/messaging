@@ -8,8 +8,8 @@ export class ThreadTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('senderId').references('id').inTable('msg_senders')
-    table.string('name')
+    table.uuid('senderId').references('id').inTable('msg_senders').notNullable()
+    table.string('name').notNullable()
     table.unique(['senderId', 'name'])
   }
 }
