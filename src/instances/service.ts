@@ -12,6 +12,8 @@ import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConfigService } from '../config/service'
 import { ConversationService } from '../conversations/service'
+import { LoggerService } from '../logger/service'
+import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
@@ -25,8 +27,10 @@ export class InstanceService extends Service {
   private monitoring: InstanceMonitoring
   private sandbox: InstanceSandbox
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
+  private logger: Logger
 
   constructor(
+    private loggerService: LoggerService,
     private configService: ConfigService,
     private cachingService: CachingService,
     private channelService: ChannelService,
@@ -49,6 +53,7 @@ export class InstanceService extends Service {
     )
     this.monitoring = new InstanceMonitoring(this.channelService, this.conduitService, this)
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
+    this.logger = this.loggerService.root.sub('instances')
   }
 
   async setup() {
@@ -65,8 +70,14 @@ export class InstanceService extends Service {
   }
 
   async initialize(conduitId: uuid) {
-    const instance = await this.get(conduitId)
-    await instance.initialize()
+    try {
+      const instance = await this.get(conduitId)
+      await instance.initialize()
+    } catch {
+      this.logger.error('Error trying to initialize conduit')
+      this.cache.del(conduitId)
+      return
+    }
 
     await this.conduitService.updateInitialized(conduitId)
   }
