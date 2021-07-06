@@ -12,56 +12,72 @@ export class ConversationApi extends ClientScopedApi {
   async setup() {
     this.router.use('/conversations', this.extractClient.bind(this))
 
-    this.router.post('/conversations', async (req: ApiRequest, res) => {
-      const { error } = CreateConvoSchema.validate(req.body)
-      if (error) {
-        return res.status(400).send(error.message)
-      }
+    this.router.post(
+      '/conversations',
+      this.asyncMiddleware(async (req: ApiRequest, res) => {
+        const { error } = CreateConvoSchema.validate(req.body)
+        if (error) {
+          return res.status(400).send(error.message)
+        }
 
-      const { userId } = req.body
-      const conversation = await this.conversations.create(req.client!.id, userId)
+        const { userId } = req.body
+        const conversation = await this.conversations.create(req.client!.id, userId)
 
-      res.send(conversation)
-    })
+        res.send(conversation)
+      })
+    )
 
-    this.router.get('/conversations/:id', async (req: ApiRequest, res) => {
-      const { error } = GetConvoSchema.validate(req.params)
-      if (error) {
-        return res.status(400).send(error.message)
-      }
+    this.router.get(
+      '/conversations/:id',
+      this.asyncMiddleware(async (req: ApiRequest, res) => {
+        const { error } = GetConvoSchema.validate(req.params)
+        if (error) {
+          return res.status(400).send(error.message)
+        }
 
-      const { id } = req.params
-      const conversation = await this.conversations.get(id)
+        const { id } = req.params
+        const conversation = await this.conversations.get(id)
 
-      if (conversation && conversation.clientId !== req.client!.id) {
-        return res.sendStatus(403)
-      }
+        if (conversation && conversation.clientId !== req.client!.id) {
+          return res.sendStatus(403)
+        }
 
-      res.send(conversation)
-    })
+        res.send(conversation)
+      })
+    )
 
-    this.router.get('/conversations/', async (req: ApiRequest, res) => {
-      const { error } = ListConvosSchema.validate(req.query)
-      if (error) {
-        return res.status(400).send(error.message)
-      }
+    this.router.get(
+      '/conversations/',
+      this.asyncMiddleware(async (req: ApiRequest, res) => {
+        const { error } = ListConvosSchema.validate(req.query)
+        if (error) {
+          return res.status(400).send(error.message)
+        }
 
-      const { userId, limit } = req.query
-      const conversations = await this.conversations.listByUserId(req.client!.id, userId as string, +(limit as string))
+        const { userId, limit } = req.query
+        const conversations = await this.conversations.listByUserId(
+          req.client!.id,
+          userId as string,
+          +(limit as string)
+        )
 
-      res.send(conversations)
-    })
+        res.send(conversations)
+      })
+    )
 
-    this.router.get('/conversations/:userId/recent', async (req: ApiRequest, res) => {
-      const { error } = RecentConvoSchema.validate(req.params)
-      if (error) {
-        return res.status(400).send(error.message)
-      }
+    this.router.get(
+      '/conversations/:userId/recent',
+      this.asyncMiddleware(async (req: ApiRequest, res) => {
+        const { error } = RecentConvoSchema.validate(req.params)
+        if (error) {
+          return res.status(400).send(error.message)
+        }
 
-      const { userId } = req.params
-      const conversation = await this.conversations.getMostRecent(req.client!.id, userId)
+        const { userId } = req.params
+        const conversation = await this.conversations.getMostRecent(req.client!.id, userId)
 
-      res.send(conversation)
-    })
+        res.send(conversation)
+      })
+    )
   }
 }
