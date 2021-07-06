@@ -2,15 +2,21 @@ import { Request, Response, NextFunction, Router } from 'express'
 import { validate as validateUuid } from 'uuid'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
+import { Logger } from '../logger/types'
 
 export abstract class BaseApi {
+  private logger = new Logger('API')
+
   constructor(protected router: Router) {}
 
   abstract setup(): Promise<void>
 
   protected asyncMiddleware(fn: (req: ApiRequest, res: Response, next: NextFunction) => Promise<any>) {
     return (req: ApiRequest, res: Response, next: NextFunction) => {
-      fn(req, res, next).catch(() => res.sendStatus(500))
+      fn(req, res, next).catch((e) => {
+        this.logger.error(`Error occured calling route ${req.originalUrl}:`, e)
+        return res.sendStatus(500)
+      })
     }
   }
 }

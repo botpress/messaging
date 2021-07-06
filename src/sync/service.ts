@@ -39,9 +39,9 @@ export class SyncService extends Service {
     )
 
     await this.syncConduits(client.providerId, req.channels || {})
-    await this.syncWebhooks(client.id, req.webhooks || [])
+    const webhooks = await this.syncWebhooks(client.id, req.webhooks || [])
 
-    return { id: client.id, token: client.token || req.token!, webhooks: req.webhooks || [] }
+    return { id: client.id, token: client.token || req.token!, webhooks }
   }
 
   async syncSandbox(req: SyncSandboxRequest) {
@@ -131,15 +131,20 @@ export class SyncService extends Service {
     return { ...client, token }
   }
 
-  private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]) {
+  private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]): Promise<SyncWebhook[]> {
+    const webhooksWithTokens: SyncWebhook[] = []
     const oldWebhooks = [...(await this.webhooks.list(clientId))]
 
     for (const webhook of webhooks) {
       const oldWebhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
 
       if (oldWebhookIndex < 0) {
-        await this.webhooks.create(clientId, webhook.url)
+        const token = await this.webhooks.generateToken()
+        const newToken = await this.webhooks.create(clientId, token, webhook.url)
+        webhooksWithTokens.push({ url: newToken.url, token: newToken.token })
       } else {
+        const oldWebhook = oldWebhooks[oldWebhookIndex]
+        webhooksWithTokens.push({ url: oldWebhook.url, token: oldWebhook.token })
         oldWebhooks.splice(oldWebhookIndex, 1)
       }
     }
@@ -147,5 +152,7 @@ export class SyncService extends Service {
     for (const unusedWebhook of oldWebhooks) {
       await this.webhooks.delete(unusedWebhook.id)
     }
+
+    return webhooksWithTokens
   }
 }

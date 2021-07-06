@@ -26,7 +26,7 @@ export class CryptoService extends Service {
     return bcrypt.compare(plainText, hash)
   }
 
-  async encrypt(text: string) {
+  encrypt(text: string) {
     if (!this.key) {
       return text
     }
@@ -40,7 +40,7 @@ export class CryptoService extends Service {
     return `${iv.toString('base64')}$${encrypted.toString('base64')}`
   }
 
-  async decrypt(encrypted: string) {
+  decrypt(encrypted: string) {
     if (!this.key) {
       return encrypted
     }

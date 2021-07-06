@@ -48,7 +48,7 @@ export class App {
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching)
-    this.webhooks = new WebhookService(this.database, this.caching)
+    this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching)
     this.users = new UserService(this.database)

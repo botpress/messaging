@@ -47,7 +47,7 @@ export class ConduitService extends Service {
       initialized: undefined
     }
 
-    await this.query().insert(await this.serialize(conduit))
+    await this.query().insert(this.serialize(conduit))
     await this.emitter.emit(ConduitEvents.Created, conduit.id)
 
     return conduit
@@ -94,7 +94,7 @@ export class ConduitService extends Service {
     const rows = await this.query().where({ id })
 
     if (rows?.length) {
-      const conduit = await this.deserialize(rows[0])
+      const conduit = this.deserialize(rows[0])
       this.cacheById.set(id, conduit)
       return conduit
     }
@@ -111,7 +111,7 @@ export class ConduitService extends Service {
     const rows = await this.query().where({ providerId, channelId })
 
     if (rows?.length) {
-      const conduit = await this.deserialize(rows[0])
+      const conduit = this.deserialize(rows[0])
       this.cacheByProviderAndChannel.set(providerId, channelId, conduit)
       return conduit
     }
@@ -144,19 +144,19 @@ export class ConduitService extends Service {
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
   }
 
-  private async serialize(conduit: Partial<Conduit>) {
+  private serialize(conduit: Partial<Conduit>) {
     return {
       ...conduit,
       initialized: this.db.setDate(conduit.initialized),
-      config: await this.cryptoService.encrypt(JSON.stringify(conduit.config || {}))
+      config: this.cryptoService.encrypt(JSON.stringify(conduit.config || {}))
     }
   }
 
-  private async deserialize(conduit: any): Promise<Conduit> {
+  private deserialize(conduit: any): Conduit {
     return {
       ...conduit,
       initialized: this.db.getDate(conduit.initialized),
-      config: JSON.parse(await this.cryptoService.decrypt(conduit.config))
+      config: JSON.parse(this.cryptoService.decrypt(conduit.config))
     }
   }
 

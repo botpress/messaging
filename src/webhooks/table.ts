@@ -10,5 +10,6 @@ export class WebhookTable extends Table {
     table.uuid('id').primary()
     table.uuid('clientId').references('id').inTable('msg_clients').notNullable()
     table.string('url').notNullable()
+    table.string('token').notNullable()
   }
 }
