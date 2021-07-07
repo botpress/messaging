@@ -1,6 +1,6 @@
 # Botpress Messaging
 
-The botpress messaging server provides a standarized messaging api to communicate with the following channels :
+The botpress messaging server provides a standardized messaging api to communicate with the following channels :
 
 - Messenger
 - Slack
