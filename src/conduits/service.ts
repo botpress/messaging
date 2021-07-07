@@ -127,7 +127,7 @@ export class ConduitService extends Service {
   async listOutdated(tolerance: number, limit: number): Promise<Conduit[]> {
     const rows = await this.query()
       .select(['msg_conduits.id', 'providerId', 'channelId', 'initialized'])
-      .where({ initable: true })
+      .where({ initiable: true })
       .andWhere((k) => {
         return k
           .where('initialized', '<=', this.db.setDate(new Date(Date.now() - tolerance))!)

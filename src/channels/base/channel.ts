@@ -9,7 +9,7 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
 
-  get initable() {
+  get initiable() {
     return false
   }
 
@@ -48,7 +48,7 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   protected asyncMiddleware(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) {
     return (req: Request, res: Response, next: NextFunction) => {
       fn(req, res, next).catch((e) => {
-        this.logger.error(`Error occured calling route ${req.originalUrl}:`, e)
+        this.logger.error(`Error occurred calling route ${req.originalUrl}:`, e)
         return res.sendStatus(500)
       })
     }
