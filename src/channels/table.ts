@@ -10,6 +10,6 @@ export class ChannelTable extends Table {
     table.uuid('id').primary()
     table.string('name').unique().notNullable()
     table.boolean('lazy').notNullable()
-    table.boolean('initable').notNullable()
+    table.boolean('initiable').notNullable()
   }
 }

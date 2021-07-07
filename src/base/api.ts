@@ -14,7 +14,7 @@ export abstract class BaseApi {
   protected asyncMiddleware(fn: (req: ApiRequest, res: Response, next: NextFunction) => Promise<any>) {
     return (req: ApiRequest, res: Response, next: NextFunction) => {
       fn(req, res, next).catch((e) => {
-        this.logger.error(`Error occured calling route ${req.originalUrl}:`, e)
+        this.logger.error(`Error occurred calling route ${req.originalUrl}:`, e)
         return res.sendStatus(500)
       })
     }

@@ -79,7 +79,7 @@ export class ChannelService extends Service {
   }
 
   private async createInDb(channel: Channel<ConduitInstance<any, any>>) {
-    await this.query().insert({ id: channel.id, name: channel.name, lazy: channel.lazy, initable: channel.initable })
+    await this.query().insert({ id: channel.id, name: channel.name, lazy: channel.lazy, initiable: channel.initiable })
   }
 
   private query() {
