@@ -9,3 +9,10 @@ bin/
 doc
 res
 scripts
+.editorconfig
+.eslintrc.js
+.gitignore
+.prettierrc
+api.rest
+CHANGELOG.md
+README.md
