@@ -78,7 +78,7 @@ export class ConversationService extends Service {
       const row = rows[0]
       const conversation = this.deserialize({
         id: row.id,
-        client: row.clientId,
+        clientId: row.clientId,
         userId: row.userId,
         createdOn: row.createdOn
       })
@@ -109,7 +109,7 @@ export class ConversationService extends Service {
     return (await query).map((row: any) => {
       const conversation = this.deserialize({
         id: row.id,
-        client: row.clientId,
+        clientId: row.clientId,
         userId: row.userId,
         createdOn: row.createdOn
       })
