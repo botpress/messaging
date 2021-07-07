@@ -64,6 +64,25 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     }
   }
 
+  protected getKvsKey(identity: string, sender: string) {
+    return `${this.conduitId}_${identity}_${sender}`
+  }
+
+  async prepareIndexResponse(identity: string, sender: string, options: any) {
+    await this.app.kvs.set(this.getKvsKey(identity, sender), options)
+  }
+
+  async handleIndexResponse(index: number, identity: string, sender: string): Promise<undefined | string> {
+    if (index) {
+      const key = this.getKvsKey(identity, sender)
+      const options = await this.app.kvs.get(key)
+
+      await this.app.kvs.delete(key)
+
+      return options?.[index - 1]?.value
+    }
+  }
+
   async initialize() {}
 
   async destroy() {}
