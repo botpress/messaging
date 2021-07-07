@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging",
-  "version": "0.0.10",
+  "version": "0.0.9",
   "main": "index.ts",
   "license": "MIT",
   "bin": "./dist/index.js",
