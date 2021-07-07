@@ -2,11 +2,11 @@
 
 ## The `config.json` file
 
-You can configure the server using a `config.json` file. The file must be located inside a `config` folder next to the executable. The `config.json` file is more convenient for local development, and is not necessary to use in production, as all of its configurations can also be achieved with enviornmnent variables.
+You can configure the server using a `config.json` file. The file must be located inside a `config` folder next to the executable. The `config.json` file is more convenient for local development, and is not necessary to use in production, as all of its configurations can also be achieved with environment variables.
 
-## Environmnent variables
+## Environment variables
 
-Environmnent variables have priority over settings configured in the `config.json` file. Every setting avaible in the `config.json` file is also avaible as an environmnent variable so it's not necessary to load the `config.json` (in fact the file can be deleted). An `.env` file in the same directory as the executable can be used to load environment variables.
+Environment variables have priority over settings configured in the `config.json` file. Every setting available in the `config.json` file is also available as an environment variable so it's not necessary to load the `config.json` (in fact the file can be deleted). An `.env` file in the same directory as the executable can be used to load environment variables.
 
 ## List of configurations
 
@@ -20,7 +20,7 @@ Environmnent variables have priority over settings configured in the `config.jso
 | DATABASE_URL      | database.connection | Connection string to the database. Can either be a connection to a PosgresSQL database (ex: `postgres://login:password@your-db-host.com:5432/your-db-name`) or a sqlite file path. If left unset, the server will create an sqlite database named `db.sqlite` in the `data` directory (or in the `dist/data` directory if in `development` mode)                                                                              |
 | DATABASE_POOL     | database.pool       | Configuration option for connection pool (ex: `{"min":3,"max":10}`)                                                                                                                                                                                                                                                                                                                                                           |
 | CLUSTER_ENABLED   | redis.enabled       | This setting determines if redis is enabled or not. The other redis settings will have no effect if this value is set to false                                                                                                                                                                                                                                                                                                |
-| REDIS_URL         | redis.connection    | Connection string to a redis instance (ex: `redis://:your-password@127.0.0.1:6379`). If you want to configure redis for clustering, you can supply an array of connections instead (ex: `[{"host":"localhost","port":7004},{"host":"localhost","port":7001},{"host":"localhost","port":7002}]`)                                                                                                                               |
+| REDIS_URL         | redis.connection    | Connection string to a redis instance (ex: `redis://login:password@your-redis-host.com:6379`). If you want to configure redis for clustering, you can supply an array of connections instead (ex: `[{"host":"localhost","port":7004},{"host":"localhost","port":7001},{"host":"localhost","port":7002}]`)                                                                                                                     |
 | REDIS_OPTIONS     | redis.options       | Advances options for redis. Refer to the [ioredis documentation](https://github.com/luin/ioredis/blob/master/API.md) (ex: `{"password":"admin123", "connectTimeout": 20000})`                                                                                                                                                                                                                                                 |
 | SYNC              | sync                | Array of sync requests to be executed when the server starts. This can be used to configure sandboxes, or test clients                                                                                                                                                                                                                                                                                                        |
 | SKIP_LOAD_CONFIG  | none                | If set to `true`, the server will skip loading any config from the `config.json` file                                                                                                                                                                                                                                                                                                                                         |
@@ -44,7 +44,7 @@ Environmnent variables have priority over settings configured in the `config.jso
   },
   "redis": {
     "enabled": true,
-    "connection": "redis://:my-redis-password@127.0.0.1:6379",
+    "connection": "redis://user:password@localhost:6379",
     "options": { "connectTimeout": 20000 }
   },
   "sync": [
@@ -90,7 +90,7 @@ DATABASE_POOL={"min":3,"max":10}
 INTERNAL_PASSWORD=my-super-secret-internal-password123*
 ENCRYPTION_KEY=this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w=
 CLUSTER_ENABLED=true
-REDIS_URL=redis://:my-redis-password@127.0.0.1:6379
+REDIS_URL=redis://user:password@localhost:6379
 REDIS_OPTIONS={"connectTimeout":20000}
 SYNC=[{"name":"sandbox","sandbox":true,"channels":{"telegram":{"enabled":true,"botToken":"my-bot-token"}}},{"id":"96af5294-46f1-4a85-a17f-6863fa4d77d7","token":"test-token-123","name":"test","channels":{"twilio":{"enabled":true,"accountSID":"my-account-sid","authToken":"my-auth-token"},"telegram":{"enabled":true,"botToken":"my-bot-token"}},"webhooks":[]}]
 ```

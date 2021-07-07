@@ -6,6 +6,8 @@ import { Api } from './api'
 import { App } from './app'
 import { Logger } from './logger/types'
 
+const pkg = require('../package.json')
+
 export class Launcher {
   private logger: Logger
   private shuttingDown: boolean = false
@@ -81,7 +83,7 @@ export class Launcher {
       '========================================\n' +
         clc.bold(centerText('Botpress Messaging', 40, 33)) +
         '\n' +
-        clc.blackBright(centerText('Version 0.0.9', 40, 33)) +
+        clc.blackBright(centerText(`Version ${pkg.version}`, 40, 33)) +
         '\n' +
         centerText('========================================', 40, 33)
     )
