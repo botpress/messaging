@@ -13,6 +13,7 @@ export class RedisSubservice implements DistributedSubservice {
   private sub!: Redis
   private callbacks: { [channel: string]: (message: any) => Promise<void> } = {}
   private pings!: PingPong
+  private scope!: string
 
   constructor(private config: RedisConfig) {}
 
@@ -20,6 +21,7 @@ export class RedisSubservice implements DistributedSubservice {
     this.nodeId = Math.round(Math.random() * 1000000)
     this.logger.info(`Id is ${clc.bold(this.nodeId)}`)
 
+    this.scope = process.env.REDIS_SCOPE || this.config.scope
     this.pub = this.setupClient()
     this.sub = this.setupClient()
 
@@ -87,11 +89,19 @@ export class RedisSubservice implements DistributedSubservice {
   }
 
   async listen(channel: string, callback: (message: any) => Promise<void>) {
-    await this.sub.subscribe(channel)
-    this.callbacks[channel] = callback
+    const scopedChannel = this.makeScopedChannel(channel)
+
+    await this.sub.subscribe(scopedChannel)
+    this.callbacks[scopedChannel] = callback
   }
 
   async send(channel: string, message: any) {
-    await this.pub.publish(channel, JSON.stringify({ nodeId: this.nodeId, ...message }))
+    const scopedChannel = this.makeScopedChannel(channel)
+
+    await this.pub.publish(scopedChannel, JSON.stringify({ nodeId: this.nodeId, ...message }))
+  }
+
+  private makeScopedChannel(key: string): string {
+    return this.scope ? `${this.scope}/${key}` : key
   }
 }

@@ -14,7 +14,8 @@
   "redis": {
     "enabled": false,
     "connection": null,
-    "options": null
+    "options": null,
+    "scope": null
   },
   "sync": [
     {
