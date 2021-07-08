@@ -81,17 +81,25 @@ export class RedisSubservice implements DistributedSubservice {
     }
   }
 
+  private makeRedisKey(key: string): string {
+    return process.env.REDIS_SCOPE ? `${process.env.REDIS_SCOPE}/${key}` : key
+  }
+
   async destroy() {
     await this.pub.quit()
     await this.sub.quit()
   }
 
   async listen(channel: string, callback: (message: any) => Promise<void>) {
-    await this.sub.subscribe(channel)
-    this.callbacks[channel] = callback
+    const prefixedChannel = this.makeRedisKey(channel)
+
+    await this.sub.subscribe(prefixedChannel)
+    this.callbacks[prefixedChannel] = callback
   }
 
   async send(channel: string, message: any) {
-    await this.pub.publish(channel, JSON.stringify({ nodeId: this.nodeId, ...message }))
+    const prefixedChannel = this.makeRedisKey(channel)
+
+    await this.pub.publish(prefixedChannel, JSON.stringify({ nodeId: this.nodeId, ...message }))
   }
 }
