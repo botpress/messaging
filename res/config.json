@@ -17,6 +17,9 @@
     "options": null,
     "scope": null
   },
+  "logging": {
+    "enabled": true
+  },
   "sync": [
     {
       "name": "sandbox",

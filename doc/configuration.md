@@ -23,6 +23,7 @@ Environment variables have priority over settings configured in the `config.json
 | REDIS_URL         | redis.connection    | Connection string to a redis instance (ex: `redis://login:password@your-redis-host.com:6379`). If you want to configure redis for clustering, you can supply an array of connections instead (ex: `[{"host":"localhost","port":7004},{"host":"localhost","port":7001},{"host":"localhost","port":7002}]`)                                                                                                                     |
 | REDIS_OPTIONS     | redis.options       | Advances options for redis. Refer to the [ioredis documentation](https://github.com/luin/ioredis/blob/master/API.md) (ex: `{"password":"admin123", "connectTimeout": 20000})`                                                                                                                                                                                                                                                 |
 | REDIS_SCOPE       | redis.scope         | Allows to prefix Redis channels and keys when multiple clients uses the same Redis cluster (e.g. `development`, `production`, `server-a`)                                                                                                                                                                                                                                                                                     |
+| LOGGING_ENABLED   | logging.enabled     | Toggles if incoming and outgoing messages are logged to the console. Defaults to `false` when in `production` mode and `true` when in `development` mode                                                                                                                                                                                                                                                                      |
 | SYNC              | sync                | Array of sync requests to be executed when the server starts. This can be used to configure sandboxes, or test clients                                                                                                                                                                                                                                                                                                        |
 | SKIP_LOAD_CONFIG  | none                | If set to `true`, the server will skip loading any config from the `config.json` file                                                                                                                                                                                                                                                                                                                                         |
 | SKIP_LOAD_ENV     | none                | If set to `true`, the server will skip loading any config from the `.env` file                                                                                                                                                                                                                                                                                                                                                |
@@ -48,6 +49,9 @@ Environment variables have priority over settings configured in the `config.json
     "connection": "redis://user:password@localhost:6379",
     "options": { "connectTimeout": 20000 },
     "scope": "production"
+  },
+  "logging": {
+    "enabled": false
   },
   "sync": [
     {
@@ -95,5 +99,6 @@ CLUSTER_ENABLED=true
 REDIS_URL=redis://user:password@localhost:6379
 REDIS_OPTIONS={"connectTimeout":20000}
 REDIS_SCOPE=production
+LOGGING_ENABLED=false
 SYNC=[{"name":"sandbox","sandbox":true,"channels":{"telegram":{"enabled":true,"botToken":"my-bot-token"}}},{"id":"96af5294-46f1-4a85-a17f-6863fa4d77d7","token":"test-token-123","name":"test","channels":{"twilio":{"enabled":true,"accountSID":"my-account-sid","authToken":"my-auth-token"},"telegram":{"enabled":true,"botToken":"my-bot-token"}},"webhooks":[]}]
 ```
