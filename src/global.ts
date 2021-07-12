@@ -9,6 +9,8 @@ export interface MessagingEnv {
   CLUSTER_ENABLED?: string
   REDIS_URL?: string
   REDIS_OPTIONS?: string
+  REDIS_SCOPE?: string
+  LOGGING_ENABLED?: string
   SYNC?: string
   SKIP_LOAD_CONFIG?: string
   SKIP_LOAD_ENV?: string

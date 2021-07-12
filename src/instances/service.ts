@@ -1,6 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import ms from 'ms'
+import yn from 'yn'
 import { App } from '../app'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
@@ -28,6 +29,7 @@ export class InstanceService extends Service {
   private sandbox: InstanceSandbox
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private logger: Logger
+  private loggingEnabled!: boolean
 
   constructor(
     private loggerService: LoggerService,
@@ -57,6 +59,17 @@ export class InstanceService extends Service {
   }
 
   async setup() {
+    if (process.env.LOGGING_ENABLED?.length) {
+      this.loggingEnabled = !!yn(process.env.LOGGING_ENABLED)
+    } else if (
+      this.configService.current.logging?.enabled !== null &&
+      this.configService.current.logging?.enabled !== undefined
+    ) {
+      this.loggingEnabled = !!yn(this.configService.current.logging.enabled)
+    } else {
+      this.loggingEnabled = process.env.NODE_ENV !== 'production'
+    }
+
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
       dispose: async (k, v) => {
         await v.destroy()
@@ -114,10 +127,12 @@ export class InstanceService extends Service {
 
     const message = await this.messageService.create(conversationId, conversation!.userId, payload)
 
-    instance.loggerOut.debug('Sending message', {
-      clientId: conversation!.clientId,
-      message
-    })
+    if (this.loggingEnabled) {
+      instance.loggerOut.debug('Sending message', {
+        clientId: conversation!.clientId,
+        message
+      })
+    }
   }
 
   async receive(conduitId: uuid, payload: any) {
@@ -145,7 +160,10 @@ export class InstanceService extends Service {
       conversation: { id: conversationId },
       message
     }
-    instance.loggerIn.debug('Received message', post)
+
+    if (this.loggingEnabled) {
+      instance.loggerIn.debug('Received message', post)
+    }
 
     const webhooks = await this.webhookService.list(clientId)
     for (const webhook of webhooks) {

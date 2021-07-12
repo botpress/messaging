@@ -1,5 +1,4 @@
-import { BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
-import _ from 'lodash'
+import { ActivityTypes, BotFrameworkAdapter, ConversationReference, TurnContext } from 'botbuilder'
 import LRU from 'lru-cache'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
@@ -41,6 +40,35 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
       content: { type: 'text', text: activity.value?.text || activity.text },
       sender: activity.from.id,
       thread: convoRef.conversation!.id
+    }
+  }
+
+  public botNewlyAddedToConversation(turnContext: TurnContext): boolean {
+    const { activity } = turnContext
+
+    // https://docs.microsoft.com/en-us/previous-versions/azure/bot-service/dotnet/bot-builder-dotnet-activities?view=azure-bot-service-3.0#conversationupdate
+    return (
+      activity.type === ActivityTypes.ConversationUpdate &&
+      (activity.membersAdded || []).some((member) => member.id === activity.recipient.id)
+    )
+  }
+
+  public async sendProactiveMessage(turnContext: TurnContext): Promise<void> {
+    const { activity } = turnContext
+    const convoRef = TurnContext.getConversationReference(activity)
+
+    await this.setConvoRef(convoRef.conversation!.id, convoRef)
+
+    // Locale format: {lang}-{subtag1}-{subtag2}-... https://en.wikipedia.org/wiki/IETF_language_tag
+    // TODO: Use Intl.Locale().language once its types are part of TS. See: https://github.com/microsoft/TypeScript/issues/37326
+    const lang = activity.locale?.split('-')[0]
+    const proactiveMessages = this.config.proactiveMessages || {}
+    const message = lang && proactiveMessages[lang]
+
+    if (message) {
+      await this.adapter.continueConversation(convoRef, async (turnContext) => {
+        await turnContext.sendActivity(message)
+      })
     }
   }
 
