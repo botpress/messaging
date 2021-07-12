@@ -1,6 +1,7 @@
 export interface MessagingEnv {
   NODE_ENV?: 'production' | 'development'
   PORT?: string
+  BOTPRESS_EXTERNAL_URL?: string
   EXTERNAL_URL?: string
   INTERNAL_PASSWORD?: string
   ENCRYPTION_KEY?: string

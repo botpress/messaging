@@ -42,8 +42,7 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
         client: undefined,
         handlers: 0,
         payload: _.cloneDeep(payload),
-        // TODO: bot url
-        botUrl: 'https://duckduckgo.com/',
+        botUrl: process.env.BOTPRESS_EXTERNAL_URL || this.app.config.current.server?.botpressExternalUrl || '',
         logger: this.logger,
         ...endpoint
       },
