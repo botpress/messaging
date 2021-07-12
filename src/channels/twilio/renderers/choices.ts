@@ -3,7 +3,7 @@ import { ChoicesRenderer } from '../../base/renderers/choices'
 import { TwilioContext } from '../context'
 
 export class TwilioChoicesRenderer extends ChoicesRenderer {
-  async renderChoice(context: TwilioContext, payload: ChoiceContent) {
+  renderChoice(context: TwilioContext, payload: ChoiceContent) {
     if (!context.messages.length) {
       context.messages.push({})
     }
@@ -15,7 +15,7 @@ export class TwilioChoicesRenderer extends ChoicesRenderer {
       .join('\n')}`
 
     if (context.identity && context.sender) {
-      await context.prepareIndexResponse(context.identity, context.sender, context.payload.choices)
+      context.prepareIndexResponse(context.identity, context.sender, context.payload.choices)
     }
   }
 }

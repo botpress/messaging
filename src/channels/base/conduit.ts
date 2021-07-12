@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
+import { ServerCache } from '../../caching/cache'
+import { ChoiceOption } from '../../content/types'
 import { Logger } from '../../logger/types'
 import { Endpoint } from '../../mapping/types'
 import { ChannelConfig } from './config'
@@ -19,6 +21,8 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
   public loggerIn!: Logger
   public loggerOut!: Logger
 
+  protected cacheIndexResponses!: ServerCache<string, ChoiceOption[]>
+
   async setup(conduitId: uuid, config: TConfig, app: App): Promise<void> {
     this.app = app
     this.config = config
@@ -34,6 +38,12 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     await this.setupConnection()
     this.renderers = this.setupRenderers().sort((a, b) => a.priority - b.priority)
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
+
+    const cacheKey = `cache_index_responses_${conduitId}`
+
+    this.cacheIndexResponses =
+      this.app.caching.getCache<ServerCache<string, ChoiceOption[]>>(cacheKey) ||
+      (await this.app.caching.newServerCache(cacheKey))
   }
 
   async sendToEndpoint(endpoint: Endpoint, payload: any, clientId?: uuid) {
@@ -68,16 +78,16 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     return `${this.conduitId}_${identity}_${sender}`
   }
 
-  async prepareIndexResponse(identity: string, sender: string, options: any) {
-    await this.app.kvs.set(this.getKvsKey(identity, sender), options)
+  prepareIndexResponse(identity: string, sender: string, options: any) {
+    this.cacheIndexResponses.set(this.getKvsKey(identity, sender), options)
   }
 
-  async handleIndexResponse(index: number, identity: string, sender: string): Promise<undefined | string> {
+  handleIndexResponse(index: number, identity: string, sender: string): undefined | string {
     if (index) {
       const key = this.getKvsKey(identity, sender)
-      const options = await this.app.kvs.get(key)
+      const options = this.cacheIndexResponses.get(key)
 
-      await this.app.kvs.delete(key)
+      this.cacheIndexResponses.del(key)
 
       return options?.[index - 1]?.value
     }

@@ -47,4 +47,8 @@ export class CachingService extends Service {
 
     return cache
   }
+
+  getCache<C>(id: string): C | undefined {
+    return this.caches[id] as C
+  }
 }

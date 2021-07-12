@@ -3,7 +3,7 @@ import { ChoicesRenderer } from '../../base/renderers/choices'
 import { VonageContext } from '../context'
 
 export class VonageChoicesRenderer extends ChoicesRenderer {
-  async renderChoice(context: VonageContext, payload: ChoiceContent): Promise<void> {
+  renderChoice(context: VonageContext, payload: ChoiceContent) {
     const message = context.messages[0]
 
     message.content.text = `${message.content.text}\n\n${payload.choices
@@ -11,7 +11,7 @@ export class VonageChoicesRenderer extends ChoicesRenderer {
       .join('\n')}`
 
     if (context.identity && context.sender) {
-      await context.prepareIndexResponse(context.identity, context.sender, context.payload.choices)
+      context.prepareIndexResponse(context.identity, context.sender, context.payload.choices)
     }
   }
 }

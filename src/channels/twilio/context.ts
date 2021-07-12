@@ -5,7 +5,7 @@ import { ChannelContext } from '../base/context'
 
 export type TwilioContext = ChannelContext<Twilio> & {
   messages: Partial<MessageInstance>[]
-  prepareIndexResponse(identity: string, sender: string, options: ChoiceOption[]): Promise<void>
+  prepareIndexResponse(identity: string, sender: string, options: ChoiceOption[]): void
 }
 
 export interface TwilioRequestBody {

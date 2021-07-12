@@ -5,5 +5,5 @@ import { ChannelContext } from '../base/context'
 export type VonageContext = ChannelContext<Vonage> & {
   messages: ChannelMessage[]
   isSandbox: boolean
-  prepareIndexResponse: (identity: string, thread: string, options: ChoiceOption[]) => Promise<void>
+  prepareIndexResponse: (identity: string, thread: string, options: ChoiceOption[]) => void
 }
