@@ -17,6 +17,7 @@ import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
+import { Message } from '../messages/types'
 import { ProviderService } from '../providers/service'
 import { WebhookService } from '../webhooks/service'
 import { InstanceInvalidator } from './invalidator'
@@ -116,14 +117,14 @@ export class InstanceService extends Service {
     return instance
   }
 
-  async send(conduitId: uuid, conversationId: uuid, payload: any): Promise<void> {
+  async send(conduitId: uuid, conversationId: uuid, payload: any): Promise<Message> {
     const conduit = (await this.conduitService.get(conduitId))!
     const conversation = (await this.conversationService.get(conversationId))!
 
     const endpoint = await this.mappingService.getEndpoint(conversation.clientId, conduit.channelId, conversation.id)
 
     const instance = await this.get(conduitId)
-    await instance.sendToEndpoint(endpoint, payload)
+    void instance.sendToEndpoint(endpoint, payload)
 
     const message = await this.messageService.create(conversationId, conversation!.userId, payload)
 
@@ -133,6 +134,8 @@ export class InstanceService extends Service {
         message
       })
     }
+
+    return message
   }
 
   async receive(conduitId: uuid, payload: any) {
