@@ -29,7 +29,7 @@ export class VonageCarouselRenderer extends CarouselRenderer {
     })
   }
 
-  async endRenderCard(context: Context, card: CardContent) {
+  endRenderCard(context: Context, card: CardContent) {
     const body = `${card.title}\n\n${card.subtitle}\n\n${context.options
       .map(({ title }, idx) => `*(${idx + 1})* ${title}`)
       .join('\n')}`
@@ -54,7 +54,7 @@ export class VonageCarouselRenderer extends CarouselRenderer {
       })
 
       if (context.channel.identity && context.channel.sender) {
-        await context.channel.prepareIndexResponse(context.channel.identity, context.channel.sender, context.options)
+        context.channel.prepareIndexResponse(context.channel.identity, context.channel.sender, context.options)
       }
     }
   }
