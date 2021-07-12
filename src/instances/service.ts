@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import _ from 'lodash'
 import ms from 'ms'
 import yn from 'yn'
@@ -167,7 +167,10 @@ export class InstanceService extends Service {
 
     const webhooks = await this.webhookService.list(clientId)
     for (const webhook of webhooks) {
-      await axios.post(webhook.url, post)
+      const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
+
+      const config: AxiosRequestConfig = { headers: { password } }
+      await axios.post(webhook.url, post, config)
     }
   }
 }
