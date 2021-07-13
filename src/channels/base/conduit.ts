@@ -39,11 +39,11 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     this.renderers = this.setupRenderers().sort((a, b) => a.priority - b.priority)
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
 
-    const cacheKey = `cache_index_responses_${conduitId}`
+    const cacheName = `cache_index_responses_${conduitId}`
 
     this.cacheIndexResponses =
-      this.app.caching.getCache<ServerCache<string, ChoiceOption[]>>(cacheKey) ||
-      (await this.app.caching.newServerCache(cacheKey))
+      this.app.caching.getCache<ServerCache<string, ChoiceOption[]>>(cacheName) ||
+      (await this.app.caching.newServerCache(cacheName))
   }
 
   async sendToEndpoint(endpoint: Endpoint, payload: any, clientId?: uuid) {
@@ -74,17 +74,23 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     }
   }
 
-  protected getKvsKey(identity: string, sender: string) {
+  async initialize() {}
+
+  async destroy() {}
+
+  public abstract extractEndpoint(payload: any): Promise<EndpointContent>
+
+  protected getIndexCacheKey(identity: string, sender: string) {
     return `${this.conduitId}_${identity}_${sender}`
   }
 
-  prepareIndexResponse(identity: string, sender: string, options: any) {
-    this.cacheIndexResponses.set(this.getKvsKey(identity, sender), options)
+  protected prepareIndexResponse(identity: string, sender: string, options: any) {
+    this.cacheIndexResponses.set(this.getIndexCacheKey(identity, sender), options)
   }
 
-  handleIndexResponse(index: number, identity: string, sender: string): undefined | string {
+  protected handleIndexResponse(index: number, identity: string, sender: string): undefined | string {
     if (index) {
-      const key = this.getKvsKey(identity, sender)
+      const key = this.getIndexCacheKey(identity, sender)
       const options = this.cacheIndexResponses.get(key)
 
       this.cacheIndexResponses.del(key)
@@ -92,12 +98,6 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
       return options?.[index - 1]?.value
     }
   }
-
-  async initialize() {}
-
-  async destroy() {}
-
-  public abstract extractEndpoint(payload: any): Promise<EndpointContent>
 
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
