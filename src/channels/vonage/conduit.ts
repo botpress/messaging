@@ -40,7 +40,7 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
     const sender = payload.from.number
 
     const index = Number(payload.message.content.text)
-    const text = (await this.handleIndexResponse(index, identity, sender)) || payload.message.content.text
+    const text = this.handleIndexResponse(index, identity, sender) || payload.message.content.text
 
     return {
       content: { type: 'text', text },

@@ -36,7 +36,7 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
     const userId = payload.From
 
     const index = Number(payload.Body)
-    const text = (await this.handleIndexResponse(index, botPhoneNumber, userId)) || payload.Body
+    const text = this.handleIndexResponse(index, botPhoneNumber, userId) || payload.Body
 
     return {
       content: { type: 'text', text },
