@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import clc from 'cli-color'
 import { Express } from 'express'
 import _ from 'lodash'
@@ -57,12 +58,7 @@ export class Launcher {
 
     this.express.listen(port)
 
-    this.logger.info(`Server is listening at: http://localhost:${port}`)
-
-    const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
-    if (externalUrl?.length) {
-      this.logger.info(`Server is exposed at: ${externalUrl}`)
-    }
+    this.logger.info(chalk.gray(`Messaging is listening at: http://localhost:${port}`))
   }
 
   async shutDown(code?: number) {
@@ -78,15 +74,10 @@ export class Launcher {
       const padding = Math.floor((width - text.length) / 2)
       return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
     }
-
-    this.logger.info(
-      '========================================\n' +
-        clc.bold(centerText('Botpress Messaging', 40, 33)) +
-        '\n' +
-        clc.blackBright(centerText(`Version ${pkg.version}`, 40, 33)) +
-        '\n' +
-        centerText('========================================', 40, 33)
-    )
+    this.logger.info(chalk`========================================
+    {bold ${centerText('Botpress Messaging', 40, 41)}}
+    {dim ${centerText(`Version ${pkg.version}`, 40, 41)}}
+    ${_.repeat(' ', 41)}========================================`)
   }
 
   private printChannels() {
@@ -105,6 +96,11 @@ export class Launcher {
       }
     }
 
-    this.logger.info(`Using ${clc.bold(enabled)} channels` + enabledText + disabledText)
+    this.logger.info(
+      `Using channels: ${this.app.channels
+        .list()
+        .map((x) => x.name)
+        .join(', ')}`
+    )
   }
 }

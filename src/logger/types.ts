@@ -49,7 +49,7 @@ export class Logger {
     const time = moment().format(timeFormat)
 
     const timeText = clc.blackBright(time)
-    const titleText = clc.bold(this.colors[level](this.scope))
+    const titleText = clc.bold(this.colors[level](`[Messaging] ${this.scope}`))
 
     if (data) {
       // eslint-disable-next-line no-console
