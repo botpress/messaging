@@ -47,11 +47,6 @@ export class KvsService extends Service {
     }
   }
 
-  async delete(key: string): Promise<void> {
-    this.cache.del(key, true)
-    await this.query().delete().where({ key })
-  }
-
   private query() {
     return this.db.knex(this.table.id)
   }
