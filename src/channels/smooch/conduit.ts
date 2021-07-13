@@ -10,7 +10,11 @@ import { SmoochSenders } from './senders'
 
 export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> {
   private smooch: any
-  // private secret!: string
+  public secret!: string
+
+  async initialize() {
+    await this.setupWebhook()
+  }
 
   protected async setupConnection() {
     this.smooch = new Smooch({
@@ -19,14 +23,22 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
       scope: 'app'
     })
 
-    // TODO: on the fly webhook creation doesn't work with lazy loading
-    /*
+    await this.setupWebhook()
+  }
+
+  private async setupWebhook() {
+    const conduit = await this.app.conduits.get(this.conduitId)
+    const provider = await this.app.providers.getById(conduit!.providerId)
+    const channel = this.app.channels.getById(conduit!.channelId)
+    const target =
+      this.config.webhookUrl || this.config.externalUrl + channel.getRoute().replace(':provider', provider!.name)
+
+    // Note: creating a webhook with the same url will not create a new webhook but return the already existing one
     const { webhook }: { webhook: SmoochWebhook } = await this.smooch.webhooks.create({
-      target: this.config.externalUrl + this.route(),
+      target,
       triggers: ['message:appUser']
     })
     this.secret = webhook.secret
-    */
   }
 
   protected setupRenderers() {

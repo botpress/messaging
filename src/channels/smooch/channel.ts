@@ -12,6 +12,10 @@ export class SmoochChannel extends Channel<SmoochConduit> {
     return '3c5c160f-d673-4ef8-8b6f-75448af048ce'
   }
 
+  get initiable() {
+    return true
+  }
+
   createConduit() {
     return new SmoochConduit()
   }
@@ -19,12 +23,12 @@ export class SmoochChannel extends Channel<SmoochConduit> {
   async setupRoutes() {
     this.router.use(express.json())
 
-    this.router.post(
+    this.router.use(
       '/',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as SmoochConduit
 
-        if (req.headers['x-api-key'] === conduit.config.webhookSecret) {
+        if (req.headers['x-api-key'] === conduit.secret) {
           const body = req.body as SmoochPayload
           for (const message of body.messages) {
             await this.app.instances.receive(conduit.conduitId, { context: body, message })
