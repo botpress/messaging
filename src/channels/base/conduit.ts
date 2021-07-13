@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
+import { ServerCache } from '../../caching/cache'
+import { ChoiceOption } from '../../content/types'
 import { Logger } from '../../logger/types'
 import { Endpoint } from '../../mapping/types'
 import { ChannelConfig } from './config'
@@ -19,6 +21,8 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
   public loggerIn!: Logger
   public loggerOut!: Logger
 
+  protected cacheIndexResponses!: ServerCache<string, ChoiceOption[]>
+
   async setup(conduitId: uuid, config: TConfig, app: App): Promise<void> {
     this.app = app
     this.config = config
@@ -34,6 +38,12 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     await this.setupConnection()
     this.renderers = this.setupRenderers().sort((a, b) => a.priority - b.priority)
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
+
+    const cacheName = `cache_index_responses_${conduitId}`
+
+    this.cacheIndexResponses =
+      this.app.caching.getCache<ServerCache<string, ChoiceOption[]>>(cacheName) ||
+      (await this.app.caching.newServerCache(cacheName))
   }
 
   async sendToEndpoint(endpoint: Endpoint, payload: any, clientId?: uuid) {
@@ -69,6 +79,25 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
   async destroy() {}
 
   public abstract extractEndpoint(payload: any): Promise<EndpointContent>
+
+  protected getIndexCacheKey(identity: string, sender: string) {
+    return `${this.conduitId}_${identity}_${sender}`
+  }
+
+  protected prepareIndexResponse(identity: string, sender: string, options: any) {
+    this.cacheIndexResponses.set(this.getIndexCacheKey(identity, sender), options)
+  }
+
+  protected handleIndexResponse(index: number, identity: string, sender: string): undefined | string {
+    if (index) {
+      const key = this.getIndexCacheKey(identity, sender)
+      const options = this.cacheIndexResponses.get(key)
+
+      this.cacheIndexResponses.del(key)
+
+      return options?.[index - 1]?.value
+    }
+  }
 
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]

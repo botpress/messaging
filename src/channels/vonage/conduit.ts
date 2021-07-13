@@ -7,6 +7,7 @@ import { VonageConfig } from './config'
 import { VonageContext } from './context'
 import { VonageRenderers } from './renderers'
 import { VonageSenders } from './senders'
+import { VonageRequestBody } from './types'
 
 export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> {
   private vonage!: Vonage
@@ -34,20 +35,27 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
     return [new TypingSender(), ...VonageSenders]
   }
 
-  public async extractEndpoint(payload: any): Promise<EndpointContent> {
+  public async extractEndpoint(payload: VonageRequestBody): Promise<EndpointContent> {
+    const identity = payload.to.number
+    const sender = payload.from.number
+
+    const index = Number(payload.message.content.text)
+    const text = this.handleIndexResponse(index, identity, sender) || payload.message.content.text
+
     return {
-      content: { type: 'text', text: payload.message.content.text },
-      identity: payload.to.number,
-      sender: payload.from.number
+      content: { type: 'text', text },
+      identity,
+      sender
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<VonageContext> {
+  protected async context(base: ChannelContext<Vonage>): Promise<VonageContext> {
     return {
       ...base,
       client: this.vonage,
       messages: [],
-      isSandbox: this.config.useTestingApi
+      isSandbox: this.config.useTestingApi,
+      prepareIndexResponse: this.prepareIndexResponse.bind(this)
     }
   }
 }

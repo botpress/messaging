@@ -52,6 +52,10 @@ export class VonageCarouselRenderer extends CarouselRenderer {
           text: body
         }
       })
+
+      if (context.channel.identity && context.channel.sender) {
+        context.channel.prepareIndexResponse(context.channel.identity, context.channel.sender, context.options)
+      }
     }
   }
 }

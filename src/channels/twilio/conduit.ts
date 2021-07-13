@@ -34,9 +34,9 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
   public async extractEndpoint(payload: TwilioRequestBody): Promise<EndpointContent> {
     const botPhoneNumber = payload.To
     const userId = payload.From
-    const text = payload.Body
 
-    // TODO: restore index responses
+    const index = Number(payload.Body)
+    const text = this.handleIndexResponse(index, botPhoneNumber, userId) || payload.Body
 
     return {
       content: { type: 'text', text },
@@ -49,7 +49,8 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
     return {
       ...base,
       client: this.twilio,
-      messages: []
+      messages: [],
+      prepareIndexResponse: this.prepareIndexResponse.bind(this)
     }
   }
 }

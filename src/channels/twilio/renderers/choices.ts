@@ -14,6 +14,8 @@ export class TwilioChoicesRenderer extends ChoicesRenderer {
       .map(({ title }, idx) => `${idx + 1}. ${title}`)
       .join('\n')}`
 
-    // context.prepareIndexResponse(context.event, context.payload.choices)
+    if (context.identity && context.sender) {
+      context.prepareIndexResponse(context.identity, context.sender, context.payload.choices)
+    }
   }
 }
