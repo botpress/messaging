@@ -1,6 +1,7 @@
-import { ChannelConfig } from '../base/config'
-
-export type TelegramConfig = ChannelConfig & {
+export interface TelegramConfig {
+  enabled: boolean
   botToken: string
+
+  // For request forwarding
   webhookUrl?: string
 }

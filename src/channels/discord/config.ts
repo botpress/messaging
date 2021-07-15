@@ -1,5 +1,4 @@
-import { ChannelConfig } from '../base/config'
-
-export type DiscordConfig = ChannelConfig & {
+export interface DiscordConfig {
+  enabled: boolean
   token: string
 }

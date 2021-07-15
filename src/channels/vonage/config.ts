@@ -1,6 +1,5 @@
-import { ChannelConfig } from '../base/config'
-
-export type VonageConfig = ChannelConfig & {
+export interface VonageConfig {
+  enabled: boolean
   useTestingApi: boolean
   apiKey: string
   apiSecret: string

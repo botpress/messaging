@@ -1,9 +1,8 @@
-import { ChannelConfig } from '../base/config'
-
-export type TwilioConfig = ChannelConfig & {
+export interface TwilioConfig {
+  enabled: boolean
   accountSID: string
   authToken: string
 
   // For request forwarding
-  webhookUrl: string
+  webhookUrl?: string
 }

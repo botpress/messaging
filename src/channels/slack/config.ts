@@ -1,6 +1,5 @@
-import { ChannelConfig } from '../base/config'
-
-export type SlackConfig = ChannelConfig & {
+export interface SlackConfig {
+  enabled: boolean
   botToken: string
   signingSecret: string
   fetchUserInfo: boolean

@@ -1,6 +1,5 @@
-import { ChannelConfig } from '../base/config'
-
-export type TeamsConfig = ChannelConfig & {
+export interface TeamsConfig {
+  enabled: boolean
   appId: string
   appPassword: string
   tenantId: string

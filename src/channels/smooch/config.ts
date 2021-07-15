@@ -1,6 +1,5 @@
-import { ChannelConfig } from '../base/config'
-
-export type SmoochConfig = ChannelConfig & {
+export interface SmoochConfig {
+  enabled: boolean
   keyId: string
   secret: string
   webhookUrl?: string

@@ -1,6 +1,5 @@
-import { ChannelConfig } from '../base/config'
-
-export type MessengerConfig = ChannelConfig & {
+export interface MessengerConfig {
+  enabled: boolean
   accessToken: string
   appSecret: string
   verifyToken: string

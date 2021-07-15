@@ -5,12 +5,11 @@ import { ServerCache } from '../../caching/cache'
 import { ChoiceOption } from '../../content/types'
 import { Logger } from '../../logger/types'
 import { Endpoint } from '../../mapping/types'
-import { ChannelConfig } from './config'
 import { ChannelContext } from './context'
 import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 
-export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext extends ChannelContext<any>> {
+export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<any>> {
   protected app!: App
   public conduitId!: uuid
   public config!: TConfig
@@ -39,11 +38,9 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
     this.renderers = this.setupRenderers().sort((a, b) => a.priority - b.priority)
     this.senders = this.setupSenders().sort((a, b) => a.priority - b.priority)
 
-    const cacheName = `cache_index_responses_${conduitId}`
-
+    const cacheName = 'cache_index_responses'
     this.cacheIndexResponses =
-      this.app.caching.getCache<ServerCache<string, ChoiceOption[]>>(cacheName) ||
-      (await this.app.caching.newServerCache(cacheName))
+      this.app.caching.getCache(cacheName) || (await this.app.caching.newServerCache(cacheName))
   }
 
   async sendToEndpoint(endpoint: Endpoint, payload: any, clientId?: uuid) {
@@ -97,6 +94,15 @@ export abstract class ConduitInstance<TConfig extends ChannelConfig, TContext ex
 
       return options?.[index - 1]?.value
     }
+  }
+
+  protected async getRoute(path?: string) {
+    const conduit = await this.app.conduits.get(this.conduitId)
+    const provider = await this.app.providers.getById(conduit!.providerId)
+    const channel = this.app.channels.getById(conduit!.channelId)
+    const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+
+    return externalUrl + channel.getRoute(path).replace(':provider', provider!.name)
   }
 
   protected abstract setupConnection(): Promise<void>

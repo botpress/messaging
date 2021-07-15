@@ -103,15 +103,10 @@ export class InstanceService extends Service {
     }
 
     const conduit = (await this.conduitService.get(conduitId))!
-    const config = {
-      ...conduit.config,
-      externalUrl: process.env.EXTERNAL_URL || this.configService.current.server?.externalUrl
-    }
-
     const channel = this.channelService.getById(conduit.channelId)
     const instance = channel.createConduit()
 
-    await instance.setup(conduitId, config, this.app)
+    await instance.setup(conduitId, conduit.config, this.app)
     this.cache.set(conduitId, instance, channel.lazy ? undefined : Infinity)
 
     return instance
