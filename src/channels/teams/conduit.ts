@@ -20,6 +20,8 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
     })
 
     this.convoRefs = this.app.caching.newLRU()
+
+    await this.printWebhook()
   }
 
   protected setupRenderers() {

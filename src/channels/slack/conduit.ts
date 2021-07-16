@@ -30,6 +30,9 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
     // TODO: refactor these functions
     await this.setupRealtime()
     await this.setupInteractiveListener()
+
+    await this.printWebhook('interactive')
+    await this.printWebhook('events')
   }
 
   protected setupRenderers() {

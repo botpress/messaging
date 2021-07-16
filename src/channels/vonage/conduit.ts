@@ -25,6 +25,9 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
         apiHost: this.config.useTestingApi ? 'https://messages-sandbox.nexmo.com' : 'https://api.nexmo.com'
       }
     )
+
+    await this.printWebhook('inbound')
+    await this.printWebhook('status')
   }
 
   protected setupRenderers() {

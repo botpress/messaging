@@ -14,7 +14,7 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   public callback!: (req: any, res: any) => void
 
   async initialize() {
-    await this.telegraf.telegram.setWebhook(this.config.webhookUrl || (await this.getRoute()))
+    await this.telegraf.telegram.setWebhook(await this.getRoute())
   }
 
   protected async setupConnection() {
@@ -28,6 +28,8 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     // using the botToken, but instead verifies that the request path is correct.
     // This means that the webhook path must contain a secret (can't be just '/').
     this.callback = this.telegraf.webhookCallback('/')
+
+    await this.printWebhook()
   }
 
   protected setupRenderers() {

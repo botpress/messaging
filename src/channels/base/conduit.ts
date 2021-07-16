@@ -1,4 +1,6 @@
+import clc from 'cli-color'
 import _ from 'lodash'
+import yn from 'yn'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { ServerCache } from '../../caching/cache'
@@ -103,6 +105,23 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
 
     return externalUrl + channel.getRoute(path).replace(':provider', provider!.name)
+  }
+
+  protected async printWebhook(path?: string) {
+    if (yn(process.env.SPINNED)) {
+      const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+      const conduit = await this.app.conduits.get(this.conduitId)
+      const channel = this.app.channels.getById(conduit!.channelId)
+      const provider = await this.app.providers.getById(conduit!.providerId)
+
+      this.logger.info(
+        `[${provider!.name}] ${clc.bold(channel.name.charAt(0).toUpperCase() + channel.name.slice(1))}${
+          path ? ' ' + path : ''
+        } webhook ${clc.blackBright(
+          `${externalUrl}/webhooks/${provider!.name}/${channel.name}${path ? `/${path}` : ''}`
+        )}`
+      )
+    }
   }
 
   protected abstract setupConnection(): Promise<void>
