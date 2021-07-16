@@ -55,7 +55,7 @@ export class SyncApi extends BaseApi {
           }
         }
 
-        const result = await this.syncs.sync(sync, force)
+        const result = await this.syncs.sync(sync, { name: force })
 
         res.send(result)
       })

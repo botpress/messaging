@@ -42,16 +42,16 @@ export class SyncService extends Service {
     }
 
     for (const req of config || []) {
-      req.sandbox ? await this.syncSandbox(req) : await this.sync(req, true)
+      req.sandbox ? await this.syncSandbox(req) : await this.sync(req, { name: true, id: true, token: true })
     }
   }
 
-  async sync(req: SyncRequest, force: boolean): Promise<SyncResult> {
+  async sync(req: SyncRequest, force: { name?: boolean; id?: boolean; token?: boolean }): Promise<SyncResult> {
     const client = await this.syncClient(
       req.id,
-      force ? req.name : undefined,
-      force ? req.id : undefined,
-      force ? req.token : undefined
+      force.name ? req.name : undefined,
+      force.id ? req.id : undefined,
+      force.token ? req.token : undefined
     )
 
     await this.syncConduits(client.providerId, req.channels || {})
