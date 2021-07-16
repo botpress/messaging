@@ -101,6 +101,16 @@ export class ProviderService extends Service {
     await this.emitter.emit(ProviderEvents.Updated, { providerId: id, oldProvider })
   }
 
+  async delete(id: uuid) {
+    await this.emitter.emit(ProviderEvents.Deleting, { providerId: id })
+
+    const provider = (await this.getById(id))!
+    this.cacheById.del(id, true)
+    this.cacheByName.del(provider.name, true)
+
+    await this.query().where({ id }).del()
+  }
+
   private query() {
     return this.db.knex(this.table.id)
   }

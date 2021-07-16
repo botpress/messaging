@@ -142,6 +142,15 @@ export class SyncService extends Service {
 
     const targetName = forceProviderName || client.id
     if (provider.name !== targetName) {
+      // If this provider's name conflicts with an old provider, we delete the old provider
+      // We only do this when setting a name ourselves to the provider (meaning we made a call to sync with sufficient authority)
+      if (forceProviderName) {
+        const providerWithSameName = await this.providers.getByName(targetName)
+        if (providerWithSameName && providerWithSameName.id !== provider.id) {
+          await this.providers.delete(providerWithSameName.id)
+        }
+      }
+
       await this.providers.updateName(provider.id, targetName)
     }
 
