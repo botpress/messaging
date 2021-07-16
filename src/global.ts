@@ -15,6 +15,7 @@ export interface MessagingEnv {
   SKIP_LOAD_CONFIG?: string
   SKIP_LOAD_ENV?: string
   SPINNED?: string
+  NO_LAZY_LOADING?: string
 }
 
 declare global {
