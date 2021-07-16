@@ -98,7 +98,11 @@ export class App {
     await this.messages.setup()
     await this.mapping.setup()
     await this.instances.setup()
+  }
+
+  async monitor() {
     await this.syncs.setup()
+    await this.instances.monitor()
   }
 
   async destroy() {

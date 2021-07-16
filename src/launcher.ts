@@ -68,6 +68,8 @@ export class Launcher {
     } else {
       this.logger.info(clc.blackBright(`Messaging is listening at: http://localhost:${port}`))
     }
+
+    await this.app.monitor()
   }
 
   async shutDown(code?: number) {

@@ -1,3 +1,4 @@
+import yn from 'yn'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { ConduitInstance } from '../channels/base/conduit'
@@ -12,6 +13,7 @@ import { InstanceService } from './service'
 
 export class InstanceInvalidator {
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
+  private lazyLoadingEnabled!: boolean
 
   constructor(
     private channels: ChannelService,
@@ -23,6 +25,7 @@ export class InstanceInvalidator {
 
   async setup(cache: ServerCache<uuid, ConduitInstance<any, any>>) {
     this.cache = cache
+    this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.conduits.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
     this.conduits.events.on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
@@ -39,7 +42,7 @@ export class InstanceInvalidator {
       await this.instances.initialize(conduitId)
     }
 
-    if (!channel.lazy) {
+    if (!channel.lazy || !this.lazyLoadingEnabled) {
       await this.instances.get(conduit.id)
     }
   }
@@ -58,7 +61,7 @@ export class InstanceInvalidator {
       await this.instances.initialize(conduitId)
     }
 
-    if (!channel.lazy) {
+    if (!channel.lazy || !this.lazyLoadingEnabled) {
       await this.instances.get(conduit.id)
     }
   }

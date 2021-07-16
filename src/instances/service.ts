@@ -31,6 +31,7 @@ export class InstanceService extends Service {
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private logger: Logger
   private loggingEnabled!: boolean
+  private lazyLoadingEnabled!: boolean
 
   constructor(
     private loggerService: LoggerService,
@@ -71,6 +72,8 @@ export class InstanceService extends Service {
       this.loggingEnabled = process.env.NODE_ENV !== 'production'
     }
 
+    this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
+
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
       dispose: async (k, v) => {
         await v.destroy()
@@ -80,6 +83,9 @@ export class InstanceService extends Service {
     })
 
     await this.invalidator.setup(this.cache)
+  }
+
+  async monitor() {
     await this.monitoring.setup()
   }
 
@@ -107,7 +113,7 @@ export class InstanceService extends Service {
     const instance = channel.createConduit()
 
     await instance.setup(conduitId, conduit.config, this.app)
-    this.cache.set(conduitId, instance, channel.lazy ? undefined : Infinity)
+    this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
 
     return instance
   }
