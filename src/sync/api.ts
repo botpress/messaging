@@ -28,8 +28,12 @@ export class SyncApi extends BaseApi {
     this.router.post(
       '/sync',
       this.asyncMiddleware(async (req, res) => {
-        const channelsWithoutEnabled: any = {}
+        const channelsWithoutEnabled: { [channelName: string]: any } = {}
         for (const [channelName, channelConfig] of Object.entries<any>(req.body?.channels || {})) {
+          if (channelConfig.enabled === false) {
+            continue
+          }
+
           channelsWithoutEnabled[channelName] = _.omit(channelConfig, ['enabled'])
         }
         const bodyWithoutEnabled = { ...(req.body || {}), channels: channelsWithoutEnabled }
