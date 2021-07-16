@@ -54,7 +54,7 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
       ...base,
       client: this.vonage,
       messages: [],
-      isSandbox: this.config.useTestingApi,
+      isSandbox: !!this.config.useTestingApi,
       prepareIndexResponse: this.prepareIndexResponse.bind(this)
     }
   }

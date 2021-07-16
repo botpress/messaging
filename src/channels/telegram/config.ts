@@ -1,7 +1,11 @@
-export interface TelegramConfig {
-  enabled: boolean
-  botToken: string
+import Joi from 'joi'
 
-  // For request forwarding
+export interface TelegramConfig {
+  botToken: string
   webhookUrl?: string
 }
+
+export const TelegramConfigSchema = Joi.object({
+  botToken: Joi.string().required(),
+  webhookUrl: Joi.string().optional()
+})

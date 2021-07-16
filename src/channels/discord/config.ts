@@ -1,4 +1,9 @@
+import Joi from 'joi'
+
 export interface DiscordConfig {
-  enabled: boolean
   token: string
 }
+
+export const DiscordConfigSchema = Joi.object({
+  token: Joi.string().required()
+})

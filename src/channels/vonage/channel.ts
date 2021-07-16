@@ -3,6 +3,7 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import { Channel } from '../base/channel'
 import { VonageConduit } from './conduit'
+import { VonageConfigSchema } from './config'
 
 export class VonageChannel extends Channel<VonageConduit> {
   get name() {
@@ -11,6 +12,10 @@ export class VonageChannel extends Channel<VonageConduit> {
 
   get id() {
     return 'bf045a3c-5627-416d-974d-5cfeb277a23f'
+  }
+
+  get schema() {
+    return VonageConfigSchema
   }
 
   createConduit() {
@@ -52,7 +57,7 @@ export class VonageChannel extends Channel<VonageConduit> {
     }
 
     try {
-      const decoded = <any>jwt.verify(token, conduit.config.signatureSecret!, { algorithms: ['HS256'] })
+      const decoded = <any>jwt.verify(token, conduit.config.signatureSecret, { algorithms: ['HS256'] })
 
       return (
         decoded.api_key === conduit.config.apiKey &&

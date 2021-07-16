@@ -1,6 +1,13 @@
+import Joi from 'joi'
+
 export interface SmoochConfig {
-  enabled: boolean
   keyId: string
   secret: string
   webhookUrl?: string
 }
+
+export const SmoochConfigSchema = Joi.object({
+  keyId: Joi.string().required(),
+  secret: Joi.string().required(),
+  webhookUrl: Joi.string().optional()
+})
