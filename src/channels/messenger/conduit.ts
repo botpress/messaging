@@ -12,6 +12,8 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
 
   protected async setupConnection() {
     this.client = new MessengerClient(this.config)
+
+    await this.printWebhook()
   }
 
   protected setupRenderers() {

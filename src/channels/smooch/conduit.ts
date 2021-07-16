@@ -24,6 +24,7 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
     })
 
     await this.setupWebhook()
+    await this.printWebhook()
   }
 
   private async setupWebhook() {
