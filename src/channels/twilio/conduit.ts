@@ -15,7 +15,7 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
 
   protected async setupConnection() {
     this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
-    this.webhookUrl = this.config.webhookUrl || (await this.getRoute())
+    this.webhookUrl = await this.getRoute()
 
     await this.printWebhook()
   }

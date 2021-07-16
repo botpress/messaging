@@ -114,12 +114,11 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
       const channel = this.app.channels.getById(conduit!.channelId)
       const provider = await this.app.providers.getById(conduit!.providerId)
 
-      // TOOD: we shouldn't hardocde /api/v1 here
       this.logger.info(
         `[${provider!.name}] ${clc.bold(channel.name.charAt(0).toUpperCase() + channel.name.slice(1))}${
           path ? ' ' + path : ''
         } webhook ${clc.blackBright(
-          `${externalUrl}/api/v1/messaging/webhooks/${provider!.name}/${channel.name}${path ? `/${path}` : ''}`
+          `${externalUrl}/webhooks/${provider!.name}/${channel.name}${path ? `/${path}` : ''}`
         )}`
       )
     }

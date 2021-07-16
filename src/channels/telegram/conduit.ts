@@ -14,7 +14,7 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   public callback!: (req: any, res: any) => void
 
   async initialize() {
-    await this.telegraf.telegram.setWebhook(this.config.webhookUrl || (await this.getRoute()))
+    await this.telegraf.telegram.setWebhook(await this.getRoute())
   }
 
   protected async setupConnection() {

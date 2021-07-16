@@ -28,7 +28,7 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
   }
 
   private async setupWebhook() {
-    const target = this.config.webhookUrl || (await this.getRoute())
+    const target = await this.getRoute()
 
     // Note: creating a webhook with the same url will not create a new webhook but return the already existing one
     const { webhook }: { webhook: SmoochWebhook } = await this.smooch.webhooks.create({
