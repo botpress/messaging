@@ -1,15 +1,17 @@
 import axios from 'axios'
 import _ from 'lodash'
 import { MessengerConfig } from './config'
+import { MessengerAction } from './types'
 
 export class MessengerClient {
   private readonly http = axios.create({ baseURL: 'https://graph.facebook.com/v3.2/me' })
 
   constructor(private config: MessengerConfig) {}
 
-  // TODO: typings
-  async sendAction(senderId: string, action: any) {
-    // TODO: disable actions config
+  async sendAction(senderId: string, action: MessengerAction) {
+    if (this.config.disabledActions?.includes(action)) {
+      return
+    }
 
     const body = {
       recipient: {
