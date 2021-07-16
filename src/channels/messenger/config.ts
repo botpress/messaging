@@ -8,10 +8,9 @@ export interface MessengerConfig {
   disabledActions?: MessengerAction[]
 }
 
-const validDisabledActions: MessengerAction[] = ['typing_on', 'typing_off', 'mark_seen']
 export const MessengerConfigSchema = Joi.object({
   accessToken: Joi.string().required(),
   appSecret: Joi.string().required(),
   verifyToken: Joi.string().required(),
-  disabledActions: Joi.array().items(Joi.string().valid(validDisabledActions)).optional()
+  disabledActions: Joi.array().items(Joi.string().valid('typing_on', 'typing_off', 'mark_seen')).optional()
 })
