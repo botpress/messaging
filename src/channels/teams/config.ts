@@ -12,6 +12,6 @@ export interface TeamsConfig {
 export const TeamsConfigSchema = Joi.object({
   appId: Joi.string().required(),
   appPassword: Joi.string().required(),
-  tenantId: Joi.string().required(),
+  tenantId: Joi.string().optional(),
   proactiveMessages: Joi.object().optional()
 })
