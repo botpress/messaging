@@ -1,6 +1,7 @@
 import clc from 'cli-color'
 import { NextFunction, Request, Response, Router } from 'express'
 import Joi from 'joi'
+import yn from 'yn'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
@@ -57,11 +58,13 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   }
 
   protected printWebhook(route?: string) {
-    this.logger.info(
-      `${clc.bold(this.name.charAt(0).toUpperCase() + this.name.slice(1))}` +
-        `${route ? ' ' + route : ''}` +
-        ` webhook ${clc.blackBright(this.getRoute(route))}`
-    )
+    if (!yn(process.env.SPINNED)) {
+      this.logger.info(
+        `${clc.bold(this.name.charAt(0).toUpperCase() + this.name.slice(1))}` +
+          `${route ? ' ' + route : ''}` +
+          ` webhook ${clc.blackBright(this.getRoute(route))}`
+      )
+    }
   }
 
   abstract createConduit(): TConduit

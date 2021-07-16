@@ -2,6 +2,7 @@ import clc from 'cli-color'
 import { Express } from 'express'
 import _ from 'lodash'
 import portfinder from 'portfinder'
+import yn from 'yn'
 import { Api } from './api'
 import { App } from './app'
 import { Logger } from './logger/types'
@@ -57,11 +58,15 @@ export class Launcher {
 
     this.express.listen(port)
 
-    this.logger.info(`Server is listening at: http://localhost:${port}`)
+    if (!yn(process.env.SPINNED)) {
+      this.logger.info(`Server is listening at: http://localhost:${port}`)
 
-    const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
-    if (externalUrl?.length) {
-      this.logger.info(`Server is exposed at: ${externalUrl}`)
+      const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+      if (externalUrl?.length) {
+        this.logger.info(`Server is exposed at: ${externalUrl}`)
+      }
+    } else {
+      this.logger.info(clc.blackBright(`Messaging is listening at: http://localhost:${port}`))
     }
   }
 
@@ -79,32 +84,36 @@ export class Launcher {
       return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
     }
 
+    const width = yn(process.env.SPINNED) ? 45 : 33
     this.logger.info(
       '========================================\n' +
-        clc.bold(centerText('Botpress Messaging', 40, 33)) +
+        clc.bold(centerText('Botpress Messaging', 40, width)) +
         '\n' +
-        clc.blackBright(centerText(`Version ${pkg.version}`, 40, 33)) +
+        clc.blackBright(centerText(`Version ${pkg.version}`, 40, width)) +
         '\n' +
-        centerText('========================================', 40, 33)
+        centerText('========================================', 40, width)
     )
   }
 
   private printChannels() {
-    const padding = _.repeat(' ', 24)
+    if (!yn(process.env.SPINNED)) {
+      const padding = _.repeat(' ', 24)
+      let text = ''
+      let enabled = 0
 
-    let enabledText = ''
-    const disabledText = ''
-    let enabled = 0
-    for (const channel of this.app.channels.list()) {
-      // TODO: should it be possible to disable channels globally?
-      if (true) {
+      for (const channel of this.app.channels.list()) {
         enabled++
-        enabledText += `\n${padding}${clc.green('⦿')} ${channel.name}`
-      } else {
-        // disabledText += `\n${padding}${clc.blackBright('⊝')} ${channel.id} ${clc.blackBright('(disabled)')}`
+        text += `\n${padding}${clc.green('⦿')} ${channel.name}`
       }
-    }
 
-    this.logger.info(`Using ${clc.bold(enabled)} channels` + enabledText + disabledText)
+      this.logger.info(`Using ${clc.bold(enabled)} channels` + text)
+    } else {
+      this.logger.info(
+        `Using channels: ${this.app.channels
+          .list()
+          .map((x) => x.name)
+          .join(', ')}`
+      )
+    }
   }
 }

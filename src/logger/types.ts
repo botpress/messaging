@@ -1,5 +1,6 @@
 import clc from 'cli-color'
 import moment from 'moment'
+import yn from 'yn'
 
 export enum LoggerLevel {
   Debug = 10,
@@ -49,7 +50,7 @@ export class Logger {
     const time = moment().format(timeFormat)
 
     const timeText = clc.blackBright(time)
-    const titleText = clc.bold(this.colors[level](this.scope))
+    const titleText = clc.bold(this.colors[level](yn(process.env.SPINNED) ? `[Messaging] ${this.scope}` : this.scope))
 
     if (data) {
       // eslint-disable-next-line no-console
