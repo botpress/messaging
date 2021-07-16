@@ -86,17 +86,18 @@ export class SyncService extends Service {
       if (!config.enabled) {
         continue
       }
+      const configWithoutEnabled = _.omit(config, ['enabled'])
 
       const channelId = this.channels.getByName(channel).id
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (oldConduitIndex < 0) {
-        await this.conduits.create(providerId, channelId, config)
+        await this.conduits.create(providerId, channelId, configWithoutEnabled)
       } else {
         const oldConduit = (await this.conduits.getByProviderAndChannel(providerId, channelId))!
 
-        if (!_.isEqual(config, oldConduit.config)) {
-          await this.conduits.updateConfig(oldConduit.id, config)
+        if (!_.isEqual(configWithoutEnabled, oldConduit.config)) {
+          await this.conduits.updateConfig(oldConduit.id, configWithoutEnabled)
         }
 
         oldConduits.splice(oldConduitIndex, 1)

@@ -1,3 +1,4 @@
+import Joi from 'joi'
 import { Channel } from '../base/channel'
 import { WebConduit } from './conduit'
 
@@ -8,6 +9,10 @@ export class WebChannel extends Channel<WebConduit> {
 
   get id() {
     return 'd9063ab0-e715-4cd4-83b4-184346175b2c'
+  }
+
+  get schema() {
+    return Joi.object()
   }
 
   createConduit() {

@@ -5,6 +5,7 @@ import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { ServerCache2D } from '../caching/cache2D'
 import { CachingService } from '../caching/service'
+import { ChannelService } from '../channels/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
 import { ConduitEmitter, ConduitEvents, ConduitWatcher } from './events'
@@ -24,7 +25,8 @@ export class ConduitService extends Service {
   constructor(
     private db: DatabaseService,
     private cryptoService: CryptoService,
-    private cachingService: CachingService
+    private cachingService: CachingService,
+    private channelService: ChannelService
   ) {
     super()
     this.emitter = new ConduitEmitter()
@@ -39,6 +41,9 @@ export class ConduitService extends Service {
   }
 
   async create(providerId: uuid, channelId: uuid, config: any): Promise<Conduit> {
+    const channel = this.channelService.getById(channelId)
+    await channel.schema.validateAsync(config)
+
     const conduit = {
       id: uuidv4(),
       providerId,
@@ -65,12 +70,15 @@ export class ConduitService extends Service {
 
   async updateConfig(id: uuid, config: any) {
     const conduit = (await this.get(id))!
+    const channel = this.channelService.getById(conduit.channelId)
+    await channel.schema.validateAsync(config)
+
     this.cacheById.del(id, true)
     this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
     await this.query()
       .where({ id })
-      .update({ initialized: null, config: await this.cryptoService.encrypt(JSON.stringify(config || {})) })
+      .update({ initialized: null, config: this.cryptoService.encrypt(JSON.stringify(config || {})) })
 
     await this.emitter.emit(ConduitEvents.Updated, id)
   }
