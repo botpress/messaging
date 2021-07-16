@@ -6,6 +6,8 @@ import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
+import { ProviderDeletingEvent, ProviderEvents } from '../providers/events'
+import { ProviderService } from '../providers/service'
 import { ClientEmitter, ClientEvents, ClientWatcher } from './events'
 import { ClientTable } from './table'
 import { Client } from './types'
@@ -24,7 +26,8 @@ export class ClientService extends Service {
   constructor(
     private db: DatabaseService,
     private cryptoService: CryptoService,
-    private cachingService: CachingService
+    private cachingService: CachingService,
+    private providerService: ProviderService
   ) {
     super()
     this.emitter = new ClientEmitter()
@@ -37,6 +40,8 @@ export class ClientService extends Service {
     this.cacheTokens = await this.cachingService.newServerCache('cache_client_tokens')
 
     await this.db.registerTable(this.table)
+
+    this.providerService.events.on(ProviderEvents.Deleting, this.onProviderDeleting.bind(this))
   }
 
   async generateToken(): Promise<string> {
@@ -118,6 +123,14 @@ export class ClientService extends Service {
 
     await this.query().where({ id }).update({ providerId })
     await this.emitter.emit(ClientEvents.Updated, { clientId: id, oldClient })
+  }
+
+  private async onProviderDeleting({ providerId }: ProviderDeletingEvent) {
+    const client = await this.getByProviderId(providerId)
+
+    if (client) {
+      await this.updateProvider(client.id, null)
+    }
   }
 
   private query() {

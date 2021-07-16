@@ -8,6 +8,8 @@ import { CachingService } from '../caching/service'
 import { ChannelService } from '../channels/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
+import { ProviderDeletingEvent, ProviderEvents } from '../providers/events'
+import { ProviderService } from '../providers/service'
 import { ConduitEmitter, ConduitEvents, ConduitWatcher } from './events'
 import { ConduitTable } from './table'
 import { Conduit } from './types'
@@ -26,7 +28,8 @@ export class ConduitService extends Service {
     private db: DatabaseService,
     private cryptoService: CryptoService,
     private cachingService: CachingService,
-    private channelService: ChannelService
+    private channelService: ChannelService,
+    private providerService: ProviderService
   ) {
     super()
     this.emitter = new ConduitEmitter()
@@ -38,6 +41,8 @@ export class ConduitService extends Service {
     this.cacheByProviderAndChannel = await this.cachingService.newServerCache2D('cache_conduit_by_provider_and_channel')
 
     await this.db.registerTable(this.table)
+
+    this.providerService.events.on(ProviderEvents.Deleting, this.onProviderDeleting.bind(this))
   }
 
   async create(providerId: uuid, channelId: uuid, config: any): Promise<Conduit> {
@@ -150,6 +155,14 @@ export class ConduitService extends Service {
   async listByChannel(channelId: uuid): Promise<Conduit[]> {
     const rows = await this.query().where({ channelId })
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
+  }
+
+  private async onProviderDeleting({ providerId }: ProviderDeletingEvent) {
+    const conduits = await this.listByProvider(providerId)
+
+    for (const conduit of conduits) {
+      await this.delete(conduit.id)
+    }
   }
 
   private serialize(conduit: Partial<Conduit>) {

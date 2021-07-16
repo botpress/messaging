@@ -3,7 +3,8 @@ import { uuid } from '../base/types'
 import { Provider } from './types'
 
 export enum ProviderEvents {
-  Updated = -6307907498173656
+  Updated = -6307907498173656,
+  Deleting = 4113861503631719
 }
 
 export interface ProviderUpdatedEvent {
@@ -11,8 +12,13 @@ export interface ProviderUpdatedEvent {
   oldProvider: Provider
 }
 
+export interface ProviderDeletingEvent {
+  providerId: uuid
+}
+
 export class ProviderEmitter extends Emitter<{
   [ProviderEvents.Updated]: ProviderUpdatedEvent
+  [ProviderEvents.Deleting]: ProviderDeletingEvent
 }> {}
 
 export type ProviderWatcher = Omit<ProviderEmitter, 'emit'>
