@@ -14,6 +14,7 @@ export interface MessagingEnv {
   SYNC?: string
   SKIP_LOAD_CONFIG?: string
   SKIP_LOAD_ENV?: string
+  SPINNED?: string
 }
 
 declare global {
