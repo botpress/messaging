@@ -1,5 +1,6 @@
 import clc from 'cli-color'
 import { NextFunction, Request, Response, Router } from 'express'
+import Joi from 'joi'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
@@ -8,6 +9,7 @@ import { ConduitInstance } from './conduit'
 export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   abstract get id(): uuid
   abstract get name(): string
+  abstract get schema(): Joi.ObjectSchema<any>
 
   get initiable() {
     return false

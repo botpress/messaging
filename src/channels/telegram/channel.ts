@@ -1,5 +1,6 @@
 import { Channel } from '../base/channel'
 import { TelegramConduit } from './conduit'
+import { TelegramConfigSchema } from './config'
 
 export class TelegramChannel extends Channel<TelegramConduit> {
   get name() {
@@ -8,6 +9,10 @@ export class TelegramChannel extends Channel<TelegramConduit> {
 
   get id() {
     return '0198f4f5-6100-4549-92e5-da6cc31b4ad1'
+  }
+
+  get schema() {
+    return TelegramConfigSchema
   }
 
   get initiable() {

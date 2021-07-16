@@ -1,5 +1,6 @@
 import { Channel } from '../base/channel'
 import { TeamsConduit } from './conduit'
+import { TeamsConfigSchema } from './config'
 
 export class TeamsChannel extends Channel<TeamsConduit> {
   get name() {
@@ -8,6 +9,10 @@ export class TeamsChannel extends Channel<TeamsConduit> {
 
   get id() {
     return '0491806d-ceb4-4397-8ebf-b8e6deb038da'
+  }
+
+  get schema() {
+    return TeamsConfigSchema
   }
 
   createConduit() {

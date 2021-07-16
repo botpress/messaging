@@ -1,6 +1,7 @@
 import express from 'express'
 import { Channel } from '../base/channel'
 import { SmoochConduit } from './conduit'
+import { SmoochConfigSchema } from './config'
 import { SmoochPayload } from './context'
 
 export class SmoochChannel extends Channel<SmoochConduit> {
@@ -10,6 +11,10 @@ export class SmoochChannel extends Channel<SmoochConduit> {
 
   get id() {
     return '3c5c160f-d673-4ef8-8b6f-75448af048ce'
+  }
+
+  get schema() {
+    return SmoochConfigSchema
   }
 
   get initiable() {

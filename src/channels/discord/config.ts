@@ -1,5 +1,9 @@
-import { ChannelConfig } from '../base/config'
+import Joi from 'joi'
 
-export type DiscordConfig = ChannelConfig & {
+export interface DiscordConfig {
   token: string
 }
+
+export const DiscordConfigSchema = Joi.object({
+  token: Joi.string().required()
+})

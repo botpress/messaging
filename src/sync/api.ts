@@ -1,8 +1,10 @@
 import { Router } from 'express'
+import _ from 'lodash'
 import { BaseApi } from '../base/api'
+import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConfigService } from '../config/service'
-import { SyncRequestSchema } from './schema'
+import { makeSyncRequestSchema } from './schema'
 import { SyncService } from './service'
 import { SyncRequest } from './types'
 
@@ -11,7 +13,8 @@ export class SyncApi extends BaseApi {
     router: Router,
     private config: ConfigService,
     private syncs: SyncService,
-    private clients: ClientService
+    private clients: ClientService,
+    private channels: ChannelService
   ) {
     super(router)
   }
@@ -20,10 +23,18 @@ export class SyncApi extends BaseApi {
     // TODO: kind of a hack to make spinning with boptress work
     const force = (process.env.INTERNAL_PASSWORD || this.config.current.security?.password)?.length > 0
 
+    const requestSchema = makeSyncRequestSchema(this.channels.list())
+
     this.router.post(
       '/sync',
       this.asyncMiddleware(async (req, res) => {
-        const { error } = SyncRequestSchema.validate(req.body)
+        const channelsWithoutEnabled: any = {}
+        for (const [channelName, channelConfig] of Object.entries<any>(req.body?.channels || {})) {
+          channelsWithoutEnabled[channelName] = _.omit(channelConfig, ['enabled'])
+        }
+        const bodyWithoutEnabled = { ...(req.body || {}), channels: channelsWithoutEnabled }
+
+        const { error } = requestSchema.validate(bodyWithoutEnabled)
         if (error) {
           return res.status(400).send(error.message)
         }

@@ -1,6 +1,11 @@
-import { ChannelConfig } from '../base/config'
+import Joi from 'joi'
 
-export type TelegramConfig = ChannelConfig & {
+export interface TelegramConfig {
   botToken: string
   webhookUrl?: string
 }
+
+export const TelegramConfigSchema = Joi.object({
+  botToken: Joi.string().required(),
+  webhookUrl: Joi.string().optional()
+})

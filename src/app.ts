@@ -50,7 +50,7 @@ export class App {
     this.clients = new ClientService(this.database, this.crypto, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.kvs = new KvsService(this.database, this.caching)
-    this.conduits = new ConduitService(this.database, this.crypto, this.caching)
+    this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels)
     this.users = new UserService(this.database)
     this.conversations = new ConversationService(this.database, this.caching)
     this.messages = new MessageService(this.database, this.caching, this.conversations)

@@ -1,9 +1,13 @@
-import { ChannelConfig } from '../base/config'
+import Joi from 'joi'
 
-export type TwilioConfig = ChannelConfig & {
+export interface TwilioConfig {
   accountSID: string
   authToken: string
-
-  // For request forwarding
-  webhookUrl: string
+  webhookUrl?: string
 }
+
+export const TwilioConfigSchema = Joi.object({
+  accountSID: Joi.string().required(),
+  authToken: Joi.string().required(),
+  webhookUrl: Joi.string().optional()
+})

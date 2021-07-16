@@ -1,8 +1,13 @@
-import { ChannelConfig } from '../base/config'
+import Joi from 'joi'
 
-export type SlackConfig = ChannelConfig & {
+export interface SlackConfig {
   botToken: string
   signingSecret: string
-  fetchUserInfo: boolean
   useRTM: boolean
 }
+
+export const SlackConfigSchema = Joi.object({
+  botToken: Joi.string().required(),
+  signingSecret: Joi.string().required(),
+  useRTM: Joi.boolean().optional()
+})
