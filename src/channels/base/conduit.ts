@@ -52,7 +52,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
         handlers: 0,
         payload: _.cloneDeep(payload),
         // TODO: temporary shorcut so that it works when botpress spins the messaging server. To be ajdusted when messaging is on cloud
-        botUrl: process.env.EXTERNAL_URL!,
+        botUrl: process.env.BOT_URL!,
         logger: this.logger,
         ...endpoint
       },
