@@ -3,7 +3,7 @@ import Joi from 'joi'
 export interface TeamsConfig {
   appId: string
   appPassword: string
-  tenantId: string
+  tenantId?: string
   proactiveMessages?: {
     [Key: string]: string
   }
