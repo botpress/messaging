@@ -42,11 +42,29 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
     const identity = payload.to.number
     const sender = payload.from.number
 
-    const index = Number(payload.message.content.text)
-    const text = this.handleIndexResponse(index, identity, sender) || payload.message.content.text
+    const messageContent = payload.message.content
+
+    let content = {}
+    switch (messageContent.type) {
+      case 'text':
+        const index = Number(messageContent.text)
+        const text = this.handleIndexResponse(index, identity, sender) || messageContent.text
+        content = { type: 'text', text }
+        break
+      case 'audio':
+        // We have to take for granted that all messages of type audio are voice messages
+        // since Vonage does not differentiate the two.
+        content = {
+          type: 'voice',
+          audio: messageContent.audio!.url
+        }
+        break
+      default:
+        break
+    }
 
     return {
-      content: { type: 'text', text },
+      content,
       identity,
       sender
     }
