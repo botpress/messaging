@@ -36,7 +36,7 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
 
         const provider = await this.app.providers.getByName(providerName)
         if (!provider) {
-          throw new Error(`Invalid provider '${providerName}'. Make sure your webhook is properly configured`)
+          throw new Error(`Unknown provider '${providerName}'. Make sure your webhook is properly configured`)
         } else {
           const providerId = provider.id
           const conduit = (await this.app.conduits.getByProviderAndChannel(providerId, this.id))!
