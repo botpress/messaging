@@ -119,7 +119,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
       }
     })
 
-    // com.on('error', (err) => this.bp.logger.attachError(err).error('An error occurred'))
+    com.on('error', (err) => this.logger.error('An error occurred', err))
   }
 
   public async extractEndpoint(payload: { ctx: any; content: any }): Promise<EndpointContent> {

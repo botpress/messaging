@@ -51,7 +51,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
         client: undefined,
         handlers: 0,
         payload: _.cloneDeep(payload),
-        // TODO: temporary shorcut so that it works when botpress spins the messaging server. To be ajdusted when messaging is on cloud
+        // TODO: temporary shortcut so that it works when botpress spins the messaging server. To be adjusted when messaging is on cloud
         botUrl: process.env.BOT_URL!,
         logger: this.logger,
         ...endpoint
@@ -61,14 +61,23 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
 
     for (const renderer of this.renderers) {
       if (renderer.handles(context)) {
-        renderer.render(context)
-        context.handlers++
+        try {
+          renderer.render(context)
+        } catch (err) {
+          this.logger.error('An error occurred when rendering a message', err)
+        } finally {
+          context.handlers++
+        }
       }
     }
 
     for (const sender of this.senders) {
       if (sender.handles(context)) {
-        await sender.send(context)
+        try {
+          await sender.send(context)
+        } catch (err) {
+          this.logger.error('An error occurred when sending a message', err)
+        }
       }
     }
   }
