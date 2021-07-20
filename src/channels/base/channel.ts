@@ -32,11 +32,17 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
     root.use(
       this.getRoute(),
       this.asyncMiddleware(async (req, res, next) => {
-        const { provider } = req.params
-        const providerId = (await this.app.providers.getByName(provider))!.id
-        const conduit = (await this.app.conduits.getByProviderAndChannel(providerId, this.id))!
-        res.locals.conduit = await this.app.instances.get(conduit.id)
-        next()
+        const providerName = req.params.provider
+
+        const provider = await this.app.providers.getByName(providerName)
+        if (!provider) {
+          throw new Error(`Invalid provider '${providerName}'. Make sure your webhook is properly configured`)
+        } else {
+          const providerId = provider.id
+          const conduit = (await this.app.conduits.getByProviderAndChannel(providerId, this.id))!
+          res.locals.conduit = await this.app.instances.get(conduit.id)
+          next()
+        }
       }),
       this.router
     )
