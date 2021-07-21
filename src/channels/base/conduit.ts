@@ -76,7 +76,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
         try {
           await sender.send(context)
         } catch (err) {
-          this.logger.error('An error occurred when sending a message', err)
+          this.logger.error('An error occurred when sending a message:', (err as Error).message)
         }
       }
     }

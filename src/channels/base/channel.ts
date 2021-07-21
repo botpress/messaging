@@ -37,12 +37,18 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
         const provider = await this.app.providers.getByName(providerName)
         if (!provider) {
           throw new Error(`Unknown provider '${providerName}'. Make sure your webhook is properly configured`)
-        } else {
-          const providerId = provider.id
-          const conduit = (await this.app.conduits.getByProviderAndChannel(providerId, this.id))!
-          res.locals.conduit = await this.app.instances.get(conduit.id)
-          next()
         }
+
+        const providerId = provider.id
+        const conduit = await this.app.conduits.getByProviderAndChannel(providerId, this.id)
+        if (!conduit) {
+          throw new Error(
+            `Cannot find a matching conduit for provider '${providerName}'. Make sure your channel is enabled and properly synced`
+          )
+        }
+
+        res.locals.conduit = await this.app.instances.get(conduit.id)
+        next()
       }),
       this.router
     )
