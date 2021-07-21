@@ -25,7 +25,7 @@ export class TeamsChannel extends Channel<TeamsConduit> {
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as TeamsConduit
 
-        await conduit.adapter.processActivity(req, <any>res, async (turnContext) => {
+        await conduit.adapter.processActivity(req, res, async (turnContext) => {
           if (conduit.botNewlyAddedToConversation(turnContext)) {
             await conduit.sendProactiveMessage(turnContext)
           } else {
