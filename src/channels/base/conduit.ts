@@ -64,7 +64,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
         try {
           renderer.render(context)
         } catch (err) {
-          this.logger.error('An error occurred when rendering a message', err)
+          this.logger.error('An error occurred when rendering a message', (err as Error).message)
         } finally {
           context.handlers++
         }
