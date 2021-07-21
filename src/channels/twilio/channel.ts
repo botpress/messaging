@@ -38,6 +38,8 @@ export class TwilioChannel extends Channel<TwilioConduit> {
           await this.app.instances.receive(conduit.conduitId, req.body)
           res.sendStatus(204)
         } else {
+          this.logger.error('Request validation failed. Make sure that your authToken is valid.')
+
           res.status(401).send('Auth token invalid')
         }
       })
