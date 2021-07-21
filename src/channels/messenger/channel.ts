@@ -1,5 +1,6 @@
 import crypto from 'crypto'
-import express from 'express'
+import express, { Response } from 'express'
+import { ServerResponse, IncomingMessage } from 'http'
 import { Channel } from '../base/channel'
 import { MessengerConduit } from './conduit'
 import { MessengerConfigSchema } from './config'
@@ -64,14 +65,16 @@ export class MessengerChannel extends Channel<MessengerConduit> {
     this.printWebhook()
   }
 
-  private auth(req: any, res: any, buffer: any) {
+  private auth(req: IncomingMessage, res: ServerResponse & Response, buffer: Buffer, _encoding: string) {
     const conduit = res.locals.conduit as MessengerConduit
 
-    const signature = req.headers['x-hub-signature']
+    const signature = req.headers['x-hub-signature'] as string
     const [, hash] = signature.split('=')
     const expectedHash = crypto.createHmac('sha1', conduit.config.appSecret).update(buffer).digest('hex')
     if (hash !== expectedHash) {
-      throw new Error("Couldn't validate the request signature.")
+      this.logger.error("Couldn't validate the request signature. Make sure your appSecret is properly configured")
+
+      throw new Error()
     }
   }
 }
