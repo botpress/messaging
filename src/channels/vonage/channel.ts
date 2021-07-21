@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import express from 'express'
+import express, { Request } from 'express'
 import jwt from 'jsonwebtoken'
 import { Channel } from '../base/channel'
 import { VonageConduit } from './conduit'
@@ -30,7 +30,7 @@ export class VonageChannel extends Channel<VonageConduit> {
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as VonageConduit
 
-        if (this.validate(conduit, <any>req)) {
+        if (this.validate(conduit, req)) {
           await this.app.instances.receive(conduit.conduitId, req.body)
         }
 
@@ -40,6 +40,8 @@ export class VonageChannel extends Channel<VonageConduit> {
     this.router.use(
       '/status',
       this.asyncMiddleware(async (req, res) => {
+        console.log('req', req)
+        console.log('req.body', req.body)
         res.sendStatus(200)
       })
     )
@@ -49,15 +51,18 @@ export class VonageChannel extends Channel<VonageConduit> {
   }
 
   private validate(conduit: VonageConduit, req: Request): boolean {
-    const body = <any>req.body
-    const [scheme, token] = (<any>req.headers).authorization.split(' ')
+    const body = req.body
+    const [scheme, token] = (req.headers.authorization || '').split(' ')
 
     if (body.from.type !== 'whatsapp' || body.to.type !== 'whatsapp' || scheme.toLowerCase() !== 'bearer' || !token) {
       return false
     }
 
     try {
-      const decoded = <any>jwt.verify(token, conduit.config.signatureSecret, { algorithms: ['HS256'] })
+      const decoded = jwt.verify(token, conduit.config.signatureSecret, { algorithms: ['HS256'] }) as {
+        api_key: string
+        payload_hash: string
+      }
 
       return (
         decoded.api_key === conduit.config.apiKey &&

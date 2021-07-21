@@ -23,7 +23,7 @@ export class VonageCommonSender extends CommonSender {
                   }
                 }
 
-                context.logger.error(`${errBody.title}: ${errBody.detail} ${reasons}${errBody.type}`)
+                context.logger.error(`${errBody.title}: ${errBody.detail} ${reasons}${errBody.type || ''}`)
               } else if ((<any>err).statusCode === '429') {
                 context.logger.error('HTTPError (429): Too Many Requests')
               } else {
