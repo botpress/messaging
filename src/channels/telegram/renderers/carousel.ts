@@ -10,14 +10,7 @@ type Context = CarouselContext<TelegramContext> & {
 }
 
 export class TelegramCarouselRenderer extends CarouselRenderer {
-  startRenderCard(context: Context, card: CardContent) {
-    if (card.image) {
-      context.channel.messages.push({ action: 'upload_photo' })
-      context.channel.messages.push({
-        photo: { url: card.image, filename: path.basename(card.image) }
-      })
-    }
-
+  startRenderCard(context: Context, _card: CardContent) {
     context.buttons = []
   }
 
@@ -34,9 +27,17 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
   }
 
   endRenderCard(context: Context, card: CardContent) {
-    context.channel.messages.push({
-      text: `*${card.title}*\n${card.subtitle}`,
-      extra: Extra.markdown(true).markup(Markup.inlineKeyboard(context.buttons))
-    })
+    if (card.image) {
+      context.channel.messages.push({ action: 'upload_photo' })
+      context.channel.messages.push({
+        photo: {
+          url: card.image,
+          filename: path.basename(card.image)
+        },
+        extra: new Extra({ caption: `*${card.title}*${card.subtitle ? '\n' + card.subtitle : ''}` })
+          .markdown(true)
+          .markup(Markup.inlineKeyboard(context.buttons))
+      })
+    }
   }
 }
