@@ -40,8 +40,6 @@ export class VonageChannel extends Channel<VonageConduit> {
     this.router.use(
       '/status',
       this.asyncMiddleware(async (req, res) => {
-        console.log('req', req)
-        console.log('req.body', req.body)
         res.sendStatus(200)
       })
     )
