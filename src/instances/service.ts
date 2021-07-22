@@ -90,11 +90,12 @@ export class InstanceService extends Service {
   }
 
   async initialize(conduitId: uuid) {
+    const instance = await this.get(conduitId)
+
     try {
-      const instance = await this.get(conduitId)
       await instance.initialize()
-    } catch {
-      this.logger.error('Error trying to initialize conduit')
+    } catch (e) {
+      instance.logger.error('Error trying to initialize conduit.', e)
       this.cache.del(conduitId)
       return
     }
@@ -112,8 +113,13 @@ export class InstanceService extends Service {
     const channel = this.channelService.getById(conduit.channelId)
     const instance = channel.createConduit()
 
-    await instance.setup(conduitId, conduit.config, this.app)
-    this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
+    try {
+      await instance.setup(conduitId, conduit.config, this.app)
+      this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
+    } catch (e) {
+      instance.logger.error('Error trying to setup conduit.', e)
+      this.cache.del(conduitId)
+    }
 
     return instance
   }
@@ -174,7 +180,11 @@ export class InstanceService extends Service {
       const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
 
       const config: AxiosRequestConfig = { headers: { password } }
-      await axios.post(webhook.url, post, config)
+      try {
+        await axios.post(webhook.url, post, config)
+      } catch (e) {
+        instance.logger.error(`Failed to call webhook ${webhook.url}`, e.message)
+      }
     }
   }
 }
