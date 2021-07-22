@@ -175,16 +175,24 @@ export class InstanceService extends Service {
       instance.loggerIn.debug('Received message', post)
     }
 
-    const webhooks = await this.webhookService.list(clientId)
-    for (const webhook of webhooks) {
-      const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
+    if (process.env.SPINNED) {
+      await this.callWebhook(instance, process.env.SPINNED_URL!, post)
+    } else {
+      const webhooks = await this.webhookService.list(clientId)
 
-      const config: AxiosRequestConfig = { headers: { password } }
-      try {
-        await axios.post(webhook.url, post, config)
-      } catch (e) {
-        instance.logger.error(`Failed to call webhook ${webhook.url}`, e.message)
+      for (const webhook of webhooks) {
+        await this.callWebhook(instance, webhook.url, post)
       }
+    }
+  }
+
+  private async callWebhook(instance: ConduitInstance<any, any>, url: string, data: any) {
+    const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
+
+    try {
+      await axios.post(url, data, { headers: { password } })
+    } catch (e) {
+      instance.logger.error(`Failed to call webhook ${url}`, e.message)
     }
   }
 }
