@@ -18,6 +18,10 @@ export class MessengerChannel extends Channel<MessengerConduit> {
     return MessengerConfigSchema
   }
 
+  get initiable() {
+    return true
+  }
+
   createConduit() {
     return new MessengerConduit()
   }

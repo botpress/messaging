@@ -10,6 +10,12 @@ import { MessengerSenders } from './senders'
 export class MessengerConduit extends ConduitInstance<MessengerConfig, MessengerContext> {
   private client!: MessengerClient
 
+  async initialize() {
+    await this.client.setupGreeting()
+    await this.client.setupGetStarted()
+    await this.client.setupPersistentMenu()
+  }
+
   protected async setupConnection() {
     this.client = new MessengerClient(this.config)
 
