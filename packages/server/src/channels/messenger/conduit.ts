@@ -8,10 +8,16 @@ import { MessengerRenderers } from './renderers'
 import { MessengerSenders } from './senders'
 
 export class MessengerConduit extends ConduitInstance<MessengerConfig, MessengerContext> {
-  private client!: MessengerClient
+  public client!: MessengerClient
+
+  async initialize() {
+    await this.client.setupGreeting()
+    await this.client.setupGetStarted()
+    await this.client.setupPersistentMenu()
+  }
 
   protected async setupConnection() {
-    this.client = new MessengerClient(this.config)
+    this.client = new MessengerClient(this.config, this.logger)
 
     await this.printWebhook()
   }
@@ -25,8 +31,16 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
   }
 
   public async extractEndpoint(payload: any): Promise<EndpointContent> {
+    let text
+    if (payload.message) {
+      text = payload.message.text
+    } else if (payload.postback) {
+      // For greeting message
+      text = payload.postback.payload
+    }
+
     return {
-      content: { type: 'text', text: payload.message.text },
+      content: { type: 'text', text },
       identity: payload.recipient.id,
       sender: payload.sender.id
     }

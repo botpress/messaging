@@ -18,6 +18,10 @@ export class MessengerChannel extends Channel<MessengerConduit> {
     return MessengerConfigSchema
   }
 
+  get initiable() {
+    return true
+  }
+
   createConduit() {
     return new MessengerConduit()
   }
@@ -66,6 +70,9 @@ export class MessengerChannel extends Channel<MessengerConduit> {
         if (!webhookEvent.sender) {
           continue
         }
+
+        await conduit.client.sendAction(webhookEvent.sender.id, 'mark_seen')
+
         await this.app.instances.receive(conduit.conduitId, webhookEvent)
       }
     }
