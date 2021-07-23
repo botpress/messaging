@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { MessengerAction } from './types'
+import { MessengerAction } from './context'
 
 export interface MessengerConfig {
   accessToken: string
