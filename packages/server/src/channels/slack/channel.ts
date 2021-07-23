@@ -24,7 +24,7 @@ export class SlackChannel extends Channel<SlackConduit> {
       '/interactive',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as SlackConduit
-        conduit.interactiveListener(req, res)
+        conduit.handleInteractiveRequest(req, res)
       })
     )
     this.printWebhook('interactive')
@@ -33,7 +33,7 @@ export class SlackChannel extends Channel<SlackConduit> {
       '/events',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as SlackConduit
-        conduit.eventsListener(req, res)
+        conduit.handleEventRequest(req, res)
       })
     )
     this.printWebhook('events')
