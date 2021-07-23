@@ -1,11 +1,12 @@
 {
   "name": "@botpress/messaging-board",
   "version": "0.0.1",
-  "main": "dist/index.js",
+  "main": "dist/index.html",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch"
+    "build": "yarn --silent && parcel build src/index.html",
+    "watch": "yarn --silent && parcel watch src/index.html",
+    "start": "parcel src/index.html"
   },
   "devDependencies": {},
   "dependencies": {

@@ -13,7 +13,7 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // Specific settings for fronted
+    // Specific settings for frontend
     "target": "es6",
     "lib": ["dom"]
   },
