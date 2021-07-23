@@ -7,11 +7,11 @@ module.exports = {
   extends: ['prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['./tsconfig.json'],
+    project: ['./tsconfig.packages.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module'
   },
-  ignorePatterns: ['**/index.d.ts', '**/global.d.ts', '**/*.scss.d.ts', '**/*.test.ts', '*.js'],
+  ignorePatterns: ['**/*.test.ts', '*.js', '**/dist/**'],
   plugins: ['eslint-plugin-import', 'eslint-plugin-jsdoc', '@typescript-eslint'],
   rules: {
     '@typescript-eslint/consistent-type-definitions': 'error',
