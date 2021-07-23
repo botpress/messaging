@@ -10,8 +10,9 @@ import { TelegramRenderers } from './renderers'
 import { TelegramSenders } from './senders'
 
 export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramContext> {
-  private telegraf!: Telegraf<TelegrafContext>
   public callback!: (req: any, res: any) => void
+
+  private telegraf!: Telegraf<TelegrafContext>
 
   async initialize() {
     await this.telegraf.telegram.setWebhook(await this.getRoute())
@@ -21,8 +22,20 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     this.telegraf = new Telegraf(this.config.botToken)
     this.telegraf.start(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
     this.telegraf.help(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
-    this.telegraf.on('message', async (ctx) => this.app.instances.receive(this.conduitId, ctx))
-    this.telegraf.on('callback_query', async (ctx) => this.app.instances.receive(this.conduitId, ctx))
+    this.telegraf.on('message', async (ctx) => {
+      try {
+        await this.app.instances.receive(this.conduitId, ctx)
+      } catch (e) {
+        this.logger.error('Error occured processing message', e)
+      }
+    })
+    this.telegraf.on('callback_query', async (ctx) => {
+      try {
+        await this.app.instances.receive(this.conduitId, ctx)
+      } catch (e) {
+        this.logger.error('Error occured processing callback query', e)
+      }
+    })
 
     // TODO: THIS ISN'T SAFE. Telegram doesn't verify incoming requests
     // using the botToken, but instead verifies that the request path is correct.

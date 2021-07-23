@@ -26,10 +26,14 @@ export class TeamsChannel extends Channel<TeamsConduit> {
         const conduit = res.locals.conduit as TeamsConduit
 
         await conduit.adapter.processActivity(req, res, async (turnContext) => {
-          if (conduit.botNewlyAddedToConversation(turnContext)) {
-            await conduit.sendProactiveMessage(turnContext)
-          } else {
-            await this.app.instances.receive(conduit.conduitId, turnContext)
+          try {
+            if (conduit.botNewlyAddedToConversation(turnContext)) {
+              await conduit.sendProactiveMessage(turnContext)
+            } else {
+              await this.app.instances.receive(conduit.conduitId, turnContext)
+            }
+          } catch (e) {
+            conduit.logger.error('Error occured processing teams activity.', e)
           }
         })
       })
