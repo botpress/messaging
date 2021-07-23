@@ -2,7 +2,7 @@
   // Manage references here
   "references": [
     {
-      "path": "../client"
+      "path": "../chat"
     }
   ],
 
@@ -11,12 +11,11 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "tsBuildInfoFile": ".tsbuildinfo",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // Specific settings for npm package
+    // Specific settings for fronted
     "target": "es6",
-    "declaration": true,
-    "sourceMap": false
+    "lib": ["dom"]
   },
   "exclude": ["dist", "node_modules"]
 }

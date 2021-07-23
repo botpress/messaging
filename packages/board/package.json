@@ -2,19 +2,15 @@
   "name": "@botpress/messaging-board",
   "version": "0.0.1",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch",
-    "prepublishOnly": "yarn --silent && tsc --build"
+    "watch": "yarn --silent && tsc --build --watch"
   },
-  "files": [
-    "dist"
-  ],
   "devDependencies": {},
   "dependencies": {
-    "@botpress/messaging-client": "0.0.1",
-    "axios": "^0.21.1"
+    "@botpress/webchat": "0.0.1",
+    "axios": "^0.21.1",
+    "express": "^4.17.1"
   }
 }
