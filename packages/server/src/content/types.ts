@@ -26,6 +26,12 @@ export interface VideoContent extends Content {
   title?: string
 }
 
+export interface FileContent extends Content {
+  type: 'file'
+  file: string
+  title?: string
+}
+
 export interface CarouselContent extends Content {
   type: 'carousel'
   items: CardContent[]

@@ -1,27 +1,26 @@
-import { VideoContent } from '../../../content/types'
+import { FileContent } from '../../../content/types'
 import { ChannelRenderer } from '../../base/renderer'
 import { formatUrl } from '../../url'
 import { VonageContext } from '../context'
 
-export class VonageVideoRenderer implements ChannelRenderer<VonageContext> {
+export class VonageFileRenderer implements ChannelRenderer<VonageContext> {
   get priority(): number {
     return 0
   }
 
   handles(context: VonageContext): boolean {
-    return !!context.payload.video
+    return context.payload.file
   }
 
   async render(context: VonageContext) {
-    const payload = context.payload as VideoContent
+    const payload = context.payload as FileContent
 
     context.messages.push({
       content: {
-        type: 'video',
+        type: 'file',
         text: undefined!,
-        video: {
-          url: formatUrl(context.botUrl, payload.video)!,
-          // @ts-ignore
+        file: {
+          url: formatUrl(context.botUrl, payload.file)!,
           caption: payload.title!
         }
       }
