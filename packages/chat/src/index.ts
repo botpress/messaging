@@ -6,5 +6,8 @@ export class BotpressWebchat {
   async setup() {
     // eslint-disable-next-line no-console
     console.log('This is the botpress webchat!')
+
+    this.client = new MessagingClient({ url: 'my-messaging.net' })
+    await this.client.chat.reply('', '', {})
   }
 }

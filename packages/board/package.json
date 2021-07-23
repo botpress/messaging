@@ -6,7 +6,7 @@
   "scripts": {
     "build": "yarn --silent && parcel build src/index.html",
     "watch": "yarn --silent && parcel watch src/index.html",
-    "start": "parcel src/index.html"
+    "dev": "parcel src/index.html"
   },
   "devDependencies": {},
   "dependencies": {
