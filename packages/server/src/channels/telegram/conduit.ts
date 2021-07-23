@@ -65,7 +65,7 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<TelegramContext> {
+  protected async getContext(base: ChannelContext<any>): Promise<TelegramContext> {
     return {
       ...base,
       client: this.telegraf,

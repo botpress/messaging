@@ -74,7 +74,7 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<TeamsContext> {
+  protected async getContext(base: ChannelContext<any>): Promise<TeamsContext> {
     return {
       ...base,
       client: this.adapter,

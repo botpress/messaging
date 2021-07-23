@@ -42,7 +42,7 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<TwilioContext> {
+  protected async getContext(base: ChannelContext<any>): Promise<TwilioContext> {
     return {
       ...base,
       client: this.twilio,

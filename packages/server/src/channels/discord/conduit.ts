@@ -68,7 +68,7 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<DiscordContext> {
+  protected async getContext(base: ChannelContext<any>): Promise<DiscordContext> {
     return {
       ...base,
       client: this.client,

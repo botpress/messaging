@@ -46,7 +46,7 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<MessengerContext> {
+  protected async getContext(base: ChannelContext<any>): Promise<MessengerContext> {
     return {
       ...base,
       client: this.client,

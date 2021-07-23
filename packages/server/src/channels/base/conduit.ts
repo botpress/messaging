@@ -46,7 +46,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
   }
 
   async sendToEndpoint(endpoint: Endpoint, payload: any, clientId?: uuid) {
-    const context = await this.context(
+    const context = await this.getContext(
       {
         client: undefined,
         handlers: 0,
@@ -136,7 +136,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
   protected abstract setupConnection(): Promise<void>
   protected abstract setupRenderers(): ChannelRenderer<TContext>[]
   protected abstract setupSenders(): ChannelSender<TContext>[]
-  protected abstract context(base: ChannelContext<any>, clientId?: uuid): Promise<TContext>
+  protected abstract getContext(base: ChannelContext<any>, clientId?: uuid): Promise<TContext>
 }
 
 export type EndpointContent = {

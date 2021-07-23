@@ -59,7 +59,7 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<SmoochContext> {
+  protected async getContext(base: ChannelContext<any>): Promise<SmoochContext> {
     return {
       ...base,
       client: this.smooch,

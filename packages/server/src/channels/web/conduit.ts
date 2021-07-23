@@ -55,7 +55,7 @@ export class WebConduit extends ConduitInstance<any, any> {
     return <any>{}
   }
 
-  protected async context(base: ChannelContext<any>): Promise<any> {
+  protected async getContext(base: ChannelContext<any>): Promise<any> {
     return {}
   }
 }

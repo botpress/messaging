@@ -70,7 +70,7 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
     }
   }
 
-  protected async context(base: ChannelContext<Vonage>): Promise<VonageContext> {
+  protected async getContext(base: ChannelContext<Vonage>): Promise<VonageContext> {
     return {
       ...base,
       client: this.vonage,

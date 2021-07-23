@@ -113,7 +113,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
     }
   }
 
-  protected async context(base: ChannelContext<any>): Promise<SlackContext> {
+  protected async getContext(base: ChannelContext<any>): Promise<SlackContext> {
     return {
       ...base,
       client: { web: this.client, events: this.events, interactive: this.interactive },
