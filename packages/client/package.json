@@ -1,0 +1,19 @@
+{
+  "name": "@botpress/messaging-client",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn --silent && tsc --build",
+    "watch": "yarn --silent && tsc --build --watch",
+    "prepublishOnly": "yarn --silent && tsc --build"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {},
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
