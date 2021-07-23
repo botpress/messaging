@@ -8,7 +8,7 @@
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
     "clean": "rimraf packages/*/dist bin",
-    "reset": "yarn clean && rimraf packages/*/node_modules && rimraf node_modules",
+    "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules && rimraf node_modules",
     "package": "yarn --silent && yarn clean && yarn build && node ./scripts/package",
     "release": "node ./scripts/release",
     "build": "yarn --silent && tsc --build",
