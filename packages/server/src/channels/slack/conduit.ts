@@ -15,23 +15,26 @@ import { SlackRenderers } from './renderers'
 import { SlackSenders } from './senders'
 
 export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
+  public handleInteractiveRequest!: RequestListener
+  public handleEventRequest!: RequestListener
+
   private client!: WebClient
   private interactive!: SlackMessageAdapter
   private events!: SlackEventAdapter
-
-  public interactiveListener!: RequestListener
-  public eventsListener!: RequestListener
 
   protected async setupConnection() {
     this.client = new WebClient(this.config.botToken)
     this.events = createEventAdapter(this.config.signingSecret)
     this.interactive = createMessageAdapter(this.config.signingSecret)
 
-    // TODO: refactor these functions
-    await this.setupRealtime()
-    await this.setupInteractiveListener()
-
+    this.interactive.action({ type: 'button' }, this.handleButtonInteractiveAction.bind(this))
+    this.interactive.action({ actionId: 'option_selected' }, this.handleOptionSelectedInteractiveAction.bind(this))
+    this.handleInteractiveRequest = this.interactive.requestListener()
     await this.printWebhook('interactive')
+
+    this.events.on('message', this.handleMessageEvent.bind(this))
+    this.events.on('error', (err) => this.logger.error('An error occurred', err))
+    this.handleEventRequest = this.events.requestListener()
     await this.printWebhook('events')
   }
 
@@ -43,89 +46,63 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
     return [new TypingSender(), ...SlackSenders]
   }
 
-  private async setupInteractiveListener() {
-    this.interactive.action({ type: 'button' }, async (payload) => {
-      // debugIncoming('Received interactive message %o', payload)
+  private async handleButtonInteractiveAction(payload: any) {
+    try {
+      const action = payload?.actions?.[0]
+      const actionId = action?.action_id
 
-      const actionId = _.get(payload, 'actions[0].action_id', '')
-      const label = _.get(payload, 'actions[0].text.text', '')
-      const value = _.get(payload, 'actions[0].value', '')
-
-      // Some actions (ex: open url) should be discarded
-      if (!actionId.startsWith('discard_action')) {
-        // Either we leave buttons displayed, we replace with the selection, or we remove it
-        if (actionId.startsWith('replace_buttons')) {
-          await axios.post(payload.response_url, { text: `*${label}*` })
-        } else if (actionId.startsWith('remove_buttons')) {
-          await axios.post(payload.response_url, { delete_original: true })
-        }
-
-        await this.app.instances.receive(this.conduitId, {
-          ctx: payload,
-          content: { type: 'quick_reply', text: label, payload: value }
-        })
+      if (actionId.startsWith('discard_action')) {
+        return
+      } else if (actionId.startsWith('replace_buttons')) {
+        await axios.post(payload.response_url, { text: `*${action?.text?.text}*` })
       }
-    })
 
-    this.interactive.action({ actionId: 'option_selected' }, async (payload) => {
-      const label = _.get(payload, 'actions[0].selected_option.text.text', '')
-      const value = _.get(payload, 'actions[0].selected_option.value', '')
-
-      //  await axios.post(payload.response_url, { text: `*${label}*` })
       await this.app.instances.receive(this.conduitId, {
         ctx: payload,
-        content: { type: 'quick_reply', text: label, payload: value }
+        content: { type: 'quick_reply', text: action?.text?.text, payload: action?.value }
       })
-    })
-
-    this.interactive.action({ actionId: 'feedback-overflow' }, async (payload) => {
-      // debugIncoming('Received feedback %o', payload)
-
-      const action = payload.actions[0]
-      const blockId = action.block_id
-      const selectedOption = action.selected_option.value
-
-      const incomingEventId = blockId.replace('feedback-', '')
-      const feedback = parseInt(selectedOption)
-
-      // TODO: this can't work
-      // const events = await this.bp.events.findEvents({ incomingEventId, direction: 'incoming' })
-      // const event = events[0]
-      // await this.bp.events.updateEvent(event.id, { feedback })
-    })
-
-    this.interactiveListener = this.interactive.requestListener()
+    } catch (e) {
+      this.logger.error('Error occured while processing a "button" interactive action.', e)
+    }
   }
 
-  private async setupRealtime() {
-    this.listenMessages(this.events)
-    this.eventsListener = this.events.requestListener()
+  private async handleOptionSelectedInteractiveAction(payload: any) {
+    try {
+      const action = payload?.actions?.[0]
+      const label = action?.text?.text
+
+      await axios.post(payload.response_url, { text: `*${label}*` })
+
+      await this.app.instances.receive(this.conduitId, {
+        ctx: payload,
+        content: { type: 'quick_reply', text: label, payload: action?.value }
+      })
+    } catch (e) {
+      this.logger.error('Error occured while processing a "option_selected" interactive action.', e)
+    }
   }
 
-  private listenMessages(com: SlackEventAdapter) {
-    const discardedSubtypes = ['bot_message', 'message_deleted', 'message_changed']
-
-    com.on('message', async (payload) => {
-      // debugIncoming('Received real time payload %o', payload)
-
-      if (!discardedSubtypes.includes(payload.subtype) && !payload.bot_id) {
-        await this.app.instances.receive(this.conduitId, {
-          ctx: payload,
-          content: {
-            type: 'text',
-            text: _.find(_.at(payload, ['text', 'files.0.name', 'files.0.title']), (x) => x && x.length) || 'N/A'
-          }
-        })
+  private async handleMessageEvent(payload: any) {
+    try {
+      if (payload.bot_id || ['bot_message', 'message_deleted', 'message_changed'].includes(payload.subtype)) {
+        return
       }
-    })
 
-    com.on('error', (err) => this.logger.error('An error occurred', err))
+      await this.app.instances.receive(this.conduitId, {
+        ctx: payload,
+        content: {
+          type: 'text',
+          text: payload.text
+        }
+      })
+    } catch (e) {
+      this.logger.error('Error occured while processing a slack message', e)
+    }
   }
 
   public async extractEndpoint(payload: { ctx: any; content: any }): Promise<EndpointContent> {
     const { user, channel } = payload.ctx
 
-    // TODO: are the || really necessary?
     const channelId = channel?.id || channel
     const userId = user?.id || user
 

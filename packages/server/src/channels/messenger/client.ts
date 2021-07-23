@@ -1,7 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import { MessengerConfig } from './config'
-import { MessengerAction } from './types'
+import { MessengerAction } from './context'
 
 export class MessengerClient {
   private readonly http = axios.create({ baseURL: 'https://graph.facebook.com/v3.2/me' })

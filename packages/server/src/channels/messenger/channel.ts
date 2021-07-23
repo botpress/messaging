@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import express, { Response } from 'express'
+import express, { Response, Request } from 'express'
 import { ServerResponse, IncomingMessage } from 'http'
 import { Channel } from '../base/channel'
 import { MessengerConduit } from './conduit'
@@ -32,41 +32,49 @@ export class MessengerChannel extends Channel<MessengerConduit> {
     this.router.use(
       '/',
       this.asyncMiddleware(async (req, res) => {
-        // For some reason proxy doesn't work with .post and .get so get need to check req.method manually
+        // For some reason proxy doesn't work with .post and .get so we need to check req.method manually
         if (req.method === 'GET') {
-          const conduit = res.locals.conduit as MessengerConduit
-
-          const mode = req.query['hub.mode']
-          const token = req.query['hub.verify_token']
-          const challenge = req.query['hub.challenge']
-
-          if (mode && token && mode === 'subscribe' && token === conduit.config.verifyToken) {
-            this.logger.debug('Webhook Verified')
-            res.send(challenge)
-          } else {
-            res.sendStatus(403)
-          }
+          await this.handleWebhookVerification(req, res)
         } else if (req.method === 'POST') {
-          const conduit = res.locals.conduit as MessengerConduit
-          const body = req.body
-
-          for (const entry of body.entry) {
-            const messages = entry.messaging
-
-            for (const webhookEvent of messages) {
-              if (!webhookEvent.sender) {
-                continue
-              }
-              await this.app.instances.receive(conduit.conduitId, webhookEvent)
-            }
-          }
-
-          res.send('EVENT_RECEIVED')
+          await this.handleMessageRequest(req, res)
         }
       })
     )
 
     this.printWebhook()
+  }
+
+  private async handleWebhookVerification(req: Request, res: Response) {
+    const conduit = res.locals.conduit as MessengerConduit
+
+    const mode = req.query['hub.mode']
+    const token = req.query['hub.verify_token']
+    const challenge = req.query['hub.challenge']
+
+    if (mode && token && mode === 'subscribe' && token === conduit.config.verifyToken) {
+      this.logger.debug('Webhook Verified')
+      res.send(challenge)
+    } else {
+      res.sendStatus(403)
+    }
+  }
+
+  private async handleMessageRequest(req: Request, res: Response) {
+    const conduit = res.locals.conduit as MessengerConduit
+    const body = req.body
+
+    for (const entry of body.entry) {
+      const messages = entry.messaging
+
+      for (const webhookEvent of messages) {
+        if (!webhookEvent.sender) {
+          continue
+        }
+        await this.app.instances.receive(conduit.conduitId, webhookEvent)
+      }
+    }
+
+    res.send('EVENT_RECEIVED')
   }
 
   private auth(req: IncomingMessage, res: ServerResponse & Response, buffer: Buffer, _encoding: string) {

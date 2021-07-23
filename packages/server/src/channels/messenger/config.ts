@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { MessengerAction, PersistentMenuItem } from './types'
+import { MessengerAction, PersistentMenuItem } from './context'
 
 export interface MessengerConfig {
   accessToken: string
