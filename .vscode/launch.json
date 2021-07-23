@@ -12,6 +12,7 @@
       "name": "Debug Transpile",
       "type": "node",
       "request": "launch",
+      "cwd": "${workspaceFolder}/packages/server",
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
       "args": ["--nolazy", "-r", "ts-node/register/transpile-only", "src/index"]
     },
@@ -19,6 +20,7 @@
       "name": "Debug Compiled",
       "type": "node",
       "request": "launch",
+      "cwd": "${workspaceFolder}/packages/server",
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
       "args": ["--nolazy", "dist/index"],
       "preLaunchTask": "build"

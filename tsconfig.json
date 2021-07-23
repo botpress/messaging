@@ -1,15 +1,13 @@
 {
+  "references": [
+    {
+      "path": "./packages/server"
+    }
+  ],
+  "files": [],
+  "include": [],
+  "exclude": ["node_modules", "**/node_modules"],
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2019",
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "composite": true,
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
-    "outDir": "dist",
-    "rootDir": "src",
-    "strict": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["dist", "node_modules"]
+    "esModuleInterop": true
+  }
 }
