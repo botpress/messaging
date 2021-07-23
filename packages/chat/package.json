@@ -1,0 +1,20 @@
+{
+  "name": "@botpress/webchat",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn --silent && tsc --build",
+    "watch": "yarn --silent && tsc --build --watch",
+    "prepublishOnly": "yarn --silent && tsc --build"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {},
+  "dependencies": {
+    "@botpress/messaging-client": "0.0.1",
+    "axios": "^0.21.1"
+  }
+}

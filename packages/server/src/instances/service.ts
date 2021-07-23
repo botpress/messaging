@@ -192,7 +192,7 @@ export class InstanceService extends Service {
     try {
       await axios.post(url, data, { headers: { password } })
     } catch (e) {
-      instance.logger.error(`Failed to call webhook ${url}`, e.message)
+      instance.logger.error(`Failed to call webhook ${url}.`, e.message)
     }
   }
 }
