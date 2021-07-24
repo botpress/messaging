@@ -1,6 +1,7 @@
 import { VonageAudioRenderer } from './audio'
 import { VonageCarouselRenderer } from './carousel'
 import { VonageChoicesRenderer } from './choices'
+import { VonageFileRenderer } from './file'
 import { VonageImageRenderer } from './image'
 import { VonageLocationRenderer } from './location'
 import { VonageTemplateRenderer } from './template'
@@ -17,5 +18,6 @@ export const VonageRenderers = [
   new VonageVideoRenderer(),
   new VonageTemplateRenderer(),
   new VonageMediaTemplateRenderer(),
-  new VonageChoicesRenderer()
+  new VonageChoicesRenderer(),
+  new VonageFileRenderer()
 ]
