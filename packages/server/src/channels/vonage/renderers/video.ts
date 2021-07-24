@@ -19,9 +19,8 @@ export class VonageVideoRenderer implements ChannelRenderer<VonageContext> {
       content: {
         type: 'video',
         text: undefined!,
-        video: {
+        video: <any>{
           url: formatUrl(context.botUrl, payload.video)!,
-          // @ts-ignore
           caption: payload.title!
         }
       }
