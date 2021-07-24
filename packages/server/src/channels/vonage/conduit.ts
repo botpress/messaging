@@ -1,4 +1,5 @@
 import Vonage from '@vonage/server-sdk'
+import { ContentType } from '../../content/types'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -44,8 +45,9 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
 
     const messageContent = payload.message.content
 
-    let content = {}
-    switch (messageContent.type) {
+    let content: ContentType = { type: 'text', text: undefined! }
+    // TODO: Improve Vonage SDK typings
+    switch (messageContent.type as any) {
       case 'text':
         const index = Number(messageContent.text)
         const text = this.handleIndexResponse(index, identity, sender) || messageContent.text
@@ -57,6 +59,37 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
         content = {
           type: 'voice',
           audio: messageContent.audio!.url
+        }
+        break
+      case 'button':
+        content = { type: 'text', text: (<any>messageContent).button.text }
+        break
+      case 'image':
+        content = {
+          type: 'image',
+          image: messageContent.image!.url,
+          title: messageContent.image!.caption
+        }
+        break
+      case 'video':
+        content = {
+          type: 'video',
+          video: messageContent.video!.url,
+          title: (<any>messageContent).video!.caption
+        }
+        break
+      case 'file':
+        content = {
+          type: 'file',
+          title: messageContent.file!.caption,
+          file: messageContent.file!.url
+        }
+        break
+      case 'location':
+        content = {
+          type: 'location',
+          latitude: (<any>messageContent).location!.lat,
+          longitude: (<any>messageContent).location!.long
         }
         break
       default:

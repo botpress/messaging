@@ -20,6 +20,11 @@ export interface AudioContent extends Content {
   title?: string
 }
 
+export interface VoiceContent extends Content {
+  type: 'voice'
+  audio: string
+}
+
 export interface VideoContent extends Content {
   type: 'video'
   video: string
@@ -52,6 +57,17 @@ export interface LocationContent extends Content {
   address?: string
   title?: string
 }
+
+export type ContentType =
+  | TextContent
+  | ImageContent
+  | AudioContent
+  | VideoContent
+  | CarouselContent
+  | CardContent
+  | LocationContent
+  | FileContent
+  | VoiceContent
 
 export enum ButtonAction {
   SaySomething = 'Say something',
