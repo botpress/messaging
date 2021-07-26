@@ -29,11 +29,10 @@ export class TwilioChannel extends Channel<TwilioConduit> {
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as TwilioConduit
         const signature = req.headers['x-twilio-signature'] as string
-        // TODO: Remove this once we deprecate the old webhooks
-        const oldWebhook = `https://${req.headers.host}${req.url}`
+
         if (
           validateRequest(conduit.config.authToken, signature, conduit.webhookUrl, req.body) ||
-          validateRequest(conduit.config.authToken, signature, oldWebhook, req.body)
+          (await this.verifyLegacy(conduit, signature, req.body))
         ) {
           await this.app.instances.receive(conduit.conduitId, req.body)
           res.sendStatus(204)
@@ -46,5 +45,14 @@ export class TwilioChannel extends Channel<TwilioConduit> {
     )
 
     this.printWebhook()
+  }
+
+  async verifyLegacy(instance: TwilioConduit, signature: string, body: any) {
+    const conduit = await this.app.conduits.get(instance.conduitId)
+    const provider = await this.app.providers.getById(conduit!.providerId)
+
+    const oldUrl = `${process.env.BOT_URL}/api/v1/bots/${provider!.name}/mod/channel-twilio/webhook`
+
+    return validateRequest(instance.config.authToken, signature, oldUrl, body)
   }
 }
