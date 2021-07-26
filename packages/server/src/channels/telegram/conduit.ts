@@ -15,7 +15,10 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   private telegraf!: Telegraf<TelegrafContext>
 
   async initialize() {
-    await this.telegraf.telegram.setWebhook(await this.getRoute())
+    // This won't display the botToken when printing the webhook
+    const webhook = `${await this.getRoute()}/${this.config.botToken}`
+
+    await this.telegraf.telegram.setWebhook(webhook)
   }
 
   protected async setupConnection() {
@@ -26,21 +29,18 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
       try {
         await this.app.instances.receive(this.conduitId, ctx)
       } catch (e) {
-        this.logger.error('Error occured processing message,', e)
+        this.logger.error('Error occurred processing message,', e)
       }
     })
     this.telegraf.on('callback_query', async (ctx) => {
       try {
         await this.app.instances.receive(this.conduitId, ctx)
       } catch (e) {
-        this.logger.error('Error occured processing callback query.', e)
+        this.logger.error('Error occurred processing callback query.', e)
       }
     })
 
-    // TODO: THIS ISN'T SAFE. Telegram doesn't verify incoming requests
-    // using the botToken, but instead verifies that the request path is correct.
-    // This means that the webhook path must contain a secret (can't be just '/').
-    this.callback = this.telegraf.webhookCallback('/')
+    this.callback = this.telegraf.webhookCallback(`/${this.config.botToken}`)
 
     await this.printWebhook()
   }
