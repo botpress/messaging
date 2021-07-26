@@ -51,8 +51,7 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
     switch (messageContent.type as any) {
       case 'text':
         const index = Number(messageContent.text)
-        const text = this.handleIndexResponse(index, identity, sender) || messageContent.text
-        content = { type: 'text', text: <any>text }
+        content = this.handleIndexResponse(index, identity, sender) || { type: 'text', text: messageContent.text }
         break
       case 'audio':
         // We have to take for granted that all messages of type audio are voice messages
