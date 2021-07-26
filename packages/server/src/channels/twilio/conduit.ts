@@ -34,10 +34,10 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
     const userId = payload.From
 
     const index = Number(payload.Body)
-    const text = this.handleIndexResponse(index, botPhoneNumber, userId) || payload.Body
+    const content = this.handleIndexResponse(index, botPhoneNumber, userId) || { type: 'text', text: payload.Body }
 
     return {
-      content: { type: 'text', text },
+      content,
       identity: botPhoneNumber,
       sender: userId
     }

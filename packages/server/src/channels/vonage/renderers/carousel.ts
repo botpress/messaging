@@ -1,9 +1,10 @@
-import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, ChoiceOption } from '../../../content/types'
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '../../../content/types'
+import { IndexChoiceOption, IndexChoiceType } from '../../base/context'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { VonageContext } from '../context'
 
 type Context = CarouselContext<VonageContext> & {
-  options: ChoiceOption[]
+  options: IndexChoiceOption[]
 }
 
 export class VonageCarouselRenderer extends CarouselRenderer {
@@ -13,17 +14,19 @@ export class VonageCarouselRenderer extends CarouselRenderer {
 
   renderButtonUrl(context: Context, button: ActionOpenURL) {
     context.options.push({
+      type: IndexChoiceType.OpenUrl,
       title: `${button.title} : ${button.url}`,
       value: undefined!
     })
   }
 
   renderButtonPostback(context: Context, button: ActionPostback) {
-    context.options.push({ title: button.title, value: button.payload })
+    context.options.push({ type: IndexChoiceType.PostBack, title: button.title, value: button.payload })
   }
 
   renderButtonSay(context: Context, button: ActionSaySomething) {
     context.options.push({
+      type: IndexChoiceType.SaySomething,
       title: button.title,
       value: button.text
     })

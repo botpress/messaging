@@ -4,10 +4,9 @@ import yn from 'yn'
 import { App } from '../../app'
 import { uuid } from '../../base/types'
 import { ServerCache } from '../../caching/cache'
-import { ChoiceOption } from '../../content/types'
 import { Logger } from '../../logger/types'
 import { Endpoint } from '../../mapping/types'
-import { ChannelContext } from './context'
+import { ChannelContext, IndexChoiceOption, IndexChoiceType } from './context'
 import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 
@@ -22,7 +21,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
   public loggerIn!: Logger
   public loggerOut!: Logger
 
-  protected cacheIndexResponses!: ServerCache<string, ChoiceOption[]>
+  protected cacheIndexResponses!: ServerCache<string, IndexChoiceOption[]>
 
   async setup(conduitId: uuid, config: TConfig, app: App): Promise<void> {
     this.app = app
@@ -92,18 +91,32 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     return `${this.conduitId}_${identity}_${sender}`
   }
 
-  protected prepareIndexResponse(identity: string, sender: string, options: any) {
+  protected prepareIndexResponse(identity: string, sender: string, options: IndexChoiceOption[]) {
     this.cacheIndexResponses.set(this.getIndexCacheKey(identity, sender), options)
   }
 
-  protected handleIndexResponse(index: number, identity: string, sender: string): undefined | string {
+  protected handleIndexResponse(index: number, identity: string, sender: string): any | undefined {
     if (index) {
       const key = this.getIndexCacheKey(identity, sender)
       const options = this.cacheIndexResponses.get(key)
 
       this.cacheIndexResponses.del(key)
 
-      return options?.[index - 1]?.value
+      const option = options?.[index - 1]
+
+      if (option) {
+        if (option.type === IndexChoiceType.PostBack) {
+          return { type: option.type, payload: option.value }
+        } else if (option.type === IndexChoiceType.SaySomething) {
+          return { type: option.type, text: option.value }
+        } else if (option.type === IndexChoiceType.QuickReply) {
+          return { type: option.type, text: option.title, payload: option.value }
+        } else if (option.type === IndexChoiceType.OpenUrl) {
+          return {}
+        }
+      }
+
+      return undefined
     }
   }
 
