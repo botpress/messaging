@@ -152,6 +152,10 @@ export class InstanceService extends Service {
     const instance = await this.get(conduitId)
     const endpoint = await instance.extractEndpoint(payload)
 
+    if (!endpoint.content.type) {
+      return
+    }
+
     const clientId = provider.sandbox
       ? await this.sandbox.getClientId(conduitId, endpoint)
       : (await this.clientService.getByProviderId(provider.id))!.id

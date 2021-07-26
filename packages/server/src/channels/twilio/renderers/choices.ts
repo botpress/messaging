@@ -1,4 +1,5 @@
-import { ChoiceContent } from '../../../content/types'
+import { ChoiceContent, ChoiceOption } from '../../../content/types'
+import { IndexChoiceType } from '../../base/context'
 import { ChoicesRenderer } from '../../base/renderers/choices'
 import { TwilioContext } from '../context'
 
@@ -14,8 +15,10 @@ export class TwilioChoicesRenderer extends ChoicesRenderer {
       .map(({ title }, idx) => `${idx + 1}. ${title}`)
       .join('\n')}`
 
-    if (context.identity && context.sender) {
-      context.prepareIndexResponse(context.identity, context.sender, context.payload.choices)
-    }
+    context.prepareIndexResponse(
+      context.identity!,
+      context.sender!,
+      payload.choices.map((x: ChoiceOption) => ({ ...x, type: IndexChoiceType.QuickReply }))
+    )
   }
 }
