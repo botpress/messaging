@@ -20,7 +20,7 @@ export class TeamsChannel extends Channel<TeamsConduit> {
   }
 
   async setupRoutes() {
-    this.router.use(
+    this.router.post(
       '/',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as TeamsConduit
@@ -33,7 +33,7 @@ export class TeamsChannel extends Channel<TeamsConduit> {
               await this.app.instances.receive(conduit.conduitId, turnContext)
             }
           } catch (e) {
-            conduit.logger.error('Error occured processing teams activity.', e)
+            conduit.logger.error('Error occurred processing teams activity.', e)
           }
         })
       })

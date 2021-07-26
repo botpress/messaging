@@ -20,7 +20,7 @@ export class SlackChannel extends Channel<SlackConduit> {
   }
 
   async setupRoutes() {
-    this.router.use(
+    this.router.post(
       '/interactive',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as SlackConduit
@@ -29,7 +29,7 @@ export class SlackChannel extends Channel<SlackConduit> {
     )
     this.printWebhook('interactive')
 
-    this.router.use(
+    this.router.post(
       '/events',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as SlackConduit

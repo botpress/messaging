@@ -24,7 +24,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
   async setupRoutes() {
     this.router.use(express.urlencoded({ extended: true }))
 
-    this.router.use(
+    this.router.post(
       '/',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as TwilioConduit
@@ -40,7 +40,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
         } else {
           this.logger.error('Request validation failed. Make sure that your authToken is valid.')
 
-          res.status(401).send('Auth token invalid')
+          res.sendStatus(401)
         }
       })
     )

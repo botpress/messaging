@@ -25,7 +25,7 @@ export class TelegramChannel extends Channel<TelegramConduit> {
   }
 
   async setupRoutes() {
-    this.router.use(
+    this.router.post(
       '/:token',
       this.asyncMiddleware(async (req, res) => {
         // This is done to make forwarding work

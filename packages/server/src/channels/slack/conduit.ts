@@ -62,7 +62,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
         content: { type: 'quick_reply', text: action?.text?.text, payload: action?.value }
       })
     } catch (e) {
-      this.logger.error('Error occured while processing a "button" interactive action.', e)
+      this.logger.error('Error occurred while processing a "button" interactive action.', e)
     }
   }
 
@@ -78,7 +78,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
         content: { type: 'quick_reply', text: label, payload: action?.value }
       })
     } catch (e) {
-      this.logger.error('Error occured while processing a "option_selected" interactive action.', e)
+      this.logger.error('Error occurred while processing a "option_selected" interactive action.', e)
     }
   }
 
@@ -96,7 +96,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
         }
       })
     } catch (e) {
-      this.logger.error('Error occured while processing a slack message.', e)
+      this.logger.error('Error occurred while processing a slack message.', e)
     }
   }
 

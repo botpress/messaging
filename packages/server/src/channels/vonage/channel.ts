@@ -25,7 +25,7 @@ export class VonageChannel extends Channel<VonageConduit> {
   async setupRoutes() {
     this.router.use(express.json())
 
-    this.router.use(
+    this.router.post(
       '/inbound',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as VonageConduit
@@ -37,7 +37,7 @@ export class VonageChannel extends Channel<VonageConduit> {
         res.sendStatus(200)
       })
     )
-    this.router.use(
+    this.router.post(
       '/status',
       this.asyncMiddleware(async (req, res) => {
         res.sendStatus(200)
