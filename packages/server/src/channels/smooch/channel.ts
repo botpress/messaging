@@ -28,7 +28,7 @@ export class SmoochChannel extends Channel<SmoochConduit> {
   async setupRoutes() {
     this.router.use(express.json())
 
-    this.router.use(
+    this.router.post(
       '/',
       this.asyncMiddleware(async (req, res) => {
         const conduit = res.locals.conduit as SmoochConduit
@@ -40,7 +40,7 @@ export class SmoochChannel extends Channel<SmoochConduit> {
           }
           res.sendStatus(200)
         } else {
-          res.status(401).send('Auth token invalid')
+          res.sendStatus(401)
         }
       })
     )

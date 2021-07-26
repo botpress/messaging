@@ -24,9 +24,10 @@ export class TwilioChannel extends Channel<TwilioConduit> {
   async setupRoutes() {
     this.router.use(express.urlencoded({ extended: true }))
 
-    this.router.use(
+    this.router.post(
       '/',
       this.asyncMiddleware(async (req, res) => {
+        console.dir(req)
         const conduit = res.locals.conduit as TwilioConduit
         const signature = req.headers['x-twilio-signature'] as string
         // TODO: Remove this once we deprecate the old webhooks
@@ -40,7 +41,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
         } else {
           this.logger.error('Request validation failed. Make sure that your authToken is valid.')
 
-          res.status(401).send('Auth token invalid')
+          res.sendStatus(401)
         }
       })
     )

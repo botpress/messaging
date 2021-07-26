@@ -29,15 +29,17 @@ export class MessengerChannel extends Channel<MessengerConduit> {
   async setupRoutes() {
     this.router.use(express.json({ verify: this.auth.bind(this) }))
 
-    this.router.use(
+    this.router.get(
       '/',
       this.asyncMiddleware(async (req, res) => {
-        // For some reason proxy doesn't work with .post and .get so we need to check req.method manually
-        if (req.method === 'GET') {
-          await this.handleWebhookVerification(req, res)
-        } else if (req.method === 'POST') {
-          await this.handleMessageRequest(req, res)
-        }
+        await this.handleWebhookVerification(req, res)
+      })
+    )
+
+    this.router.post(
+      '/',
+      this.asyncMiddleware(async (req, res) => {
+        await this.handleMessageRequest(req, res)
       })
     )
 
