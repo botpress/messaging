@@ -32,20 +32,14 @@ export class TelegramChannel extends Channel<TelegramConduit> {
         req.url = `/${req.params.token}`
 
         const conduit = res.locals.conduit as TelegramConduit
-        if (this.validate(conduit, req)) {
+        if (req.params.token === conduit.config.botToken) {
           conduit.callback(req, res)
         } else {
-          this.logger.error("Request validation failed. Request probably didn't come from Telegram.")
-
-          res.status(401).send('Auth token invalid')
+          res.sendStatus(401)
         }
       })
     )
 
     this.printWebhook()
-  }
-
-  private validate(conduit: TelegramConduit, req: Request): boolean {
-    return req.params.token === conduit.config.botToken
   }
 }
