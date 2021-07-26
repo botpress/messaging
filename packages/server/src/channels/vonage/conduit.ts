@@ -3,6 +3,7 @@ import { ContentType } from '../../content/types'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { TypingSender } from '../base/senders/typing'
 import { VonageConfig } from './config'
 import { VonageContext } from './context'
@@ -32,7 +33,7 @@ export class VonageConduit extends ConduitInstance<VonageConfig, VonageContext> 
   }
 
   protected setupRenderers() {
-    return [new CardToCarouselRenderer(), ...VonageRenderers]
+    return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...VonageRenderers]
   }
 
   protected setupSenders() {

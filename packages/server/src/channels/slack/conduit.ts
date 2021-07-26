@@ -68,7 +68,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
 
   private async handleOptionSelectedInteractiveAction(payload: any) {
     try {
-      const action = payload?.actions?.[0]
+      const action = payload?.actions?.[0]?.selected_option
       const label = action?.text?.text
 
       await axios.post(payload.response_url, { text: `*${label}*` })

@@ -1,6 +1,7 @@
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { MessengerClient } from './client'
 import { MessengerConfig } from './config'
 import { MessengerContext } from './context'
@@ -23,7 +24,7 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
   }
 
   protected setupRenderers() {
-    return [new CardToCarouselRenderer(), ...MessengerRenderers]
+    return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...MessengerRenderers]
   }
 
   protected setupSenders() {

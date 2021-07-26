@@ -3,6 +3,7 @@ import Smooch from 'smooch-core'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { SmoochConfig } from './config'
 import { SmoochMessage, SmoochPayload, SmoochContext, SmoochWebhook } from './context'
 import { SmoochRenderers } from './renderers'
@@ -44,7 +45,7 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
   }
 
   protected setupRenderers() {
-    return [new CardToCarouselRenderer(), ...SmoochRenderers]
+    return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...SmoochRenderers]
   }
 
   protected setupSenders() {

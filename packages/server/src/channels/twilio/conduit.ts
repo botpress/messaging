@@ -3,6 +3,7 @@ import { Twilio } from 'twilio'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { TypingSender } from '../base/senders/typing'
 import { TwilioConfig } from './config'
 import { TwilioContext, TwilioRequestBody } from './context'
@@ -21,7 +22,7 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
   }
 
   protected setupRenderers() {
-    return [new CardToCarouselRenderer(), ...TwilioRenderers]
+    return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...TwilioRenderers]
   }
 
   protected setupSenders() {
