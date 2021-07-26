@@ -57,10 +57,26 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   public async extractEndpoint(payload: TelegrafContext): Promise<EndpointContent> {
     const chatId = payload.chat?.id || payload.message?.chat.id
     const userId = payload.from?.id || payload.message?.from?.id
-    const text = payload.message?.text || payload.callbackQuery?.data
+    const text = payload.message?.text
+
+    // TODO: this logic should be handled by channel receivers
+    const data = payload.callbackQuery?.data
+    let content
+
+    if (!text && data) {
+      if (data.startsWith('say::')) {
+        content = { type: 'say_something', text: data.replace('say::', '') }
+      } else if (data.startsWith('postback::')) {
+        content = { type: 'postback', payload: data.replace('postback::', '') }
+      }
+    }
+
+    if (!content) {
+      content = { type: 'text', text }
+    }
 
     return {
-      content: { type: 'text', text },
+      content,
       sender: userId!.toString(),
       thread: chatId!.toString()
     }

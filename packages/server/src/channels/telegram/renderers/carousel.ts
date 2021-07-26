@@ -19,11 +19,11 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
   }
 
   renderButtonPostback(context: Context, button: ActionPostback) {
-    context.buttons.push(Markup.callbackButton(button.title, button.payload))
+    context.buttons.push(Markup.callbackButton(button.title, `postback::${button.payload}`))
   }
 
   renderButtonSay(context: Context, button: ActionSaySomething) {
-    context.buttons.push(Markup.callbackButton(button.title, button.text))
+    context.buttons.push(Markup.callbackButton(button.title, `say::${button.text}`))
   }
 
   endRenderCard(context: Context, card: CardContent) {
