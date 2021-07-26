@@ -4,6 +4,7 @@ import { TelegrafContext } from 'telegraf/typings/context'
 import { EndpointContent, ConduitInstance } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { TelegramConfig } from './config'
 import { TelegramContext } from './context'
 import { TelegramRenderers } from './renderers'
@@ -46,7 +47,7 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   }
 
   protected setupRenderers() {
-    return [new CardToCarouselRenderer(), ...TelegramRenderers]
+    return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...TelegramRenderers]
   }
 
   protected setupSenders() {
