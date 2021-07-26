@@ -5,6 +5,7 @@ import LRU from 'lru-cache'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
+import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { DiscordConfig } from './config'
 import { DiscordContext } from './context'
 import { DiscordRenderers } from './renderers'
@@ -51,7 +52,7 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
   }
 
   protected setupRenderers() {
-    return [new CardToCarouselRenderer(), ...DiscordRenderers]
+    return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...DiscordRenderers]
   }
 
   protected setupSenders() {
