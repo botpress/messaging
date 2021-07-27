@@ -6,4 +6,4 @@ export interface DiscordConfig {
 
 export const DiscordConfigSchema = Joi.object({
   token: Joi.string().required()
-})
+}).options({ stripUnknown: true })

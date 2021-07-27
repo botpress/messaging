@@ -19,4 +19,4 @@ export const MessengerConfigSchema = Joi.object({
   greeting: Joi.string().optional(),
   getStarted: Joi.string().optional(),
   persistentMenu: Joi.array().optional()
-})
+}).options({ stripUnknown: true })

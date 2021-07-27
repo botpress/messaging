@@ -16,4 +16,4 @@ export const VonageConfigSchema = Joi.object({
   applicationId: Joi.string().required(),
   privateKey: Joi.string().required(),
   useTestingApi: Joi.boolean().optional()
-})
+}).options({ stripUnknown: true })

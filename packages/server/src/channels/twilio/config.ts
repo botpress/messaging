@@ -8,4 +8,4 @@ export interface TwilioConfig {
 export const TwilioConfigSchema = Joi.object({
   accountSID: Joi.string().required(),
   authToken: Joi.string().required()
-})
+}).options({ stripUnknown: true })
