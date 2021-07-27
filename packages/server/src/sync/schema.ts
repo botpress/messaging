@@ -19,5 +19,5 @@ export const makeSyncRequestSchema = (channels: Channel<any>[]) => {
     id: Joi.string().guid().allow(null),
     token: Joi.string().allow(null),
     name: Joi.string().allow(null)
-  })
+  }).options({ stripUnknown: true })
 }
