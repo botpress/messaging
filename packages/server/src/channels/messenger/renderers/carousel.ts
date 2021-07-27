@@ -28,12 +28,16 @@ export class MessengerCarouselRenderer extends CarouselRenderer {
     context.buttons.push({
       type: 'postback',
       title: button.title,
-      payload: button.payload
+      payload: `postback::${button.payload}`
     })
   }
 
   renderButtonSay(context: Context, button: ActionSaySomething) {
-    // TODO: not supported
+    context.buttons.push({
+      type: 'postback',
+      title: button.title,
+      payload: `say::${button.text}`
+    })
   }
 
   endRenderCard(context: Context, card: CardContent) {

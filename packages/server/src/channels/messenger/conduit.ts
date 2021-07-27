@@ -32,16 +32,27 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
   }
 
   public async extractEndpoint(payload: any): Promise<EndpointContent> {
-    let text
-    if (payload.message) {
-      text = payload.message.text
-    } else if (payload.postback) {
-      // For greeting message
-      text = payload.postback.payload
+    const postback = payload.postback?.payload
+    let content
+
+    if (payload.message?.quick_reply) {
+      content = {
+        type: 'quick_reply',
+        text: payload.message.text,
+        payload: payload.message.quick_reply.payload
+      }
+    } else if (payload.message) {
+      content = { type: 'text', text: payload.message.text }
+    } else if (postback?.startsWith('postback::')) {
+      content = { type: 'postback', payload: postback.replace('postback::', '') }
+    } else if (postback?.startsWith('say::')) {
+      content = { type: 'say_something', text: postback.replace('say::', '') }
+    } else {
+      content = { type: 'text', text: postback }
     }
 
     return {
-      content: { type: 'text', text },
+      content,
       identity: payload.recipient.id,
       sender: payload.sender.id
     }
