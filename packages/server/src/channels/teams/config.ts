@@ -14,4 +14,4 @@ export const TeamsConfigSchema = Joi.object({
   appPassword: Joi.string().required(),
   tenantId: Joi.string().optional(),
   proactiveMessages: Joi.object().optional()
-})
+}).options({ stripUnknown: true })

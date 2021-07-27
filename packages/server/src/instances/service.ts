@@ -95,7 +95,7 @@ export class InstanceService extends Service {
     try {
       await instance.initialize()
     } catch (e) {
-      instance.logger.error('Error trying to initialize conduit.', e)
+      instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
       this.cache.del(conduitId)
       return
     }

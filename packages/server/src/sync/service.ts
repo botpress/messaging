@@ -83,7 +83,8 @@ export class SyncService extends Service {
     const oldConduits = [...(await this.conduits.listByProvider(providerId))]
 
     for (const [channel, config] of Object.entries(conduits)) {
-      if (!config.enabled) {
+      // A conduit is enabled by default (don't need to set enabled: true)
+      if (config.enabled !== undefined && !config.enabled) {
         continue
       }
       const configWithoutEnabled = _.omit(config, ['enabled'])

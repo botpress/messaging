@@ -10,4 +10,4 @@ export const SlackConfigSchema = Joi.object({
   botToken: Joi.string().required(),
   signingSecret: Joi.string().required(),
   useRTM: Joi.boolean().optional()
-})
+}).options({ stripUnknown: true })

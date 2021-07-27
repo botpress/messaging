@@ -47,13 +47,13 @@ export class ConduitService extends Service {
 
   async create(providerId: uuid, channelId: uuid, config: any): Promise<Conduit> {
     const channel = this.channelService.getById(channelId)
-    await channel.schema.validateAsync(config)
+    const validConfig = await channel.schema.validateAsync(config)
 
     const conduit = {
       id: uuidv4(),
       providerId,
       channelId,
-      config,
+      config: validConfig,
       initialized: undefined
     }
 
@@ -76,14 +76,14 @@ export class ConduitService extends Service {
   async updateConfig(id: uuid, config: any) {
     const conduit = (await this.get(id))!
     const channel = this.channelService.getById(conduit.channelId)
-    await channel.schema.validateAsync(config)
+    const validConfig = await channel.schema.validateAsync(config)
 
     this.cacheById.del(id, true)
     this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
     await this.query()
       .where({ id })
-      .update({ initialized: null, config: this.cryptoService.encrypt(JSON.stringify(config || {})) })
+      .update({ initialized: null, config: this.cryptoService.encrypt(JSON.stringify(validConfig || {})) })
 
     await this.emitter.emit(ConduitEvents.Updated, id)
   }
