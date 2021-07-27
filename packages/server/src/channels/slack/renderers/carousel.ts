@@ -29,7 +29,7 @@ export class SlackCarouselRenderer extends CarouselRenderer {
   renderButtonPostback(context: Context, button: ActionPostback) {
     context.buttons.push({
       type: 'button',
-      action_id: 'button_clicked' + uuidv4(),
+      action_id: 'postback' + uuidv4(),
       text: {
         type: 'plain_text',
         text: button.title
@@ -41,7 +41,7 @@ export class SlackCarouselRenderer extends CarouselRenderer {
   renderButtonSay(context: Context, button: ActionSaySomething) {
     context.buttons.push({
       type: 'button',
-      action_id: 'button_clicked' + uuidv4(),
+      action_id: 'say_something' + uuidv4(),
       text: {
         type: 'plain_text',
         text: button.title

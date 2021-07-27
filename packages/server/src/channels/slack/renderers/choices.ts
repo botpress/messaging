@@ -14,7 +14,7 @@ export class SlackChoicesRenderer extends ChoicesRenderer {
       type: 'actions',
       elements: payload.choices.map((x) => ({
         type: 'button',
-        action_id: `replace_buttons${uuidv4()}`,
+        action_id: `quick_reply${uuidv4()}`,
         text: {
           type: 'plain_text',
           text: x.title

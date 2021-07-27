@@ -53,14 +53,23 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
 
       if (actionId.startsWith('discard_action')) {
         return
-      } else if (actionId.startsWith('replace_buttons')) {
+      } else if (actionId.startsWith('quick_reply')) {
         await axios.post(payload.response_url, { text: `*${action?.text?.text}*` })
+        await this.app.instances.receive(this.conduitId, {
+          ctx: payload,
+          content: { type: 'quick_reply', text: action?.text?.text, payload: action?.value }
+        })
+      } else if (actionId.startsWith('say_something')) {
+        await this.app.instances.receive(this.conduitId, {
+          ctx: payload,
+          content: { type: 'say_something', text: action?.value }
+        })
+      } else {
+        await this.app.instances.receive(this.conduitId, {
+          ctx: payload,
+          content: { type: 'postback', payload: action?.value }
+        })
       }
-
-      await this.app.instances.receive(this.conduitId, {
-        ctx: payload,
-        content: { type: 'quick_reply', text: action?.text?.text, payload: action?.value }
-      })
     } catch (e) {
       this.logger.error('Error occurred while processing a "button" interactive action.', e)
     }
