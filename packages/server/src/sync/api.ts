@@ -38,12 +38,12 @@ export class SyncApi extends BaseApi {
         }
         const bodyWithoutEnabled = { ...(req.body || {}), channels: channelsWithoutEnabled }
 
-        const { error } = requestSchema.validate(bodyWithoutEnabled)
+        const { error, value } = requestSchema.validate(bodyWithoutEnabled)
         if (error) {
           return res.status(400).send(error.message)
         }
 
-        const sync = req.body as SyncRequest
+        const sync = value as SyncRequest
 
         // We forbid sync requests that act on existing clients (valid clientId) but don't provide the correct token
         // A sync request will accept a incorrect client id (we assume the client was deleted a provide a new client id in response)
