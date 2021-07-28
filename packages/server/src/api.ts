@@ -1,4 +1,4 @@
-import express, { Router } from 'express'
+import express, { Request, Response, Router } from 'express'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ChatApi } from './chat/api'
@@ -37,6 +37,7 @@ export class Api {
   async setup() {
     await this.setupPassword()
 
+    this.root.get('/status', this.status)
     this.root.use('/api', this.router)
     this.router.use(express.json())
     this.router.use(express.urlencoded({ extended: true }))
@@ -62,5 +63,9 @@ export class Api {
         res.sendStatus(403)
       }
     })
+  }
+
+  private status(_req: Request, res: Response) {
+    res.sendStatus(201)
   }
 }
