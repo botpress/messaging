@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../../base/service'
 import { uuid } from '../../base/types'
+import { Batcher } from '../../batching/batcher'
+import { BatchingService } from '../../batching/service'
 import { ServerCache } from '../../caching/cache'
 import { ServerCache2D } from '../../caching/cache2D'
 import { CachingService } from '../../caching/service'
@@ -12,8 +14,9 @@ export class SenderService extends Service {
   private table: SenderTable
   private cacheById!: ServerCache<uuid, Sender>
   private cacheByName!: ServerCache2D<Sender>
+  public batcher!: Batcher<Sender>
 
-  constructor(private db: DatabaseService, private caching: CachingService) {
+  constructor(private db: DatabaseService, private caching: CachingService, private batching: BatchingService) {
     super()
     this.table = new SenderTable()
   }
@@ -22,7 +25,13 @@ export class SenderService extends Service {
     this.cacheById = await this.caching.newServerCache('cache_sender_by_id')
     this.cacheByName = await this.caching.newServerCache2D('cache_sender_by_name')
 
+    this.batcher = await this.batching.newBatcher('batcher_sender', [], this.handleBatchFlush.bind(this))
+
     await this.db.registerTable(this.table)
+  }
+
+  private async handleBatchFlush(batch: Sender[]) {
+    await this.query().insert(batch)
   }
 
   async get(id: uuid): Promise<Sender | undefined> {
@@ -31,6 +40,7 @@ export class SenderService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
     const rows = await this.query().where({ id })
 
     if (rows?.length) {
@@ -48,6 +58,7 @@ export class SenderService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
     const rows = await this.query().where({ identityId, name })
 
     if (rows?.length) {
@@ -61,7 +72,7 @@ export class SenderService extends Service {
         name
       }
 
-      await this.query().insert(sender)
+      await this.batcher.push(sender)
       this.cacheByName.set(identityId, name, sender)
       this.cacheById.set(sender.id, sender)
 
