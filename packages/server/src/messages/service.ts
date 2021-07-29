@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { Batcher } from '../batching/batcher'
+import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConversationService } from '../conversations/service'
@@ -11,10 +13,12 @@ import { Message } from './types'
 export class MessageService extends Service {
   private table: MessageTable
   private cache!: ServerCache<uuid, Message>
+  private batcher!: Batcher<Message>
 
   constructor(
     private db: DatabaseService,
     private cachingService: CachingService,
+    private batchingService: BatchingService,
     private conversationService: ConversationService
   ) {
     super()
@@ -24,7 +28,18 @@ export class MessageService extends Service {
   async setup() {
     this.cache = await this.cachingService.newServerCache('cache_message_by_id')
 
+    this.batcher = await this.batchingService.newBatcher(
+      'batcher_messages',
+      [this.conversationService.batcher],
+      this.handleBatchFlush.bind(this)
+    )
+
     await this.db.registerTable(this.table)
+  }
+
+  private async handleBatchFlush(batch: Message[]) {
+    const rows = batch.map((x) => this.serialize(x))
+    await this.query().insert(rows)
   }
 
   public async create(conversationId: uuid, authorId: uuid | undefined, payload: any): Promise<Message> {
@@ -36,7 +51,7 @@ export class MessageService extends Service {
       payload
     }
 
-    await this.query().insert(this.serialize(message))
+    await this.batcher.push(message)
 
     const conversation = await this.conversationService.get(conversationId)
     await this.conversationService.setMostRecent(conversation!.userId, conversation!.id)
@@ -45,6 +60,8 @@ export class MessageService extends Service {
   }
 
   public async delete(id: uuid): Promise<number> {
+    await this.batcher.flush()
+
     const message = await this.get(id)
     const conversation = await this.conversationService.get(message!.conversationId)
 
@@ -60,7 +77,9 @@ export class MessageService extends Service {
       return cached
     }
 
-    const rows = await this.query().where({ name })
+    await this.batcher.flush()
+
+    const rows = await this.query().where({ id })
     if (rows?.length) {
       const message = this.deserialize(rows[0])
 
@@ -73,6 +92,8 @@ export class MessageService extends Service {
   }
 
   public async listByConversationId(conversationId: uuid, limit?: number, offset?: number): Promise<Message[]> {
+    await this.batcher.flush()
+
     let query = this.query().where({ conversationId }).orderBy('sentOn', 'desc')
 
     if (limit) {
@@ -87,6 +108,8 @@ export class MessageService extends Service {
   }
 
   public async deleteByConversationId(conversationId: uuid): Promise<number> {
+    await this.batcher.flush()
+
     const deletedIds = (await this.query().select('id').where({ conversationId })).map((x) => x.id)
 
     if (deletedIds.length) {

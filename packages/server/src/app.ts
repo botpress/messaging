@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { BatchingService } from './batching/service'
 import { CachingService } from './caching/service'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
@@ -25,6 +26,7 @@ export class App {
   crypto: CryptoService
   distributed: DistributedService
   caching: CachingService
+  batching: BatchingService
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
@@ -45,15 +47,16 @@ export class App {
     this.crypto = new CryptoService(this.config)
     this.distributed = new DistributedService(this.config)
     this.caching = new CachingService(this.distributed)
+    this.batching = new BatchingService()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
-    this.users = new UserService(this.database)
-    this.conversations = new ConversationService(this.database, this.caching)
-    this.messages = new MessageService(this.database, this.caching, this.conversations)
+    this.users = new UserService(this.database, this.batching)
+    this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
+    this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching, this.users, this.conversations)
     this.instances = new InstanceService(
       this.logger,
@@ -87,6 +90,7 @@ export class App {
     await this.crypto.setup()
     await this.distributed.setup()
     await this.caching.setup()
+    await this.batching.setup()
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
@@ -106,6 +110,7 @@ export class App {
   }
 
   async destroy() {
+    await this.batching?.destroy()
     await this.distributed?.destroy()
     await this.database?.destroy()
   }
