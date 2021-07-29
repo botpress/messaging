@@ -1,7 +1,10 @@
 import { Service } from '../../base/service'
 import { uuid } from '../../base/types'
+import { Batcher } from '../../batching/batcher'
+import { BatchingService } from '../../batching/service'
 import { ServerCache2D } from '../../caching/cache2D'
 import { CachingService } from '../../caching/service'
+import { ConversationService } from '../../conversations/service'
 import { DatabaseService } from '../../database/service'
 import { ConvmapTable } from './table'
 import { Convmap } from './types'
@@ -10,8 +13,14 @@ export class ConvmapService extends Service {
   private table: ConvmapTable
   private cacheByThreadId!: ServerCache2D<Convmap>
   private cacheByConversationId!: ServerCache2D<Convmap>
+  private batcher!: Batcher<Convmap>
 
-  constructor(private db: DatabaseService, private caching: CachingService) {
+  constructor(
+    private db: DatabaseService,
+    private caching: CachingService,
+    private batching: BatchingService,
+    private conversations: ConversationService
+  ) {
     super()
 
     this.table = new ConvmapTable()
@@ -21,7 +30,17 @@ export class ConvmapService extends Service {
     this.cacheByThreadId = await this.caching.newServerCache2D('cache_convmap_by_thread_id')
     this.cacheByConversationId = await this.caching.newServerCache2D('cache_convmap_by_conversation_id')
 
+    this.batcher = await this.batching.newBatcher(
+      'batcher_convmap',
+      [this.conversations.batcher],
+      this.handleBatchFlush.bind(this)
+    )
+
     await this.db.registerTable(this.table)
+  }
+
+  private async handleBatchFlush(batch: Convmap[]) {
+    await this.query().insert(batch)
   }
 
   async create(tunnelId: uuid, conversationId: uuid, threadId: uuid): Promise<Convmap> {
@@ -31,7 +50,7 @@ export class ConvmapService extends Service {
       threadId
     }
 
-    await this.query().insert(convmap)
+    await this.batcher.push(convmap)
     this.cacheByThreadId.set(tunnelId, threadId, convmap)
     this.cacheByConversationId.set(tunnelId, conversationId, convmap)
 
@@ -44,6 +63,7 @@ export class ConvmapService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
     const rows = await this.query().where({ tunnelId, threadId })
 
     if (rows?.length) {
@@ -61,6 +81,7 @@ export class ConvmapService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
     const rows = await this.query().where({ tunnelId, conversationId })
 
     if (rows?.length) {

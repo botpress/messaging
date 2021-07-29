@@ -57,7 +57,7 @@ export class App {
     this.users = new UserService(this.database, this.batching)
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
     this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
-    this.mapping = new MappingService(this.database, this.caching, this.users, this.conversations)
+    this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
     this.instances = new InstanceService(
       this.logger,
       this.config,

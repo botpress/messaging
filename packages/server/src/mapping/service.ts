@@ -1,5 +1,6 @@
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { BatchingService } from '../batching/service'
 import { CachingService } from '../caching/service'
 import { ConversationService } from '../conversations/service'
 import { DatabaseService } from '../database/service'
@@ -25,6 +26,7 @@ export class MappingService extends Service {
   constructor(
     private db: DatabaseService,
     private caching: CachingService,
+    private batching: BatchingService,
     private users: UserService,
     private conversations: ConversationService
   ) {
@@ -34,8 +36,8 @@ export class MappingService extends Service {
     this.identities = new IdentityService(this.db, this.caching)
     this.senders = new SenderService(this.db, this.caching)
     this.threads = new ThreadService(this.db, this.caching)
-    this.usermap = new UsermapService(this.db, this.caching)
-    this.convmap = new ConvmapService(this.db, this.caching)
+    this.usermap = new UsermapService(this.db, this.caching, this.batching, this.users)
+    this.convmap = new ConvmapService(this.db, this.caching, this.batching, this.conversations)
     this.sandboxmap = new SandboxmapService(this.db, this.caching)
   }
 
