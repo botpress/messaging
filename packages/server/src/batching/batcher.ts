@@ -4,42 +4,28 @@ export class Batcher<T> {
   public constructor(
     public id: string,
     private dependencies: Batcher<any>[],
+    private maxSize: number,
     private onFlush: (batch: T[]) => Promise<void>
   ) {}
 
   public async push(item: T) {
     this.batch.push(item)
 
-    if (this.batch.length > 40) {
+    if (this.batch.length > this.maxSize) {
       await this.flush()
     }
   }
 
-  public async flush(depth: number = 0) {
-    const padding = ' '.repeat(depth * 4)
-
-    if (depth === 0) {
-      console.log()
-    }
-
-    console.log(`${padding}${this.id} flush ${this.batch.length}`)
-
+  public async flush() {
     if (this.batch.length === 0) {
       return
     }
 
     for (const dep of this.dependencies) {
-      console.log(`flushing dependency ${dep.id}`)
-      await dep.flush(++depth)
+      await dep.flush()
     }
 
     await this.onFlush(this.batch)
     this.batch = []
-
-    console.log(`${padding}${this.id} done flushing`)
-
-    if (depth === 0) {
-      console.log()
-    }
   }
 }

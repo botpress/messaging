@@ -1,6 +1,8 @@
 import { Service } from '../base/service'
 import { Batcher } from './batcher'
 
+const MAX_BATCH_SIZE = 40
+
 export class BatchingService extends Service {
   private batchers: { [cacheId: string]: Batcher<any> } = {}
 
@@ -17,7 +19,7 @@ export class BatchingService extends Service {
     dependencies: Batcher<any>[],
     onFlush: (batch: T[]) => Promise<void>
   ): Promise<Batcher<T>> {
-    const batcher = new Batcher(id, dependencies, onFlush)
+    const batcher = new Batcher(id, dependencies, MAX_BATCH_SIZE, onFlush)
     this.batchers[id] = batcher
     return batcher
   }
