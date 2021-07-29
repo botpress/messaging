@@ -66,6 +66,6 @@ export class Api {
   }
 
   private status(_req: Request, res: Response) {
-    res.sendStatus(201)
+    res.sendStatus(200)
   }
 }
