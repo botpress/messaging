@@ -9,23 +9,24 @@ export class Batcher<T> {
   ) {}
 
   public async push(item: T) {
-    this.batch.push(item)
-
-    if (this.batch.length > this.maxSize) {
+    if (this.batch.length + 1 > this.maxSize) {
       await this.flush()
     }
+
+    this.batch.push(item)
   }
 
   public async flush() {
-    if (this.batch.length === 0) {
-      return
-    }
-
     for (const dep of this.dependencies) {
       await dep.flush()
     }
 
-    await this.onFlush(this.batch)
+    if (this.batch.length === 0) {
+      return
+    }
+
+    const outBatch = this.batch
     this.batch = []
+    await this.onFlush(outBatch)
   }
 }
