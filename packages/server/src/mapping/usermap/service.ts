@@ -6,6 +6,7 @@ import { ServerCache2D } from '../../caching/cache2D'
 import { CachingService } from '../../caching/service'
 import { DatabaseService } from '../../database/service'
 import { UserService } from '../../users/service'
+import { SenderService } from '../senders/service'
 import { UsermapTable } from './table'
 import { Usermap } from './types'
 
@@ -19,7 +20,8 @@ export class UsermapService extends Service {
     private db: DatabaseService,
     private caching: CachingService,
     private batching: BatchingService,
-    private users: UserService
+    private users: UserService,
+    private senders: SenderService
   ) {
     super()
 
@@ -32,7 +34,7 @@ export class UsermapService extends Service {
 
     this.batcher = await this.batching.newBatcher(
       'batcher_usermap',
-      [this.users.batcher],
+      [this.users.batcher, this.senders.batcher],
       this.handleBatchFlush.bind(this)
     )
 

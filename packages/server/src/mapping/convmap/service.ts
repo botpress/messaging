@@ -6,20 +6,23 @@ import { ServerCache2D } from '../../caching/cache2D'
 import { CachingService } from '../../caching/service'
 import { ConversationService } from '../../conversations/service'
 import { DatabaseService } from '../../database/service'
+import { ThreadService } from '../threads/service'
 import { ConvmapTable } from './table'
 import { Convmap } from './types'
 
 export class ConvmapService extends Service {
+  public batcher!: Batcher<Convmap>
+
   private table: ConvmapTable
   private cacheByThreadId!: ServerCache2D<Convmap>
   private cacheByConversationId!: ServerCache2D<Convmap>
-  private batcher!: Batcher<Convmap>
 
   constructor(
     private db: DatabaseService,
     private caching: CachingService,
     private batching: BatchingService,
-    private conversations: ConversationService
+    private conversations: ConversationService,
+    private threads: ThreadService
   ) {
     super()
 
@@ -32,7 +35,7 @@ export class ConvmapService extends Service {
 
     this.batcher = await this.batching.newBatcher(
       'batcher_convmap',
-      [this.conversations.batcher],
+      [this.conversations.batcher, this.threads.batcher],
       this.handleBatchFlush.bind(this)
     )
 

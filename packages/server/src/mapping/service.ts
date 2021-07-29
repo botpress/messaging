@@ -36,8 +36,8 @@ export class MappingService extends Service {
     this.identities = new IdentityService(this.db, this.caching)
     this.senders = new SenderService(this.db, this.caching, this.batching)
     this.threads = new ThreadService(this.db, this.caching, this.batching, this.senders)
-    this.usermap = new UsermapService(this.db, this.caching, this.batching, this.users)
-    this.convmap = new ConvmapService(this.db, this.caching, this.batching, this.conversations)
+    this.usermap = new UsermapService(this.db, this.caching, this.batching, this.users, this.senders)
+    this.convmap = new ConvmapService(this.db, this.caching, this.batching, this.conversations, this.threads)
     this.sandboxmap = new SandboxmapService(this.db, this.caching)
   }
 

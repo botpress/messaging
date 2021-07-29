@@ -12,10 +12,11 @@ import { ThreadTable } from './table'
 import { Thread } from './types'
 
 export class ThreadService extends Service {
+  public batcher!: Batcher<Thread>
+
   private table: ThreadTable
   private cacheById!: ServerCache<uuid, Thread>
   private cacheByName!: ServerCache2D<Thread>
-  private batcher!: Batcher<Thread>
 
   constructor(
     private db: DatabaseService,
