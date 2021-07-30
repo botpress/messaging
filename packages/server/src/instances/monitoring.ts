@@ -4,8 +4,15 @@ import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
 import { InstanceService } from './service'
 
+const MAX_ALLOWED_FAILURES = 5
+
 export class InstanceMonitoring {
-  constructor(private channels: ChannelService, private conduits: ConduitService, private instances: InstanceService) {}
+  constructor(
+    private channels: ChannelService,
+    private conduits: ConduitService,
+    private instances: InstanceService,
+    private failures: { [conduitId: string]: number }
+  ) {}
 
   async setup() {
     await this.initializeOutdatedConduits()
@@ -14,7 +21,7 @@ export class InstanceMonitoring {
     setInterval(() => {
       void this.initializeOutdatedConduits()
       void this.loadNonLazyConduits()
-    }, ms('15s'))
+    }, ms('2s'))
   }
 
   private async initializeOutdatedConduits() {
@@ -22,6 +29,11 @@ export class InstanceMonitoring {
 
     const promises = []
     for (const outdated of outdateds) {
+      // TODO: replace by HealthService
+      if (this.failures[outdated.id] >= MAX_ALLOWED_FAILURES) {
+        continue
+      }
+
       promises.push(this.instances.initialize(outdated.id))
     }
 
@@ -39,6 +51,11 @@ export class InstanceMonitoring {
 
       const conduits = await this.conduits.listByChannel(channel.id)
       for (const conduit of conduits) {
+        // TODO: replace by HealthService
+        if (this.failures[conduit.id] >= MAX_ALLOWED_FAILURES) {
+          continue
+        }
+
         promises.push(this.instances.get(conduit.id))
       }
     }

@@ -29,6 +29,7 @@ export class InstanceService extends Service {
   private monitoring: InstanceMonitoring
   private sandbox: InstanceSandbox
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
+  private failures: { [conduitId: string]: number } = {}
   private logger: Logger
   private loggingEnabled!: boolean
   private lazyLoadingEnabled!: boolean
@@ -55,7 +56,7 @@ export class InstanceService extends Service {
       this.clientService,
       this
     )
-    this.monitoring = new InstanceMonitoring(this.channelService, this.conduitService, this)
+    this.monitoring = new InstanceMonitoring(this.channelService, this.conduitService, this, this.failures)
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
     this.logger = this.loggerService.root.sub('instances')
   }
@@ -97,6 +98,12 @@ export class InstanceService extends Service {
     } catch (e) {
       instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
       this.cache.del(conduitId)
+
+      // TODO: replace by HealthService
+      if (!this.failures[conduitId]) {
+        this.failures[conduitId] = 0
+      }
+      this.failures[conduitId]++
       return
     }
 
@@ -119,6 +126,12 @@ export class InstanceService extends Service {
     } catch (e) {
       instance.logger.error('Error trying to setup conduit.', e)
       this.cache.del(conduitId)
+
+      // TODO: replace by HealthService
+      if (!this.failures[conduitId]) {
+        this.failures[conduitId] = 0
+      }
+      this.failures[conduitId]++
     }
 
     return instance
