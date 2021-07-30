@@ -21,7 +21,7 @@ export class InstanceMonitoring {
     setInterval(() => {
       void this.initializeOutdatedConduits()
       void this.loadNonLazyConduits()
-    }, ms('2s'))
+    }, ms('15s'))
   }
 
   private async initializeOutdatedConduits() {
