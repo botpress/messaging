@@ -120,8 +120,22 @@ export class ClientService extends Service {
 
     this.cacheByProvider.del(oldClient.providerId, true)
     this.cacheById.del(id, true)
+    this.cacheTokens.del(id, true)
 
     await this.query().where({ id }).update({ providerId })
+    await this.emitter.emit(ClientEvents.Updated, { clientId: id, oldClient })
+  }
+
+  async updateToken(id: uuid, token: string) {
+    const oldClient = (await this.getById(id))!
+
+    this.cacheByProvider.del(oldClient.providerId, true)
+    this.cacheById.del(id, true)
+    this.cacheTokens.del(id, true)
+
+    await this.query()
+      .where({ id })
+      .update({ token: await this.cryptoService.hash(token) })
     await this.emitter.emit(ClientEvents.Updated, { clientId: id, oldClient })
   }
 
