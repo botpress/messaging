@@ -17,6 +17,7 @@ export interface MessagingEnv {
   SPINNED?: string
   SPINNED_URL?: string
   NO_LAZY_LOADING?: string
+  BATCHING_ENABLED?: string
 }
 
 declare global {
