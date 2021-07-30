@@ -1,18 +1,28 @@
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { Batcher } from '../batching/batcher'
+import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
+import { UserService } from '../users/service'
 import { ConversationTable } from './table'
 import { Conversation, RecentConversation } from './types'
 
 export class ConversationService extends Service {
+  public batcher!: Batcher<Conversation>
+
   private table: ConversationTable
   private cache!: ServerCache<uuid, Conversation>
   private cacheMostRecent!: ServerCache<uuid, Conversation>
 
-  constructor(private db: DatabaseService, private cachingService: CachingService) {
+  constructor(
+    private db: DatabaseService,
+    private cachingService: CachingService,
+    private batchingService: BatchingService,
+    private userService: UserService
+  ) {
     super()
     this.table = new ConversationTable()
   }
@@ -21,7 +31,18 @@ export class ConversationService extends Service {
     this.cache = await this.cachingService.newServerCache('cache_conversation_by_id')
     this.cacheMostRecent = await this.cachingService.newServerCache('cache_conversation_most_recent_by_user_id')
 
+    this.batcher = await this.batchingService.newBatcher(
+      'batcher_conversations',
+      [this.userService.batcher],
+      this.handleBatchFlush.bind(this)
+    )
+
     await this.db.registerTable(this.table)
+  }
+
+  private async handleBatchFlush(batch: Conversation[]) {
+    const rows = batch.map((x) => this.serialize(x))
+    await this.query().insert(rows)
   }
 
   public async create(clientId: uuid, userId: uuid): Promise<Conversation> {
@@ -32,13 +53,15 @@ export class ConversationService extends Service {
       createdOn: new Date()
     }
 
-    await this.query().insert(this.serialize(conversation))
+    await this.batcher.push(conversation)
     this.cache.set(conversation.id, conversation)
 
     return conversation
   }
 
   public async delete(id: uuid): Promise<number> {
+    await this.batcher.flush()
+
     const conversation = await this.get(id)
 
     this.cache.del(id, true)
@@ -53,6 +76,8 @@ export class ConversationService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
+
     const rows = await this.query().where({ id })
     if (rows?.length) {
       const conversation = this.deserialize(rows[0])
@@ -66,6 +91,8 @@ export class ConversationService extends Service {
   }
 
   public async getMostRecent(clientId: uuid, userId: uuid): Promise<Conversation | undefined> {
+    // TODO: need to figure out batching for this
+
     const cached = this.cacheMostRecent.get(userId)
     if (cached) {
       return cached
@@ -97,6 +124,8 @@ export class ConversationService extends Service {
     limit?: number,
     offset?: number
   ): Promise<RecentConversation[]> {
+    // TODO: need to figure out batching for this
+
     let query = this.queryRecents(clientId, userId)
 
     if (limit) {

@@ -1,8 +1,12 @@
 import { Service } from '../../base/service'
 import { uuid } from '../../base/types'
+import { Batcher } from '../../batching/batcher'
+import { BatchingService } from '../../batching/service'
 import { ServerCache2D } from '../../caching/cache2D'
 import { CachingService } from '../../caching/service'
 import { DatabaseService } from '../../database/service'
+import { UserService } from '../../users/service'
+import { SenderService } from '../senders/service'
 import { UsermapTable } from './table'
 import { Usermap } from './types'
 
@@ -10,8 +14,15 @@ export class UsermapService extends Service {
   private table: UsermapTable
   private cacheBySenderId!: ServerCache2D<Usermap>
   private cacheByUserId!: ServerCache2D<Usermap>
+  private batcher!: Batcher<Usermap>
 
-  constructor(private db: DatabaseService, private caching: CachingService) {
+  constructor(
+    private db: DatabaseService,
+    private caching: CachingService,
+    private batching: BatchingService,
+    private users: UserService,
+    private senders: SenderService
+  ) {
     super()
 
     this.table = new UsermapTable()
@@ -21,7 +32,17 @@ export class UsermapService extends Service {
     this.cacheBySenderId = await this.caching.newServerCache2D('cache_usermap_by_sender_id')
     this.cacheByUserId = await this.caching.newServerCache2D('cache_usermap_by_user_id')
 
+    this.batcher = await this.batching.newBatcher(
+      'batcher_usermap',
+      [this.users.batcher, this.senders.batcher],
+      this.handleBatchFlush.bind(this)
+    )
+
     await this.db.registerTable(this.table)
+  }
+
+  private async handleBatchFlush(batch: Usermap[]) {
+    await this.query().insert(batch)
   }
 
   async create(tunnelId: uuid, userId: uuid, senderId: uuid): Promise<Usermap> {
@@ -31,7 +52,7 @@ export class UsermapService extends Service {
       senderId
     }
 
-    await this.query().insert(usermap)
+    await this.batcher.push(usermap)
     this.cacheBySenderId.set(tunnelId, senderId, usermap)
     this.cacheByUserId.set(tunnelId, userId, usermap)
 
@@ -44,6 +65,7 @@ export class UsermapService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
     const rows = await this.query().where({ tunnelId, senderId })
 
     if (rows?.length) {
@@ -61,6 +83,7 @@ export class UsermapService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
     const rows = await this.query().where({ tunnelId, userId })
 
     if (rows?.length) {
