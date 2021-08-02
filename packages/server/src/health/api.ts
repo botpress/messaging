@@ -14,10 +14,7 @@ export class HealthApi extends ClientScopedApi {
     this.router.get(
       '/health',
       this.asyncMiddleware(async (req: ApiRequest, res) => {
-        // TODO: validate schema
-
         const health = await this.health.getHealth(req.client!.id)
-
         res.send(health)
       })
     )

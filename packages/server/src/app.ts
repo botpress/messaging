@@ -83,7 +83,7 @@ export class App {
       this.clients,
       this.webhooks
     )
-    this.health = new HealthService(this.providers, this.clients, this.conduits)
+    this.health = new HealthService(this.channels, this.providers, this.clients, this.conduits)
   }
 
   async setup() {
@@ -109,6 +109,7 @@ export class App {
 
   async monitor() {
     await this.syncs.setup()
+    await this.health.setup()
     await this.instances.monitor()
   }
 
