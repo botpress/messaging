@@ -9,6 +9,7 @@ import { ConversationService } from './conversations/service'
 import { CryptoService } from './crypto/service'
 import { DatabaseService } from './database/service'
 import { DistributedService } from './distributed/service'
+import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
 import { KvsService } from './kvs/service'
 import { LoggerService } from './logger/service'
@@ -39,6 +40,7 @@ export class App {
   mapping: MappingService
   instances: InstanceService
   syncs: SyncService
+  health: HealthService
 
   constructor() {
     this.logger = new LoggerService()
@@ -81,6 +83,7 @@ export class App {
       this.clients,
       this.webhooks
     )
+    this.health = new HealthService(this.providers, this.clients, this.conduits)
   }
 
   async setup() {
