@@ -13,6 +13,7 @@ import { InstanceService } from './service'
 
 export class InstanceInvalidator {
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
+  private failures: { [conduitId: string]: number } = {}
   private lazyLoadingEnabled!: boolean
 
   constructor(
@@ -23,8 +24,9 @@ export class InstanceInvalidator {
     private instances: InstanceService
   ) {}
 
-  async setup(cache: ServerCache<uuid, ConduitInstance<any, any>>) {
+  async setup(cache: ServerCache<uuid, ConduitInstance<any, any>>, failures: { [conduitId: string]: number } = {}) {
     this.cache = cache
+    this.failures = failures
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.conduits.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
@@ -53,6 +55,8 @@ export class InstanceInvalidator {
 
   private async onConduitUpdated(conduitId: uuid) {
     this.cache.del(conduitId, true)
+    // TODO: replace by HealthService
+    this.failures[conduitId] = 0
 
     const conduit = (await this.conduits.get(conduitId))!
     const channel = this.channels.getById(conduit.channelId)

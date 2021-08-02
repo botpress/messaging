@@ -83,7 +83,7 @@ export class InstanceService extends Service {
       maxAge: ms('30min')
     })
 
-    await this.invalidator.setup(this.cache)
+    await this.invalidator.setup(this.cache, this.failures)
   }
 
   async monitor() {
