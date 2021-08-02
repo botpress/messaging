@@ -1,6 +1,10 @@
 export enum HealthEventType {
-  Init = 'init',
+  Create = 'create',
+  Configure = 'configure',
   Start = 'start',
+  StartFailure = 'start-failure',
+  Initialize = 'initialize',
+  InitializeFailure = 'initialize-failure',
   Sleep = 'sleep',
   Delete = 'delete'
 }

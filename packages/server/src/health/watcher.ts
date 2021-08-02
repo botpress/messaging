@@ -4,6 +4,7 @@ import { ConduitService } from '../conduits/service'
 import { InstanceEvents } from '../instances/events'
 import { InstanceService } from '../instances/service'
 import { HealthService } from './service'
+import { HealthEventType } from './types'
 
 export class HealthWatcher {
   constructor(
@@ -13,7 +14,9 @@ export class HealthWatcher {
   ) {}
 
   async setup() {
+    this.conduitService.events.on(ConduitEvents.Created, this.handleConduitCreated.bind(this))
     this.conduitService.events.on(ConduitEvents.Updated, this.handleConduitUpdated.bind(this))
+    this.conduitService.events.on(ConduitEvents.Deleting, this.handleConduitDeleted.bind(this))
     this.instanceService.events.on(InstanceEvents.Setup, this.handleInstanceSetup.bind(this))
     this.instanceService.events.on(InstanceEvents.SetupFailed, this.handleInstanceSetupFailed.bind(this))
     this.instanceService.events.on(InstanceEvents.Initialized, this.handleInstanceInitialized.bind(this))
@@ -24,27 +27,35 @@ export class HealthWatcher {
     this.instanceService.events.on(InstanceEvents.Destroyed, this.handleInstanceDestroyed.bind(this))
   }
 
+  private async handleConduitCreated(conduitId: uuid) {
+    await this.healthService.register(conduitId, HealthEventType.Create)
+  }
+
   private async handleConduitUpdated(conduitId: uuid) {
-    console.log('conduit updated!', conduitId)
+    await this.healthService.register(conduitId, HealthEventType.Configure)
+  }
+
+  private async handleConduitDeleted(conduitId: uuid) {
+    await this.healthService.register(conduitId, HealthEventType.Delete)
   }
 
   private async handleInstanceSetup(conduitId: uuid) {
-    console.log('conduit setup!', conduitId)
+    await this.healthService.register(conduitId, HealthEventType.Start)
   }
 
   private async handleInstanceSetupFailed(conduitId: uuid) {
-    console.log('conduit setup failed!', conduitId)
+    await this.healthService.register(conduitId, HealthEventType.StartFailure)
   }
 
   private async handleInstanceInitialized(conduitId: uuid) {
-    console.log('conduit initialized!', conduitId)
+    await this.healthService.register(conduitId, HealthEventType.Initialize)
   }
 
   private async handleInstanceInitializationFailed(conduitId: uuid) {
-    console.log('conduit initialization failed!', conduitId)
+    await this.healthService.register(conduitId, HealthEventType.InitializeFailure)
   }
 
   private async handleInstanceDestroyed(conduitId: uuid) {
-    console.log('conduit destroyed!', conduitId)
+    await this.healthService.register(conduitId, HealthEventType.Sleep)
   }
 }

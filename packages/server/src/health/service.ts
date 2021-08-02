@@ -1,3 +1,4 @@
+import clc from 'cli-color'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ChannelService } from '../channels/service'
@@ -5,6 +6,7 @@ import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { DatabaseService } from '../database/service'
 import { InstanceService } from '../instances/service'
+import { Logger } from '../logger/types'
 import { ProviderService } from '../providers/service'
 import { HealthTable } from './table'
 import { HealthEventType } from './types'
@@ -13,6 +15,7 @@ import { HealthWatcher } from './watcher'
 export class HealthService extends Service {
   private table: HealthTable
   private watcher: HealthWatcher
+  private logger = new Logger('Health')
 
   constructor(
     private db: DatabaseService,
@@ -33,7 +36,13 @@ export class HealthService extends Service {
     await this.watcher.setup()
   }
 
-  async register(conduitId: uuid, type: HealthEventType, info: any = undefined) {}
+  async register(conduitId: uuid, type: HealthEventType, info: any = undefined) {
+    const conduit = await this.conduitService.get(conduitId)
+    const provider = await this.providerService.getById(conduit!.providerId)
+    const channel = this.channelService.getById(conduit!.channelId)
+
+    this.logger.info(`[${provider!.name}] ${clc.bold(channel.name)} ${type}`)
+  }
 
   async getHealth(clientId: uuid) {
     const client = await this.clientService.getById(clientId)
