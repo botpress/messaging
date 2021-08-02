@@ -20,11 +20,17 @@ import { MessageService } from '../messages/service'
 import { Message } from '../messages/types'
 import { ProviderService } from '../providers/service'
 import { WebhookService } from '../webhooks/service'
+import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
 import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
+  get events(): InstanceWatcher {
+    return this.emitter
+  }
+
+  private emitter: InstanceEmitter
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
   private sandbox: InstanceSandbox
@@ -49,6 +55,7 @@ export class InstanceService extends Service {
     private app: App
   ) {
     super()
+    this.emitter = new InstanceEmitter()
     this.invalidator = new InstanceInvalidator(
       this.channelService,
       this.providerService,
@@ -78,6 +85,7 @@ export class InstanceService extends Service {
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
       dispose: async (k, v) => {
         await v.destroy()
+        await this.emitter.emit(InstanceEvents.Destroyed, v.conduitId)
       },
       max: 50000,
       maxAge: ms('30min')
@@ -104,10 +112,12 @@ export class InstanceService extends Service {
         this.failures[conduitId] = 0
       }
       this.failures[conduitId]++
-      return
+
+      return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
     }
 
     await this.conduitService.updateInitialized(conduitId)
+    return this.emitter.emit(InstanceEvents.Initialized, conduitId)
   }
 
   async get(conduitId: uuid): Promise<ConduitInstance<any, any>> {
@@ -123,6 +133,8 @@ export class InstanceService extends Service {
     try {
       await instance.setup(conduitId, conduit.config, this.app)
       this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
+
+      await this.emitter.emit(InstanceEvents.Setup, conduitId)
     } catch (e) {
       instance.logger.error('Error trying to setup conduit.', e)
       this.cache.del(conduitId)
@@ -132,6 +144,8 @@ export class InstanceService extends Service {
         this.failures[conduitId] = 0
       }
       this.failures[conduitId]++
+
+      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
     }
 
     return instance
