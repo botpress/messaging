@@ -94,6 +94,16 @@ export class InstanceService extends Service {
     await this.invalidator.setup(this.cache, this.failures)
   }
 
+  async destroy() {
+    const keys = this.cache.keys()
+
+    for (const conduitId of keys) {
+      this.cache.del(conduitId)
+    }
+
+    this.cache.prune()
+  }
+
   async monitor() {
     await this.monitoring.setup()
   }

@@ -122,6 +122,7 @@ export class App {
 
   async destroy() {
     await this.batching?.destroy()
+    await this.instances?.destroy()
     await this.distributed?.destroy()
     await this.database?.destroy()
   }
