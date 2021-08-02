@@ -56,6 +56,14 @@ export class ServerCache<K, V> {
       this.invalidate(key)
     }
   }
+
+  prune() {
+    this.lru.prune()
+  }
+
+  keys() {
+    return this.lru.keys()
+  }
 }
 
 interface ServerCacheEvent<K, V> {
