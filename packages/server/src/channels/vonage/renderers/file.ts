@@ -1,6 +1,5 @@
 import { FileContent } from '../../../content/types'
 import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
 import { VonageContext } from '../context'
 
 export class VonageFileRenderer implements ChannelRenderer<VonageContext> {
@@ -20,7 +19,7 @@ export class VonageFileRenderer implements ChannelRenderer<VonageContext> {
         type: 'file',
         text: undefined!,
         file: {
-          url: formatUrl(context.botUrl, payload.file)!,
+          url: payload.file!,
           caption: payload.title!
         }
       }

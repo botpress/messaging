@@ -50,8 +50,6 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
         client: undefined,
         handlers: 0,
         payload: _.cloneDeep(payload),
-        // TODO: temporary shortcut so that it works when botpress spins the messaging server. To be adjusted when messaging is on cloud
-        botUrl: process.env.BOT_URL!,
         logger: this.logger,
         ...endpoint
       },

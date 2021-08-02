@@ -1,6 +1,5 @@
 import { VideoContent } from '../../../content/types'
 import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
 import { VonageContext } from '../context'
 
 export class VonageVideoRenderer implements ChannelRenderer<VonageContext> {
@@ -20,7 +19,7 @@ export class VonageVideoRenderer implements ChannelRenderer<VonageContext> {
         type: 'video',
         text: undefined!,
         video: <any>{
-          url: formatUrl(context.botUrl, payload.video)!,
+          url: payload.video,
           caption: payload.title!
         }
       }
