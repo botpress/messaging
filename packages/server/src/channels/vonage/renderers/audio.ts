@@ -1,6 +1,5 @@
 import { AudioContent } from '../../../content/types'
 import { ChannelRenderer } from '../../base/renderer'
-import { formatUrl } from '../../url'
 import { VonageContext } from '../context'
 
 export class VonageAudioRenderer implements ChannelRenderer<VonageContext> {
@@ -20,7 +19,7 @@ export class VonageAudioRenderer implements ChannelRenderer<VonageContext> {
         type: 'audio',
         text: undefined!,
         audio: {
-          url: formatUrl(context.botUrl, payload.audio)!
+          url: payload.audio
         }
       }
     })
