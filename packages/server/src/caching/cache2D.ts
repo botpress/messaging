@@ -57,6 +57,14 @@ export class ServerCache2D<V> {
     }
   }
 
+  prune() {
+    this.lru.prune()
+  }
+
+  keys() {
+    return this.lru.keys()
+  }
+
   private getKey(keyX: string, keyY: string) {
     return `${keyX}~\`${keyY}`
   }

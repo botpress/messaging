@@ -29,7 +29,7 @@ export class InstanceMonitoring {
 
     const promises = []
     for (const outdated of outdateds) {
-      // TODO: replace by HealthService
+      // TODO: replace by StatusService
       if (this.failures[outdated.id] >= MAX_ALLOWED_FAILURES) {
         continue
       }
@@ -51,7 +51,7 @@ export class InstanceMonitoring {
 
       const conduits = await this.conduits.listByChannel(channel.id)
       for (const conduit of conduits) {
-        // TODO: replace by HealthService
+        // TODO: replace by StatusService
         if (this.failures[conduit.id] >= MAX_ALLOWED_FAILURES) {
           continue
         }

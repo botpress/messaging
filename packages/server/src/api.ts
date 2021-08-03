@@ -3,6 +3,7 @@ import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ChatApi } from './chat/api'
 import { ConversationApi } from './conversations/api'
+import { HealthApi } from './health/api'
 import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
@@ -11,6 +12,7 @@ export class Api {
   private router: Router
 
   syncs: SyncApi
+  health: HealthApi
   chat: ChatApi
   users: UserApi
   conversations: ConversationApi
@@ -20,6 +22,7 @@ export class Api {
   constructor(private app: App, private root: Router) {
     this.router = Router()
     this.syncs = new SyncApi(this.router, this.app.config, this.app.syncs, this.app.clients, this.app.channels)
+    this.health = new HealthApi(this.router, this.app.clients, this.app.health)
     this.chat = new ChatApi(
       this.router,
       this.app.clients,
@@ -43,6 +46,7 @@ export class Api {
     this.router.use(express.urlencoded({ extended: true }))
 
     await this.syncs.setup()
+    await this.health.setup()
     await this.chat.setup()
     await this.users.setup()
     await this.conversations.setup()

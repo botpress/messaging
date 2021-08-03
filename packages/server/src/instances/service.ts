@@ -20,11 +20,17 @@ import { MessageService } from '../messages/service'
 import { Message } from '../messages/types'
 import { ProviderService } from '../providers/service'
 import { WebhookService } from '../webhooks/service'
+import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
 import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
+  get events(): InstanceWatcher {
+    return this.emitter
+  }
+
+  private emitter: InstanceEmitter
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
   private sandbox: InstanceSandbox
@@ -49,6 +55,7 @@ export class InstanceService extends Service {
     private app: App
   ) {
     super()
+    this.emitter = new InstanceEmitter()
     this.invalidator = new InstanceInvalidator(
       this.channelService,
       this.providerService,
@@ -78,12 +85,23 @@ export class InstanceService extends Service {
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
       dispose: async (k, v) => {
         await v.destroy()
+        await this.emitter.emit(InstanceEvents.Destroyed, v.conduitId)
       },
       max: 50000,
       maxAge: ms('30min')
     })
 
     await this.invalidator.setup(this.cache, this.failures)
+  }
+
+  async destroy() {
+    const keys = this.cache.keys()
+
+    for (const conduitId of keys) {
+      this.cache.del(conduitId)
+    }
+
+    this.cache.prune()
   }
 
   async monitor() {
@@ -96,18 +114,20 @@ export class InstanceService extends Service {
     try {
       await instance.initialize()
     } catch (e) {
-      instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
       this.cache.del(conduitId)
 
-      // TODO: replace by HealthService
+      // TODO: replace by StatusService
+      instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
       }
       this.failures[conduitId]++
-      return
+
+      return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
     }
 
     await this.conduitService.updateInitialized(conduitId)
+    return this.emitter.emit(InstanceEvents.Initialized, conduitId)
   }
 
   async get(conduitId: uuid): Promise<ConduitInstance<any, any>> {
@@ -123,11 +143,14 @@ export class InstanceService extends Service {
     try {
       await instance.setup(conduitId, conduit.config, this.app)
       this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
-    } catch (e) {
-      instance.logger.error('Error trying to setup conduit.', e)
-      this.cache.del(conduitId)
 
-      // TODO: replace by HealthService
+      await this.emitter.emit(InstanceEvents.Setup, conduitId)
+    } catch (e) {
+      this.cache.del(conduitId)
+      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
+
+      // TODO: replace by StatusService
+      instance.logger.error('Error trying to setup conduit.', e)
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
       }
@@ -181,6 +204,7 @@ export class InstanceService extends Service {
     const message = await this.messageService.create(conversationId, userId, endpoint.content)
 
     const post = {
+      type: 'message',
       client: { id: clientId },
       channel: { id: conduit.channelId, name: this.channelService.getById(conduit.channelId).name },
       user: { id: userId },
@@ -207,7 +231,7 @@ export class InstanceService extends Service {
     const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
 
     try {
-      await axios.post(url, data, { headers: { password } })
+      await axios.post(url, data, password ? { headers: { password } } : undefined)
     } catch (e) {
       instance.logger.error(`Failed to call webhook ${url}.`, e.message)
     }

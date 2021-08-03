@@ -1,12 +1,14 @@
 export class Emitter<T extends { [key: number]: any }> {
   private listeners: { [eventId: number]: ((arg: any) => Promise<void>)[] } = {}
 
-  public on<K extends keyof T>(event: K, listener: (arg: T[K]) => Promise<void>) {
+  public on<K extends keyof T>(event: K, listener: (arg: T[K]) => Promise<void>, pushBack: boolean = false) {
     const listeners = this.listeners[event as number]
     if (!listeners) {
       this.listeners[event as number] = [listener]
-    } else {
+    } else if (!pushBack) {
       listeners.push(listener)
+    } else {
+      listeners.unshift(listener)
     }
   }
 
