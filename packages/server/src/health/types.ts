@@ -16,5 +16,15 @@ export interface HealthEvent {
   conduitId: uuid
   time: Date
   type: HealthEventType
-  data: any
+  data?: any
 }
+
+export interface HealthReport {
+  channels: {
+    [channel: string]: {
+      events: HealthReportEvent[]
+    }
+  }
+}
+
+export type HealthReportEvent = Omit<HealthEvent, 'id' | 'conduitId'>

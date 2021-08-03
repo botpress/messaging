@@ -85,6 +85,7 @@ export class App {
     )
     this.health = new HealthService(
       this.database,
+      this.caching,
       this.channels,
       this.providers,
       this.clients,

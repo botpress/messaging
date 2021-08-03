@@ -1,25 +1,26 @@
-import clc from 'cli-color'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
+import { ServerCache } from '../caching/cache'
+import { CachingService } from '../caching/service'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { DatabaseService } from '../database/service'
 import { InstanceService } from '../instances/service'
-import { Logger } from '../logger/types'
 import { ProviderService } from '../providers/service'
 import { HealthTable } from './table'
-import { HealthEvent, HealthEventType } from './types'
+import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from './types'
 import { HealthWatcher } from './watcher'
 
 export class HealthService extends Service {
   private table: HealthTable
+  private cache!: ServerCache<uuid, HealthReport>
   private watcher: HealthWatcher
-  private logger = new Logger('Health')
 
   constructor(
     private db: DatabaseService,
+    private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
     private clientService: ClientService,
@@ -32,18 +33,14 @@ export class HealthService extends Service {
   }
 
   async setup() {
+    this.cache = await this.cachingService.newServerCache('cache_health_reports')
+
     await this.db.registerTable(this.table)
 
     await this.watcher.setup()
   }
 
   async register(conduitId: uuid, type: HealthEventType, data: any = undefined) {
-    const conduit = await this.conduitService.get(conduitId)
-    const provider = await this.providerService.getById(conduit!.providerId)
-    const channel = this.channelService.getById(conduit!.channelId)
-
-    this.logger.info(`[${provider!.name}] ${clc.bold(channel.name)} ${type}`)
-
     const event: HealthEvent = {
       id: uuidv4(),
       conduitId,
@@ -52,25 +49,34 @@ export class HealthService extends Service {
       data
     }
 
+    const conduit = await this.conduitService.get(conduitId)
+    const client = await this.clientService.getByProviderId(conduit!.providerId)
+    if (client) {
+      this.cache.del(client.id, true)
+    }
+
     await this.query().insert(this.serialize(event))
   }
 
-  async getHealthForClient(clientId: uuid) {
-    const client = await this.clientService.getById(clientId)
-    const provider = await this.providerService.getById(client!.providerId)
-    const conduits = await this.conduitService.listByProvider(provider!.id)
+  async getHealthForClient(clientId: uuid): Promise<HealthReport> {
+    const cached = this.cache.get(clientId)
+    if (cached) {
+      return cached
+    }
 
-    const channels: any = {}
+    const client = await this.clientService.getById(clientId)
+    const conduits = await this.conduitService.listByProvider(client!.providerId)
+
+    const report: HealthReport = { channels: {} }
 
     for (const conduit of conduits) {
       const channel = this.channelService.getById(conduit.channelId)
       const events = await this.listEventsByConduit(conduit.id)
-      channels[channel.name] = { events: events.map((x) => this.makeReadable(x)) }
+      report.channels[channel.name] = { events: events.map((x) => this.makeReadable(x)) }
     }
 
-    return {
-      channels
-    }
+    this.cache.set(clientId, report)
+    return report
   }
 
   async listEventsByConduit(conduitId: uuid) {
@@ -78,7 +84,7 @@ export class HealthService extends Service {
     return rows.map((x) => this.deserialize(x))
   }
 
-  private makeReadable(event: HealthEvent) {
+  private makeReadable(event: HealthEvent): HealthReportEvent {
     return {
       type: event.type,
       time: event.time,
