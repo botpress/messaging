@@ -85,7 +85,7 @@ export class HealthService extends Service {
     const password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
 
     try {
-      await axios.post(url, data, { headers: { password } })
+      await axios.post(url, data, password ? { headers: { password } } : undefined)
     } catch (e) {
       // TODO: maybe we should retry if this call fails
     }

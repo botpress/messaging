@@ -116,7 +116,7 @@ export class InstanceService extends Service {
     } catch (e) {
       this.cache.del(conduitId)
 
-      // TODO: replace by HealthService
+      // TODO: replace by StatusService
       instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
@@ -149,7 +149,7 @@ export class InstanceService extends Service {
       this.cache.del(conduitId)
       await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
 
-      // TODO: replace by HealthService
+      // TODO: replace by StatusService
       instance.logger.error('Error trying to setup conduit.', e)
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
@@ -231,7 +231,7 @@ export class InstanceService extends Service {
     const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
 
     try {
-      await axios.post(url, data, { headers: { password } })
+      await axios.post(url, data, password ? { headers: { password } } : undefined)
     } catch (e) {
       instance.logger.error(`Failed to call webhook ${url}.`, e.message)
     }

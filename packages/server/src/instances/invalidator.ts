@@ -55,7 +55,7 @@ export class InstanceInvalidator {
 
   private async onConduitUpdated(conduitId: uuid) {
     this.cache.del(conduitId, true)
-    // TODO: replace by HealthService
+    // TODO: replace by StatusService
     this.failures[conduitId] = 0
 
     const conduit = (await this.conduits.get(conduitId))!
