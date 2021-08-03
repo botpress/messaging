@@ -204,6 +204,7 @@ export class InstanceService extends Service {
     const message = await this.messageService.create(conversationId, userId, endpoint.content)
 
     const post = {
+      type: 'message',
       client: { id: clientId },
       channel: { id: conduit.channelId, name: this.channelService.getById(conduit.channelId).name },
       user: { id: userId },

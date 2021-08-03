@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
@@ -6,9 +7,10 @@ import { CachingService } from '../caching/service'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
+import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { InstanceService } from '../instances/service'
-import { ProviderService } from '../providers/service'
+import { WebhookService } from '../webhooks/service'
 import { HealthTable } from './table'
 import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from './types'
 import { HealthWatcher } from './watcher'
@@ -19,11 +21,12 @@ export class HealthService extends Service {
   private watcher: HealthWatcher
 
   constructor(
+    private configService: ConfigService,
     private db: DatabaseService,
     private cachingService: CachingService,
     private channelService: ChannelService,
-    private providerService: ProviderService,
     private clientService: ClientService,
+    private webhookService: WebhookService,
     private conduitService: ConduitService,
     private instanceService: InstanceService
   ) {
@@ -53,9 +56,39 @@ export class HealthService extends Service {
     const client = await this.clientService.getByProviderId(conduit!.providerId)
     if (client) {
       this.cache.del(client.id, true)
+
+      const channel = this.channelService.getById(conduit!.channelId)
+      const post = {
+        type: 'health',
+        client: { id: client.id },
+        channel: { id: channel.id, name: channel.name },
+        event: this.makeReadable(event)
+      }
+
+      // TODO: this code to call webhook is copy pasted. It should be refactored somewhere else
+      if (process.env.SPINNED) {
+        await this.callWebhook(process.env.SPINNED_URL!, post)
+      } else {
+        const webhooks = await this.webhookService.list(client.id)
+
+        for (const webhook of webhooks) {
+          await this.callWebhook(webhook.url, post)
+        }
+      }
     }
 
     await this.query().insert(this.serialize(event))
+  }
+
+  // TODO: move this somewhere else
+  private async callWebhook(url: string, data: any) {
+    const password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
+
+    try {
+      await axios.post(url, data, { headers: { password } })
+    } catch (e) {
+      // TODO: maybe we should retry if this call fails
+    }
   }
 
   async getHealthForClient(clientId: uuid): Promise<HealthReport> {

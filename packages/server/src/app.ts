@@ -84,11 +84,12 @@ export class App {
       this.webhooks
     )
     this.health = new HealthService(
+      this.config,
       this.database,
       this.caching,
       this.channels,
-      this.providers,
       this.clients,
+      this.webhooks,
       this.conduits,
       this.instances
     )
