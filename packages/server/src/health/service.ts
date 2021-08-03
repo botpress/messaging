@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
@@ -72,7 +72,7 @@ export class HealthService extends Service {
         const webhooks = await this.webhookService.list(client.id)
 
         for (const webhook of webhooks) {
-          await this.callWebhook(webhook.url, post)
+          await this.callWebhook(webhook.url, post, webhook.token)
         }
       }
     }
@@ -81,11 +81,20 @@ export class HealthService extends Service {
   }
 
   // TODO: move this somewhere else
-  private async callWebhook(url: string, data: any) {
+  private async callWebhook(url: string, data: any, token?: string) {
     const password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
+    const config: AxiosRequestConfig = { headers: {} }
+
+    if (password) {
+      config.headers.password = password
+    }
+
+    if (token) {
+      config.headers['X-Webhook-Token'] = token
+    }
 
     try {
-      await axios.post(url, data, password ? { headers: { password } } : undefined)
+      await axios.post(url, data, config)
     } catch (e) {
       // TODO: maybe we should retry if this call fails
     }
