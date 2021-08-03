@@ -14,9 +14,9 @@ export class HealthWatcher {
   ) {}
 
   async setup() {
-    this.conduitService.events.on(ConduitEvents.Created, this.handleConduitCreated.bind(this))
-    this.conduitService.events.on(ConduitEvents.Updated, this.handleConduitUpdated.bind(this))
-    this.conduitService.events.on(ConduitEvents.Deleting, this.handleConduitDeleted.bind(this))
+    this.conduitService.events.on(ConduitEvents.Created, this.handleConduitCreated.bind(this), true)
+    this.conduitService.events.on(ConduitEvents.Updated, this.handleConduitUpdated.bind(this), true)
+    this.conduitService.events.on(ConduitEvents.Deleting, this.handleConduitDeleted.bind(this), true)
     this.instanceService.events.on(InstanceEvents.Setup, this.handleInstanceSetup.bind(this))
     this.instanceService.events.on(InstanceEvents.SetupFailed, this.handleInstanceSetupFailed.bind(this))
     this.instanceService.events.on(InstanceEvents.Initialized, this.handleInstanceInitialized.bind(this))
