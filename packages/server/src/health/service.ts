@@ -113,7 +113,7 @@ export class HealthService extends Service {
   }
 
   async listEventsByConduit(conduitId: uuid) {
-    const rows = await this.query().where({ conduitId }).orderBy('time', 'desc')
+    const rows = await this.query().where({ conduitId }).orderBy('time', 'desc').limit(20)
     return rows.map((x) => this.deserialize(x))
   }
 
