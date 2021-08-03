@@ -10,5 +10,8 @@ export class HealthTable extends Table {
     table.uuid('id').primary()
     table.uuid('conduitId').references('id').inTable('msg_conduits').notNullable()
     table.timestamp('time').notNullable()
+    table.string('type').notNullable()
+    table.jsonb('data').nullable()
+    table.index(['conduitId', 'time'])
   }
 }

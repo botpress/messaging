@@ -1,3 +1,5 @@
+import { uuid } from '../base/types'
+
 export enum HealthEventType {
   Create = 'create',
   Configure = 'configure',
@@ -10,7 +12,9 @@ export enum HealthEventType {
 }
 
 export interface HealthEvent {
-  type: HealthEventType
+  id: uuid
+  conduitId: uuid
   time: Date
+  type: HealthEventType
   data: any
 }

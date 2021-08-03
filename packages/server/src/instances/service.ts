@@ -114,10 +114,10 @@ export class InstanceService extends Service {
     try {
       await instance.initialize()
     } catch (e) {
-      instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
       this.cache.del(conduitId)
 
       // TODO: replace by HealthService
+      instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
       }
@@ -146,16 +146,15 @@ export class InstanceService extends Service {
 
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
     } catch (e) {
-      instance.logger.error('Error trying to setup conduit.', e)
       this.cache.del(conduitId)
+      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
 
       // TODO: replace by HealthService
+      instance.logger.error('Error trying to setup conduit.', e)
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
       }
       this.failures[conduitId]++
-
-      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
     }
 
     return instance
