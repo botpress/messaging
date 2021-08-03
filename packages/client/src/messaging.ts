@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
 import { ChatClient } from './chat'
 import { ConversationClient } from './conversations'
+import { HealthClient } from './health'
 import { MessageClient } from './messages'
 import { SyncClient } from './sync'
 import { UserClient } from './users'
@@ -9,6 +10,7 @@ export class MessagingClient {
   http: AxiosInstance
   authHttp: AxiosInstance
   syncs: SyncClient
+  health: HealthClient
   chat: ChatClient
   users: UserClient
   conversations: ConversationClient
@@ -25,6 +27,7 @@ export class MessagingClient {
     })
 
     this.syncs = new SyncClient(this.http)
+    this.health = new HealthClient(this.authHttp)
     this.chat = new ChatClient(this.authHttp)
     this.users = new UserClient(this.authHttp)
     this.conversations = new ConversationClient(this.authHttp)
