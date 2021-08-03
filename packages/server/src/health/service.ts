@@ -132,14 +132,16 @@ export class HealthService extends Service {
   public serialize(event: Partial<HealthEvent>) {
     return {
       ...event,
-      time: this.db.setDate(event.time)
+      time: this.db.setDate(event.time),
+      data: this.db.setJson(event.data)
     }
   }
 
   public deserialize(event: any): HealthEvent {
     return {
       ...event,
-      time: this.db.getDate(event.time)
+      time: this.db.getDate(event.time),
+      data: this.db.getJson(event.data)
     }
   }
 }
