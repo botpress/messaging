@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
+import yn from 'yn'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
@@ -66,7 +67,7 @@ export class HealthService extends Service {
       }
 
       // TODO: this code to call webhook is copy pasted. It should be refactored somewhere else
-      if (process.env.SPINNED) {
+      if (yn(process.env.SPINNED)) {
         await this.callWebhook(process.env.SPINNED_URL!, post)
       } else {
         const webhooks = await this.webhookService.list(client.id)

@@ -216,7 +216,7 @@ export class InstanceService extends Service {
       instance.loggerIn.debug('Received message', post)
     }
 
-    if (process.env.SPINNED) {
+    if (yn(process.env.SPINNED)) {
       await this.callWebhook(instance, process.env.SPINNED_URL!, post)
     } else {
       const webhooks = await this.webhookService.list(clientId)
