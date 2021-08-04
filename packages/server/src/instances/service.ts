@@ -1,4 +1,3 @@
-import axios, { AxiosRequestConfig } from 'axios'
 import _ from 'lodash'
 import ms from 'ms'
 import yn from 'yn'
@@ -18,6 +17,7 @@ import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { Message } from '../messages/types'
+import { PostService } from '../post/service'
 import { ProviderService } from '../providers/service'
 import { WebhookService } from '../webhooks/service'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
@@ -44,6 +44,7 @@ export class InstanceService extends Service {
     private loggerService: LoggerService,
     private configService: ConfigService,
     private cachingService: CachingService,
+    private postService: PostService,
     private channelService: ChannelService,
     private providerService: ProviderService,
     private conduitService: ConduitService,
@@ -217,32 +218,13 @@ export class InstanceService extends Service {
     }
 
     if (yn(process.env.SPINNED)) {
-      await this.callWebhook(instance, process.env.SPINNED_URL!, post)
+      await this.postService.post(process.env.SPINNED_URL!, post)
     } else {
       const webhooks = await this.webhookService.list(clientId)
 
       for (const webhook of webhooks) {
-        await this.callWebhook(instance, webhook.url, post, webhook.token)
+        await this.postService.post(webhook.url, post, webhook.token)
       }
-    }
-  }
-
-  private async callWebhook(instance: ConduitInstance<any, any>, url: string, data: any, token?: string) {
-    const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
-    const config: AxiosRequestConfig = { headers: {} }
-
-    if (password) {
-      config.headers.password = password
-    }
-
-    if (token) {
-      config.headers['x-webhook-token'] = token
-    }
-
-    try {
-      await axios.post(url, data, config)
-    } catch (e) {
-      instance.logger.error(`Failed to call webhook ${url}.`, e.message)
     }
   }
 }
