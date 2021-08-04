@@ -8,6 +8,8 @@ import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
 
+const pkg = require('../package.json')
+
 export class Api {
   private router: Router
 
@@ -40,6 +42,7 @@ export class Api {
   async setup() {
     await this.setupPassword()
 
+    this.root.get('/version', this.version)
     this.root.get('/status', this.status)
     this.root.use('/api', this.router)
     this.router.use(express.json())
@@ -71,5 +74,9 @@ export class Api {
 
   private status(_req: Request, res: Response) {
     res.sendStatus(200)
+  }
+
+  private version(_req: Request, res: Response) {
+    res.send(pkg.version)
   }
 }
