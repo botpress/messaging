@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request } from 'express'
 import { validateRequest } from 'twilio'
 import { Channel } from '../base/channel'
 import { TwilioConduit } from './conduit'
@@ -32,7 +32,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
 
         if (
           validateRequest(conduit.config.authToken, signature, conduit.webhookUrl, req.body) ||
-          (await this.verifyLegacy(conduit, signature, req.body))
+          (await this.verifyLegacy(conduit, signature, req))
         ) {
           await this.app.instances.receive(conduit.conduitId, req.body)
           res.sendStatus(204)
@@ -47,12 +47,13 @@ export class TwilioChannel extends Channel<TwilioConduit> {
     this.printWebhook()
   }
 
-  async verifyLegacy(instance: TwilioConduit, signature: string, body: any) {
+  // TODO: Remove this once we deprecate old webhooks
+  async verifyLegacy(instance: TwilioConduit, signature: string, req: Request) {
     const conduit = await this.app.conduits.get(instance.conduitId)
     const provider = await this.app.providers.getById(conduit!.providerId)
 
-    const oldUrl = `${process.env.BOT_URL}/api/v1/bots/${provider!.name}/mod/channel-twilio/webhook`
+    const oldUrl = `https://${req.headers.host}/api/v1/bots/${provider!.name}/mod/channel-twilio/webhook`
 
-    return validateRequest(instance.config.authToken, signature, oldUrl, body)
+    return validateRequest(instance.config.authToken, signature, oldUrl, req.body)
   }
 }
