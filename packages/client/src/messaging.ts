@@ -17,13 +17,18 @@ export class MessagingClient {
   messages: MessageClient
 
   constructor(options: MessagingOptions) {
-    const { url, password, auth } = options
+    const { url, password, auth: authentication } = options
 
-    this.http = axios.create({ baseURL: `${url}/api`, headers: { password } })
+    const headers = password ? { password } : {}
+    const auth = authentication
+      ? { username: authentication.clientId, password: authentication.clientToken }
+      : undefined
+
+    this.http = axios.create({ baseURL: `${url}/api`, headers })
     this.authHttp = axios.create({
       baseURL: `${url}/api`,
-      headers: { password },
-      auth: { username: auth?.clientId!, password: auth?.clientToken! }
+      headers,
+      auth
     })
 
     this.syncs = new SyncClient(this.http)
@@ -40,7 +45,7 @@ export interface MessagingOptions {
   url: string
   /** Internal password of the messaging server. Optional */
   password?: string
-  /** Client authentification to access client owned ressources. Optional */
+  /** Client authentication to access client owned resources. Optional */
   auth?: {
     clientId: string
     clientToken: string
