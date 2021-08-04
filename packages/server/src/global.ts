@@ -15,7 +15,6 @@ export interface MessagingEnv {
   SKIP_LOAD_CONFIG?: string
   SKIP_LOAD_ENV?: string
   SPINNED?: string
-  SPINNED_URL?: string
   NO_LAZY_LOADING?: string
   BATCHING_ENABLED?: string
 }

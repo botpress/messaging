@@ -66,15 +66,10 @@ export class HealthService extends Service {
         event: this.makeReadable(event)
       }
 
-      // TODO: this code to call webhook is copy pasted. It should be refactored somewhere else
-      if (yn(process.env.SPINNED)) {
-        await this.callWebhook(process.env.SPINNED_URL!, post)
-      } else {
-        const webhooks = await this.webhookService.list(client.id)
+      const webhooks = await this.webhookService.list(client.id)
 
-        for (const webhook of webhooks) {
-          await this.callWebhook(webhook.url, post, webhook.token)
-        }
+      for (const webhook of webhooks) {
+        await this.callWebhook(webhook.url, post, webhook.token)
       }
     }
 
