@@ -90,7 +90,7 @@ export class HealthService extends Service {
     }
 
     if (token) {
-      config.headers['X-Webhook-Token'] = token
+      config.headers['x-webhook-token'] = token
     }
 
     try {

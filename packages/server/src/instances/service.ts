@@ -236,7 +236,7 @@ export class InstanceService extends Service {
     }
 
     if (token) {
-      config.headers['X-Webhook-Token'] = token
+      config.headers['x-webhook-token'] = token
     }
 
     try {
