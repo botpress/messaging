@@ -28,9 +28,8 @@ export abstract class ClientScopedApi extends BaseApi {
 
   async extractClient(req: ApiRequest, res: Response, next: NextFunction) {
     try {
-      const authorization = req.headers.authorization
-      const [_, auth] = authorization!.split(' ')
-      const [clientId, clientToken] = Buffer.from(auth, 'base64').toString('utf-8').split(':')
+      const clientId = req.headers['x-bp-messaging-client-id'] as string
+      const clientToken = req.headers['x-bp-messaging-client-token'] as string
 
       if (!validateUuid(clientId)) {
         return res.sendStatus(403)
