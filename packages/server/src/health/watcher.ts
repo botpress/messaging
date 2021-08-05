@@ -58,7 +58,11 @@ export class HealthWatcher {
   private async handleInstanceDestroyed(conduitId: uuid) {
     // It's possible that this gets called by the cleared cached after the conduit was deleted from the db
     if (await this.conduitService.get(conduitId)) {
-      await this.healthService.register(conduitId, HealthEventType.Sleep)
+      try {
+        await this.healthService.register(conduitId, HealthEventType.Sleep)
+      } catch {
+        // TODO: doesn't fully solve the problem. Because of some race condition it can happen that the insert happens after the delete
+      }
     }
   }
 }
