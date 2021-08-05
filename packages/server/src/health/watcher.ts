@@ -16,7 +16,7 @@ export class HealthWatcher {
   async setup() {
     this.conduitService.events.on(ConduitEvents.Created, this.handleConduitCreated.bind(this), true)
     this.conduitService.events.on(ConduitEvents.Updated, this.handleConduitUpdated.bind(this), true)
-    this.conduitService.events.on(ConduitEvents.Deleting, this.handleConduitDeleted.bind(this), true)
+    this.conduitService.events.on(ConduitEvents.Deleting, this.handleConduitDeleting.bind(this), true)
     this.instanceService.events.on(InstanceEvents.Setup, this.handleInstanceSetup.bind(this))
     this.instanceService.events.on(InstanceEvents.SetupFailed, this.handleInstanceSetupFailed.bind(this))
     this.instanceService.events.on(InstanceEvents.Initialized, this.handleInstanceInitialized.bind(this))
@@ -35,7 +35,7 @@ export class HealthWatcher {
     await this.healthService.register(conduitId, HealthEventType.Configure)
   }
 
-  private async handleConduitDeleted(conduitId: uuid) {
+  private async handleConduitDeleting(conduitId: uuid) {
     await this.healthService.register(conduitId, HealthEventType.Delete)
   }
 
@@ -56,6 +56,13 @@ export class HealthWatcher {
   }
 
   private async handleInstanceDestroyed(conduitId: uuid) {
-    await this.healthService.register(conduitId, HealthEventType.Sleep)
+    // It's possible that this gets called by the cleared cached after the conduit was deleted from the db
+    if (await this.conduitService.get(conduitId)) {
+      try {
+        await this.healthService.register(conduitId, HealthEventType.Sleep)
+      } catch {
+        // TODO: doesn't fully solve the problem. Because of some race condition it can happen that the insert happens after the delete
+      }
+    }
   }
 }
