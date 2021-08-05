@@ -64,9 +64,15 @@ export class InstanceService extends Service {
       this.clientService,
       this
     )
-    this.monitoring = new InstanceMonitoring(this.channelService, this.conduitService, this, this.failures)
-    this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
     this.logger = this.loggerService.root.sub('instances')
+    this.monitoring = new InstanceMonitoring(
+      this.logger.sub('monitoring'),
+      this.channelService,
+      this.conduitService,
+      this,
+      this.failures
+    )
+    this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
   }
 
   async setup() {
@@ -84,15 +90,21 @@ export class InstanceService extends Service {
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
-      dispose: async (k, v) => {
-        await v.destroy()
-        await this.emitter.emit(InstanceEvents.Destroyed, v.conduitId)
-      },
+      dispose: this.handleCacheDispose.bind(this),
       max: 50000,
       maxAge: ms('30min')
     })
 
     await this.invalidator.setup(this.cache, this.failures)
+  }
+
+  private async handleCacheDispose(conduitId: uuid, instance: ConduitInstance<any, any>) {
+    try {
+      await instance.destroy()
+      await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
+    } catch (e) {
+      this.logger.error('Error trying to destroy conduit.', e.message)
+    }
   }
 
   async destroy() {

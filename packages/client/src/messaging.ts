@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { ChatClient } from './chat'
 import { ConversationClient } from './conversations'
 import { HealthClient } from './health'
@@ -19,12 +19,8 @@ export class MessagingClient {
   constructor(options: MessagingOptions) {
     const { url, password, auth } = options
 
-    this.http = axios.create({ baseURL: `${url}/api`, headers: { password } })
-    this.authHttp = axios.create({
-      baseURL: `${url}/api`,
-      headers: { password },
-      auth: { username: auth?.clientId!, password: auth?.clientToken! }
-    })
+    this.http = axios.create(this.getAxiosConfig({ url, password }))
+    this.authHttp = axios.create(this.getAxiosConfig({ url, password, auth }))
 
     this.syncs = new SyncClient(this.http)
     this.health = new HealthClient(this.authHttp)
@@ -33,6 +29,21 @@ export class MessagingClient {
     this.conversations = new ConversationClient(this.authHttp)
     this.messages = new MessageClient(this.authHttp)
   }
+
+  private getAxiosConfig({ url, password, auth }: MessagingOptions): AxiosRequestConfig {
+    const config: AxiosRequestConfig = { baseURL: `${url}/api`, headers: {} }
+
+    if (password) {
+      config.headers.password = password
+    }
+
+    if (auth) {
+      config.headers['x-bp-messaging-client-id'] = auth.clientId
+      config.headers['x-bp-messaging-client-token'] = auth.clientToken
+    }
+
+    return config
+  }
 }
 
 export interface MessagingOptions {
@@ -40,7 +51,7 @@ export interface MessagingOptions {
   url: string
   /** Internal password of the messaging server. Optional */
   password?: string
-  /** Client authentification to access client owned ressources. Optional */
+  /** Client authentication to access client owned resources. Optional */
   auth?: {
     clientId: string
     clientToken: string
