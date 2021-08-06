@@ -88,8 +88,8 @@ export class DatabaseService extends Service {
 
     try {
       await this.knex.destroy()
-    } catch {
-      this.logger.error('Failed to destroy database connection')
+    } catch (e) {
+      this.logger.error(e, 'Failed to destroy database connection')
     }
   }
 

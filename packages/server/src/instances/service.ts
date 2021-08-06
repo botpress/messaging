@@ -105,7 +105,7 @@ export class InstanceService extends Service {
       await instance.destroy()
       await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
     } catch (e) {
-      this.logger.error('Error trying to destroy conduit.', e.message)
+      this.logger.error(e, 'Error trying to destroy conduit')
     }
   }
 
@@ -135,7 +135,7 @@ export class InstanceService extends Service {
       this.cache.del(conduitId)
 
       // TODO: replace by StatusService
-      instance.logger.error('Error trying to initialize conduit.', (e as Error).message)
+      instance.logger.error(e, 'Error trying to initialize conduit')
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
       }
@@ -170,7 +170,7 @@ export class InstanceService extends Service {
       await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
 
       // TODO: replace by StatusService
-      instance.logger.error('Error trying to setup conduit.', e)
+      instance.logger.error(e, 'Error trying to setup conduit')
       if (!this.failures[conduitId]) {
         this.failures[conduitId] = 0
       }
@@ -262,7 +262,7 @@ export class InstanceService extends Service {
     try {
       await axios.post(url, data, config)
     } catch (e) {
-      instance.logger.error(`Failed to call webhook ${url}.`, e.message)
+      instance.logger.error(e, `Failed to call webhook ${url}`)
     }
   }
 }

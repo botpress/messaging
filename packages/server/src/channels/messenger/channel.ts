@@ -89,7 +89,9 @@ export class MessengerChannel extends Channel<MessengerConduit> {
     const [, hash] = signature.split('=')
     const expectedHash = crypto.createHmac('sha1', conduit.config.appSecret).update(buffer).digest('hex')
     if (hash !== expectedHash) {
-      this.logger.error("Couldn't validate the request signature. Make sure your appSecret is properly configured.")
+      // TODO: can we just throw the error with the message in it instead??
+      const e = new Error()
+      this.logger.error(e, "Couldn't validate the request signature. Make sure your appSecret is properly configured")
 
       throw new Error()
     }

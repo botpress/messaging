@@ -17,7 +17,7 @@ export class LocalSubservice implements DistributedSubservice {
       this.locks[ressource] = true
       return { ressource }
     } else {
-      throw new Error('Failed to acquire lock. Already in use.')
+      throw new Error('Failed to acquire lock. Already in use')
     }
   }
 

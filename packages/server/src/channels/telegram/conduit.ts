@@ -30,14 +30,14 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
       try {
         await this.app.instances.receive(this.conduitId, ctx)
       } catch (e) {
-        this.logger.error('Error occurred processing message,', e)
+        this.logger.error(e, 'Error occurred processing message')
       }
     })
     this.telegraf.on('callback_query', async (ctx) => {
       try {
         await this.app.instances.receive(this.conduitId, ctx)
       } catch (e) {
-        this.logger.error('Error occurred processing callback query.', e)
+        this.logger.error(e, 'Error occurred processing callback query')
       }
     })
 

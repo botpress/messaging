@@ -39,8 +39,8 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
       })
 
       this.secret = webhook.secret
-    } catch (err) {
-      this.logger.error('An error occurred when creating the webhook.', (err as Error).message)
+    } catch (e) {
+      this.logger.error(e, 'An error occurred when creating the webhook')
     }
   }
 

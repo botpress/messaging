@@ -29,7 +29,7 @@ export class InstanceMonitoring {
         await this.loadNonLazyConduits()
       })
     } catch (e) {
-      this.logger.error('Error occurred while monitoring.', e.message)
+      this.logger.error(e, 'Error occurred while monitoring', e.message)
     } finally {
       setTimeout(this.tickMonitoring.bind(this), ms('15s'))
     }

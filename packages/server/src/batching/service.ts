@@ -19,8 +19,8 @@ export class BatchingService extends Service {
     for (const batcher of Object.values(this.batchers)) {
       try {
         await batcher.flush()
-      } catch {
-        this.logger.error(`Failed to destroy batch ${batcher.id}`)
+      } catch (e) {
+        this.logger.error(e, `Failed to destroy batch ${batcher.id}`)
       }
     }
   }

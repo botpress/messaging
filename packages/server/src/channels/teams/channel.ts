@@ -33,7 +33,7 @@ export class TeamsChannel extends Channel<TeamsConduit> {
               await this.app.instances.receive(conduit.conduitId, turnContext)
             }
           } catch (e) {
-            conduit.logger.error('Error occurred processing teams activity.', e)
+            conduit.logger.error(e, 'Error occurred processing teams activity')
           }
         })
       })

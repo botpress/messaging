@@ -37,12 +37,25 @@ export class Logger {
     this.print(message, data, LoggerLevel.Warn)
   }
 
-  error(message: string, data?: any) {
-    this.print(message, data, LoggerLevel.Error)
-  }
+  error(error: Error | undefined, message: string, data?: any) {
+    const timeFormat = 'L HH:mm:ss.SSS'
+    const time = moment().format(timeFormat)
 
-  critical(message: string, data?: any) {
-    this.print(message, data, LoggerLevel.Critical)
+    const timeText = clc.blackBright(time)
+    const titleText = clc.bold(
+      this.colors[LoggerLevel.Error](yn(process.env.SPINNED) ? `[Messaging] ${this.scope}` : this.scope)
+    )
+    if (message.length && message[message.length - 1] !== '.') {
+      message += '.'
+    }
+
+    if (data) {
+      // eslint-disable-next-line no-console
+      console.log(timeText, titleText, message, data, error)
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(timeText, titleText, message, error)
+    }
   }
 
   private print(message: string, data: any, level: LoggerLevel) {
