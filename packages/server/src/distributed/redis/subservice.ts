@@ -1,16 +1,21 @@
 import clc from 'cli-color'
 import redis, { ClusterOptions, Redis, RedisOptions } from 'ioredis'
 import _ from 'lodash'
+import Redlock from 'redlock'
 import { Logger } from '../../logger/types'
 import { DistributedSubservice } from '../base/subservice'
 import { RedisConfig } from './config'
 import { PingPong } from './ping'
+
+const DEFAULT_LOCK_TTL = 2000
 
 export class RedisSubservice implements DistributedSubservice {
   private logger: Logger = new Logger('Redis')
   private nodeId!: number
   private pub!: Redis
   private sub!: Redis
+  private redlock!: Redlock
+  private locks: { [ressource: string]: RedisLock } = {}
   private callbacks: { [channel: string]: (message: any) => Promise<void> } = {}
   private pings!: PingPong
   private scope!: string
@@ -24,6 +29,7 @@ export class RedisSubservice implements DistributedSubservice {
     this.scope = process.env.REDIS_SCOPE || this.config.scope
     this.pub = this.setupClient()
     this.sub = this.setupClient()
+    this.redlock = new Redlock([this.pub])
 
     this.sub.on('message', (channel, message) => {
       const callback = this.callbacks[channel]
@@ -84,8 +90,24 @@ export class RedisSubservice implements DistributedSubservice {
   }
 
   async destroy() {
-    await this.pub.quit()
-    await this.sub.quit()
+    const now = new Date()
+
+    for (const lock of Object.values(this.locks)) {
+      if (lock.expiry > now) {
+        try {
+          await this.release(lock)
+        } catch {
+          this.logger.error('Failed to release lock', _.omit(lock, 'lock'))
+        }
+      }
+    }
+
+    try {
+      await this.pub.quit()
+      await this.sub.quit()
+    } catch {
+      this.logger.error('Failed to destroy connections')
+    }
   }
 
   async listen(channel: string, callback: (message: any) => Promise<void>) {
@@ -101,7 +123,29 @@ export class RedisSubservice implements DistributedSubservice {
     await this.pub.publish(scopedChannel, JSON.stringify({ nodeId: this.nodeId, ...message }))
   }
 
+  async lock(ressource: string) {
+    const ttl = DEFAULT_LOCK_TTL
+    const lock = {
+      lock: await this.redlock.acquire(ressource, ttl),
+      ressource,
+      expiry: new Date(new Date().getTime() + ttl)
+    }
+    this.locks[ressource] = lock
+    return lock
+  }
+
+  async release(lock: RedisLock) {
+    await this.redlock.release(lock.lock)
+    delete this.locks[lock.ressource]
+  }
+
   private makeScopedChannel(key: string): string {
     return this.scope ? `${this.scope}/${key}` : key
   }
+}
+
+interface RedisLock {
+  ressource: string
+  expiry: Date
+  lock: Redlock.Lock
 }
