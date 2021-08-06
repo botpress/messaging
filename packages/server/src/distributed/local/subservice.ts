@@ -24,7 +24,7 @@ export class LocalSubservice implements DistributedSubservice {
       const attempt = () => {
         const lock = this.tryGetLock(ressource)
         if (lock) {
-          return resolve(lock)
+          resolve(lock)
         } else if (attemptCount < MAX_LOCK_ATTEMPT) {
           attemptCount++
           setTimeout(attempt, LOCK_ATTEMPT_INTERVAL + Math.random() * LOCK_ATTEMPT_INTERVAL_JITTER)
