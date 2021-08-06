@@ -52,7 +52,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
     const conduit = await this.app.conduits.get(instance.conduitId)
     const provider = await this.app.providers.getById(conduit!.providerId)
 
-    const oldUrl = `${req.headers['x-bp-host']}/api/v1/bots/${provider!.name}/mod/channel-twilio/webhook`
+    const oldUrl = `${process.env.MASTER_URL}/api/v1/bots/${provider!.name}/mod/channel-twilio/webhook`
 
     return validateRequest(instance.config.authToken, signature, oldUrl, req.body)
   }
