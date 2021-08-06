@@ -7,6 +7,8 @@ import { DistributedSubservice } from '../base/subservice'
 import { RedisConfig } from './config'
 import { PingPong } from './ping'
 
+const DEFAULT_LOCK_TTL = 2000
+
 export class RedisSubservice implements DistributedSubservice {
   private logger: Logger = new Logger('Redis')
   private nodeId!: number
@@ -122,7 +124,7 @@ export class RedisSubservice implements DistributedSubservice {
   }
 
   async lock(ressource: string) {
-    const ttl = 2000
+    const ttl = DEFAULT_LOCK_TTL
     const lock = {
       lock: await this.redlock.acquire(ressource, ttl),
       ressource,
