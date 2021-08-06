@@ -1,5 +1,6 @@
 // @ts-ignore
 import Smooch from 'smooch-core'
+import yn from 'yn'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -14,7 +15,28 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
   public secret!: string
 
   async initialize() {
-    await this.setupWebhook()
+    const target = await this.getRoute()
+    const { webhooks } = await this.smooch.webhooks.list()
+
+    if (yn(process.env.SPINNED)) {
+      const legacyWh = webhooks.find((x: any) => x.target?.includes('/mod/channel-smooch'))
+      if (legacyWh) {
+        await this.smooch.webhooks.delete(legacyWh._id)
+        this.logger.info('Deleted legacy webhook', legacyWh.target)
+      }
+    }
+
+    let webhook = webhooks.find((x: any) => x.target === target)
+    if (!webhook) {
+      webhook = (
+        await this.smooch.webhooks.create({
+          target,
+          triggers: ['message:appUser']
+        })
+      ).webhook
+    }
+
+    this.secret = webhook.secret
   }
 
   protected async setupConnection() {
@@ -24,24 +46,12 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
       scope: 'app'
     })
 
-    await this.setupWebhook()
-    await this.printWebhook()
-  }
-
-  private async setupWebhook() {
+    const { webhooks } = await this.smooch.webhooks.list()
     const target = await this.getRoute()
+    const webhook = webhooks.find((x: any) => x.target === target)
+    this.secret = webhook?.secret
 
-    try {
-      // Note: creating a webhook with the same url will not create a new webhook but return the already existing one
-      const { webhook }: { webhook: SmoochWebhook } = await this.smooch.webhooks.create({
-        target,
-        triggers: ['message:appUser']
-      })
-
-      this.secret = webhook.secret
-    } catch (e) {
-      this.logger.error(e, 'An error occurred when creating the webhook')
-    }
+    await this.printWebhook()
   }
 
   protected setupRenderers() {
