@@ -13,6 +13,7 @@ import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConfigService } from '../config/service'
 import { ConversationService } from '../conversations/service'
+import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
@@ -43,6 +44,7 @@ export class InstanceService extends Service {
   constructor(
     private loggerService: LoggerService,
     private configService: ConfigService,
+    private distributedService: DistributedService,
     private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
@@ -66,6 +68,7 @@ export class InstanceService extends Service {
     this.logger = this.loggerService.root.sub('instances')
     this.monitoring = new InstanceMonitoring(
       this.logger.sub('monitoring'),
+      this.distributedService,
       this.channelService,
       this.conduitService,
       this,
@@ -117,14 +120,16 @@ export class InstanceService extends Service {
   }
 
   async monitor() {
-    await this.monitoring.setup()
+    await this.monitoring.monitor()
   }
 
   async initialize(conduitId: uuid) {
     const instance = await this.get(conduitId)
 
     try {
-      await instance.initialize()
+      await this.distributedService.using(`lock_dyn_instance_init::${conduitId}`, async () => {
+        await instance.initialize()
+      })
     } catch (e) {
       this.cache.del(conduitId)
 
@@ -153,7 +158,9 @@ export class InstanceService extends Service {
     const instance = channel.createConduit()
 
     try {
-      await instance.setup(conduitId, conduit.config, this.app)
+      await this.distributedService.using(`lock_dyn_instance_setup::${conduitId}`, async () => {
+        await instance.setup(conduitId, conduit.config, this.app)
+      })
       this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
 
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
