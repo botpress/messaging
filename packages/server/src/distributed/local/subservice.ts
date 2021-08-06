@@ -1,7 +1,7 @@
 import { DistributedSubservice } from '../base/subservice'
 import { Lock } from '../types'
 
-const DEFAULT_LOCK_TTL = 20000
+const DEFAULT_LOCK_TTL = 2000
 const MAX_LOCK_ATTEMPT = 10
 const LOCK_ATTEMPT_INTERVAL = 200
 const LOCK_ATTEMPT_INTERVAL_JITTER = 100
