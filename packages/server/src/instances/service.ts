@@ -127,7 +127,9 @@ export class InstanceService extends Service {
     const instance = await this.get(conduitId)
 
     try {
-      await instance.initialize()
+      await this.distributedService.using(`lock_dyn_instance_init::${conduitId}`, async () => {
+        await instance.initialize()
+      })
     } catch (e) {
       this.cache.del(conduitId)
 
@@ -156,7 +158,9 @@ export class InstanceService extends Service {
     const instance = channel.createConduit()
 
     try {
-      await instance.setup(conduitId, conduit.config, this.app)
+      await this.distributedService.using(`lock_dyn_instance_setup::${conduitId}`, async () => {
+        await instance.setup(conduitId, conduit.config, this.app)
+      })
       this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
 
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
