@@ -15,7 +15,28 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
   public secret!: string
 
   async initialize() {
-    await this.setupWebhook()
+    const target = await this.getRoute()
+    const { webhooks } = await this.smooch.webhooks.list()
+
+    if (yn(process.env.SPINNED)) {
+      const legacyWh = webhooks.find((x: any) => x.target?.includes('/mod/channel-smooch'))
+      if (legacyWh) {
+        await this.smooch.webhooks.delete(legacyWh._id)
+        this.logger.info('Deleted legacy webhook', legacyWh.target)
+      }
+    }
+
+    let webhook = webhooks.find((x: any) => x.target === target)
+    if (!webhook) {
+      webhook = (
+        await this.smooch.webhooks.create({
+          target,
+          triggers: ['message:appUser']
+        })
+      ).webhook
+    }
+
+    this.secret = webhook.secret
   }
 
   protected async setupConnection() {
@@ -31,36 +52,6 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
     this.secret = webhook?.secret
 
     await this.printWebhook()
-  }
-
-  private async setupWebhook() {
-    const target = await this.getRoute()
-
-    try {
-      const { webhooks } = await this.smooch.webhooks.list()
-
-      if (yn(process.env.SPINNED)) {
-        const legacyWh = webhooks.find((x: any) => x.target?.includes('/mod/channel-smooch'))
-        if (legacyWh) {
-          await this.smooch.webhooks.delete(legacyWh._id)
-          this.logger.info('Deleted legacy webhook', legacyWh.target)
-        }
-      }
-
-      let webhook = webhooks.find((x: any) => x.target === target)
-      if (!webhook) {
-        webhook = (
-          await this.smooch.webhooks.create({
-            target,
-            triggers: ['message:appUser']
-          })
-        ).webhook
-      }
-
-      this.secret = webhook.secret
-    } catch (err) {
-      this.logger.error('An error occurred when creating the webhook.', (err as Error).message)
-    }
   }
 
   protected setupRenderers() {
