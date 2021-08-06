@@ -37,7 +37,7 @@ export class Logger {
     this.print(message, data, LoggerLevel.Warn)
   }
 
-  error(error: Error | undefined, message: string, data?: any) {
+  error(error: Error | undefined, message?: string, data?: any) {
     const timeFormat = 'L HH:mm:ss.SSS'
     const time = moment().format(timeFormat)
 
@@ -45,7 +45,7 @@ export class Logger {
     const titleText = clc.bold(
       this.colors[LoggerLevel.Error](yn(process.env.SPINNED) ? `[Messaging] ${this.scope}` : this.scope)
     )
-    if (message.length && message[message.length - 1] !== '.') {
+    if (message?.length && message[message.length - 1] !== '.') {
       message += '.'
     }
 

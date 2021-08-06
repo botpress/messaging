@@ -37,9 +37,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
           await this.app.instances.receive(conduit.conduitId, req.body)
           res.sendStatus(204)
         } else {
-          // Maybe throw a exception here. Or just do new Error() and log that?
-          this.logger.error(undefined, 'Request validation failed. Make sure that your authToken is valid')
-
+          this.logger.error(new Error('Request validation failed. Make sure that your authToken is valid'))
           res.sendStatus(401)
         }
       })
