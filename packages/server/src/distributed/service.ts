@@ -27,6 +27,10 @@ export class DistributedService extends Service {
   }
 
   async destroy() {
+    if (!this.subservice) {
+      return
+    }
+
     await this.subservice.destroy()
   }
 

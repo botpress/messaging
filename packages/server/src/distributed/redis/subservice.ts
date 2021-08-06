@@ -90,7 +90,7 @@ export class RedisSubservice implements DistributedSubservice {
   async destroy() {
     const now = new Date()
 
-    for (const lock of Object.values(this.locks)) {
+    for (const lock of Object.values(this.locks || {})) {
       if (lock.expiry > now) {
         try {
           await this.release(lock)
