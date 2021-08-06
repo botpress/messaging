@@ -78,6 +78,7 @@ export class App {
     this.syncs = new SyncService(
       this.logger,
       this.config,
+      this.distributed,
       this.channels,
       this.providers,
       this.conduits,
