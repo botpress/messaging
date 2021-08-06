@@ -26,51 +26,33 @@ export class Logger {
   }
 
   info(message: string, data?: any) {
-    this.print(message, data, LoggerLevel.Info)
+    this.print([message, data], LoggerLevel.Info)
   }
 
   debug(message: string, data?: any) {
-    this.print(message, data, LoggerLevel.Debug)
+    this.print([message, data], LoggerLevel.Debug)
   }
 
   warn(message: string, data?: any) {
-    this.print(message, data, LoggerLevel.Warn)
+    this.print([message, data], LoggerLevel.Warn)
   }
 
   error(error: Error | undefined, message?: string, data?: any) {
-    const timeFormat = 'L HH:mm:ss.SSS'
-    const time = moment().format(timeFormat)
-
-    const timeText = clc.blackBright(time)
-    const titleText = clc.bold(
-      this.colors[LoggerLevel.Error](yn(process.env.SPINNED) ? `[Messaging] ${this.scope}` : this.scope)
-    )
     if (message?.length && message[message.length - 1] !== '.') {
       message += '.'
     }
 
-    if (data) {
-      // eslint-disable-next-line no-console
-      console.log(timeText, titleText, message, data, error)
-    } else {
-      // eslint-disable-next-line no-console
-      console.log(timeText, titleText, message, error)
-    }
+    this.print([message, data, error?.stack], LoggerLevel.Error)
   }
 
-  private print(message: string, data: any, level: LoggerLevel) {
+  private print(params: any[], level: LoggerLevel) {
     const timeFormat = 'L HH:mm:ss.SSS'
     const time = moment().format(timeFormat)
 
     const timeText = clc.blackBright(time)
     const titleText = clc.bold(this.colors[level](yn(process.env.SPINNED) ? `[Messaging] ${this.scope}` : this.scope))
 
-    if (data) {
-      // eslint-disable-next-line no-console
-      console.log(timeText, titleText, message, data)
-    } else {
-      // eslint-disable-next-line no-console
-      console.log(timeText, titleText, message)
-    }
+    // eslint-disable-next-line no-console
+    console.log(timeText, titleText, ...params.filter((x) => x !== undefined))
   }
 }
