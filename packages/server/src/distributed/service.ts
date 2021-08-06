@@ -48,7 +48,12 @@ export class DistributedService extends Service {
 
   async using(ressource: string, callback: () => Promise<void>) {
     const lock = await this.lock(ressource)
-    await callback()
-    await this.release(lock)
+    try {
+      await callback()
+    } catch (e) {
+      throw e
+    } finally {
+      await this.release(lock)
+    }
   }
 }
