@@ -5,6 +5,7 @@ import { DistributedSubservice } from './base/subservice'
 import { LocalSubservice } from './local/subservice'
 import { RedisConfig } from './redis/config'
 import { RedisSubservice } from './redis/subservice'
+import { Lock } from './types'
 
 export class DistributedService extends Service {
   private subservice!: DistributedSubservice
@@ -35,5 +36,19 @@ export class DistributedService extends Service {
 
   async send(channel: string, message: any) {
     return this.subservice.send(channel, message)
+  }
+
+  async lock(ressource: string): Promise<Lock> {
+    return this.subservice.lock(ressource)
+  }
+
+  async release(lock: Lock) {
+    await this.subservice.release(lock)
+  }
+
+  async using(ressource: string, callback: () => Promise<void>) {
+    const lock = await this.lock(ressource)
+    await callback()
+    await this.release(lock)
   }
 }
