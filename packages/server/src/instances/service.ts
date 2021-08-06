@@ -110,12 +110,13 @@ export class InstanceService extends Service {
   }
 
   async destroy() {
-    const keys = this.cache.keys()
-
-    for (const conduitId of keys) {
-      this.cache.del(conduitId)
+    if (!this.cache) {
+      return
     }
 
+    for (const conduitId of this.cache.keys()) {
+      this.cache.del(conduitId)
+    }
     this.cache.prune()
   }
 

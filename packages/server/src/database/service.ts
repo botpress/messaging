@@ -86,7 +86,11 @@ export class DatabaseService extends Service {
     const delay = 1000
     await new Promise((resolve) => setTimeout(resolve, delay))
 
-    await this.knex.destroy()
+    try {
+      await this.knex.destroy()
+    } catch {
+      this.logger.error('Failed to destroy database connection')
+    }
   }
 
   async registerTable(table: Table) {
