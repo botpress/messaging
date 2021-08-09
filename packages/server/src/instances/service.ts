@@ -22,6 +22,7 @@ import { Message } from '../messages/types'
 import { ProviderService } from '../providers/service'
 import { WebhookBroadcaster } from '../webhooks/broadcaster'
 import { WebhookService } from '../webhooks/service'
+import { WebhookContent } from '../webhooks/types'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
@@ -226,10 +227,9 @@ export class InstanceService extends Service {
     const { userId, conversationId } = await this.mappingService.getMapping(clientId, conduit.channelId, endpoint)
     const message = await this.messageService.create(conversationId, userId, endpoint.content)
 
-    const post = {
+    const post: WebhookContent = {
       type: 'message',
-      client: { id: clientId },
-      channel: { id: conduit.channelId, name: this.channelService.getById(conduit.channelId).name },
+      channel: { name: this.channelService.getById(conduit.channelId).name },
       user: { id: userId },
       conversation: { id: conversationId },
       message
