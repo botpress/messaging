@@ -2,12 +2,18 @@ import axios, { AxiosRequestConfig } from 'axios'
 import yn from 'yn'
 
 import { ConfigService } from '../config/service'
+import { Logger } from '../logger/types'
 import { WebhookService } from './service'
+import { WebhookContent } from './types'
 
 export class WebhookBroadcaster {
-  constructor(private configService: ConfigService, private webhookService: WebhookService) {}
+  private logger: Logger
 
-  public async send(clientId: string, data: any) {
+  constructor(private configService: ConfigService, private webhookService: WebhookService) {
+    this.logger = new Logger('webhook').sub('broadcaster')
+  }
+
+  public async send(clientId: string, data: WebhookContent) {
     if (yn(process.env.SPINNED)) {
       await this.callWebhook(process.env.SPINNED_URL!, data)
     } else {
@@ -19,7 +25,7 @@ export class WebhookBroadcaster {
     }
   }
 
-  private async callWebhook(url: string, data: any, token?: string) {
+  private async callWebhook(url: string, data: WebhookContent, token?: string) {
     const password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
     const config: AxiosRequestConfig = { headers: {} }
 

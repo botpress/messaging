@@ -15,6 +15,7 @@ import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { WebhookBroadcaster } from '../webhooks/broadcaster'
 import { WebhookService } from '../webhooks/service'
+import { WebhookContent } from '../webhooks/types'
 import { HealthTable } from './table'
 import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from './types'
 import { HealthWatcher } from './watcher'
@@ -67,10 +68,10 @@ export class HealthService extends Service {
       this.cache.del(client.id, true)
 
       const channel = this.channelService.getById(conduit!.channelId)
-      const post = {
+      const post: WebhookContent = {
         type: 'health',
         client: { id: client.id },
-        channel: { id: channel.id, name: channel.name },
+        channel: { name: channel.name },
         event: this.makeReadable(event)
       }
 
