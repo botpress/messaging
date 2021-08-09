@@ -11,7 +11,7 @@ export enum LoggerLevel {
 }
 
 export class Logger {
-  colors = {
+  private readonly colors = {
     [LoggerLevel.Debug]: clc.blue,
     [LoggerLevel.Warn]: clc.yellow,
     [LoggerLevel.Error]: clc.red,

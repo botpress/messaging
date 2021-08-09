@@ -7,12 +7,14 @@
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch",
     "start": "node dist/index.js",
+    "test": "jest",
     "dev": "yarn --silent && ts-node-dev --inspect --inspect-publish-uid=http --transpile-only src/index.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/cli-color": "^2.0.0",
     "@types/ioredis": "^4.26.4",
+    "@types/jest": "^26.0.24",
     "@types/lodash": "^4.14.168",
     "@types/lru-cache": "^5.1.0",
     "@types/ms": "^0.7.31",
