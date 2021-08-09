@@ -20,6 +20,7 @@ import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { Message } from '../messages/types'
 import { ProviderService } from '../providers/service'
+import { WebhookBroadcaster } from '../webhooks/broadcaster'
 import { WebhookService } from '../webhooks/service'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
@@ -35,6 +36,7 @@ export class InstanceService extends Service {
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
   private sandbox: InstanceSandbox
+  private webhookBroadcaster: WebhookBroadcaster
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private failures: { [conduitId: string]: number } = {}
   private logger: Logger
@@ -75,6 +77,7 @@ export class InstanceService extends Service {
       this.failures
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
+    this.webhookBroadcaster = new WebhookBroadcaster(this.configService, this.webhookService)
   }
 
   async setup() {
@@ -236,33 +239,6 @@ export class InstanceService extends Service {
       instance.loggerIn.debug('Received message', post)
     }
 
-    if (yn(process.env.SPINNED)) {
-      await this.callWebhook(instance, process.env.SPINNED_URL!, post)
-    } else {
-      const webhooks = await this.webhookService.list(clientId)
-
-      for (const webhook of webhooks) {
-        await this.callWebhook(instance, webhook.url, post, webhook.token)
-      }
-    }
-  }
-
-  private async callWebhook(instance: ConduitInstance<any, any>, url: string, data: any, token?: string) {
-    const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
-    const config: AxiosRequestConfig = { headers: {} }
-
-    if (password) {
-      config.headers.password = password
-    }
-
-    if (token) {
-      config.headers['x-webhook-token'] = token
-    }
-
-    try {
-      await axios.post(url, data, config)
-    } catch (e) {
-      instance.logger.error(e, `Failed to call webhook ${url}`)
-    }
+    await this.webhookBroadcaster.send(clientId, post)
   }
 }

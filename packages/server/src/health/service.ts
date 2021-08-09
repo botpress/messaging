@@ -13,6 +13,7 @@ import { DatabaseService } from '../database/service'
 import { InstanceService } from '../instances/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
+import { WebhookBroadcaster } from '../webhooks/broadcaster'
 import { WebhookService } from '../webhooks/service'
 import { HealthTable } from './table'
 import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from './types'
@@ -23,6 +24,7 @@ export class HealthService extends Service {
   private cache!: ServerCache<uuid, HealthReport>
   private watcher: HealthWatcher
   private logger: Logger
+  private webhookBroadcaster: WebhookBroadcaster
 
   constructor(
     private loggerService: LoggerService,
@@ -39,6 +41,7 @@ export class HealthService extends Service {
     this.table = new HealthTable()
     this.watcher = new HealthWatcher(this.conduitService, this.instanceService, this)
     this.logger = this.loggerService.root.sub('health')
+    this.webhookBroadcaster = new WebhookBroadcaster(this.configService, this.webhookService)
   }
 
   async setup() {
@@ -76,39 +79,10 @@ export class HealthService extends Service {
         this.logger.info(`[${client.id}] ${channel.name} : ${type}`)
       }
 
-      // TODO: this code to call webhook is copy pasted. It should be refactored somewhere else
-      if (yn(process.env.SPINNED)) {
-        await this.callWebhook(process.env.SPINNED_URL!, post)
-      } else {
-        const webhooks = await this.webhookService.list(client.id)
-
-        for (const webhook of webhooks) {
-          await this.callWebhook(webhook.url, post, webhook.token)
-        }
-      }
+      await this.webhookBroadcaster.send(client.id, post)
     }
 
     await this.query().insert(this.serialize(event))
-  }
-
-  // TODO: move this somewhere else
-  private async callWebhook(url: string, data: any, token?: string) {
-    const password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
-    const config: AxiosRequestConfig = { headers: {} }
-
-    if (password) {
-      config.headers.password = password
-    }
-
-    if (token) {
-      config.headers['x-webhook-token'] = token
-    }
-
-    try {
-      await axios.post(url, data, config)
-    } catch (e) {
-      // TODO: maybe we should retry if this call fails
-    }
   }
 
   async getHealthForClient(clientId: uuid): Promise<HealthReport> {
