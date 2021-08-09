@@ -89,7 +89,8 @@ export class MessengerChannel extends Channel<MessengerConduit> {
     const [, hash] = signature.split('=')
     const expectedHash = crypto.createHmac('sha1', conduit.config.appSecret).update(buffer).digest('hex')
     if (hash !== expectedHash) {
-      this.logger.error("Couldn't validate the request signature. Make sure your appSecret is properly configured.")
+      const message = "Couldn't validate the request signature. Make sure your appSecret is properly configured"
+      this.logger.error(new Error(message))
 
       throw new Error()
     }

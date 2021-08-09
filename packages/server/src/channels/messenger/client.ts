@@ -21,7 +21,7 @@ export class MessengerClient {
         }
       })
     } catch (e) {
-      this.logger.error('Error occurred trying to setup "getStarted" message.', e.message)
+      this.logger.error(e, 'Error occurred trying to setup "getStarted" message')
     }
   }
 
@@ -41,7 +41,7 @@ export class MessengerClient {
         ]
       })
     } catch (e) {
-      this.logger.error('Error occurred trying to setup greeting.', e.message)
+      this.logger.error(e, 'Error occurred trying to setup greeting')
     }
   }
 
@@ -54,7 +54,7 @@ export class MessengerClient {
     try {
       await this.sendProfile({ persistent_menu: this.config.persistentMenu })
     } catch (e) {
-      this.logger.error('Error occurred trying to setup persistent menu.', e.message)
+      this.logger.error(e, 'Error occurred trying to setup persistent menu')
     }
   }
 

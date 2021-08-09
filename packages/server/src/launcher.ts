@@ -16,13 +16,13 @@ export class Launcher {
   constructor(private express: Express, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
 
-    process.on('uncaughtException', async (err) => {
-      this.logger.error('Uncaught Exception', err)
+    process.on('uncaughtException', async (e) => {
+      this.logger.error(e, 'Uncaught Exception')
       await this.shutDown(1)
     })
 
-    process.on('unhandledRejection', async (err) => {
-      this.logger.error('Unhandled Rejection', err)
+    process.on('unhandledRejection', async (e) => {
+      this.logger.error(e as Error, 'Unhandled Rejection')
       await this.shutDown(1)
     })
 

@@ -23,11 +23,11 @@ export class VonageCommonSender extends CommonSender {
                   }
                 }
 
-                context.logger.error(`${errBody.title}: ${errBody.detail} ${reasons}${errBody.type || ''}`)
+                context.logger.error(undefined, `${errBody.title}: ${errBody.detail} ${reasons}${errBody.type || ''}`)
               } else if ((<any>err).statusCode === '429') {
-                context.logger.error('HTTPError (429): Too Many Requests')
+                context.logger.error(undefined, 'HTTPError (429): Too Many Requests')
               } else {
-                context.logger.error('UnknownError', err)
+                context.logger.error(undefined, 'UnknownError', err)
               }
             } else {
               resolve(data)

@@ -68,7 +68,7 @@ export class RedisSubservice implements DistributedSubservice {
 
     const retryStrategy = (times: number) => {
       if (times > 10) {
-        throw new Error('Unable to connect to the Redis cluster after multiple attempts.')
+        throw new Error('Unable to connect to the Redis cluster after multiple attempts')
       }
       return Math.min(times * 200, 5000)
     }
@@ -96,8 +96,8 @@ export class RedisSubservice implements DistributedSubservice {
       if (lock.expiry > now) {
         try {
           await this.release(lock)
-        } catch {
-          this.logger.error('Failed to release lock', _.omit(lock, 'lock'))
+        } catch (e) {
+          this.logger.error(e, 'Failed to release lock', _.omit(lock, 'lock'))
         }
       }
     }
@@ -105,8 +105,8 @@ export class RedisSubservice implements DistributedSubservice {
     try {
       await this.pub.quit()
       await this.sub.quit()
-    } catch {
-      this.logger.error('Failed to destroy connections')
+    } catch (e) {
+      this.logger.error(e, 'Failed to destroy connections')
     }
   }
 
