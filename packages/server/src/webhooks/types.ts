@@ -10,6 +10,7 @@ export interface Webhook {
 export type WebhookContent =
   | {
       type: 'message'
+      client: { id: string }
       channel: { name: string }
       user: { id: string }
       conversation: { id: string }
@@ -17,6 +18,7 @@ export type WebhookContent =
     }
   | {
       type: 'health'
+      client: { id: string }
       channel: { name: string }
       event: any
     }

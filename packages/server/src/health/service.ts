@@ -70,6 +70,7 @@ export class HealthService extends Service {
       const channel = this.channelService.getById(conduit!.channelId)
       const post: WebhookContent = {
         type: 'health',
+        client: { id: client.id },
         channel: { name: channel.name },
         event: this.makeReadable(event)
       }

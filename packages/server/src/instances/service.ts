@@ -229,6 +229,7 @@ export class InstanceService extends Service {
 
     const post: WebhookContent = {
       type: 'message',
+      client: { id: clientId },
       channel: { name: this.channelService.getById(conduit.channelId).name },
       user: { id: userId },
       conversation: { id: conversationId },
