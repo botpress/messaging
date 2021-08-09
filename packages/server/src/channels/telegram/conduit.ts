@@ -25,8 +25,20 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
 
   protected async setupConnection() {
     this.telegraf = new Telegraf(this.config.botToken)
-    this.telegraf.start(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
-    this.telegraf.help(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
+    this.telegraf.start(async (ctx) => {
+      try {
+        await this.app.instances.receive(this.conduitId, ctx)
+      } catch (e) {
+        this.logger.error(e, 'Error occured on start')
+      }
+    })
+    this.telegraf.help(async (ctx) => {
+      try {
+        await this.app.instances.receive(this.conduitId, ctx)
+      } catch (e) {
+        this.logger.error(e, 'Error occured on help')
+      }
+    })
     this.telegraf.on('message', async (ctx) => {
       try {
         await this.app.instances.receive(this.conduitId, ctx)
