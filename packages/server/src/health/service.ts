@@ -11,6 +11,8 @@ import { ConduitService } from '../conduits/service'
 import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { InstanceService } from '../instances/service'
+import { LoggerService } from '../logger/service'
+import { Logger } from '../logger/types'
 import { WebhookService } from '../webhooks/service'
 import { HealthTable } from './table'
 import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from './types'
@@ -20,8 +22,10 @@ export class HealthService extends Service {
   private table: HealthTable
   private cache!: ServerCache<uuid, HealthReport>
   private watcher: HealthWatcher
+  private logger: Logger
 
   constructor(
+    private loggerService: LoggerService,
     private configService: ConfigService,
     private db: DatabaseService,
     private cachingService: CachingService,
@@ -34,6 +38,7 @@ export class HealthService extends Service {
     super()
     this.table = new HealthTable()
     this.watcher = new HealthWatcher(this.conduitService, this.instanceService, this)
+    this.logger = this.loggerService.root.sub('health')
   }
 
   async setup() {
@@ -64,6 +69,11 @@ export class HealthService extends Service {
         client: { id: client.id },
         channel: { id: channel.id, name: channel.name },
         event: this.makeReadable(event)
+      }
+
+      // TODO: we should check the .json here
+      if (yn(process.env.LOGGING_ENABLED)) {
+        this.logger.info(`[${client.id}] ${channel.name} : ${type}`)
       }
 
       // TODO: this code to call webhook is copy pasted. It should be refactored somewhere else

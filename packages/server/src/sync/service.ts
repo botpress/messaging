@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
+import yn from 'yn'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ChannelService } from '../channels/service'
@@ -58,6 +59,11 @@ export class SyncService extends Service {
         force.id ? req.id : undefined,
         force.token ? req.token : undefined
       )
+
+      // TODO: we should check the .json here
+      if (yn(process.env.LOGGING_ENABLED)) {
+        this.logger.info(`[${client.id}] sync`)
+      }
 
       await this.syncConduits(client.providerId, req.channels || {})
       const webhooks = await this.syncWebhooks(client.id, req.webhooks || [])

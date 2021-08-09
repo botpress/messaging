@@ -86,6 +86,7 @@ export class App {
       this.webhooks
     )
     this.health = new HealthService(
+      this.logger,
       this.config,
       this.database,
       this.caching,
