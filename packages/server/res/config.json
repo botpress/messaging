@@ -1,11 +1,11 @@
 {
   "server": {
     "port": null,
-    "externalUrl": null
+    "externalUrl": "https://f239ff38f093.ngrok.io"
   },
   "security": {
     "password": null,
-    "key": "this+is+a+test+key+ruwy1UMdKwlwo8n412wCek2w="
+    "key": null
   },
   "database": {
     "connection": null,
