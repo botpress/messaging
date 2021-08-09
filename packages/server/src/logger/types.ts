@@ -30,7 +30,10 @@ export class Logger {
   }
 
   debug(message: string, data?: any) {
-    this.print([message, data], LoggerLevel.Debug)
+    // TODO: we should check the config.json here
+    if (yn(process.env.DEBUG)) {
+      this.print([message, data], LoggerLevel.Debug)
+    }
   }
 
   warn(message: string, data?: any) {
