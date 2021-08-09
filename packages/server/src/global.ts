@@ -11,7 +11,6 @@ export interface MessagingEnv {
   REDIS_OPTIONS?: string
   REDIS_SCOPE?: string
   LOGGING_ENABLED?: string
-  DEBUG?: string
   SYNC?: string
   SKIP_LOAD_CONFIG?: string
   SKIP_LOAD_ENV?: string
