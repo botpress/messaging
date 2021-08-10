@@ -37,8 +37,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
           await this.app.instances.receive(conduit.conduitId, req.body)
           res.sendStatus(204)
         } else {
-          this.logger.error('Request validation failed. Make sure that your authToken is valid.')
-
+          this.logger.error(new Error('Request validation failed. Make sure that your authToken is valid'))
           res.sendStatus(401)
         }
       })
@@ -52,7 +51,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
     const conduit = await this.app.conduits.get(instance.conduitId)
     const provider = await this.app.providers.getById(conduit!.providerId)
 
-    const oldUrl = `https://${req.headers.host}/api/v1/bots/${provider!.name}/mod/channel-twilio/webhook`
+    const oldUrl = `${process.env.MASTER_URL}/api/v1/bots/${provider!.name}/mod/channel-twilio/webhook`
 
     return validateRequest(instance.config.authToken, signature, oldUrl, req.body)
   }

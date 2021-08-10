@@ -1,6 +1,7 @@
 import ms from 'ms'
 import yn from 'yn'
 import { Service } from '../base/service'
+import { Logger } from '../logger/types'
 import { Batcher, DelayedBatcher, ImmediateBatcher } from './batcher'
 
 const MAX_BATCH_SIZE = 400
@@ -8,6 +9,7 @@ const MAX_BATCH_SIZE = 400
 export class BatchingService extends Service {
   private enabled!: boolean
   private batchers: { [cacheId: string]: Batcher<any> } = {}
+  private logger = new Logger('Batching')
 
   async setup() {
     this.enabled = !!yn(process.env.BATCHING_ENABLED)
@@ -15,7 +17,11 @@ export class BatchingService extends Service {
 
   async destroy() {
     for (const batcher of Object.values(this.batchers)) {
-      await batcher.flush()
+      try {
+        await batcher.flush()
+      } catch (e) {
+        this.logger.error(e, `Failed to destroy batch ${batcher.id}`)
+      }
     }
   }
 

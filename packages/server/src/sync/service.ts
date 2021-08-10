@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
+import yn from 'yn'
 import { Service } from '../base/service'
 import { uuid } from '../base/types'
 import { ChannelService } from '../channels/service'
@@ -7,6 +8,7 @@ import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
 import { ConfigService } from '../config/service'
+import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { ProviderService } from '../providers/service'
@@ -20,6 +22,7 @@ export class SyncService extends Service {
   constructor(
     private loggers: LoggerService,
     private config: ConfigService,
+    private distributed: DistributedService,
     private channels: ChannelService,
     private providers: ProviderService,
     private conduits: ConduitService,
@@ -47,17 +50,34 @@ export class SyncService extends Service {
   }
 
   async sync(req: SyncRequest, force: { name?: boolean; id?: boolean; token?: boolean }): Promise<SyncResult> {
-    const client = await this.syncClient(
-      req.id,
-      force.name ? req.name : undefined,
-      force.id ? req.id : undefined,
-      force.token ? req.token : undefined
-    )
+    let result: SyncResult
 
-    await this.syncConduits(client.providerId, req.channels || {})
-    const webhooks = await this.syncWebhooks(client.id, req.webhooks || [])
+    const lockedTask = async () => {
+      const client = await this.syncClient(
+        req.id,
+        force.name ? req.name : undefined,
+        force.id ? req.id : undefined,
+        force.token ? req.token : undefined
+      )
 
-    return { id: client.id, token: client.token || req.token!, webhooks }
+      // TODO: we should check the .json here
+      if (yn(process.env.LOGGING_ENABLED)) {
+        this.logger.info(`[${client.id}] sync`)
+      }
+
+      await this.syncConduits(client.providerId, req.channels || {})
+      const webhooks = await this.syncWebhooks(client.id, req.webhooks || [])
+
+      result = { id: client.id, token: client.token || req.token!, webhooks }
+    }
+
+    if (req.id) {
+      await this.distributed.using(`lock_dyn_sync_client::${req.id}`, lockedTask)
+    } else {
+      await lockedTask()
+    }
+
+    return result!
   }
 
   async syncSandbox(req: SyncSandboxRequest) {

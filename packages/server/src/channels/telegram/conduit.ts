@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { Telegraf } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
+import yn from 'yn'
 import { EndpointContent, ConduitInstance } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -16,34 +17,54 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
   private telegraf!: Telegraf<TelegrafContext>
 
   async initialize() {
-    // This won't display the botToken when printing the webhook
-    const webhook = `${await this.getRoute()}/${this.config.botToken}`
-
-    await this.telegraf.telegram.setWebhook(webhook)
+    if (this.useWebhook()) {
+      const webhook = `${await this.getRoute()}/${this.config.botToken}`
+      await this.telegraf.telegram.setWebhook(webhook)
+    }
   }
 
   protected async setupConnection() {
     this.telegraf = new Telegraf(this.config.botToken)
-    this.telegraf.start(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
-    this.telegraf.help(async (ctx) => this.app.instances.receive(this.conduitId, ctx))
+    this.telegraf.start(async (ctx) => {
+      try {
+        await this.app.instances.receive(this.conduitId, ctx)
+      } catch (e) {
+        this.logger.error(e, 'Error occured on start')
+      }
+    })
+    this.telegraf.help(async (ctx) => {
+      try {
+        await this.app.instances.receive(this.conduitId, ctx)
+      } catch (e) {
+        this.logger.error(e, 'Error occured on help')
+      }
+    })
     this.telegraf.on('message', async (ctx) => {
       try {
         await this.app.instances.receive(this.conduitId, ctx)
       } catch (e) {
-        this.logger.error('Error occurred processing message,', e)
+        this.logger.error(e, 'Error occurred processing message')
       }
     })
     this.telegraf.on('callback_query', async (ctx) => {
       try {
         await this.app.instances.receive(this.conduitId, ctx)
       } catch (e) {
-        this.logger.error('Error occurred processing callback query.', e)
+        this.logger.error(e, 'Error occurred processing callback query')
       }
     })
 
-    this.callback = this.telegraf.webhookCallback(`/${this.config.botToken}`)
+    if (!this.useWebhook()) {
+      await this.telegraf.telegram.deleteWebhook()
+      this.telegraf.startPolling()
+    } else {
+      this.callback = this.telegraf.webhookCallback(`/${this.config.botToken}`)
+      await this.printWebhook()
+    }
+  }
 
-    await this.printWebhook()
+  private useWebhook() {
+    return !yn(process.env.SPINNED) || yn(process.env.CLUSTER_ENABLED)
   }
 
   protected setupRenderers() {

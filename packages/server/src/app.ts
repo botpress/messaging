@@ -66,6 +66,7 @@ export class App {
     this.instances = new InstanceService(
       this.logger,
       this.config,
+      this.distributed,
       this.caching,
       this.post,
       this.channels,
@@ -81,6 +82,7 @@ export class App {
     this.syncs = new SyncService(
       this.logger,
       this.config,
+      this.distributed,
       this.channels,
       this.providers,
       this.conduits,
@@ -88,6 +90,7 @@ export class App {
       this.webhooks
     )
     this.health = new HealthService(
+      this.logger,
       this.config,
       this.database,
       this.caching,

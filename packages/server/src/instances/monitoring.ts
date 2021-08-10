@@ -2,6 +2,7 @@ import ms from 'ms'
 import yn from 'yn'
 import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
+import { DistributedService } from '../distributed/service'
 import { Logger } from '../logger/types'
 import { InstanceService } from './service'
 
@@ -10,24 +11,27 @@ const MAX_ALLOWED_FAILURES = 5
 export class InstanceMonitoring {
   constructor(
     private logger: Logger,
+    private distributed: DistributedService,
     private channels: ChannelService,
     private conduits: ConduitService,
     private instances: InstanceService,
     private failures: { [conduitId: string]: number }
   ) {}
 
-  async setup() {
-    await this.tickMonitoring()
-
-    setInterval(this.tickMonitoring.bind(this), ms('15s'))
+  async monitor() {
+    void this.tickMonitoring()
   }
 
   private async tickMonitoring() {
     try {
-      await this.initializeOutdatedConduits()
-      await this.loadNonLazyConduits()
+      await this.distributed.using('lock_instance_monitoring', async () => {
+        await this.initializeOutdatedConduits()
+        await this.loadNonLazyConduits()
+      })
     } catch (e) {
-      this.logger.error('Error occurred while monitoring.', e.message)
+      this.logger.error(e, 'Error occurred while monitoring', e.message)
+    } finally {
+      setTimeout(this.tickMonitoring.bind(this), ms('15s'))
     }
   }
 

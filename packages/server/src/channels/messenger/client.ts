@@ -9,7 +9,16 @@ export class MessengerClient {
 
   constructor(private config: MessengerConfig, private logger: Logger) {}
 
-  async setupGetStarted(): Promise<void> {
+  async getPageId() {
+    try {
+      const { data } = await this.http.get('/', { params: { access_token: this.config.accessToken } })
+      return data.id
+    } catch (e) {
+      throw new Error('Error occured fetching page id')
+    }
+  }
+
+  async setupGetStarted() {
     if (!this.config.getStarted) {
       return
     }
@@ -21,11 +30,11 @@ export class MessengerClient {
         }
       })
     } catch (e) {
-      this.logger.error('Error occurred trying to setup "getStarted" message.', e.message)
+      this.logger.error(e, 'Error occurred trying to setup "getStarted" message')
     }
   }
 
-  async setupGreeting(): Promise<void> {
+  async setupGreeting() {
     if (!this.config.greeting) {
       await this.deleteProfileFields(['greeting'])
       return
@@ -41,11 +50,11 @@ export class MessengerClient {
         ]
       })
     } catch (e) {
-      this.logger.error('Error occurred trying to setup greeting.', e.message)
+      this.logger.error(e, 'Error occurred trying to setup greeting')
     }
   }
 
-  async setupPersistentMenu(): Promise<void> {
+  async setupPersistentMenu() {
     if (!this.config.persistentMenu?.length) {
       await this.deleteProfileFields(['persistent_menu'])
       return
@@ -54,7 +63,7 @@ export class MessengerClient {
     try {
       await this.sendProfile({ persistent_menu: this.config.persistentMenu })
     } catch (e) {
-      this.logger.error('Error occurred trying to setup persistent menu.', e.message)
+      this.logger.error(e, 'Error occurred trying to setup persistent menu')
     }
   }
 
