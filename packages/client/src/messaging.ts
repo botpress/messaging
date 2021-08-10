@@ -17,10 +17,10 @@ export class MessagingClient {
   messages: MessageClient
 
   constructor(options: MessagingOptions) {
-    const { url, password, auth } = options
+    const { url, password, auth, client } = options
 
-    this.http = axios.create(this.getAxiosConfig({ url, password }))
-    this.authHttp = axios.create(this.getAxiosConfig({ url, password, auth }))
+    this.http = this.configureHttpClient(client, this.getAxiosConfig({ url, password }))
+    this.authHttp = this.configureHttpClient(client, this.getAxiosConfig({ url, password, auth }))
 
     this.syncs = new SyncClient(this.http)
     this.health = new HealthClient(this.authHttp)
@@ -30,7 +30,21 @@ export class MessagingClient {
     this.messages = new MessageClient(this.authHttp)
   }
 
-  private getAxiosConfig({ url, password, auth }: MessagingOptions): AxiosRequestConfig {
+  private configureHttpClient(client: MessagingOptions['client'], config: AxiosRequestConfig) {
+    if (client) {
+      client.defaults = Object.assign(client.defaults, config)
+
+      return client
+    } else {
+      return axios.create(config)
+    }
+  }
+
+  private getAxiosConfig({
+    url,
+    password,
+    auth
+  }: Pick<MessagingOptions, 'url' | 'password' | 'auth'>): AxiosRequestConfig {
     const config: AxiosRequestConfig = { baseURL: `${url}/api`, headers: {} }
 
     if (password) {
@@ -56,4 +70,6 @@ export interface MessagingOptions {
     clientId: string
     clientToken: string
   }
+  /** A custom axios instance giving more control over the HTTP client used internally. Optional */
+  client?: AxiosInstance
 }
