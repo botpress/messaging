@@ -1,10 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import { Service } from '../base/service'
+import { backOff } from 'exponential-backoff'
 
+import { Service } from '../base/service'
 import { ConfigService } from '../config/service'
 import { Logger } from '../logger/types'
 
 export class PostService extends Service {
+  private readonly attempts = 10
+
   private logger: Logger
   private password: string | undefined
 
@@ -29,10 +32,18 @@ export class PostService extends Service {
     }
 
     try {
-      await axios.post(url, data, config)
+      await backOff(async () => axios.post(url, data, config), {
+        jitter: 'none', // TODO: We should enable to jitter if the post service may be called for the same resource on multiple nodes
+        numOfAttempts: this.attempts,
+        retry: (_e: any, _attemptNumber: number) => {
+          // TODO: Add debug logging
+          //this.logger.debug(`attempt number: ${attemptNumber}`)
+
+          return true
+        }
+      })
     } catch (e) {
-      // TODO: maybe we should retry if this call fails
-      this.logger.error(e, `An error occurred calling route ${url}`)
+      this.logger.error(e, `An error occurred calling route ${url}. Total number of attempts: ${this.attempts}`)
     }
   }
 }
