@@ -18,7 +18,7 @@ describe('DatabaseService', () => {
     jest.clearAllMocks()
   })
 
-  it('Should instantiate without throwing any error', () => {
+  test('Should instantiate without throwing any error', () => {
     try {
       new DatabaseService(configService)
     } catch (e) {
@@ -26,7 +26,7 @@ describe('DatabaseService', () => {
     }
   })
 
-  it('Should setup a PostgreSQL database connection', async () => {
+  test('Should setup a PostgreSQL database connection', async () => {
     const env = _.cloneDeep(process.env)
     process.env.DATABASE_URL = postgresDatabaseUrl
 
@@ -42,7 +42,7 @@ describe('DatabaseService', () => {
     process.env = env
   })
 
-  it('Should setup a SQLite database connection', async () => {
+  test('Should setup a SQLite database connection', async () => {
     const db = new DatabaseService(configService)
 
     await db.setup()
