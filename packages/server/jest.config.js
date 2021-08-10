@@ -1,9 +1,6 @@
 /** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   preset: 'ts-jest',
-  transform: {
-    '^.+\\.(ts|tsx|js)$': 'ts-jest'
-  },
   testEnvironment: 'node',
   testMatch: ['**/tests/**/(*.)test.ts'],
   testPathIgnorePatterns: ['/node_modules/', '<rootDir>/dist/'],
