@@ -1,16 +1,11 @@
 import yn from 'yn'
 
-import { ConfigService } from '../config/service'
 import { PostService } from '../post/service'
 import { WebhookService } from './service'
 import { WebhookContent } from './types'
 
 export class WebhookBroadcaster {
-  private postService: PostService
-
-  constructor(private configService: ConfigService, private webhookService: WebhookService) {
-    this.postService = new PostService(this.configService)
-  }
+  constructor(private postService: PostService, private webhookService: WebhookService) {}
 
   public async send(clientId: string, data: WebhookContent) {
     if (yn(process.env.SPINNED)) {
