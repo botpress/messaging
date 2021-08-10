@@ -1,12 +1,26 @@
 @baseUrl = http://localhost:3100
+// @baseUrl =  https://messaging.botpress.dev/
 @clientId = YOUR_CLIENT_ID
 @clientToken = YOUR_TOKEN
 @channel= YOUR_CHANNEL
 @convoId = YOUR_CONVO_ID
 
+### Auth messaging cloud
+# @name auth
+POST https://oauth.botpress.dev/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id=CLOUD_CLIENT
+&client_secret=CLOUD_SERCRET
+&grant_type=client_credentials
+
+###
+@authToken = {{auth.response.body.access_token}}
+
 ### Sync
 POST {{baseUrl}}/api/sync
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
   "channels": {
@@ -20,9 +34,17 @@ Content-Type: application/json
   "token": null
 }
 
+### Health
+GET {{baseUrl}}/api/health
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+
 ### Send Text
 POST {{baseUrl}}/api/chat/reply
-Authorization: Basic {{clientId}}:{{clientToken}}
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
@@ -36,7 +58,9 @@ Content-Type: application/json
 
 ### Send Image
 POST {{baseUrl}}/api/chat/reply
-Authorization: Basic {{clientId}}:{{clientToken}}
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
@@ -51,7 +75,9 @@ Content-Type: application/json
 
 ### Send Choices
 POST {{baseUrl}}/api/chat/reply
-Authorization: Basic {{clientId}}:{{clientToken}}
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
@@ -69,7 +95,9 @@ Content-Type: application/json
 
 ### Send Card
 POST {{baseUrl}}/api/chat/reply
-Authorization: Basic {{clientId}}:{{clientToken}}
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
@@ -102,7 +130,9 @@ Content-Type: application/json
 
 ### Send Carousel
 POST {{baseUrl}}/api/chat/reply
-Authorization: Basic {{clientId}}:{{clientToken}}
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
