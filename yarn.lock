@@ -296,13 +296,6 @@
     "@babel/helper-validator-identifier" "^7.14.8"
     to-fast-properties "^2.0.0"
 
-"@botpress/messaging-client@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@botpress/messaging-client/-/messaging-client-0.0.1.tgz#b78bd5b01cadb4d61972fd99fc2d7d92c85a93bd"
-  integrity sha512-nzXAoCxuuMMUbioiLPk9nu3UMuNujAk4XiExXpAmEtExGDQLlwhHgmPOO8BHEIS8SbyqmodE8KB3ZRHS/v/zUg==
-  dependencies:
-    axios "^0.21.1"
-
 "@discordjs/collection@^0.1.6":
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/@discordjs/collection/-/collection-0.1.6.tgz#9e9a7637f4e4e0688fd8b2b5c63133c91607682c"

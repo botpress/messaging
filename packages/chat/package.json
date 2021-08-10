@@ -15,7 +15,7 @@
   ],
   "devDependencies": {},
   "dependencies": {
-    "@botpress/messaging-client": "0.0.1",
+    "@botpress/messaging-client": "0.0.3",
     "axios": "^0.21.1"
   }
 }
