@@ -1,9 +1,8 @@
-/** @type {import('@ts-jest/dist/types').InitialOptionsTsJest} */
-module.exports = {
+import type { Config } from '@jest/types'
+
+const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  testEnvironment: 'node',
   testMatch: ['**/test/**/(*.)test.ts'],
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/dist/'],
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
   coverageThreshold: {
     global: {
@@ -14,3 +13,5 @@ module.exports = {
     }
   }
 }
+
+export default config
