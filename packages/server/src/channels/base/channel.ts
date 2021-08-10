@@ -37,12 +37,6 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
     root.use(this.getRoute(), this.asyncMiddleware(this.extractConduit.bind(this)), this.router)
   }
 
-  protected abstract setupRoutes(): Promise<void>
-
-  getRoute(path?: string) {
-    return `/webhooks/:provider/${this.name}${path ? `/${path}` : ''}`
-  }
-
   protected async extractConduit(req: Request, res: Response, next: NextFunction) {
     const providerName = req.params.provider
 
@@ -60,6 +54,10 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
 
     res.locals.conduit = await this.app.instances.get(conduit.id)
     next()
+  }
+
+  getRoute(path?: string) {
+    return `/webhooks/:provider/${this.name}${path ? `/${path}` : ''}`
   }
 
   protected asyncMiddleware(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) {
@@ -85,4 +83,5 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   }
 
   abstract createConduit(): TConduit
+  protected abstract setupRoutes(): Promise<void>
 }
