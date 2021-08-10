@@ -11,7 +11,7 @@ export enum LoggerLevel {
 }
 
 export class Logger {
-  colors = {
+  private readonly colors = {
     [LoggerLevel.Debug]: clc.blue,
     [LoggerLevel.Warn]: clc.yellow,
     [LoggerLevel.Error]: clc.red,
@@ -37,6 +37,8 @@ export class Logger {
     this.print([message, data], LoggerLevel.Warn)
   }
 
+  error(error: undefined, message: string, data?: any): void
+  error(error: Error, message?: string, data?: any): void
   error(error: Error | undefined, message?: string, data?: any) {
     if (message?.length && message[message.length - 1] !== '.') {
       message += '.'
