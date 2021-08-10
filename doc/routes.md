@@ -74,9 +74,23 @@ router.post('/mycallbackroute', (req, req) => {})
 
 As you can see from the example, you need to provide your entire configuration every time you call `api/sync`. The sync api will then do a diff of the new configuration and the old one, and apply changes automatically to fit the new configuration.
 
+## Health
+
+GET `/api/health`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
+
+Provides information on configured channels
+
 ## Chat
 
 POST `/api/chat/reply/`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 - `channel`: Channel to send the message to
 - `conversationId`: Id of conversation to send the message to
@@ -86,7 +100,9 @@ POST `/api/chat/reply/`
 
 POST `/api/users`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 Creates a new users
 
@@ -94,7 +110,9 @@ Creates a new users
 
 POST `/api/conversations`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 - `userId`: Id of the user who owns this conversation
 
@@ -102,19 +120,25 @@ Creates a new conversation
 
 GET `/api/conversations/:id`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 Gets a conversation by id
 
 GET `/api/conversations?userId=&limit=`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 Lists the conversations of a user
 
 GET `/api/conversations/:userId/recent`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 Gets the most recent conversation of a user
 
@@ -122,7 +146,9 @@ Gets the most recent conversation of a user
 
 POST `/api/messages`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 - `conversationId`: Id of the conversation
 - `authorId`: Id of the writer of the message (null for bot)
@@ -132,18 +158,24 @@ Creates a new message
 
 GET `/api/messages/:id`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 Gets a message by id
 
 GET `/api/messages?conversationId=&limit=`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 List messages of a conversation
 
 DELETE `/api/messages?id=&conversationId=`
 
-Authorization: Basic clientId:clientToken
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
 
 Deletes messages. Can filter by id or by conversation id.
