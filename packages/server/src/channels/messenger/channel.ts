@@ -35,6 +35,7 @@ export class MessengerChannel extends Channel<MessengerConduit> {
   }
 
   protected async setupRoot(root: Router) {
+    // json parser needs to be here because extractConduit uses the body to get the pageId
     root.use(this.getRoute(), express.json({ verify: this.prepareAuth.bind(this) }))
     await super.setupRoot(root)
   }
