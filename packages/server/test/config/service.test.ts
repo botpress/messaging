@@ -21,10 +21,6 @@ describe('ConfigService', () => {
     configService = new ConfigService()
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   test('Should instantiate without throwing any error', () => {
     try {
       new ConfigService()

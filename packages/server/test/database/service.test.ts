@@ -14,10 +14,6 @@ describe('DatabaseService', () => {
     configService['current'] = {}
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   test('Should instantiate without throwing any error', () => {
     try {
       new DatabaseService(configService)

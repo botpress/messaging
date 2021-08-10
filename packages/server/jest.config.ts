@@ -4,6 +4,7 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testMatch: ['**/test/**/(*.)test.ts'],
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
+  clearMocks: true,
   coverageThreshold: {
     global: {
       branches: 60,

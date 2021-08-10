@@ -12,10 +12,6 @@ describe('Logger', () => {
   }
   const levels = ['info', 'debug', 'warn', 'error']
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   test('Should instantiate without throwing any error', () => {
     try {
       const logger = new Logger(scope)
