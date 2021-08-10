@@ -1,7 +1,9 @@
+import yn from 'yn'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
+import { MessengerChannel } from './channel'
 import { MessengerClient } from './client'
 import { MessengerConfig } from './config'
 import { MessengerContext } from './context'
@@ -19,6 +21,16 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
 
   protected async setupConnection() {
     this.client = new MessengerClient(this.config, this.logger)
+
+    // Legacy stuff
+    if (yn(process.env.SPINNED)) {
+      const conduit = await this.app.conduits.get(this.conduitId)
+      const provider = await this.app.providers.getById(conduit!.providerId)
+      const channel = this.app.channels.getById(conduit!.channelId) as MessengerChannel
+
+      const pageId = await this.client.getPageId()
+      channel.registerPageId(pageId, provider!.name)
+    }
 
     await this.printWebhook()
   }
