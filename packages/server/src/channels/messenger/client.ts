@@ -9,7 +9,16 @@ export class MessengerClient {
 
   constructor(private config: MessengerConfig, private logger: Logger) {}
 
-  async setupGetStarted(): Promise<void> {
+  async getPageId() {
+    try {
+      const { data } = await this.http.get('/', { params: { access_token: this.config.accessToken } })
+      return data.id
+    } catch (e) {
+      throw new Error('Error occured fetching page id')
+    }
+  }
+
+  async setupGetStarted() {
     if (!this.config.getStarted) {
       return
     }
@@ -25,7 +34,7 @@ export class MessengerClient {
     }
   }
 
-  async setupGreeting(): Promise<void> {
+  async setupGreeting() {
     if (!this.config.greeting) {
       await this.deleteProfileFields(['greeting'])
       return
@@ -45,7 +54,7 @@ export class MessengerClient {
     }
   }
 
-  async setupPersistentMenu(): Promise<void> {
+  async setupPersistentMenu() {
     if (!this.config.persistentMenu?.length) {
       await this.deleteProfileFields(['persistent_menu'])
       return
