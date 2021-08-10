@@ -29,34 +29,37 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
     this.logger = this.app.logger.root.sub(this.name)
     this.router = Router()
 
-    root.use(
-      this.getRoute(),
-      this.asyncMiddleware(async (req, res, next) => {
-        const providerName = req.params.provider
-
-        const provider = await this.app.providers.getByName(providerName)
-        if (!provider) {
-          throw new Error(`Unknown provider '${providerName}'. Make sure your webhook is properly configured`)
-        }
-
-        const conduit = await this.app.conduits.getByProviderAndChannel(provider.id, this.id)
-        if (!conduit) {
-          throw new Error(
-            `Cannot find a matching conduit for provider '${providerName}'. Make sure your channel is enabled and properly synced`
-          )
-        }
-
-        res.locals.conduit = await this.app.instances.get(conduit.id)
-        next()
-      }),
-      this.router
-    )
-
+    await this.setupRoot(root)
     await this.setupRoutes()
   }
 
+  protected async setupRoot(root: Router) {
+    root.use(this.getRoute(), this.asyncMiddleware(this.extractConduit.bind(this)), this.router)
+  }
+
+  protected abstract setupRoutes(): Promise<void>
+
   getRoute(path?: string) {
     return `/webhooks/:provider/${this.name}${path ? `/${path}` : ''}`
+  }
+
+  protected async extractConduit(req: Request, res: Response, next: NextFunction) {
+    const providerName = req.params.provider
+
+    const provider = await this.app.providers.getByName(providerName)
+    if (!provider) {
+      throw new Error(`Unknown provider '${providerName}'. Make sure your webhook is properly configured`)
+    }
+
+    const conduit = await this.app.conduits.getByProviderAndChannel(provider.id, this.id)
+    if (!conduit) {
+      throw new Error(
+        `Cannot find a matching conduit for provider '${providerName}'. Make sure your channel is enabled and properly synced`
+      )
+    }
+
+    res.locals.conduit = await this.app.instances.get(conduit.id)
+    next()
   }
 
   protected asyncMiddleware(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) {
@@ -82,5 +85,4 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   }
 
   abstract createConduit(): TConduit
-  protected abstract setupRoutes(): Promise<void>
 }
