@@ -21,11 +21,7 @@ describe('ConfigService', () => {
     configService = new ConfigService()
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
-  it('Should instantiate without throwing any error', () => {
+  test('Should instantiate without throwing any error', () => {
     try {
       new ConfigService()
     } catch (e) {
@@ -33,7 +29,7 @@ describe('ConfigService', () => {
     }
   })
 
-  it('Should load environment variables from .env file in dist folder', async () => {
+  test('Should load environment variables from .env file in dist folder', async () => {
     const spy = jest.spyOn(dotenv, 'config')
 
     await configService.setupEnv()
@@ -42,7 +38,7 @@ describe('ConfigService', () => {
     expect(spy).toHaveBeenCalledWith({ path: dotenvPath })
   })
 
-  it('Should load environment variables from .env file at the root', async () => {
+  test('Should load environment variables from .env file at the root', async () => {
     const env = _.cloneDeep(process.env)
     process.env.NODE_ENV = 'production'
 
@@ -56,7 +52,7 @@ describe('ConfigService', () => {
     process.env = env
   })
 
-  it('Should not load any environment variables from .env file', async () => {
+  test('Should not load any environment variables from .env file', async () => {
     const env = _.cloneDeep(process.env)
     process.env.SKIP_LOAD_ENV = 'true'
 
@@ -69,7 +65,7 @@ describe('ConfigService', () => {
     process.env = env
   })
 
-  it('Should load configuration from json file in dist folder', async () => {
+  test('Should load configuration from json file in dist folder', async () => {
     const configBuffer = Buffer.from(JSON.stringify(config))
 
     mocked(fs.existsSync).mockReturnValueOnce(true)
@@ -84,7 +80,7 @@ describe('ConfigService', () => {
     expect(configService.current).toEqual(config)
   })
 
-  it('Should load configuration from json file at the root', async () => {
+  test('Should load configuration from json file at the root', async () => {
     const env = _.cloneDeep(process.env)
     process.env.NODE_ENV = 'production'
 
@@ -104,7 +100,7 @@ describe('ConfigService', () => {
     process.env = env
   })
 
-  it('Should throw if config file in the wrong format', async () => {
+  test('Should throw if config file in the wrong format', async () => {
     const configBuffer = Buffer.from(invalidConfig)
 
     mocked(fs.existsSync).mockReturnValueOnce(true)
@@ -118,7 +114,7 @@ describe('ConfigService', () => {
     expect(fs.readFileSync).toHaveBeenCalledWith(devConfigPath)
   })
 
-  it('Should create an empty config if config file does not exists', async () => {
+  test('Should create an empty config if config file does not exists', async () => {
     mocked(fs.existsSync).mockReturnValueOnce(false)
 
     await configService.setupConfig()
@@ -128,7 +124,7 @@ describe('ConfigService', () => {
     expect(configService.current).toMatchObject({})
   })
 
-  it('Should not load any configuration from json file', async () => {
+  test('Should not load any configuration from json file', async () => {
     const env = _.cloneDeep(process.env)
     process.env.SKIP_LOAD_CONFIG = 'true'
 
@@ -140,7 +136,7 @@ describe('ConfigService', () => {
     process.env = env
   })
 
-  it('Should not load any config', async () => {
+  test('Should not load any config', async () => {
     const env = _.cloneDeep(process.env)
     process.env.SKIP_LOAD_CONFIG = 'true'
     process.env.SKIP_LOAD_ENV = 'true'

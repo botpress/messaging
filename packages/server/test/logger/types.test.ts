@@ -12,11 +12,7 @@ describe('Logger', () => {
   }
   const levels = ['info', 'debug', 'warn', 'error']
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
-  it('Should instantiate without throwing any error', () => {
+  test('Should instantiate without throwing any error', () => {
     try {
       const logger = new Logger(scope)
 
@@ -26,7 +22,7 @@ describe('Logger', () => {
     }
   })
 
-  it('Should allow to create sub loggers with sub scopes', () => {
+  test('Should allow to create sub loggers with sub scopes', () => {
     const logger = new Logger(scope)
 
     const subLogger = logger.sub(subScope)
@@ -35,7 +31,7 @@ describe('Logger', () => {
     expect(subLogger['scope']).toEqual(`${scope}:${subScope}`)
   })
 
-  it('Should print an info message with some data', () => {
+  test('Should print an info message with some data', () => {
     const logger = new Logger(scope)
     const spy = jest.spyOn(console, 'log').mockImplementation()
 
@@ -58,7 +54,7 @@ describe('Logger', () => {
     }
   })
 
-  it('Should only print messages without any data', () => {
+  test('Should only print messages without any data', () => {
     const logger = new Logger(scope)
     const spy = jest.spyOn(console, 'log').mockImplementation()
 
@@ -81,7 +77,7 @@ describe('Logger', () => {
     }
   })
 
-  it('Should print an error message and add a dot at the end', () => {
+  test('Should print an error message and add a dot at the end', () => {
     const logger = new Logger(scope)
     const spy = jest.spyOn(console, 'log').mockImplementation()
     const error = new Error()
@@ -92,7 +88,7 @@ describe('Logger', () => {
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), message, error.stack)
   })
 
-  it('Should print an error without a message', () => {
+  test('Should print an error without a message', () => {
     const logger = new Logger(scope)
     const spy = jest.spyOn(console, 'log').mockImplementation()
     const error = new Error()
@@ -103,7 +99,7 @@ describe('Logger', () => {
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), error.stack)
   })
 
-  it('Should print an error message without a stack trace', () => {
+  test('Should print an error message without a stack trace', () => {
     const logger = new Logger(scope)
     const spy = jest.spyOn(console, 'log').mockImplementation()
 
@@ -113,7 +109,7 @@ describe('Logger', () => {
     expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), message)
   })
 
-  it('Spinned env var should display more info', () => {
+  test('Spinned env var should display more info', () => {
     const env = _.cloneDeep(process.env)
     process.env.SPINNED = 'true'
 
