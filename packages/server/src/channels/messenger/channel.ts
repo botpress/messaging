@@ -35,7 +35,7 @@ export class MessengerChannel extends Channel<MessengerConduit> {
   }
 
   protected async setupRoot(root: Router) {
-    root.use(express.json({ verify: this.prepareAuth.bind(this) }))
+    root.use(this.getRoute(), express.json({ verify: this.prepareAuth.bind(this) }))
     await super.setupRoot(root)
   }
 
