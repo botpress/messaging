@@ -10,8 +10,8 @@
 POST https://oauth.botpress.dev/oauth2/token
 Content-Type: application/x-www-form-urlencoded
 
-client_id=be955f30-df90-4a80-9911-0a6f78073a78
-&client_secret=rBsbayGWi4O-._jUu5.UihIso5
+client_id=CLOUD_CLIENT
+&client_secret=CLOUD_SERCRET
 &grant_type=client_credentials
 
 ###
