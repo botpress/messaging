@@ -37,6 +37,8 @@ export class Logger {
     this.print([message, data], LoggerLevel.Warn)
   }
 
+  error(error: undefined, message: string, data?: any): void
+  error(error: Error, message?: string, data?: any): void
   error(error: Error | undefined, message?: string, data?: any) {
     if (message?.length && message[message.length - 1] !== '.') {
       message += '.'

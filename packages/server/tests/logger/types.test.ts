@@ -1,10 +1,11 @@
 import _ from 'lodash'
-import { Logger } from '../types'
+import { Logger } from '../../src/logger/types'
 
 describe('Logger', () => {
   const scope = 'tests'
   const subScope = 'unit'
   const message = 'a message.'
+  const messageWithoutDot = 'a message'
   const error = new Error('an error')
   const data = {
     some: 'data'
@@ -57,7 +58,7 @@ describe('Logger', () => {
     }
   })
 
-  it('Should only print an info message', () => {
+  it('Should only print messages without any data', () => {
     const logger = new Logger(scope)
     const spy = jest.spyOn(console, 'log').mockImplementation()
 
@@ -80,14 +81,36 @@ describe('Logger', () => {
     }
   })
 
-  it('Should print an info message with some data', () => {
+  it('Should print an error message and add a dot at the end', () => {
+    const logger = new Logger(scope)
+    const spy = jest.spyOn(console, 'log').mockImplementation()
+    const error = new Error()
+
+    logger.error(error, messageWithoutDot)
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), message, error.stack)
+  })
+
+  it('Should print an error without a message', () => {
+    const logger = new Logger(scope)
+    const spy = jest.spyOn(console, 'log').mockImplementation()
+    const error = new Error()
+
+    logger.error(error)
+
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), error.stack)
+  })
+
+  it('Should print an error message without a stack trace', () => {
     const logger = new Logger(scope)
     const spy = jest.spyOn(console, 'log').mockImplementation()
 
-    logger.info(message, data)
+    logger.error(undefined, message)
 
     expect(spy).toHaveBeenCalledTimes(1)
-    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), message, data)
+    expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), message)
   })
 
   it('Spinned env var should display more info', () => {

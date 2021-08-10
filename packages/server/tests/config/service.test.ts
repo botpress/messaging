@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ConfigService } from '../service'
+import { ConfigService } from '../../src/config/service'
 import * as path from 'path'
 import fs from 'fs'
 import dotenv from 'dotenv'

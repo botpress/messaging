@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import { DatabaseService } from '../service'
-import { ConfigService } from '../../config/service'
+import { DatabaseService } from '../../src/database/service'
+import { ConfigService } from '../../src/config/service'
 
-jest.mock('../../config/service')
+jest.mock('../../src/config/service')
 
 describe('DatabaseService', () => {
   let configService: ConfigService
