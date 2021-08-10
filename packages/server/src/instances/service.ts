@@ -1,4 +1,3 @@
-import axios, { AxiosRequestConfig } from 'axios'
 import _ from 'lodash'
 import ms from 'ms'
 import yn from 'yn'
