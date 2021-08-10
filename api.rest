@@ -4,6 +4,8 @@
 @channel= YOUR_CHANNEL
 @convoId = YOUR_CONVO_ID
 
+test
+
 ### Sync
 POST {{baseUrl}}/api/sync
 Content-Type: application/json
