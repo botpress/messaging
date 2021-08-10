@@ -9,5 +9,6 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
+  "include": ["src"],
   "exclude": ["dist", "node_modules"]
 }
