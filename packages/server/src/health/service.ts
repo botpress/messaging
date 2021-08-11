@@ -79,7 +79,7 @@ export class HealthService extends Service {
         this.logger.info(`[${client.id}] ${channel.name} : ${type}`)
       }
 
-      await this.webhookBroadcaster.send(client.id, post)
+      void this.webhookBroadcaster.send(client.id, post)
     }
 
     await this.query().insert(this.serialize(event))
