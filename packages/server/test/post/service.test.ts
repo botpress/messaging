@@ -26,11 +26,7 @@ describe('PostService', () => {
     headers = { custom: 'header' }
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
-  it('Should instantiate without throwing any error', async () => {
+  test('Should instantiate without throwing any error', async () => {
     try {
       const postService = new PostService(configService)
       await postService.setup()
@@ -43,7 +39,7 @@ describe('PostService', () => {
     }
   })
 
-  it('Should call a URL making a post request', async () => {
+  test('Should call a URL making a post request', async () => {
     data = undefined
 
     const spy = jest.spyOn(axios, 'post')
@@ -57,7 +53,7 @@ describe('PostService', () => {
     expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
   })
 
-  it('Should send data to a URL making a post request', async () => {
+  test('Should send data to a URL making a post request', async () => {
     const spy = jest.spyOn(axios, 'post')
 
     const postService = new PostService(configService)
@@ -69,7 +65,7 @@ describe('PostService', () => {
     expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
   })
 
-  it('Should send data to a URL making a post request using custom headers', async () => {
+  test('Should send data to a URL making a post request using custom headers', async () => {
     axiosConfig.headers = headers
 
     const spy = jest.spyOn(axios, 'post')
@@ -83,7 +79,7 @@ describe('PostService', () => {
     expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
   })
 
-  it('Should send data to a URL making a post request using custom headers and a password from env var', async () => {
+  test('Should send data to a URL making a post request using custom headers and a password from env var', async () => {
     const env = _.cloneDeep(process.env)
     process.env.INTERNAL_PASSWORD = password
 
@@ -102,7 +98,7 @@ describe('PostService', () => {
     process.env = env
   })
 
-  it('Should send data to a URL making a post request using custom headers and a password from config file', async () => {
+  test('Should send data to a URL making a post request using custom headers and a password from config file', async () => {
     configService['current'].security = { password }
     axiosConfig.headers = { ...headers, password }
 
@@ -117,12 +113,16 @@ describe('PostService', () => {
     expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
   })
 
-  it('Should log the error if the request fails', async () => {
+  test('Should log the error if the request fails', async () => {
     const error = new Error('error')
     const spy = jest.spyOn(axios, 'post').mockImplementationOnce(() => Promise.reject(error))
 
     const postService = new PostService(configService)
     await postService.setup()
+    Object.defineProperty(postService, 'attempts', {
+      value: 1,
+      writable: false
+    })
 
     const loggerSpy = jest.spyOn(postService['logger'], 'error')
 
