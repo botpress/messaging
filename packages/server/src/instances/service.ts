@@ -1,4 +1,3 @@
-import axios, { AxiosRequestConfig } from 'axios'
 import _ from 'lodash'
 import ms from 'ms'
 import yn from 'yn'
@@ -19,6 +18,7 @@ import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { Message } from '../messages/types'
+import { PostService } from '../post/service'
 import { ProviderService } from '../providers/service'
 import { WebhookBroadcaster } from '../webhooks/broadcaster'
 import { WebhookService } from '../webhooks/service'
@@ -51,6 +51,7 @@ export class InstanceService extends Service {
     private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
+    private postService: PostService,
     private conduitService: ConduitService,
     private clientService: ClientService,
     private webhookService: WebhookService,
@@ -78,7 +79,7 @@ export class InstanceService extends Service {
       this.failures
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
-    this.webhookBroadcaster = new WebhookBroadcaster(this.configService, this.webhookService)
+    this.webhookBroadcaster = new WebhookBroadcaster(this.postService, this.webhookService)
   }
 
   async setup() {

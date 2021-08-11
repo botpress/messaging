@@ -7,5 +7,6 @@
   "eslint.nodePath": "./node_modules",
   "editor.codeActionsOnSave": {
     "source.fixAll": true
-  }
+  },
+  "jest.jestCommandLine": "yarn test"
 }
