@@ -1,3 +1,4 @@
+import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
@@ -45,6 +46,7 @@ export class Api {
     this.root.get('/version', this.version)
     this.root.get('/status', this.status)
     this.root.use('/api', this.router)
+    this.router.use(cors())
     this.router.use(express.json())
     this.router.use(express.urlencoded({ extended: true }))
 
