@@ -15,6 +15,7 @@ import { KvsService } from './kvs/service'
 import { LoggerService } from './logger/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
+import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SyncService } from './sync/service'
 import { UserService } from './users/service'
@@ -28,6 +29,7 @@ export class App {
   distributed: DistributedService
   caching: CachingService
   batching: BatchingService
+  post: PostService
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
@@ -50,6 +52,7 @@ export class App {
     this.distributed = new DistributedService(this.config)
     this.caching = new CachingService(this.distributed)
     this.batching = new BatchingService()
+    this.post = new PostService(this.config)
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
@@ -67,6 +70,7 @@ export class App {
       this.caching,
       this.channels,
       this.providers,
+      this.post,
       this.conduits,
       this.clients,
       this.webhooks,
@@ -87,7 +91,7 @@ export class App {
     )
     this.health = new HealthService(
       this.logger,
-      this.config,
+      this.post,
       this.database,
       this.caching,
       this.channels,
@@ -106,6 +110,7 @@ export class App {
     await this.distributed.setup()
     await this.caching.setup()
     await this.batching.setup()
+    await this.post.setup()
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()

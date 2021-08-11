@@ -24,6 +24,17 @@
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
       "args": ["--nolazy", "dist/index"],
       "preLaunchTask": "build"
+    },
+    {
+      "type": "node",
+      "name": "Debug Unit Tests",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "cwd": "${workspaceFolder}/packages/server",
+      "args": ["test", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
     }
   ]
 }

@@ -1,4 +1,3 @@
-import axios, { AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
 import { Service } from '../base/service'
@@ -8,11 +7,11 @@ import { CachingService } from '../caching/service'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
-import { ConfigService } from '../config/service'
 import { DatabaseService } from '../database/service'
 import { InstanceService } from '../instances/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
+import { PostService } from '../post/service'
 import { WebhookBroadcaster } from '../webhooks/broadcaster'
 import { WebhookService } from '../webhooks/service'
 import { WebhookContent } from '../webhooks/types'
@@ -29,7 +28,7 @@ export class HealthService extends Service {
 
   constructor(
     private loggerService: LoggerService,
-    private configService: ConfigService,
+    private postService: PostService,
     private db: DatabaseService,
     private cachingService: CachingService,
     private channelService: ChannelService,
@@ -42,7 +41,7 @@ export class HealthService extends Service {
     this.table = new HealthTable()
     this.watcher = new HealthWatcher(this.conduitService, this.instanceService, this)
     this.logger = this.loggerService.root.sub('health')
-    this.webhookBroadcaster = new WebhookBroadcaster(this.configService, this.webhookService)
+    this.webhookBroadcaster = new WebhookBroadcaster(this.postService, this.webhookService)
   }
 
   async setup() {
