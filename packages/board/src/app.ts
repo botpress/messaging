@@ -1,11 +1,8 @@
 import { BotpressWebchat } from '@botpress/webchat'
-import { myFunction } from './script'
 
-// eslint-disable-next-line no-console
-console.log('This is the board ui')
+// We assume the messaging server is started in localhost
+const url = 'http://localhost:3100'
+const root = document.getElementById('my-div')
 
-void new BotpressWebchat().setup()
-
-document.getElementById('my-div')!.innerText = 'This text was set by a script'
-
-myFunction()
+const webchat = new BotpressWebchat(url, root!)
+void webchat.setup()
