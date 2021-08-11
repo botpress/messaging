@@ -43,7 +43,6 @@ export class MessengerChannel extends Channel<MessengerConduit> {
   protected async setupRoutes() {
     this.router.get(
       '/',
-      this.asyncMiddleware(this.auth.bind(this)),
       this.asyncMiddleware(async (req, res) => {
         await this.handleWebhookVerification(req, res)
       })
