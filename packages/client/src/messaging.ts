@@ -17,10 +17,10 @@ export class MessagingClient {
   messages: MessageClient
 
   constructor(options: MessagingOptions) {
-    const { url, password, auth } = options
+    const { url, auth, client } = options
 
-    this.http = axios.create(this.getAxiosConfig({ url, password }))
-    this.authHttp = axios.create(this.getAxiosConfig({ url, password, auth }))
+    this.http = this.configureHttpClient(client, this.getAxiosConfig({ url }))
+    this.authHttp = this.configureHttpClient(client, this.getAxiosConfig({ url, auth }))
 
     this.syncs = new SyncClient(this.http)
     this.health = new HealthClient(this.authHttp)
@@ -30,12 +30,18 @@ export class MessagingClient {
     this.messages = new MessageClient(this.authHttp)
   }
 
-  private getAxiosConfig({ url, password, auth }: MessagingOptions): AxiosRequestConfig {
-    const config: AxiosRequestConfig = { baseURL: `${url}/api`, headers: {} }
+  private configureHttpClient(client: MessagingOptions['client'], config: AxiosRequestConfig) {
+    if (client) {
+      client.defaults = Object.assign(client.defaults, config)
 
-    if (password) {
-      config.headers.password = password
+      return client
+    } else {
+      return axios.create(config)
     }
+  }
+
+  private getAxiosConfig({ url, auth }: Pick<MessagingOptions, 'url' | 'auth'>): AxiosRequestConfig {
+    const config: AxiosRequestConfig = { baseURL: `${url}/api`, headers: {} }
 
     if (auth) {
       config.headers['x-bp-messaging-client-id'] = auth.clientId
@@ -49,11 +55,11 @@ export class MessagingClient {
 export interface MessagingOptions {
   /** Base url of the messaging server */
   url: string
-  /** Internal password of the messaging server. Optional */
-  password?: string
   /** Client authentication to access client owned resources. Optional */
   auth?: {
     clientId: string
     clientToken: string
   }
+  /** A custom axios instance giving more control over the HTTP client used internally. Optional */
+  client?: AxiosInstance
 }
