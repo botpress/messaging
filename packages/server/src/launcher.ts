@@ -107,11 +107,24 @@ export class Launcher {
       return
     }
 
-    this.logger.info(
-      `Using channels: ${this.app.channels
-        .list()
-        .map((x) => x.name)
-        .join(', ')}`
-    )
+    if (!yn(process.env.SPINNED)) {
+      const padding = _.repeat(' ', 24)
+      let text = ''
+      let enabled = 0
+
+      for (const channel of this.app.channels.list()) {
+        enabled++
+        text += `\n${padding}${clc.green('⦿')} ${channel.name}`
+      }
+
+      this.logger.info(`Using ${clc.bold(enabled)} channels` + text)
+    } else {
+      this.logger.info(
+        `Using channels: ${this.app.channels
+          .list()
+          .map((x) => x.name)
+          .join(', ')}`
+      )
+    }
   }
 }
