@@ -33,6 +33,7 @@ export class InstanceService extends Service {
     return this.emitter
   }
 
+  private destroyed: boolean
   private emitter: InstanceEmitter
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
@@ -61,6 +62,7 @@ export class InstanceService extends Service {
     private app: App
   ) {
     super()
+    this.destroyed = false
     this.emitter = new InstanceEmitter()
     this.invalidator = new InstanceInvalidator(
       this.channelService,
@@ -97,7 +99,7 @@ export class InstanceService extends Service {
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
-      dispose: this.handleCacheDispose.bind(this),
+      dispose: () => !this.destroyed && this.handleCacheDispose.bind(this),
       max: 50000,
       maxAge: ms('30min')
     })
@@ -115,11 +117,16 @@ export class InstanceService extends Service {
   }
 
   async destroy() {
+    this.destroyed = true
+
     if (!this.cache) {
       return
     }
 
     for (const conduitId of this.cache.keys()) {
+      const instance = this.cache.get(conduitId)!
+      await this.handleCacheDispose(conduitId, instance)
+
       this.cache.del(conduitId)
     }
     this.cache.prune()

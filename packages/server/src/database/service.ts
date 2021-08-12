@@ -34,7 +34,7 @@ export class DatabaseService extends Service {
 
     if (process.env.DATABASE_POOL) {
       try {
-        config = JSON.parse(process.env.DATABASE_POOL) || {}
+        config = JSON.parse(process.env.DATABASE_POOL)
       } catch {
         this.logger.warn('DATABASE_POOL is not valid json')
       }
@@ -82,10 +82,6 @@ export class DatabaseService extends Service {
   }
 
   async destroy() {
-    // This delay is necessary to assure that all queries to the database are done before closing the connection
-    const delay = 1000
-    await new Promise((resolve) => setTimeout(resolve, delay))
-
     try {
       await this.knex.destroy()
     } catch (e) {
