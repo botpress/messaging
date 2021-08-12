@@ -63,10 +63,10 @@ export class BotpressWebchat {
 
   private async testCreateMessages() {
     this.user.current = await this.client.users.create()
-    this.conversation.current = await this.client.conversations.create(this.user.current.id)
+    await this.conversation.set(await this.client.conversations.create(this.user.current.id))
 
     for (let i = 0; i < 10; i++) {
-      const message = await this.client.messages.create(this.conversation.current.id, this.user.current.id, {
+      const message = await this.client.messages.create(this.conversation.current!.id, this.user.current.id, {
         type: 'text',
         text: `yoyoy!${i}`
       })
@@ -74,7 +74,7 @@ export class BotpressWebchat {
       await this.emitter.emit(WebchatEvents.Messages, [message])
     }
 
-    this.messages = await this.client.messages.list(this.conversation.current.id, 100)
+    this.messages = await this.client.messages.list(this.conversation.current!.id, 100)
 
     await this.emitter.emit(WebchatEvents.Messages, this.messages.reverse())
   }
