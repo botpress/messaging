@@ -68,17 +68,25 @@ export class WebchatRenderer {
 
   private makeTextbox() {
     element('p', this.element, (p) => {
-      element('label', p, (label) => {
-        text('Type a message', label)
-      })
-      element('br', p)
-      element('input', p, (input) => {
-        input.type = 'text'
-      })
-      element('button', p, (button) => {
-        button.className = 'bp-send-button'
+      element('form', p, (form) => {
+        element('label', form, (label) => {
+          label.htmlFor = 'bp-message-input'
+          text('Type a message', label)
+        })
+        element('br', form)
+        element('input', form, (input) => {
+          input.type = 'text'
+          input.name = 'bp-message-input'
 
-        text('Send', button)
+          form.onsubmit = () => {
+            input.value = ''
+            return false
+          }
+        })
+        element('button', form, (button) => {
+          button.className = 'bp-send-button'
+          text('Send', button)
+        })
       })
     })
   }
