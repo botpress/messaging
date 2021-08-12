@@ -1,11 +1,13 @@
 import { Message, MessagingClient } from '@botpress/messaging-client'
 import { WebchatConversation } from './conversation/system'
 import { WebchatEmitter, WebchatEvents, WebchatWatcher } from './events'
+import { WebchateLocale } from './locale/system'
 import { WebchatStorage } from './storage/system'
 import { WebchatUser } from './user/system'
 
 export class BotpressWebchat {
   public readonly events: WebchatWatcher
+  public readonly locale: WebchateLocale
   public readonly client: MessagingClient
   public readonly storage: WebchatStorage
   public readonly user: WebchatUser
@@ -20,6 +22,7 @@ export class BotpressWebchat {
 
   constructor(private url: string) {
     this.client = new MessagingClient({ url: this.url })
+    this.locale = new WebchateLocale()
     this.storage = new WebchatStorage()
     this.user = new WebchatUser()
     this.conversation = new WebchatConversation()
@@ -30,6 +33,8 @@ export class BotpressWebchat {
 
   public async setup() {
     await this.emitter.emit(WebchatEvents.Setup, null)
+
+    this.locale.setup()
 
     await this.authenticate()
     await this.testCreateMessages()

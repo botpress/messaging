@@ -67,6 +67,13 @@ export class WebchatRenderer {
             thText.appendChild(thTextText)
           }
           tr.appendChild(thText)
+
+          const thTime = document.createElement('th')
+          {
+            const thTimeText = document.createTextNode('time')
+            thTime.appendChild(thTimeText)
+          }
+          tr.appendChild(thTime)
         }
         thead.appendChild(tr)
       }
@@ -108,6 +115,15 @@ export class WebchatRenderer {
           tdText.appendChild(tdTextText)
         }
         tr.appendChild(tdText)
+
+        const tdTime = document.createElement('td')
+        {
+          const textTime = document.createTextNode(
+            new Date(message?.sentOn)?.toLocaleTimeString(this.webchat.locale.current)
+          )
+          tdTime.appendChild(textTime)
+        }
+        tr.appendChild(tdTime)
       }
       this.tbodyMessages.appendChild(tr)
     }
