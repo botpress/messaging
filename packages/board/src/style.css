@@ -1,0 +1,8 @@
+.bp-send-button {
+  margin-left: 5px;
+}
+
+.bp-messages-section {
+  overflow: auto;
+  height: 400px;
+}
