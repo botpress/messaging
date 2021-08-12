@@ -1,5 +1,5 @@
+import { Conversation, ConversationWithLastMessage } from '@botpress/messaging-base'
 import { BaseClient } from './base'
-import { Message } from './messages'
 
 export class ConversationClient extends BaseClient {
   async create(userId: string): Promise<Conversation> {
@@ -26,15 +26,4 @@ export class ConversationClient extends BaseClient {
       createdOn: new Date(conversation.createdOn)
     }
   }
-}
-
-export interface Conversation {
-  id: string
-  clientId: string
-  userId: string
-  createdOn: Date
-}
-
-export interface ConversationWithLastMessage extends Conversation {
-  lastMessage?: Message
 }

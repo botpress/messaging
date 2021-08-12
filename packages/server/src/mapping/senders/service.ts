@@ -1,6 +1,6 @@
+import { uuid } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../../base/service'
-import { uuid } from '../../base/types'
 import { Batcher } from '../../batching/batcher'
 import { BatchingService } from '../../batching/service'
 import { ServerCache } from '../../caching/cache'

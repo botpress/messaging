@@ -1,5 +1,5 @@
+import { uuid } from '@botpress/messaging-base'
 import yn from 'yn'
-import { uuid } from '../base/types'
 import { ServerCache } from '../caching/cache'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'

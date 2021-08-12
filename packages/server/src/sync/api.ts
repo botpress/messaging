@@ -1,3 +1,4 @@
+import { SyncRequest } from '@botpress/messaging-base'
 import { Router } from 'express'
 import _ from 'lodash'
 import { BaseApi } from '../base/api'
@@ -6,7 +7,6 @@ import { ClientService } from '../clients/service'
 import { ConfigService } from '../config/service'
 import { makeSyncRequestSchema } from './schema'
 import { SyncService } from './service'
-import { SyncRequest } from './types'
 
 export class SyncApi extends BaseApi {
   constructor(

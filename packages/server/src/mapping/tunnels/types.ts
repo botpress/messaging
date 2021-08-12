@@ -1,4 +1,4 @@
-import { uuid } from '../../base/types'
+import { uuid } from '@botpress/messaging-base'
 
 export interface Tunnel {
   id: uuid

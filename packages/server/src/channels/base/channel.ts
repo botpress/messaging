@@ -1,9 +1,9 @@
+import { uuid } from '@botpress/messaging-base'
 import clc from 'cli-color'
 import { NextFunction, Request, Response, Router } from 'express'
 import Joi from 'joi'
 import yn from 'yn'
 import { App } from '../../app'
-import { uuid } from '../../base/types'
 import { Logger } from '../../logger/types'
 import { ConduitInstance } from './conduit'
 

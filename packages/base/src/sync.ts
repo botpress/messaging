@@ -1,4 +1,4 @@
-import { uuid } from '../base/types'
+import { uuid } from './uuid'
 
 export interface SyncRequest {
   channels?: SyncChannels
@@ -10,7 +10,7 @@ export interface SyncRequest {
 
 export interface SyncResult {
   id: uuid
-  token: uuid
+  token: string
   webhooks: SyncWebhook[]
 }
 

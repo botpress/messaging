@@ -1,5 +1,5 @@
+import { uuid } from '@botpress/messaging-base'
 import { Service } from '../base/service'
-import { uuid } from '../base/types'
 import { BatchingService } from '../batching/service'
 import { CachingService } from '../caching/service'
 import { ConversationService } from '../conversations/service'

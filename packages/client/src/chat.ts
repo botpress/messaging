@@ -1,5 +1,5 @@
+import { Message } from '@botpress/messaging-base'
 import { BaseClient } from './base'
-import { Message } from './messages'
 
 export class ChatClient extends BaseClient {
   async reply(conversationId: string, channel: string, payload: any): Promise<Message> {

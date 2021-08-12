@@ -1,3 +1,4 @@
+export * from '@botpress/messaging-base'
 export * from './base'
 export * from './chat'
 export * from './conversations'

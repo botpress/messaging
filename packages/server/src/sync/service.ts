@@ -1,8 +1,8 @@
+import { SyncChannels, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook, uuid } from '@botpress/messaging-base'
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
 import { Service } from '../base/service'
-import { uuid } from '../base/types'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
@@ -14,7 +14,6 @@ import { Logger } from '../logger/types'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
 import { WebhookService } from '../webhooks/service'
-import { SyncChannels, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook } from './types'
 
 export class SyncService extends Service {
   private logger: Logger

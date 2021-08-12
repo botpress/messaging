@@ -1,6 +1,6 @@
+import { Conversation, ConversationWithLastMessage, uuid } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
-import { uuid } from '../base/types'
 import { Batcher } from '../batching/batcher'
 import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
@@ -8,7 +8,6 @@ import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
 import { UserService } from '../users/service'
 import { ConversationTable } from './table'
-import { Conversation, RecentConversation } from './types'
 
 export class ConversationService extends Service {
   public batcher!: Batcher<Conversation>
@@ -123,7 +122,7 @@ export class ConversationService extends Service {
     userId: string,
     limit?: number,
     offset?: number
-  ): Promise<RecentConversation[]> {
+  ): Promise<ConversationWithLastMessage[]> {
     // TODO: need to figure out batching for this
 
     let query = this.queryRecents(clientId, userId)

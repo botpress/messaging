@@ -1,3 +1,4 @@
+import { Message } from '@botpress/messaging-base'
 import { BaseClient } from './base'
 
 export class MessageClient extends BaseClient {
@@ -25,12 +26,4 @@ export class MessageClient extends BaseClient {
       sentOn: new Date(message.sentOn)
     }
   }
-}
-
-export interface Message {
-  id: string
-  conversationId: string
-  authorId: string | undefined
-  sentOn: Date
-  payload: any
 }
