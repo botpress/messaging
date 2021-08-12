@@ -1,5 +1,6 @@
 import { Message } from '@botpress/messaging-client'
 import { WebchatEvents } from './events'
+import { element, text } from './ui'
 import { BotpressWebchat } from './webchat'
 
 export class WebchatRenderer {
@@ -19,70 +20,40 @@ export class WebchatRenderer {
   }
 
   private makeHeader() {
-    const title = document.createElement('h3')
-    {
-      const titleText = document.createTextNode('Messaging box')
-      title.appendChild(titleText)
-    }
-    this.root.appendChild(title)
+    element('h3', this.root, (title) => {
+      text('Messaging box', title)
+    })
   }
 
   private makeClientInfo() {
-    const ul = document.createElement('ul')
-    {
-      const liClientId = document.createElement('li')
-      {
-        this.textClientId = document.createTextNode('')
-        liClientId.appendChild(this.textClientId)
-      }
-      ul.appendChild(liClientId)
-
-      const liToken = document.createElement('li')
-      {
-        this.textClientToken = document.createTextNode('')
-        liToken.appendChild(this.textClientToken)
-      }
-      ul.appendChild(liToken)
-    }
-    this.root.appendChild(ul)
+    element('ul', this.root, (ul) => {
+      element('li', ul, (li) => {
+        this.textClientId = text('', li).assignTo(this.textClientId)
+      })
+      element('li', ul, (li) => {
+        this.textClientToken = text('', li).assignTo(this.textClientToken)
+      })
+    })
   }
 
   private makeMessageTable() {
-    const table = document.createElement('table')
-    {
-      const thead = document.createElement('thead')
-      {
-        const tr = document.createElement('tr')
-        {
-          const thType = document.createElement('th')
-          {
-            const thTypeText = document.createTextNode('type')
-            thType.appendChild(thTypeText)
-          }
-          tr.appendChild(thType)
+    element('table', this.root, (table) => {
+      element('thead', table, (thead) => {
+        element('tr', thead, (tr) => {
+          element('th', tr, (th) => {
+            text('type', th)
+          })
+          element('th', tr, (th) => {
+            text('text', th)
+          })
+          element('th', tr, (th) => {
+            text('time', th)
+          })
+        })
+      })
 
-          const thText = document.createElement('th')
-          {
-            const thTextText = document.createTextNode('text')
-            thText.appendChild(thTextText)
-          }
-          tr.appendChild(thText)
-
-          const thTime = document.createElement('th')
-          {
-            const thTimeText = document.createTextNode('time')
-            thTime.appendChild(thTimeText)
-          }
-          tr.appendChild(thTime)
-        }
-        thead.appendChild(tr)
-      }
-      table.appendChild(thead)
-
-      this.tbodyMessages = document.createElement('tbody')
-      table.appendChild(this.tbodyMessages)
-    }
-    this.root.appendChild(table)
+      this.tbodyMessages = element('tbody', table).assignTo(this.tbodyMessages)
+    })
   }
 
   private listen() {
@@ -100,32 +71,17 @@ export class WebchatRenderer {
 
   private async handleMessages(messages: Message[]) {
     for (const message of messages) {
-      const tr = document.createElement('tr')
-      {
-        const tdType = document.createElement('td')
-        {
-          const tdTypeText = document.createTextNode(message?.payload?.type)
-          tdType.appendChild(tdTypeText)
-        }
-        tr.appendChild(tdType)
-
-        const tdText = document.createElement('td')
-        {
-          const tdTextText = document.createTextNode(message?.payload?.text)
-          tdText.appendChild(tdTextText)
-        }
-        tr.appendChild(tdText)
-
-        const tdTime = document.createElement('td')
-        {
-          const textTime = document.createTextNode(
-            new Date(message?.sentOn)?.toLocaleTimeString(this.webchat.locale.current)
-          )
-          tdTime.appendChild(textTime)
-        }
-        tr.appendChild(tdTime)
-      }
-      this.tbodyMessages.appendChild(tr)
+      element('tr', this.tbodyMessages, (tr) => {
+        element('td', tr, (td) => {
+          text(message?.payload?.type, td)
+        })
+        element('td', tr, (td) => {
+          text(message?.payload?.text, td)
+        })
+        element('td', tr, (td) => {
+          text(new Date(message?.sentOn)?.toLocaleTimeString(this.webchat.locale.current), td)
+        })
+      })
     }
   }
 }
