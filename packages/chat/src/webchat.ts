@@ -1,4 +1,4 @@
-import { Message, MessagingClient } from '@botpress/messaging-client'
+import { Conversation, MessagingClient, User } from '@botpress/messaging-client'
 import { WebchatConversation } from './conversation/system'
 import { WebchatEmitter, WebchatEvents, WebchatWatcher } from './events'
 import { WebchateLocale } from './locale/system'
@@ -18,7 +18,6 @@ export class BotpressWebchat {
   }
 
   private emitter: WebchatEmitter
-  private messages!: Message[]
 
   constructor(private url: string) {
     this.client = new MessagingClient({ url: this.url })
@@ -62,8 +61,22 @@ export class BotpressWebchat {
   }
 
   private async testCreateMessages() {
-    this.user.current = await this.client.users.create()
-    await this.conversation.set(await this.client.conversations.create(this.user.current.id))
+    let user = this.storage.get<User>('saved-user')
+    if (!user) {
+      user = await this.client.users.create()
+      this.storage.set('saved-user', user)
+    }
+    this.user.current = user
+
+    let conversation = this.storage.get<Conversation>('saved-conversation') // TODO: this needs to be deserialized
+    if (!conversation) {
+      conversation = await this.client.conversations.create(this.user.current!.id)
+      this.storage.set('saved-conversation', conversation)
+    }
+    await this.conversation.set(conversation)
+
+    const messages = await this.client.messages.list(this.conversation.current!.id, 100)
+    await this.emitter.emit(WebchatEvents.Messages, messages.reverse())
 
     for (let i = 0; i < 10; i++) {
       const message = await this.client.messages.create(this.conversation.current!.id, this.user.current.id, {
@@ -73,9 +86,5 @@ export class BotpressWebchat {
 
       await this.emitter.emit(WebchatEvents.Messages, [message])
     }
-
-    this.messages = await this.client.messages.list(this.conversation.current!.id, 100)
-
-    await this.emitter.emit(WebchatEvents.Messages, this.messages.reverse())
   }
 }
