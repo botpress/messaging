@@ -71,7 +71,7 @@ describe('ConfigService', () => {
     mocked(fs.existsSync).mockReturnValueOnce(true)
     mocked(fs.readFileSync).mockReturnValueOnce(configBuffer)
 
-    await configService.setupConfig()
+    await configService.setup()
 
     expect(fs.existsSync).toHaveBeenCalledTimes(1)
     expect(fs.existsSync).toHaveBeenCalledWith(devConfigPath)
@@ -89,7 +89,7 @@ describe('ConfigService', () => {
     mocked(fs.existsSync).mockReturnValueOnce(true)
     mocked(fs.readFileSync).mockReturnValueOnce(configBuffer)
 
-    await configService.setupConfig()
+    await configService.setup()
 
     expect(fs.existsSync).toHaveBeenCalledTimes(1)
     expect(fs.existsSync).toHaveBeenCalledWith(prodConfigPath)
@@ -106,7 +106,7 @@ describe('ConfigService', () => {
     mocked(fs.existsSync).mockReturnValueOnce(true)
     mocked(fs.readFileSync).mockReturnValueOnce(configBuffer)
 
-    await expect(configService.setupConfig()).rejects.toThrow()
+    await expect(configService.setup()).rejects.toThrow()
 
     expect(fs.existsSync).toHaveBeenCalledTimes(1)
     expect(fs.existsSync).toHaveBeenCalledWith(devConfigPath)
@@ -117,7 +117,7 @@ describe('ConfigService', () => {
   test('Should create an empty config if config file does not exists', async () => {
     mocked(fs.existsSync).mockReturnValueOnce(false)
 
-    await configService.setupConfig()
+    await configService.setup()
 
     expect(fs.existsSync).toHaveBeenCalledTimes(1)
     expect(fs.existsSync).toHaveBeenCalledWith(devConfigPath)
@@ -128,7 +128,7 @@ describe('ConfigService', () => {
     const env = _.cloneDeep(process.env)
     process.env.SKIP_LOAD_CONFIG = 'true'
 
-    await configService.setupConfig()
+    await configService.setup()
 
     expect(fs.existsSync).not.toHaveBeenCalled()
     expect(fs.readFileSync).not.toHaveBeenCalled()

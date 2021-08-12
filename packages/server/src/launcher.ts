@@ -44,6 +44,7 @@ export class Launcher {
   }
 
   async launch() {
+    await this.app.config.setupEnv()
     this.printLogo()
     await this.app.setup()
     this.printChannels()
@@ -81,6 +82,10 @@ export class Launcher {
   }
 
   private printLogo() {
+    if (yn(process.env.NO_LOGO)) {
+      return
+    }
+
     const centerText = (text: string, width: number, indent: number = 0) => {
       const padding = Math.floor((width - text.length) / 2)
       return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
@@ -98,24 +103,15 @@ export class Launcher {
   }
 
   private printChannels() {
-    if (!yn(process.env.SPINNED)) {
-      const padding = _.repeat(' ', 24)
-      let text = ''
-      let enabled = 0
-
-      for (const channel of this.app.channels.list()) {
-        enabled++
-        text += `\n${padding}${clc.green('⦿')} ${channel.name}`
-      }
-
-      this.logger.info(`Using ${clc.bold(enabled)} channels` + text)
-    } else {
-      this.logger.info(
-        `Using channels: ${this.app.channels
-          .list()
-          .map((x) => x.name)
-          .join(', ')}`
-      )
+    if (yn(process.env.NO_LOGO)) {
+      return
     }
+
+    this.logger.info(
+      `Using channels: ${this.app.channels
+        .list()
+        .map((x) => x.name)
+        .join(', ')}`
+    )
   }
 }
