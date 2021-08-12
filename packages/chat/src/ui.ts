@@ -8,7 +8,12 @@ export const element = <K extends keyof HTMLElementTagNameMap, N extends Node>(
     return node
   }
 
-  construct?.(node)
+  try {
+    construct?.(node)
+  } catch (e) {
+    node.appendChild(document.createTextNode(e))
+  }
+
   parent.appendChild(node)
   return node
 }
