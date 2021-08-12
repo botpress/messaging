@@ -79,6 +79,7 @@ export class WebchatRenderer {
           input.name = 'bp-message-input'
 
           form.onsubmit = () => {
+            void this.webchat.postMessage(input.value)
             input.value = ''
             return false
           }

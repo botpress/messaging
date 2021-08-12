@@ -40,6 +40,15 @@ export class BotpressWebchat {
     await this.testCreateMessages()
   }
 
+  public async postMessage(text: string) {
+    const message = await this.client.messages.create(this.conversation.current!.id, this.user.current!.id, {
+      type: 'text',
+      text
+    })
+
+    await this.emitter.emit(WebchatEvents.Messages, [message])
+  }
+
   private async authenticate() {
     let auth = this.storage.get<{ id: string; token: string }>('saved-auth')
 
