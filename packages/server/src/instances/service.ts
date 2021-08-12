@@ -241,6 +241,6 @@ export class InstanceService extends Service {
       instance.loggerIn.debug('Received message', post)
     }
 
-    await this.webhookBroadcaster.send(clientId, post)
+    void this.webhookBroadcaster.send(clientId, post)
   }
 }
