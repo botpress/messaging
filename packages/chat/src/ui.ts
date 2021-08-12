@@ -13,8 +13,8 @@ export const element = <K extends keyof HTMLElementTagNameMap, N extends Node>(
   return node
 }
 
-export const text = <N extends Node>(data: string, parent: N) => {
-  const text = document.createTextNode(data) as Assignable<Text>
+export const text = <N extends Node>(data: string | undefined, parent: N) => {
+  const text = document.createTextNode(data || '') as Assignable<Text>
   text.assignTo = (data) => {
     return text
   }

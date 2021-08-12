@@ -79,7 +79,7 @@ export class WebchatRenderer {
           text(message?.payload?.text, td)
         })
         element('td', tr, (td) => {
-          text(new Date(message?.sentOn)?.toLocaleTimeString(this.webchat.locale.current), td)
+          text(message?.sentOn && new Date(message.sentOn).toLocaleTimeString(this.webchat.locale.current), td)
         })
       })
     }
