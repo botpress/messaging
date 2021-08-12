@@ -7,41 +7,9 @@ export class WebchatRenderer {
   private textClientId!: Text
   private textClientToken!: Text
 
-  constructor(private webchat: BotpressWebchat, private root: HTMLElement) {
+  constructor(private root: HTMLElement, private webchat: BotpressWebchat) {
     this.make()
-
-    this.webchat.events.on(WebchatEvents.Setup, this.handleSetup.bind(this))
-    this.webchat.events.on(WebchatEvents.Authenticated, this.handleAuthenticated.bind(this))
-    this.webchat.events.on(WebchatEvents.Messages, this.handleMessages.bind(this))
-  }
-
-  private async handleSetup() {}
-
-  private async handleAuthenticated() {
-    this.textClientId.textContent = this.webchat.getAuth()!.clientId
-    this.textClientToken.textContent = this.webchat.getAuth()!.clientToken
-  }
-
-  private async handleMessages(messages: Message[]) {
-    for (const message of messages) {
-      const tr = document.createElement('tr')
-      {
-        const tdType = document.createElement('td')
-        {
-          const tdTypeText = document.createTextNode(message?.payload?.type)
-          tdType.appendChild(tdTypeText)
-        }
-        tr.appendChild(tdType)
-
-        const tdText = document.createElement('td')
-        {
-          const tdTextText = document.createTextNode(message?.payload?.text)
-          tdText.appendChild(tdTextText)
-        }
-        tr.appendChild(tdText)
-      }
-      this.tbodyMessages.appendChild(tr)
-    }
+    this.listen()
   }
 
   private make() {
@@ -108,5 +76,40 @@ export class WebchatRenderer {
       table.appendChild(this.tbodyMessages)
     }
     this.root.appendChild(table)
+  }
+
+  private listen() {
+    this.webchat.events.on(WebchatEvents.Setup, this.handleSetup.bind(this))
+    this.webchat.events.on(WebchatEvents.Auth, this.handleAuth.bind(this))
+    this.webchat.events.on(WebchatEvents.Messages, this.handleMessages.bind(this))
+  }
+
+  private async handleSetup() {}
+
+  private async handleAuth() {
+    this.textClientId.textContent = this.webchat.auth!.clientId
+    this.textClientToken.textContent = this.webchat.auth!.clientToken
+  }
+
+  private async handleMessages(messages: Message[]) {
+    for (const message of messages) {
+      const tr = document.createElement('tr')
+      {
+        const tdType = document.createElement('td')
+        {
+          const tdTypeText = document.createTextNode(message?.payload?.type)
+          tdType.appendChild(tdTypeText)
+        }
+        tr.appendChild(tdType)
+
+        const tdText = document.createElement('td')
+        {
+          const tdTextText = document.createTextNode(message?.payload?.text)
+          tdText.appendChild(tdTextText)
+        }
+        tr.appendChild(tdText)
+      }
+      this.tbodyMessages.appendChild(tr)
+    }
   }
 }

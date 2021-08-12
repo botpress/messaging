@@ -1,15 +1,15 @@
 import { Message } from '@botpress/messaging-client'
-import { Emitter } from './emitter'
+import { Emitter } from './base/emitter'
 
 export enum WebchatEvents {
   Setup = 'setup',
-  Authenticated = 'authenticated',
+  Auth = 'auth',
   Messages = 'messages'
 }
 
 export class WebchatEmitter extends Emitter<{
   [WebchatEvents.Setup]: null
-  [WebchatEvents.Authenticated]: null
+  [WebchatEvents.Auth]: null
   [WebchatEvents.Messages]: Message[]
 }> {}
 
