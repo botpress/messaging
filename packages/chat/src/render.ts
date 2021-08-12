@@ -4,7 +4,6 @@ import { element, text } from './ui'
 import { BotpressWebchat } from './webchat'
 
 export class WebchatRenderer {
-  private element!: HTMLDivElement
   private tbodyMessages!: HTMLTableSectionElement
 
   constructor(private parent: HTMLElement, private webchat: BotpressWebchat) {
@@ -13,17 +12,14 @@ export class WebchatRenderer {
   }
 
   private make() {
-    this.makeElement()
-    this.makeMessageTable()
-    this.makeTextbox()
+    element('div', this.parent, (div) => {
+      this.makeMessageTable(div)
+      this.makeTextbox(div)
+    })
   }
 
-  private makeElement() {
-    this.element = element('div', this.parent)
-  }
-
-  private makeMessageTable() {
-    element('section', this.element, (div) => {
+  private makeMessageTable(parent: Node) {
+    return element('section', parent, (div) => {
       div.className = 'bp-messages-section'
 
       element('table', div, (table) => {
@@ -45,8 +41,8 @@ export class WebchatRenderer {
     })
   }
 
-  private makeTextbox() {
-    element('p', this.element, (p) => {
+  private makeTextbox(parent: Node) {
+    return element('p', parent, (p) => {
       element('form', p, (form) => {
         form.autocomplete = 'off'
 
