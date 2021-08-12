@@ -4,29 +4,35 @@ import { element, text } from './ui'
 import { BotpressWebchat } from './webchat'
 
 export class WebchatRenderer {
+  private element!: HTMLDivElement
   private tbodyMessages!: HTMLTableSectionElement
   private textClientId!: Text
   private textClientToken!: Text
 
-  constructor(private root: HTMLElement, private webchat: BotpressWebchat) {
+  constructor(private parent: HTMLElement, private webchat: BotpressWebchat) {
     this.make()
     this.listen()
   }
 
   private make() {
+    this.makeElement()
     this.makeHeader()
     this.makeClientInfo()
     this.makeMessageTable()
   }
 
+  private makeElement() {
+    this.element = element('div', this.parent).assignTo(this.element)
+  }
+
   private makeHeader() {
-    element('h3', this.root, (title) => {
+    element('h3', this.element, (title) => {
       text('Messaging box', title)
     })
   }
 
   private makeClientInfo() {
-    element('ul', this.root, (ul) => {
+    element('ul', this.element, (ul) => {
       element('li', ul, (li) => {
         this.textClientId = text('', li).assignTo(this.textClientId)
       })
@@ -37,7 +43,7 @@ export class WebchatRenderer {
   }
 
   private makeMessageTable() {
-    element('table', this.root, (table) => {
+    element('table', this.element, (table) => {
       element('thead', table, (thead) => {
         element('tr', thead, (tr) => {
           element('th', tr, (th) => {
