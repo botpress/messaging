@@ -20,7 +20,7 @@ export class ConversationClient extends BaseClient {
     return this.deserialize((await this.http.get(`/conversations/${userId}/recent`)).data)
   }
 
-  private deserialize(conversation: any) {
+  public deserialize(conversation: any) {
     return {
       ...conversation,
       createdOn: new Date(conversation.createdOn)

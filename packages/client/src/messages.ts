@@ -19,7 +19,7 @@ export class MessageClient extends BaseClient {
     return (await this.http.delete('/messages', { params: filters })).data
   }
 
-  private deserialize(message: any) {
+  public deserialize(message: any) {
     return {
       ...message,
       sentOn: new Date(message.sentOn)

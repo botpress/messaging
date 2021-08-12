@@ -68,12 +68,14 @@ export class BotpressWebchat {
     }
     this.user.current = user
 
-    let conversation = this.storage.get<Conversation>('saved-conversation') // TODO: this needs to be deserialized
+    let conversation = this.storage.get<Conversation>('saved-conversation')
     if (!conversation) {
       conversation = await this.client.conversations.create(this.user.current!.id)
       this.storage.set('saved-conversation', conversation)
+    } else {
+      conversation = this.client.conversations.deserialize(conversation)
     }
-    await this.conversation.set(conversation)
+    await this.conversation.set(conversation!)
 
     const messages = await this.client.messages.list(this.conversation.current!.id, 100)
     await this.emitter.emit(WebchatEvents.Messages, messages.reverse())
