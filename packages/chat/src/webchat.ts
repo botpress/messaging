@@ -44,12 +44,14 @@ export class BotpressWebchat {
   }
 
   public async postMessage(text: string) {
-    const message = await this.client.messages.create(this.conversation.current!.id, this.user.current!.id, {
+    const content = {
       type: 'text',
       text
-    })
+    }
 
-    await this.socket.send(text)
+    const message = await this.client.messages.create(this.conversation.current!.id, this.user.current!.id, content)
+
+    await this.socket.send(content)
 
     await this.emitter.emit(WebchatEvents.Messages, [message])
   }

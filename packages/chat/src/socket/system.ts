@@ -11,11 +11,11 @@ export class WebchatSocket {
     })
 
     this.socket.on('connect', () => {
-      this.socket.send('hello!')
+      this.socket.send({ type: 'visit' })
     })
   }
 
-  async send(data: string) {
+  async send(data: any) {
     this.socket.send(data)
   }
 }
