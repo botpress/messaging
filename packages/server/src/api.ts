@@ -1,5 +1,6 @@
 import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
+import { Server } from 'http'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ChatApi } from './chat/api'
@@ -57,6 +58,10 @@ export class Api {
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
+  }
+
+  async setupSocket(server: Server) {
+    await this.users.setupSocket(server)
   }
 
   async setupPassword() {

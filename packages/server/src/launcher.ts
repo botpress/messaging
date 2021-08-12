@@ -57,7 +57,8 @@ export class Launcher {
       port = (await portfinder.getPortPromise()).toString()
     }
 
-    this.express.listen(port)
+    const server = this.express.listen(port)
+    await this.api.setupSocket(server)
 
     if (!yn(process.env.SPINNED)) {
       this.logger.info(`Server is listening at: http://localhost:${port}`)
