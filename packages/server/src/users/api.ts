@@ -33,7 +33,10 @@ export class UserApi extends ClientScopedApi {
       socket.on('message', (data) => {
         logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
       })
-      logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgGreen(clc.magenta('connection'))}`)
+      socket.on('disconnect', (data) => {
+        logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
+      })
+      logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
     })
   }
 }
