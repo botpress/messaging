@@ -41,9 +41,14 @@ export class BotpressWebchat {
   }
 
   private async authenticate() {
-    const { id, token } = await this.client.syncs.sync({ channels: {} })
-    this.client.authenticate(id, token)
+    let auth = this.storage.get<{ id: string; token: string }>('saved-auth')
 
+    if (!auth) {
+      auth = await this.client.syncs.sync({ channels: {} })
+      this.storage.set('saved-auth', { id: auth.id, token: auth.token })
+    }
+
+    this.client.authenticate(auth.id, auth.token)
     await this.emitter.emit(WebchatEvents.Auth, null)
   }
 
