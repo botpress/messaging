@@ -7,11 +7,7 @@ import { Service } from '../base/service'
 export class ConfigService extends Service {
   current: any
 
-  async setup() {
-    await this.setupEnv()
-    await this.setupConfig()
-  }
-
+  // We call this before setting up the whole app
   async setupEnv() {
     if (yn(process.env.SKIP_LOAD_ENV)) {
       return
@@ -24,7 +20,7 @@ export class ConfigService extends Service {
     }
   }
 
-  async setupConfig() {
+  async setup() {
     if (yn(process.env.SKIP_LOAD_CONFIG)) {
       this.current = {}
       return

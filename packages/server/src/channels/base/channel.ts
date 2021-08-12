@@ -73,7 +73,7 @@ export abstract class Channel<TConduit extends ConduitInstance<any, any>> {
   }
 
   protected printWebhook(route?: string) {
-    if (!yn(process.env.SPINNED)) {
+    if (!yn(process.env.SPINNED) && !yn(process.env.NO_LOGO)) {
       this.logger.info(
         `${clc.bold(this.name.charAt(0).toUpperCase() + this.name.slice(1))}` +
           `${route ? ' ' + route : ''}` +
