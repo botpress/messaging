@@ -1,5 +1,4 @@
 import { Message } from '@botpress/messaging-client'
-import { ConversationEvents, ConversationSetEvent } from './conversation/events'
 import { WebchatEvents } from './events'
 import { element, text } from './ui'
 import { BotpressWebchat } from './webchat'
@@ -7,9 +6,6 @@ import { BotpressWebchat } from './webchat'
 export class WebchatRenderer {
   private element!: HTMLDivElement
   private tbodyMessages!: HTMLTableSectionElement
-  private textClientId!: Text
-  private textClientToken!: Text
-  private textConversationId!: Text
 
   constructor(private parent: HTMLElement, private webchat: BotpressWebchat) {
     this.make()
@@ -18,50 +14,12 @@ export class WebchatRenderer {
 
   private make() {
     this.makeElement()
-    this.makeHeader()
-    this.makeDetails()
     this.makeMessageTable()
     this.makeTextbox()
   }
 
   private makeElement() {
     this.element = element('div', this.parent)
-  }
-
-  private makeHeader() {
-    element('h3', this.element, (title) => {
-      text('Messaging box', title)
-    })
-  }
-
-  private makeDetails() {
-    element('details', this.element, (details) => {
-      details.open = true
-
-      element('summary', details, (summary) => {
-        text('Variables', summary)
-      })
-      element('ul', details, (ul) => {
-        element('li', ul, (li) => {
-          element('code', li, (mark) => {
-            text('clientId ', mark)
-          })
-          this.textClientId = text('', li)
-        })
-        element('li', ul, (li) => {
-          element('code', li, (mark) => {
-            text('clientToken ', mark)
-          })
-          this.textClientToken = text('', li)
-        })
-        element('li', ul, (li) => {
-          element('code', li, (mark) => {
-            text('conversationId ', mark)
-          })
-          this.textConversationId = text('', li)
-        })
-      })
-    })
   }
 
   private makeMessageTable() {
@@ -118,17 +76,7 @@ export class WebchatRenderer {
   }
 
   private listen() {
-    this.webchat.events.on(WebchatEvents.Setup, this.handleSetup.bind(this))
-    this.webchat.events.on(WebchatEvents.Auth, this.handleAuth.bind(this))
     this.webchat.events.on(WebchatEvents.Messages, this.handleMessages.bind(this))
-    this.webchat.conversation.events.on(ConversationEvents.Set, this.handleConversationSet.bind(this))
-  }
-
-  private async handleSetup() {}
-
-  private async handleAuth() {
-    this.textClientId.textContent = this.webchat.auth!.clientId
-    this.textClientToken.textContent = this.webchat.auth!.clientToken
   }
 
   private async handleMessages(messages: Message[]) {
@@ -145,9 +93,5 @@ export class WebchatRenderer {
         })
       })
     }
-  }
-
-  private async handleConversationSet(e: ConversationSetEvent) {
-    this.textConversationId.textContent = e.value?.id || ''
   }
 }
