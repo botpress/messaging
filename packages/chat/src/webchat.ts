@@ -47,14 +47,16 @@ export class BotpressWebchat {
     this.conversation.current = await this.client.conversations.create(this.user.current.id)
 
     for (let i = 0; i < 10; i++) {
-      this.client.messages.create(this.conversation.current.id, this.user.current.id, {
+      const message = await this.client.messages.create(this.conversation.current.id, this.user.current.id, {
         type: 'text',
         text: `yoyoy!${i}`
       })
+
+      await this.emitter.emit(WebchatEvents.Messages, [message])
     }
 
     this.messages = await this.client.messages.list(this.conversation.current.id, 100)
 
-    await this.emitter.emit(WebchatEvents.Messages, this.messages)
+    await this.emitter.emit(WebchatEvents.Messages, this.messages.reverse())
   }
 }
