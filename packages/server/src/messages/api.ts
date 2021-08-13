@@ -1,6 +1,6 @@
+import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
-import { uuid } from '../base/types'
 import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
 import { CreateMsgSchema, DeleteMsgSchema, GetMsgSchema, ListMsgSchema } from './schema'
