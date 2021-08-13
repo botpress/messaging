@@ -40,6 +40,10 @@ export class BotpressWebchat {
     await this.socket.setup()
 
     await this.authenticate()
+
+    const authReq = await this.socket.request('auth', { clientId: this.auth?.clientId })
+    console.log('authReq', authReq)
+
     await this.testCreateMessages()
   }
 

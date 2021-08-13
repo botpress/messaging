@@ -1,11 +1,14 @@
+import clc from 'cli-color'
 import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
 import { Server } from 'http'
+import Socket from 'socket.io'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ChatApi } from './chat/api'
 import { ConversationApi } from './conversations/api'
 import { HealthApi } from './health/api'
+import { Logger } from './logger/types'
 import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
@@ -61,7 +64,32 @@ export class Api {
   }
 
   async setupSocket(server: Server) {
-    await this.users.setupSocket(server)
+    const logger = new Logger('Socket')
+
+    const ws = new Socket.Server(server, { cors: { origin: '*' } })
+    ws.on('connection', async (socket) => {
+      try {
+        socket.on('message', async (data) => {
+          try {
+            logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
+            await this.users.handle(socket, data)
+          } catch (e) {
+            logger.error(e, 'An error occured receiving a socket message', data)
+          }
+        })
+        socket.on('disconnect', async (data) => {
+          try {
+            logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
+          } catch (e) {
+            logger.error(e, 'An error occured during a socket disconnect')
+          }
+        })
+
+        logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
+      } catch (e) {
+        logger.error(e, 'An error occurred during a socket connection')
+      }
+    })
   }
 
   async setupPassword() {

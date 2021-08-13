@@ -1,10 +1,7 @@
-import clc from 'cli-color'
 import { Router } from 'express'
-import { Server } from 'http'
-import Socket from 'socket.io'
+import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
-import { Logger } from '../logger/types'
 import { UserService } from './service'
 
 export class UserApi extends ClientScopedApi {
@@ -25,18 +22,13 @@ export class UserApi extends ClientScopedApi {
     )
   }
 
-  async setupSocket(server: Server) {
-    const logger = new Logger('Socket')
-
-    const ws = new Socket.Server(server, { path: '/api/users/socket', cors: { origin: '*' } })
-    ws.on('connection', (socket) => {
-      socket.on('message', (data) => {
-        logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
+  async handle(socket: Socket, message: any) {
+    if (message.type === 'auth') {
+      socket.emit('message', {
+        request: message.request,
+        type: 'auth',
+        data: await this.users.create(message.data.clientId)
       })
-      socket.on('disconnect', (data) => {
-        logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
-      })
-      logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
-    })
+    }
   }
 }
