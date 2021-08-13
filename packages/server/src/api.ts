@@ -73,6 +73,8 @@ export class Api {
           try {
             logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
             await this.users.handle(socket, data)
+            await this.conversations.handle(socket, data)
+            await this.messages.handle(socket, data)
           } catch (e) {
             logger.error(e, 'An error occured receiving a socket message', data)
           }

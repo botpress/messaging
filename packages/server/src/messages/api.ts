@@ -1,5 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
+import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
@@ -130,4 +131,42 @@ export class MessageApi extends ClientScopedApi {
       })
     )
   }
+
+  async handle(socket: Socket, message: SocketRequest<SocketCreateMessageRequest>) {
+    if (message.type === 'create-message') {
+      const { conversationId, authorId, payload } = message.data
+
+      // TODO: safety checks
+
+      socket.emit('message', {
+        request: message.request,
+        type: 'use-convo',
+        data: await this.messages.create(conversationId, authorId, payload)
+      })
+    } else if (message.type === 'list-messages') {
+      const { conversationId } = message.data
+
+      // TODO: safety checks
+
+      socket.emit('message', {
+        request: message.request,
+        type: 'list-messages',
+        data: await this.messages.listByConversationId(conversationId)
+      })
+    }
+  }
+}
+
+interface SocketRequest<T> {
+  request: string
+  type: string
+  data: T
+}
+
+interface SocketCreateMessageRequest {
+  clientId: uuid
+  userId: uuid
+  conversationId: uuid
+  authorId: uuid
+  payload: any
 }

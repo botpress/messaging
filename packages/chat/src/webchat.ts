@@ -1,4 +1,4 @@
-import { Conversation, MessagingClient, User } from '@botpress/messaging-client'
+import { Conversation, Message, MessagingClient, User } from '@botpress/messaging-client'
 import { WebchatConversation } from './conversation/system'
 import { WebchatEmitter, WebchatEvents, WebchatWatcher } from './events'
 import { WebchateLocale } from './locale/system'
@@ -34,23 +34,12 @@ export class BotpressWebchat {
     this.locale.setup()
     await this.socket.setup()
 
-    await this.testCreateMessages()
+    await this.setupUser()
+    await this.setupConversation()
+    await this.setupMessages()
   }
 
-  public async postMessage(text: string) {
-    const content = {
-      type: 'text',
-      text
-    }
-
-    const message = await this.client.messages.create(this.conversation.current!.id, this.user.current!.id, content)
-
-    await this.socket.send(content)
-
-    await this.emitter.emit(WebchatEvents.Messages, [message])
-  }
-
-  private async testCreateMessages() {
+  private async setupUser() {
     let user = this.storage.get<User>('saved-user')
 
     user = await this.socket.request<User>('auth', {
@@ -61,17 +50,43 @@ export class BotpressWebchat {
 
     this.storage.set('saved-user', user)
     this.user.current = user
+  }
 
+  private async setupConversation() {
     let conversation = this.storage.get<Conversation>('saved-conversation')
-    if (!conversation) {
-      conversation = await this.client.conversations.create(this.user.current!.id)
-      this.storage.set('saved-conversation', conversation)
-    } else {
-      conversation = this.client.conversations.deserialize(conversation)
-    }
-    await this.conversation.set(conversation!)
 
-    const messages = await this.client.messages.list(this.conversation.current!.id, 100)
+    conversation = await this.socket.request<Conversation>('use-convo', {
+      userId: this.user.current?.id,
+      conversationId: conversation?.id,
+      clientId: this.clientId
+    })
+
+    this.storage.set('saved-conversation', conversation)
+    await this.conversation.set(conversation!)
+  }
+
+  private async setupMessages() {
+    const messages = await this.socket.request<Message[]>('list-messages', {
+      clientId: this.clientId,
+      userId: this.user.current?.id,
+      conversationId: this.conversation.current?.id
+    })
     await this.emitter.emit(WebchatEvents.Messages, messages.reverse())
+  }
+
+  public async postMessage(text: string) {
+    const payload = {
+      type: 'text',
+      text
+    }
+
+    const message = await this.socket.request<Message>('create-message', {
+      clientId: this.clientId,
+      userId: this.user.current?.id,
+      conversationId: this.conversation.current?.id,
+      payload
+    })
+
+    await this.emitter.emit(WebchatEvents.Messages, [message])
   }
 }

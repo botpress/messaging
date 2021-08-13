@@ -1,4 +1,6 @@
+import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
+import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema } from './schema'
@@ -83,4 +85,37 @@ export class ConversationApi extends ClientScopedApi {
       })
     )
   }
+
+  async handle(socket: Socket, message: SocketRequest<SocketUseConvoRequest>) {
+    if (message.type === 'use-convo') {
+      if (message.data.conversationId) {
+        const conversation = await this.conversations.get(message.data.conversationId)
+        if (conversation) {
+          socket.emit('message', {
+            request: message.request,
+            type: 'use-convo',
+            data: conversation
+          })
+        }
+      }
+
+      socket.emit('message', {
+        request: message.request,
+        type: 'use-convo',
+        data: await this.conversations.create(message.data.clientId, message.data.userId)
+      })
+    }
+  }
+}
+
+interface SocketRequest<T> {
+  request: string
+  type: string
+  data: T
+}
+
+interface SocketUseConvoRequest {
+  clientId: uuid
+  userId: uuid
+  conversationId?: uuid
 }
