@@ -81,11 +81,13 @@ export class BotpressWebchat {
     await this.emitter.emit(WebchatEvents.Messages, messages.reverse())
   }
 
-  public async postMessage(text: string) {
+  public async send(text: string) {
     const payload = {
       type: 'text',
       text
     }
+
+    await this.emitter.emit(WebchatEvents.Send, [payload])
 
     const message = await this.socket.request<Message>('create-message', {
       clientId: this.clientId,

@@ -3,6 +3,7 @@ import { WebchatEvents, BotpressWebchat } from '@botpress/webchat'
 import { element, text } from './ui'
 
 export class WebchatRenderer {
+  private sectionMessage!: HTMLElement
   private tbodyMessages!: HTMLTableSectionElement
 
   constructor(private parent: HTMLElement, private webchat: BotpressWebchat) {
@@ -18,10 +19,11 @@ export class WebchatRenderer {
   }
 
   private makeMessageTable(parent: Node) {
-    return element('section', parent, (div) => {
-      div.className = 'bp-messages-section'
+    return element('section', parent, (section) => {
+      this.sectionMessage = section
+      section.className = 'bp-messages-section'
 
-      element('table', div, (table) => {
+      element('table', section, (table) => {
         element('thead', table, (thead) => {
           element('tr', thead, (tr) => {
             element('th', tr, (th) => {
@@ -56,7 +58,7 @@ export class WebchatRenderer {
 
           form.onsubmit = () => {
             if (input.value.trim().length) {
-              void this.webchat.postMessage(input.value.trim())
+              void this.webchat.send(input.value.trim())
             }
             input.value = ''
             return false
@@ -72,6 +74,7 @@ export class WebchatRenderer {
 
   private listen() {
     this.webchat.events.on(WebchatEvents.Messages, this.handleMessages.bind(this))
+    this.webchat.events.on(WebchatEvents.Send, this.handleSend.bind(this))
   }
 
   private async handleMessages(messages: Message[]) {
@@ -92,5 +95,11 @@ export class WebchatRenderer {
         })
       })
     }
+
+    this.sectionMessage?.scrollTo(0, this.sectionMessage.scrollHeight)
+  }
+
+  private async handleSend(content: any) {
+    this.sectionMessage?.scrollTo(0, this.sectionMessage.scrollHeight)
   }
 }
