@@ -63,7 +63,7 @@ describe('DatabaseService', () => {
     jest.useRealTimers()
   })
 
-  test('Should new throw any error with a default configuration', () => {
+  test('Should not throw any error with a default configuration', () => {
     try {
       new DatabaseService(configService)
     } catch (e) {

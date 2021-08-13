@@ -23,6 +23,10 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     }
   }
 
+  async destroy() {
+    await this.telegraf.stop()
+  }
+
   protected async setupConnection() {
     this.telegraf = new Telegraf(this.config.botToken)
     this.telegraf.start(async (ctx) => {

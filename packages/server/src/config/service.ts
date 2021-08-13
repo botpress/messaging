@@ -5,6 +5,7 @@ import yn from 'yn'
 import { Service } from '../base/service'
 
 export class ConfigService extends Service {
+  // TODO: Add typings here
   current: any
 
   // We call this before setting up the whole app
