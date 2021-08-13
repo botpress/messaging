@@ -1,5 +1,6 @@
 import clc from 'cli-color'
 import { Express } from 'express'
+import { Server } from 'http'
 import _ from 'lodash'
 import portfinder from 'portfinder'
 import yn from 'yn'
@@ -12,6 +13,7 @@ const pkg = require('../package.json')
 export class Launcher {
   private logger: Logger
   private shuttingDown: boolean = false
+  private serverHandle: Server | undefined
 
   constructor(private express: Express, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
@@ -57,8 +59,8 @@ export class Launcher {
       port = (await portfinder.getPortPromise()).toString()
     }
 
-    const server = this.express.listen(port)
-    await this.api.setupSocket(server)
+    this.serverHandle = this.express.listen(port)
+    await this.api.setupSocket(this.serverHandle)
 
     if (!yn(process.env.SPINNED)) {
       this.logger.info(`Server is listening at: http://localhost:${port}`)
@@ -77,6 +79,16 @@ export class Launcher {
   async shutDown(code?: number) {
     if (!this.shuttingDown) {
       this.shuttingDown = true
+
+      await new Promise((resolve, reject) =>
+        this.serverHandle?.close((err) => {
+          if (err) {
+            reject(err)
+          } else {
+            resolve(undefined)
+          }
+        })
+      )
       await this.app.destroy()
     }
     process.exit(code)
