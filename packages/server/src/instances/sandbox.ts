@@ -1,5 +1,5 @@
+import { uuid } from '@botpress/messaging-base'
 import { validate as uuidValidate } from 'uuid'
-import { uuid } from '../base/types'
 import { EndpointContent } from '../channels/base/conduit'
 import { ClientService } from '../clients/service'
 import { Logger } from '../logger/types'

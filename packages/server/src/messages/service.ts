@@ -1,6 +1,6 @@
+import { Message, uuid } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
-import { uuid } from '../base/types'
 import { Batcher } from '../batching/batcher'
 import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
@@ -8,7 +8,6 @@ import { CachingService } from '../caching/service'
 import { ConversationService } from '../conversations/service'
 import { DatabaseService } from '../database/service'
 import { MessageTable } from './table'
-import { Message } from './types'
 
 export class MessageService extends Service {
   private table: MessageTable
