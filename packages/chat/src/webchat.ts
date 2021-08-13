@@ -14,14 +14,9 @@ export class BotpressWebchat {
   public readonly storage: WebchatStorage
   public readonly user: WebchatUser
   public readonly conversation: WebchatConversation
-
-  public get auth() {
-    return this.client.auth
-  }
-
   private emitter: WebchatEmitter
 
-  constructor(private url: string) {
+  constructor(private url: string, public readonly clientId: string) {
     this.client = new MessagingClient({ url: this.url })
     this.locale = new WebchateLocale()
     this.socket = new WebchatSocket(url)
@@ -39,7 +34,6 @@ export class BotpressWebchat {
     this.locale.setup()
     await this.socket.setup()
 
-    await this.authenticate()
     await this.testCreateMessages()
   }
 
@@ -56,21 +50,13 @@ export class BotpressWebchat {
     await this.emitter.emit(WebchatEvents.Messages, [message])
   }
 
-  private async authenticate() {
-    let auth = this.storage.get<{ id: string; token: string }>('saved-auth')
-    auth = await this.client.syncs.sync(auth ?? {})
-    this.storage.set('saved-auth', { id: auth.id, token: auth.token })
-
-    await this.emitter.emit(WebchatEvents.Auth, null)
-  }
-
   private async testCreateMessages() {
     let user = this.storage.get<User>('saved-user')
 
     user = await this.socket.request<User>('auth', {
       userId: user?.id,
       userToken: 'abc123',
-      clientId: this.auth?.clientId
+      clientId: this.clientId
     })
 
     this.storage.set('saved-user', user)

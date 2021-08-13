@@ -2,8 +2,6 @@ import { BotpressWebchat, ConversationEvents, ConversationSetEvent, WebchatEvent
 import { text, element } from '@botpress/webchat-skin'
 
 export class BoardRenderer {
-  private textClientId!: Text
-  private textClientToken!: Text
   private textConversationId!: Text
 
   constructor(private parent: HTMLElement, private webchat: BotpressWebchat) {
@@ -26,13 +24,7 @@ export class BoardRenderer {
           element('code', li, (mark) => {
             text('clientId ', mark)
           })
-          this.textClientId = text('', li)
-        })
-        element('li', ul, (li) => {
-          element('code', li, (mark) => {
-            text('clientToken ', mark)
-          })
-          this.textClientToken = text('', li)
+          text(this.webchat.clientId, li)
         })
         element('li', ul, (li) => {
           element('code', li, (mark) => {
@@ -45,16 +37,7 @@ export class BoardRenderer {
   }
 
   private listen() {
-    this.webchat.events.on(WebchatEvents.Setup, this.handleSetup.bind(this))
-    this.webchat.events.on(WebchatEvents.Auth, this.handleAuth.bind(this))
     this.webchat.conversation.events.on(ConversationEvents.Set, this.handleConversationSet.bind(this))
-  }
-
-  private async handleSetup() {}
-
-  private async handleAuth() {
-    this.textClientId.textContent = this.webchat.auth!.clientId
-    this.textClientToken.textContent = this.webchat.auth!.clientToken
   }
 
   private async handleConversationSet(e: ConversationSetEvent) {
