@@ -1,7 +1,6 @@
 import { Message } from '@botpress/messaging-client'
-import { WebchatEvents } from './events'
+import { WebchatEvents, BotpressWebchat } from '@botpress/webchat'
 import { element, text } from './ui'
-import { BotpressWebchat } from './webchat'
 
 export class WebchatRenderer {
   private tbodyMessages!: HTMLTableSectionElement

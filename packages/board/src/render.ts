@@ -1,11 +1,5 @@
-import {
-  BotpressWebchat,
-  ConversationEvents,
-  ConversationSetEvent,
-  element,
-  text,
-  WebchatEvents
-} from '@botpress/webchat'
+import { BotpressWebchat, ConversationEvents, ConversationSetEvent, WebchatEvents } from '@botpress/webchat'
+import { text, element } from '@botpress/webchat-skin'
 
 export class BoardRenderer {
   private textClientId!: Text

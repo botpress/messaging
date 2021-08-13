@@ -11,6 +11,7 @@
   "devDependencies": {},
   "dependencies": {
     "@botpress/webchat": "0.0.1",
+    "@botpress/webchat-skin": "0.0.1",
     "axios": "^0.21.1"
   }
 }

@@ -1,6 +1,10 @@
 {
   // Manage references here
-  "references": [],
+  "references": [
+    {
+      "path": "../chat"
+    }
+  ],
 
   // Defaults (don't change this)
   "extends": "../../tsconfig.packages.json",
