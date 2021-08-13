@@ -5,4 +5,11 @@
 .bp-messages-section {
   overflow: auto;
   height: 400px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.bp-messages-section table {
+  margin-top: 0;
+  margin-bottom: 0;
 }
