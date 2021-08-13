@@ -22,8 +22,20 @@ export class UserApi extends ClientScopedApi {
     )
   }
 
-  async handle(socket: Socket, message: any) {
+  async handle(socket: Socket, message: SocketRequest<SocketUserAuthRequest>) {
     if (message.type === 'auth') {
+      if (message.data.userId) {
+        // TODO: check user token
+        const user = await this.users.get(message.data.userId)
+        if (user) {
+          socket.emit('message', {
+            request: message.request,
+            type: 'auth',
+            data: user
+          })
+        }
+      }
+
       socket.emit('message', {
         request: message.request,
         type: 'auth',
@@ -31,4 +43,16 @@ export class UserApi extends ClientScopedApi {
       })
     }
   }
+}
+
+interface SocketRequest<T> {
+  request: string
+  type: string
+  data: T
+}
+
+interface SocketUserAuthRequest {
+  clientId: string
+  userId?: string
+  userToken?: string
 }

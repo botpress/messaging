@@ -40,10 +40,6 @@ export class BotpressWebchat {
     await this.socket.setup()
 
     await this.authenticate()
-
-    const authReq = await this.socket.request('auth', { clientId: this.auth?.clientId })
-    console.log('authReq', authReq)
-
     await this.testCreateMessages()
   }
 
@@ -62,22 +58,22 @@ export class BotpressWebchat {
 
   private async authenticate() {
     let auth = this.storage.get<{ id: string; token: string }>('saved-auth')
+    auth = await this.client.syncs.sync(auth ?? {})
+    this.storage.set('saved-auth', { id: auth.id, token: auth.token })
 
-    if (!auth) {
-      auth = await this.client.syncs.sync({ channels: {} })
-      this.storage.set('saved-auth', { id: auth.id, token: auth.token })
-    }
-
-    this.client.authenticate(auth.id, auth.token)
     await this.emitter.emit(WebchatEvents.Auth, null)
   }
 
   private async testCreateMessages() {
     let user = this.storage.get<User>('saved-user')
-    if (!user) {
-      user = await this.client.users.create()
-      this.storage.set('saved-user', user)
-    }
+
+    user = await this.socket.request<User>('auth', {
+      userId: user?.id,
+      userToken: 'abc123',
+      clientId: this.auth?.clientId
+    })
+
+    this.storage.set('saved-user', user)
     this.user.current = user
 
     let conversation = this.storage.get<Conversation>('saved-conversation')

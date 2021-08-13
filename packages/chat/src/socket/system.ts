@@ -15,7 +15,7 @@ export class WebchatSocket {
 
     this.socket.on('message', (data) => {
       if (this.pending[data.request]) {
-        this.pending[data.request](data)
+        this.pending[data.request](data.data)
         delete this.pending[data.request]
       }
     })
@@ -25,9 +25,9 @@ export class WebchatSocket {
     this.socket.send(data)
   }
 
-  async request(type: string, data: any) {
+  async request<T>(type: string, data: any): Promise<T> {
     const request = this.random(32)
-    const promise = new Promise((resolve) => {
+    const promise = new Promise<T>((resolve) => {
       this.pending[request] = resolve
     })
 
