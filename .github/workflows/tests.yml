@@ -16,4 +16,4 @@ jobs:
           yarn
       - name: Run tests
         run: |
-          yarn test --coverage
+          yarn test --coverage --verbose
