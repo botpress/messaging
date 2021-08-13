@@ -60,7 +60,7 @@ export class Launcher {
     }
 
     this.serverHandle = this.express.listen(port)
-    await this.api.setupSocket(this.serverHandle)
+    await this.api.sockets.setup(this.serverHandle)
 
     if (!yn(process.env.SPINNED)) {
       this.logger.info(`Server is listening at: http://localhost:${port}`)

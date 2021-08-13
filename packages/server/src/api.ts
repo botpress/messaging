@@ -1,33 +1,32 @@
-import clc from 'cli-color'
 import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
-import { Server } from 'http'
-import Socket from 'socket.io'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ChatApi } from './chat/api'
 import { ConversationApi } from './conversations/api'
 import { HealthApi } from './health/api'
-import { Logger } from './logger/types'
 import { MessageApi } from './messages/api'
+import { SocketManager } from './socket/manager'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
 
 const pkg = require('../package.json')
 
 export class Api {
-  private router: Router
+  public readonly sockets: SocketManager
 
-  syncs: SyncApi
-  health: HealthApi
-  chat: ChatApi
-  users: UserApi
-  conversations: ConversationApi
-  messages: MessageApi
-  channels: ChannelApi
+  private syncs: SyncApi
+  private health: HealthApi
+  private chat: ChatApi
+  private users: UserApi
+  private conversations: ConversationApi
+  private messages: MessageApi
+  private channels: ChannelApi
+  private router: Router
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
+    this.sockets = new SocketManager()
     this.syncs = new SyncApi(this.router, this.app.config, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.app.clients, this.app.health)
     this.chat = new ChatApi(
@@ -39,11 +38,18 @@ export class Api {
       this.app.conversations,
       this.app.messages
     )
-    this.users = new UserApi(this.router, this.app.clients, this.app.users)
-    this.conversations = new ConversationApi(this.router, this.app.clients, this.app.conversations, this.chat)
+    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users)
+    this.conversations = new ConversationApi(
+      this.router,
+      this.app.clients,
+      this.sockets,
+      this.app.conversations,
+      this.chat
+    )
     this.messages = new MessageApi(
       this.router,
       this.app.clients,
+      this.sockets,
       this.app.conversations,
       this.app.messages,
       this.app.instances
@@ -68,37 +74,6 @@ export class Api {
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
-  }
-
-  async setupSocket(server: Server) {
-    const logger = new Logger('Socket')
-
-    const ws = new Socket.Server(server, { cors: { origin: '*' } })
-    ws.on('connection', async (socket) => {
-      try {
-        socket.on('message', async (data) => {
-          try {
-            logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
-            await this.users.handle(socket, data)
-            await this.conversations.handle(socket, data)
-            await this.messages.handle(socket, data)
-          } catch (e) {
-            logger.error(e, 'An error occured receiving a socket message', data)
-          }
-        })
-        socket.on('disconnect', async (data) => {
-          try {
-            logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
-          } catch (e) {
-            logger.error(e, 'An error occured during a socket disconnect')
-          }
-        })
-
-        logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
-      } catch (e) {
-        logger.error(e, 'An error occurred during a socket connection')
-      }
-    })
   }
 
   async setupPassword() {

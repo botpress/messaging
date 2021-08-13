@@ -1,9 +1,8 @@
-import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
-import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ChatApi } from '../chat/api'
 import { ClientService } from '../clients/service'
+import { SocketManager } from '../socket/manager'
 import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema } from './schema'
 import { ConversationService } from './service'
 
@@ -11,6 +10,7 @@ export class ConversationApi extends ClientScopedApi {
   constructor(
     router: Router,
     clients: ClientService,
+    private sockets: SocketManager,
     private conversations: ConversationService,
     private chat: ChatApi
   ) {
@@ -90,10 +90,8 @@ export class ConversationApi extends ClientScopedApi {
         res.send(conversation)
       })
     )
-  }
 
-  async handle(socket: Socket, message: SocketRequest<SocketUseConvoRequest>) {
-    if (message.type === 'use-convo') {
+    this.sockets.handle('use-convo', async (socket, message) => {
       if (message.data.conversationId) {
         const conversation = await this.conversations.get(message.data.conversationId)
         if (conversation) {
@@ -113,18 +111,6 @@ export class ConversationApi extends ClientScopedApi {
         type: 'use-convo',
         data: conversation
       })
-    }
+    })
   }
-}
-
-interface SocketRequest<T> {
-  request: string
-  type: string
-  data: T
-}
-
-interface SocketUseConvoRequest {
-  clientId: uuid
-  userId: uuid
-  conversationId?: uuid
 }

@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
+import { SocketManager } from '../socket/manager'
 import { UserService } from './service'
 
 export class UserApi extends ClientScopedApi {
-  constructor(router: Router, clients: ClientService, private users: UserService) {
+  constructor(router: Router, clients: ClientService, private sockets: SocketManager, private users: UserService) {
     super(router, clients)
   }
 
@@ -20,10 +20,8 @@ export class UserApi extends ClientScopedApi {
         res.send(user)
       })
     )
-  }
 
-  async handle(socket: Socket, message: SocketRequest<SocketUserAuthRequest>) {
-    if (message.type === 'auth') {
+    this.sockets.handle('auth', async (socket, message: any) => {
       if (message.data.userId) {
         // TODO: check user token
         const user = await this.users.get(message.data.userId)
@@ -41,18 +39,6 @@ export class UserApi extends ClientScopedApi {
         type: 'auth',
         data: await this.users.create(message.data.clientId)
       })
-    }
+    })
   }
-}
-
-interface SocketRequest<T> {
-  request: string
-  type: string
-  data: T
-}
-
-interface SocketUserAuthRequest {
-  clientId: string
-  userId?: string
-  userToken?: string
 }

@@ -1,10 +1,10 @@
 import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
-import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
 import { InstanceService } from '../instances/service'
+import { SocketManager } from '../socket/manager'
 import { CreateMsgSchema, DeleteMsgSchema, GetMsgSchema, ListMsgSchema } from './schema'
 import { MessageService } from './service'
 
@@ -12,6 +12,7 @@ export class MessageApi extends ClientScopedApi {
   constructor(
     router: Router,
     clients: ClientService,
+    private sockets: SocketManager,
     private conversations: ConversationService,
     private messages: MessageService,
     // garbadge code, this shouldn't be here but whatever
@@ -133,10 +134,8 @@ export class MessageApi extends ClientScopedApi {
         res.send({ count: deleted })
       })
     )
-  }
 
-  async handle(socket: Socket, message: SocketRequest<SocketCreateMessageRequest>) {
-    if (message.type === 'create-message') {
+    this.sockets.handle('create-message', async (socket, message) => {
       const { clientId, userId, conversationId, payload } = message.data
 
       const msg = await this.messages.create(conversationId, userId, payload)
@@ -154,7 +153,9 @@ export class MessageApi extends ClientScopedApi {
         type: 'use-convo',
         data: msg
       })
-    } else if (message.type === 'list-messages') {
+    })
+
+    this.sockets.handle('list-messages', async (socket, message) => {
       const { conversationId } = message.data
 
       // TODO: safety checks
@@ -164,20 +165,6 @@ export class MessageApi extends ClientScopedApi {
         type: 'list-messages',
         data: await this.messages.listByConversationId(conversationId)
       })
-    }
+    })
   }
-}
-
-interface SocketRequest<T> {
-  request: string
-  type: string
-  data: T
-}
-
-interface SocketCreateMessageRequest {
-  clientId: uuid
-  userId: uuid
-  conversationId: uuid
-  authorId: uuid
-  payload: any
 }
