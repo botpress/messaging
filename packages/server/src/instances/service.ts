@@ -99,7 +99,11 @@ export class InstanceService extends Service {
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
-      dispose: () => !this.destroyed && this.handleCacheDispose.bind(this),
+      dispose: async (k, v) => {
+        if (!this.destroyed) {
+          await this.handleCacheDispose(k, v)
+        }
+      },
       max: 50000,
       maxAge: ms('30min')
     })
@@ -126,10 +130,7 @@ export class InstanceService extends Service {
     for (const conduitId of this.cache.keys()) {
       const instance = this.cache.get(conduitId)!
       await this.handleCacheDispose(conduitId, instance)
-
-      this.cache.del(conduitId)
     }
-    this.cache.prune()
   }
 
   async monitor() {
