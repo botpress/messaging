@@ -1,3 +1,4 @@
+import './rewire'
 import express from 'express'
 import { Api } from './api'
 import { App } from './app'

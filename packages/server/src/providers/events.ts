@@ -1,5 +1,4 @@
-import { Emitter } from '../base/events'
-import { uuid } from '../base/types'
+import { Emitter, uuid } from '@botpress/messaging-base'
 import { Provider } from './types'
 
 export enum ProviderEvents {

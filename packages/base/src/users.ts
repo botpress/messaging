@@ -1,4 +1,4 @@
-import { uuid } from '../base/types'
+import { uuid } from './uuid'
 
 export interface User {
   id: uuid

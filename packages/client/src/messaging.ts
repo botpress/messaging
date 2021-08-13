@@ -9,6 +9,8 @@ import { UserClient } from './users'
 export class MessagingClient {
   http: AxiosInstance
   authHttp: AxiosInstance
+  auth?: MessagingAuth
+
   syncs: SyncClient
   health: HealthClient
   chat: ChatClient
@@ -22,6 +24,10 @@ export class MessagingClient {
     this.http = this.configureHttpClient(client, this.getAxiosConfig({ url }))
     this.authHttp = this.configureHttpClient(client, this.getAxiosConfig({ url, auth }))
 
+    if (auth) {
+      this.authenticate(auth.clientId, auth.clientToken)
+    }
+
     this.syncs = new SyncClient(this.http)
     this.health = new HealthClient(this.authHttp)
     this.chat = new ChatClient(this.authHttp)
@@ -30,25 +36,23 @@ export class MessagingClient {
     this.messages = new MessageClient(this.authHttp)
   }
 
-  private configureHttpClient(client: MessagingOptions['client'], config: AxiosRequestConfig) {
-    if (client) {
-      client.defaults = Object.assign(client.defaults, config)
+  public authenticate(clientId: string, clientToken: string) {
+    this.auth = { clientId, clientToken }
+    this.authHttp.defaults.headers['x-bp-messaging-client-id'] = clientId
+    this.authHttp.defaults.headers['x-bp-messaging-client-token'] = clientToken
+  }
 
+  private configureHttpClient(client: AxiosInstance | undefined, config: AxiosRequestConfig) {
+    if (client) {
+      client.defaults = { ...client.defaults, ...config }
       return client
     } else {
       return axios.create(config)
     }
   }
 
-  private getAxiosConfig({ url, auth }: Pick<MessagingOptions, 'url' | 'auth'>): AxiosRequestConfig {
-    const config: AxiosRequestConfig = { baseURL: `${url}/api`, headers: {} }
-
-    if (auth) {
-      config.headers['x-bp-messaging-client-id'] = auth.clientId
-      config.headers['x-bp-messaging-client-token'] = auth.clientToken
-    }
-
-    return config
+  private getAxiosConfig({ url }: MessagingOptions): AxiosRequestConfig {
+    return { baseURL: `${url}/api`, headers: {} }
   }
 }
 
@@ -56,10 +60,12 @@ export interface MessagingOptions {
   /** Base url of the messaging server */
   url: string
   /** Client authentication to access client owned resources. Optional */
-  auth?: {
-    clientId: string
-    clientToken: string
-  }
+  auth?: MessagingAuth
   /** A custom axios instance giving more control over the HTTP client used internally. Optional */
   client?: AxiosInstance
+}
+
+export interface MessagingAuth {
+  clientId: string
+  clientToken: string
 }

@@ -1,9 +1,9 @@
-import { uuid } from '../base/types'
+import { uuid } from './uuid'
 
 export interface Message {
   id: uuid
   conversationId: uuid
-  authorId: string | undefined
+  authorId: uuid | undefined
   sentOn: Date
   payload: any
 }

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { BatchingService } from './batching/service'
 import { CachingService } from './caching/service'
 import { ChannelService } from './channels/service'
