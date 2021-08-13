@@ -13,9 +13,9 @@
     "release": "node ./scripts/release",
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch",
-    "start": "cd packages/server && node dist/index.js",
-    "dev": "cd packages/server && yarn --silent && ts-node-dev --inspect --inspect-publish-uid=http --transpile-only src/index.ts",
-    "board": "cd packages/board && yarn dev",
+    "start": "yarn workspace @botpress/messaging-server start",
+    "dev": "yarn workspace @botpress/messaging-server dev",
+    "board": "yarn workspace @botpress/messaging-board dev",
     "test": "yarn workspace @botpress/messaging-server test"
   },
   "bin": "./packages/server/dist/index.js",
