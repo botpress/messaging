@@ -1,5 +1,4 @@
-import { Message } from '@botpress/messaging-client'
-import { Emitter } from './base/emitter'
+import { Emitter, Message } from '@botpress/messaging-client'
 
 export enum WebchatEvents {
   Setup = 'setup',

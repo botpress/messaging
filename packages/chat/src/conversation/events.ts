@@ -1,5 +1,4 @@
-import { Conversation } from '@botpress/messaging-client'
-import { Emitter } from '../base/emitter'
+import { Conversation, Emitter } from '@botpress/messaging-client'
 
 export enum ConversationEvents {
   Set = 'set'
