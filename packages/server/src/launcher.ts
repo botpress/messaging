@@ -1,3 +1,4 @@
+import './rewire'
 import clc from 'cli-color'
 import { Express } from 'express'
 import { Server } from 'http'
