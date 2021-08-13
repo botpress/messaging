@@ -19,7 +19,7 @@
     "@types/lodash": "^4.14.172",
     "@types/lru-cache": "^5.1.1",
     "@types/ms": "^0.7.31",
-    "@types/node": "^15.0.0",
+    "@types/node": "^12.18.3",
     "@types/redlock": "^4.0.2",
     "@types/uuid": "^8.3.1",
     "jest": "^27.0.6",
