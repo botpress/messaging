@@ -7,6 +7,7 @@ import { DiscordChannel } from './discord/channel'
 import { MessengerChannel } from './messenger/channel'
 import { SlackChannel } from './slack/channel'
 import { SmoochChannel } from './smooch/channel'
+import { SocketChannel } from './socket/channel'
 import { ChannelTable } from './table'
 import { TeamsChannel } from './teams/channel'
 import { TelegramChannel } from './telegram/channel'
@@ -35,7 +36,8 @@ export class ChannelService extends Service {
       new DiscordChannel(),
       new SmoochChannel(),
       new VonageChannel(),
-      new WebChannel()
+      new WebChannel(),
+      new SocketChannel()
     ]
 
     this.channelsByName = {}

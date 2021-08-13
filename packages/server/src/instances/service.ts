@@ -235,17 +235,28 @@ export class InstanceService extends Service {
     const { userId, conversationId } = await this.mappingService.getMapping(clientId, conduit.channelId, endpoint)
     const message = await this.messageService.create(conversationId, userId, endpoint.content)
 
+    await this.sendToWebhooks({
+      clientId,
+      userId,
+      conversationId,
+      message,
+      channel: this.channelService.getById(conduit.channelId).name
+    })
+  }
+
+  // TODO: move that somewhere else
+  async sendToWebhooks({ clientId, userId, conversationId, message, channel }: any) {
     const post: WebhookContent = {
       type: 'message',
       client: { id: clientId },
-      channel: { name: this.channelService.getById(conduit.channelId).name },
+      channel: { name: channel },
       user: { id: userId },
       conversation: { id: conversationId },
       message
     }
 
     if (this.loggingEnabled) {
-      instance.loggerIn.debug('Received message', post)
+      this.logger.debug('Received message', post)
     }
 
     void this.webhookBroadcaster.send(clientId, post)

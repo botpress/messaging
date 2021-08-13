@@ -2,12 +2,18 @@ import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
 import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
+import { ChatApi } from '../chat/api'
 import { ClientService } from '../clients/service'
 import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema } from './schema'
 import { ConversationService } from './service'
 
 export class ConversationApi extends ClientScopedApi {
-  constructor(router: Router, clients: ClientService, private conversations: ConversationService) {
+  constructor(
+    router: Router,
+    clients: ClientService,
+    private conversations: ConversationService,
+    private chat: ChatApi
+  ) {
     super(router, clients)
   }
 
@@ -91,6 +97,7 @@ export class ConversationApi extends ClientScopedApi {
       if (message.data.conversationId) {
         const conversation = await this.conversations.get(message.data.conversationId)
         if (conversation) {
+          this.chat.registerSocket(socket, conversation.id)
           socket.emit('message', {
             request: message.request,
             type: 'use-convo',
@@ -99,10 +106,12 @@ export class ConversationApi extends ClientScopedApi {
         }
       }
 
+      const conversation = await this.conversations.create(message.data.clientId, message.data.userId)
+      this.chat.registerSocket(socket, conversation.id)
       socket.emit('message', {
         request: message.request,
         type: 'use-convo',
-        data: await this.conversations.create(message.data.clientId, message.data.userId)
+        data: conversation
       })
     }
   }

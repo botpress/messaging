@@ -2,6 +2,7 @@ import { Conversation, Message, MessagingClient, User } from '@botpress/messagin
 import { WebchatConversation } from './conversation/system'
 import { WebchatEmitter, WebchatEvents, WebchatWatcher } from './events'
 import { WebchateLocale } from './locale/system'
+import { SocketEvents } from './socket/events'
 import { WebchatSocket } from './socket/system'
 import { WebchatStorage } from './storage/system'
 import { WebchatUser } from './user/system'
@@ -33,6 +34,12 @@ export class BotpressWebchat {
 
     this.locale.setup()
     await this.socket.setup()
+
+    this.socket.events.on(SocketEvents.Message, async (message) => {
+      if (message.type === 'message') {
+        void this.emitter.emit(WebchatEvents.Messages, [message.data])
+      }
+    })
 
     await this.setupUser()
     await this.setupConversation()

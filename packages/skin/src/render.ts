@@ -76,6 +76,10 @@ export class WebchatRenderer {
 
   private async handleMessages(messages: Message[]) {
     for (const message of messages) {
+      if (message?.payload?.type === 'typing') {
+        continue
+      }
+
       element('tr', this.tbodyMessages, (tr) => {
         element('td', tr, (td) => {
           text(message?.payload?.type, td)

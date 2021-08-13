@@ -4,6 +4,7 @@ import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
+import { InstanceService } from '../instances/service'
 import { CreateMsgSchema, DeleteMsgSchema, GetMsgSchema, ListMsgSchema } from './schema'
 import { MessageService } from './service'
 
@@ -12,7 +13,9 @@ export class MessageApi extends ClientScopedApi {
     router: Router,
     clients: ClientService,
     private conversations: ConversationService,
-    private messages: MessageService
+    private messages: MessageService,
+    // garbadge code, this shouldn't be here but whatever
+    private instances: InstanceService
   ) {
     super(router, clients)
   }
@@ -134,14 +137,22 @@ export class MessageApi extends ClientScopedApi {
 
   async handle(socket: Socket, message: SocketRequest<SocketCreateMessageRequest>) {
     if (message.type === 'create-message') {
-      const { conversationId, authorId, payload } = message.data
+      const { clientId, userId, conversationId, payload } = message.data
 
-      // TODO: safety checks
+      const msg = await this.messages.create(conversationId, userId, payload)
+
+      await this.instances.sendToWebhooks({
+        clientId,
+        userId,
+        conversationId,
+        message: msg,
+        channel: 'socket'
+      })
 
       socket.emit('message', {
         request: message.request,
         type: 'use-convo',
-        data: await this.messages.create(conversationId, authorId, payload)
+        data: msg
       })
     } else if (message.type === 'list-messages') {
       const { conversationId } = message.data
