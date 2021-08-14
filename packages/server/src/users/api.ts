@@ -3,6 +3,7 @@ import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
+import { AuthUserSocketSchema } from './schema'
 import { UserService } from './service'
 
 export class UserApi extends ClientScopedApi {
@@ -28,11 +29,15 @@ export class UserApi extends ClientScopedApi {
       })
     )
 
-    this.sockets.handle('users.auth', async (socket, message: any) => {
-      // TODO: safety
+    this.sockets.handle('users.auth', async (socket, message) => {
+      const { error } = AuthUserSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
 
-      const { clientId, userId } = message.data
+      const { clientId, userId, userToken } = message.data
 
+      // TODO: use user token to validate user
       const user = userId
         ? (await this.users.get(userId)) || (await this.users.create(clientId))
         : await this.users.create(clientId)

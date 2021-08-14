@@ -41,12 +41,12 @@ export class SocketManager {
     socket.on('message', async (data) => {
       await this.handleSocketMessage(socket, data)
     })
-    socket.on('disconnect', async (data) => {
-      await this.handleSocketDisconnect(socket, data)
+    socket.on('disconnect', async () => {
+      await this.handleSocketDisconnect(socket)
     })
   }
 
-  private async handleSocketMessage(socket: Socket.Socket, data: any) {
+  private async handleSocketMessage(socket: Socket.Socket, data: SocketRequest) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
       await this.handlers[data?.type]?.(socket, data)
@@ -55,7 +55,7 @@ export class SocketManager {
     }
   }
 
-  private async handleSocketDisconnect(socket: Socket.Socket, data: any) {
+  private async handleSocketDisconnect(socket: Socket.Socket) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
       this.sockets.delete(socket)
@@ -65,4 +65,10 @@ export class SocketManager {
   }
 }
 
-export type SocketHandler = (socket: Socket.Socket, data: any) => Promise<any>
+export type SocketHandler = (socket: Socket.Socket, data: SocketRequest) => Promise<any>
+
+export interface SocketRequest {
+  request: string
+  type: string
+  data: { [key: string]: string }
+}
