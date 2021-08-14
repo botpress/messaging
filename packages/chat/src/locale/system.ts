@@ -1,7 +1,7 @@
 export class WebchateLocale {
   public current!: string
 
-  setup() {
+  async setup() {
     this.current = navigator.language
   }
 }

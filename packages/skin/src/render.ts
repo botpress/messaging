@@ -1,5 +1,5 @@
 import { Message } from '@botpress/messaging-client'
-import { WebchatEvents, BotpressWebchat } from '@botpress/webchat'
+import { BotpressWebchat, MessagesEvents } from '@botpress/webchat'
 import { element, text } from './ui'
 
 export class WebchatRenderer {
@@ -58,7 +58,7 @@ export class WebchatRenderer {
 
           form.onsubmit = () => {
             if (input.value.trim().length) {
-              void this.webchat.send(input.value.trim())
+              void this.webchat.messages.send(input.value.trim())
             }
             input.value = ''
             return false
@@ -73,11 +73,11 @@ export class WebchatRenderer {
   }
 
   private listen() {
-    this.webchat.events.on(WebchatEvents.Messages, this.handleMessages.bind(this))
-    this.webchat.events.on(WebchatEvents.Send, this.handleSend.bind(this))
+    this.webchat.messages.events.on(MessagesEvents.Receive, this.handleReceive.bind(this))
+    this.webchat.messages.events.on(MessagesEvents.Send, this.handleSend.bind(this))
   }
 
-  private async handleMessages(messages: Message[]) {
+  private async handleReceive(messages: Message[]) {
     for (const message of messages) {
       if (message?.payload?.type === 'typing') {
         continue

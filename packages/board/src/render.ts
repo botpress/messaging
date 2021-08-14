@@ -1,4 +1,4 @@
-import { BotpressWebchat, ConversationEvents, ConversationSetEvent, WebchatEvents } from '@botpress/webchat'
+import { BotpressWebchat, ConversationEvents, ConversationSetEvent } from '@botpress/webchat'
 import { text, element } from '@botpress/webchat-skin'
 import { UserEvents, UserSetEvent } from '@botpress/webchat/src/user/events'
 
