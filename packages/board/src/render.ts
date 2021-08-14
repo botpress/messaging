@@ -1,4 +1,4 @@
-import { BotpressWebchat, ConversationEvents, ConversationSetEvent } from '@botpress/webchat'
+import { Webchat, ConversationEvents, ConversationSetEvent } from '@botpress/webchat'
 import { text, element } from '@botpress/webchat-skin'
 import { UserEvents, UserSetEvent } from '@botpress/webchat/src/user/events'
 
@@ -6,7 +6,7 @@ export class BoardRenderer {
   private textUserId!: Text
   private textConversationId!: Text
 
-  constructor(private parent: HTMLElement, private webchat: BotpressWebchat) {
+  constructor(private parent: HTMLElement, private webchat: Webchat) {
     this.make()
     this.listen()
   }

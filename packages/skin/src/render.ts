@@ -1,12 +1,12 @@
 import { Message } from '@botpress/messaging-client'
-import { BotpressWebchat, MessagesEvents } from '@botpress/webchat'
+import { Webchat, MessagesEvents } from '@botpress/webchat'
 import { element, text } from './ui'
 
 export class WebchatRenderer {
   private sectionMessage!: HTMLElement
   private tbodyMessages!: HTMLTableSectionElement
 
-  constructor(private parent: HTMLElement, private webchat: BotpressWebchat) {
+  constructor(private parent: HTMLElement, private webchat: Webchat) {
     this.make()
     this.listen()
   }

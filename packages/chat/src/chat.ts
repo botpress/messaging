@@ -6,7 +6,7 @@ import { WebchatSocket } from './socket/system'
 import { WebchatStorage } from './storage/system'
 import { WebchatUser } from './user/system'
 
-export class BotpressWebchat {
+export class Webchat {
   public readonly locale: WebchateLocale
   public readonly socket: WebchatSocket
   public readonly client: MessagingClient
