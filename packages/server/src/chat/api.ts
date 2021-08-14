@@ -1,6 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
-import { Socket } from 'socket.io'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
@@ -8,14 +6,14 @@ import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
 import { InstanceService } from '../instances/service'
 import { MessageService } from '../messages/service'
+import { SocketManager } from '../socket/manager'
 import { ChatReplySchema } from './schema'
 
 export class ChatApi extends ClientScopedApi {
-  private sockets: { [conversationId: string]: Socket } = {}
-
   constructor(
     router: Router,
     clients: ClientService,
+    private sockets: SocketManager,
     private channels: ChannelService,
     private conduits: ConduitService,
     private instances: InstanceService,
@@ -54,16 +52,11 @@ export class ChatApi extends ClientScopedApi {
           message = await this.instances.send(conduit.id, conversationId, payload)
         } else {
           message = await this.messages.create(conversationId, undefined, payload)
-          this.sockets[conversationId].send({ type: 'message', data: message })
+          this.sockets.get(conversation.id).send({ type: 'message', data: message })
         }
 
         res.send(message)
       })
     )
-  }
-
-  // TODO: this is terrible
-  registerSocket(socket: Socket, conversationId: uuid) {
-    this.sockets[conversationId] = socket
   }
 }

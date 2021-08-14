@@ -32,6 +32,7 @@ export class Api {
     this.chat = new ChatApi(
       this.router,
       this.app.clients,
+      this.sockets,
       this.app.channels,
       this.app.conduits,
       this.app.instances,
@@ -39,13 +40,7 @@ export class Api {
       this.app.messages
     )
     this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users)
-    this.conversations = new ConversationApi(
-      this.router,
-      this.app.clients,
-      this.sockets,
-      this.app.conversations,
-      this.chat
-    )
+    this.conversations = new ConversationApi(this.router, this.app.clients, this.sockets, this.app.conversations)
     this.messages = new MessageApi(
       this.router,
       this.app.clients,

@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
-import { ChatApi } from '../chat/api'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
 import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema } from './schema'
@@ -11,8 +10,7 @@ export class ConversationApi extends ClientScopedApi {
     router: Router,
     clients: ClientService,
     private sockets: SocketManager,
-    private conversations: ConversationService,
-    private chat: ChatApi
+    private conversations: ConversationService
   ) {
     super(router, clients)
   }
@@ -100,7 +98,7 @@ export class ConversationApi extends ClientScopedApi {
         ? (await this.conversations.get(conversationId)) || (await this.conversations.create(clientId, userId))
         : await this.conversations.create(clientId, userId)
 
-      this.chat.registerSocket(socket, conversation.id)
+      this.sockets.register(conversation.id, socket)
       this.sockets.reply(socket, message, conversation)
     })
   }

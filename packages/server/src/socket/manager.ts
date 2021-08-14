@@ -6,6 +6,7 @@ import { Logger } from '../logger/types'
 export class SocketManager {
   private logger = new Logger('Socket')
   private handlers: { [type: string]: SocketHandler } = {}
+  private sockets: { [key: string]: Socket.Socket } = {}
 
   async setup(server: Server) {
     const ws = new Socket.Server(server, { cors: { origin: '*' } })
@@ -21,6 +22,14 @@ export class SocketManager {
       request: message.request,
       data
     })
+  }
+
+  public get(key: string) {
+    return this.sockets[key]
+  }
+
+  public register(key: string, socket: Socket.Socket) {
+    this.sockets[key] = socket
   }
 
   private async handleSocketConnection(socket: Socket.Socket) {
