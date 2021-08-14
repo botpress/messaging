@@ -1,4 +1,4 @@
-import { SocketCom } from './com/com'
+import { SocketCom } from './com'
 import { MessagingSocketAuth } from './socket'
 
 export class BaseSocket {

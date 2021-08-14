@@ -9,7 +9,7 @@ export class WebchatLang {
 
   public extend(langs: any) {
     for (const [key, value] of Object.entries(langs)) {
-      this.translations[key] = { ...(this.translations[key] || {}), ...this.squash(langs[key]) }
+      this.translations[key] = { ...(this.translations[key] || {}), ...this.squash(value) }
     }
   }
 
