@@ -6,9 +6,8 @@ import { ConversationEmitter, ConversationEvents, ConversationWatcher } from './
 
 export class WebchatConversation {
   public readonly events: ConversationWatcher
-  public current?: Conversation
-
-  private emitter: ConversationEmitter
+  private readonly emitter: ConversationEmitter
+  private current?: Conversation
 
   constructor(
     private clientId: uuid,
@@ -21,16 +20,19 @@ export class WebchatConversation {
   }
 
   async setup() {
-    let conversation = this.storage.get<Conversation>('saved-conversation')
-
-    conversation = await this.socket.request<Conversation>('conversations.use', {
+    const saved = this.storage.get<Conversation>('saved-conversation')
+    const conversation = await this.socket.request<Conversation>('conversations.use', {
       clientId: this.clientId,
-      userId: this.user.current?.id,
-      conversationId: conversation?.id
+      userId: this.user.get()!.id,
+      conversationId: saved?.id
     })
-
     this.storage.set('saved-conversation', conversation)
+
     await this.set(conversation!)
+  }
+
+  get() {
+    return this.current
   }
 
   async set(value: Conversation) {

@@ -1,5 +1,5 @@
 import { MessagingClient } from '@botpress/messaging-client'
-import { BotpressWebchat } from '@botpress/webchat'
+import { Webchat } from '@botpress/webchat'
 import { WebchatRenderer } from '@botpress/webchat-skin'
 import { BoardRenderer } from './render'
 
@@ -17,7 +17,7 @@ const setup = async () => {
 
   localStorage.setItem('bp-board-client', JSON.stringify(clientCreds))
 
-  const webchat = new BotpressWebchat(url, clientCreds.id)
+  const webchat = new Webchat(url, clientCreds.id)
   new BoardRenderer(document.getElementById('board-debug')!, webchat)
   new WebchatRenderer(document.getElementById('webchat')!, webchat)
 

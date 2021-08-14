@@ -1,4 +1,6 @@
 export class WebchatStorage {
+  async setup() {}
+
   public get<T>(key: string): T | undefined {
     const stored = localStorage.getItem(this.getKey(key))
     if (!stored) {

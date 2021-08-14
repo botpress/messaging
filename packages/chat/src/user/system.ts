@@ -5,9 +5,8 @@ import { UserEmitter, UserEvents, UserWatcher } from './events'
 
 export class WebchatUser {
   public readonly events: UserWatcher
-  public current?: User
-
-  private emitter: UserEmitter
+  private readonly emitter: UserEmitter
+  private current?: User
 
   constructor(private clientId: uuid, private storage: WebchatStorage, private socket: WebchatSocket) {
     this.emitter = new UserEmitter()
@@ -15,16 +14,19 @@ export class WebchatUser {
   }
 
   async setup() {
-    let user = this.storage.get<User>('saved-user')
-
-    user = await this.socket.request<User>('users.auth', {
+    const saved = this.storage.get<User>('saved-user')
+    const user = await this.socket.request<User>('users.auth', {
       clientId: this.clientId,
-      userId: user?.id,
+      userId: saved?.id,
       userToken: 'abc123'
     })
-
     this.storage.set('saved-user', user)
+
     await this.set(user)
+  }
+
+  get() {
+    return this.current
   }
 
   async set(value: User) {
