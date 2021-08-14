@@ -21,24 +21,16 @@ export class UserApi extends ClientScopedApi {
       })
     )
 
-    this.sockets.handle('auth', async (socket, message: any) => {
-      if (message.data.userId) {
-        // TODO: check user token
-        const user = await this.users.get(message.data.userId)
-        if (user) {
-          socket.emit('message', {
-            request: message.request,
-            type: 'auth',
-            data: user
-          })
-        }
-      }
+    this.sockets.handle('users.auth', async (socket, message: any) => {
+      // TODO: safety
 
-      socket.emit('message', {
-        request: message.request,
-        type: 'auth',
-        data: await this.users.create(message.data.clientId)
-      })
+      const { clientId, userId } = message.data
+
+      const user = userId
+        ? (await this.users.get(userId)) || (await this.users.create(clientId))
+        : await this.users.create(clientId)
+
+      this.sockets.reply(socket, message, user)
     })
   }
 }

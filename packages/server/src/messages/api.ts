@@ -135,10 +135,13 @@ export class MessageApi extends ClientScopedApi {
       })
     )
 
-    this.sockets.handle('create-message', async (socket, message) => {
+    this.sockets.handle('messages.create', async (socket, message) => {
+      // TODO: safety
+
       const { clientId, userId, conversationId, payload } = message.data
 
       const msg = await this.messages.create(conversationId, userId, payload)
+      this.sockets.reply(socket, message, msg)
 
       await this.instances.sendToWebhooks({
         clientId,
@@ -147,24 +150,15 @@ export class MessageApi extends ClientScopedApi {
         message: msg,
         channel: 'socket'
       })
-
-      socket.emit('message', {
-        request: message.request,
-        type: 'use-convo',
-        data: msg
-      })
     })
 
-    this.sockets.handle('list-messages', async (socket, message) => {
+    this.sockets.handle('messages.list', async (socket, message) => {
+      // TODO: safety
+
       const { conversationId } = message.data
 
-      // TODO: safety checks
-
-      socket.emit('message', {
-        request: message.request,
-        type: 'list-messages',
-        data: await this.messages.listByConversationId(conversationId)
-      })
+      const messages = await this.messages.listByConversationId(conversationId)
+      this.sockets.reply(socket, message, messages)
     })
   }
 }

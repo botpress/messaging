@@ -49,7 +49,7 @@ export class BotpressWebchat {
   private async setupUser() {
     let user = this.storage.get<User>('saved-user')
 
-    user = await this.socket.request<User>('auth', {
+    user = await this.socket.request<User>('users.auth', {
       userId: user?.id,
       userToken: 'abc123',
       clientId: this.clientId
@@ -62,7 +62,7 @@ export class BotpressWebchat {
   private async setupConversation() {
     let conversation = this.storage.get<Conversation>('saved-conversation')
 
-    conversation = await this.socket.request<Conversation>('use-convo', {
+    conversation = await this.socket.request<Conversation>('conversations.use', {
       userId: this.user.current?.id,
       conversationId: conversation?.id,
       clientId: this.clientId
@@ -73,7 +73,7 @@ export class BotpressWebchat {
   }
 
   private async setupMessages() {
-    const messages = await this.socket.request<Message[]>('list-messages', {
+    const messages = await this.socket.request<Message[]>('messages.list', {
       clientId: this.clientId,
       userId: this.user.current?.id,
       conversationId: this.conversation.current?.id
@@ -89,7 +89,7 @@ export class BotpressWebchat {
 
     await this.emitter.emit(WebchatEvents.Send, [payload])
 
-    const message = await this.socket.request<Message>('create-message', {
+    const message = await this.socket.request<Message>('messages.create', {
       clientId: this.clientId,
       userId: this.user.current?.id,
       conversationId: this.conversation.current?.id,

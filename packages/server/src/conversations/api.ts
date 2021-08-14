@@ -91,26 +91,17 @@ export class ConversationApi extends ClientScopedApi {
       })
     )
 
-    this.sockets.handle('use-convo', async (socket, message) => {
-      if (message.data.conversationId) {
-        const conversation = await this.conversations.get(message.data.conversationId)
-        if (conversation) {
-          this.chat.registerSocket(socket, conversation.id)
-          socket.emit('message', {
-            request: message.request,
-            type: 'use-convo',
-            data: conversation
-          })
-        }
-      }
+    this.sockets.handle('conversations.use', async (socket, message) => {
+      // TODO: safety
 
-      const conversation = await this.conversations.create(message.data.clientId, message.data.userId)
+      const { clientId, userId, conversationId } = message.data
+
+      const conversation = conversationId
+        ? (await this.conversations.get(conversationId)) || (await this.conversations.create(clientId, userId))
+        : await this.conversations.create(clientId, userId)
+
       this.chat.registerSocket(socket, conversation.id)
-      socket.emit('message', {
-        request: message.request,
-        type: 'use-convo',
-        data: conversation
-      })
+      this.sockets.reply(socket, message, conversation)
     })
   }
 }

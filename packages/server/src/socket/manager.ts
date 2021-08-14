@@ -16,6 +16,13 @@ export class SocketManager {
     this.handlers[type] = callback
   }
 
+  public reply(socket: Socket.Socket, message: any, data: any) {
+    socket.send({
+      request: message.request,
+      data
+    })
+  }
+
   private async handleSocketConnection(socket: Socket.Socket) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
@@ -38,7 +45,7 @@ export class SocketManager {
   private async handleSocketMessage(socket: Socket.Socket, data: any) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
-      this.handlers[data?.type]?.(socket, data)
+      await this.handlers[data?.type]?.(socket, data)
     } catch (e) {
       this.logger.error(e, 'An error occured receiving a socket message', data)
     }
