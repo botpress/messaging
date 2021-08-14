@@ -16,6 +16,7 @@ import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
+import { SocketService } from './socket/service'
 import { SyncService } from './sync/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
@@ -42,6 +43,7 @@ export class App {
   instances: InstanceService
   syncs: SyncService
   health: HealthService
+  sockets: SocketService
 
   constructor() {
     this.logger = new LoggerService()
@@ -99,6 +101,7 @@ export class App {
       this.conduits,
       this.instances
     )
+    this.sockets = new SocketService(this.caching)
   }
 
   async setup() {
@@ -122,6 +125,7 @@ export class App {
     await this.mapping.setup()
     await this.instances.setup()
     await this.health.setup()
+    await this.sockets.setup()
   }
 
   async monitor() {

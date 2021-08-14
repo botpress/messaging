@@ -98,7 +98,6 @@ export class ConversationApi extends ClientScopedApi {
         ? (await this.conversations.get(conversationId)) || (await this.conversations.create(clientId, userId))
         : await this.conversations.create(clientId, userId)
 
-      this.sockets.register(conversation.id, socket)
       this.sockets.reply(socket, message, conversation)
     })
   }

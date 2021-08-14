@@ -2,10 +2,17 @@ import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
+import { SocketService } from '../socket/service'
 import { UserService } from './service'
 
 export class UserApi extends ClientScopedApi {
-  constructor(router: Router, clients: ClientService, private sockets: SocketManager, private users: UserService) {
+  constructor(
+    router: Router,
+    clients: ClientService,
+    private sockets: SocketManager,
+    private socketService: SocketService,
+    private users: UserService
+  ) {
     super(router, clients)
   }
 
@@ -30,6 +37,7 @@ export class UserApi extends ClientScopedApi {
         ? (await this.users.get(userId)) || (await this.users.create(clientId))
         : await this.users.create(clientId)
 
+      this.socketService.registerForUser(user.id, socket)
       this.sockets.reply(socket, message, user)
     })
   }

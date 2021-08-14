@@ -2,11 +2,13 @@ import clc from 'cli-color'
 import { Server } from 'http'
 import Socket from 'socket.io'
 import { Logger } from '../logger/types'
+import { SocketService } from './service'
 
 export class SocketManager {
   private logger = new Logger('Socket')
   private handlers: { [type: string]: SocketHandler } = {}
-  private sockets: { [key: string]: Socket.Socket } = {}
+
+  constructor(private sockets: SocketService) {}
 
   async setup(server: Server) {
     const ws = new Socket.Server(server, { cors: { origin: '*' } })
@@ -24,19 +26,12 @@ export class SocketManager {
     })
   }
 
-  public get(key: string) {
-    return this.sockets[key]
-  }
-
-  public register(key: string, socket: Socket.Socket) {
-    this.sockets[key] = socket
-  }
-
   private async handleSocketConnection(socket: Socket.Socket) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
 
       await this.setupSocket(socket)
+      this.sockets.create(socket)
     } catch (e) {
       this.logger.error(e, 'An error occurred during a socket connection')
     }
@@ -63,6 +58,7 @@ export class SocketManager {
   private async handleSocketDisconnect(socket: Socket.Socket, data: any) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
+      this.sockets.delete(socket)
     } catch (e) {
       this.logger.error(e, 'An error occured during a socket disconnect')
     }

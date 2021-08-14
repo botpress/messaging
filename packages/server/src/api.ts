@@ -26,20 +26,20 @@ export class Api {
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
-    this.sockets = new SocketManager()
+    this.sockets = new SocketManager(this.app.sockets)
     this.syncs = new SyncApi(this.router, this.app.config, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.app.clients, this.app.health)
     this.chat = new ChatApi(
       this.router,
       this.app.clients,
-      this.sockets,
       this.app.channels,
       this.app.conduits,
       this.app.instances,
       this.app.conversations,
-      this.app.messages
+      this.app.messages,
+      this.app.sockets
     )
-    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users)
+    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.sockets, this.app.users)
     this.conversations = new ConversationApi(this.router, this.app.clients, this.sockets, this.app.conversations)
     this.messages = new MessageApi(
       this.router,

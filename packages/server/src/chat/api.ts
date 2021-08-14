@@ -6,19 +6,19 @@ import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
 import { InstanceService } from '../instances/service'
 import { MessageService } from '../messages/service'
-import { SocketManager } from '../socket/manager'
+import { SocketService } from '../socket/service'
 import { ChatReplySchema } from './schema'
 
 export class ChatApi extends ClientScopedApi {
   constructor(
     router: Router,
     clients: ClientService,
-    private sockets: SocketManager,
     private channels: ChannelService,
     private conduits: ConduitService,
     private instances: InstanceService,
     private conversations: ConversationService,
-    private messages: MessageService
+    private messages: MessageService,
+    private sockets: SocketService
   ) {
     super(router, clients)
   }
@@ -52,7 +52,10 @@ export class ChatApi extends ClientScopedApi {
           message = await this.instances.send(conduit.id, conversationId, payload)
         } else {
           message = await this.messages.create(conversationId, undefined, payload)
-          this.sockets.get(conversation.id).send({ type: 'message', data: message })
+          const sockets = this.sockets.listByUser(conversation.userId)
+          for (const socket of sockets) {
+            socket.send({ type: 'message', data: message })
+          }
         }
 
         res.send(message)
