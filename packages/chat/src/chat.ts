@@ -1,5 +1,6 @@
 import { MessagingClient } from '@botpress/messaging-client'
 import { WebchatConversation } from './conversation/system'
+import { WebchatLang } from './lang/system'
 import { WebchateLocale } from './locale/system'
 import { WebchatMessages } from './messages/system'
 import { WebchatSocket } from './socket/system'
@@ -10,6 +11,7 @@ export class Webchat {
   public readonly client: MessagingClient
   public readonly storage: WebchatStorage
   public readonly locale: WebchateLocale
+  public readonly lang: WebchatLang
   public readonly socket: WebchatSocket
   public readonly user: WebchatUser
   public readonly conversation: WebchatConversation
@@ -19,6 +21,7 @@ export class Webchat {
     this.client = new MessagingClient({ url: this.url })
     this.storage = new WebchatStorage()
     this.locale = new WebchateLocale()
+    this.lang = new WebchatLang(this.locale)
     this.socket = new WebchatSocket(url)
     this.user = new WebchatUser(this.clientId, this.storage, this.socket)
     this.conversation = new WebchatConversation(this.clientId, this.storage, this.socket, this.user)
@@ -28,6 +31,7 @@ export class Webchat {
   public async setup() {
     await this.storage.setup()
     await this.locale.setup()
+    await this.lang.setup()
     await this.socket.setup()
     await this.user.setup()
     await this.conversation.setup()

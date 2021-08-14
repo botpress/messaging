@@ -1,5 +1,6 @@
 import { Message } from '@botpress/messaging-client'
 import { Webchat, MessagesEvents } from '@botpress/webchat'
+import lang from './lang'
 import { element, text } from './ui'
 
 export class WebchatRenderer {
@@ -12,6 +13,8 @@ export class WebchatRenderer {
   }
 
   private make() {
+    this.webchat.lang.extend(lang)
+
     element('div', this.parent, (div) => {
       this.makeMessageTable(div)
       this.makeTextbox(div)
@@ -49,7 +52,7 @@ export class WebchatRenderer {
 
         element('label', form, (label) => {
           label.htmlFor = 'bp-message-input'
-          text('Type a message', label)
+          text(this.webchat.lang.tr('webchat.typeMessage'), label)
         })
         element('br', form)
         element('input', form, (input) => {
@@ -66,7 +69,7 @@ export class WebchatRenderer {
         })
         element('button', form, (button) => {
           button.className = 'bp-send-button'
-          text('Send', button)
+          text(this.webchat.lang.tr('webchat.send'), button)
         })
       })
     })
@@ -91,7 +94,7 @@ export class WebchatRenderer {
           text(message?.payload?.text, td)
         })
         element('td', tr, (td) => {
-          text(message?.sentOn && new Date(message.sentOn).toLocaleTimeString(this.webchat.locale.current), td)
+          text(this.webchat.lang.date(message?.sentOn), td)
         })
       })
     }

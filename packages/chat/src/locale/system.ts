@@ -1,7 +1,13 @@
 export class WebchateLocale {
   public current!: string
 
-  async setup() {
+  constructor() {
     this.current = navigator.language
+  }
+
+  async setup() {}
+
+  getFamily() {
+    return this.current?.split('-')[0]
   }
 }

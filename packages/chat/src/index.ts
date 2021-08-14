@@ -1,5 +1,6 @@
 export * from './conversation/events'
 export * from './conversation/system'
+export * from './lang/system'
 export * from './locale/system'
 export * from './messages/events'
 export * from './messages/system'
