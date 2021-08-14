@@ -1,0 +1,19 @@
+name: Build
+on: [pull_request]
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.18.3'
+      - name: Fetch Node Packages
+        run: |
+          yarn
+      - name: Build Messaging
+        run: |
+          yarn build
