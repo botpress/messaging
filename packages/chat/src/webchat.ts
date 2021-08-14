@@ -56,7 +56,7 @@ export class BotpressWebchat {
     })
 
     this.storage.set('saved-user', user)
-    this.user.current = user
+    await this.user.set(user)
   }
 
   private async setupConversation() {
