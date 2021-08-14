@@ -5,7 +5,14 @@ import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
 import { InstanceService } from '../instances/service'
 import { SocketManager } from '../socket/manager'
-import { CreateMsgSchema, DeleteMsgSchema, GetMsgSchema, ListMsgSchema } from './schema'
+import {
+  CreateMsgSchema,
+  CreateMsgSocketSchema,
+  DeleteMsgSchema,
+  GetMsgSchema,
+  ListMsgSchema,
+  ListMsgSocketSchema
+} from './schema'
 import { MessageService } from './service'
 
 export class MessageApi extends ClientScopedApi {
@@ -136,9 +143,13 @@ export class MessageApi extends ClientScopedApi {
     )
 
     this.sockets.handle('messages.create', async (socket, message) => {
-      // TODO: safety
+      const { error } = CreateMsgSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
 
       const { clientId, userId, conversationId, payload } = message.data
+      // TODO: safety
 
       const msg = await this.messages.create(conversationId, userId, payload)
       this.sockets.reply(socket, message, msg)
@@ -153,11 +164,15 @@ export class MessageApi extends ClientScopedApi {
     })
 
     this.sockets.handle('messages.list', async (socket, message) => {
+      const { error } = ListMsgSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
+
+      const { conversationId, limit } = message.data
       // TODO: safety
 
-      const { conversationId } = message.data
-
-      const messages = await this.messages.listByConversationId(conversationId)
+      const messages = await this.messages.listByConversationId(conversationId, limit)
       this.sockets.reply(socket, message, messages)
     })
   }

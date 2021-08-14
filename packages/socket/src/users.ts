@@ -9,7 +9,7 @@ export class UserSocket extends BaseSocket {
     })
 
     this.auths.userId = user.id
-    this.auths.userToken = (<any>user).token || userToken
+    // this.auths.userToken = (<any>user).token || userToken
 
     return user
   }

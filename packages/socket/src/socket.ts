@@ -30,5 +30,4 @@ export interface MessagingSocketOptions {
 export interface MessagingSocketAuth {
   clientId: uuid
   userId?: uuid
-  userToken?: string
 }

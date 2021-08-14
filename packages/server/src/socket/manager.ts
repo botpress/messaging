@@ -19,7 +19,7 @@ export class SocketManager {
     this.handlers[type] = callback
   }
 
-  public reply(socket: Socket.Socket, message: any, data: any) {
+  public reply(socket: Socket.Socket, message: SocketRequest, data: any) {
     socket.send({
       request: message.request,
       data
@@ -70,5 +70,5 @@ export type SocketHandler = (socket: Socket.Socket, data: SocketRequest) => Prom
 export interface SocketRequest {
   request: string
   type: string
-  data: { [key: string]: string }
+  data: any
 }

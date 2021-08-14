@@ -37,7 +37,7 @@ export class WebchatMessages {
     }
     await this.emitter.emit(MessagesEvents.Send, [payload])
 
-    const message = await this.socket.messages.create(this.conversation.get()!.id, this.user.get()!.id, payload)
+    const message = await this.socket.messages.create(this.conversation.get()!.id, payload)
     await this.emitter.emit(MessagesEvents.Receive, [message])
     return message
   }
