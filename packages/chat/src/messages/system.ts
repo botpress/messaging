@@ -1,7 +1,6 @@
 import { Message, uuid } from '@botpress/messaging-base'
+import { MessagingSocket, SocketComEvents } from '@botpress/messaging-socket'
 import { WebchatConversation } from '../conversation/system'
-import { SocketEvents } from '../socket/events'
-import { WebchatSocket } from '../socket/system'
 import { WebchatUser } from '../user/system'
 import { MessagesEmitter, MessagesEvents, MessagesWatcher } from './events'
 
@@ -11,7 +10,7 @@ export class WebchatMessages {
 
   constructor(
     private clientId: uuid,
-    private socket: WebchatSocket,
+    private socket: MessagingSocket,
     private user: WebchatUser,
     private conversation: WebchatConversation
   ) {
@@ -25,7 +24,7 @@ export class WebchatMessages {
   }
 
   private async setupMessageReception() {
-    this.socket.events.on(SocketEvents.Message, async (message) => {
+    this.socket.com.events.on(SocketComEvents.Message, async (message) => {
       if (message.type === 'message') {
         void this.emitter.emit(MessagesEvents.Receive, [message.data])
       }
@@ -33,7 +32,7 @@ export class WebchatMessages {
   }
 
   private async setupInitialMessages() {
-    const messages = await this.socket.request<Message[]>('messages.list', {
+    const messages = await this.socket.com.request<Message[]>('messages.list', {
       clientId: this.clientId,
       userId: this.user.get()?.id,
       conversationId: this.conversation.get()!.id
@@ -48,7 +47,7 @@ export class WebchatMessages {
     }
     await this.emitter.emit(MessagesEvents.Send, [payload])
 
-    const message = await this.socket.request<Message>('messages.create', {
+    const message = await this.socket.com.request<Message>('messages.create', {
       clientId: this.clientId,
       userId: this.user.get()!.id,
       conversationId: this.conversation.get()!.id,

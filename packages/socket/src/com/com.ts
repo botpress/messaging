@@ -1,19 +1,20 @@
 import io, { Socket } from 'socket.io-client'
-import { SocketEmitter, SocketEvents, SocketWatcher } from './events'
+import { SocketComEmitter, SocketComEvents, SocketComWatcher } from './events'
 
-export class WebchatSocket {
-  public readonly events: SocketWatcher
+export class SocketCom {
+  public readonly events: SocketComWatcher
 
-  private emitter: SocketEmitter
+  private emitter: SocketComEmitter
   private socket!: Socket
   private pending: { [request: string]: (value: any) => void } = {}
 
   constructor(private url: string) {
-    this.emitter = new SocketEmitter()
+    this.emitter = new SocketComEmitter()
     this.events = this.emitter
+    this.setup()
   }
 
-  async setup() {
+  setup() {
     this.socket = io(this.url.replace('http://', 'ws://').replace('https://', 'ws://'), {
       transports: ['websocket']
     })
@@ -28,7 +29,7 @@ export class WebchatSocket {
         delete this.pending[data.request]
       }
 
-      await this.emitter.emit(SocketEvents.Message, data)
+      await this.emitter.emit(SocketComEvents.Message, data)
     })
   }
 

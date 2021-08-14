@@ -1,5 +1,5 @@
 import { Conversation, uuid } from '@botpress/messaging-base'
-import { WebchatSocket } from '../socket/system'
+import { MessagingSocket } from '@botpress/messaging-socket'
 import { WebchatStorage } from '../storage/system'
 import { WebchatUser } from '../user/system'
 import { ConversationEmitter, ConversationEvents, ConversationWatcher } from './events'
@@ -12,7 +12,7 @@ export class WebchatConversation {
   constructor(
     private clientId: uuid,
     private storage: WebchatStorage,
-    private socket: WebchatSocket,
+    private socket: MessagingSocket,
     private user: WebchatUser
   ) {
     this.emitter = new ConversationEmitter()
@@ -21,7 +21,7 @@ export class WebchatConversation {
 
   async setup() {
     const saved = this.storage.get<Conversation>('saved-conversation')
-    const conversation = await this.socket.request<Conversation>('conversations.use', {
+    const conversation = await this.socket.com.request<Conversation>('conversations.use', {
       clientId: this.clientId,
       userId: this.user.get()!.id,
       conversationId: saved?.id
