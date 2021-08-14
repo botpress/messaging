@@ -7,16 +7,16 @@ import { WebchatStorage } from './storage/system'
 import { WebchatUser } from './user/system'
 
 export class Webchat {
-  public readonly socket: MessagingSocket
   public readonly storage: WebchatStorage
   public readonly locale: WebchateLocale
   public readonly lang: WebchatLang
+  public readonly socket: MessagingSocket
   public readonly user: WebchatUser
   public readonly conversation: WebchatConversation
   public readonly messages: WebchatMessages
 
   constructor(private url: string, public readonly clientId: string) {
-    this.socket = new MessagingSocket(this.url)
+    this.socket = new MessagingSocket({ url, manualConnect: true })
     this.storage = new WebchatStorage()
     this.locale = new WebchateLocale()
     this.lang = new WebchatLang(this.locale)
@@ -29,6 +29,7 @@ export class Webchat {
     await this.storage.setup()
     await this.locale.setup()
     await this.lang.setup()
+    await this.socket.com.connect()
     await this.user.setup()
     await this.conversation.setup()
     await this.messages.setup()

@@ -8,13 +8,16 @@ export class SocketCom {
   private socket!: Socket
   private pending: { [request: string]: (value: any) => void } = {}
 
-  constructor(private url: string) {
+  constructor(private url: string, private manualConnect: boolean) {
     this.emitter = new SocketComEmitter()
     this.events = this.emitter
-    this.setup()
+
+    if (!this.manualConnect) {
+      this.connect()
+    }
   }
 
-  setup() {
+  connect() {
     this.socket = io(this.url.replace('http://', 'ws://').replace('https://', 'ws://'), {
       transports: ['websocket']
     })
