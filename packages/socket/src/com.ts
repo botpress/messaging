@@ -1,5 +1,5 @@
+import { Emitter } from '@botpress/messaging-base'
 import io, { Socket } from 'socket.io-client'
-import { SocketComEmitter, SocketComEvents, SocketComWatcher } from './events'
 
 export class SocketCom {
   public readonly events: SocketComWatcher
@@ -56,3 +56,18 @@ export class SocketCom {
     return str
   }
 }
+
+export enum SocketComEvents {
+  Message = 'message'
+}
+
+export interface SocketComMessageEvent {
+  type: string
+  data: any
+}
+
+export class SocketComEmitter extends Emitter<{
+  [SocketComEvents.Message]: SocketComMessageEvent
+}> {}
+
+export type SocketComWatcher = Omit<SocketComEmitter, 'emit'>

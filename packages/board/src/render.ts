@@ -26,7 +26,7 @@ export class BoardRenderer {
           element('code', li, (mark) => {
             text('clientId ', mark)
           })
-          text(this.webchat.clientId, li)
+          text(this.webchat.socket.auth.clientId, li)
         })
         element('li', ul, (li) => {
           element('code', li, (mark) => {
