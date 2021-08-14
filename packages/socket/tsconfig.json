@@ -2,13 +2,7 @@
   // Manage references here
   "references": [
     {
-      "path": "../chat"
-    },
-    {
-      "path": "../skin"
-    },
-    {
-      "path": "../client"
+      "path": "../base"
     }
   ],
 
@@ -19,9 +13,10 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // Specific settings for frontend
+    // Specific settings for npm package
     "target": "es6",
-    "lib": ["dom"]
+    "declaration": true,
+    "sourceMap": false
   },
   "exclude": ["dist", "node_modules"]
 }

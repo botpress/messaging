@@ -1,4 +1,4 @@
-import { Emitter } from '@botpress/messaging-client'
+import { Emitter } from '@botpress/messaging-base'
 
 export enum SocketEvents {
   Message = 'message'

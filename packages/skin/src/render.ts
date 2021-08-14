@@ -1,4 +1,4 @@
-import { Message } from '@botpress/messaging-client'
+import { Message } from '@botpress/messaging-base'
 import { Webchat, MessagesEvents } from '@botpress/webchat'
 import lang from './lang'
 import { element, text } from './ui'

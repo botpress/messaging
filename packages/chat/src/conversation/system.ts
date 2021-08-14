@@ -1,4 +1,4 @@
-import { Conversation, uuid } from '@botpress/messaging-client'
+import { Conversation, uuid } from '@botpress/messaging-base'
 import { WebchatSocket } from '../socket/system'
 import { WebchatStorage } from '../storage/system'
 import { WebchatUser } from '../user/system'
