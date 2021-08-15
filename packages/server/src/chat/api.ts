@@ -43,11 +43,10 @@ export class ChatApi extends ClientScopedApi {
           return res.sendStatus(403)
         }
 
-        const channelId = this.channels.getByName(channel).id
-
         // TODO: this is terrible
         let message
         if (channel !== 'socket') {
+          const channelId = this.channels.getByName(channel).id
           const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
           message = await this.instances.send(conduit.id, conversationId, payload)
         } else {
