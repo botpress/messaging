@@ -11,6 +11,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.18.3'
+          cache: 'yarn'
       - name: Fetch Node Packages
         run: |
           yarn

@@ -10,6 +10,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.18.3'
+          cache: 'yarn'
       - name: Git Unshalow
         run: git fetch --prune --unshallow
       - name: Fetch Node Packages
