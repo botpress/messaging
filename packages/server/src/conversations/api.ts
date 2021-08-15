@@ -2,7 +2,8 @@ import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
-import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema } from './schema'
+import { SocketService } from '../socket/service'
+import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema, UseConvoSocketSchema } from './schema'
 import { ConversationService } from './service'
 
 export class ConversationApi extends ClientScopedApi {
@@ -10,7 +11,8 @@ export class ConversationApi extends ClientScopedApi {
     router: Router,
     clients: ClientService,
     private sockets: SocketManager,
-    private conversations: ConversationService
+    private conversations: ConversationService,
+    private socketService: SocketService
   ) {
     super(router, clients)
   }
@@ -90,13 +92,18 @@ export class ConversationApi extends ClientScopedApi {
     )
 
     this.sockets.handle('conversations.use', async (socket, message) => {
-      // TODO: safety
+      const { error } = UseConvoSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
 
-      const { clientId, userId, conversationId } = message.data
+      const { clientId, userId } = this.socketService.getUserInfo(socket)
+      const { conversationId } = message.data
 
-      const conversation = conversationId
-        ? (await this.conversations.get(conversationId)) || (await this.conversations.create(clientId, userId))
-        : await this.conversations.create(clientId, userId)
+      let conversation = await this.conversations.get(conversationId)
+      if (!conversation || conversation.userId !== userId) {
+        conversation = await this.conversations.create(clientId, userId)
+      }
 
       this.sockets.reply(socket, message, conversation)
     })

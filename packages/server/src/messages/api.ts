@@ -5,6 +5,7 @@ import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
 import { InstanceService } from '../instances/service'
 import { SocketManager } from '../socket/manager'
+import { SocketService } from '../socket/service'
 import {
   CreateMsgSchema,
   CreateMsgSocketSchema,
@@ -23,7 +24,8 @@ export class MessageApi extends ClientScopedApi {
     private conversations: ConversationService,
     private messages: MessageService,
     // garbadge code, this shouldn't be here but whatever
-    private instances: InstanceService
+    private instances: InstanceService,
+    private socketService: SocketService
   ) {
     super(router, clients)
   }
@@ -148,8 +150,18 @@ export class MessageApi extends ClientScopedApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
-      const { clientId, userId, conversationId, payload } = message.data
-      // TODO: safety
+      const { clientId, userId } = this.socketService.getUserInfo(socket)
+      const { conversationId, payload } = message.data
+      const conversation = await this.conversations.get(conversationId)
+
+      if (!conversation) {
+        return this.sockets.reply(socket, message, { error: true, message: 'conversation does not exist' })
+      } else if (conversation.userId !== userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'conversation does not belong to that user'
+        })
+      }
 
       const msg = await this.messages.create(conversationId, userId, payload)
       this.sockets.reply(socket, message, msg)
@@ -169,8 +181,18 @@ export class MessageApi extends ClientScopedApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
+      const { userId } = this.socketService.getUserInfo(socket)
       const { conversationId, limit } = message.data
-      // TODO: safety
+      const conversation = await this.conversations.get(conversationId)
+
+      if (!conversation) {
+        return this.sockets.reply(socket, message, { error: true, message: 'conversation does not exist' })
+      } else if (conversation.userId !== userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'conversation does not belong to that user'
+        })
+      }
 
       const messages = await this.messages.listByConversationId(conversationId, limit)
       this.sockets.reply(socket, message, messages)

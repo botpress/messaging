@@ -101,7 +101,7 @@ export class App {
       this.conduits,
       this.instances
     )
-    this.sockets = new SocketService(this.caching)
+    this.sockets = new SocketService(this.caching, this.users)
   }
 
   async setup() {

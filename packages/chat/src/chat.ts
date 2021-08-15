@@ -16,7 +16,7 @@ export class Webchat {
   public readonly messages: WebchatMessages
 
   constructor(url: string, clientId: string) {
-    this.socket = new MessagingSocket({ url, auth: { clientId }, manualConnect: true })
+    this.socket = new MessagingSocket({ url, clientId, manualConnect: true })
     this.storage = new WebchatStorage()
     this.locale = new WebchateLocale()
     this.lang = new WebchatLang(this.locale)

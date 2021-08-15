@@ -1,10 +1,9 @@
 import { SocketCom } from './com'
-import { MessagingSocketAuth } from './socket'
 
 export class BaseSocket {
-  constructor(protected com: SocketCom, protected auths: MessagingSocketAuth) {}
+  constructor(protected com: SocketCom) {}
 
   protected request<T>(type: string, data: any) {
-    return this.com.request<T>(type, { ...this.auths, ...data })
+    return this.com.request<T>(type, data)
   }
 }

@@ -5,29 +5,23 @@ import { MessageSocket } from './messages'
 import { UserSocket } from './users'
 
 export class MessagingSocket {
+  public readonly clientId: uuid
   public readonly com: SocketCom
   public readonly users: UserSocket
   public readonly conversations: ConversationSocket
   public readonly messages: MessageSocket
 
-  public readonly auth: MessagingSocketAuth
-
   constructor(options: MessagingSocketOptions) {
-    this.auth = { ...options.auth }
+    this.clientId = options.clientId
     this.com = new SocketCom(options.url, options.manualConnect)
-    this.users = new UserSocket(this.com, this.auth)
-    this.conversations = new ConversationSocket(this.com, this.auth)
-    this.messages = new MessageSocket(this.com, this.auth)
+    this.users = new UserSocket(this.com, this.clientId)
+    this.conversations = new ConversationSocket(this.com)
+    this.messages = new MessageSocket(this.com)
   }
 }
 
 export interface MessagingSocketOptions {
   url: string
-  auth: MessagingSocketAuth
-  manualConnect: boolean
-}
-
-export interface MessagingSocketAuth {
   clientId: uuid
-  userId?: uuid
+  manualConnect: boolean
 }

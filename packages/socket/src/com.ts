@@ -6,7 +6,7 @@ export class SocketCom {
 
   private emitter: SocketComEmitter
   private socket!: Socket
-  private pending: { [request: string]: (value: any) => void } = {}
+  private pending: { [request: string]: { resolve: (value: any) => void; reject: (reason?: any) => void } } = {}
 
   constructor(private url: string, private manualConnect: boolean) {
     this.emitter = new SocketComEmitter()
@@ -26,20 +26,24 @@ export class SocketCom {
       this.socket.send({ type: 'visit' })
     })
 
-    this.socket.on('message', async (data) => {
-      if (this.pending[data.request]) {
-        this.pending[data.request](data.data)
-        delete this.pending[data.request]
+    this.socket.on('message', async (message) => {
+      if (this.pending[message.request]) {
+        if (message.data.error) {
+          this.pending[message.request].reject(message.data.message)
+        } else {
+          this.pending[message.request].resolve(message.data)
+        }
+        delete this.pending[message.request]
       }
 
-      await this.emitter.emit(SocketComEvents.Message, data)
+      await this.emitter.emit(SocketComEvents.Message, message)
     })
   }
 
   async request<T>(type: string, data: any): Promise<T> {
     const request = this.random(32)
-    const promise = new Promise<T>((resolve) => {
-      this.pending[request] = resolve
+    const promise = new Promise<T>((resolve, reject) => {
+      this.pending[request] = { resolve, reject }
     })
 
     this.socket.send({ request, type, data })

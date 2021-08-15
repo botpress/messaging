@@ -42,7 +42,7 @@ export class UserApi extends ClientScopedApi {
         ? (await this.users.get(userId)) || (await this.users.create(clientId))
         : await this.users.create(clientId)
 
-      this.socketService.registerForUser(user.id, socket)
+      await this.socketService.registerForUser(socket, user.id)
       this.sockets.reply(socket, message, user)
     })
   }

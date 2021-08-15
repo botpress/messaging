@@ -4,6 +4,7 @@ import { Socket } from 'socket.io'
 import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
+import { UserService } from '../users/service'
 
 export class SocketService extends Service {
   private sockets: { [socketId: string]: SocketState | undefined } = {}
@@ -11,7 +12,7 @@ export class SocketService extends Service {
   private socketsByUserId: { [userId: string]: Socket[] } = {}
   private cacheByUserId!: ServerCache<uuid, Socket[]>
 
-  constructor(private cachingService: CachingService) {
+  constructor(private cachingService: CachingService, private userService: UserService) {
     super()
   }
 
@@ -20,23 +21,34 @@ export class SocketService extends Service {
   }
 
   public create(socket: Socket) {
-    this.sockets[socket.id] = { userLinks: [] }
+    this.sockets[socket.id] = {}
   }
 
   public delete(socket: Socket) {
     const state = this.sockets[socket.id]!
 
-    for (const userId of state.userLinks) {
-      _.remove(this.socketsByUserId[userId], (x) => x.id === socket.id)
-      this.cacheByUserId.del(userId)
+    if (state.userId && this.socketsByUserId[state.userId]) {
+      _.remove(this.socketsByUserId[state.userId], (x) => x.id === socket.id)
+      this.cacheByUserId.del(state.userId)
     }
 
     this.sockets[socket.id] = undefined
   }
 
-  public registerForUser(userId: uuid, socket: Socket) {
+  public getUserInfo(socket: Socket) {
+    const state = this.sockets[socket.id]
+    return {
+      clientId: state!.clientId!,
+      userId: state!.userId!
+    }
+  }
+
+  public async registerForUser(socket: Socket, userId: uuid) {
+    const user = await this.userService.get(userId)
+
     const state = this.sockets[socket.id]!
-    state.userLinks.push(userId)
+    state.userId = userId
+    state.clientId = user!.clientId
 
     if (!this.socketsByUserId[userId]) {
       this.socketsByUserId[userId] = []
@@ -57,5 +69,6 @@ export class SocketService extends Service {
 }
 
 export interface SocketState {
-  userLinks: uuid[]
+  clientId?: uuid
+  userId?: uuid
 }
