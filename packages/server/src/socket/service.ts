@@ -8,6 +8,7 @@ import { UserService } from '../users/service'
 
 export class SocketService extends Service {
   private sockets: { [socketId: string]: SocketState | undefined } = {}
+  private cache!: ServerCache<string, SocketState>
 
   private socketsByUserId: { [userId: string]: Socket[] } = {}
   private cacheByUserId!: ServerCache<uuid, Socket[]>
@@ -17,6 +18,7 @@ export class SocketService extends Service {
   }
 
   async setup() {
+    this.cache = await this.cachingService.newServerCache('cache_socket_states')
     this.cacheByUserId = await this.cachingService.newServerCache('cache_sockets_by_user_id')
   }
 
@@ -33,14 +35,18 @@ export class SocketService extends Service {
     }
 
     this.sockets[socket.id] = undefined
+    this.cache.del(socket.id)
   }
 
-  public getUserInfo(socket: Socket) {
-    const state = this.sockets[socket.id]
-    return {
-      clientId: state!.clientId!,
-      userId: state!.userId!
+  public getUserInfo(socket: Socket): UserInfo {
+    const cached = this.cache.get(socket.id)
+    if (cached) {
+      return cached as UserInfo
     }
+
+    const state = this.sockets[socket.id]!
+    this.cache.set(socket.id, state)
+    return state as UserInfo
   }
 
   public async registerForUser(socket: Socket, userId: uuid) {
@@ -71,4 +77,9 @@ export class SocketService extends Service {
 export interface SocketState {
   clientId?: uuid
   userId?: uuid
+}
+
+export interface UserInfo {
+  clientId: uuid
+  userId: uuid
 }
