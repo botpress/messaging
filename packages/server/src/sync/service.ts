@@ -1,4 +1,5 @@
 import { SyncChannels, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook, uuid } from '@botpress/messaging-base'
+import axios from 'axios'
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
@@ -198,9 +199,16 @@ export class SyncService extends Service {
       const oldWebhookIndex = oldWebhooks.findIndex((x) => x.url === webhook.url)
 
       if (oldWebhookIndex < 0) {
-        const token = await this.webhooks.generateToken()
-        const newToken = await this.webhooks.create(clientId, token, webhook.url)
-        webhooksWithTokens.push({ url: newToken.url, token: newToken.token })
+        try {
+          await axios.options(webhook.url)
+
+          const token = await this.webhooks.generateToken()
+          const newToken = await this.webhooks.create(clientId, token, webhook.url)
+          webhooksWithTokens.push({ url: newToken.url, token: newToken.token })
+        } catch {
+          // TODO: Send this info back to the user
+          this.logger.warn(`Webhook with url "${webhook.url}" cannot be reached. Skipping...`)
+        }
       } else {
         const oldWebhook = oldWebhooks[oldWebhookIndex]
         webhooksWithTokens.push({ url: oldWebhook.url, token: oldWebhook.token })

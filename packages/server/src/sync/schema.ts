@@ -2,7 +2,7 @@ import Joi from 'joi'
 import { Channel } from '../channels/base/channel'
 
 const SyncWebhookSchema = Joi.object({
-  url: Joi.string().required(),
+  url: Joi.string().uri().required(),
   token: Joi.string()
 })
 
