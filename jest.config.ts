@@ -12,23 +12,14 @@ const config: Config.InitialOptions = {
       statements: 60
     }
   }*/
-  collectCoverageFrom: ['<rootDir>/packages/**/src/**/*.ts'],
-  cacheDirectory: '.jest/cache',
+
   projects: [
     {
       testMatch: ['<rootDir>/packages/server/test/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: tsjPreset.transform,
-      clearMocks: true,
-      /*moduleNameMapper: {
-        '^botpress/messaging-(.*)$': '<rootDir>/../$1/src'
-      },*/
-      globals: {
-        'ts-jest': {
-          tsconfig: '<rootDir>/packages/server/tsconfig.json'
-        }
-      }
+      clearMocks: true
     }
   ]
 }
