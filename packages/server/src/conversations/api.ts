@@ -98,9 +98,9 @@ export class ConversationApi extends ClientScopedApi {
       }
 
       const { clientId, userId } = this.socketService.getUserInfo(socket)
-      const { conversationId } = message.data
+      const { conversationId }: { conversationId?: string } = message.data
 
-      let conversation = await this.conversations.get(conversationId)
+      let conversation = conversationId && (await this.conversations.get(conversationId))
       if (!conversation || conversation.userId !== userId) {
         conversation = await this.conversations.create(clientId, userId)
       }
