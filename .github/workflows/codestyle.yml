@@ -1,15 +1,16 @@
 name: Codestyle
 on: [pull_request]
 jobs:
-  run_prettier:
+  prettier:
     name: Run Prettier on codebase
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: '12.18.3'
+          cache: 'yarn'
       - name: Install Dependencies
         run: |
           yarn
@@ -22,12 +23,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
           node-version: '12.18.3'
+          cache: 'yarn'
       - name: Install Dependencies
         run: |
-          yarn
+          yarn --frozen-lockfile
       - name: Run ESLint
         run: |
           yarn eslint

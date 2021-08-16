@@ -10,11 +10,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.18.3'
+          cache: 'yarn'
       - name: Git Unshalow
         run: git fetch --prune --unshallow
       - name: Fetch Node Packages
         run: |
-          yarn
+          yarn --frozen-lockfile
       - name: Get Previous Tag
         id: previous_tag
         uses: 'WyriHaximus/github-action-get-previous-tag@v1'
