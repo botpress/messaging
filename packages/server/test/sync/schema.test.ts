@@ -1,5 +1,4 @@
 import cloneDeep from 'lodash/cloneDeep'
-import omit from 'lodash/omit'
 
 import { ChannelService } from '../../src/channels/service'
 import { ConfigService } from '../../src/config/service'
