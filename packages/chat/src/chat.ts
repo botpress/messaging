@@ -34,4 +34,8 @@ export class Webchat {
     await this.conversation.setup()
     await this.messages.setup()
   }
+
+  public async destroy() {
+    this.socket.com.disconnect()
+  }
 }

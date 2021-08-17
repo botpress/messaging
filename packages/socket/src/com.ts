@@ -40,6 +40,10 @@ export class SocketCom {
     })
   }
 
+  disconnect() {
+    this.socket.disconnect()
+  }
+
   async request<T>(type: string, data: any): Promise<T> {
     const request = this.random(32)
     const promise = new Promise<T>((resolve, reject) => {
