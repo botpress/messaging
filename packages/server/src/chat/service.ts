@@ -2,6 +2,7 @@ import { Message, uuid } from '@botpress/messaging-base'
 import _ from 'lodash'
 import yn from 'yn'
 import { Service } from '../base/service'
+import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConfigService } from '../config/service'
@@ -26,6 +27,7 @@ export class ChatService extends Service {
     private loggers: LoggerService,
     private configs: ConfigService,
     private posts: PostService,
+    private channels: ChannelService,
     private clients: ClientService,
     private webhooks: WebhookService,
     private conduits: ConduitService,
@@ -62,16 +64,23 @@ export class ChatService extends Service {
       }
     }
 
+    let channel: string = 'messaging'
     const convmaps = await this.mappings.convmap.listByConversationId(conversationId)
+
     for (const convmap of convmaps) {
       const endpoint = await this.mappings.getEndpoint(convmap.threadId)
+
+      const tunnel = await this.mappings.tunnels.get(convmap.tunnelId)
+      if (convmaps.length === 1) {
+        channel = this.channels.getById(tunnel!.channelId).name
+      }
+
       if (
         !from.endpoint ||
         (from.endpoint.identity || '*') !== endpoint.identity ||
         (from.endpoint.sender || '*') !== endpoint.sender ||
         (from.endpoint.thread || '*') !== endpoint.thread
       ) {
-        const tunnel = await this.mappings.tunnels.get(convmap.tunnelId)
         // TODO: we don't need to get the config here. Just getting the conduitId would be way better
         const conduit = await this.conduits.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
         const instance = await this.instances.get(conduit!.id)
@@ -85,7 +94,7 @@ export class ChatService extends Service {
         userId: conversation?.userId,
         conversationId,
         message,
-        channel: 'messaging'
+        channel
       })
     }
 

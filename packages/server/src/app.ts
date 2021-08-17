@@ -103,6 +103,7 @@ export class App {
       this.logger,
       this.config,
       this.post,
+      this.channels,
       this.clients,
       this.webhooks,
       this.conduits,
