@@ -38,10 +38,15 @@ export class UserApi extends ClientScopedApi {
 
       const { clientId, userId, userToken }: { clientId: uuid; userId: uuid; userToken: string } = message.data
 
+      const client = await this.clients.getById(clientId)
+      if (!client) {
+        return this.sockets.reply(socket, message, { error: true, message: 'client not found' })
+      }
+
       // TODO: use user token to validate user
       let user = userId && (await this.users.get(userId))
-      if (!user || user.clientId !== clientId) {
-        user = await this.users.create(clientId)
+      if (!user || user.clientId !== client.id) {
+        user = await this.users.create(client.id)
       }
 
       this.socketService.registerForUser(socket, user.id)
