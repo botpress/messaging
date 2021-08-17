@@ -30,7 +30,7 @@ export class Api {
     this.syncs = new SyncApi(this.router, this.app.config, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.app.clients, this.app.health)
     this.chat = new ChatApi(this.router, this.app.clients, this.app.conversations, this.app.chat)
-    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.sockets, this.app.users)
+    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users, this.app.sockets)
     this.conversations = new ConversationApi(
       this.router,
       this.app.clients,

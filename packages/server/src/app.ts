@@ -103,14 +103,14 @@ export class App {
       this.logger,
       this.config,
       this.post,
+      this.clients,
       this.webhooks,
+      this.conduits,
       this.conversations,
       this.messages,
-      this.sockets,
       this.mapping,
-      this.clients,
-      this.conduits,
-      this.instances
+      this.instances,
+      this.sockets
     )
   }
 

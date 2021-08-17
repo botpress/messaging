@@ -11,8 +11,8 @@ export class UserApi extends ClientScopedApi {
     router: Router,
     clients: ClientService,
     private sockets: SocketManager,
-    private socketService: SocketService,
-    private users: UserService
+    private users: UserService,
+    private socketService: SocketService
   ) {
     super(router, clients)
   }
