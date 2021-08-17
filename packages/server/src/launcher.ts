@@ -1,6 +1,8 @@
 import clc from 'cli-color'
 import { Express } from 'express'
+import { createHttpTerminator, HttpTerminator } from 'http-terminator'
 import _ from 'lodash'
+import ms from 'ms'
 import portfinder from 'portfinder'
 import yn from 'yn'
 import { Api } from './api'
@@ -13,7 +15,8 @@ const pkg = require('../package.json')
 export class Launcher {
   private logger: Logger
   private shuttingDown: boolean = false
-  private serverManager: ServerManager | undefined
+  private httpTerminator: HttpTerminator | undefined
+  private readonly shutdownTimeout: number = ms('5s')
 
   constructor(private express: Express, private app: App, private api: Api) {
     this.logger = new Logger('Launcher')
@@ -59,7 +62,8 @@ export class Launcher {
       port = (await portfinder.getPortPromise()).toString()
     }
 
-    this.serverManager = new ServerManager(this.express.listen(port))
+    const server = this.express.listen(port)
+    this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
 
     if (!yn(process.env.SPINNED)) {
       this.logger.info(`Server is listening at: http://localhost:${port}`)
@@ -79,7 +83,7 @@ export class Launcher {
     if (!this.shuttingDown) {
       this.shuttingDown = true
 
-      await this.serverManager?.terminate()
+      await this.httpTerminator?.terminate()
       await this.app.destroy()
     }
     process.exit(code)
