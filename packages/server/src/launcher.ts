@@ -8,7 +8,6 @@ import yn from 'yn'
 import { Api } from './api'
 import { App } from './app'
 import { Logger } from './logger/types'
-import { ServerManager } from './server-manager'
 
 const pkg = require('../package.json')
 
