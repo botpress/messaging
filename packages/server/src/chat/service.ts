@@ -64,16 +64,16 @@ export class ChatService extends Service {
 
     const convmaps = await this.mappings.convmap.listByConversationId(conversationId)
     for (const convmap of convmaps) {
-      const tunnel = await this.mappings.tunnels.get(convmap.tunnelId)
-      // TODO: we don't need to get the config here. Just getting the conduitId would be way better
-      const conduit = await this.conduits.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
       const endpoint = await this.mappings.getEndpoint(convmap.threadId)
       if (
         !from.endpoint ||
-        from.endpoint.identity !== endpoint.identity ||
-        from.endpoint.sender !== endpoint.sender ||
-        from.endpoint.thread !== endpoint.thread
+        (from.endpoint.identity || '*') !== endpoint.identity ||
+        (from.endpoint.sender || '*') !== endpoint.sender ||
+        (from.endpoint.thread || '*') !== endpoint.thread
       ) {
+        const tunnel = await this.mappings.tunnels.get(convmap.tunnelId)
+        // TODO: we don't need to get the config here. Just getting the conduitId would be way better
+        const conduit = await this.conduits.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
         const instance = await this.instances.get(conduit!.id)
         await instance.sendToEndpoint(endpoint, payload)
       }
