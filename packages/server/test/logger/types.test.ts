@@ -110,6 +110,45 @@ describe('Logger', () => {
         spy.mockReset()
       }
     })
+
+    test('Should display single-line info when SINGLE_LINE_LOGGING is true', () => {
+      process.env.SINGLE_LINE_LOGGING = 'true'
+
+      const logger = new Logger(scope)
+      const spy = jest.spyOn(console, 'log').mockImplementation()
+
+      for (const level of levels) {
+        let params: any[] = [message, data]
+        let outputParams: any[] = [expect.anything(), expect.stringContaining(scope), ...logger['singleLine'](params)]
+
+        if (level === 'error') {
+          params.unshift(error)
+          outputParams.push(...logger['singleLine']([error.stack]))
+        }
+
+        ;(<any>logger)[level](...params)
+
+        expect(spy).toHaveBeenCalledTimes(1)
+        expect(spy).toHaveBeenCalledWith(...outputParams)
+
+        spy.mockReset()
+      }
+    })
+
+    test("Should display multi-line info if it can't be stringify when SINGLE_LINE_LOGGING is true", () => {
+      process.env.SINGLE_LINE_LOGGING = 'true'
+
+      const logger = new Logger(scope)
+      const spy = jest.spyOn(console, 'log').mockImplementation()
+
+      let circularObj = {}
+      circularObj['a'] = circularObj
+
+      logger.info(message, circularObj)
+
+      expect(spy).toHaveBeenCalledTimes(1)
+      expect(spy).toHaveBeenCalledWith(expect.anything(), expect.stringContaining(scope), message, circularObj)
+    })
   })
 
   describe('error', () => {
