@@ -7,6 +7,7 @@ import { Logger } from '../logger/types'
 
 export class PostService extends Service {
   private readonly attempts = 10
+  private isTerminating: boolean
 
   private logger: Logger
   private password: string | undefined
@@ -14,10 +15,15 @@ export class PostService extends Service {
   constructor(private configService: ConfigService) {
     super()
     this.logger = new Logger('post')
+    this.isTerminating = false
   }
 
   public async setup() {
     this.password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
+  }
+
+  async destroy() {
+    this.isTerminating = true
   }
 
   public async send(url: string, data?: any, headers?: { [name: string]: string }) {
@@ -38,6 +44,10 @@ export class PostService extends Service {
         retry: (_e: any, _attemptNumber: number) => {
           // TODO: Add debug logging
           //this.logger.debug(`attempt number: ${attemptNumber}`)
+
+          if (this.isTerminating) {
+            return false
+          }
 
           return true
         }

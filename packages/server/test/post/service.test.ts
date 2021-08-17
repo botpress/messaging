@@ -141,5 +141,29 @@ describe('PostService', () => {
       expect(loggerSpy).toBeCalledTimes(1)
       expect(loggerSpy).toBeCalledWith(error, expect.anything())
     })
+
+    describe('destroy', () => {
+      test('Should prevent backoff from ever retrying the request', async () => {
+        const error = new Error('error')
+        const spy = jest.spyOn(axios, 'post').mockImplementationOnce(() => Promise.reject(error))
+
+        const postService = new PostService(configService)
+        await postService.setup()
+        Object.defineProperty(postService, 'attempts', {
+          value: 10,
+          writable: false
+        })
+
+        const loggerSpy = jest.spyOn(postService['logger'], 'error')
+
+        await postService.destroy()
+        await postService.send(url, data)
+
+        expect(spy).toHaveBeenCalledTimes(1)
+        expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
+        expect(loggerSpy).toBeCalledTimes(1)
+        expect(loggerSpy).toBeCalledWith(error, expect.anything())
+      })
+    })
   })
 })
