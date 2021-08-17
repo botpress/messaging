@@ -19,6 +19,7 @@ export interface MessagingEnv {
   NO_LAZY_LOADING?: string
   BATCHING_ENABLED?: string
   NO_LOGO?: string
+  SINGLE_LINE_LOGGING?: string
 }
 
 declare global {

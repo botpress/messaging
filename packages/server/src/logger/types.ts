@@ -10,6 +10,8 @@ export enum LoggerLevel {
   Info = 50
 }
 
+type Param = string | object | undefined
+
 export class Logger {
   private readonly colors = {
     [LoggerLevel.Debug]: clc.blue,
@@ -25,36 +27,54 @@ export class Logger {
     return new Logger(`${this.scope}:${scope}`)
   }
 
-  info(message: string, data?: any) {
+  info(message: string, data?: Param) {
     this.print([message, data], LoggerLevel.Info)
   }
 
-  debug(message: string, data?: any) {
+  debug(message: string, data?: Param) {
     this.print([message, data], LoggerLevel.Debug)
   }
 
-  warn(message: string, data?: any) {
+  warn(message: string, data?: Param) {
     this.print([message, data], LoggerLevel.Warn)
   }
 
-  error(error: undefined, message: string, data?: any): void
-  error(error: Error, message?: string, data?: any): void
-  error(error: Error | undefined, message?: string, data?: any) {
+  error(error: undefined, message: string, data?: Param): void
+  error(error: Error, message?: string, data?: Param): void
+  error(error: Error | undefined, message?: string, data?: Param) {
     if (message?.length && message[message.length - 1] !== '.') {
       message += '.'
     }
 
-    this.print([message, data, error?.stack && JSON.stringify(error.stack)], LoggerLevel.Error)
+    this.print([message, data, error?.stack], LoggerLevel.Error)
   }
 
-  private print(params: any[], level: LoggerLevel) {
+  private print(params: Param[], level: LoggerLevel) {
     const timeFormat = 'L HH:mm:ss.SSS'
     const time = moment().format(timeFormat)
 
     const timeText = clc.blackBright(time)
     const titleText = clc.bold(this.colors[level](yn(process.env.SPINNED) ? `[Messaging] ${this.scope}` : this.scope))
 
+    let definedParams = params.filter((x) => x !== undefined)
+    if (yn(process.env.SINGLE_LINE_LOGGING)) {
+      definedParams = this.singleLine(definedParams)
+    }
+
     // eslint-disable-next-line no-console
-    console.log(timeText, titleText, ...params.filter((x) => x !== undefined))
+    console.log(timeText, titleText, ...definedParams)
+  }
+
+  private singleLine(params: Param[]) {
+    return params.map((x) => {
+      if ((typeof x === 'string' && /\r|\n/.exec(x)) || (typeof x === 'object' && x !== null)) {
+        try {
+          return JSON.stringify(x)
+        } catch {
+          return x
+        }
+      }
+      return x
+    })
   }
 }
