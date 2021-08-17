@@ -8,15 +8,21 @@ RUN yarn build
 
 FROM node:12.18.3-alpine
 
-COPY --from=build /messaging/packages/server/dist /messaging/server
-COPY --from=build /messaging/packages/server/package.json /messaging/package.json
-COPY --from=build /messaging/yarn.lock /messaging/yarn.lock
-
 WORKDIR /messaging
 
-RUN yarn --silent --prod
+COPY --from=build /messaging/packages/server/dist packages/server/src
+COPY --from=build /messaging/packages/server/package.json packages/server/package.json
+ 
+COPY --from=build /messaging/packages/base/dist packages/base/dist
+COPY --from=build /messaging/packages/base/package.json packages/base/package.json
+
+COPY --from=build /messaging/package.json package.json
+COPY --from=build /messaging/yarn.lock yarn.lock
+
+
+RUN yarn --silent --prod --frozen-lockfile
 
 ENV NODE_ENV=production
 
 ENTRYPOINT [ "node" ]
-CMD ["./server/index.js"]
+CMD ["./packages/server/src/index.js"]
