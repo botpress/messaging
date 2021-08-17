@@ -42,6 +42,7 @@ export class UserService extends Service {
     }
 
     await this.batcher.push(user)
+    this.cache.set(user.id, user)
 
     return user
   }

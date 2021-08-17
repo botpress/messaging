@@ -63,11 +63,12 @@ export class SocketService extends Service {
       userId
     }
     this.sockets[socket.id] = state
-    this.cache.del(socket.id)
+    this.cache.set(socket.id, state)
 
     const current = this.socketsByUserId[userId]
-    this.socketsByUserId[userId] = [...(current || []), socket]
-    this.cacheByUserId.del(userId)
+    const list = [...(current || []), socket]
+    this.socketsByUserId[userId] = list
+    this.cacheByUserId.set(userId, list)
   }
 
   public listByUser(userId: string) {
