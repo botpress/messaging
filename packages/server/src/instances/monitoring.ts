@@ -4,6 +4,7 @@ import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
 import { DistributedService } from '../distributed/service'
 import { Logger } from '../logger/types'
+import { StatusService } from '../status/service'
 import { InstanceService } from './service'
 
 const MAX_ALLOWED_FAILURES = 5
@@ -14,8 +15,8 @@ export class InstanceMonitoring {
     private distributed: DistributedService,
     private channels: ChannelService,
     private conduits: ConduitService,
-    private instances: InstanceService,
-    private failures: { [conduitId: string]: number }
+    private statusService: StatusService,
+    private instances: InstanceService
   ) {}
 
   async monitor() {
@@ -39,8 +40,7 @@ export class InstanceMonitoring {
     const outdateds = await this.conduits.listOutdated(ms('10h'), 1000)
 
     for (const outdated of outdateds) {
-      // TODO: replace by StatusService
-      if (this.failures[outdated.id] >= MAX_ALLOWED_FAILURES) {
+      if (((await this.statusService.get(outdated.id)) || 0) >= MAX_ALLOWED_FAILURES) {
         continue
       }
 
@@ -58,8 +58,7 @@ export class InstanceMonitoring {
 
       const conduits = await this.conduits.listByChannel(channel.id)
       for (const conduit of conduits) {
-        // TODO: replace by StatusService
-        if (this.failures[conduit.id] >= MAX_ALLOWED_FAILURES) {
+        if (((await this.statusService.get(conduit.id)) || 0) >= MAX_ALLOWED_FAILURES) {
           continue
         }
 

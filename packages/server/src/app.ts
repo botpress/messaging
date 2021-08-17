@@ -16,6 +16,7 @@ import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
+import { StatusService } from './status/service'
 import { SyncService } from './sync/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
@@ -42,6 +43,7 @@ export class App {
   instances: InstanceService
   syncs: SyncService
   health: HealthService
+  status: StatusService
 
   constructor() {
     this.logger = new LoggerService()
@@ -62,6 +64,7 @@ export class App {
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
     this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
+    this.status = new StatusService(this.database, this.caching)
     this.instances = new InstanceService(
       this.logger,
       this.config,
@@ -76,6 +79,7 @@ export class App {
       this.conversations,
       this.messages,
       this.mapping,
+      this.status,
       this
     )
     this.syncs = new SyncService(
@@ -122,6 +126,7 @@ export class App {
     await this.mapping.setup()
     await this.instances.setup()
     await this.health.setup()
+    await this.status.setup()
   }
 
   async monitor() {
