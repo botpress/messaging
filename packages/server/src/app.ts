@@ -136,6 +136,7 @@ export class App {
     await this.instances.setup()
     await this.health.setup()
     await this.sockets.setup()
+    await this.chat.setup()
   }
 
   async monitor() {
