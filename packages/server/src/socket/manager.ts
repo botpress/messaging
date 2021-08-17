@@ -1,6 +1,7 @@
 import clc from 'cli-color'
 import { Server } from 'http'
 import Socket from 'socket.io'
+import yn from 'yn'
 import { Logger } from '../logger/types'
 import { SocketService } from './service'
 
@@ -11,8 +12,10 @@ export class SocketManager {
   constructor(private sockets: SocketService) {}
 
   async setup(server: Server) {
-    const ws = new Socket.Server(server, { cors: { origin: '*' } })
-    ws.on('connection', this.handleSocketConnection.bind(this))
+    if (yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
+      const ws = new Socket.Server(server, { cors: { origin: '*' } })
+      ws.on('connection', this.handleSocketConnection.bind(this))
+    }
   }
 
   public handle(type: string, callback: SocketHandler) {
