@@ -26,14 +26,14 @@ export class ChatService extends Service {
     private loggers: LoggerService,
     private configs: ConfigService,
     private posts: PostService,
+    private clients: ClientService,
     private webhooks: WebhookService,
+    private conduits: ConduitService,
     private conversations: ConversationService,
     private messages: MessageService,
-    private sockets: SocketService,
     private mappings: MappingService,
-    private clients: ClientService,
-    private conduits: ConduitService,
-    private instances: InstanceService
+    private instances: InstanceService,
+    private sockets: SocketService
   ) {
     super()
     this.webhookBroadcaster = new WebhookBroadcaster(this.posts, this.webhooks)
