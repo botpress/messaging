@@ -35,6 +35,7 @@ export class Api {
       this.router,
       this.app.clients,
       this.sockets,
+      this.app.users,
       this.app.conversations,
       this.app.sockets
     )
