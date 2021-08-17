@@ -15,12 +15,12 @@ import { Endpoint, Mapping } from './types'
 import { UsermapService } from './usermap/service'
 
 export class MappingService extends Service {
-  private tunnels: TunnelService
-  private identities: IdentityService
-  private senders: SenderService
-  private threads: ThreadService
-  private usermap: UsermapService
-  private convmap: ConvmapService
+  public tunnels: TunnelService
+  public identities: IdentityService
+  public senders: SenderService
+  public threads: ThreadService
+  public usermap: UsermapService
+  public convmap: ConvmapService
   public sandboxmap: SandboxmapService
 
   constructor(
@@ -81,11 +81,8 @@ export class MappingService extends Service {
     }
   }
 
-  async getEndpoint(clientId: uuid, channelId: uuid, conversationId: uuid): Promise<Endpoint> {
-    const tunnel = await this.tunnels.map(clientId, channelId)
-    const convmap = await this.convmap.getByConversationId(tunnel.id, conversationId)
-
-    const thread = await this.threads.get(convmap!.threadId)
+  async getEndpoint(threadId: uuid): Promise<Endpoint> {
+    const thread = await this.threads.get(threadId)
     const sender = await this.senders.get(thread!.senderId)
     const identity = await this.identities.get(sender!.identityId)
 

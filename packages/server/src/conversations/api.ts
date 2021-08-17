@@ -3,6 +3,7 @@ import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
+import { UserService } from '../users/service'
 import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema, UseConvoSocketSchema } from './schema'
 import { ConversationService } from './service'
 
@@ -11,6 +12,7 @@ export class ConversationApi extends ClientScopedApi {
     router: Router,
     clients: ClientService,
     private sockets: SocketManager,
+    private users: UserService,
     private conversations: ConversationService,
     private socketService: SocketService
   ) {
@@ -97,12 +99,20 @@ export class ConversationApi extends ClientScopedApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
-      const { clientId, userId } = this.socketService.getUserInfo(socket)
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
       const { conversationId }: { conversationId?: string } = message.data
 
+      const user = await this.users.get(userId)
       let conversation = conversationId && (await this.conversations.get(conversationId))
+
       if (!conversation || conversation.userId !== userId) {
-        conversation = await this.conversations.create(clientId, userId)
+        conversation = await this.conversations.create(user!.clientId, userId)
       }
 
       this.sockets.reply(socket, message, conversation)

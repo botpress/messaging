@@ -100,8 +100,7 @@ export class MessengerChannel extends Channel<MessengerConduit> {
         }
 
         await conduit.client.sendAction(webhookEvent.sender.id, 'mark_seen')
-
-        await this.app.instances.receive(conduit.conduitId, webhookEvent)
+        await conduit.receive(webhookEvent)
       }
     }
 

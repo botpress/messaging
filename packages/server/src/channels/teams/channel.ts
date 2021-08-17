@@ -30,7 +30,7 @@ export class TeamsChannel extends Channel<TeamsConduit> {
             if (conduit.botNewlyAddedToConversation(turnContext)) {
               await conduit.sendProactiveMessage(turnContext)
             } else {
-              await this.app.instances.receive(conduit.conduitId, turnContext)
+              await conduit.receive(turnContext)
             }
           } catch (e) {
             conduit.logger.error(e, 'Error occurred processing teams activity')

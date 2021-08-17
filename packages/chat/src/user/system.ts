@@ -1,4 +1,4 @@
-import { User } from '@botpress/messaging-base'
+import { User, uuid } from '@botpress/messaging-base'
 import { MessagingSocket } from '@botpress/messaging-socket'
 import { WebchatStorage } from '../storage/system'
 import { UserEmitter, UserEvents, UserWatcher } from './events'
@@ -14,9 +14,13 @@ export class WebchatUser {
   }
 
   async setup() {
-    const saved = this.storage.get<User>('saved-user')
-    const user = await this.socket.users.auth(saved?.id, 'abc123')
-    this.storage.set('saved-user', user)
+    const saved = this.storage.get<uuid>('saved-user')
+
+    const event = { choice: saved }
+    await this.emitter.emit(UserEvents.Choose, event)
+
+    const user = await this.socket.users.auth(event.choice, 'abc123')
+    this.storage.set('saved-user', user.id)
 
     await this.set(user)
   }

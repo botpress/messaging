@@ -2,7 +2,7 @@ import { Webchat, ConversationEvents, ConversationSetEvent } from '@botpress/web
 import { text, element } from '@botpress/webchat-skin'
 import { UserEvents, UserSetEvent } from '@botpress/webchat/src/user/events'
 
-export class BoardRenderer {
+export class BoardWatcher {
   private textUserId!: Text
   private textConversationId!: Text
 
@@ -12,9 +12,6 @@ export class BoardRenderer {
   }
 
   private make() {
-    element('h3', this.parent, (title) => {
-      text('Messaging box', title)
-    })
     element('details', this.parent, (details) => {
       details.open = true
 
@@ -23,20 +20,20 @@ export class BoardRenderer {
       })
       element('ul', details, (ul) => {
         element('li', ul, (li) => {
-          element('code', li, (mark) => {
-            text('clientId ', mark)
+          element('code', li, (code) => {
+            text('clientId ', code)
           })
           text(this.webchat.socket.clientId, li)
         })
         element('li', ul, (li) => {
-          element('code', li, (mark) => {
-            text('userId ', mark)
+          element('code', li, (code) => {
+            text('userId ', code)
           })
           this.textUserId = text('', li)
         })
         element('li', ul, (li) => {
-          element('code', li, (mark) => {
-            text('conversationId ', mark)
+          element('code', li, (code) => {
+            text('conversationId ', code)
           })
           this.textConversationId = text('', li)
         })

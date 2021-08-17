@@ -29,21 +29,13 @@ export class Api {
     this.sockets = new SocketManager(this.app.sockets)
     this.syncs = new SyncApi(this.router, this.app.config, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.app.clients, this.app.health)
-    this.chat = new ChatApi(
-      this.router,
-      this.app.clients,
-      this.app.channels,
-      this.app.conduits,
-      this.app.instances,
-      this.app.conversations,
-      this.app.messages,
-      this.app.sockets
-    )
-    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.sockets, this.app.users)
+    this.chat = new ChatApi(this.router, this.app.clients, this.app.conversations, this.app.chat)
+    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users, this.app.sockets)
     this.conversations = new ConversationApi(
       this.router,
       this.app.clients,
       this.sockets,
+      this.app.users,
       this.app.conversations,
       this.app.sockets
     )
@@ -53,7 +45,7 @@ export class Api {
       this.sockets,
       this.app.conversations,
       this.app.messages,
-      this.app.instances,
+      this.app.chat,
       this.app.sockets
     )
     this.channels = new ChannelApi(this.root, this.app)

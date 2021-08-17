@@ -1,5 +1,4 @@
 import { uuid } from '@botpress/messaging-base'
-import _ from 'lodash'
 import { Socket } from 'socket.io'
 import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
@@ -10,7 +9,7 @@ export class SocketService extends Service {
   private sockets: { [socketId: string]: SocketState | undefined } = {}
   private cache!: ServerCache<string, SocketState>
 
-  private socketsByUserId: { [userId: string]: Socket[] } = {}
+  private socketsByUserId: { [userId: string]: Socket[] | undefined } = {}
   private cacheByUserId!: ServerCache<uuid, Socket[]>
 
   constructor(private cachingService: CachingService, private userService: UserService) {
@@ -29,8 +28,9 @@ export class SocketService extends Service {
   public delete(socket: Socket) {
     const state = this.sockets[socket.id]!
 
-    if (state.userId && this.socketsByUserId[state.userId]) {
-      _.remove(this.socketsByUserId[state.userId], (x) => x.id === socket.id)
+    if (state.userId) {
+      const current = this.socketsByUserId[state.userId]
+      this.socketsByUserId[state.userId] = (current || []).filter((x) => x.id !== socket.id)
       this.cacheByUserId.del(state.userId)
     }
 
@@ -38,28 +38,37 @@ export class SocketService extends Service {
     this.cache.del(socket.id)
   }
 
-  public getUserInfo(socket: Socket): UserInfo {
+  public getUserId(socket: Socket): uuid | undefined {
+    // Todo: possible vulnerability here if the user gets deleted. It would still have permissions in the cache
+    // The user service has no delete() function at the moment so we can't listen to deleted events yet
+
     const cached = this.cache.get(socket.id)
     if (cached) {
-      return cached as UserInfo
+      return cached.userId
     }
 
-    const state = this.sockets[socket.id]!
-    this.cache.set(socket.id, state)
-    return state as UserInfo
+    const state = this.sockets[socket.id]
+
+    if (state?.userId) {
+      this.cache.set(socket.id, state)
+      return state.userId
+    } else {
+      return undefined
+    }
   }
 
-  public async registerForUser(socket: Socket, userId: uuid) {
-    const user = await this.userService.get(userId)
-
-    const state = this.sockets[socket.id]!
-    state.userId = userId
-    state.clientId = user!.clientId
-
-    if (!this.socketsByUserId[userId]) {
-      this.socketsByUserId[userId] = []
+  public registerForUser(socket: Socket, userId: uuid) {
+    const state = {
+      socket,
+      userId
     }
-    this.socketsByUserId[userId].push(socket)
+    this.sockets[socket.id] = state
+    this.cache.set(socket.id, state)
+
+    const current = this.socketsByUserId[userId]
+    const list = [...(current || []), socket]
+    this.socketsByUserId[userId] = list
+    this.cacheByUserId.set(userId, list)
   }
 
   public listByUser(userId: string) {
@@ -68,18 +77,12 @@ export class SocketService extends Service {
       return cached
     }
 
-    const sockets = this.socketsByUserId[userId]
+    const sockets = this.socketsByUserId[userId] || []
     this.cacheByUserId.set(userId, sockets)
     return sockets
   }
 }
 
 export interface SocketState {
-  clientId?: uuid
   userId?: uuid
-}
-
-export interface UserInfo {
-  clientId: uuid
-  userId: uuid
 }

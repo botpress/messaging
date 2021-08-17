@@ -1,4 +1,4 @@
-import { Conversation } from '@botpress/messaging-base'
+import { Conversation, uuid } from '@botpress/messaging-base'
 import { MessagingSocket } from '@botpress/messaging-socket'
 import { WebchatStorage } from '../storage/system'
 import { ConversationEmitter, ConversationEvents, ConversationWatcher } from './events'
@@ -14,9 +14,13 @@ export class WebchatConversation {
   }
 
   async setup() {
-    const saved = this.storage.get<Conversation>('saved-conversation')
-    const conversation = await this.socket.conversations.use(saved?.id)
-    this.storage.set('saved-conversation', conversation)
+    const saved = this.storage.get<uuid>('saved-conversation')
+
+    const event = { choice: saved }
+    await this.emitter.emit(ConversationEvents.Choose, event)
+
+    const conversation = await this.socket.conversations.use(event.choice)
+    this.storage.set('saved-conversation', conversation.id)
 
     await this.set(conversation!)
   }
