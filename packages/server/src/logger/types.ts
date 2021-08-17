@@ -44,7 +44,7 @@ export class Logger {
       message += '.'
     }
 
-    this.print([message, data, error?.stack], LoggerLevel.Error)
+    this.print([message, data, error?.stack && JSON.stringify(error.stack)], LoggerLevel.Error)
   }
 
   private print(params: any[], level: LoggerLevel) {
