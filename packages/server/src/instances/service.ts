@@ -1,4 +1,4 @@
-import { Message, uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/messaging-base'
 import _ from 'lodash'
 import ms from 'ms'
 import yn from 'yn'
@@ -10,18 +10,11 @@ import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
-import { ConfigService } from '../config/service'
-import { ConversationService } from '../conversations/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
-import { MessageService } from '../messages/service'
-import { PostService } from '../post/service'
 import { ProviderService } from '../providers/service'
-import { WebhookBroadcaster } from '../webhooks/broadcaster'
-import { WebhookService } from '../webhooks/service'
-import { WebhookContent } from '../webhooks/types'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
@@ -37,26 +30,19 @@ export class InstanceService extends Service {
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
   private sandbox: InstanceSandbox
-  private webhookBroadcaster: WebhookBroadcaster
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private failures: { [conduitId: string]: number } = {}
   private logger: Logger
-  private loggingEnabled!: boolean
   private lazyLoadingEnabled!: boolean
 
   constructor(
     private loggerService: LoggerService,
-    private configService: ConfigService,
     private distributedService: DistributedService,
     private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
-    private postService: PostService,
     private conduitService: ConduitService,
     private clientService: ClientService,
-    private webhookService: WebhookService,
-    private conversationService: ConversationService,
-    private messageService: MessageService,
     private mappingService: MappingService,
     private app: App
   ) {
@@ -80,21 +66,9 @@ export class InstanceService extends Service {
       this.failures
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
-    this.webhookBroadcaster = new WebhookBroadcaster(this.postService, this.webhookService)
   }
 
   async setup() {
-    if (process.env.LOGGING_ENABLED?.length) {
-      this.loggingEnabled = !!yn(process.env.LOGGING_ENABLED)
-    } else if (
-      this.configService.current.logging?.enabled !== null &&
-      this.configService.current.logging?.enabled !== undefined
-    ) {
-      this.loggingEnabled = !!yn(this.configService.current.logging.enabled)
-    } else {
-      this.loggingEnabled = process.env.NODE_ENV !== 'production'
-    }
-
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
@@ -190,75 +164,5 @@ export class InstanceService extends Service {
     }
 
     return instance
-  }
-
-  async send(conduitId: uuid, conversationId: uuid, payload: any): Promise<Message> {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const conversation = (await this.conversationService.get(conversationId))!
-
-    const endpoint = await this.mappingService.getEndpoint(conversation.clientId, conduit.channelId, conversation.id)
-
-    const instance = await this.get(conduitId)
-    await instance.sendToEndpoint(endpoint, payload)
-
-    const message = await this.messageService.create(conversationId, conversation!.userId, payload)
-
-    if (this.loggingEnabled) {
-      instance.loggerOut.debug('Sending message', {
-        clientId: conversation!.clientId,
-        message
-      })
-    }
-
-    return message
-  }
-
-  async receive(conduitId: uuid, payload: any) {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
-
-    const instance = await this.get(conduitId)
-    const endpoint = await instance.extractEndpoint(payload)
-
-    if (!endpoint.content.type) {
-      return
-    }
-
-    const clientId = provider.sandbox
-      ? await this.sandbox.getClientId(conduitId, endpoint)
-      : (await this.clientService.getByProviderId(provider.id))!.id
-
-    if (!clientId) {
-      return
-    }
-
-    const { userId, conversationId } = await this.mappingService.getMapping(clientId, conduit.channelId, endpoint)
-    const message = await this.messageService.create(conversationId, userId, endpoint.content)
-
-    await this.sendToWebhooks({
-      clientId,
-      userId,
-      conversationId,
-      message,
-      channel: this.channelService.getById(conduit.channelId).name
-    })
-  }
-
-  // TODO: move that somewhere else
-  async sendToWebhooks({ clientId, userId, conversationId, message, channel }: any) {
-    const post: WebhookContent = {
-      type: 'message',
-      client: { id: clientId },
-      channel: { name: channel },
-      user: { id: userId },
-      conversation: { id: conversationId },
-      message
-    }
-
-    if (this.loggingEnabled) {
-      this.logger.debug('Received message', post)
-    }
-
-    void this.webhookBroadcaster.send(clientId, post)
   }
 }

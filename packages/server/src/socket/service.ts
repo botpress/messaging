@@ -58,6 +58,8 @@ export class SocketService extends Service {
 
     if (!this.socketsByUserId[userId]) {
       this.socketsByUserId[userId] = []
+      // TODO: fix weird caching here
+      this.cacheByUserId.set(userId, this.socketsByUserId[userId])
     }
     this.socketsByUserId[userId].push(socket)
   }
@@ -68,7 +70,7 @@ export class SocketService extends Service {
       return cached
     }
 
-    const sockets = this.socketsByUserId[userId]
+    const sockets = this.socketsByUserId[userId] || []
     this.cacheByUserId.set(userId, sockets)
     return sockets
   }

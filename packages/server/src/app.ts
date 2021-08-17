@@ -1,6 +1,7 @@
 import { BatchingService } from './batching/service'
 import { CachingService } from './caching/service'
 import { ChannelService } from './channels/service'
+import { ChatService } from './chat/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConfigService } from './config/service'
@@ -44,6 +45,7 @@ export class App {
   syncs: SyncService
   health: HealthService
   sockets: SocketService
+  chat: ChatService
 
   constructor() {
     this.logger = new LoggerService()
@@ -66,17 +68,12 @@ export class App {
     this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
     this.instances = new InstanceService(
       this.logger,
-      this.config,
       this.distributed,
       this.caching,
       this.channels,
       this.providers,
-      this.post,
       this.conduits,
       this.clients,
-      this.webhooks,
-      this.conversations,
-      this.messages,
       this.mapping,
       this
     )
@@ -102,6 +99,19 @@ export class App {
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
+    this.chat = new ChatService(
+      this.logger,
+      this.config,
+      this.post,
+      this.webhooks,
+      this.conversations,
+      this.messages,
+      this.sockets,
+      this.mapping,
+      this.clients,
+      this.conduits,
+      this.instances
+    )
   }
 
   async setup() {

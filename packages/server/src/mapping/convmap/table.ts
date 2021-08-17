@@ -10,7 +10,6 @@ export class ConvmapTable extends Table {
     table.uuid('tunnelId').references('id').inTable('msg_tunnels').notNullable()
     table.uuid('conversationId').references('id').inTable('msg_conversations').notNullable()
     table.uuid('threadId').references('id').inTable('msg_threads').notNullable()
-    table.unique(['tunnelId', 'conversationId'])
     table.unique(['tunnelId', 'threadId'])
   }
 }

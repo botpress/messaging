@@ -1,24 +1,16 @@
 import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
-import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
-import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
-import { InstanceService } from '../instances/service'
-import { MessageService } from '../messages/service'
-import { SocketService } from '../socket/service'
 import { ChatReplySchema } from './schema'
+import { ChatService } from './service'
 
 export class ChatApi extends ClientScopedApi {
   constructor(
     router: Router,
     clients: ClientService,
-    private channels: ChannelService,
-    private conduits: ConduitService,
-    private instances: InstanceService,
     private conversations: ConversationService,
-    private messages: MessageService,
-    private sockets: SocketService
+    private chat: ChatService
   ) {
     super(router, clients)
   }
@@ -34,7 +26,7 @@ export class ChatApi extends ClientScopedApi {
           return res.status(400).send(error.message)
         }
 
-        const { channel, conversationId, payload } = req.body
+        const { conversationId, payload } = req.body
         const conversation = await this.conversations.get(conversationId)
 
         if (!conversation) {
@@ -43,19 +35,7 @@ export class ChatApi extends ClientScopedApi {
           return res.sendStatus(403)
         }
 
-        // TODO: this is terrible
-        let message
-        if (channel !== 'socket') {
-          const channelId = this.channels.getByName(channel).id
-          const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
-          message = await this.instances.send(conduit.id, conversationId, payload)
-        } else {
-          message = await this.messages.create(conversationId, undefined, payload)
-          const sockets = this.sockets.listByUser(conversation.userId)
-          for (const socket of sockets) {
-            socket.send({ type: 'message', data: message })
-          }
-        }
+        const message = await this.chat.send(conversationId, undefined, payload, { clientId: req.client!.id })
 
         res.send(message)
       })

@@ -1,6 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../../base/service'
+import { ServerCache } from '../../caching/cache'
 import { ServerCache2D } from '../../caching/cache2D'
 import { CachingService } from '../../caching/service'
 import { DatabaseService } from '../../database/service'
@@ -9,7 +10,8 @@ import { Tunnel } from './types'
 
 export class TunnelService extends Service {
   private table: TunnelTable
-  private cache!: ServerCache2D<Tunnel>
+  private cacheById!: ServerCache<uuid, Tunnel>
+  private cacheByClienAndChannel!: ServerCache2D<Tunnel>
 
   constructor(private db: DatabaseService, private caching: CachingService) {
     super()
@@ -17,13 +19,31 @@ export class TunnelService extends Service {
   }
 
   async setup() {
-    this.cache = await this.caching.newServerCache2D('cache_tunnel_by_client_and_channel')
+    this.cacheById = await this.caching.newServerCache('cache_tunnel_by_id')
+    this.cacheByClienAndChannel = await this.caching.newServerCache2D('cache_tunnel_by_client_and_channel')
 
     await this.db.registerTable(this.table)
   }
 
+  async get(tunnelId: uuid): Promise<Tunnel | undefined> {
+    const cached = this.cacheById.get(tunnelId)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ id: tunnelId })
+
+    if (rows?.length) {
+      const tunnel = rows[0] as Tunnel
+      this.cacheById.set(tunnelId, tunnel)
+      return tunnel
+    } else {
+      return undefined
+    }
+  }
+
   async map(clientId: uuid, channelId: uuid): Promise<Tunnel> {
-    const cached = this.cache.get(clientId, channelId)
+    const cached = this.cacheByClienAndChannel.get(clientId, channelId)
     if (cached) {
       return cached
     }
@@ -32,7 +52,7 @@ export class TunnelService extends Service {
 
     if (rows?.length) {
       const tunnel = rows[0] as Tunnel
-      this.cache.set(clientId, channelId, tunnel)
+      this.cacheByClienAndChannel.set(clientId, channelId, tunnel)
       return tunnel
     } else {
       const tunnel = {
@@ -42,7 +62,8 @@ export class TunnelService extends Service {
       }
 
       await this.query().insert(tunnel)
-      this.cache.set(clientId, channelId, tunnel)
+      this.cacheByClienAndChannel.set(clientId, channelId, tunnel)
+      this.cacheById.set(tunnel.id, tunnel)
 
       return tunnel
     }

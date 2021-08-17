@@ -2,6 +2,7 @@ import { uuid } from '@botpress/messaging-base'
 import { Service } from '../../base/service'
 import { Batcher } from '../../batching/batcher'
 import { BatchingService } from '../../batching/service'
+import { ServerCache } from '../../caching/cache'
 import { ServerCache2D } from '../../caching/cache2D'
 import { CachingService } from '../../caching/service'
 import { ConversationService } from '../../conversations/service'
@@ -15,7 +16,7 @@ export class ConvmapService extends Service {
 
   private table: ConvmapTable
   private cacheByThreadId!: ServerCache2D<Convmap>
-  private cacheByConversationId!: ServerCache2D<Convmap>
+  private cacheByConversationId!: ServerCache<uuid, Convmap[]>
 
   constructor(
     private db: DatabaseService,
@@ -31,7 +32,7 @@ export class ConvmapService extends Service {
 
   async setup() {
     this.cacheByThreadId = await this.caching.newServerCache2D('cache_convmap_by_thread_id')
-    this.cacheByConversationId = await this.caching.newServerCache2D('cache_convmap_by_conversation_id')
+    this.cacheByConversationId = await this.caching.newServerCache('cache_convmap_by_conversation_id')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_convmap',
@@ -55,7 +56,8 @@ export class ConvmapService extends Service {
 
     await this.batcher.push(convmap)
     this.cacheByThreadId.set(tunnelId, threadId, convmap)
-    this.cacheByConversationId.set(tunnelId, conversationId, convmap)
+    // TODO: What to do with this? This could lead to errors
+    this.cacheByConversationId.set(conversationId, [convmap])
 
     return convmap
   }
@@ -78,22 +80,18 @@ export class ConvmapService extends Service {
     }
   }
 
-  async getByConversationId(tunnelId: uuid, conversationId: uuid): Promise<Convmap | undefined> {
-    const cached = this.cacheByConversationId.get(tunnelId, conversationId)
+  async listByConversationId(conversationId: uuid): Promise<Convmap[]> {
+    const cached = this.cacheByConversationId.get(conversationId)
     if (cached) {
       return cached
     }
 
     await this.batcher.flush()
-    const rows = await this.query().where({ tunnelId, conversationId })
+    const rows = await this.query().where({ conversationId })
 
-    if (rows?.length) {
-      const convmap = rows[0] as Convmap
-      this.cacheByConversationId.set(tunnelId, conversationId, convmap)
-      return convmap
-    } else {
-      return undefined
-    }
+    const convmaps = (rows || []) as Convmap[]
+    this.cacheByConversationId.set(conversationId, convmaps)
+    return convmaps
   }
 
   private query() {

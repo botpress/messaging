@@ -1,9 +1,9 @@
 import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
+import { ChatService } from '../chat/service'
 import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
-import { InstanceService } from '../instances/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
 import {
@@ -23,8 +23,7 @@ export class MessageApi extends ClientScopedApi {
     private sockets: SocketManager,
     private conversations: ConversationService,
     private messages: MessageService,
-    // garbadge code, this shouldn't be here but whatever
-    private instances: InstanceService,
+    private chat: ChatService,
     private socketService: SocketService
   ) {
     super(router, clients)
@@ -150,7 +149,7 @@ export class MessageApi extends ClientScopedApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
-      const { clientId, userId } = this.socketService.getUserInfo(socket)
+      const { userId } = this.socketService.getUserInfo(socket)
       const { conversationId, payload } = message.data
       const conversation = await this.conversations.get(conversationId)
 
@@ -163,16 +162,8 @@ export class MessageApi extends ClientScopedApi {
         })
       }
 
-      const msg = await this.messages.create(conversationId, userId, payload)
+      const msg = await this.chat.send(conversationId, userId, payload, { socket })
       this.sockets.reply(socket, message, msg)
-
-      await this.instances.sendToWebhooks({
-        clientId,
-        userId,
-        conversationId,
-        message: msg,
-        channel: 'socket'
-      })
     })
 
     this.sockets.handle('messages.list', async (socket, message) => {
