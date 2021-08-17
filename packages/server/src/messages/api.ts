@@ -149,7 +149,14 @@ export class MessageApi extends ClientScopedApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
-      const { userId } = this.socketService.getUserInfo(socket)
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
+
       const { conversationId, payload } = message.data
       const conversation = await this.conversations.get(conversationId)
 
@@ -172,7 +179,14 @@ export class MessageApi extends ClientScopedApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
-      const { userId } = this.socketService.getUserInfo(socket)
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
+
       const { conversationId, limit } = message.data
       const conversation = await this.conversations.get(conversationId)
 
