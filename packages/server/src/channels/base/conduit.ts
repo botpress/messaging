@@ -88,14 +88,10 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
       return
     }
 
-    // TODO: rehandle sandbox
-    /*
     const clientId = provider.sandbox
-      ? await this.sandbox.getClientId(conduitId, endpoint)
+      ? await this.app.instances.sandbox.getClientId(this.conduitId, endpoint)
       : (await this.app.clients.getByProviderId(provider.id))!.id
-      */
 
-    const clientId = (await this.app.clients.getByProviderId(provider.id))?.id
     if (!clientId) {
       return
     }

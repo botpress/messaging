@@ -25,11 +25,11 @@ export class InstanceService extends Service {
     return this.emitter
   }
 
+  public readonly sandbox: InstanceSandbox
   private destroyed: boolean
   private emitter: InstanceEmitter
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
-  private sandbox: InstanceSandbox
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private failures: { [conduitId: string]: number } = {}
   private logger: Logger
