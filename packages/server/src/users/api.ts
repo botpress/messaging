@@ -1,3 +1,4 @@
+import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
@@ -35,12 +36,13 @@ export class UserApi extends ClientScopedApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
-      const { clientId, userId, userToken } = message.data
+      const { clientId, userId, userToken }: { clientId: uuid; userId: uuid; userToken: string } = message.data
 
       // TODO: use user token to validate user
-      const user = userId
-        ? (await this.users.get(userId)) || (await this.users.create(clientId))
-        : await this.users.create(clientId)
+      let user = userId && (await this.users.get(userId))
+      if (!user || user.clientId !== clientId) {
+        user = await this.users.create(clientId)
+      }
 
       this.socketService.registerForUser(socket, user.id)
       this.sockets.reply(socket, message, user)
