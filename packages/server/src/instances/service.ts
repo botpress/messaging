@@ -15,6 +15,7 @@ import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
 import { ProviderService } from '../providers/service'
+import { StatusService } from '../status/service'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
@@ -31,7 +32,6 @@ export class InstanceService extends Service {
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
-  private failures: { [conduitId: string]: number } = {}
   private logger: Logger
   private lazyLoadingEnabled!: boolean
 
@@ -44,6 +44,7 @@ export class InstanceService extends Service {
     private conduitService: ConduitService,
     private clientService: ClientService,
     private mappingService: MappingService,
+    private statusService: StatusService,
     private app: App
   ) {
     super()
@@ -54,6 +55,7 @@ export class InstanceService extends Service {
       this.providerService,
       this.conduitService,
       this.clientService,
+      this.statusService,
       this
     )
     this.logger = this.loggerService.root.sub('instances')
@@ -62,8 +64,8 @@ export class InstanceService extends Service {
       this.distributedService,
       this.channelService,
       this.conduitService,
-      this,
-      this.failures
+      this.statusService,
+      this
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
   }
@@ -81,7 +83,7 @@ export class InstanceService extends Service {
       maxAge: ms('30min')
     })
 
-    await this.invalidator.setup(this.cache, this.failures)
+    await this.invalidator.setup(this.cache)
   }
 
   private async handleCacheDispose(conduitId: uuid, instance: ConduitInstance<any, any>) {
@@ -120,17 +122,14 @@ export class InstanceService extends Service {
     } catch (e) {
       this.cache.del(conduitId)
 
-      // TODO: replace by StatusService
+      await this.statusService.addError(conduitId, e)
       instance.logger.error(e, 'Error trying to initialize conduit')
-      if (!this.failures[conduitId]) {
-        this.failures[conduitId] = 0
-      }
-      this.failures[conduitId]++
 
       return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
     }
 
     await this.conduitService.updateInitialized(conduitId)
+    await this.statusService.clearErrors(conduitId)
     return this.emitter.emit(InstanceEvents.Initialized, conduitId)
   }
 
@@ -153,14 +152,11 @@ export class InstanceService extends Service {
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
     } catch (e) {
       this.cache.del(conduitId)
-      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
 
-      // TODO: replace by StatusService
+      await this.statusService.addError(conduitId, e)
       instance.logger.error(e, 'Error trying to setup conduit')
-      if (!this.failures[conduitId]) {
-        this.failures[conduitId] = 0
-      }
-      this.failures[conduitId]++
+
+      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
     }
 
     return instance
