@@ -16,13 +16,14 @@ export class WebchatConversation extends WebchatSystem {
   }
 
   async setup() {
-    const saved = this.storage.get<uuid>('saved-conversation')
+    const STORAGE_ID = 'saved-conversation'
+    const saved = this.storage.get<uuid>(STORAGE_ID)
 
     const event = { choice: saved }
     await this.emitter.emit(ConversationEvents.Choose, event)
 
     const conversation = await this.socket.conversations.use(event.choice)
-    this.storage.set('saved-conversation', conversation.id)
+    this.storage.set(STORAGE_ID, conversation.id)
 
     await this.set(conversation!)
   }
