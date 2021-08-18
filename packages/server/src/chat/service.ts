@@ -1,5 +1,6 @@
 import { Message, uuid } from '@botpress/messaging-base'
 import _ from 'lodash'
+import { Socket } from 'socket.io'
 import yn from 'yn'
 import { Service } from '../base/service'
 import { ChannelService } from '../channels/service'
@@ -11,6 +12,7 @@ import { InstanceService } from '../instances/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
+import { Endpoint } from '../mapping/types'
 import { MessageService } from '../messages/service'
 import { PostService } from '../post/service'
 import { SocketService } from '../socket/service'
@@ -52,7 +54,12 @@ export class ChatService extends Service {
     }
   }
 
-  async send(conversationId: uuid, authorId: uuid | undefined, payload: any, from: any): Promise<Message> {
+  async send(
+    conversationId: uuid,
+    authorId: uuid | undefined,
+    payload: any,
+    from: { socket?: Socket; endpoint?: Endpoint; clientId?: uuid }
+  ): Promise<Message> {
     const conversation = await this.conversations.get(conversationId)
     const client = await this.clients.getById(conversation!.clientId)
     const message = await this.messages.create(conversationId, authorId, payload)
