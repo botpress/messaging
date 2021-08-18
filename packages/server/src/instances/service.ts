@@ -49,9 +49,9 @@ export class InstanceService extends Service {
     private configService: ConfigService,
     private distributedService: DistributedService,
     private cachingService: CachingService,
+    private postService: PostService,
     private channelService: ChannelService,
     private providerService: ProviderService,
-    private postService: PostService,
     private conduitService: ConduitService,
     private clientService: ClientService,
     private webhookService: WebhookService,
@@ -155,6 +155,7 @@ export class InstanceService extends Service {
     }
 
     await this.conduitService.updateInitialized(conduitId)
+    await this.statusService.clearErrors(conduitId)
     return this.emitter.emit(InstanceEvents.Initialized, conduitId)
   }
 

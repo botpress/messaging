@@ -1,27 +1,35 @@
 import { uuid } from '@botpress/messaging-base'
-import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
+import { ConduitEvents } from '../conduits/events'
+import { ConduitService } from '../conduits/service'
 import { DatabaseService } from '../database/service'
+import { DistributedService } from '../distributed/service'
 import { StatusTable } from './table'
 
 export class StatusService extends Service {
   private table: StatusTable
   private cache!: ServerCache<uuid, number>
 
-  constructor(private db: DatabaseService, private cachingService: CachingService) {
+  constructor(
+    private db: DatabaseService,
+    private distributed: DistributedService,
+    private caching: CachingService,
+    private conduits: ConduitService
+  ) {
     super()
     this.table = new StatusTable()
+    this.conduits.events.on(ConduitEvents.Deleting, this.onConduitDeleted.bind(this))
   }
 
   async setup() {
-    this.cache = await this.cachingService.newServerCache('cache_nb_error_by_conduit')
+    this.cache = await this.caching.newServerCache('cache_number_of_errors_by_conduit')
 
     await this.db.registerTable(this.table)
   }
 
-  public async get(conduitId: uuid): Promise<number | undefined> {
+  public async getNumberOfErrors(conduitId: uuid): Promise<number | undefined> {
     const cached = this.cache.get(conduitId)
     if (cached) {
       return cached
@@ -29,9 +37,9 @@ export class StatusService extends Service {
 
     const rows = await this.query().where({ conduitId })
     if (rows?.length) {
-      const numberOfErrors = rows[0]['numberOfErrors']
+      const numberOfErrors = rows[0].numberOfErrors
 
-      this.cache.set(conduitId, numberOfErrors)
+      this.cache.set(conduitId, numberOfErrors, undefined, true)
 
       return numberOfErrors
     }
@@ -40,32 +48,55 @@ export class StatusService extends Service {
   }
 
   async addError(conduitId: uuid, error: Error) {
-    const numberOfErrors = await this.get(conduitId)
+    await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
+      const numberOfErrors = await this.getNumberOfErrors(conduitId)
+      const formattedError = this.formatError(error)
 
-    if (numberOfErrors === undefined) {
-      await this.query().insert({ id: uuidv4(), conduitId, numberOfErrors: 1, lastError: error })
+      if (numberOfErrors === undefined) {
+        await this.query().insert({ conduitId, numberOfErrors: 1, lastError: formattedError })
 
-      this.cache.set(conduitId, 1)
-    } else {
-      await this.query()
-        .update({ numberOfErrors: numberOfErrors + 1, lastError: error })
-        .where({ conduitId })
+        this.cache.set(conduitId, 1, undefined, true)
+      } else {
+        await this.query()
+          .update({ numberOfErrors: numberOfErrors + 1, lastError: formattedError })
+          .where({ conduitId })
 
-      this.cache.set(conduitId, numberOfErrors + 1)
-    }
+        this.cache.set(conduitId, numberOfErrors + 1, undefined, true)
+      }
+    })
   }
 
   async clearErrors(conduitId: uuid) {
-    const numberOfErrors = await this.get(conduitId)
+    await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
+      const numberOfErrors = await this.getNumberOfErrors(conduitId)
 
-    if (numberOfErrors && numberOfErrors > 0) {
-      await this.query().update({ numberOfErrors: 0, lastError: null }).where({ conduitId })
+      if (numberOfErrors && numberOfErrors > 0) {
+        await this.query().update({ numberOfErrors: 0, lastError: null }).where({ conduitId })
 
-      this.cache.set(conduitId, 0)
-    }
+        this.cache.del(conduitId, true)
+      }
+    })
   }
 
   private query() {
     return this.db.knex(this.table.id)
+  }
+
+  private async onConduitDeleted(conduitId: string) {
+    if (this.cache.has(conduitId)) {
+      await this.query().delete().where({ conduitId })
+
+      this.cache.del(conduitId, true)
+    }
+  }
+
+  private formatError(error: Error) {
+    let formattedError = `${error.name}: ${error.message}`
+
+    if (error.stack) {
+      formattedError = error.stack
+    }
+
+    return formattedError
   }
 }

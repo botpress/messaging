@@ -21,7 +21,7 @@ export class InstanceInvalidator {
     private providers: ProviderService,
     private conduits: ConduitService,
     private clients: ClientService,
-    private statusService: StatusService,
+    private status: StatusService,
     private instances: InstanceService
   ) {}
 
@@ -55,7 +55,7 @@ export class InstanceInvalidator {
 
   private async onConduitUpdated(conduitId: uuid) {
     this.cache.del(conduitId, true)
-    await this.statusService.clearErrors(conduitId)
+    await this.status.clearErrors(conduitId)
 
     const conduit = (await this.conduits.get(conduitId))!
     const channel = this.channels.getById(conduit.channelId)

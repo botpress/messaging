@@ -15,7 +15,7 @@ export class InstanceMonitoring {
     private distributed: DistributedService,
     private channels: ChannelService,
     private conduits: ConduitService,
-    private statusService: StatusService,
+    private status: StatusService,
     private instances: InstanceService
   ) {}
 
@@ -40,7 +40,8 @@ export class InstanceMonitoring {
     const outdateds = await this.conduits.listOutdated(ms('10h'), 1000)
 
     for (const outdated of outdateds) {
-      if (((await this.statusService.get(outdated.id)) || 0) >= MAX_ALLOWED_FAILURES) {
+      const failures = await this.status.getNumberOfErrors(outdated.id)
+      if (failures && failures >= MAX_ALLOWED_FAILURES) {
         continue
       }
 
@@ -58,7 +59,8 @@ export class InstanceMonitoring {
 
       const conduits = await this.conduits.listByChannel(channel.id)
       for (const conduit of conduits) {
-        if (((await this.statusService.get(conduit.id)) || 0) >= MAX_ALLOWED_FAILURES) {
+        const failures = await this.status.getNumberOfErrors(conduit.id)
+        if (failures && failures >= MAX_ALLOWED_FAILURES) {
           continue
         }
 

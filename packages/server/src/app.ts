@@ -40,10 +40,10 @@ export class App {
   conversations: ConversationService
   messages: MessageService
   mapping: MappingService
+  status: StatusService
   instances: InstanceService
   syncs: SyncService
   health: HealthService
-  status: StatusService
 
   constructor() {
     this.logger = new LoggerService()
@@ -64,15 +64,15 @@ export class App {
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
     this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
-    this.status = new StatusService(this.database, this.caching)
+    this.status = new StatusService(this.database, this.distributed, this.caching, this.conduits)
     this.instances = new InstanceService(
       this.logger,
       this.config,
       this.distributed,
       this.caching,
+      this.post,
       this.channels,
       this.providers,
-      this.post,
       this.conduits,
       this.clients,
       this.webhooks,
@@ -124,9 +124,9 @@ export class App {
     await this.conversations.setup()
     await this.messages.setup()
     await this.mapping.setup()
+    await this.status.setup()
     await this.instances.setup()
     await this.health.setup()
-    await this.status.setup()
   }
 
   async monitor() {
