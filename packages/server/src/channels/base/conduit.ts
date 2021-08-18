@@ -79,7 +79,7 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     }
   }
 
-  async receive(payload: any) {
+  async receive<T>(payload: T) {
     const conduit = (await this.app.conduits.get(this.conduitId))!
     const provider = (await this.app.providers.getById(conduit.providerId))!
     const endpoint = await this.extractEndpoint(payload)

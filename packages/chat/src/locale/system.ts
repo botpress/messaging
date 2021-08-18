@@ -1,11 +1,12 @@
-export class WebchateLocale {
+import { WebchatSystem } from '../base/system'
+
+export class WebchateLocale extends WebchatSystem {
   public current!: string
 
   constructor() {
+    super()
     this.current = navigator.language
   }
-
-  async setup() {}
 
   getFamily() {
     return this.current?.split('-')[0]

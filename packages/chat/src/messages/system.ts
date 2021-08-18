@@ -1,13 +1,14 @@
 import { MessagingSocket, SocketComEvents } from '@botpress/messaging-socket'
+import { WebchatSystem } from '../base/system'
 import { WebchatConversation } from '../conversation/system'
-import { WebchatUser } from '../user/system'
 import { MessagesEmitter, MessagesEvents, MessagesWatcher } from './events'
 
-export class WebchatMessages {
+export class WebchatMessages extends WebchatSystem {
   public readonly events: MessagesWatcher
   private readonly emitter: MessagesEmitter
 
-  constructor(private socket: MessagingSocket, private user: WebchatUser, private conversation: WebchatConversation) {
+  constructor(private socket: MessagingSocket, private conversation: WebchatConversation) {
+    super()
     this.emitter = new MessagesEmitter()
     this.events = this.emitter
   }
@@ -20,7 +21,7 @@ export class WebchatMessages {
   private async setupMessageReception() {
     this.socket.com.events.on(SocketComEvents.Message, async (message) => {
       if (message.type === 'message') {
-        void this.emitter.emit(MessagesEvents.Receive, [message.data])
+        await this.emitter.emit(MessagesEvents.Receive, [message.data])
       }
     })
   }

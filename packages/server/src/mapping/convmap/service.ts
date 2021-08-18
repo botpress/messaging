@@ -56,7 +56,8 @@ export class ConvmapService extends Service {
 
     await this.batcher.push(convmap)
     this.cacheByThreadId.set(tunnelId, threadId, convmap)
-    // TODO: What to do with this? This could lead to errors
+    // FIXME: What to do with this? This could lead to errors if we have a single
+    // conversation linked to more than one channel (we don't do that currently so it's fine for now)
     this.cacheByConversationId.set(conversationId, [convmap])
 
     return convmap

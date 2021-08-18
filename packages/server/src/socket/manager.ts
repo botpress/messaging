@@ -68,7 +68,7 @@ export class SocketManager {
   }
 }
 
-export type SocketHandler = (socket: Socket.Socket, data: SocketRequest) => Promise<any>
+export type SocketHandler = (socket: Socket.Socket, data: SocketRequest) => Promise<void>
 
 export interface SocketRequest {
   request: string

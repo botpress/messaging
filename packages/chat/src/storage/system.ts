@@ -1,6 +1,6 @@
-export class WebchatStorage {
-  async setup() {}
+import { WebchatSystem } from '../base/system'
 
+export class WebchatStorage extends WebchatSystem {
   public get<T>(key: string): T | undefined {
     const stored = localStorage.getItem(this.getKey(key))
     if (!stored) {

@@ -16,13 +16,13 @@ export class Webchat {
   public readonly messages: WebchatMessages
 
   constructor(url: string, clientId: string) {
-    this.socket = new MessagingSocket({ url, clientId, manualConnect: true })
     this.storage = new WebchatStorage()
     this.locale = new WebchateLocale()
     this.lang = new WebchatLang(this.locale)
+    this.socket = new MessagingSocket({ url, clientId, manualConnect: true })
     this.user = new WebchatUser(this.storage, this.socket)
     this.conversation = new WebchatConversation(this.storage, this.socket)
-    this.messages = new WebchatMessages(this.socket, this.user, this.conversation)
+    this.messages = new WebchatMessages(this.socket, this.conversation)
   }
 
   public async setup() {

@@ -39,7 +39,7 @@ export class DiscordConduit extends ConduitInstance<DiscordConfig, DiscordContex
 
     this.client.on('message', async (msg) => {
       if (!msg.author.bot) {
-        await this.receive(this.conduitId)
+        await this.receive(msg)
       }
     })
 

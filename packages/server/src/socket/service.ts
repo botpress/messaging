@@ -39,7 +39,7 @@ export class SocketService extends Service {
   }
 
   public getUserId(socket: Socket): uuid | undefined {
-    // Todo: possible vulnerability here if the user gets deleted. It would still have permissions in the cache
+    // TODO: possible vulnerability here if the user gets deleted. It would still have permissions in the cache
     // The user service has no delete() function at the moment so we can't listen to deleted events yet
 
     const cached = this.cache.get(socket.id)
@@ -58,17 +58,19 @@ export class SocketService extends Service {
   }
 
   public registerForUser(socket: Socket, userId: uuid) {
-    const state = {
-      socket,
-      userId
-    }
-    this.sockets[socket.id] = state
-    this.cache.set(socket.id, state)
-
     const current = this.socketsByUserId[userId]
-    const list = [...(current || []), socket]
-    this.socketsByUserId[userId] = list
-    this.cacheByUserId.set(userId, list)
+    if (!current || !current.find((x) => x.id === socket.id)) {
+      const state = {
+        socket,
+        userId
+      }
+      this.sockets[socket.id] = state
+      this.cache.set(socket.id, state)
+
+      const list = [...(current || []), socket]
+      this.socketsByUserId[userId] = list
+      this.cacheByUserId.set(userId, list)
+    }
   }
 
   public listByUser(userId: string) {

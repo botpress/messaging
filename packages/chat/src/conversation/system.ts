@@ -1,14 +1,16 @@
 import { Conversation, uuid } from '@botpress/messaging-base'
 import { MessagingSocket } from '@botpress/messaging-socket'
+import { WebchatSystem } from '../base/system'
 import { WebchatStorage } from '../storage/system'
 import { ConversationEmitter, ConversationEvents, ConversationWatcher } from './events'
 
-export class WebchatConversation {
+export class WebchatConversation extends WebchatSystem {
   public readonly events: ConversationWatcher
   private readonly emitter: ConversationEmitter
   private current?: Conversation
 
   constructor(private storage: WebchatStorage, private socket: MessagingSocket) {
+    super()
     this.emitter = new ConversationEmitter()
     this.events = this.emitter
   }

@@ -89,32 +89,22 @@ export class ChatService extends Service {
     }
 
     if (from.clientId !== client!.id) {
-      await this.sendToWebhooks({
-        clientId: client?.id,
-        userId: conversation?.userId,
-        conversationId,
-        message,
-        channel
-      })
+      const post: WebhookContent = {
+        type: 'message',
+        client: { id: client!.id },
+        channel: { name: channel },
+        user: { id: conversation!.userId },
+        conversation: { id: conversationId },
+        message
+      }
+
+      if (this.loggingEnabled) {
+        this.logger.debug('Received message', post)
+      }
+
+      void this.webhookBroadcaster.send(client!.id, post)
     }
 
     return message
-  }
-
-  async sendToWebhooks({ clientId, userId, conversationId, message, channel }: any) {
-    const post: WebhookContent = {
-      type: 'message',
-      client: { id: clientId },
-      channel: { name: channel },
-      user: { id: userId },
-      conversation: { id: conversationId },
-      message
-    }
-
-    if (this.loggingEnabled) {
-      this.logger.debug('Received message', post)
-    }
-
-    void this.webhookBroadcaster.send(clientId, post)
   }
 }
