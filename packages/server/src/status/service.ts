@@ -39,7 +39,7 @@ export class StatusService extends Service {
     if (rows?.length) {
       const numberOfErrors = rows[0].numberOfErrors
 
-      this.cache.set(conduitId, numberOfErrors, undefined, true)
+      this.cache.set(conduitId, numberOfErrors)
 
       return numberOfErrors
     }
@@ -83,11 +83,7 @@ export class StatusService extends Service {
   }
 
   private async onConduitDeleted(conduitId: string) {
-    if (this.cache.has(conduitId)) {
-      await this.query().delete().where({ conduitId })
-
-      this.cache.del(conduitId, true)
-    }
+    this.cache.del(conduitId, true)
   }
 
   private formatError(error: Error) {
