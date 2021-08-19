@@ -130,6 +130,7 @@ export class App {
     await this.config.setup()
     await this.database.setup()
     await this.meta.setup()
+    await this.migration.setup()
     await this.crypto.setup()
     await this.distributed.setup()
     await this.caching.setup()
