@@ -13,7 +13,6 @@ import { Usermap } from './types'
 export class UsermapService extends Service {
   private table: UsermapTable
   private cacheBySenderId!: ServerCache2D<Usermap>
-  private cacheByUserId!: ServerCache2D<Usermap>
   private batcher!: Batcher<Usermap>
 
   constructor(
@@ -30,7 +29,6 @@ export class UsermapService extends Service {
 
   async setup() {
     this.cacheBySenderId = await this.caching.newServerCache2D('cache_usermap_by_sender_id')
-    this.cacheByUserId = await this.caching.newServerCache2D('cache_usermap_by_user_id')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_usermap',
@@ -54,7 +52,6 @@ export class UsermapService extends Service {
 
     await this.batcher.push(usermap)
     this.cacheBySenderId.set(tunnelId, senderId, usermap)
-    this.cacheByUserId.set(tunnelId, userId, usermap)
 
     return usermap
   }
@@ -71,24 +68,6 @@ export class UsermapService extends Service {
     if (rows?.length) {
       const convmap = rows[0] as Usermap
       this.cacheBySenderId.set(tunnelId, senderId, convmap)
-      return convmap
-    } else {
-      return undefined
-    }
-  }
-
-  async getByUserId(tunnelId: uuid, userId: uuid): Promise<Usermap | undefined> {
-    const cached = this.cacheByUserId.get(tunnelId, userId)
-    if (cached) {
-      return cached
-    }
-
-    await this.batcher.flush()
-    const rows = await this.query().where({ tunnelId, userId })
-
-    if (rows?.length) {
-      const convmap = rows[0] as Usermap
-      this.cacheByUserId.set(tunnelId, userId, convmap)
       return convmap
     } else {
       return undefined

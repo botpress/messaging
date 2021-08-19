@@ -1,0 +1,29 @@
+.bp-send-button {
+  margin-left: 5px;
+}
+
+.bp-messages-section {
+  overflow: auto;
+  height: 400px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.bp-messages-section table {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Copied from simple css source. Forces dark theme colors */
+:root {
+  --bg: #212121;
+  --accent-bg: #2b2b2b;
+  --text: #dcdcdc;
+  --text-light: #ababab;
+  --border: #666;
+  --accent: #ffb300;
+  --accent-light: #ffecb3;
+  --code: #f06292;
+  --preformatted: #ccc;
+  --disabled: #111;
+}

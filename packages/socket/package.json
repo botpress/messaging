@@ -1,0 +1,21 @@
+{
+  "name": "@botpress/messaging-socket",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn --silent && tsc --build",
+    "watch": "yarn --silent && tsc --build --watch",
+    "prepublishOnly": "yarn --silent --frozen-lockfile && tsc --build"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {},
+  "dependencies": {
+    "@botpress/messaging-base": "0.0.1",
+    "socket.io-client": "^4.1.3"
+  }
+}

@@ -55,17 +55,17 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
         return
       } else if (actionId.startsWith('quick_reply')) {
         await axios.post(payload.response_url, { text: `*${action?.text?.text}*` })
-        await this.app.instances.receive(this.conduitId, {
+        await this.receive({
           ctx: payload,
           content: { type: 'quick_reply', text: action?.text?.text, payload: action?.value }
         })
       } else if (actionId.startsWith('say_something')) {
-        await this.app.instances.receive(this.conduitId, {
+        await this.receive({
           ctx: payload,
           content: { type: 'say_something', text: action?.value }
         })
       } else {
-        await this.app.instances.receive(this.conduitId, {
+        await this.receive({
           ctx: payload,
           content: { type: 'postback', payload: action?.value }
         })
@@ -82,7 +82,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
 
       await axios.post(payload.response_url, { text: `*${label}*` })
 
-      await this.app.instances.receive(this.conduitId, {
+      await this.receive({
         ctx: payload,
         content: { type: 'quick_reply', text: label, payload: action?.value }
       })
@@ -97,7 +97,7 @@ export class SlackConduit extends ConduitInstance<SlackConfig, SlackContext> {
         return
       }
 
-      await this.app.instances.receive(this.conduitId, {
+      await this.receive({
         ctx: payload,
         content: {
           type: 'text',

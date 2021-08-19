@@ -62,6 +62,7 @@ export class Launcher {
     }
 
     const server = this.express.listen(port)
+    await this.api.sockets.setup(server)
     this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
 
     if (!yn(process.env.SPINNED)) {

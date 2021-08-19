@@ -31,7 +31,7 @@ export class VonageChannel extends Channel<VonageConduit> {
         const conduit = res.locals.conduit as VonageConduit
 
         if (this.validate(conduit, req)) {
-          await this.app.instances.receive(conduit.conduitId, req.body)
+          await conduit.receive(req.body)
         }
 
         res.sendStatus(200)

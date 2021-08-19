@@ -34,7 +34,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
           validateRequest(conduit.config.authToken, signature, conduit.webhookUrl, req.body) ||
           (await this.verifyLegacy(conduit, signature, req))
         ) {
-          await this.app.instances.receive(conduit.conduitId, req.body)
+          await conduit.receive(req.body)
           res.sendStatus(204)
         } else {
           this.logger.error(new Error('Request validation failed. Make sure that your authToken is valid'))
