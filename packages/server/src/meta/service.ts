@@ -1,7 +1,7 @@
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
 import { MetaTable } from './table'
-import { ServerMetadata, ServerMetaEntry } from './types'
+import { ServerMetadata, ServerMetadataSchema, ServerMetaEntry } from './types'
 
 const pkg = require('../../package.json')
 
@@ -33,6 +33,8 @@ export class MetaService extends Service {
   }
 
   async update(data: ServerMetadata) {
+    await ServerMetadataSchema.validateAsync(data)
+
     const entry = {
       time: new Date(),
       data
