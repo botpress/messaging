@@ -1,3 +1,4 @@
+import semver from 'semver'
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
 import { Logger } from '../logger/types'
@@ -19,7 +20,7 @@ export class MigrationService extends Service {
     const dbVersion = this.meta.get().version
     this.logger.debug('Database Version', dbVersion)
 
-    const migrations = this.listAllMigrations()
+    const migrations = this.listAllMigrations().filter((x) => semver.lte(x.meta.version, appVersion))
     this.logger.debug(
       'Migrations',
       migrations.map((x) => x.meta)
