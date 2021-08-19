@@ -28,8 +28,12 @@ export class MetaService extends Service {
     }
   }
 
+  app() {
+    return { version: pkg.version }
+  }
+
   get() {
-    return this.current
+    return this.current.data
   }
 
   async update(data: ServerMetadata) {
