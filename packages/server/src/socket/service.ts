@@ -21,19 +21,6 @@ export class SocketService extends Service {
     this.cacheByUserId = await this.cachingService.newServerCache('cache_sockets_by_user_id')
   }
 
-  async destroy() {
-    for (const sockets of Object.values(this.socketsByUserId)) {
-      if (!sockets) {
-        continue
-      }
-
-      for (const socket of sockets) {
-        // TODO: Delete the socket from the cache and invalidate once we distribute the socket usage
-        socket.disconnect()
-      }
-    }
-  }
-
   public create(socket: Socket) {
     this.sockets[socket.id] = {}
   }

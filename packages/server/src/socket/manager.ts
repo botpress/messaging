@@ -35,8 +35,6 @@ export class SocketManager {
         })
       })
     }
-
-    await this.sockets.destroy()
   }
 
   public handle(type: string, callback: SocketHandler) {
