@@ -29,6 +29,7 @@ export class HealthWatcher {
 
   private async handleConduitCreated(conduitId: uuid) {
     await this.healthService.register(conduitId, HealthEventType.Create)
+    await this.healthService.register(conduitId, HealthEventType.Configure)
   }
 
   private async handleConduitUpdated(conduitId: uuid) {
