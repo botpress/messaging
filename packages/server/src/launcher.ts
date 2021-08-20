@@ -83,6 +83,9 @@ export class Launcher {
     if (!this.shuttingDown) {
       this.shuttingDown = true
 
+      this.logger.info('Server gracefully closing down...')
+
+      await this.api.sockets.destroy()
       await this.httpTerminator?.terminate()
       await this.app.destroy()
     }

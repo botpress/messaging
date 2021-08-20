@@ -7,15 +7,36 @@ import { SocketService } from './service'
 
 export class SocketManager {
   private logger = new Logger('Socket')
+  private ws: Socket.Server | undefined
   private handlers: { [type: string]: SocketHandler } = {}
 
   constructor(private sockets: SocketService) {}
 
   async setup(server: Server) {
     if (yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
-      const ws = new Socket.Server(server, { cors: { origin: '*' } })
-      ws.on('connection', this.handleSocketConnection.bind(this))
+      this.ws = new Socket.Server(server, { cors: { origin: '*' } })
+      this.ws.on('connection', this.handleSocketConnection.bind(this))
     }
+  }
+
+  async destroy() {
+    if (this.ws !== undefined) {
+      await new Promise((resolve, reject) => {
+        // This is kind of hack to make sure that socket.io does not
+        // try to close the HTTP server before http-terminator
+        this.ws!['httpServer'] = undefined
+
+        this.ws!.close((err) => {
+          if (err) {
+            return reject(err)
+          }
+
+          resolve(undefined)
+        })
+      })
+    }
+
+    await this.sockets.destroy()
   }
 
   public handle(type: string, callback: SocketHandler) {
