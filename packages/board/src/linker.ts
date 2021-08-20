@@ -88,10 +88,7 @@ export class BoardLinker {
 
     let host = this.inputHost.value
     if (!host?.length) {
-      host = localStorage.getItem('bp-host')!
-    }
-    if (!host?.length) {
-      host = 'http://localhost:3100'
+      host = localStorage.getItem('bp-host') || 'http://localhost:3100'
     }
 
     let clientId = this.inputClientId.value
