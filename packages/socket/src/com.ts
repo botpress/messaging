@@ -22,8 +22,8 @@ export class SocketCom {
       transports: ['websocket']
     })
 
-    this.socket.on('connect', () => {
-      this.socket.send({ type: 'visit' })
+    this.socket.on('connect', async () => {
+      await this.emitter.emit(SocketComEvents.Connect, {})
     })
 
     this.socket.on('message', async (message) => {
@@ -66,6 +66,7 @@ export class SocketCom {
 }
 
 export enum SocketComEvents {
+  Connect = 'connect',
   Message = 'message'
 }
 
@@ -74,7 +75,10 @@ export interface SocketComMessageEvent {
   data: any
 }
 
+export interface SocketComConnectEvent {}
+
 export class SocketComEmitter extends Emitter<{
+  [SocketComEvents.Connect]: SocketComConnectEvent
   [SocketComEvents.Message]: SocketComMessageEvent
 }> {}
 
