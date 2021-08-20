@@ -1,21 +1,18 @@
 import { MessagingClient } from '@botpress/messaging-client'
+import { SocketComEvents } from '@botpress/messaging-socket'
 import { ConversationEvents, UserEvents, Webchat } from '@botpress/webchat'
 import { text, element, WebchatRenderer } from '@botpress/webchat-skin'
 import { BoardWatcher } from './watcher'
 
 export class BoardLinker {
+  private inputHost!: HTMLInputElement
   private inputClientId!: HTMLInputElement
   private inputUserId!: HTMLInputElement
   private inputConversationId!: HTMLInputElement
 
   private webchat?: Webchat
 
-  constructor(
-    private url: string,
-    private parent: HTMLElement,
-    private webchatElement: HTMLElement,
-    private watcherElement: HTMLElement
-  ) {
+  constructor(private parent: HTMLElement, private webchatElement: HTMLElement, private watcherElement: HTMLElement) {
     this.make()
     this.listen()
     void this.create()
@@ -32,6 +29,16 @@ export class BoardLinker {
       element('form', details, (form) => {
         form.autocomplete = 'off'
 
+        element('label', form, (label) => {
+          label.htmlFor = 'bp-host-input'
+          text('host', label)
+        })
+        element('br', form)
+        this.inputHost = element('input', form, (input) => {
+          input.type = 'text'
+          input.name = 'bp-host-input'
+        })
+        element('br', form)
         element('label', form, (label) => {
           label.htmlFor = 'bp-clientId-input'
           text('clientId', label)
@@ -79,12 +86,20 @@ export class BoardLinker {
   private async create() {
     this.webchat?.destroy()
 
+    let host = this.inputHost.value
+    if (!host?.length) {
+      host = localStorage.getItem('bp-host')!
+    }
+    if (!host?.length) {
+      host = 'http://localhost:3100'
+    }
+
     let clientId = this.inputClientId.value
     if (!clientId?.length) {
       clientId = localStorage.getItem('bp-board-client')!
     }
     if (!clientId?.length) {
-      const client = new MessagingClient({ url: this.url })
+      const client = new MessagingClient({ url: host })
       const res = await client.syncs.sync({})
       clientId = res.id
     }
@@ -96,7 +111,7 @@ export class BoardLinker {
       this.webchatElement.removeChild(this.webchatElement.lastChild!)
     }
 
-    this.webchat = new Webchat(this.url, clientId)
+    this.webchat = new Webchat(host, clientId)
     new WebchatRenderer(this.webchatElement, this.webchat)
     new BoardWatcher(this.watcherElement, this.webchat)
 
@@ -110,6 +125,12 @@ export class BoardLinker {
         e.choice = this.inputConversationId.value
       })
     }
+
+    this.webchat.socket.com.events.on(SocketComEvents.Connect, async (e) => {
+      localStorage.setItem('bp-host', host)
+      this.inputHost.placeholder = host
+      this.inputHost.value = ''
+    })
 
     this.inputClientId.placeholder = clientId
     this.webchat.user.events.on(UserEvents.Set, async (e) => {
