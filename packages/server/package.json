@@ -17,7 +17,7 @@
     "@types/lodash": "^4.14.172",
     "@types/lru-cache": "^5.1.1",
     "@types/ms": "^0.7.31",
-    "@types/node": "^12.18.3",
+    "@types/node": "^12.20.20",
     "@types/redlock": "^4.0.2",
     "@types/uuid": "^8.3.1"
   },
@@ -56,6 +56,6 @@
     "telegraf": "^3.27.1",
     "twilio": "^3.61.0",
     "uuid": "^8.3.2",
-    "yn": "^4.0.0"
+    "yn": "^5.0.0"
   }
 }

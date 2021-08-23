@@ -18,7 +18,12 @@ const config: Config.InitialOptions = {
       testMatch: ['<rootDir>/packages/server/test/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
-      transform: tsjPreset.transform,
+      transform: {
+        ...tsjPreset.transform,
+        '.js': 'jest-esm-transformer'
+      },
+      // yn ^5.0.0 must be transformed using 'jest-esm-transformer' since it uses ESM modules: https://github.com/sindresorhus/yn/releases/tag/v5.0.0
+      transformIgnorePatterns: ['node_modules/(?!(yn)/)'],
       clearMocks: true
     }
   ]
