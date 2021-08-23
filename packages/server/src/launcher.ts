@@ -94,19 +94,14 @@ export class Launcher {
       return
     }
 
-    const centerText = (text: string, width: number, indent: number = 0) => {
-      const padding = Math.floor((width - text.length) / 2)
-      return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
-    }
-
     const width = yn(process.env.SPINNED) ? 45 : 33
     this.logger.info(
       '========================================\n' +
-        clc.bold(centerText('Botpress Messaging', 40, width)) +
+        clc.bold(this.logger.center('Botpress Messaging', 40)) +
         '\n' +
-        clc.blackBright(centerText(`Version ${pkg.version}`, 40, width)) +
+        clc.blackBright(this.logger.center(`Version ${pkg.version}`, 40)) +
         '\n' +
-        centerText('========================================', 40, width)
+        this.logger.center('========================================', 40)
     )
   }
 

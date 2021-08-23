@@ -1,4 +1,5 @@
 import clc from 'cli-color'
+import _ from 'lodash'
 import moment from 'moment'
 import yn from 'yn'
 
@@ -47,6 +48,12 @@ export class Logger {
     }
 
     this.print([message, data, error?.stack], LoggerLevel.Error)
+  }
+
+  center(text: string, width: number) {
+    const indent = (yn(process.env.SPINNED) ? 37 : 25) + this.scope.length
+    const padding = Math.floor((width - text.length) / 2)
+    return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
   }
 
   private print(params: Param[], level: LoggerLevel) {

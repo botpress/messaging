@@ -1,6 +1,7 @@
 import clc from 'cli-color'
 import _ from 'lodash'
 import semver from 'semver'
+import yn from 'yn'
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
 import { Logger } from '../logger/types'
@@ -28,14 +29,41 @@ export class MigrationService extends Service {
     )
 
     if (migrationsToRun.length) {
-      this.logger.info(`Database Version ${clc.magenta(srcVersion)} => ${clc.magenta(dstVersion)}`)
+      this.logger.warn(
+        '========================================\n' +
+          clc.bold(this.logger.center('Migrations Required', 40)) +
+          '\n' +
+          clc.blackBright(this.logger.center(`Version ${srcVersion} => ${dstVersion}`, 40)) +
+          '\n' +
+          clc.blackBright(this.logger.center(`${migrationsToRun.length} changes`, 40)) +
+          '\n' +
+          this.logger.center('========================================', 40)
+      )
 
       const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
 
+      for (const [version, migrations] of Object.entries(migrationsByVersion)) {
+        this.logger.warn(clc.bold(version))
+        for (const migration of migrations) {
+          this.logger.warn(`- ${migration.meta.description}`)
+        }
+      }
+
+      if (!yn(process.env.AUTO_MIGRATE)) {
+        this.logger.error(undefined, 'Migrations required. Please restart the server with AUTO_MIGRATE=true')
+        process.exit(0)
+      }
+
       this.logger.info(
-        `Steps: ${Object.keys(migrationsByVersion)
-          .map((x) => clc.magenta(x))
-          .join(' => ')}`
+        '========================================\n' +
+          clc.bold(
+            this.logger.center(
+              `Executing ${migrationsToRun.length} migration${migrationsToRun.length > 1 ? 's' : ''}`,
+              40
+            )
+          ) +
+          '\n' +
+          this.logger.center('========================================', 40)
       )
 
       for (const [version, migrations] of Object.entries(migrationsByVersion)) {
@@ -44,6 +72,8 @@ export class MigrationService extends Service {
         // We wait a bit between each version so the timestamp isn't too close
         await new Promise((resolve) => setTimeout(resolve, 100))
       }
+
+      this.logger.info('Migrations completed successfully!')
     }
 
     if (!semver.eq(this.meta.get().version, dstVersion)) {
@@ -52,19 +82,21 @@ export class MigrationService extends Service {
   }
 
   private async migrateVersion(version: string, migrations: Migration[]) {
-    this.logger.info(`===== Migrating to ${clc.magenta(version)} =====`)
+    this.logger.info(clc.bold(version))
+
     const trx = await this.db.knex.transaction()
 
     try {
       for (const migration of migrations) {
+        this.logger.info('Running', migration.meta.name)
         migration.transact(trx)
 
         if (!(await migration.applied())) {
-          this.logger.info('Running', migration.meta.name)
           await migration.up()
+          this.logger.info('- Success')
         } else {
           // We should expect migrations to never be skipped. This is just extra safety
-          this.logger.warn('Skipped', migration.meta.name)
+          this.logger.info('- Skipped')
         }
       }
       await trx.commit()
