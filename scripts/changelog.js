@@ -20,8 +20,8 @@ const build = async ({ writeToFile } = { writeToFile: false }) => {
 
   let text = ''
   const stream = changelog(changelogOts, context, gitRawCommitsOpts, commitsParserOpts, changelogWriterOpts)
-  stream.on('data', chunk => (text += chunk))
-  await Promise.fromCallback(cb => stream.on('end', cb))
+  stream.on('data', (chunk) => (text += chunk))
+  await Promise.fromCallback((cb) => stream.on('end', cb))
 
   if (writeToFile) {
     const existingChangelog = await fse.readFile('./CHANGELOG.md', 'utf-8')
