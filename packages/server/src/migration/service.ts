@@ -1,3 +1,4 @@
+import clc from 'cli-color'
 import _ from 'lodash'
 import semver from 'semver'
 import { Service } from '../base/service'
@@ -22,27 +23,36 @@ export class MigrationService extends Service {
   }
 
   private async migrateUp(srcVersion: string, dstVersion: string) {
-    if (!semver.gt(dstVersion, srcVersion)) {
-      return
-    }
-
-    this.logger.info(`Database Version ${srcVersion} => ${dstVersion}`)
-
     const migrationsToRun = this.listAllMigrations().filter(
       (x) => semver.gt(x.meta.version, srcVersion) && semver.lte(x.meta.version, dstVersion)
     )
-    const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
 
-    for (const [version, migrations] of Object.entries(migrationsByVersion)) {
-      await this.migrateVersion(version, migrations)
+    if (migrationsToRun.length) {
+      this.logger.info(`Database Version ${clc.magenta(srcVersion)} => ${clc.magenta(dstVersion)}`)
 
-      // We wait a bit between each version so the timestamp isn't too close
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
+
+      this.logger.info(
+        `Steps: ${Object.keys(migrationsByVersion)
+          .map((x) => clc.magenta(x))
+          .join(' => ')}`
+      )
+
+      for (const [version, migrations] of Object.entries(migrationsByVersion)) {
+        await this.migrateVersion(version, migrations)
+
+        // We wait a bit between each version so the timestamp isn't too close
+        await new Promise((resolve) => setTimeout(resolve, 100))
+      }
+    }
+
+    if (!semver.eq(this.meta.get().version, dstVersion)) {
+      await this.meta.update({ version: dstVersion })
     }
   }
 
   private async migrateVersion(version: string, migrations: Migration[]) {
-    this.logger.info(`===== Migrating to ${version} =====`)
+    this.logger.info(`===== Migrating to ${clc.magenta(version)} =====`)
     const trx = await this.db.knex.transaction()
 
     try {

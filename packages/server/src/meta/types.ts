@@ -11,4 +11,4 @@ export interface ServerMetadata {
 
 export const ServerMetadataSchema = Joi.object({
   version: Joi.string().required()
-})
+}).required()
