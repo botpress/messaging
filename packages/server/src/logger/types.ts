@@ -52,7 +52,7 @@ export class Logger {
 
   center(text: string, width: number) {
     const indent = (yn(process.env.SPINNED) ? 37 : 25) + this.scope.length
-    const padding = Math.floor((width - text.length) / 2)
+    const padding = Math.floor((width - clc.strip(text).length) / 2)
     return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
   }
 

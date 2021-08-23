@@ -29,9 +29,11 @@ export class MigrationService extends Service {
     )
 
     if (migrationsToRun.length) {
+      const header = yn(process.env.MIGRATE_DRYRUN) ? 'DRY RUN' : 'Migrations Required'
+
       this.logger.warn(
         '========================================\n' +
-          clc.bold(this.logger.center('Migrations Required', 40)) +
+          clc.bold(this.logger.center(header, 40)) +
           '\n' +
           clc.blackBright(this.logger.center(`Version ${srcVersion} => ${dstVersion}`, 40)) +
           '\n' +
@@ -49,31 +51,17 @@ export class MigrationService extends Service {
         }
       }
 
+      if (yn(process.env.MIGRATE_DRYRUN)) {
+        await this.runMigrations(migrationsToRun)
+        process.exit(0)
+      }
+
       if (!yn(process.env.AUTO_MIGRATE)) {
         this.logger.error(undefined, 'Migrations required. Please restart the server with AUTO_MIGRATE=true')
         process.exit(0)
       }
 
-      this.logger.info(
-        '========================================\n' +
-          clc.bold(
-            this.logger.center(
-              `Executing ${migrationsToRun.length} migration${migrationsToRun.length > 1 ? 's' : ''}`,
-              40
-            )
-          ) +
-          '\n' +
-          this.logger.center('========================================', 40)
-      )
-
-      for (const [version, migrations] of Object.entries(migrationsByVersion)) {
-        await this.migrateVersion(version, migrations)
-
-        // We wait a bit between each version so the timestamp isn't too close
-        await new Promise((resolve) => setTimeout(resolve, 100))
-      }
-
-      this.logger.info('Migrations completed successfully!')
+      await this.runMigrations(migrationsToRun)
     }
 
     if (!semver.eq(this.meta.get().version, dstVersion)) {
@@ -81,31 +69,51 @@ export class MigrationService extends Service {
     }
   }
 
-  private async migrateVersion(version: string, migrations: Migration[]) {
-    this.logger.info(clc.bold(version))
+  private async runMigrations(migrationsToRun: Migration[]) {
+    const logPrefix = yn(process.env.MIGRATE_DRYRUN) ? clc.blackBright('[DRY] ') : ''
+    this.logger.info(
+      '========================================\n' +
+        clc.bold(
+          this.logger.center(
+            `${logPrefix}Executing ${migrationsToRun.length} migration${migrationsToRun.length > 1 ? 's' : ''}`,
+            40
+          )
+        ) +
+        '\n' +
+        this.logger.center('========================================', 40)
+    )
 
+    const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
     const trx = await this.db.knex.transaction()
 
     try {
-      for (const migration of migrations) {
-        this.logger.info('Running', migration.meta.name)
-        migration.transact(trx)
+      for (const [version, migrations] of Object.entries(migrationsByVersion)) {
+        this.logger.info(`${logPrefix}${clc.bold(version)}`)
 
-        if (!(await migration.applied())) {
-          await migration.up()
-          this.logger.info('- Success')
-        } else {
-          // We should expect migrations to never be skipped. This is just extra safety
-          this.logger.info('- Skipped')
+        for (const migration of migrations) {
+          this.logger.info(`${logPrefix}Running`, migration.meta.name)
+          migration.transact(trx)
+
+          if (!(await migration.applied())) {
+            await migration.up()
+            this.logger.info(`${logPrefix}- Success`)
+          } else {
+            this.logger.info(`${logPrefix}- Skipped`)
+          }
         }
       }
-      await trx.commit()
+
+      if (yn(process.env.MIGRATE_DRYRUN)) {
+        await trx.rollback()
+      } else {
+        await trx.commit()
+      }
+
+      this.logger.info(`${logPrefix}Migrations completed successfully!`)
     } catch (e) {
       await trx.rollback()
       throw e
     }
-
-    await this.meta.update({ version })
   }
 
   private listAllMigrations() {

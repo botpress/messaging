@@ -21,6 +21,7 @@ export interface MessagingEnv {
   NO_LOGO?: string
   SINGLE_LINE_LOGGING?: string
   AUTO_MIGRATE?: string
+  MIGRATE_DRYRUN?: string
 }
 
 declare global {
