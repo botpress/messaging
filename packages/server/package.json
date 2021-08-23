@@ -32,7 +32,7 @@
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "bluebird-global": "^1.0.1",
-    "botbuilder": "^4.5.2",
+    "botbuilder": "^4.14.1",
     "cli-color": "^2.0.0",
     "discord-buttons": "^2.4.1",
     "discord.js": "^12.5.3",
