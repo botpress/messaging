@@ -40,6 +40,14 @@ export class Logger {
     this.print([message, data], LoggerLevel.Warn)
   }
 
+  window(lines: string[], level = LoggerLevel.Info) {
+    const line = '========================================'
+    this.print(
+      [line + '\n' + lines.map((x) => this.center(x, line.length)).join('\n') + '\n' + this.center(line, line.length)],
+      level
+    )
+  }
+
   error(error: undefined, message: string, data?: Param): void
   error(error: Error, message?: string, data?: Param): void
   error(error: Error | undefined, message?: string, data?: Param) {
@@ -50,7 +58,7 @@ export class Logger {
     this.print([message, data, error?.stack], LoggerLevel.Error)
   }
 
-  center(text: string, width: number) {
+  private center(text: string, width: number) {
     const indent = (yn(process.env.SPINNED) ? 37 : 25) + this.scope.length
     const padding = Math.floor((width - clc.strip(text).length) / 2)
     return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)

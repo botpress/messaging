@@ -4,7 +4,7 @@ import semver from 'semver'
 import yn from 'yn'
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
-import { Logger } from '../logger/types'
+import { Logger, LoggerLevel } from '../logger/types'
 import { MetaService } from '../meta/service'
 import { Migration } from './migration'
 import migs from './migs'
@@ -29,17 +29,13 @@ export class MigrationService extends Service {
     )
 
     if (migrationsToRun.length) {
-      const header = yn(process.env.MIGRATE_DRYRUN) ? 'DRY RUN' : 'Migrations Required'
-
-      this.logger.warn(
-        '========================================\n' +
-          clc.bold(this.logger.center(header, 40)) +
-          '\n' +
-          clc.blackBright(this.logger.center(`Version ${srcVersion} => ${dstVersion}`, 40)) +
-          '\n' +
-          clc.blackBright(this.logger.center(`${migrationsToRun.length} changes`, 40)) +
-          '\n' +
-          this.logger.center('========================================', 40)
+      this.logger.window(
+        [
+          clc.bold(yn(process.env.MIGRATE_DRYRUN) ? 'DRY RUN' : 'Migrations Required'),
+          clc.blackBright(`Version ${srcVersion} => ${dstVersion}`),
+          clc.blackBright(`${migrationsToRun.length} changes`)
+        ],
+        LoggerLevel.Warn
       )
 
       const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
@@ -71,17 +67,9 @@ export class MigrationService extends Service {
 
   private async runMigrations(migrationsToRun: Migration[]) {
     const logPrefix = yn(process.env.MIGRATE_DRYRUN) ? clc.blackBright('[DRY] ') : ''
-    this.logger.info(
-      '========================================\n' +
-        clc.bold(
-          this.logger.center(
-            `${logPrefix}Executing ${migrationsToRun.length} migration${migrationsToRun.length > 1 ? 's' : ''}`,
-            40
-          )
-        ) +
-        '\n' +
-        this.logger.center('========================================', 40)
-    )
+    this.logger.window([
+      clc.bold(`${logPrefix}Executing ${migrationsToRun.length} migration${migrationsToRun.length > 1 ? 's' : ''}`)
+    ])
 
     const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
     const trx = await this.db.knex.transaction()

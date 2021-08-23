@@ -94,15 +94,7 @@ export class Launcher {
       return
     }
 
-    const width = yn(process.env.SPINNED) ? 45 : 33
-    this.logger.info(
-      '========================================\n' +
-        clc.bold(this.logger.center('Botpress Messaging', 40)) +
-        '\n' +
-        clc.blackBright(this.logger.center(`Version ${pkg.version}`, 40)) +
-        '\n' +
-        this.logger.center('========================================', 40)
-    )
+    this.logger.window([clc.bold('Botpress Messaging'), clc.blackBright(`Version ${pkg.version}`)])
   }
 
   private printChannels() {
