@@ -16,13 +16,20 @@ export class MigrationService extends Service {
 
   async setup() {
     const appVersion = this.meta.app().version
-    this.logger.info('App Version:', appVersion)
-
     const dbVersion = this.meta.get().version
-    this.logger.info('Database Version', dbVersion)
+
+    await this.migrateUp(dbVersion, appVersion)
+  }
+
+  private async migrateUp(srcVersion: string, dstVersion: string) {
+    if (!semver.gt(dstVersion, srcVersion)) {
+      return
+    }
+
+    this.logger.info(`Database Version ${srcVersion} => ${dstVersion}`)
 
     const migrationsToRun = this.listAllMigrations().filter(
-      (x) => semver.gt(x.meta.version, dbVersion) && semver.lte(x.meta.version, appVersion)
+      (x) => semver.gt(x.meta.version, srcVersion) && semver.lte(x.meta.version, dstVersion)
     )
     const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
 
