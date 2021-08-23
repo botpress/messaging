@@ -11,28 +11,32 @@ import migs from './migs'
 
 export class MigrationService extends Service {
   private logger = new Logger('Migration')
+  private srcVersion!: string
+  private dstVersion!: string
+  private isDry!: boolean
 
   constructor(private db: DatabaseService, private meta: MetaService) {
     super()
   }
 
   async setup() {
-    const appVersion = process.env.MIGRATE_TARGET || this.meta.app().version
-    const dbVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
+    this.srcVersion = process.env.MIGRATE_TARGET || this.meta.app().version
+    this.dstVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
+    this.isDry = !!yn(process.env.MIGRATE_DRYRUN)
 
-    await this.migrateUp(dbVersion, appVersion)
-  }
-
-  private async migrateUp(srcVersion: string, dstVersion: string) {
     const migrationsToRun = this.listAllMigrations().filter(
-      (x) => semver.gt(x.meta.version, srcVersion) && semver.lte(x.meta.version, dstVersion)
+      (x) => semver.gt(x.meta.version, this.srcVersion) && semver.lte(x.meta.version, this.dstVersion)
     )
 
-    if (migrationsToRun.length || yn(process.env.MIGRATE_DRYRUN)) {
+    await this.migrate(migrationsToRun)
+  }
+
+  private async migrate(migrationsToRun: Migration[]) {
+    if (migrationsToRun.length || this.isDry) {
       this.logger.window(
         [
-          clc.bold(yn(process.env.MIGRATE_DRYRUN) ? 'DRY RUN' : 'Migrations Required'),
-          clc.blackBright(`Version ${srcVersion} => ${dstVersion}`),
+          clc.bold(this.isDry ? 'DRY RUN' : 'Migrations Required'),
+          clc.blackBright(`Version ${this.srcVersion} => ${this.dstVersion}`),
           clc.blackBright(`${migrationsToRun.length} changes`)
         ],
         LoggerLevel.Warn
@@ -47,7 +51,7 @@ export class MigrationService extends Service {
         }
       }
 
-      if (yn(process.env.MIGRATE_DRYRUN)) {
+      if (this.isDry) {
         await this.runMigrations(migrationsToRun)
         process.exit(0)
       }
@@ -60,13 +64,13 @@ export class MigrationService extends Service {
       await this.runMigrations(migrationsToRun)
     }
 
-    if (!semver.eq(this.meta.get().version, dstVersion)) {
-      await this.meta.update({ version: dstVersion })
+    if (!this.isDry && !semver.eq(this.meta.get().version, this.dstVersion)) {
+      await this.meta.update({ version: this.dstVersion })
     }
   }
 
   private async runMigrations(migrationsToRun: Migration[]) {
-    const logPrefix = yn(process.env.MIGRATE_DRYRUN) ? clc.blackBright('[DRY] ') : ''
+    const logPrefix = this.isDry ? clc.blackBright('[DRY] ') : ''
     this.logger.window([
       clc.bold(`${logPrefix}Executing ${migrationsToRun.length} migration${migrationsToRun.length > 1 ? 's' : ''}`)
     ])
@@ -91,7 +95,7 @@ export class MigrationService extends Service {
         }
       }
 
-      if (yn(process.env.MIGRATE_DRYRUN)) {
+      if (this.isDry) {
         await trx.rollback()
       } else {
         await trx.commit()
