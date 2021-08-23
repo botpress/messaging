@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '12.18.3'
           cache: 'yarn'
-      - name: Git Unshalow
+      - name: Git Unshallow
         run: git fetch --prune --unshallow
       - name: Fetch Node Packages
         run: |
