@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Botpress messaging repo",
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
