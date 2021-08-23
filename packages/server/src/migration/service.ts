@@ -17,8 +17,8 @@ export class MigrationService extends Service {
   }
 
   async setup() {
-    const appVersion = this.meta.app().version
-    const dbVersion = this.meta.get().version
+    const appVersion = process.env.MIGRATE_TARGET || this.meta.app().version
+    const dbVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
 
     await this.migrateUp(dbVersion, appVersion)
   }
@@ -28,7 +28,7 @@ export class MigrationService extends Service {
       (x) => semver.gt(x.meta.version, srcVersion) && semver.lte(x.meta.version, dstVersion)
     )
 
-    if (migrationsToRun.length) {
+    if (migrationsToRun.length || yn(process.env.MIGRATE_DRYRUN)) {
       this.logger.window(
         [
           clc.bold(yn(process.env.MIGRATE_DRYRUN) ? 'DRY RUN' : 'Migrations Required'),
