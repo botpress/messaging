@@ -15,7 +15,7 @@ const package = async () => {
       )
     }
 
-    await execute('cross-env pkg package.json', undefined, { silent: true })
+    await execute('pkg package.json', undefined, { silent: true })
 
     await fse.rename('./bin/messaging-win.exe', `./bin/messaging-v${version}-win-x64.exe`)
     await fse.rename('./bin/messaging-linux', `./bin/messaging-v${version}-linux-x64`)
