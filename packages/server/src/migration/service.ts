@@ -36,25 +36,31 @@ export class MigrationService extends Service {
 
   private async migrateVersion(version: string, migrations: Migration[]) {
     this.logger.info(`===== Migrating to ${version} =====`)
-
     const trx = await this.db.knex.transaction()
+
     try {
       for (const migration of migrations) {
-        this.logger.info('Running', migration.meta.name)
-        await migration.run(trx)
+        migration.transact(trx)
+
+        if (!(await migration.applied())) {
+          this.logger.info('Running', migration.meta.name)
+          await migration.up()
+        } else {
+          // We should expect migrations to never be skipped. This is just extra safety
+          this.logger.warn('Skipped', migration.meta.name)
+        }
       }
       await trx.commit()
     } catch (e) {
-      this.logger.error(e, `Failed to migrate to ${version}`)
       await trx.rollback()
-      throw new Error(`Failed to migrate to ${version}`)
+      throw e
     }
 
     await this.meta.update({ version })
   }
 
   private listAllMigrations() {
-    const all = migs.map((x) => new x(this.db)) as Migration[]
+    const all = migs.map((x) => new x()) as Migration[]
     const alphabetical = all.sort((a, b) => {
       return a.meta.name.localeCompare(b.meta.name, 'en')
     })
