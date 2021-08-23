@@ -28,6 +28,20 @@ export class MigrationService extends Service {
   }
 
   private listAllMigrations() {
-    return migs.map((x) => new x(this.db)) as Migration[]
+    const all = migs.map((x) => new x(this.db)) as Migration[]
+    const alphabetical = all.sort((a, b) => {
+      return a.meta.name.localeCompare(b.meta.name, 'en')
+    })
+    const versions = alphabetical.sort((a, b) => {
+      if (semver.gt(a.meta.version, b.meta.version)) {
+        return 1
+      } else if (semver.lt(a.meta.version, b.meta.version)) {
+        return -1
+      } else {
+        return 0
+      }
+    })
+
+    return versions
   }
 }
