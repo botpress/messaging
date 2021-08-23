@@ -20,21 +20,23 @@ export class SocketManager {
   }
 
   async destroy() {
-    if (this.ws !== undefined) {
-      await new Promise((resolve, reject) => {
-        // This is kind of hack to make sure that socket.io does not
-        // try to close the HTTP server before http-terminator
-        this.ws!['httpServer'] = undefined
-
-        this.ws!.close((err) => {
-          if (err) {
-            return reject(err)
-          }
-
-          resolve(undefined)
-        })
-      })
+    if (!this.ws) {
+      return
     }
+
+    await new Promise((resolve, reject) => {
+      // This is kind of hack to make sure that socket.io does not
+      // try to close the HTTP server before http-terminator
+      this.ws!['httpServer'] = undefined
+
+      this.ws!.close((err) => {
+        if (err) {
+          this.logger.error(err, 'An error occurred when closing the websocket server.')
+        }
+
+        resolve(undefined)
+      })
+    })
   }
 
   public handle(type: string, callback: SocketHandler) {
