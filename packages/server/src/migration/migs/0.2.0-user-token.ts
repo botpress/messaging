@@ -7,7 +7,19 @@ export class UserTokenMigration extends Migration {
     version: '0.2.0'
   }
 
-  async up() {}
+  async applied() {
+    return this.trx.schema.hasColumn('msg_users', 'token')
+  }
 
-  async down() {}
+  async up() {
+    return this.trx.schema.alterTable('msg_users', (table) => {
+      table.string('token')
+    })
+  }
+
+  async down() {
+    return this.trx.schema.alterTable('msg_users', (table) => {
+      table.dropColumn('token')
+    })
+  }
 }

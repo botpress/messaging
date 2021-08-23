@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import semver from 'semver'
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
@@ -15,16 +16,41 @@ export class MigrationService extends Service {
 
   async setup() {
     const appVersion = this.meta.app().version
-    this.logger.debug('App Version:', appVersion)
+    this.logger.info('App Version:', appVersion)
 
     const dbVersion = this.meta.get().version
-    this.logger.debug('Database Version', dbVersion)
+    this.logger.info('Database Version', dbVersion)
 
-    const migrations = this.listAllMigrations().filter((x) => semver.lte(x.meta.version, appVersion))
-    this.logger.debug(
-      'Migrations',
-      migrations.map((x) => x.meta)
+    const migrationsToRun = this.listAllMigrations().filter(
+      (x) => semver.gt(x.meta.version, dbVersion) && semver.lte(x.meta.version, appVersion)
     )
+    const migrationsByVersion = _.groupBy(migrationsToRun, 'meta.version')
+
+    for (const [version, migrations] of Object.entries(migrationsByVersion)) {
+      await this.migrateVersion(version, migrations)
+
+      // We wait a bit between each version so the timestamp isn't too close
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+  }
+
+  private async migrateVersion(version: string, migrations: Migration[]) {
+    this.logger.info(`===== Migrating to ${version} =====`)
+
+    const trx = await this.db.knex.transaction()
+    try {
+      for (const migration of migrations) {
+        this.logger.info('Running', migration.meta.name)
+        await migration.run(trx)
+      }
+      await trx.commit()
+    } catch (e) {
+      this.logger.error(e, `Failed to migrate to ${version}`)
+      await trx.rollback()
+      throw new Error(`Failed to migrate to ${version}`)
+    }
+
+    await this.meta.update({ version })
   }
 
   private listAllMigrations() {
