@@ -16,6 +16,7 @@ export class MigrationService extends Service {
   private loggerDry!: Logger
   private srcVersion!: string
   private dstVersion!: string
+  private autoMigrate!: boolean
   private isDown!: boolean
   private isDry!: boolean
 
@@ -26,6 +27,7 @@ export class MigrationService extends Service {
   async setup() {
     this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
     this.dstVersion = process.env.MIGRATE_TARGET || this.meta.app().version
+    this.autoMigrate = !!yn(process.env.AUTO_MIGRATE)
     this.isDown = process.env.MIGRATE_CMD === 'down'
     this.isDry = !!yn(process.env.MIGRATE_DRYRUN)
 
@@ -50,7 +52,7 @@ export class MigrationService extends Service {
       throw new ShutDownSignal()
     }
 
-    if (!yn(process.env.AUTO_MIGRATE)) {
+    if (!this.autoMigrate) {
       this.logger.error(undefined, 'Migrations required. Please restart the server with AUTO_MIGRATE=true')
       throw new ShutDownSignal()
     }
