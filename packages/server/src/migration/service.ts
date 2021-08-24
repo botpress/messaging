@@ -32,6 +32,7 @@ export class MigrationService extends Service {
     this.isDry = !!yn(process.env.MIGRATE_DRYRUN)
 
     await this.migrate()
+    await this.updateDbVersion()
 
     if (process.env.MIGRATE_CMD) {
       throw new ShutDownSignal()
@@ -40,8 +41,8 @@ export class MigrationService extends Service {
 
   private async migrate() {
     const migrations = this.listMigrationsToRun()
-    if (!migrations.length && !this.isDry) {
-      return this.updateDbVersion()
+    if (!migrations.length && !this.isDry && !process.env.MIGRATE_CMD?.length) {
+      return
     }
 
     this.showMigrationsRequiredWindow(migrations.length)
@@ -58,7 +59,6 @@ export class MigrationService extends Service {
     }
 
     await this.runMigrations(migrations)
-    await this.updateDbVersion()
   }
 
   private async runMigrations(migrations: Migration[]) {
@@ -132,7 +132,7 @@ export class MigrationService extends Service {
   }
 
   private async updateDbVersion() {
-    if (!this.isDry && !semver.eq(this.meta.get().version, this.dstVersion)) {
+    if (!semver.eq(this.meta.get().version, this.dstVersion)) {
       await this.meta.update({ version: this.dstVersion })
     }
   }
