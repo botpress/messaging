@@ -13,6 +13,7 @@ import migs from './migs'
 
 export class MigrationService extends Service {
   private logger = new Logger('Migration')
+  private loggerDry!: Logger
   private srcVersion!: string
   private dstVersion!: string
   private isDown!: boolean
@@ -59,21 +60,15 @@ export class MigrationService extends Service {
   }
 
   private async runMigrations(migrations: Migration[]) {
-    const logPrefix = this.isDry ? clc.blackBright('[DRY] ') : ''
-    const log = (text: string) => {
-      this.logger.info(`${logPrefix}${text}`)
-    }
-
-    this.logger.window([
-      clc.bold(`${logPrefix}Executing ${migrations.length} migration${migrations.length > 1 ? 's' : ''}`)
-    ])
+    this.loggerDry = this.logger.prefix(this.isDry ? '[DRY] ' : '')
+    this.loggerDry.window([clc.bold(`Executing ${migrations.length} migration${migrations.length > 1 ? 's' : ''}`)])
 
     const migrationsByVersion = _.groupBy(migrations, 'meta.version')
     const trx = await this.db.knex.transaction()
 
     try {
       for (const [version, migrations] of Object.entries(migrationsByVersion)) {
-        await this.runMigrationsForVersion(version, migrations, trx, log)
+        await this.runMigrationsForVersion(version, migrations, trx)
       }
 
       if (this.isDry) {
@@ -82,24 +77,19 @@ export class MigrationService extends Service {
         await trx.commit()
       }
 
-      log('Migrations completed successfully!')
+      this.loggerDry.info('Migrations completed successfully!')
     } catch (e) {
       await trx.rollback()
-      this.logger.error(e, `${logPrefix}Migrations failed`)
+      this.loggerDry.error(e, 'Migrations failed')
       throw new ShutDownSignal()
     }
   }
 
-  private async runMigrationsForVersion(
-    version: string,
-    migrations: Migration[],
-    trx: Knex.Transaction,
-    log: (text: string) => void
-  ) {
-    log(clc.bold(version))
+  private async runMigrationsForVersion(version: string, migrations: Migration[], trx: Knex.Transaction) {
+    this.loggerDry.info(clc.bold(version))
 
     for (const migration of migrations) {
-      log(`Running ${migration.meta.name}`)
+      this.loggerDry.info(`Running ${migration.meta.name}`)
 
       migration.transact(trx)
 
@@ -110,9 +100,9 @@ export class MigrationService extends Service {
           await migration.up()
         }
 
-        log('- Success')
+        this.loggerDry.info('- Success')
       } else {
-        log('- Skipped')
+        this.loggerDry.info('- Skipped')
       }
     }
   }
