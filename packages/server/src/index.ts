@@ -8,17 +8,39 @@ import { Launcher } from './launcher'
 // Set NODE_ENV to production when starting messaging using the binary version
 process.env.NODE_ENV = (<any>process).pkg ? 'production' : process.env.NODE_ENV
 
-void yargs.command(
-  '$0',
-  'Start server',
-  () => {},
-  async () => {
-    const router = express()
+const launch = async () => {
+  const router = express()
 
-    const app = new App()
-    const api = new Api(app, router)
+  const app = new App()
+  const api = new Api(app, router)
 
-    const launcher = new Launcher(router, app, api)
-    await launcher.launch()
+  const launcher = new Launcher(router, app, api)
+  await launcher.launch()
+}
+
+yargs.scriptName('')
+
+yargs.command({
+  command: ['$0', 'serve'],
+  describe: 'Run messaging server',
+  builder: (d) => {
+    return d.options({ autoMigrate: { type: 'boolean', default: false } })
+  },
+  handler: async (argv) => {
+    if (argv.autoMigrate) {
+      process.env.AUTO_MIGRATE = 'true'
+    }
+
+    await launch()
   }
-).argv
+})
+
+yargs.command({
+  command: 'migrate',
+  describe: 'Migrate database',
+  handler: async () => {
+    await launch()
+  }
+})
+
+void yargs.argv
