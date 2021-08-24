@@ -27,7 +27,7 @@ export class Api {
   constructor(private app: App, private root: Router) {
     this.router = Router()
     this.sockets = new SocketManager(this.app.sockets)
-    this.syncs = new SyncApi(this.router, this.app.config, this.app.syncs, this.app.clients, this.app.channels)
+    this.syncs = new SyncApi(this.router, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.app.clients, this.app.health)
     this.chat = new ChatApi(this.router, this.app.clients, this.app.conversations, this.app.chat)
     this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users, this.app.sockets)
@@ -71,7 +71,7 @@ export class Api {
   }
 
   async setupPassword() {
-    const password = process.env.INTERNAL_PASSWORD || this.app.config.current.security?.password
+    const password = process.env.INTERNAL_PASSWORD
     if (!password) {
       return
     }

@@ -7,7 +7,6 @@ import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
-import { ConfigService } from '../config/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
@@ -20,7 +19,6 @@ export class SyncService extends Service {
 
   constructor(
     private loggers: LoggerService,
-    private config: ConfigService,
     private distributed: DistributedService,
     private channels: ChannelService,
     private providers: ProviderService,
@@ -33,7 +31,7 @@ export class SyncService extends Service {
   }
 
   async setup() {
-    let config = this.config.current.sync
+    let config = undefined
 
     if (process.env.SYNC) {
       try {

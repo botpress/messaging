@@ -1,17 +1,16 @@
 import { SyncRequest } from '@botpress/messaging-base'
 import { Router } from 'express'
 import _ from 'lodash'
+import yn from 'yn'
 import { BaseApi } from '../base/api'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
-import { ConfigService } from '../config/service'
 import { makeSyncRequestSchema } from './schema'
 import { SyncService } from './service'
 
 export class SyncApi extends BaseApi {
   constructor(
     router: Router,
-    private config: ConfigService,
     private syncs: SyncService,
     private clients: ClientService,
     private channels: ChannelService
@@ -20,8 +19,7 @@ export class SyncApi extends BaseApi {
   }
 
   async setup() {
-    // TODO: kind of a hack to make spinning with boptress work
-    const force = (process.env.INTERNAL_PASSWORD || this.config.current.security?.password)?.length > 0
+    const force = !!yn(process.env.SPINNED)
 
     const requestSchema = makeSyncRequestSchema(this.channels.list())
 

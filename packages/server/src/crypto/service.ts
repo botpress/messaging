@@ -1,17 +1,12 @@
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { Service } from '../base/service'
-import { ConfigService } from '../config/service'
 
 export class CryptoService extends Service {
   private key!: Buffer
 
-  constructor(private configService: ConfigService) {
-    super()
-  }
-
   async setup() {
-    const key = process.env.ENCRYPTION_KEY || this.configService.current.security?.key
+    const key = process.env.ENCRYPTION_KEY
 
     if (key?.length) {
       this.key = Buffer.from(key, 'base64')

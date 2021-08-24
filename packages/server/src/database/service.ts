@@ -3,7 +3,6 @@ import knex, { Knex } from 'knex'
 import path from 'path'
 import { Service } from '../base/service'
 import { Table } from '../base/table'
-import { ConfigService } from '../config/service'
 import { Logger } from '../logger/types'
 
 export class DatabaseService extends Service {
@@ -11,15 +10,10 @@ export class DatabaseService extends Service {
   private url!: string
   private pool!: Knex.PoolConfig
   private isLite!: boolean
-  private logger: Logger
-
-  constructor(private configService: ConfigService) {
-    super()
-    this.logger = new Logger('Database')
-  }
+  private logger = new Logger('Database')
 
   async setup() {
-    this.url = process.env.DATABASE_URL || this.configService.current.database?.connection
+    this.url = process.env.DATABASE_URL!
     this.loadPoolConfig()
 
     if (this.url?.startsWith('postgres')) {
@@ -30,7 +24,7 @@ export class DatabaseService extends Service {
   }
 
   private loadPoolConfig() {
-    let config = this.configService.current.database?.pool
+    let config = undefined
 
     if (process.env.DATABASE_POOL) {
       try {

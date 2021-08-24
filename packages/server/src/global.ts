@@ -12,7 +12,6 @@ export interface MessagingEnv {
   REDIS_SCOPE?: string
   LOGGING_ENABLED?: string
   SYNC?: string
-  SKIP_LOAD_CONFIG?: string
   SKIP_LOAD_ENV?: string
   SPINNED?: string
   SPINNED_URL?: string
