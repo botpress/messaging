@@ -40,8 +40,8 @@ export class InstanceMonitoring {
     const outdateds = await this.conduits.listOutdated(ms('10h'), 1000)
 
     for (const outdated of outdateds) {
-      const failures = await this.status.getNumberOfErrors(outdated.id)
-      if (failures! >= MAX_ALLOWED_FAILURES) {
+      const failures = (await this.status.getNumberOfErrors(outdated.id)) || 0
+      if (failures >= MAX_ALLOWED_FAILURES) {
         continue
       }
 
@@ -59,8 +59,8 @@ export class InstanceMonitoring {
 
       const conduits = await this.conduits.listByChannel(channel.id)
       for (const conduit of conduits) {
-        const failures = await this.status.getNumberOfErrors(conduit.id)
-        if (!yn(process.env.SPINNED) && failures! >= MAX_ALLOWED_FAILURES) {
+        const failures = (await this.status.getNumberOfErrors(conduit.id)) || 0
+        if (!yn(process.env.SPINNED) && failures >= MAX_ALLOWED_FAILURES) {
           continue
         }
 
