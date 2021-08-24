@@ -1,3 +1,4 @@
+import clc from 'cli-color'
 import _ from 'lodash'
 import { Logger } from '../../src/logger/types'
 
@@ -5,7 +6,9 @@ describe('Logger', () => {
   const defaultEnv = process.env
   const scope = 'tests'
   const subScope = 'unit'
+  const prefix = '[MYPREFIX] '
   const message = 'a message.'
+  const prefixedMessage = `${clc.blackBright(prefix)}${message}`
   const messageWithoutDot = 'a message'
   const error = new Error('an error')
   const data = {
@@ -42,6 +45,17 @@ describe('Logger', () => {
     })
   })
 
+  describe('prefix', () => {
+    test('Should allow to create a loggers with a prefix', () => {
+      const logger = new Logger(scope)
+
+      const subLogger = logger.prefix(prefix)
+
+      expect(subLogger).toBeInstanceOf(Logger)
+      expect(subLogger['logPrefix']).toEqual(prefix)
+    })
+  })
+
   describe(levels.join(', '), () => {
     test('Should print a message with some data', () => {
       const logger = new Logger(scope)
@@ -72,6 +86,28 @@ describe('Logger', () => {
       for (const level of levels) {
         let params: any[] = [message]
         let outputParams: any[] = [expect.anything(), expect.stringContaining(scope), message]
+
+        if (level === 'error') {
+          params.unshift(error)
+          outputParams.push(error.stack)
+        }
+
+        ;(<any>logger)[level](...params)
+
+        expect(spy).toHaveBeenCalledTimes(1)
+        expect(spy).toHaveBeenCalledWith(...outputParams)
+
+        spy.mockReset()
+      }
+    })
+
+    test('Should print a message with a prefix', () => {
+      const logger = new Logger(scope, prefix)
+      const spy = jest.spyOn(console, 'log').mockImplementation()
+
+      for (const level of levels) {
+        let params: any[] = [message, data]
+        let outputParams: any[] = [expect.anything(), expect.stringContaining(scope), prefixedMessage, data]
 
         if (level === 'error') {
           params.unshift(error)
