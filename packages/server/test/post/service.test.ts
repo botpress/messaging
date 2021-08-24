@@ -132,14 +132,13 @@ describe('PostService', () => {
         writable: false
       })
 
-      const loggerSpy = jest.spyOn(postService['logger'], 'error')
+      const loggerSpy = jest.spyOn(postService['logger'], 'warn')
 
       await postService.send(url, data)
 
       expect(spy).toHaveBeenCalledTimes(1)
       expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
       expect(loggerSpy).toBeCalledTimes(1)
-      expect(loggerSpy).toBeCalledWith(error, expect.anything())
     })
 
     describe('destroy', () => {
@@ -154,7 +153,7 @@ describe('PostService', () => {
           writable: false
         })
 
-        const loggerSpy = jest.spyOn(postService['logger'], 'error')
+        const loggerSpy = jest.spyOn(postService['logger'], 'warn')
 
         await postService.destroy()
         await postService.send(url, data)
@@ -162,7 +161,6 @@ describe('PostService', () => {
         expect(spy).toHaveBeenCalledTimes(1)
         expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
         expect(loggerSpy).toBeCalledTimes(1)
-        expect(loggerSpy).toBeCalledWith(error, expect.anything())
       })
     })
   })
