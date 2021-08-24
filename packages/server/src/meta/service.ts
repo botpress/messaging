@@ -48,7 +48,7 @@ export class MetaService extends Service {
     return this.query().insert(this.serialize(entry))
   }
 
-  async fetch() {
+  async fetch(): Promise<ServerMetaEntry | undefined> {
     const rows = await this.query().orderBy('time', 'desc').limit(1)
 
     if (rows?.length) {

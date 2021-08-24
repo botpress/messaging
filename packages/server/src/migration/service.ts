@@ -30,6 +30,7 @@ export class MigrationService extends Service {
     this.autoMigrate = !!yn(process.env.AUTO_MIGRATE)
     this.isDown = process.env.MIGRATE_CMD === 'down'
     this.isDry = !!yn(process.env.MIGRATE_DRYRUN)
+    this.loggerDry = this.logger.prefix(this.isDry ? '[DRY] ' : '')
 
     await this.migrate()
     await this.updateDbVersion()
@@ -62,7 +63,6 @@ export class MigrationService extends Service {
   }
 
   private async runMigrations(migrations: Migration[]) {
-    this.loggerDry = this.logger.prefix(this.isDry ? '[DRY] ' : '')
     this.loggerDry.window([clc.bold(`Executing ${migrations.length} migration${migrations.length > 1 ? 's' : ''}`)])
 
     const migrationsByVersion = _.groupBy(migrations, 'meta.version')
