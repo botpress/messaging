@@ -97,7 +97,7 @@ export class MigrationService extends Service {
         for (const migration of migrations) {
           this.logger.info(`${logPrefix}Running`, migration.meta.name)
           migration.transact(trx)
-          if ((await migration.applied()) === this.isDown) {
+          if ((await migration.applied(this.isDown)) === this.isDown) {
             if (this.isDown) {
               await migration.down()
             } else {

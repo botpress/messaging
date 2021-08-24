@@ -9,7 +9,7 @@ export abstract class Migration {
     this.trx = trx
   }
 
-  abstract applied(): Promise<boolean>
+  abstract applied(isDown: boolean): Promise<boolean>
 
   abstract up(): Promise<void>
 
