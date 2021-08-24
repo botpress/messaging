@@ -90,16 +90,10 @@ export class MigrationService extends Service {
 
     for (const migration of migrations) {
       this.loggerDry.info(`Running ${migration.meta.name}`)
+      await migration.init(trx, this.isDown)
 
-      migration.transact(trx)
-
-      if ((await migration.applied(this.isDown)) === this.isDown) {
-        if (this.isDown) {
-          await migration.down()
-        } else {
-          await migration.up()
-        }
-
+      if (await migration.shouldRun()) {
+        await migration.run()
         this.loggerDry.info('- Success')
       } else {
         this.loggerDry.info('- Skipped')

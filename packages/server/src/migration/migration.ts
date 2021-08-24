@@ -2,18 +2,39 @@ import { Knex } from 'knex'
 
 export abstract class Migration {
   protected trx!: Knex.Transaction
+  protected isDown!: boolean
 
   abstract get meta(): MigrationMeta
 
-  transact(trx: Knex.Transaction) {
+  async init(trx: Knex.Transaction, isDown: boolean) {
     this.trx = trx
+    this.isDown = isDown
   }
 
-  abstract applied(isDown: boolean): Promise<boolean>
+  async shouldRun() {
+    if (!this.valid()) {
+      return false
+    }
 
-  abstract up(): Promise<void>
+    if (this.isDown) {
+      return this.applied()
+    } else {
+      return !this.applied()
+    }
+  }
 
-  abstract down(): Promise<void>
+  async run() {
+    if (this.isDown) {
+      return this.down()
+    } else {
+      return this.up()
+    }
+  }
+
+  protected abstract valid(): Promise<boolean>
+  protected abstract applied(): Promise<boolean>
+  protected abstract up(): Promise<void>
+  protected abstract down(): Promise<void>
 }
 
 export interface MigrationMeta {
