@@ -54,7 +54,7 @@ export class MigrationService extends Service {
     }
 
     if (!this.autoMigrate) {
-      this.logger.error(undefined, 'Migrations required. Please restart the server with AUTO_MIGRATE=true')
+      this.logger.error(undefined, 'Migrations required. Please restart the messaging server with --auto-migrate')
       throw new ShutDownSignal()
     }
 

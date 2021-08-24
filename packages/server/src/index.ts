@@ -62,6 +62,6 @@ void yargs
       })
       .option('dryrun', {
         alias: 'dry',
-        describe: 'Displays the list of migrations that will be executed, without running them'
+        describe: 'Displays the list of migrations that will be executed, without applying the changes'
       })
   }).argv
