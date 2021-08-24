@@ -14,7 +14,7 @@ export class PostService extends Service {
 
   constructor(private configService: ConfigService) {
     super()
-    this.logger = new Logger('post')
+    this.logger = new Logger('Post')
     this.isTerminating = false
   }
 
@@ -53,7 +53,9 @@ export class PostService extends Service {
         }
       })
     } catch (e) {
-      this.logger.error(e, `An error occurred calling route ${url}. Total number of attempts: ${this.attempts}`)
+      this.logger.warn(
+        `An error occurred calling route ${url}. Total number of attempts: ${this.attempts}. ${e.message}`
+      )
     }
   }
 }
