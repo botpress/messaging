@@ -18,7 +18,9 @@ const config: Config.InitialOptions = {
       testMatch: ['<rootDir>/packages/server/test/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
-      transform: tsjPreset.transform,
+      transform: {
+        ...tsjPreset.transform
+      },
       clearMocks: true
     }
   ]
