@@ -12,14 +12,14 @@ export abstract class Migration {
   }
 
   async shouldRun() {
-    if (!this.valid()) {
+    if (!(await this.valid())) {
       return false
     }
 
     if (this.isDown) {
       return this.applied()
     } else {
-      return !this.applied()
+      return !(await this.applied())
     }
   }
 
