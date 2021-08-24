@@ -13,6 +13,7 @@ export class MigrationService extends Service {
   private logger = new Logger('Migration')
   private srcVersion!: string
   private dstVersion!: string
+  private isDown!: boolean
   private isDry!: boolean
 
   constructor(private db: DatabaseService, private meta: MetaService) {
@@ -20,15 +21,26 @@ export class MigrationService extends Service {
   }
 
   async setup() {
-    this.srcVersion = process.env.MIGRATE_TARGET || this.meta.app().version
-    this.dstVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
+    this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
+    this.dstVersion = process.env.MIGRATE_TARGET || this.meta.app().version
+    this.isDown = process.env.MIGRATE_CMD === 'down'
     this.isDry = !!yn(process.env.MIGRATE_DRYRUN)
 
-    const migrationsToRun = this.listAllMigrations().filter(
-      (x) => semver.gt(x.meta.version, this.srcVersion) && semver.lte(x.meta.version, this.dstVersion)
-    )
+    const allMigrations = this.listAllMigrations()
+
+    const migrationsToRun = this.isDown
+      ? allMigrations
+          .filter((x) => semver.lte(x.meta.version, this.srcVersion) && semver.gt(x.meta.version, this.dstVersion))
+          .reverse()
+      : allMigrations.filter(
+          (x) => semver.gt(x.meta.version, this.srcVersion) && semver.lte(x.meta.version, this.dstVersion)
+        )
 
     await this.migrate(migrationsToRun)
+
+    if (process.env.MIGRATE_CMD) {
+      process.exit(0)
+    }
   }
 
   private async migrate(migrationsToRun: Migration[]) {
@@ -47,7 +59,7 @@ export class MigrationService extends Service {
       for (const [version, migrations] of Object.entries(migrationsByVersion)) {
         this.logger.warn(clc.bold(version))
         for (const migration of migrations) {
-          this.logger.warn(`- ${migration.meta.description}`)
+          this.logger.warn(`- ${this.isDown ? '[rollback] ' : ''}${migration.meta.description}`)
         }
       }
 
@@ -85,9 +97,12 @@ export class MigrationService extends Service {
         for (const migration of migrations) {
           this.logger.info(`${logPrefix}Running`, migration.meta.name)
           migration.transact(trx)
-
-          if (!(await migration.applied())) {
-            await migration.up()
+          if ((await migration.applied()) === this.isDown) {
+            if (this.isDown) {
+              await migration.down()
+            } else {
+              await migration.up()
+            }
             this.logger.info(`${logPrefix}- Success`)
           } else {
             this.logger.info(`${logPrefix}- Skipped`)
