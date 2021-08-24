@@ -41,7 +41,7 @@ export class InstanceMonitoring {
 
     for (const outdated of outdateds) {
       const failures = (await this.status.getNumberOfErrors(outdated.id)) || 0
-      if (failures >= MAX_ALLOWED_FAILURES) {
+      if (!yn(process.env.SPINNED) && failures >= MAX_ALLOWED_FAILURES) {
         continue
       }
 
