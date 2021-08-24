@@ -18,29 +18,50 @@ const launch = async () => {
   await launcher.launch()
 }
 
-yargs.scriptName('')
+void yargs
+  .scriptName('')
+  .command(
+    ['$0', 'serve'],
+    'Start server',
+    (yargs) => {
+      return yargs.options({ autoMigrate: { type: 'boolean', default: false } })
+    },
+    async (argv) => {
+      if (argv.autoMigrate) {
+        process.env.AUTO_MIGRATE = 'true'
+      }
 
-yargs.command({
-  command: ['$0', 'serve'],
-  describe: 'Run messaging server',
-  builder: (d) => {
-    return d.options({ autoMigrate: { type: 'boolean', default: false } })
-  },
-  handler: async (argv) => {
-    if (argv.autoMigrate) {
+      await launch()
+    }
+  )
+  .command('migrate', 'Migrate database', (yargs) => {
+    const start = async (cmd: string, target: string, dry: boolean) => {
       process.env.AUTO_MIGRATE = 'true'
+      if (cmd) {
+        process.env.MIGRATE_CMD = cmd
+      }
+      if (target) {
+        process.env.MIGRATE_TARGET = target
+      }
+      if (dry) {
+        process.env.MIGRATE_DRYRUN = 'true'
+      }
+      await launch()
     }
 
-    await launch()
-  }
-})
-
-yargs.command({
-  command: 'migrate',
-  describe: 'Migrate database',
-  handler: async () => {
-    await launch()
-  }
-})
-
-void yargs.argv
+    return yargs
+      .command('up', 'Migrate to the latest version (unless --target is specified)', {}, async (argv) => {
+        await start('up', argv.target as string, argv.dry as boolean)
+      })
+      .command('down', 'Downgrade to a previous version (--target must be specified)', {}, async (argv) => {
+        await start('down', argv.target as string, argv.dry as boolean)
+      })
+      .option('target', {
+        alias: 't',
+        describe: 'Target a specific version'
+      })
+      .option('dryrun', {
+        alias: 'dry',
+        describe: 'Displays the list of migrations that will be executed, without running them'
+      })
+  }).argv
