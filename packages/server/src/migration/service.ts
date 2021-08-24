@@ -116,7 +116,7 @@ export class MigrationService extends Service {
   }
 
   private listAllMigrations() {
-    const all = migs.map((x) => new x()) as Migration[]
+    const all = migs.map((x) => new x())
     const alphabetical = all.sort((a, b) => {
       return a.meta.name.localeCompare(b.meta.name, 'en')
     })
