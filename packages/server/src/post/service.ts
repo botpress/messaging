@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
+import clc from 'cli-color'
 import { backOff } from 'exponential-backoff'
 
 import { Service } from '../base/service'
@@ -54,7 +55,9 @@ export class PostService extends Service {
       })
     } catch (e) {
       this.logger.warn(
-        `An error occurred calling route ${url}. Total number of attempts: ${this.attempts}. ${e.message}`
+        `Unabled to reach webhook after ${this.attempts} attempts ${clc.blackBright(url)} ${clc.blackBright(
+          `Error: ${e.message}`
+        )}`
       )
     }
   }
