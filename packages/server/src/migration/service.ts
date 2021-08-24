@@ -2,6 +2,7 @@ import clc from 'cli-color'
 import _ from 'lodash'
 import semver from 'semver'
 import yn from 'yn'
+import { ShutDownSignal } from '../base/errors'
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
 import { Logger, LoggerLevel } from '../logger/types'
@@ -39,7 +40,7 @@ export class MigrationService extends Service {
     await this.migrate(migrationsToRun)
 
     if (process.env.MIGRATE_CMD) {
-      process.exit(0)
+      throw new ShutDownSignal()
     }
   }
 
@@ -65,12 +66,12 @@ export class MigrationService extends Service {
 
       if (this.isDry) {
         await this.runMigrations(migrationsToRun)
-        process.exit(0)
+        throw new ShutDownSignal()
       }
 
       if (!yn(process.env.AUTO_MIGRATE)) {
         this.logger.error(undefined, 'Migrations required. Please restart the server with AUTO_MIGRATE=true')
-        process.exit(0)
+        throw new ShutDownSignal()
       }
 
       await this.runMigrations(migrationsToRun)
@@ -119,7 +120,8 @@ export class MigrationService extends Service {
       this.logger.info(`${logPrefix}Migrations completed successfully!`)
     } catch (e) {
       await trx.rollback()
-      throw e
+      this.logger.error(e, `${logPrefix}Migrations failed`)
+      throw new ShutDownSignal()
     }
   }
 
