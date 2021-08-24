@@ -1,4 +1,5 @@
 import clc from 'cli-color'
+import _ from 'lodash'
 import moment from 'moment'
 import yn from 'yn'
 
@@ -21,32 +22,63 @@ export class Logger {
     [LoggerLevel.Info]: clc.green
   }
 
-  constructor(private scope: string) {}
+  constructor(private scope: string, private logPrefix?: string) {}
 
   sub(scope: string) {
     return new Logger(`${this.scope}:${scope}`)
   }
 
+  prefix(prefix: string) {
+    return new Logger(this.scope, prefix)
+  }
+
   info(message: string, data?: Param) {
-    this.print([message, data], LoggerLevel.Info)
+    this.printPrefix([message, data], LoggerLevel.Info)
   }
 
   debug(message: string, data?: Param) {
-    this.print([message, data], LoggerLevel.Debug)
+    this.printPrefix([message, data], LoggerLevel.Debug)
   }
 
   warn(message: string, data?: Param) {
-    this.print([message, data], LoggerLevel.Warn)
+    this.printPrefix([message, data], LoggerLevel.Warn)
   }
 
-  error(error: undefined, message: string, data?: Param): void
-  error(error: Error, message?: string, data?: Param): void
+  window(lines: string[], level = LoggerLevel.Info) {
+    const line = '========================================'
+    this.print(
+      [
+        line +
+          '\n' +
+          lines
+            .map((x) => this.center(this.logPrefix ? `${clc.blackBright(this.logPrefix)}${x}` : x, line.length))
+            .join('\n') +
+          '\n' +
+          this.center(line, line.length)
+      ],
+      level
+    )
+  }
+
   error(error: Error | undefined, message?: string, data?: Param) {
     if (message?.length && message[message.length - 1] !== '.') {
       message += '.'
     }
 
-    this.print([message, data, error?.stack], LoggerLevel.Error)
+    this.printPrefix([message, data, error?.stack], LoggerLevel.Error)
+  }
+
+  private center(text: string, width: number) {
+    const indent = (yn(process.env.SPINNED) ? 37 : 25) + this.scope.length
+    const padding = Math.floor((width - clc.strip(text).length) / 2)
+    return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
+  }
+
+  private printPrefix(params: Param[], level: LoggerLevel) {
+    if (this.logPrefix) {
+      params[0] = `${clc.blackBright(this.logPrefix)}${params[0]}`
+    }
+    this.print(params, level)
   }
 
   private print(params: Param[], level: LoggerLevel) {
