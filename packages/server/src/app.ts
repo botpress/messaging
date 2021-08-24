@@ -4,6 +4,7 @@ import { ChannelService } from './channels/service'
 import { ChatService } from './chat/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
+import { ConfigService } from './config/service'
 import { ConversationService } from './conversations/service'
 import { CryptoService } from './crypto/service'
 import { DatabaseService } from './database/service'
@@ -14,6 +15,8 @@ import { KvsService } from './kvs/service'
 import { LoggerService } from './logger/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
+import { MetaService } from './meta/service'
+import { MigrationService } from './migration/service'
 import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
@@ -24,7 +27,10 @@ import { WebhookService } from './webhooks/service'
 
 export class App {
   logger: LoggerService
+  config: ConfigService
   database: DatabaseService
+  meta: MetaService
+  migration: MigrationService
   crypto: CryptoService
   distributed: DistributedService
   caching: CachingService
@@ -49,12 +55,15 @@ export class App {
 
   constructor() {
     this.logger = new LoggerService()
-    this.database = new DatabaseService()
-    this.crypto = new CryptoService()
-    this.distributed = new DistributedService()
+    this.config = new ConfigService()
+    this.database = new DatabaseService(this.config)
+    this.meta = new MetaService(this.database)
+    this.migration = new MigrationService(this.database, this.meta)
+    this.crypto = new CryptoService(this.config)
+    this.distributed = new DistributedService(this.config)
     this.caching = new CachingService(this.distributed)
     this.batching = new BatchingService()
-    this.post = new PostService()
+    this.post = new PostService(this.config)
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
@@ -80,6 +89,7 @@ export class App {
     )
     this.syncs = new SyncService(
       this.logger,
+      this.config,
       this.distributed,
       this.channels,
       this.providers,
@@ -101,6 +111,7 @@ export class App {
     this.sockets = new SocketService(this.caching, this.users)
     this.chat = new ChatService(
       this.logger,
+      this.config,
       this.post,
       this.channels,
       this.clients,
@@ -116,7 +127,10 @@ export class App {
 
   async setup() {
     await this.logger.setup()
+    await this.config.setup()
     await this.database.setup()
+    await this.meta.setup()
+    await this.migration.setup()
     await this.crypto.setup()
     await this.distributed.setup()
     await this.caching.setup()

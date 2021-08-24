@@ -10,8 +10,6 @@ import { SocketManager } from './socket/manager'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
 
-const pkg = require('../package.json')
-
 export class Api {
   public readonly sockets: SocketManager
 
@@ -90,6 +88,6 @@ export class Api {
   }
 
   private version(_req: Request, res: Response) {
-    res.send(pkg.version)
+    res.send(this.app.meta.app().version)
   }
 }

@@ -7,6 +7,7 @@ import portfinder from 'portfinder'
 import yn from 'yn'
 import { Api } from './api'
 import { App } from './app'
+import { ShutDownSignal } from './base/errors'
 import { Logger } from './logger/types'
 
 const pkg = require('../package.json')
@@ -48,34 +49,42 @@ export class Launcher {
   }
 
   async launch() {
-    this.printLogo()
-    await this.app.setup()
-    this.printChannels()
+    try {
+      await this.app.config.setupEnv()
+      this.printLogo()
+      await this.app.setup()
+      this.printChannels()
 
-    await this.api.setup()
+      await this.api.setup()
 
-    let port = process.env.PORT
-    if (!port) {
-      portfinder.basePort = 3100
-      port = (await portfinder.getPortPromise()).toString()
-    }
-
-    const server = this.express.listen(port)
-    await this.api.sockets.setup(server)
-    this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
-
-    if (!yn(process.env.SPINNED)) {
-      this.logger.info(`Server is listening at: http://localhost:${port}`)
-
-      const externalUrl = process.env.EXTERNAL_URL
-      if (externalUrl?.length) {
-        this.logger.info(`Server is exposed at: ${externalUrl}`)
+      let port = process.env.PORT || this.app.config.current.server?.port
+      if (!port) {
+        portfinder.basePort = 3100
+        port = (await portfinder.getPortPromise()).toString()
       }
-    } else {
-      this.logger.info(clc.blackBright(`Messaging is listening at: http://localhost:${port}`))
-    }
 
-    await this.app.monitor()
+      const server = this.express.listen(port)
+      await this.api.sockets.setup(server)
+      this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
+
+      if (!yn(process.env.SPINNED)) {
+        this.logger.info(`Server is listening at: http://localhost:${port}`)
+
+        const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+        if (externalUrl?.length) {
+          this.logger.info(`Server is exposed at: ${externalUrl}`)
+        }
+      } else {
+        this.logger.info(clc.blackBright(`Messaging is listening at: http://localhost:${port}`))
+      }
+
+      await this.app.monitor()
+    } catch (e) {
+      if (!(e instanceof ShutDownSignal)) {
+        this.logger.error(e, 'Error occurred starting server')
+      }
+      await this.shutDown()
+    }
   }
 
   async shutDown(code?: number) {
@@ -102,20 +111,7 @@ export class Launcher {
       return
     }
 
-    const centerText = (text: string, width: number, indent: number = 0) => {
-      const padding = Math.floor((width - text.length) / 2)
-      return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
-    }
-
-    const width = yn(process.env.SPINNED) ? 45 : 33
-    this.logger.info(
-      '========================================\n' +
-        clc.bold(centerText('Botpress Messaging', 40, width)) +
-        '\n' +
-        clc.blackBright(centerText(`Version ${pkg.version}`, 40, width)) +
-        '\n' +
-        centerText('========================================', 40, width)
-    )
+    this.logger.window([clc.bold('Botpress Messaging'), clc.blackBright(`Version ${pkg.version}`)])
   }
 
   private printChannels() {

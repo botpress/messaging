@@ -19,6 +19,11 @@ export interface MessagingEnv {
   BATCHING_ENABLED?: string
   NO_LOGO?: string
   SINGLE_LINE_LOGGING?: string
+  AUTO_MIGRATE?: string
+  MIGRATE_TARGET?: string
+  MIGRATE_CMD?: string
+  MIGRATE_DRYRUN?: string
+  TESTMIG_DB_VERSION?: string
 }
 
 declare global {
