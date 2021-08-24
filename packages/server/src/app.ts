@@ -4,7 +4,6 @@ import { ChannelService } from './channels/service'
 import { ChatService } from './chat/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
-import { ConfigService } from './config/service'
 import { ConversationService } from './conversations/service'
 import { CryptoService } from './crypto/service'
 import { DatabaseService } from './database/service'
@@ -27,7 +26,6 @@ import { WebhookService } from './webhooks/service'
 
 export class App {
   logger: LoggerService
-  config: ConfigService
   database: DatabaseService
   meta: MetaService
   migration: MigrationService
@@ -55,15 +53,14 @@ export class App {
 
   constructor() {
     this.logger = new LoggerService()
-    this.config = new ConfigService()
-    this.database = new DatabaseService(this.config)
+    this.database = new DatabaseService()
     this.meta = new MetaService(this.database)
     this.migration = new MigrationService(this.database, this.meta)
-    this.crypto = new CryptoService(this.config)
-    this.distributed = new DistributedService(this.config)
+    this.crypto = new CryptoService()
+    this.distributed = new DistributedService()
     this.caching = new CachingService(this.distributed)
     this.batching = new BatchingService()
-    this.post = new PostService(this.config)
+    this.post = new PostService()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
@@ -89,7 +86,6 @@ export class App {
     )
     this.syncs = new SyncService(
       this.logger,
-      this.config,
       this.distributed,
       this.channels,
       this.providers,
@@ -111,7 +107,6 @@ export class App {
     this.sockets = new SocketService(this.caching, this.users)
     this.chat = new ChatService(
       this.logger,
-      this.config,
       this.post,
       this.channels,
       this.clients,
@@ -127,7 +122,6 @@ export class App {
 
   async setup() {
     await this.logger.setup()
-    await this.config.setup()
     await this.database.setup()
     await this.meta.setup()
     await this.migration.setup()

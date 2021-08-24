@@ -50,14 +50,13 @@ export class Launcher {
 
   async launch() {
     try {
-      await this.app.config.setupEnv()
       this.printLogo()
       await this.app.setup()
       this.printChannels()
 
       await this.api.setup()
 
-      let port = process.env.PORT || this.app.config.current.server?.port
+      let port = process.env.PORT
       if (!port) {
         portfinder.basePort = 3100
         port = (await portfinder.getPortPromise()).toString()
@@ -70,7 +69,7 @@ export class Launcher {
       if (!yn(process.env.SPINNED)) {
         this.logger.info(`Server is listening at: http://localhost:${port}`)
 
-        const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+        const externalUrl = process.env.EXTERNAL_URLs
         if (externalUrl?.length) {
           this.logger.info(`Server is exposed at: ${externalUrl}`)
         }
