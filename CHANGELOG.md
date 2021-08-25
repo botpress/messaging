@@ -1,3 +1,19 @@
+## [0.1.10](https://github.com/botpress/messaging/compare/v0.1.9...v0.1.10) (2021-08-24)
+
+
+### Bug Fixes
+
+* **chat:** fix crash when replying to null conduit ([#156](https://github.com/botpress/messaging/issues/156)) ([4d0542f](https://github.com/botpress/messaging/commit/4d0542f04451b1f6ab97fd5f63102f333be34cbb))
+* **instances:** fix instance service destroy ([#155](https://github.com/botpress/messaging/issues/155)) ([ffeb091](https://github.com/botpress/messaging/commit/ffeb0916c0ea525c816b993013ca5369a788d906))
+* **post:** log errors as warnings ([#154](https://github.com/botpress/messaging/issues/154)) ([edf54c2](https://github.com/botpress/messaging/commit/edf54c2cb77f40de2f03f36e0a32a817a3381237))
+
+
+### Features
+
+* **migration:** implement migration service ([#142](https://github.com/botpress/messaging/issues/142)) ([a6fef7c](https://github.com/botpress/messaging/commit/a6fef7c14fab8116cc0af0d364843ceceb86f719))
+
+
+
 ## [0.1.9](https://github.com/botpress/messaging/compare/v0.1.8...v0.1.9) (2021-08-23)
 
 
