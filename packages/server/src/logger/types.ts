@@ -2,6 +2,7 @@ import clc from 'cli-color'
 import _ from 'lodash'
 import moment from 'moment'
 import yn from 'yn'
+import { RedisSubservice } from '../distributed/redis/subservice'
 
 export enum LoggerLevel {
   Debug = 10,
@@ -82,11 +83,21 @@ export class Logger {
   }
 
   private print(params: Param[], level: LoggerLevel) {
-    const timeFormat = 'L HH:mm:ss.SSS'
-    const time = moment().format(timeFormat)
+    let timeText = ''
+    if (!yn(process.env.DISABLE_LOGGING_TIMESTAMP)) {
+      const timeFormat = 'L HH:mm:ss.SSS'
+      const time = moment().format(timeFormat)
+      timeText = clc.blackBright(time)
+    }
 
-    const timeText = clc.blackBright(time)
-    const titleText = clc.bold(this.colors[level](yn(process.env.SPINNED) ? `[Messaging] ${this.scope}` : this.scope))
+    let title = this.scope
+    if (yn(process.env.SPINNED)) {
+      title = `[Messaging] ${title}`
+    } else if (yn(process.env.CLUSTER_ENABLED)) {
+      title = `[${RedisSubservice.nodeId}] ${title}`
+    }
+
+    const titleText = clc.bold(this.colors[level](title))
 
     let definedParams = params.filter((x) => x !== undefined)
     if (yn(process.env.SINGLE_LINE_LOGGING)) {
