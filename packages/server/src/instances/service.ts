@@ -103,8 +103,10 @@ export class InstanceService extends Service {
     }
 
     for (const conduitId of this.cache.keys()) {
-      const instance = this.cache.get(conduitId)!
-      await this.handleCacheDispose(conduitId, instance)
+      const instance = this.cache.get(conduitId)
+      if (instance) {
+        await this.handleCacheDispose(conduitId, instance)
+      }
     }
   }
 

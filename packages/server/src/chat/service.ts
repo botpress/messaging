@@ -90,6 +90,10 @@ export class ChatService extends Service {
       ) {
         // TODO: we don't need to get the config here. Just getting the conduitId would be way better
         const conduit = await this.conduits.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
+        if (!conduit) {
+          continue
+        }
+
         const instance = await this.instances.get(conduit!.id)
         await instance.sendToEndpoint(endpoint, payload)
       }
