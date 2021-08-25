@@ -7,6 +7,8 @@ import { HealthApi } from './health/api'
 import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
+import * as Sentry from '@sentry/node'
+import yn from 'yn'
 
 const pkg = require('../package.json')
 
@@ -40,6 +42,16 @@ export class Api {
   }
 
   async setup() {
+    const apmEnabled = yn(process.env.APM_ENABLED)
+
+    if (apmEnabled) {
+      Sentry.init({
+        integrations: [new Sentry.Integrations.Http({})]
+      })
+
+      this.root.use(Sentry.Handlers.requestHandler())
+    }
+
     await this.setupPassword()
 
     this.root.get('/version', this.version)
@@ -55,6 +67,10 @@ export class Api {
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
+
+    if (apmEnabled) {
+      this.root.use(Sentry.Handlers.errorHandler())
+    }
   }
 
   async setupPassword() {
