@@ -1,6 +1,9 @@
 import './rewire'
+import dotenv from 'dotenv'
 import express from 'express'
+import path from 'path'
 import yargs from 'yargs'
+import yn from 'yn'
 import { Api } from './api'
 import { App } from './app'
 import { Launcher } from './launcher'
@@ -9,6 +12,8 @@ import { Launcher } from './launcher'
 process.env.NODE_ENV = (<any>process).pkg ? 'production' : process.env.NODE_ENV
 
 const launch = async () => {
+  await setupEnv()
+
   const router = express()
 
   const app = new App()
@@ -16,6 +21,18 @@ const launch = async () => {
 
   const launcher = new Launcher(router, app, api)
   await launcher.launch()
+}
+
+const setupEnv = async () => {
+  if (yn(process.env.SKIP_LOAD_ENV)) {
+    return
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    dotenv.config({ path: path.resolve(process.cwd(), 'dist', '.env') })
+  } else {
+    dotenv.config()
+  }
 }
 
 void yargs
