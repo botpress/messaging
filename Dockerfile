@@ -24,5 +24,5 @@ RUN yarn --silent --prod --frozen-lockfile
 
 ENV NODE_ENV=production
 
-ENTRYPOINT [ "node" ]
-CMD ["./packages/server/src/index.js"]
+ENTRYPOINT [ "node", "./packages/server/src/index.js" ]
+CMD []
