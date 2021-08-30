@@ -87,20 +87,16 @@ export class Launcher {
   }
 
   async shutDown(code?: number) {
-    if (!this.shuttingDown) {
+    if (!this.shuttingDown && !yn(process.env.SPINNED)) {
       this.shuttingDown = true
 
-      if (!yn(process.env.SPINNED)) {
-        this.logger.info('Server gracefully closing down...')
-      }
+      this.logger.info('Server gracefully closing down...')
 
       await this.api.sockets.destroy()
       await this.httpTerminator?.terminate()
       await this.app.destroy()
 
-      if (!yn(process.env.SPINNED)) {
-        this.logger.info('Server shutdown complete')
-      }
+      this.logger.info('Server shutdown complete')
     }
     process.exit(code)
   }
@@ -119,7 +115,7 @@ export class Launcher {
     }
 
     if (!yn(process.env.SPINNED)) {
-      const padding = _.repeat(' ', 24)
+      const padding = yn(process.env.DISABLE_LOGGING_TIMESTAMP) ? '' : _.repeat(' ', 24)
       let text = ''
       let enabled = 0
 

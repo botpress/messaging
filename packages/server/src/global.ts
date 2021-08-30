@@ -19,6 +19,7 @@ export interface MessagingEnv {
   BATCHING_ENABLED?: string
   NO_LOGO?: string
   SINGLE_LINE_LOGGING?: string
+  DISABLE_LOGGING_TIMESTAMP?: string
   AUTO_MIGRATE?: string
   MIGRATE_TARGET?: string
   MIGRATE_CMD?: string
