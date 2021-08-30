@@ -10,6 +10,7 @@ import { PingPong } from './ping'
 const DEFAULT_LOCK_TTL = 2000
 
 export class RedisSubservice implements DistributedSubservice {
+  // TODO: Remove evil static keyword here when we refactor the logging
   public static nodeId = Math.round(Math.random() * 1000000)
 
   private logger: Logger = new Logger('Redis')
