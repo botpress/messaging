@@ -1,17 +1,31 @@
-import Telegraf from 'telegraf'
-import { TelegrafContext } from 'telegraf/typings/context'
-import { ChatAction, ExtraReplyMessage, InputFile } from 'telegraf/typings/telegram-types'
+import { Context, Telegraf } from 'telegraf'
+import * as tg from 'telegraf/src/core/types/typegram'
+import { ChatAction, ExtraAnimation, ExtraPhoto, ExtraReplyMessage } from 'telegraf/typings/telegram-types'
 import { ChannelContext } from '../base/context'
 
-export type TelegramContext = ChannelContext<Telegraf<TelegrafContext>> & {
+export interface TelegramContext extends ChannelContext<Telegraf<Context>> {
   messages: TelegramMessage[]
 }
 
-export interface TelegramMessage {
-  text?: string
-  animation?: string
-  photo?: InputFile
+interface TelegramTextMessage {
+  text: string
   markdown?: boolean
-  action?: ChatAction
   extra?: ExtraReplyMessage
 }
+interface TelegramPhotoMessage {
+  photo: tg.Opts<'sendPhoto'>['photo']
+  extra?: ExtraPhoto
+}
+interface TelegramAnimationMessage {
+  animation: tg.Opts<'sendAnimation'>['animation']
+  extra?: ExtraAnimation
+}
+interface TelegramActionMessage {
+  action: ChatAction
+}
+
+export type TelegramMessage =
+  | TelegramTextMessage
+  | TelegramPhotoMessage
+  | TelegramAnimationMessage
+  | TelegramActionMessage

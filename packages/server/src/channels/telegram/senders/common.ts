@@ -1,4 +1,3 @@
-import { ExtraPhoto } from 'telegraf/typings/telegram-types'
 import { CommonSender } from '../../base/senders/common'
 import { TelegramContext } from '../context'
 
@@ -8,16 +7,16 @@ export class TelegramCommonSender extends CommonSender {
     const chatId = context.thread!
 
     for (const message of context.messages) {
-      if (message.action) {
+      if ('action' in message) {
         await client.telegram.sendChatAction(chatId, message.action)
       }
-      if (message.text) {
+      if ('text' in message) {
         await client.telegram.sendMessage(chatId, message.text, message.extra)
       }
-      if (message.photo) {
-        await client.telegram.sendPhoto(chatId, message.photo, <ExtraPhoto>message.extra)
+      if ('photo' in message) {
+        await client.telegram.sendPhoto(chatId, message.photo, message.extra)
       }
-      if (message.animation) {
+      if ('animation' in message) {
         await client.telegram.sendAnimation(chatId, message.animation, message.extra)
       }
     }

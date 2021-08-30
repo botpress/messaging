@@ -1,6 +1,5 @@
 import _ from 'lodash'
-import { Telegraf } from 'telegraf'
-import { TelegrafContext } from 'telegraf/typings/context'
+import { Telegraf, Context } from 'telegraf'
 import yn from 'yn'
 import { EndpointContent, ConduitInstance } from '../base/conduit'
 import { ChannelContext } from '../base/context'
@@ -14,7 +13,7 @@ import { TelegramSenders } from './senders'
 export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramContext> {
   public callback!: (req: any, res: any) => void
 
-  private telegraf!: Telegraf<TelegrafContext>
+  private telegraf!: Telegraf<Context>
 
   async initialize() {
     if (this.useWebhook()) {
@@ -33,14 +32,14 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
       try {
         await this.receive(ctx)
       } catch (e) {
-        this.logger.error(e, 'Error occured on start')
+        this.logger.error(e, 'Error occurred on start')
       }
     })
     this.telegraf.help(async (ctx) => {
       try {
         await this.receive(ctx)
       } catch (e) {
-        this.logger.error(e, 'Error occured on help')
+        this.logger.error(e, 'Error occurred on help')
       }
     })
     this.telegraf.on('message', async (ctx) => {
@@ -60,7 +59,7 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
 
     if (!this.useWebhook()) {
       await this.telegraf.telegram.deleteWebhook()
-      this.telegraf.startPolling()
+      this.telegraf['startPolling']()
     } else {
       this.callback = this.telegraf.webhookCallback(`/${this.config.botToken}`)
       await this.printWebhook()
@@ -79,15 +78,23 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     return TelegramSenders
   }
 
-  public async extractEndpoint(payload: TelegrafContext): Promise<EndpointContent> {
+  public async extractEndpoint(payload: Context): Promise<EndpointContent> {
     const chatId = payload.chat?.id || payload.message?.chat.id
     const userId = payload.from?.id || payload.message?.from?.id
-    const text = payload.message?.text
+
+    let text = ''
+    let data = ''
+
+    if (payload.message && 'text' in payload.message) {
+      text = payload.message?.text
+    }
 
     // TODO: this logic should be handled by channel receivers
-    const data = payload.callbackQuery?.data
-    let content
+    if (payload.callbackQuery && 'data' in payload.callbackQuery) {
+      data = payload.callbackQuery.data
+    }
 
+    let content
     if (!text && data) {
       if (data.startsWith('say::')) {
         content = { type: 'say_something', text: data.replace('say::', '') }
@@ -107,11 +114,13 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     }
   }
 
-  protected async getContext(base: ChannelContext<any>): Promise<TelegramContext> {
-    return {
+  protected async getContext(base: ChannelContext<Telegraf<Context>>): Promise<TelegramContext> {
+    const context: TelegramContext = {
       ...base,
       client: this.telegraf,
       messages: []
     }
+
+    return context
   }
 }
