@@ -120,7 +120,7 @@ export class Launcher {
     }
 
     if (!yn(process.env.SPINNED)) {
-      const padding = _.repeat(' ', 24)
+      const padding = yn(process.env.DISABLE_LOGGING_TIMESTAMP) ? '' : _.repeat(' ', 24)
       let text = ''
       let enabled = 0
 
