@@ -15,6 +15,8 @@ import { KvsService } from './kvs/service'
 import { LoggerService } from './logger/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
+import { MetaService } from './meta/service'
+import { MigrationService } from './migration/service'
 import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
@@ -27,6 +29,8 @@ export class App {
   logger: LoggerService
   config: ConfigService
   database: DatabaseService
+  meta: MetaService
+  migration: MigrationService
   crypto: CryptoService
   distributed: DistributedService
   caching: CachingService
@@ -53,6 +57,8 @@ export class App {
     this.logger = new LoggerService()
     this.config = new ConfigService()
     this.database = new DatabaseService(this.config)
+    this.meta = new MetaService(this.database)
+    this.migration = new MigrationService(this.database, this.meta)
     this.crypto = new CryptoService(this.config)
     this.distributed = new DistributedService(this.config)
     this.caching = new CachingService(this.distributed)
@@ -123,6 +129,8 @@ export class App {
     await this.logger.setup()
     await this.config.setup()
     await this.database.setup()
+    await this.meta.setup()
+    await this.migration.setup()
     await this.crypto.setup()
     await this.distributed.setup()
     await this.caching.setup()
