@@ -70,7 +70,8 @@ export class Logger {
   }
 
   private center(text: string, width: number) {
-    const indent = (yn(process.env.SPINNED) ? 37 : 25) + this.scope.length
+    const indent =
+      (yn(process.env.SPINNED) ? 12 : 0) + (yn(process.env.DISABLE_LOGGING_TIMESTAMP) ? 0 : 24) + 1 + this.scope.length
     const padding = Math.floor((width - clc.strip(text).length) / 2)
     return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
   }
@@ -83,7 +84,7 @@ export class Logger {
   }
 
   private print(params: Param[], level: LoggerLevel) {
-    let timeText = ''
+    let timeText = undefined
     if (!yn(process.env.DISABLE_LOGGING_TIMESTAMP)) {
       const timeFormat = 'L HH:mm:ss.SSS'
       const time = moment().format(timeFormat)
@@ -98,6 +99,8 @@ export class Logger {
     }
 
     const titleText = clc.bold(this.colors[level](title))
+    params.unshift(titleText)
+    params.unshift(timeText)
 
     let definedParams = params.filter((x) => x !== undefined)
     if (yn(process.env.SINGLE_LINE_LOGGING)) {
@@ -105,7 +108,7 @@ export class Logger {
     }
 
     // eslint-disable-next-line no-console
-    console.log(timeText, titleText, ...definedParams)
+    console.log(...definedParams)
   }
 
   private singleLine(params: Param[]) {
