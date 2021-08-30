@@ -1,24 +1,16 @@
 import yn from 'yn'
 import { Service } from '../base/service'
-import { ConfigService } from '../config/service'
 import { DistributedSubservice } from './base/subservice'
 import { LocalSubservice } from './local/subservice'
-import { RedisConfig } from './redis/config'
 import { RedisSubservice } from './redis/subservice'
 import { Lock } from './types'
 
 export class DistributedService extends Service {
   private subservice!: DistributedSubservice
 
-  constructor(private configService: ConfigService) {
-    super()
-  }
-
   async setup() {
-    const config = (this.configService.current.redis || {}) as RedisConfig
-
-    if (yn(process.env.CLUSTER_ENABLED) || config.enabled) {
-      this.subservice = new RedisSubservice(config)
+    if (yn(process.env.CLUSTER_ENABLED)) {
+      this.subservice = new RedisSubservice()
     } else {
       this.subservice = new LocalSubservice()
     }

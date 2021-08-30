@@ -1,12 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import { ChannelService } from '../../src/channels/service'
-import { ConfigService } from '../../src/config/service'
 import { DatabaseService } from '../../src/database/service'
 import { makeSyncRequestSchema } from '../../src/sync/schema'
 
 jest.mock('../../src/database/service')
-jest.mock('../../src/config/service')
 
 const channels = {
   messenger: {
@@ -81,8 +79,7 @@ describe('Sync', () => {
   }
 
   beforeEach(() => {
-    const configService = new ConfigService()
-    const databaseService = new DatabaseService(configService)
+    const databaseService = new DatabaseService()
     channelService = new ChannelService(databaseService)
   })
 

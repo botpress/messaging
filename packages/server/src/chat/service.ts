@@ -6,7 +6,6 @@ import { Service } from '../base/service'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
-import { ConfigService } from '../config/service'
 import { ConversationService } from '../conversations/service'
 import { InstanceService } from '../instances/service'
 import { LoggerService } from '../logger/service'
@@ -27,7 +26,6 @@ export class ChatService extends Service {
 
   constructor(
     private loggers: LoggerService,
-    private configs: ConfigService,
     private posts: PostService,
     private channels: ChannelService,
     private clients: ClientService,
@@ -47,8 +45,6 @@ export class ChatService extends Service {
   async setup() {
     if (process.env.LOGGING_ENABLED?.length) {
       this.loggingEnabled = !!yn(process.env.LOGGING_ENABLED)
-    } else if (this.configs.current.logging?.enabled !== null && this.configs.current.logging?.enabled !== undefined) {
-      this.loggingEnabled = !!yn(this.configs.current.logging.enabled)
     } else {
       this.loggingEnabled = process.env.NODE_ENV !== 'production'
     }

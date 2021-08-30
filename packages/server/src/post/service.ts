@@ -3,7 +3,6 @@ import clc from 'cli-color'
 import { backOff } from 'exponential-backoff'
 
 import { Service } from '../base/service'
-import { ConfigService } from '../config/service'
 import { Logger } from '../logger/types'
 
 export class PostService extends Service {
@@ -13,14 +12,14 @@ export class PostService extends Service {
   private logger: Logger
   private password: string | undefined
 
-  constructor(private configService: ConfigService) {
+  constructor() {
     super()
     this.logger = new Logger('Post')
     this.isTerminating = false
   }
 
   public async setup() {
-    this.password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
+    this.password = process.env.INTERNAL_PASSWORD
   }
 
   async destroy() {

@@ -4,7 +4,6 @@ import _ from 'lodash'
 import Redlock from 'redlock'
 import { Logger } from '../../logger/types'
 import { DistributedSubservice } from '../base/subservice'
-import { RedisConfig } from './config'
 import { PingPong } from './ping'
 
 const DEFAULT_LOCK_TTL = 2000
@@ -22,12 +21,10 @@ export class RedisSubservice implements DistributedSubservice {
   private pings!: PingPong
   private scope!: string
 
-  constructor(private config: RedisConfig) {}
-
   async setup() {
     this.logger.info(`Id is ${clc.bold(RedisSubservice.nodeId)}`)
 
-    this.scope = process.env.REDIS_SCOPE || this.config.scope
+    this.scope = process.env.REDIS_SCOPE!
     this.pub = this.setupClient()
     this.sub = this.setupClient()
     this.redlock = new Redlock([this.pub])
@@ -48,8 +45,8 @@ export class RedisSubservice implements DistributedSubservice {
   }
 
   private setupClient(): Redis {
-    let connection = this.config.connection
-    let options = this.config.options || {}
+    let connection = undefined
+    let options = {}
 
     if (process.env.REDIS_URL) {
       try {

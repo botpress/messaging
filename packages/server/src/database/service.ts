@@ -3,7 +3,6 @@ import knex, { Knex } from 'knex'
 import path from 'path'
 import { Service } from '../base/service'
 import { Table } from '../base/table'
-import { ConfigService } from '../config/service'
 import { Logger } from '../logger/types'
 
 export class DatabaseService extends Service {
@@ -11,15 +10,10 @@ export class DatabaseService extends Service {
   private url!: string
   private pool!: Knex.PoolConfig
   private isLite!: boolean
-  private logger: Logger
-
-  constructor(private configService: ConfigService) {
-    super()
-    this.logger = new Logger('Database')
-  }
+  private logger = new Logger('Database')
 
   async setup() {
-    this.url = process.env.DATABASE_URL || this.configService.current.database?.connection
+    this.url = process.env.DATABASE_URL!
     this.loadPoolConfig()
 
     if (this.url?.startsWith('postgres')) {
@@ -30,17 +24,16 @@ export class DatabaseService extends Service {
   }
 
   private loadPoolConfig() {
-    let config = this.configService.current.database?.pool
-
-    if (process.env.DATABASE_POOL) {
+    const getPoolConfig = () => {
       try {
-        config = JSON.parse(process.env.DATABASE_POOL)
+        return process.env.DATABASE_POOL ? JSON.parse(process.env.DATABASE_POOL) : undefined
       } catch {
         this.logger.warn('DATABASE_POOL is not valid json')
+        return undefined
       }
     }
 
-    this.pool = { log: (message: any) => this.logger.warn(`[pool] ${message}`), ...config }
+    this.pool = { log: (message: any) => this.logger.warn(`[pool] ${message}`), ...getPoolConfig() }
   }
 
   private async setupPostgres() {

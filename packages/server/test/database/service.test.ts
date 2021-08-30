@@ -4,12 +4,10 @@ import * as path from 'path'
 import { mocked } from 'ts-jest/utils'
 
 import { DatabaseService } from '../../src/database/service'
-import { ConfigService } from '../../src/config/service'
 import { Table } from '../../src/base/table'
 import { Knex } from 'knex'
 
 jest.mock('../../src/logger/types')
-jest.mock('../../src/config/service')
 jest.mock('fs')
 jest.mock('knex', () => {
   const mKnexSchema = { hasTable: jest.fn(), createTable: jest.fn() }
@@ -32,8 +30,6 @@ export class TestTable extends Table {
   }
 }
 
-let configService: ConfigService
-
 const table = new TestTable()
 const defaultEnv = process.env
 const postgresDatabaseUrl = 'postgres://user:pass@url:123/db'
@@ -49,9 +45,6 @@ const falsyValues = ['', null, undefined, false]
 
 describe('DatabaseService', () => {
   beforeEach(() => {
-    configService = new ConfigService()
-    configService['current'] = {}
-
     process.env = { ..._.cloneDeep(process.env) }
 
     jest.useFakeTimers()
@@ -65,7 +58,7 @@ describe('DatabaseService', () => {
 
   test('Should not throw any error with a default configuration', () => {
     try {
-      new DatabaseService(configService)
+      new DatabaseService()
     } catch (e) {
       fail(e)
     }
@@ -78,24 +71,7 @@ describe('DatabaseService', () => {
 
     describe('setup', () => {
       test('Should configure a PostgreSQL database connection from an env var', async () => {
-        const db = new DatabaseService(configService)
-        await db.setup()
-
-        expect(Object.keys(db['pool'])).toEqual(['log'])
-        expect(db['isLite']).toEqual(false)
-        expect(db['url']).toEqual(postgresDatabaseUrl)
-        expect(db.knex).not.toBeUndefined()
-      })
-
-      test('Should configure a PostgreSQL database connection from a config file', async () => {
-        delete process.env.DATABASE_URL
-        configService.current = {
-          database: {
-            connection: postgresDatabaseUrl
-          }
-        }
-
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log'])
@@ -108,7 +84,7 @@ describe('DatabaseService', () => {
         process.env.DATABASE_POOL = poolOptions
         const jsonPoolOptions = JSON.parse(poolOptions)
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log', ...Object.keys(jsonPoolOptions)])
@@ -121,7 +97,7 @@ describe('DatabaseService', () => {
       test('Should configure a PostgreSQL database connection with no extra pool options', async () => {
         process.env.DATABASE_POOL = '{}'
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log'])
@@ -133,7 +109,7 @@ describe('DatabaseService', () => {
       test('Should display a warning if the custom pool options are invalid JSON', async () => {
         process.env.DATABASE_POOL = invalidPoolOptions
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db['logger'].warn).toHaveBeenCalledTimes(1)
@@ -146,7 +122,7 @@ describe('DatabaseService', () => {
 
     describe('destroy', () => {
       test('Should call destroy on knex', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.destroy).mockReturnValueOnce(Promise.resolve())
@@ -158,7 +134,7 @@ describe('DatabaseService', () => {
       })
 
       test('Should call the logger if an error is thrown', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.destroy).mockImplementationOnce(Promise.reject)
@@ -172,7 +148,7 @@ describe('DatabaseService', () => {
 
     describe('registerTable', () => {
       test('Should create a new table if it does not exists', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(false))
@@ -188,7 +164,7 @@ describe('DatabaseService', () => {
       })
 
       test('Should not create a new table if it already exists', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(true))
@@ -204,7 +180,7 @@ describe('DatabaseService', () => {
 
     describe('getJson', () => {
       test('Should return the value as is', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.getJson(anyValue)).toEqual(anyValue)
@@ -213,7 +189,7 @@ describe('DatabaseService', () => {
 
     describe('setJson', () => {
       test('Should return the value as is', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.setJson(anyValue)).toEqual(anyValue)
@@ -222,7 +198,7 @@ describe('DatabaseService', () => {
 
     describe('getDate', () => {
       test('Should convert a string into a new Date', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.getDate(stringDate)).toEqual(date)
@@ -231,14 +207,14 @@ describe('DatabaseService', () => {
 
     describe('setDate', () => {
       test('Should convert a string into a new Date', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.setDate(date)).toEqual(stringDate)
       })
 
       test('Should return undefined if no date is provided', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.setDate(undefined)).toEqual(undefined)
@@ -251,7 +227,7 @@ describe('DatabaseService', () => {
       test('Should configure a SQLite database connection', async () => {
         mocked(fs.existsSync).mockReturnValueOnce(true)
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log'])
@@ -268,7 +244,7 @@ describe('DatabaseService', () => {
         mocked(fs.existsSync).mockReturnValueOnce(false)
         mocked(fs.mkdirSync).mockReturnValueOnce(undefined)
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log'])
@@ -286,27 +262,7 @@ describe('DatabaseService', () => {
 
         mocked(fs.existsSync).mockReturnValueOnce(true)
 
-        const db = new DatabaseService(configService)
-        await db.setup()
-
-        expect(Object.keys(db['pool'])).toEqual(['log'])
-        expect(db['isLite']).toEqual(true)
-        expect(db['url']).toEqual(sqlitePath)
-        expect(fs.existsSync).toHaveBeenCalledTimes(1)
-        expect(fs.existsSync).toHaveBeenCalledWith(path.dirname(sqlitePath))
-        expect(db.knex).not.toBeUndefined()
-      })
-
-      test('Should configure a SQLite database connection using a provided filename from a config file', async () => {
-        configService.current = {
-          database: {
-            connection: sqlitePath
-          }
-        }
-
-        mocked(fs.existsSync).mockReturnValueOnce(true)
-
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log'])
@@ -322,7 +278,7 @@ describe('DatabaseService', () => {
         process.env.DATABASE_POOL = poolOptions
         const jsonPoolOptions = JSON.parse(poolOptions)
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log', ...Object.keys(jsonPoolOptions)])
@@ -336,7 +292,7 @@ describe('DatabaseService', () => {
         process.env.DATABASE_URL = sqlitePath
         process.env.DATABASE_POOL = '{}'
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(Object.keys(db['pool'])).toEqual(['log'])
@@ -349,7 +305,7 @@ describe('DatabaseService', () => {
         process.env.DATABASE_URL = sqlitePath
         process.env.DATABASE_POOL = invalidPoolOptions
 
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db['logger'].warn).toHaveBeenCalledTimes(1)
@@ -362,7 +318,7 @@ describe('DatabaseService', () => {
 
     describe('destroy', () => {
       test('Should call destroy on knex', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.destroy).mockReturnValueOnce(Promise.resolve())
@@ -374,7 +330,7 @@ describe('DatabaseService', () => {
       })
 
       test('Should call the logger if an error is thrown', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.destroy).mockImplementationOnce(Promise.reject)
@@ -388,7 +344,7 @@ describe('DatabaseService', () => {
 
     describe('registerTable', () => {
       test('Should create a new table if it does not exists', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(false))
@@ -404,7 +360,7 @@ describe('DatabaseService', () => {
       })
 
       test('Should not create a new table if it already exists', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(true))
@@ -420,14 +376,14 @@ describe('DatabaseService', () => {
 
     describe('getJson', () => {
       test('Should return the value parsed into an object', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.getJson(stringObj)).toEqual(obj)
       })
 
       test('Should return undefined if the value provided is falsy', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         for (const value of falsyValues) {
@@ -438,14 +394,14 @@ describe('DatabaseService', () => {
 
     describe('setJson', () => {
       test('Should return object parsed into a string', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.setJson(obj)).toEqual(stringObj)
       })
 
       test('Should return undefined if the value provided is falsy', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         for (const value of falsyValues) {
@@ -456,7 +412,7 @@ describe('DatabaseService', () => {
 
     describe('getDate', () => {
       test('Should convert a string into a new Date', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.getDate(stringDate)).toEqual(date)
@@ -465,14 +421,14 @@ describe('DatabaseService', () => {
 
     describe('setDate', () => {
       test('Should convert a string into a new Date', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.setDate(date)).toEqual(stringDate)
       })
 
       test('Should return undefined if no date is provided', async () => {
-        const db = new DatabaseService(configService)
+        const db = new DatabaseService()
         await db.setup()
 
         expect(db.setDate(undefined)).toEqual(undefined)
