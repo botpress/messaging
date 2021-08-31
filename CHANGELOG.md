@@ -1,3 +1,12 @@
+## [0.1.11](https://github.com/botpress/messaging/compare/v0.1.10...v0.1.11) (2021-08-31)
+
+
+### Bug Fixes
+
+* **monitoring:** always setup non lazy when spinned ([#158](https://github.com/botpress/messaging/issues/158)) ([2b22a68](https://github.com/botpress/messaging/commit/2b22a689533032eaf4e9eaa49e6a85e157fcba11))
+
+
+
 ## [0.1.10](https://github.com/botpress/messaging/compare/v0.1.9...v0.1.10) (2021-08-24)
 
 
