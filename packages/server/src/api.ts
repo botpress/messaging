@@ -2,7 +2,6 @@ import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
-import { ChatApi } from './chat/api'
 import { ConversationApi } from './conversations/api'
 import { HealthApi } from './health/api'
 import { MessageApi } from './messages/api'
@@ -15,7 +14,6 @@ export class Api {
 
   private syncs: SyncApi
   private health: HealthApi
-  private chat: ChatApi
   private users: UserApi
   private conversations: ConversationApi
   private messages: MessageApi
@@ -27,7 +25,6 @@ export class Api {
     this.sockets = new SocketManager(this.app.sockets)
     this.syncs = new SyncApi(this.router, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.app.clients, this.app.health)
-    this.chat = new ChatApi(this.router, this.app.clients, this.app.conversations, this.app.chat)
     this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users, this.app.sockets)
     this.conversations = new ConversationApi(
       this.router,
@@ -43,7 +40,6 @@ export class Api {
       this.sockets,
       this.app.conversations,
       this.app.messages,
-      this.app.chat,
       this.app.sockets
     )
     this.channels = new ChannelApi(this.root, this.app)
@@ -61,7 +57,6 @@ export class Api {
 
     await this.syncs.setup()
     await this.health.setup()
-    await this.chat.setup()
     await this.users.setup()
     await this.conversations.setup()
     await this.messages.setup()

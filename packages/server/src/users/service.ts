@@ -6,13 +6,19 @@ import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
+import { UserEmitter, UserEvents, UserWatcher } from './events'
 import { UserTable } from './table'
 
 export class UserService extends Service {
-  public batcher!: Batcher<User>
-  private cache!: ServerCache<uuid, User>
+  get events(): UserWatcher {
+    return this.emitter
+  }
 
+  public batcher!: Batcher<User>
+
+  private emitter: UserEmitter
   private table: UserTable
+  private cache!: ServerCache<uuid, User>
 
   constructor(
     private db: DatabaseService,
@@ -21,6 +27,7 @@ export class UserService extends Service {
   ) {
     super()
     this.table = new UserTable()
+    this.emitter = new UserEmitter()
   }
 
   async setup() {
@@ -43,6 +50,7 @@ export class UserService extends Service {
 
     await this.batcher.push(user)
     this.cache.set(user.id, user)
+    await this.emitter.emit(UserEvents.Created, { user })
 
     return user
   }

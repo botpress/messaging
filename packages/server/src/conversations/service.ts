@@ -7,11 +7,17 @@ import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { DatabaseService } from '../database/service'
 import { UserService } from '../users/service'
+import { ConversationEmitter, ConversationEvents, ConversationWatcher } from './events'
 import { ConversationTable } from './table'
 
 export class ConversationService extends Service {
+  get events(): ConversationWatcher {
+    return this.emitter
+  }
+
   public batcher!: Batcher<Conversation>
 
+  private emitter: ConversationEmitter
   private table: ConversationTable
   private cache!: ServerCache<uuid, Conversation>
   private cacheMostRecent!: ServerCache<uuid, Conversation>
@@ -24,6 +30,7 @@ export class ConversationService extends Service {
   ) {
     super()
     this.table = new ConversationTable()
+    this.emitter = new ConversationEmitter()
   }
 
   async setup() {
@@ -54,6 +61,7 @@ export class ConversationService extends Service {
 
     await this.batcher.push(conversation)
     this.cache.set(conversation.id, conversation)
+    await this.emitter.emit(ConversationEvents.Created, { conversation })
 
     return conversation
   }

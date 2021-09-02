@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import _ from 'lodash'
+import { Message, uuid } from '@botpress/messaging-base'
 import ms from 'ms'
 import yn from 'yn'
 import { App } from '../app'
@@ -10,10 +9,14 @@ import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
+import { ConversationService } from '../conversations/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
+import { Convmap } from '../mapping/convmap/types'
 import { MappingService } from '../mapping/service'
+import { MessageCreatedEvent, MessageEvents } from '../messages/events'
+import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
 import { StatusService } from '../status/service'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
@@ -42,6 +45,8 @@ export class InstanceService extends Service {
     private channelService: ChannelService,
     private providerService: ProviderService,
     private conduitService: ConduitService,
+    private conversationService: ConversationService,
+    private messageService: MessageService,
     private clientService: ClientService,
     private mappingService: MappingService,
     private statusService: StatusService,
@@ -84,15 +89,8 @@ export class InstanceService extends Service {
     })
 
     await this.invalidator.setup(this.cache)
-  }
 
-  private async handleCacheDispose(conduitId: uuid, instance: ConduitInstance<any, any>) {
-    try {
-      await instance.destroy()
-      await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
-    } catch (e) {
-      this.logger.error(e, 'Error trying to destroy conduit')
-    }
+    this.messageService.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
   }
 
   async destroy() {
@@ -162,5 +160,41 @@ export class InstanceService extends Service {
     }
 
     return instance
+  }
+
+  private async handleCacheDispose(conduitId: uuid, instance: ConduitInstance<any, any>) {
+    try {
+      await instance.destroy()
+      await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
+    } catch (e) {
+      this.logger.error(e, 'Error trying to destroy conduit')
+    }
+  }
+
+  private async handleMessageCreated({ message }: MessageCreatedEvent) {
+    const conversation = await this.conversationService.get(message.conversationId)
+    const client = await this.clientService.getById(conversation!.clientId)
+    const convmaps = await this.mappingService.convmap.listByConversationId(message.conversationId)
+
+    for (const convmap of convmaps) {
+      void this.sendMessageToInstance(message, client!.providerId, convmap)
+    }
+  }
+
+  private async sendMessageToInstance(message: Message, providerId: uuid, convmap: Convmap) {
+    try {
+      const endpoint = await this.mappingService.getEndpoint(convmap.threadId)
+      const tunnel = await this.mappingService.tunnels.get(convmap.tunnelId)
+
+      const conduit = await this.conduitService.getByProviderAndChannel(providerId, tunnel!.channelId)
+      if (!conduit) {
+        return
+      }
+
+      const instance = await this.get(conduit!.id)
+      await instance.sendToEndpoint(endpoint, message.payload)
+    } catch (e) {
+      this.logger.error(e, 'Failed to send message to instance')
+    }
   }
 }

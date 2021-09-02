@@ -6,7 +6,7 @@ import { InstanceService } from '../instances/service'
 import { HealthService } from './service'
 import { HealthEventType } from './types'
 
-export class HealthWatcher {
+export class HealthListener {
   constructor(
     private conduitService: ConduitService,
     private instanceService: InstanceService,

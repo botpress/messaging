@@ -1,7 +1,6 @@
 import { BatchingService } from './batching/service'
 import { CachingService } from './caching/service'
 import { ChannelService } from './channels/service'
-import { ChatService } from './chat/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
@@ -20,6 +19,7 @@ import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
 import { StatusService } from './status/service'
+import { StreamService } from './stream/service'
 import { SyncService } from './sync/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
@@ -49,7 +49,7 @@ export class App {
   syncs: SyncService
   health: HealthService
   sockets: SocketService
-  chat: ChatService
+  stream: StreamService
 
   constructor() {
     this.logger = new LoggerService()
@@ -79,6 +79,8 @@ export class App {
       this.channels,
       this.providers,
       this.conduits,
+      this.conversations,
+      this.messages,
       this.clients,
       this.mapping,
       this.status,
@@ -94,29 +96,24 @@ export class App {
       this.webhooks
     )
     this.health = new HealthService(
-      this.logger,
-      this.post,
       this.database,
       this.caching,
       this.channels,
       this.clients,
-      this.webhooks,
       this.conduits,
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
-    this.chat = new ChatService(
-      this.logger,
+    this.stream = new StreamService(
       this.post,
-      this.channels,
+      this.sockets,
       this.clients,
       this.webhooks,
       this.conduits,
+      this.health,
+      this.users,
       this.conversations,
-      this.messages,
-      this.mapping,
-      this.instances,
-      this.sockets
+      this.messages
     )
   }
 
@@ -144,7 +141,7 @@ export class App {
     await this.instances.setup()
     await this.health.setup()
     await this.sockets.setup()
-    await this.chat.setup()
+    await this.stream.setup()
   }
 
   async monitor() {
