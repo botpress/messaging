@@ -1,3 +1,12 @@
+## [0.1.12](https://github.com/botpress/messaging/compare/v0.1.11...v0.1.12) (2021-09-02)
+
+
+### Bug Fixes
+
+* **server:** fix macos binary ([#165](https://github.com/botpress/messaging/issues/165)) ([5b5282b](https://github.com/botpress/messaging/commit/5b5282b24155ae67b32cf71b7adc76569b56b58a))
+
+
+
 ## [0.1.11](https://github.com/botpress/messaging/compare/v0.1.10...v0.1.11) (2021-08-31)
 
 
