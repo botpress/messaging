@@ -1,4 +1,4 @@
-FROM node:12.18.3-alpine AS build
+FROM node:12.22.5-alpine AS build
 
 ADD . /messaging
 
@@ -6,7 +6,7 @@ WORKDIR /messaging/packages/server
 
 RUN yarn build
 
-FROM node:12.18.3-alpine
+FROM node:12.22.5-alpine
 
 WORKDIR /messaging
 
@@ -24,5 +24,5 @@ RUN yarn --silent --prod --frozen-lockfile
 
 ENV NODE_ENV=production
 
-ENTRYPOINT [ "node" ]
-CMD ["./packages/server/src/index.js"]
+ENTRYPOINT [ "node", "./packages/server/src/index.js" ]
+CMD []

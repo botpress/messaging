@@ -3,6 +3,12 @@
   "references": [
     {
       "path": "../chat"
+    },
+    {
+      "path": "../skin"
+    },
+    {
+      "path": "../client"
     }
   ],
 

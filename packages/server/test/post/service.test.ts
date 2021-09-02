@@ -2,15 +2,12 @@ import _ from 'lodash'
 import axios, { AxiosRequestConfig } from 'axios'
 
 import { PostService } from '../../src/post/service'
-import { ConfigService } from '../../src/config/service'
 
-jest.mock('../../src/config/service')
 jest.mock('../../src/logger/types')
 jest.mock('axios')
 
 describe('PostService', () => {
   const defaultEnv = process.env
-  let configService: ConfigService
   let data: any
   let axiosConfig: AxiosRequestConfig
   let headers: { [name: string]: string }
@@ -20,9 +17,6 @@ describe('PostService', () => {
 
   beforeEach(async () => {
     process.env = { ..._.cloneDeep(process.env) }
-
-    configService = new ConfigService()
-    configService['current'] = {}
 
     data = { some: 'data' }
     axiosConfig = { headers: {} }
@@ -35,12 +29,11 @@ describe('PostService', () => {
 
   test('Should not throw any error with a default configuration', async () => {
     try {
-      const postService = new PostService(configService)
+      const postService = new PostService()
       await postService.setup()
 
       expect(postService['logger']).not.toBeUndefined()
       expect(postService['password']).toBeUndefined()
-      expect(postService['configService']).toEqual(configService)
     } catch (e) {
       fail(e)
     }
@@ -52,7 +45,7 @@ describe('PostService', () => {
 
       const spy = jest.spyOn(axios, 'post')
 
-      const postService = new PostService(configService)
+      const postService = new PostService()
       await postService.setup()
 
       await postService.send(url, data)
@@ -64,7 +57,7 @@ describe('PostService', () => {
     test('Should send data to a URL making a post request', async () => {
       const spy = jest.spyOn(axios, 'post')
 
-      const postService = new PostService(configService)
+      const postService = new PostService()
       await postService.setup()
 
       await postService.send(url, data)
@@ -78,7 +71,7 @@ describe('PostService', () => {
 
       const spy = jest.spyOn(axios, 'post')
 
-      const postService = new PostService(configService)
+      const postService = new PostService()
       await postService.setup()
 
       await postService.send(url, data, headers)
@@ -95,7 +88,7 @@ describe('PostService', () => {
 
       const spy = jest.spyOn(axios, 'post')
 
-      const postService = new PostService(configService)
+      const postService = new PostService()
       await postService.setup()
 
       await postService.send(url, data, headers)
@@ -106,40 +99,24 @@ describe('PostService', () => {
       process.env = env
     })
 
-    test('Should send data to a URL making a post request, using custom headers and a password from a config file', async () => {
-      configService['current'].security = { password }
-      axiosConfig.headers = { ...headers, password }
-
-      const spy = jest.spyOn(axios, 'post')
-
-      const postService = new PostService(configService)
-      await postService.setup()
-
-      await postService.send(url, data, headers)
-
-      expect(spy).toHaveBeenCalledTimes(1)
-      expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
-    })
-
     test('Should log the error if the request fails', async () => {
       const error = new Error('error')
       const spy = jest.spyOn(axios, 'post').mockImplementationOnce(() => Promise.reject(error))
 
-      const postService = new PostService(configService)
+      const postService = new PostService()
       await postService.setup()
       Object.defineProperty(postService, 'attempts', {
         value: 1,
         writable: false
       })
 
-      const loggerSpy = jest.spyOn(postService['logger'], 'error')
+      const loggerSpy = jest.spyOn(postService['logger'], 'warn')
 
       await postService.send(url, data)
 
       expect(spy).toHaveBeenCalledTimes(1)
       expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
       expect(loggerSpy).toBeCalledTimes(1)
-      expect(loggerSpy).toBeCalledWith(error, expect.anything())
     })
 
     describe('destroy', () => {
@@ -147,14 +124,14 @@ describe('PostService', () => {
         const error = new Error('error')
         const spy = jest.spyOn(axios, 'post').mockImplementationOnce(() => Promise.reject(error))
 
-        const postService = new PostService(configService)
+        const postService = new PostService()
         await postService.setup()
         Object.defineProperty(postService, 'attempts', {
           value: 10,
           writable: false
         })
 
-        const loggerSpy = jest.spyOn(postService['logger'], 'error')
+        const loggerSpy = jest.spyOn(postService['logger'], 'warn')
 
         await postService.destroy()
         await postService.send(url, data)
@@ -162,7 +139,6 @@ describe('PostService', () => {
         expect(spy).toHaveBeenCalledTimes(1)
         expect(spy).toHaveBeenCalledWith(url, data, axiosConfig)
         expect(loggerSpy).toBeCalledTimes(1)
-        expect(loggerSpy).toBeCalledWith(error, expect.anything())
       })
     })
   })

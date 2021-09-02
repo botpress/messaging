@@ -16,3 +16,7 @@ export const ListConvosSchema = Joi.object({
 export const RecentConvoSchema = Joi.object({
   userId: Joi.string().guid().required()
 })
+
+export const UseConvoSocketSchema = Joi.object({
+  conversationId: Joi.string().guid().optional()
+})

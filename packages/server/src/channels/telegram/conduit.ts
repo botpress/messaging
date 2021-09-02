@@ -31,28 +31,28 @@ export class TelegramConduit extends ConduitInstance<TelegramConfig, TelegramCon
     this.telegraf = new Telegraf(this.config.botToken)
     this.telegraf.start(async (ctx) => {
       try {
-        await this.app.instances.receive(this.conduitId, ctx)
+        await this.receive(ctx)
       } catch (e) {
         this.logger.error(e, 'Error occured on start')
       }
     })
     this.telegraf.help(async (ctx) => {
       try {
-        await this.app.instances.receive(this.conduitId, ctx)
+        await this.receive(ctx)
       } catch (e) {
         this.logger.error(e, 'Error occured on help')
       }
     })
     this.telegraf.on('message', async (ctx) => {
       try {
-        await this.app.instances.receive(this.conduitId, ctx)
+        await this.receive(ctx)
       } catch (e) {
         this.logger.error(e, 'Error occurred processing message')
       }
     })
     this.telegraf.on('callback_query', async (ctx) => {
       try {
-        await this.app.instances.receive(this.conduitId, ctx)
+        await this.receive(ctx)
       } catch (e) {
         this.logger.error(e, 'Error occurred processing callback query')
       }

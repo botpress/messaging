@@ -4,14 +4,15 @@ import _ from 'lodash'
 import Redlock from 'redlock'
 import { Logger } from '../../logger/types'
 import { DistributedSubservice } from '../base/subservice'
-import { RedisConfig } from './config'
 import { PingPong } from './ping'
 
 const DEFAULT_LOCK_TTL = 2000
 
 export class RedisSubservice implements DistributedSubservice {
+  // TODO: Remove evil static keyword here when we refactor the logging
+  public static nodeId = Math.round(Math.random() * 1000000)
+
   private logger: Logger = new Logger('Redis')
-  private nodeId!: number
   private pub!: Redis
   private sub!: Redis
   private redlock!: Redlock
@@ -20,13 +21,10 @@ export class RedisSubservice implements DistributedSubservice {
   private pings!: PingPong
   private scope!: string
 
-  constructor(private config: RedisConfig) {}
-
   async setup() {
-    this.nodeId = Math.round(Math.random() * 1000000)
-    this.logger.info(`Id is ${clc.bold(this.nodeId)}`)
+    this.logger.info(`Id is ${clc.bold(RedisSubservice.nodeId)}`)
 
-    this.scope = process.env.REDIS_SCOPE || this.config.scope
+    this.scope = process.env.REDIS_SCOPE!
     this.pub = this.setupClient()
     this.sub = this.setupClient()
     this.redlock = new Redlock([this.pub])
@@ -35,20 +33,20 @@ export class RedisSubservice implements DistributedSubservice {
       const callback = this.callbacks[channel]
       if (callback) {
         const parsed = JSON.parse(message)
-        if (parsed.nodeId !== this.nodeId) {
+        if (parsed.nodeId !== RedisSubservice.nodeId) {
           delete parsed.nodeId
           void callback(parsed)
         }
       }
     })
 
-    this.pings = new PingPong(this.nodeId, this, this.logger)
+    this.pings = new PingPong(RedisSubservice.nodeId, this, this.logger)
     await this.pings.setup()
   }
 
   private setupClient(): Redis {
-    let connection = this.config.connection
-    let options = this.config.options || {}
+    let connection = undefined
+    let options = {}
 
     if (process.env.REDIS_URL) {
       try {
@@ -120,7 +118,7 @@ export class RedisSubservice implements DistributedSubservice {
   async send(channel: string, message: any) {
     const scopedChannel = this.makeScopedChannel(channel)
 
-    await this.pub.publish(scopedChannel, JSON.stringify({ nodeId: this.nodeId, ...message }))
+    await this.pub.publish(scopedChannel, JSON.stringify({ nodeId: RedisSubservice.nodeId, ...message }))
   }
 
   async lock(ressource: string) {

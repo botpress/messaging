@@ -79,6 +79,27 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     }
   }
 
+  async receive<T>(payload: T) {
+    const conduit = (await this.app.conduits.get(this.conduitId))!
+    const provider = (await this.app.providers.getById(conduit.providerId))!
+    const endpoint = await this.extractEndpoint(payload)
+
+    if (!endpoint.content.type) {
+      return
+    }
+
+    const clientId = provider.sandbox
+      ? await this.app.instances.sandbox.getClientId(this.conduitId, endpoint)
+      : (await this.app.clients.getByProviderId(provider.id))!.id
+
+    if (!clientId) {
+      return
+    }
+
+    const { userId, conversationId } = await this.app.mapping.getMapping(clientId, conduit.channelId, endpoint)
+    return this.app.chat.send(conversationId, userId, endpoint.content, { endpoint: _.omit(endpoint, 'content') })
+  }
+
   async initialize() {}
 
   async destroy() {}
@@ -122,14 +143,14 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     const conduit = await this.app.conduits.get(this.conduitId)
     const provider = await this.app.providers.getById(conduit!.providerId)
     const channel = this.app.channels.getById(conduit!.channelId)
-    const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+    const externalUrl = process.env.EXTERNAL_URL
 
     return externalUrl + channel.getRoute(path).replace(':provider', provider!.name)
   }
 
   protected async printWebhook(path?: string) {
     if (yn(process.env.SPINNED)) {
-      const externalUrl = process.env.EXTERNAL_URL || this.app.config.current.server?.externalUrl
+      const externalUrl = process.env.EXTERNAL_URL
       const conduit = await this.app.conduits.get(this.conduitId)
       const channel = this.app.channels.getById(conduit!.channelId)
       const provider = await this.app.providers.getById(conduit!.providerId)

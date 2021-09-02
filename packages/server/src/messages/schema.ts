@@ -19,3 +19,13 @@ export const DeleteMsgSchema = Joi.object({
   id: Joi.string().guid().optional(),
   conversationId: Joi.string().guid().optional()
 })
+
+export const CreateMsgSocketSchema = Joi.object({
+  conversationId: Joi.string().guid().required(),
+  payload: Joi.object().required()
+})
+
+export const ListMsgSocketSchema = Joi.object({
+  conversationId: Joi.string().guid().required(),
+  limit: Joi.number().required()
+})

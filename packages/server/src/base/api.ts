@@ -22,7 +22,7 @@ export abstract class BaseApi {
 }
 
 export abstract class ClientScopedApi extends BaseApi {
-  constructor(router: Router, private clients: ClientService) {
+  constructor(router: Router, protected clients: ClientService) {
     super(router)
   }
 

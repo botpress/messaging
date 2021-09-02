@@ -1,20 +1,16 @@
 import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
-import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
-import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
-import { InstanceService } from '../instances/service'
 import { ChatReplySchema } from './schema'
+import { ChatService } from './service'
 
 export class ChatApi extends ClientScopedApi {
   constructor(
     router: Router,
     clients: ClientService,
-    private channels: ChannelService,
-    private conduits: ConduitService,
-    private instances: InstanceService,
-    private conversations: ConversationService
+    private conversations: ConversationService,
+    private chat: ChatService
   ) {
     super(router, clients)
   }
@@ -30,7 +26,7 @@ export class ChatApi extends ClientScopedApi {
           return res.status(400).send(error.message)
         }
 
-        const { channel, conversationId, payload } = req.body
+        const { conversationId, payload } = req.body
         const conversation = await this.conversations.get(conversationId)
 
         if (!conversation) {
@@ -39,9 +35,7 @@ export class ChatApi extends ClientScopedApi {
           return res.sendStatus(403)
         }
 
-        const channelId = this.channels.getByName(channel).id
-        const conduit = (await this.conduits.getByProviderAndChannel(req.client!.providerId, channelId))!
-        const message = await this.instances.send(conduit.id, conversationId, payload)
+        const message = await this.chat.send(conversationId, undefined, payload, { clientId: req.client!.id })
 
         res.send(message)
       })

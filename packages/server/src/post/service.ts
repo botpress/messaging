@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios'
+import clc from 'cli-color'
 import { backOff } from 'exponential-backoff'
 
 import { Service } from '../base/service'
-import { ConfigService } from '../config/service'
 import { Logger } from '../logger/types'
 
 export class PostService extends Service {
@@ -12,14 +12,14 @@ export class PostService extends Service {
   private logger: Logger
   private password: string | undefined
 
-  constructor(private configService: ConfigService) {
+  constructor() {
     super()
-    this.logger = new Logger('post')
+    this.logger = new Logger('Post')
     this.isTerminating = false
   }
 
   public async setup() {
-    this.password = process.env.INTERNAL_PASSWORD || this.configService.current.security?.password
+    this.password = process.env.INTERNAL_PASSWORD
   }
 
   async destroy() {
@@ -53,7 +53,11 @@ export class PostService extends Service {
         }
       })
     } catch (e) {
-      this.logger.error(e, `An error occurred calling route ${url}. Total number of attempts: ${this.attempts}`)
+      this.logger.warn(
+        `Unabled to reach webhook after ${this.attempts} attempts ${clc.blackBright(url)} ${clc.blackBright(
+          `Error: ${e.message}`
+        )}`
+      )
     }
   }
 }

@@ -12,7 +12,6 @@ export interface MessagingEnv {
   REDIS_SCOPE?: string
   LOGGING_ENABLED?: string
   SYNC?: string
-  SKIP_LOAD_CONFIG?: string
   SKIP_LOAD_ENV?: string
   SPINNED?: string
   SPINNED_URL?: string
@@ -21,6 +20,12 @@ export interface MessagingEnv {
   NO_LOGO?: string
   SINGLE_LINE_LOGGING?: string
   APM_ENABLED?: string
+  DISABLE_LOGGING_TIMESTAMP?: string
+  AUTO_MIGRATE?: string
+  MIGRATE_TARGET?: string
+  MIGRATE_CMD?: string
+  MIGRATE_DRYRUN?: string
+  TESTMIG_DB_VERSION?: string
 }
 
 declare global {

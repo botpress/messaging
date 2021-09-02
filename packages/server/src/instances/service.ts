@@ -1,4 +1,4 @@
-import { Message, uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/messaging-base'
 import _ from 'lodash'
 import ms from 'ms'
 import yn from 'yn'
@@ -10,18 +10,12 @@ import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
-import { ConfigService } from '../config/service'
-import { ConversationService } from '../conversations/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
-import { MessageService } from '../messages/service'
-import { PostService } from '../post/service'
 import { ProviderService } from '../providers/service'
-import { WebhookBroadcaster } from '../webhooks/broadcaster'
-import { WebhookService } from '../webhooks/service'
-import { WebhookContent } from '../webhooks/types'
+import { StatusService } from '../status/service'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
@@ -32,32 +26,25 @@ export class InstanceService extends Service {
     return this.emitter
   }
 
+  public readonly sandbox: InstanceSandbox
   private destroyed: boolean
   private emitter: InstanceEmitter
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
-  private sandbox: InstanceSandbox
-  private webhookBroadcaster: WebhookBroadcaster
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
-  private failures: { [conduitId: string]: number } = {}
   private logger: Logger
-  private loggingEnabled!: boolean
   private lazyLoadingEnabled!: boolean
 
   constructor(
     private loggerService: LoggerService,
-    private configService: ConfigService,
     private distributedService: DistributedService,
     private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
-    private postService: PostService,
     private conduitService: ConduitService,
     private clientService: ClientService,
-    private webhookService: WebhookService,
-    private conversationService: ConversationService,
-    private messageService: MessageService,
     private mappingService: MappingService,
+    private statusService: StatusService,
     private app: App
   ) {
     super()
@@ -68,6 +55,7 @@ export class InstanceService extends Service {
       this.providerService,
       this.conduitService,
       this.clientService,
+      this.statusService,
       this
     )
     this.logger = this.loggerService.root.sub('instances')
@@ -76,25 +64,13 @@ export class InstanceService extends Service {
       this.distributedService,
       this.channelService,
       this.conduitService,
-      this,
-      this.failures
+      this.statusService,
+      this
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
-    this.webhookBroadcaster = new WebhookBroadcaster(this.postService, this.webhookService)
   }
 
   async setup() {
-    if (process.env.LOGGING_ENABLED?.length) {
-      this.loggingEnabled = !!yn(process.env.LOGGING_ENABLED)
-    } else if (
-      this.configService.current.logging?.enabled !== null &&
-      this.configService.current.logging?.enabled !== undefined
-    ) {
-      this.loggingEnabled = !!yn(this.configService.current.logging.enabled)
-    } else {
-      this.loggingEnabled = process.env.NODE_ENV !== 'production'
-    }
-
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
@@ -107,7 +83,7 @@ export class InstanceService extends Service {
       maxAge: ms('30min')
     })
 
-    await this.invalidator.setup(this.cache, this.failures)
+    await this.invalidator.setup(this.cache)
   }
 
   private async handleCacheDispose(conduitId: uuid, instance: ConduitInstance<any, any>) {
@@ -127,8 +103,10 @@ export class InstanceService extends Service {
     }
 
     for (const conduitId of this.cache.keys()) {
-      const instance = this.cache.get(conduitId)!
-      await this.handleCacheDispose(conduitId, instance)
+      const instance = this.cache.get(conduitId)
+      if (instance) {
+        await this.handleCacheDispose(conduitId, instance)
+      }
     }
   }
 
@@ -146,17 +124,14 @@ export class InstanceService extends Service {
     } catch (e) {
       this.cache.del(conduitId)
 
-      // TODO: replace by StatusService
+      await this.statusService.addError(conduitId, e)
       instance.logger.error(e, 'Error trying to initialize conduit')
-      if (!this.failures[conduitId]) {
-        this.failures[conduitId] = 0
-      }
-      this.failures[conduitId]++
 
       return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
     }
 
     await this.conduitService.updateInitialized(conduitId)
+    await this.statusService.clearErrors(conduitId)
     return this.emitter.emit(InstanceEvents.Initialized, conduitId)
   }
 
@@ -179,75 +154,13 @@ export class InstanceService extends Service {
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
     } catch (e) {
       this.cache.del(conduitId)
-      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
 
-      // TODO: replace by StatusService
+      await this.statusService.addError(conduitId, e)
       instance.logger.error(e, 'Error trying to setup conduit')
-      if (!this.failures[conduitId]) {
-        this.failures[conduitId] = 0
-      }
-      this.failures[conduitId]++
+
+      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
     }
 
     return instance
-  }
-
-  async send(conduitId: uuid, conversationId: uuid, payload: any): Promise<Message> {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const conversation = (await this.conversationService.get(conversationId))!
-
-    const endpoint = await this.mappingService.getEndpoint(conversation.clientId, conduit.channelId, conversation.id)
-
-    const instance = await this.get(conduitId)
-    await instance.sendToEndpoint(endpoint, payload)
-
-    const message = await this.messageService.create(conversationId, conversation!.userId, payload)
-
-    if (this.loggingEnabled) {
-      instance.loggerOut.debug('Sending message', {
-        clientId: conversation!.clientId,
-        message
-      })
-    }
-
-    return message
-  }
-
-  async receive(conduitId: uuid, payload: any) {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
-
-    const instance = await this.get(conduitId)
-    const endpoint = await instance.extractEndpoint(payload)
-
-    if (!endpoint.content.type) {
-      return
-    }
-
-    const clientId = provider.sandbox
-      ? await this.sandbox.getClientId(conduitId, endpoint)
-      : (await this.clientService.getByProviderId(provider.id))!.id
-
-    if (!clientId) {
-      return
-    }
-
-    const { userId, conversationId } = await this.mappingService.getMapping(clientId, conduit.channelId, endpoint)
-    const message = await this.messageService.create(conversationId, userId, endpoint.content)
-
-    const post: WebhookContent = {
-      type: 'message',
-      client: { id: clientId },
-      channel: { name: this.channelService.getById(conduit.channelId).name },
-      user: { id: userId },
-      conversation: { id: conversationId },
-      message
-    }
-
-    if (this.loggingEnabled) {
-      instance.loggerIn.debug('Received message', post)
-    }
-
-    void this.webhookBroadcaster.send(clientId, post)
   }
 }

@@ -7,7 +7,6 @@ import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
-import { ConfigService } from '../config/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
@@ -20,7 +19,6 @@ export class SyncService extends Service {
 
   constructor(
     private loggers: LoggerService,
-    private config: ConfigService,
     private distributed: DistributedService,
     private channels: ChannelService,
     private providers: ProviderService,
@@ -33,18 +31,18 @@ export class SyncService extends Service {
   }
 
   async setup() {
-    let config = this.config.current.sync
-
-    if (process.env.SYNC) {
-      try {
-        config = JSON.parse(process.env.SYNC) || {}
-      } catch {
-        this.logger.warn('SYNC is not valid json')
-      }
+    if (!process.env.SYNC) {
+      return
     }
 
-    for (const req of config || []) {
-      req.sandbox ? await this.syncSandbox(req) : await this.sync(req, { name: true, id: true, token: true })
+    try {
+      const config = JSON.parse(process.env.SYNC) || {}
+
+      for (const req of config || []) {
+        req.sandbox ? await this.syncSandbox(req) : await this.sync(req, { name: true, id: true, token: true })
+      }
+    } catch {
+      this.logger.warn('SYNC is not valid json')
     }
   }
 

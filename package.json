@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging",
-  "version": "0.1.7",
+  "version": "0.1.12",
   "description": "Botpress messaging repo",
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
@@ -33,29 +33,32 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.29.1",
-    "@typescript-eslint/parser": "^4.29.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
     "conventional-changelog": "^3.1.24",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.24.0",
-    "eslint-plugin-jsdoc": "^35.5.1",
+    "eslint-plugin-import": "^2.24.1",
+    "eslint-plugin-jsdoc": "^36.0.7",
     "fs-extra": "^10.0.0",
     "jest": "^27.0.6",
     "parcel": "^2.0.0-beta.3.1",
-    "pkg": "^4.3.7",
+    "pkg": "^4.5.1",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "semver": "^7.3.5",
-    "ts-jest": "^27.0.4",
+    "ts-jest": "^27.0.5",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5",
-    "yargs": "^17.0.1"
+    "yargs": "^17.1.1"
   },
   "dependencies": {},
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "engines": {
+    "node": "12.22.5"
+  }
 }
