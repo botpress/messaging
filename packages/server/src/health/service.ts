@@ -54,6 +54,12 @@ export class HealthService extends Service {
       data
     }
 
+    const conduit = await this.conduitService.get(conduitId)
+    const client = await this.clientService.getByProviderId(conduit!.providerId)
+    if (client) {
+      this.cache.del(client.id, true)
+    }
+
     await this.query().insert(this.serialize(event))
     await this.emitter.emit(HealthEvents.Registered, { event })
   }
