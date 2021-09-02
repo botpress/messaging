@@ -80,9 +80,11 @@ export class StreamService extends Service {
   async stream(type: string, payload: any, clientId: uuid, userId: uuid | undefined) {
     const data = {
       type,
-      clientId,
-      ...(userId ? { userId } : {}),
-      ...payload
+      data: {
+        clientId,
+        ...(userId ? { userId } : {}),
+        ...payload
+      }
     }
 
     this.logger.debug(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan(type)}`, data)
