@@ -47,7 +47,7 @@ export class StreamService extends Service {
       const channel = this.channels.getById(conduit!.channelId)
       await this.stream(
         'health.new',
-        { event: { channel: channel.name, ...this.health.makeReadable(event) } },
+        { channel: channel.name, event: { ...this.health.makeReadable(event) } },
         client.id,
         undefined
       )
