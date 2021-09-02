@@ -2,6 +2,7 @@ import { uuid } from '@botpress/messaging-base'
 import clc from 'cli-color'
 import yn from 'yn'
 import { Service } from '../base/service'
+import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConversationEvents } from '../conversations/events'
@@ -23,6 +24,7 @@ export class StreamService extends Service {
   constructor(
     private posts: PostService,
     private sockets: SocketService,
+    private channels: ChannelService,
     private clients: ClientService,
     private webhooks: WebhookService,
     private conduits: ConduitService,
@@ -42,24 +44,47 @@ export class StreamService extends Service {
         return
       }
 
-      await this.stream('health.new', this.health.makeReadable(event), client.id, undefined)
+      const channel = this.channels.getById(conduit!.channelId)
+      await this.stream(
+        'health.new',
+        { event: { channel: channel.name, ...this.health.makeReadable(event) } },
+        client.id,
+        undefined
+      )
     })
 
     this.users.events.on(UserEvents.Created, async ({ user }) => {
-      await this.stream('user.new', user, user.clientId, user.id)
+      await this.stream('user.new', {}, user.clientId, user.id)
     })
 
     this.conversations.events.on(ConversationEvents.Created, async ({ conversation }) => {
-      await this.stream('conversation.new', conversation, conversation.clientId, conversation.userId)
+      await this.stream(
+        'conversation.new',
+        { conversationId: conversation.id },
+        conversation.clientId,
+        conversation.userId
+      )
     })
 
     this.messages.events.on(MessageEvents.Created, async ({ message }) => {
       const conversation = await this.conversations.get(message.conversationId)
-      await this.stream('message.new', message, conversation!.clientId, conversation!.userId)
+      await this.stream(
+        'message.new',
+        { conversationId: conversation!.id, message },
+        conversation!.clientId,
+        conversation!.userId
+      )
     })
   }
 
-  async stream(type: string, data: any, clientId: uuid, userId: uuid | undefined) {
+  async stream(type: string, payload: any, clientId: uuid, userId: uuid | undefined) {
+    const data = {
+      type,
+      clientId,
+      ...(userId ? { userId } : {}),
+      ...payload
+    }
+
     this.logger.debug(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan(type)}`, data)
 
     if (userId) {

@@ -107,6 +107,7 @@ export class App {
     this.stream = new StreamService(
       this.post,
       this.sockets,
+      this.channels,
       this.clients,
       this.webhooks,
       this.conduits,
