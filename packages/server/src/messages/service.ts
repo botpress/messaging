@@ -1,6 +1,7 @@
 import { Message, uuid } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
+import { ActionSource } from '../base/source'
 import { Batcher } from '../batching/batcher'
 import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
@@ -48,7 +49,12 @@ export class MessageService extends Service {
     await this.query().insert(rows)
   }
 
-  public async create(conversationId: uuid, authorId: uuid | undefined, payload: any): Promise<Message> {
+  public async create(
+    conversationId: uuid,
+    authorId: uuid | undefined,
+    payload: any,
+    source?: ActionSource
+  ): Promise<Message> {
     const message = {
       id: uuidv4(),
       conversationId,
@@ -61,7 +67,7 @@ export class MessageService extends Service {
     const conversation = await this.conversationService.get(conversationId)
     await this.conversationService.setMostRecent(conversation!.userId, conversation!.id)
 
-    await this.emitter.emit(MessageEvents.Created, { message })
+    await this.emitter.emit(MessageEvents.Created, { message, source })
 
     return message
   }

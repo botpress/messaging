@@ -1,4 +1,5 @@
 import { Emitter, Message } from '@botpress/messaging-base'
+import { ActionSource } from '../base/source'
 
 export enum MessageEvents {
   Created
@@ -6,6 +7,7 @@ export enum MessageEvents {
 
 export interface MessageCreatedEvent {
   message: Message
+  source?: ActionSource
 }
 
 export class MessageEmitter extends Emitter<{

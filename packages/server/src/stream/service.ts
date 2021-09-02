@@ -2,6 +2,7 @@ import { uuid } from '@botpress/messaging-base'
 import clc from 'cli-color'
 import yn from 'yn'
 import { Service } from '../base/service'
+import { ActionSource } from '../base/source'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
@@ -66,18 +67,19 @@ export class StreamService extends Service {
       )
     })
 
-    this.messages.events.on(MessageEvents.Created, async ({ message }) => {
+    this.messages.events.on(MessageEvents.Created, async ({ message, source }) => {
       const conversation = await this.conversations.get(message.conversationId)
       await this.stream(
         'message.new',
         { conversationId: conversation!.id, message },
         conversation!.clientId,
-        conversation!.userId
+        conversation!.userId,
+        source
       )
     })
   }
 
-  async stream(type: string, payload: any, clientId: uuid, userId: uuid | undefined) {
+  async stream(type: string, payload: any, clientId: uuid, userId: uuid | undefined, source?: ActionSource) {
     const data = {
       type,
       data: {
@@ -92,21 +94,23 @@ export class StreamService extends Service {
     if (userId) {
       const sockets = this.sockets.listByUser(userId)
       for (const socket of sockets) {
-        // if (from.socket?.id !== socket.id) {
-        socket.send({ type, data })
-        // }
+        if (source?.socket?.id !== socket.id) {
+          socket.send({ type, data })
+        }
       }
     }
 
     // TODO: Send socket messages to sockets connected for a clientId
 
-    if (yn(process.env.SPINNED)) {
-      void this.posts.send(process.env.SPINNED_URL!, data)
-    } else {
-      const webhooks = await this.webhooks.list(clientId)
+    if (source?.client?.id !== clientId) {
+      if (yn(process.env.SPINNED)) {
+        void this.posts.send(process.env.SPINNED_URL!, data)
+      } else {
+        const webhooks = await this.webhooks.list(clientId)
 
-      for (const webhook of webhooks) {
-        void this.posts.send(webhook.url, data, { 'x-webhook-token': webhook.token })
+        for (const webhook of webhooks) {
+          void this.posts.send(webhook.url, data, { 'x-webhook-token': webhook.token })
+        }
       }
     }
   }

@@ -97,7 +97,9 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     }
 
     const { userId, conversationId } = await this.app.mapping.getMapping(clientId, conduit.channelId, endpoint)
-    return this.app.messages.create(conversationId, userId, endpoint.content) //, { endpoint: _.omit(endpoint, 'content') })
+    return this.app.messages.create(conversationId, userId, endpoint.content, {
+      conduit: { id: this.conduitId, endpoint: _.omit(endpoint, 'content') }
+    })
   }
 
   async initialize() {}

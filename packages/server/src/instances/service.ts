@@ -3,6 +3,7 @@ import ms from 'ms'
 import yn from 'yn'
 import { App } from '../app'
 import { Service } from '../base/service'
+import { ActionSource } from '../base/source'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
@@ -171,28 +172,40 @@ export class InstanceService extends Service {
     }
   }
 
-  private async handleMessageCreated({ message }: MessageCreatedEvent) {
+  private async handleMessageCreated({ message, source }: MessageCreatedEvent) {
     const conversation = await this.conversationService.get(message.conversationId)
     const client = await this.clientService.getById(conversation!.clientId)
     const convmaps = await this.mappingService.convmap.listByConversationId(message.conversationId)
 
     for (const convmap of convmaps) {
-      void this.sendMessageToInstance(message, client!.providerId, convmap)
+      void this.sendMessageToInstance(message, source, client!.providerId, convmap)
     }
   }
 
-  private async sendMessageToInstance(message: Message, providerId: uuid, convmap: Convmap) {
+  private async sendMessageToInstance(
+    message: Message,
+    source: ActionSource | undefined,
+    providerId: uuid,
+    convmap: Convmap
+  ) {
     try {
       const endpoint = await this.mappingService.getEndpoint(convmap.threadId)
       const tunnel = await this.mappingService.tunnels.get(convmap.tunnelId)
 
-      const conduit = await this.conduitService.getByProviderAndChannel(providerId, tunnel!.channelId)
-      if (!conduit) {
-        return
-      }
+      if (
+        !source?.conduit ||
+        (source.conduit.endpoint.identity || '*') !== endpoint.identity ||
+        (source.conduit.endpoint.sender || '*') !== endpoint.sender ||
+        (source.conduit.endpoint.thread || '*') !== endpoint.thread
+      ) {
+        const conduit = await this.conduitService.getByProviderAndChannel(providerId, tunnel!.channelId)
+        if (!conduit) {
+          return
+        }
 
-      const instance = await this.get(conduit!.id)
-      await instance.sendToEndpoint(endpoint, message.payload)
+        const instance = await this.get(conduit!.id)
+        await instance.sendToEndpoint(endpoint, message.payload)
+      }
     } catch (e) {
       this.logger.error(e, 'Failed to send message to instance')
     }
