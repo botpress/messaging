@@ -1,5 +1,7 @@
+import * as Sentry from '@sentry/node'
 import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
+import yn from 'yn'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ChatApi } from './chat/api'
@@ -9,8 +11,6 @@ import { MessageApi } from './messages/api'
 import { SocketManager } from './socket/manager'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
-import * as Sentry from '@sentry/node'
-import yn from 'yn'
 
 export class Api {
   public readonly sockets: SocketManager
@@ -52,16 +52,7 @@ export class Api {
   }
 
   async setup() {
-    const apmEnabled = yn(process.env.APM_ENABLED)
-
-    if (apmEnabled) {
-      Sentry.init({
-        integrations: [new Sentry.Integrations.Http({})]
-      })
-
-      this.root.use(Sentry.Handlers.requestHandler())
-    }
-
+    this.setupApm()
     await this.setupPassword()
 
     this.root.get('/version', this.version)
@@ -78,6 +69,24 @@ export class Api {
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
+
+    this.setupApmErrorHandler()
+  }
+
+  setupApm() {
+    const apmEnabled = yn(process.env.APM_ENABLED)
+
+    if (apmEnabled) {
+      Sentry.init({
+        integrations: [new Sentry.Integrations.Http({})]
+      })
+
+      this.root.use(Sentry.Handlers.requestHandler())
+    }
+  }
+
+  setupApmErrorHandler() {
+    const apmEnabled = yn(process.env.APM_ENABLED)
 
     if (apmEnabled) {
       this.root.use(Sentry.Handlers.errorHandler())
