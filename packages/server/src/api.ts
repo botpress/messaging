@@ -1,5 +1,7 @@
+import * as Sentry from '@sentry/node'
 import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
+import yn from 'yn'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ChatApi } from './chat/api'
@@ -50,6 +52,7 @@ export class Api {
   }
 
   async setup() {
+    this.setupApm()
     await this.setupPassword()
 
     this.root.get('/version', this.version)
@@ -66,6 +69,28 @@ export class Api {
     await this.conversations.setup()
     await this.messages.setup()
     await this.channels.setup()
+
+    this.setupApmErrorHandler()
+  }
+
+  setupApm() {
+    const apmEnabled = yn(process.env.APM_ENABLED)
+
+    if (apmEnabled) {
+      Sentry.init({
+        integrations: [new Sentry.Integrations.Http({})]
+      })
+
+      this.root.use(Sentry.Handlers.requestHandler())
+    }
+  }
+
+  setupApmErrorHandler() {
+    const apmEnabled = yn(process.env.APM_ENABLED)
+
+    if (apmEnabled) {
+      this.root.use(Sentry.Handlers.errorHandler())
+    }
   }
 
   async setupPassword() {
