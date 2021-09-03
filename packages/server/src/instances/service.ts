@@ -177,6 +177,10 @@ export class InstanceService extends Service {
     const client = await this.clientService.getById(conversation!.clientId)
     const convmaps = await this.mappingService.convmap.listByConversationId(message.conversationId)
 
+    if (convmaps.length === 1 && source?.conduit) {
+      return
+    }
+
     for (const convmap of convmaps) {
       void this.sendMessageToInstance(message, source, client!.providerId, convmap)
     }

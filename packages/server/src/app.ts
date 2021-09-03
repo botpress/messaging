@@ -114,7 +114,8 @@ export class App {
       this.health,
       this.users,
       this.conversations,
-      this.messages
+      this.messages,
+      this.mapping
     )
   }
 

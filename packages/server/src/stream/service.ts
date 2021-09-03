@@ -11,6 +11,7 @@ import { ConversationService } from '../conversations/service'
 import { HealthEvents } from '../health/events'
 import { HealthService } from '../health/service'
 import { Logger } from '../logger/types'
+import { MappingService } from '../mapping/service'
 import { MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { PostService } from '../post/service'
@@ -32,7 +33,8 @@ export class StreamService extends Service {
     private health: HealthService,
     private users: UserService,
     private conversations: ConversationService,
-    private messages: MessageService
+    private messages: MessageService,
+    private mapping: MappingService
   ) {
     super()
   }
@@ -69,14 +71,25 @@ export class StreamService extends Service {
 
     this.messages.events.on(MessageEvents.Created, async ({ message, source }) => {
       const conversation = await this.conversations.get(message.conversationId)
+
       await this.stream(
         'message.new',
-        { conversationId: conversation!.id, message },
+        { channel: await this.getChannel(conversation!.id), conversationId: conversation!.id, message },
         conversation!.clientId,
         conversation!.userId,
         source
       )
     })
+  }
+
+  private async getChannel(conversationId: uuid) {
+    const convmaps = await this.mapping.convmap.listByConversationId(conversationId)
+    if (convmaps.length === 1) {
+      const tunnel = await this.mapping.tunnels.get(convmaps[0].tunnelId)
+      return this.channels.getById(tunnel!.channelId).name
+    } else {
+      return 'messaging'
+    }
   }
 
   async stream(type: string, payload: any, clientId: uuid, userId: uuid | undefined, source?: ActionSource) {
@@ -89,7 +102,9 @@ export class StreamService extends Service {
       }
     }
 
-    this.logger.debug(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan(type)}`, data)
+    if (yn(process.env.LOGGING_ENABLED)) {
+      this.logger.debug(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan(type)}`, data)
+    }
 
     if (userId) {
       const sockets = this.sockets.listByUser(userId)
