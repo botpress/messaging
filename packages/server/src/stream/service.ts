@@ -51,8 +51,7 @@ export class StreamService extends Service {
       await this.stream(
         'health.new',
         { channel: channel.name, event: { ...this.health.makeReadable(event) } },
-        client.id,
-        undefined
+        client.id
       )
     })
 
@@ -92,7 +91,7 @@ export class StreamService extends Service {
     }
   }
 
-  async stream(type: string, payload: any, clientId: uuid, userId: uuid | undefined, source?: ActionSource) {
+  async stream(type: string, payload: any, clientId: uuid, userId?: uuid, source?: ActionSource) {
     const data = {
       type,
       data: {

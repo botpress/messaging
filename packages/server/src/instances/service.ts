@@ -177,6 +177,8 @@ export class InstanceService extends Service {
     const client = await this.clientService.getById(conversation!.clientId)
     const convmaps = await this.mappingService.convmap.listByConversationId(message.conversationId)
 
+    // small optimization. If the message comes from a channel, and we are only linked to one channel,
+    // then we already know that we don't need to spread the message to other connected channels
     if (convmaps.length === 1 && source?.conduit) {
       return
     }
