@@ -1,14 +1,8 @@
 import { App } from '../../src/app'
 
-let app: App
+export let app: App
 
-export const getApp = async () => {
-  if (app) {
-    return app
-  }
-
-  process.env.DATABASE_URL = ''
-
+export const setupApp = async () => {
   app = new App()
   await app.setup()
   return app
