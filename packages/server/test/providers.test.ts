@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { validate as validateUuid } from 'uuid'
 import { ProviderService } from '../src/providers/service'
 import { Provider } from '../src/providers/types'
 import { setupApp, app } from './util/app'
@@ -23,10 +24,11 @@ describe('Providers', () => {
   })
 
   test('Create provider', async () => {
-    const name = crypto.randomBytes(66).toString('base64')
+    const name = crypto.randomBytes(20).toString('hex')
     const provider = await providers.create(name, false)
 
     expect(provider).toBeDefined()
+    expect(validateUuid(provider.id)).toBeTruthy()
     expect(provider.name).toBe(name)
     expect(provider.sandbox).toBeFalsy()
 
@@ -71,7 +73,7 @@ describe('Providers', () => {
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
-  test('Cache by id is also set by getByName', async () => {
+  test('Cache for getById is also set by calling getByName', async () => {
     const notCached = await providers.getByName(state.provider!.name)
     expect(notCached).toEqual(state.provider)
     expect(querySpy).toHaveBeenCalledTimes(1)
@@ -81,7 +83,7 @@ describe('Providers', () => {
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
-  test('Cache by name is also set by getById', async () => {
+  test('Cache for getByName is also set by calling getById', async () => {
     const notCached = await providers.getById(state.provider!.id)
     expect(notCached).toEqual(state.provider)
     expect(querySpy).toHaveBeenCalledTimes(1)
@@ -91,44 +93,39 @@ describe('Providers', () => {
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
-  test('Update provider sandbox', async () => {
+  test('Updating provider sandbox clears cache and persists changes', async () => {
     await providers.updateSandbox(state.provider!.id, true)
     const calls = querySpy.mock.calls.length
 
     const provider = await providers.getById(state.provider!.id)
     expect(provider).toEqual({ ...state.provider, sandbox: true })
-    // cache should have been cleared
     expect(querySpy).toHaveBeenCalledTimes(calls + 1)
 
     state.provider = provider
   })
 
-  test('Update provider name', async () => {
-    const newName = crypto.randomBytes(66).toString('base64')
+  test('Updating provider name clears cache and persists changes', async () => {
+    const newName = crypto.randomBytes(20).toString('hex')
     await providers.updateName(state.provider!.id, newName)
     const calls = querySpy.mock.calls.length
 
     const provider = await providers.getById(state.provider!.id)
     expect(provider).toEqual({ ...state.provider, name: newName })
-    // cache should have been cleared
     expect(querySpy).toHaveBeenCalledTimes(calls + 1)
 
     state.provider = provider
   })
 
-  test('Delete provider', async () => {
+  test('Deleting provider clears cache and persists in changes', async () => {
     await providers.delete(state.provider!.id)
-  })
+    const calls = querySpy.mock.calls.length
 
-  test('Deleted provider cannot be fetched by id', async () => {
-    const provider = await providers.getById(state.provider!.id)
-    expect(provider).toBeUndefined()
-    expect(querySpy).toHaveBeenCalledTimes(1)
-  })
+    const notCachedById = await providers.getById(state.provider!.id)
+    expect(notCachedById).toBeUndefined()
+    expect(querySpy).toHaveBeenCalledTimes(calls + 1)
 
-  test('Deleted provider cannot be fetched by name', async () => {
-    const provider = await providers.getByName(state.provider!.name)
-    expect(provider).toBeUndefined()
-    expect(querySpy).toHaveBeenCalledTimes(1)
+    const notCachedByName = await providers.getByName(state.provider!.name)
+    expect(notCachedByName).toBeUndefined()
+    expect(querySpy).toHaveBeenCalledTimes(calls + 2)
   })
 })
