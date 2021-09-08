@@ -147,7 +147,7 @@ export class ClientService extends Service {
     }
   }
 
-  private query() {
+  query() {
     return this.db.knex(this.table.id)
   }
 }
