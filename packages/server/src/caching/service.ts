@@ -6,7 +6,7 @@ import { ServerCache } from './cache'
 import { ServerCache2D } from './cache2D'
 
 export class CachingService extends Service {
-  private caches: { [cacheId: string]: any } = {}
+  private caches: { [cacheId: string]: ServerCache<any, any> | ServerCache2D<any> } = {}
 
   constructor(private distributedService: DistributedService) {
     super()
@@ -48,7 +48,13 @@ export class CachingService extends Service {
     return cache
   }
 
-  getCache<C>(id: string): C | undefined {
+  getCache<C extends ServerCache<any, any> | ServerCache2D<any>>(id: string): C | undefined {
     return this.caches[id] as C
+  }
+
+  resetAll() {
+    for (const cache of Object.values(this.caches)) {
+      cache.reset()
+    }
   }
 }
