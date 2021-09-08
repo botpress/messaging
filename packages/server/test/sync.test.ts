@@ -1,10 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import { ChannelService } from '../../src/channels/service'
-import { DatabaseService } from '../../src/database/service'
-import { makeSyncRequestSchema } from '../../src/sync/schema'
+import { ChannelService } from '../src/channels/service'
+import { DatabaseService } from '../src/database/service'
+import { makeSyncRequestSchema } from '../src/sync/schema'
 
-jest.mock('../../src/database/service')
+jest.mock('../src/database/service')
 
 const channels = {
   messenger: {

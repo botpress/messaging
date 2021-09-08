@@ -1,9 +1,9 @@
-import _ from 'lodash'
 import axios, { AxiosRequestConfig } from 'axios'
+import _ from 'lodash'
 
-import { PostService } from '../../src/post/service'
+import { PostService } from '../src/post/service'
 
-jest.mock('../../src/logger/types')
+jest.mock('../src/logger/types')
 jest.mock('axios')
 
 describe('PostService', () => {

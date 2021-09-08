@@ -1,6 +1,6 @@
 import clc from 'cli-color'
 import _ from 'lodash'
-import { Logger } from '../../src/logger/types'
+import { Logger } from '../src/logger/types'
 
 describe('Logger', () => {
   const defaultEnv = process.env
@@ -62,8 +62,8 @@ describe('Logger', () => {
       const spy = jest.spyOn(console, 'log').mockImplementation()
 
       for (const level of levels) {
-        let params: any[] = [message, data]
-        let outputParams: any[] = [expect.anything(), expect.stringContaining(scope), message, data]
+        const params: any[] = [message, data]
+        const outputParams: any[] = [expect.anything(), expect.stringContaining(scope), message, data]
 
         if (level === 'error') {
           params.unshift(error)
@@ -84,8 +84,8 @@ describe('Logger', () => {
       const spy = jest.spyOn(console, 'log').mockImplementation()
 
       for (const level of levels) {
-        let params: any[] = [message]
-        let outputParams: any[] = [expect.anything(), expect.stringContaining(scope), message]
+        const params: any[] = [message]
+        const outputParams: any[] = [expect.anything(), expect.stringContaining(scope), message]
 
         if (level === 'error') {
           params.unshift(error)
@@ -106,8 +106,8 @@ describe('Logger', () => {
       const spy = jest.spyOn(console, 'log').mockImplementation()
 
       for (const level of levels) {
-        let params: any[] = [message, data]
-        let outputParams: any[] = [expect.anything(), expect.stringContaining(scope), prefixedMessage, data]
+        const params: any[] = [message, data]
+        const outputParams: any[] = [expect.anything(), expect.stringContaining(scope), prefixedMessage, data]
 
         if (level === 'error') {
           params.unshift(error)
@@ -130,8 +130,8 @@ describe('Logger', () => {
       const spy = jest.spyOn(console, 'log').mockImplementation()
 
       for (const level of levels) {
-        let params: any[] = [message]
-        let outputParams: any[] = [expect.anything(), expect.stringContaining(`[Messaging] ${scope}`), message]
+        const params: any[] = [message]
+        const outputParams: any[] = [expect.anything(), expect.stringContaining(`[Messaging] ${scope}`), message]
 
         if (level === 'error') {
           params.unshift(error)
@@ -154,8 +154,8 @@ describe('Logger', () => {
       const spy = jest.spyOn(console, 'log').mockImplementation()
 
       for (const level of levels) {
-        let params: any[] = [message, data]
-        let outputParams: any[] = [expect.anything(), expect.stringContaining(scope), ...logger['singleLine'](params)]
+        const params: any[] = [message, data]
+        const outputParams: any[] = [expect.anything(), expect.stringContaining(scope), ...logger['singleLine'](params)]
 
         if (level === 'error') {
           params.unshift(error)
@@ -177,7 +177,7 @@ describe('Logger', () => {
       const logger = new Logger(scope)
       const spy = jest.spyOn(console, 'log').mockImplementation()
 
-      let circularObj = {}
+      const circularObj: any = {}
       circularObj['a'] = circularObj
 
       logger.info(message, circularObj)
