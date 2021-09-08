@@ -71,6 +71,51 @@ describe('Providers', () => {
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
+  test('Cache by id is also set by getByName', async () => {
+    const notCached = await providers.getByName(state.provider!.name)
+    expect(notCached).toEqual(state.provider)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    const cached = await providers.getById(state.provider!.id)
+    expect(cached).toEqual(state.provider)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Cache by name is also set by getById', async () => {
+    const notCached = await providers.getById(state.provider!.id)
+    expect(notCached).toEqual(state.provider)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    const cached = await providers.getByName(state.provider!.name)
+    expect(cached).toEqual(state.provider)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Update provider sandbox', async () => {
+    await providers.updateSandbox(state.provider!.id, true)
+    const calls = querySpy.mock.calls.length
+
+    const provider = await providers.getById(state.provider!.id)
+    expect(provider).toEqual({ ...state.provider, sandbox: true })
+    // cache should have been cleared
+    expect(querySpy).toHaveBeenCalledTimes(calls + 1)
+
+    state.provider = provider
+  })
+
+  test('Update provider name', async () => {
+    const newName = crypto.randomBytes(66).toString('base64')
+    await providers.updateName(state.provider!.id, newName)
+    const calls = querySpy.mock.calls.length
+
+    const provider = await providers.getById(state.provider!.id)
+    expect(provider).toEqual({ ...state.provider, name: newName })
+    // cache should have been cleared
+    expect(querySpy).toHaveBeenCalledTimes(calls + 1)
+
+    state.provider = provider
+  })
+
   test('Delete provider', async () => {
     await providers.delete(state.provider!.id)
   })
