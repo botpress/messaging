@@ -20,8 +20,8 @@ export class WebchatMessages extends WebchatSystem {
 
   private async setupMessageReception() {
     this.socket.com.events.on(SocketComEvents.Message, async (message) => {
-      if (message.type === 'message') {
-        await this.emitter.emit(MessagesEvents.Receive, [message.data])
+      if (message.type === 'message.new') {
+        await this.emitter.emit(MessagesEvents.Receive, [message.data.data.message])
       }
     })
   }

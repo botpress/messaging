@@ -1,7 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
 import { ApiRequest, ClientScopedApi } from '../base/api'
-import { ChatService } from '../chat/service'
 import { ClientService } from '../clients/service'
 import { ConversationService } from '../conversations/service'
 import { SocketManager } from '../socket/manager'
@@ -23,7 +22,6 @@ export class MessageApi extends ClientScopedApi {
     private sockets: SocketManager,
     private conversations: ConversationService,
     private messages: MessageService,
-    private chat: ChatService,
     private socketService: SocketService
   ) {
     super(router, clients)
@@ -49,7 +47,9 @@ export class MessageApi extends ClientScopedApi {
           return res.sendStatus(403)
         }
 
-        const message = await this.messages.create(conversationId, authorId, payload)
+        const message = await this.messages.create(conversationId, authorId, payload, {
+          client: { id: req.client!.id }
+        })
 
         res.send(message)
       })
@@ -169,7 +169,7 @@ export class MessageApi extends ClientScopedApi {
         })
       }
 
-      const msg = await this.chat.send(conversationId, userId, payload, { socket })
+      const msg = await this.messages.create(conversationId, userId, payload, { socket: { id: socket.id } })
       this.sockets.reply(socket, message, msg)
     })
 

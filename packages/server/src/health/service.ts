@@ -1,6 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
-import yn from 'yn'
 import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
@@ -9,39 +8,33 @@ import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { DatabaseService } from '../database/service'
 import { InstanceService } from '../instances/service'
-import { LoggerService } from '../logger/service'
-import { Logger } from '../logger/types'
-import { PostService } from '../post/service'
-import { WebhookBroadcaster } from '../webhooks/broadcaster'
-import { WebhookService } from '../webhooks/service'
-import { WebhookContent } from '../webhooks/types'
+import { HealthEmitter, HealthEvents, HealthWatcher } from './events'
+import { HealthListener } from './listener'
 import { HealthTable } from './table'
 import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from './types'
-import { HealthWatcher } from './watcher'
 
 export class HealthService extends Service {
+  get events(): HealthWatcher {
+    return this.emitter
+  }
+
+  private emitter: HealthEmitter
   private table: HealthTable
   private cache!: ServerCache<uuid, HealthReport>
-  private watcher: HealthWatcher
-  private logger: Logger
-  private webhookBroadcaster: WebhookBroadcaster
+  private listener: HealthListener
 
   constructor(
-    private loggerService: LoggerService,
-    private postService: PostService,
     private db: DatabaseService,
     private cachingService: CachingService,
     private channelService: ChannelService,
     private clientService: ClientService,
-    private webhookService: WebhookService,
     private conduitService: ConduitService,
     private instanceService: InstanceService
   ) {
     super()
     this.table = new HealthTable()
-    this.watcher = new HealthWatcher(this.conduitService, this.instanceService, this)
-    this.logger = this.loggerService.root.sub('health')
-    this.webhookBroadcaster = new WebhookBroadcaster(this.postService, this.webhookService)
+    this.emitter = new HealthEmitter()
+    this.listener = new HealthListener(this.conduitService, this.instanceService, this)
   }
 
   async setup() {
@@ -49,7 +42,7 @@ export class HealthService extends Service {
 
     await this.db.registerTable(this.table)
 
-    await this.watcher.setup()
+    await this.listener.setup()
   }
 
   async register(conduitId: uuid, type: HealthEventType, data: any = undefined) {
@@ -65,24 +58,10 @@ export class HealthService extends Service {
     const client = await this.clientService.getByProviderId(conduit!.providerId)
     if (client) {
       this.cache.del(client.id, true)
-
-      const channel = this.channelService.getById(conduit!.channelId)
-      const post: WebhookContent = {
-        type: 'health',
-        client: { id: client.id },
-        channel: { name: channel.name },
-        event: this.makeReadable(event)
-      }
-
-      // TODO: we should check the .json here
-      if (yn(process.env.LOGGING_ENABLED)) {
-        this.logger.info(`[${client.id}] ${channel.name} : ${type}`)
-      }
-
-      void this.webhookBroadcaster.send(client.id, post)
     }
 
     await this.query().insert(this.serialize(event))
+    await this.emitter.emit(HealthEvents.Registered, { event })
   }
 
   async getHealthForClient(clientId: uuid): Promise<HealthReport> {
@@ -111,7 +90,7 @@ export class HealthService extends Service {
     return rows.map((x) => this.deserialize(x))
   }
 
-  private makeReadable(event: HealthEvent): HealthReportEvent {
+  public makeReadable(event: HealthEvent): HealthReportEvent {
     return {
       type: event.type,
       time: event.time,

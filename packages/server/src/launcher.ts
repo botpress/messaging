@@ -69,7 +69,7 @@ export class Launcher {
       if (!yn(process.env.SPINNED)) {
         this.logger.info(`Server is listening at: http://localhost:${port}`)
 
-        const externalUrl = process.env.EXTERNAL_URLs
+        const externalUrl = process.env.EXTERNAL_URL
         if (externalUrl?.length) {
           this.logger.info(`Server is exposed at: ${externalUrl}`)
         }
