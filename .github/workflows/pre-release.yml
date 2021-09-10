@@ -35,7 +35,7 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
 
       - name: Build Project
-        run: yarn build --prod
+        run: yarn build
 
       - name: Package Binaries
         run: yarn package
