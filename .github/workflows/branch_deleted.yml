@@ -1,0 +1,21 @@
+name: Branch deleted
+on: delete
+
+jobs:
+  remove:
+    if: github.event.ref_type == 'branch'
+    name: Remove Branch Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Branch Name
+        id: extract_branch
+        shell: bash
+        run: |
+          DELETED_BRANCH=${{ github.event.ref }}
+          echo "##[set-output name=branch;]$(echo ${DELETED_BRANCH#refs/heads/})"
+      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: dev-${{ steps.extract_branch.outputs.branch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
