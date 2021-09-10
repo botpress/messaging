@@ -45,4 +45,49 @@ describe('Clients', () => {
 
     state.client = client
   })
+
+  test('Get client by id', async () => {
+    const client = await clients.getById(state.client!.id)
+    expect(client).toEqual(state.client)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get client by id cached', async () => {
+    const client = await clients.getById(state.client!.id)
+    expect(client).toEqual(state.client)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const cached = await clients.getById(state.client!.id)
+      expect(cached).toEqual(state.client)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get client by id and token', async () => {
+    const client = await clients.getByIdAndToken(state.client!.id, state.token!)
+    expect(client).toEqual(state.client)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get client by id and token cached', async () => {
+    const client = await clients.getByIdAndToken(state.client!.id, state.token!)
+    expect(client).toEqual(state.client)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const cached = await clients.getByIdAndToken(state.client!.id, state.token!)
+      expect(cached).toEqual(state.client)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get client by id and wrong token should return undefined', async () => {
+    const garbageToken = 'abc'
+    const client = await clients.getByIdAndToken(state.client!.id, garbageToken)
+    expect(client).toBeUndefined()
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
 })
