@@ -26,7 +26,7 @@ jobs:
       - name: Get Release Details
         id: release_details
         uses: botpress/gh-actions/get_release_details@master
-      
+
       - name: Fix Change Log
         id: changelog
         run: |
@@ -35,20 +35,20 @@ jobs:
           echo "Version: ${{ steps.release_details.outputs.version }}"
           echo "Latest Tag: ${{ steps.release_details.outputs.latest_tag }}"
 
-      - name: 'Build and Package'
+      - name: Build and Package
         if: ${{ steps.release_details.outputs.is_new_release == 'true' }}
         run: |
           yarn build
           yarn package
 
-      - name: 'Release'
+      - name: Release
         if: ${{ steps.release_details.outputs.is_new_release == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           files: ./bin/messaging-v*
           prerelease: false
           draft: false
-           body: ${{ steps.changelog.outputs.value }}
+          body: ${{ steps.changelog.outputs.value }}
           name: v${{ steps.release_details.outputs.version }}
           tag_name: v${{ steps.release_details.outputs.version }}
         env:
