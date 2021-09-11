@@ -14,6 +14,11 @@ export enum LoggerLevel {
 
 type Param = string | object | undefined
 
+export const logIndent =
+  (yn(process.env.SPINNED) ? 12 : 0) +
+  (!yn(process.env.SPINNED) && yn(process.env.CLUSTER_ENABLED) ? `[${RedisSubservice.nodeId}] `.length : 0) +
+  (yn(process.env.DISABLE_LOGGING_TIMESTAMP) ? 0 : 24)
+
 export class Logger {
   private readonly colors = {
     [LoggerLevel.Debug]: clc.blue,
@@ -69,13 +74,8 @@ export class Logger {
     this.printPrefix([message, data, error?.stack], LoggerLevel.Error)
   }
 
-  private center(text: string, width: number) {
-    const indent =
-      (yn(process.env.SPINNED) ? 12 : 0) +
-      (!yn(process.env.SPINNED) && yn(process.env.CLUSTER_ENABLED) ? `[${RedisSubservice.nodeId}] `.length : 0) +
-      (yn(process.env.DISABLE_LOGGING_TIMESTAMP) ? 0 : 24) +
-      1 +
-      this.scope.length
+  public center(text: string, width: number) {
+    const indent = logIndent + 1 + this.scope.length
     const padding = Math.floor((width - clc.strip(text).length) / 2)
     return _.repeat(' ', padding + indent) + text + _.repeat(' ', padding)
   }

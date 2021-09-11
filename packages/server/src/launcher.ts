@@ -9,6 +9,7 @@ import { Api } from './api'
 import { App } from './app'
 import { ShutDownSignal } from './base/errors'
 import { Logger } from './logger/types'
+import { showBanner } from './utils/banner'
 
 const pkg = require('../package.json')
 
@@ -106,7 +107,13 @@ export class Launcher {
       return
     }
 
-    this.logger.window([clc.bold('Botpress Messaging'), clc.blackBright(`Version ${pkg.version}`)])
+    showBanner({
+      title: 'Botpress Messaging',
+      version: pkg.version,
+      labelLength: 9,
+      lineWidth: 75,
+      logger: this.logger
+    })
   }
 
   private printChannels() {
