@@ -110,8 +110,8 @@ export class Launcher {
     showBanner({
       title: 'Botpress Messaging',
       version: pkg.version,
-      labelLength: 9,
-      lineWidth: 75,
+      logScopeLength: 9,
+      bannerWidth: 75,
       logger: this.logger
     })
   }
