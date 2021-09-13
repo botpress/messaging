@@ -2,6 +2,7 @@ import clc from 'cli-color'
 import { Express } from 'express'
 import { createHttpTerminator, HttpTerminator } from 'http-terminator'
 import _ from 'lodash'
+import moment from 'moment'
 import ms from 'ms'
 import portfinder from 'portfinder'
 import yn from 'yn'
@@ -9,7 +10,6 @@ import { Api } from './api'
 import { App } from './app'
 import { ShutDownSignal } from './base/errors'
 import { Logger } from './logger/types'
-import { showBanner } from './utils/banner'
 
 const pkg = require('../package.json')
 
@@ -107,13 +107,16 @@ export class Launcher {
       return
     }
 
-    showBanner({
-      title: 'Botpress Messaging',
-      version: pkg.version,
-      logScopeLength: 9,
-      bannerWidth: 75,
-      logger: this.logger
-    })
+    let info = `Version ${pkg.version}`
+    try {
+      const metadata = require('./metadata.json')
+      const builtFrom = process.pkg ? 'BIN' : 'SRC'
+      const branchInfo = metadata.branch !== 'master' ? `/${metadata.branch}` : ''
+
+      info += ` - Build ${moment(metadata.date).format('YYYYMMDD-HHmm')}_${builtFrom}${branchInfo}`
+    } catch {}
+
+    this.logger.window([clc.bold('Botpress Messaging'), clc.blackBright(info)], undefined, 75)
   }
 
   private printChannels() {
