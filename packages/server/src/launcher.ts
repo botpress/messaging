@@ -2,6 +2,7 @@ import clc from 'cli-color'
 import { Express } from 'express'
 import { createHttpTerminator, HttpTerminator } from 'http-terminator'
 import _ from 'lodash'
+import moment from 'moment'
 import ms from 'ms'
 import portfinder from 'portfinder'
 import yn from 'yn'
@@ -106,7 +107,16 @@ export class Launcher {
       return
     }
 
-    this.logger.window([clc.bold('Botpress Messaging'), clc.blackBright(`Version ${pkg.version}`)])
+    let info = `Version ${pkg.version}`
+    try {
+      const metadata: { branch: string; date: string } = require('./metadata.json')
+      const builtFrom = process.pkg ? 'BIN' : 'SRC'
+      const branchInfo = metadata.branch !== 'master' ? `/${metadata.branch}` : ''
+
+      info += ` - Build ${moment(metadata.date).format('YYYYMMDD-HHmm')}_${builtFrom}${branchInfo}`
+    } catch {}
+
+    this.logger.window([clc.bold('Botpress Messaging'), clc.blackBright(info)], undefined, 75)
   }
 
   private printChannels() {

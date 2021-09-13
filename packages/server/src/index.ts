@@ -9,7 +9,7 @@ import { App } from './app'
 import { Launcher } from './launcher'
 
 // Set NODE_ENV to production when starting messaging using the binary version
-process.env.NODE_ENV = (<any>process).pkg ? 'production' : process.env.NODE_ENV
+process.env.NODE_ENV = process.pkg ? 'production' : process.env.NODE_ENV
 
 const launch = async () => {
   await setupEnv()
