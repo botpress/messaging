@@ -109,7 +109,7 @@ export class Launcher {
 
     let info = `Version ${pkg.version}`
     try {
-      const metadata = require('./metadata.json')
+      const metadata: { branch: string; date: string } = require('./metadata.json')
       const builtFrom = process.pkg ? 'BIN' : 'SRC'
       const branchInfo = metadata.branch !== 'master' ? `/${metadata.branch}` : ''
 
