@@ -3,4 +3,5 @@ dist/
 bin/
 *.log
 .parcel-cache
+.cache
 coverage/
