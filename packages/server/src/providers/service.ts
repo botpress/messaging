@@ -38,7 +38,7 @@ export class ProviderService extends Service {
       sandbox: sandbox === undefined ? false : sandbox
     }
 
-    await this.query().insert(provider)
+    await this.query().insert(this.serialize(provider))
 
     return provider
   }
@@ -51,7 +51,7 @@ export class ProviderService extends Service {
 
     const rows = await this.query().where({ name })
     if (rows?.length) {
-      const provider = rows[0] as Provider
+      const provider = this.deserialize(rows[0])
 
       this.cacheById.set(provider.id, provider)
       this.cacheByName.set(provider.name, provider)
@@ -70,7 +70,7 @@ export class ProviderService extends Service {
 
     const rows = await this.query().where({ id })
     if (rows?.length) {
-      const provider = rows[0] as Provider
+      const provider = this.deserialize(rows[0])
 
       this.cacheById.set(id, provider)
       this.cacheByName.set(provider.name, provider)
@@ -87,7 +87,9 @@ export class ProviderService extends Service {
     this.cacheById.del(id, true)
     this.cacheByName.del(oldProvider.name, true)
 
-    await this.query().where({ id }).update({ sandbox })
+    await this.query()
+      .where({ id })
+      .update({ sandbox: this.db.setBool(sandbox) })
     await this.emitter.emit(ProviderEvents.Updated, { providerId: id, oldProvider })
   }
 
@@ -113,5 +115,19 @@ export class ProviderService extends Service {
 
   query() {
     return this.db.knex(this.table.id)
+  }
+
+  private serialize(provider: Provider) {
+    return {
+      ...provider,
+      sandbox: this.db.setBool(provider.sandbox)
+    }
+  }
+
+  private deserialize(provider: any): Provider {
+    return {
+      ...provider,
+      sandbox: this.db.getBool(provider.sandbox)
+    }
   }
 }
