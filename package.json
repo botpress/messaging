@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Botpress messaging repo",
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
@@ -11,8 +11,8 @@
     "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules && rimraf node_modules",
     "package": "yarn clean && yarn build && node ./scripts/package",
     "release": "node ./scripts/release",
-    "build": "yarn --frozen-lockfile --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch",
+    "build": "yarn workspace @botpress/messaging-server build",
+    "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
     "dev": "yarn workspace @botpress/messaging-server dev",
     "board": "yarn workspace @botpress/messaging-board dev",
@@ -40,10 +40,10 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.1",
-    "eslint-plugin-jsdoc": "^36.0.7",
+    "eslint-plugin-jsdoc": "35.5.1",
     "fs-extra": "^10.0.0",
     "jest": "^27.0.6",
-    "parcel": "^2.0.0-beta.3.1",
+    "parcel": "1.12.3",
     "pkg": "^4.5.1",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
@@ -59,6 +59,6 @@
     "packages/*"
   ],
   "engines": {
-    "node": "12.22.5"
+    "node": "12.13"
   }
 }

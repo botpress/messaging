@@ -45,8 +45,8 @@ export class Logger {
     this.printPrefix([message, data], LoggerLevel.Warn)
   }
 
-  window(lines: string[], level = LoggerLevel.Info) {
-    const line = '========================================'
+  window(lines: string[], level = LoggerLevel.Info, width = 40) {
+    const line = '='.repeat(width)
     this.print(
       [
         line +

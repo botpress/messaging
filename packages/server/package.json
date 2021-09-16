@@ -1,10 +1,11 @@
 {
   "name": "@botpress/messaging-server",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "main": "index.ts",
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn --silent && tsc --build",
+    "postbuild": "node ./dist/meta/build",
     "watch": "yarn --silent && tsc --build --watch",
     "start": "node dist/index.js",
     "dev": "yarn --silent && ts-node-dev --inspect --inspect-publish-uid=http --transpile-only src/index.ts"

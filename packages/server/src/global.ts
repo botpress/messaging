@@ -31,5 +31,8 @@ export interface MessagingEnv {
 declare global {
   namespace NodeJS {
     interface ProcessEnv extends MessagingEnv {}
+    export interface Process {
+      pkg: any
+    }
   }
 }

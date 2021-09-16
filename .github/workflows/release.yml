@@ -10,54 +10,46 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+
       - uses: actions/setup-node@v2
         with:
-          node-version: '12.22.5'
+          node-version: '12.13'
           cache: 'yarn'
+
       - name: Git Unshallow
         run: git fetch --prune --unshallow
+
       - name: Fetch Node Packages
         run: |
           yarn --frozen-lockfile
-      - name: Get Previous Tag
-        id: previous_tag
-        uses: 'WyriHaximus/github-action-get-previous-tag@v1'
-      - name: Get Current Version
-        id: extract_version
-        uses: Saionaro/extract-package-version@v1.0.6
-      - name: Validate Semver
-        id: validate_semver
+
+      - name: Get Release Details
+        id: release_details
+        uses: botpress/gh-actions/get_release_details@master
+
+      - name: Fix Change Log
+        id: changelog
         run: |
-          valid_latest_tag=$(node ./node_modules/semver/bin/semver.js ${{ steps.previous_tag.outputs.tag }})
-          valid_current_version=$(node ./node_modules/semver/bin/semver.js ${{ steps.extract_version.outputs.version }})
-          change_log=$(node -e "require('./scripts/changelog.js').build({ writeToFile: true }).then(cl => console.log(cl))")
+          echo "::set-output name=value::${{ steps.release_details.outputs.changelog }}"
+          echo "Is new release?: ${{ steps.release_details.outputs.is_new_release }}"
+          echo "Version: ${{ steps.release_details.outputs.version }}"
+          echo "Latest Tag: ${{ steps.release_details.outputs.latest_tag }}"
 
-          # if not change log is truncated at first line
-          change_log="${change_log//'%'/'%25'}"
-          change_log="${change_log//$'\n'/'%0A'}"
-          change_log="${change_log//$'\r'/'%0D'}"
-
-          echo $valid_latest_tag
-          echo $valid_current_version
-          echo $change_log
-
-          echo "::set-output name=valid_latest_tag::$valid_latest_tag"
-          echo "::set-output name=valid_current_version::$valid_current_version"
-          echo "::set-output name=change_log::$change_log"
-      - name: 'Build and Package'
-        if: ${{ steps.validate_semver.outputs.valid_latest_tag != steps.validate_semver.outputs.valid_current_version }}
+      - name: Build and Package
+        if: ${{ steps.release_details.outputs.is_new_release == 'true' }}
         run: |
           yarn build
           yarn package
-      - name: 'Release'
-        if: ${{ steps.validate_semver.outputs.valid_latest_tag != steps.validate_semver.outputs.valid_current_version }}
+
+      - name: Release
+        if: ${{ steps.release_details.outputs.is_new_release == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           files: ./bin/messaging-v*
           prerelease: false
           draft: false
-          body: ${{ steps.validate_semver.outputs.change_log }}
-          name: v${{ steps.validate_semver.outputs.valid_current_version }}
-          tag_name: v${{ steps.validate_semver.outputs.valid_current_version }}
+          body: ${{ steps.changelog.outputs.value }}
+          name: v${{ steps.release_details.outputs.version }}
+          tag_name: v${{ steps.release_details.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

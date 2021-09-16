@@ -1,3 +1,13 @@
+## [0.1.13](https://github.com/botpress/messaging/compare/v0.1.12...v0.1.13) (2021-09-14)
+
+
+### Features
+
+* **apm:** added apm configuration setup ([#167](https://github.com/botpress/messaging/issues/167)) ([a1cc6a0](https://github.com/botpress/messaging/commit/a1cc6a07eda7be1e9245a53951c61a2e03ed635a))
+* **webhook:** add convo and user events ([#168](https://github.com/botpress/messaging/issues/168)) ([2e30ddd](https://github.com/botpress/messaging/commit/2e30ddd60807f61332c1f519e269143fbb1ca18a))
+
+
+
 ## [0.1.12](https://github.com/botpress/messaging/compare/v0.1.11...v0.1.12) (2021-09-02)
 
 
