@@ -90,4 +90,23 @@ describe('Clients', () => {
     expect(client).toBeUndefined()
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
+
+  test('Get client by provider id', async () => {
+    const client = await clients.getByProviderId(state.provider.id)
+    expect(client).toEqual(state.client)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get client by provider id cached', async () => {
+    const client = await clients.getByProviderId(state.provider.id)
+    expect(client).toEqual(state.client)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const cached = await clients.getByProviderId(state.provider.id)
+      expect(cached).toEqual(state.client)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
 })
