@@ -8,7 +8,7 @@ export class SlackImageRenderer extends ImageRenderer {
       type: 'image',
       title: {
         type: 'plain_text',
-        text: payload.title!
+        text: payload.title || 'image_title'
       },
       image_url: payload.image,
       alt_text: 'image'
