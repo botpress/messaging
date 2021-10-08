@@ -1,4 +1,4 @@
-FROM node:12.13-alpine AS build
+FROM node:12.18.1-alpine AS build
 
 ADD . /messaging
 
@@ -6,7 +6,7 @@ WORKDIR /messaging/packages/server
 
 RUN yarn build
 
-FROM node:12.13-alpine
+FROM node:12.18.1-alpine
 
 WORKDIR /messaging
 
