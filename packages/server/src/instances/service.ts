@@ -183,9 +183,11 @@ export class InstanceService extends Service {
       return
     }
 
+    const promises = []
     for (const convmap of convmaps) {
-      void this.sendMessageToInstance(message, source, client!.providerId, convmap)
+      promises.push(this.sendMessageToInstance(message, source, client!.providerId, convmap))
     }
+    await Promise.all(promises)
   }
 
   private async sendMessageToInstance(
