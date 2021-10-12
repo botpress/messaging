@@ -1,0 +1,19 @@
+name: Docker
+on: [push]
+jobs:
+  messaging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: actions/checkout@v2.1.0
+        with:
+          repository: botpress/actions
+          token: ${{ secrets.PAT }}
+          path: '@actions'
+      - uses: ./@actions/build/docker
+        with:
+          repository: messaging
+          aws-ecr-policy: '${{ secrets.AWS_ECR_POLICY }}'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}

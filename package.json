@@ -59,6 +59,6 @@
     "packages/*"
   ],
   "engines": {
-    "node": "12.13"
+    "node": "12.18.1"
   }
 }
