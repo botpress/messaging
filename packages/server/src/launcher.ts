@@ -73,6 +73,10 @@ export class Launcher {
         const externalUrl = process.env.EXTERNAL_URL
         if (externalUrl?.length) {
           this.logger.info(`Server is exposed at: ${externalUrl}`)
+        } else {
+          this.logger.warn(
+            "No external URL configured. Messaging Server might not behave as expected. Set the value for 'EXTERNAL_URL' to suppress this warning"
+          )
         }
       } else {
         this.logger.info(clc.blackBright(`Messaging is listening at: http://localhost:${port}`))
