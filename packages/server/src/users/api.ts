@@ -30,6 +30,16 @@ export class UserApi extends ClientScopedApi {
       })
     )
 
+    this.router.get(
+      '/users/:id',
+      this.asyncMiddleware(async (req: ApiRequest, res) => {
+        const { id } = req.params
+        const user = await this.users.get(id)
+
+        res.send(user)
+      })
+    )
+
     this.sockets.handle('users.auth', async (socket, message) => {
       const { error } = AuthUserSocketSchema.validate(message.data)
       if (error) {
