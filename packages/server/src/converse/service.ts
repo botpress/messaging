@@ -20,17 +20,16 @@ export class ConverseService extends Service {
 
     for (const collector of collectors || []) {
       collector.messages.push(message)
+      this.resetCollectorTimeout(collector)
     }
   }
 
   async collect(conversationId: uuid): Promise<Message[]> {
     const collector = this.addCollector(conversationId)
+    this.resetCollectorTimeout(collector)
 
     return new Promise<Message[]>((resolve) => {
-      setTimeout(() => {
-        this.removeCollector(conversationId, collector)
-        resolve(collector.messages)
-      }, 5000)
+      collector.resolve = resolve
     })
   }
 
@@ -40,6 +39,7 @@ export class ConverseService extends Service {
     }
 
     const collector: Collector = {
+      conversationId,
       messages: []
     }
 
@@ -48,12 +48,25 @@ export class ConverseService extends Service {
     return collector
   }
 
-  private removeCollector(conversationId: uuid, collector: Collector) {
+  private removeCollector(collector: Collector) {
+    const { conversationId } = collector
+
     const index = this.collectors[conversationId].indexOf(collector)
     this.collectors[conversationId].splice(index, 1)
 
     if (this.collectors[conversationId].length === 0) {
       delete this.collectors[conversationId]
     }
+  }
+
+  private resetCollectorTimeout(collector: Collector) {
+    if (collector.timeout) {
+      clearTimeout(collector.timeout)
+    }
+
+    collector.timeout = setTimeout(() => {
+      this.removeCollector(collector)
+      collector.resolve!(collector.messages)
+    }, 5000)
   }
 }
