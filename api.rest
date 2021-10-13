@@ -48,6 +48,7 @@ x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
+  "collect": false,
   "conversationId": "{{convoId}}",
   "payload": {
     "type": "text",
