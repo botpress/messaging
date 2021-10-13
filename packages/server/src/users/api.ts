@@ -4,7 +4,7 @@ import { ApiRequest, ClientScopedApi } from '../base/api'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
-import { AuthUserSocketSchema } from './schema'
+import { AuthUserSocketSchema, GetUserSchema } from './schema'
 import { UserService } from './service'
 
 export class UserApi extends ClientScopedApi {
@@ -33,8 +33,17 @@ export class UserApi extends ClientScopedApi {
     this.router.get(
       '/users/:id',
       this.asyncMiddleware(async (req: ApiRequest, res) => {
+        const { error } = GetUserSchema.validate(req.params)
+        if (error) {
+          return res.status(400).send(error.message)
+        }
+
         const { id } = req.params
         const user = await this.users.get(id)
+
+        if (user && user.clientId !== req.client!.id) {
+          return res.sendStatus(403)
+        }
 
         res.send(user)
       })
