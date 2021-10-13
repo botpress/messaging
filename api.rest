@@ -40,6 +40,23 @@ Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 
+### Create User
+POST {{baseUrl}}/api/users
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+
+### Create Conversation
+POST {{baseUrl}}/api/conversations
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "userId": "my-user-id"
+}
+
 ### Send Text
 POST {{baseUrl}}/api/messages
 Authorization: Bearer {{authToken}}
