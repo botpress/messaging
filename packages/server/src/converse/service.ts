@@ -64,9 +64,13 @@ export class ConverseService extends Service {
       clearTimeout(collector.timeout)
     }
 
-    collector.timeout = setTimeout(() => {
-      this.removeCollector(collector)
-      collector.resolve!(collector.messages)
-    }, 5000)
+    collector.timeout = setTimeout(
+      () => {
+        this.removeCollector(collector)
+        collector.resolve!(collector.messages)
+      },
+      // Waiting for 3 sec is kind of garbage. We'll have to resee how we handle typing time to make this better
+      3000
+    )
   }
 }
