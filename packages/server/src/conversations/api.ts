@@ -1,30 +1,25 @@
 import { Router } from 'express'
-import { ApiRequest, ClientScopedApi } from '../base/api'
-import { ClientService } from '../clients/service'
+import { Auth } from '../base/auth/auth'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
 import { UserService } from '../users/service'
 import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema, UseConvoSocketSchema } from './schema'
 import { ConversationService } from './service'
 
-export class ConversationApi extends ClientScopedApi {
+export class ConversationApi {
   constructor(
-    router: Router,
-    clients: ClientService,
+    private router: Router,
+    private auth: Auth,
     private sockets: SocketManager,
     private users: UserService,
     private conversations: ConversationService,
     private socketService: SocketService
-  ) {
-    super(router, clients)
-  }
+  ) {}
 
   async setup() {
-    this.router.use('/conversations', this.extractClient.bind(this))
-
     this.router.post(
       '/conversations',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = CreateConvoSchema.validate(req.body)
         if (error) {
           return res.status(400).send(error.message)
@@ -39,7 +34,7 @@ export class ConversationApi extends ClientScopedApi {
 
     this.router.get(
       '/conversations/:id',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = GetConvoSchema.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
@@ -58,7 +53,7 @@ export class ConversationApi extends ClientScopedApi {
 
     this.router.get(
       '/conversations/',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = ListConvosSchema.validate(req.query)
         if (error) {
           return res.status(400).send(error.message)
@@ -77,7 +72,7 @@ export class ConversationApi extends ClientScopedApi {
 
     this.router.get(
       '/conversations/:userId/recent',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = RecentConvoSchema.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)

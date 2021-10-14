@@ -1,11 +1,8 @@
 import { Router } from 'express'
 import { App } from '../app'
-import { BaseApi } from '../base/api'
 
-export class ChannelApi extends BaseApi {
-  constructor(router: Router, private app: App) {
-    super(router)
-  }
+export class ChannelApi {
+  constructor(private router: Router, private app: App) {}
 
   async setup() {
     for (const channel of this.app.channels.list()) {

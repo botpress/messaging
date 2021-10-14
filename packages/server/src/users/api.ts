@@ -1,29 +1,26 @@
 import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
-import { ApiRequest, ClientScopedApi } from '../base/api'
+import { Auth } from '../base/auth/auth'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
 import { AuthUserSocketSchema } from './schema'
 import { UserService } from './service'
 
-export class UserApi extends ClientScopedApi {
+export class UserApi {
   constructor(
-    router: Router,
-    clients: ClientService,
+    private router: Router,
+    private auth: Auth,
+    private clients: ClientService,
     private sockets: SocketManager,
     private users: UserService,
     private socketService: SocketService
-  ) {
-    super(router, clients)
-  }
+  ) {}
 
   async setup() {
-    this.router.use('/users', this.extractClient.bind(this))
-
     this.router.post(
       '/users',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const user = await this.users.create(req.client!.id)
 
         res.send(user)
