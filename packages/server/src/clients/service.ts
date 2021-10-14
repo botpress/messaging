@@ -60,7 +60,7 @@ export class ClientService extends Service {
     return client
   }
 
-  async getById(id: string): Promise<Client | undefined> {
+  async getById(id: uuid): Promise<Client | undefined> {
     const cached = this.cacheById.get(id)
     if (cached) {
       return cached
@@ -76,7 +76,7 @@ export class ClientService extends Service {
     }
   }
 
-  async getByIdAndToken(id: string, token: string): Promise<Client | undefined> {
+  async getByIdAndToken(id: uuid, token: string): Promise<Client | undefined> {
     const client = await this.getById(id)
     if (!client) {
       return undefined
@@ -99,7 +99,7 @@ export class ClientService extends Service {
     }
   }
 
-  async getByProviderId(providerId: string): Promise<Client | undefined> {
+  async getByProviderId(providerId: uuid): Promise<Client | undefined> {
     const cached = this.cacheByProvider.get(providerId)
     if (cached) {
       return cached
@@ -147,7 +147,7 @@ export class ClientService extends Service {
     }
   }
 
-  private query() {
+  query() {
     return this.db.knex(this.table.id)
   }
 }

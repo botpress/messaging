@@ -61,6 +61,10 @@ export class ServerCache2D<V> {
     this.lru.prune()
   }
 
+  reset() {
+    this.lru.reset()
+  }
+
   keys() {
     return this.lru.keys()
   }

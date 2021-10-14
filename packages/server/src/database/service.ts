@@ -111,4 +111,18 @@ export class DatabaseService extends Service {
   setDate(date: Date | undefined) {
     return date?.toISOString()
   }
+
+  getBool(bool: any): boolean {
+    if (this.isLite) {
+      return !!bool
+    }
+    return bool
+  }
+
+  setBool(bool: boolean): any {
+    if (this.isLite) {
+      return bool ? 1 : 0
+    }
+    return bool
+  }
 }
