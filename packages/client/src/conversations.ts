@@ -1,5 +1,4 @@
 import { Conversation, ConversationWithLastMessage } from '@botpress/messaging-base'
-import axios from 'axios'
 import { BaseClient } from './base'
 
 export class ConversationClient extends BaseClient {
@@ -8,15 +7,7 @@ export class ConversationClient extends BaseClient {
   }
 
   async get(id: string): Promise<Conversation | undefined> {
-    try {
-      return this.deserialize((await this.http.get<Conversation>(`/conversations/${id}`)).data)
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 404) {
-        return undefined
-      }
-
-      throw err
-    }
+    return this.deserialize((await this.http.get<Conversation>(`/conversations/${id}`)).data)
   }
 
   async list(userId: string, limit: number): Promise<ConversationWithLastMessage[]> {
