@@ -1,5 +1,4 @@
 import { User } from '@botpress/messaging-base'
-import axios from 'axios'
 import { BaseClient } from './base'
 
 export class UserClient extends BaseClient {
@@ -8,14 +7,6 @@ export class UserClient extends BaseClient {
   }
 
   async get(id: string): Promise<User | undefined> {
-    try {
-      return (await this.http.get<User>(`/users/${id}`)).data
-    } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 404) {
-        return undefined
-      }
-
-      throw err
-    }
+    return (await this.http.get<User>(`/users/${id}`)).data
   }
 }
