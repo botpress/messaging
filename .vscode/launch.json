@@ -4,6 +4,7 @@
     {
       "name": "Attach",
       "type": "node",
+      "runtimeVersion": "12.18.1",
       "request": "attach",
       "restart": true,
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
@@ -11,6 +12,7 @@
     {
       "name": "Debug Transpile",
       "type": "node",
+      "runtimeVersion": "12.18.1",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/server",
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
@@ -19,6 +21,7 @@
     {
       "name": "Debug Compiled",
       "type": "node",
+      "runtimeVersion": "12.18.1",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/server",
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
@@ -27,10 +30,10 @@
     },
     {
       "type": "node",
+      "runtimeVersion": "12.18.1",
       "name": "Debug Unit Tests",
       "request": "launch",
       "runtimeExecutable": "yarn",
-      "cwd": "${workspaceFolder}/packages/server",
       "args": ["test", "--runInBand"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
