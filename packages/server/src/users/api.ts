@@ -43,6 +43,8 @@ export class UserApi extends ClientScopedApi {
 
         if (user && user.clientId !== req.client!.id) {
           return res.sendStatus(403)
+        } else if (!user) {
+          return res.sendStatus(404)
         }
 
         res.send(user)
