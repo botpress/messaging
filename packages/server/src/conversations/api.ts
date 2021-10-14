@@ -50,6 +50,8 @@ export class ConversationApi extends ClientScopedApi {
 
         if (conversation && conversation.clientId !== req.client!.id) {
           return res.sendStatus(403)
+        } else if (!conversation) {
+          return res.sendStatus(404)
         }
 
         res.send(conversation)

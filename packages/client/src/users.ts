@@ -7,6 +7,6 @@ export class UserClient extends BaseClient {
   }
 
   async get(id: string): Promise<User | undefined> {
-    return (await this.http.get<User | undefined>(`/users/${id}`)).data
+    return (await this.http.get<User>(`/users/${id}`)).data
   }
 }
