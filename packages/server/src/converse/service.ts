@@ -16,9 +16,9 @@ export class ConverseService extends Service {
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
-    const collectors = this.collectors[message.conversationId]
+    const collectors = this.collectors[message.conversationId] || []
 
-    for (const collector of collectors || []) {
+    for (const collector of collectors) {
       collector.messages.push(message)
       this.resetCollectorTimeout(collector)
     }
