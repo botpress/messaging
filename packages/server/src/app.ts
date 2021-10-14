@@ -21,6 +21,7 @@ import { SocketService } from './socket/service'
 import { StatusService } from './status/service'
 import { StreamService } from './stream/service'
 import { SyncService } from './sync/service'
+import { UserTokenService } from './user-tokens/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
@@ -41,6 +42,7 @@ export class App {
   kvs: KvsService
   conduits: ConduitService
   users: UserService
+  userTokens: UserTokenService
   conversations: ConversationService
   messages: MessageService
   mapping: MappingService
@@ -68,6 +70,7 @@ export class App {
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
+    this.userTokens = new UserTokenService(this.database, this.crypto, this.caching)
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
     this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
@@ -136,6 +139,7 @@ export class App {
     await this.kvs.setup()
     await this.conduits.setup()
     await this.users.setup()
+    await this.userTokens.setup()
     await this.conversations.setup()
     await this.messages.setup()
     await this.mapping.setup()
