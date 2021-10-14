@@ -1,3 +1,13 @@
+## [0.1.14](https://github.com/botpress/messaging/compare/v0.1.13...v0.1.14) (2021-10-14)
+
+
+### Bug Fixes
+
+* **slack:** slack image rendered requires text in title ([#188](https://github.com/botpress/messaging/issues/188)) ([53141f1](https://github.com/botpress/messaging/commit/53141f11884db2b6d0cdcb0eafa52d9db8484f26))
+* **vonage:** fix too many requests when using sandbox ([#176](https://github.com/botpress/messaging/issues/176)) ([59982f2](https://github.com/botpress/messaging/commit/59982f2e2f5a79a2310dd0db3016bc57a7a3c5b1))
+
+
+
 ## [0.1.13](https://github.com/botpress/messaging/compare/v0.1.12...v0.1.13) (2021-09-14)
 
 

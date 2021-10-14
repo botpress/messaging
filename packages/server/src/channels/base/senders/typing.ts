@@ -8,7 +8,7 @@ export class TypingSender implements ChannelSender<any> {
 
   handles(context: ChannelContext<any>): boolean {
     const typing = context.payload.typing
-    return context.handlers > 0 && (typing === undefined || typing === true)
+    return context.handlers > 0 && typing === true
   }
 
   async send(context: ChannelContext<any>): Promise<void> {
