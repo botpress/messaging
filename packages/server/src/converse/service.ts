@@ -20,13 +20,13 @@ export class ConverseService extends Service {
 
     for (const collector of collectors) {
       collector.messages.push(message)
-      this.resetCollectorTimeout(collector)
+      this.resetCollectorTimeout(collector, 250)
     }
   }
 
   async collect(conversationId: uuid): Promise<Message[]> {
     const collector = this.addCollector(conversationId)
-    this.resetCollectorTimeout(collector)
+    this.resetCollectorTimeout(collector, 5000)
 
     return new Promise<Message[]>((resolve) => {
       collector.resolve = resolve
@@ -59,18 +59,14 @@ export class ConverseService extends Service {
     }
   }
 
-  private resetCollectorTimeout(collector: Collector) {
+  private resetCollectorTimeout(collector: Collector, time: number) {
     if (collector.timeout) {
       clearTimeout(collector.timeout)
     }
 
-    collector.timeout = setTimeout(
-      () => {
-        this.removeCollector(collector)
-        collector.resolve!(collector.messages)
-      },
-      // Waiting for 3 sec is kind of garbage. We'll have to resee how we handle typing time to make this better
-      3000
-    )
+    collector.timeout = setTimeout(() => {
+      this.removeCollector(collector)
+      collector.resolve!(collector.messages)
+    }, time)
   }
 }
