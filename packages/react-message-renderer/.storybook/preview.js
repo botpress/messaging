@@ -1,3 +1,5 @@
+import './botpress-default.css'
+import './custom.css'
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {

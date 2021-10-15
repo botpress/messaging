@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
-import { Message, MessageConfig, MessageType, MessageTypeHandlerProps } from 'typings'
-import { Carousel, File, LoginPrompt, QuickReplies, Text, VoiceMessage, Custom } from './renderer'
+import { Carousel, File, LoginPrompt, QuickReplies, Text, VoiceMessage, Custom, TypingIndicator } from './renderer'
 import { Dropdown } from './renderer/Dropdown'
+import { Message, MessageConfig, MessageType, MessageTypeHandlerProps } from './typings'
 import { FallthroughIntl } from './utils'
 
 export const defaultMessageConfig: MessageConfig = {
@@ -90,7 +90,7 @@ export const defaultTypesRenderers = {
   dropdown: Dropdown,
   voice: VoiceMessage,
   visit: () => null,
-  typing: () => null,
+  typing: TypingIndicator,
   session_reset: () => null,
   custom: Custom
 }

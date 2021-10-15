@@ -25,7 +25,7 @@ export class Button extends Component<Props> {
   }
 
   handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
-    if (this.props.preventDoubleClick || true) {
+    if (this.props.preventDoubleClick) {
       ;(e.target as HTMLButtonElement).disabled = true
     }
 

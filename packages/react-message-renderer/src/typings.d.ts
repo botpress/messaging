@@ -15,6 +15,7 @@ export type FileUploadHandler = (label: string, payload: any, file: File) => Pro
 export interface LiteStore {
   composer: {
     setLocked: (locked: boolean) => void
+    locked: boolean
   }
 }
 export interface MessageConfig {

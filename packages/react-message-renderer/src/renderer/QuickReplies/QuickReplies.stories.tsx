@@ -2,12 +2,26 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 import { QuickReplies } from '..'
 import { defaultMessageConfig } from '../../index'
+import { LiteStore } from '../../typings'
 import Keyboard from '../Keyboard'
+import { Button } from './Button'
 
 export default {
   title: 'QuickReplies',
   component: QuickReplies
 } as ComponentMeta<typeof QuickReplies>
+
+class ComposerStateManager {
+  public locked = false
+
+  public setLocked = () => {
+    this.locked = true
+  }
+}
+
+class BasicLiteStore implements LiteStore {
+  public composer = new ComposerStateManager()
+}
 
 const Template: ComponentStory<typeof QuickReplies> = (args) => {
   const [shown, setShown] = useState<boolean>(false)
@@ -20,7 +34,7 @@ const Template: ComponentStory<typeof QuickReplies> = (args) => {
     <>
       {shown && <QuickReplies {...args} />}
       <Keyboard>
-        <textarea placeholder="placeholder composer" />
+        <textarea placeholder="placeholder composer" disabled={args.config.store?.composer.locked} />
       </Keyboard>
     </>
   )
@@ -54,6 +68,7 @@ Primary.args = {
   },
   config: {
     ...defaultMessageConfig,
+    store: new BasicLiteStore(),
     onSendData: async (data) => {
       alert(`onSendData called with: ${JSON.stringify(data)}`)
     },
@@ -64,5 +79,28 @@ Primary.args = {
         } size: ${file.size}> }`
       )
     }
+  }
+}
+
+const ButtonTemplate: ComponentStory<typeof Button> = (args) => <Button {...args} />
+
+export const QuickReplyButton = ButtonTemplate.bind({})
+
+QuickReplyButton.args = {
+  label: 'click me!',
+  payload: 'BUTTON_PAYLOAD',
+  onFileUpload: async (label, payload, file) => {
+    alert(
+      `onFileUpload called with: { label: ${label}, payload: ${JSON.stringify(payload)}, file: <File object name: ${
+        file.name
+      } size: ${file.size}> }`
+    )
+  },
+  preventDoubleClick: true,
+  onButtonClick: (label, payload) => {
+    alert(`onButtonClick called with: { label: ${label}, payload: ${payload} }`)
+  },
+  onUploadError: (error) => {
+    alert(`onUploadError called with: ${error}`)
   }
 }
