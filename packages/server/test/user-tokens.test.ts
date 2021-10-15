@@ -43,7 +43,7 @@ describe('UserTokens', () => {
   })
 
   test('Create user token', async () => {
-    const userToken = await app.userTokens.create(state.user.id, state.rawToken!)
+    const userToken = await app.userTokens.create(state.user.id, state.rawToken!, undefined)
 
     expect(userToken).toBeDefined()
     expect(validateUuid(userToken.id)).toBeTruthy()
@@ -94,6 +94,31 @@ describe('UserTokens', () => {
 
   test('Get user token by id and wrong token should return undefined', async () => {
     const userToken = await app.userTokens.getByIdAndToken(state.userToken!.id, 'abc')
+    expect(userToken).toBeUndefined()
+  })
+
+  test('Create user token with outdated expiry', async () => {
+    const oldDate = new Date(1982, 3, 1)
+    const userToken = await app.userTokens.create(state.user.id, state.rawToken!, oldDate)
+
+    expect(userToken).toBeDefined()
+    expect(validateUuid(userToken.id)).toBeTruthy()
+    expect(userToken.userId).toBe(state.user.id)
+    // the token stored is the hash of the token
+    expect(userToken.token).not.toBe(state.rawToken)
+    expect(userToken.expiry).toEqual(oldDate)
+
+    state.userToken = userToken
+  })
+
+  test('Get user token by id with outdated expiry', async () => {
+    const userToken = await app.userTokens.getById(state.userToken!.id)
+    expect(userToken).toEqual(state.userToken)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get user token by id with outdated expiry should return undefined', async () => {
+    const userToken = await app.userTokens.getByIdAndToken(state.userToken!.id, state.rawToken!)
     expect(userToken).toBeUndefined()
   })
 })

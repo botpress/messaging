@@ -34,13 +34,12 @@ export class UserTokenService extends Service {
     return crypto.randomBytes(66).toString('base64')
   }
 
-  async create(userId: uuid, token: string): Promise<UserToken> {
+  async create(userId: uuid, token: string, expiry: Date | undefined): Promise<UserToken> {
     const userToken = {
       id: uuidv4(),
       userId,
       token: await this.cryptoService.hash(token),
-      // TODO: custom expiry
-      expiry: undefined
+      expiry
     }
 
     // TODO: batching
@@ -68,10 +67,12 @@ export class UserTokenService extends Service {
   }
 
   async getByIdAndToken(id: string, token: string): Promise<UserToken | undefined> {
-    // TODO: verify expiry
-
     const userToken = await this.getById(id)
     if (!userToken) {
+      return undefined
+    }
+
+    if (userToken.expiry && Date.now() > userToken.expiry.getTime()) {
       return undefined
     }
 
@@ -106,7 +107,7 @@ export class UserTokenService extends Service {
   private deserialize(userToken: any): UserToken {
     return {
       ...userToken,
-      expiry: userToken.expirey ? this.db.getDate(userToken.expiry) : undefined
+      expiry: userToken.expiry ? this.db.getDate(userToken.expiry) : undefined
     }
   }
 }
