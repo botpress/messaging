@@ -93,7 +93,7 @@ describe('UserTokens', () => {
   })
 
   test('Get user token by id and wrong token should return undefined', async () => {
-    const userToken = await app.userTokens.getByIdAndToken(state.userToken!.id, state.rawToken!)
-    expect(userToken).toEqual(state.userToken)
+    const userToken = await app.userTokens.getByIdAndToken(state.userToken!.id, 'abc')
+    expect(userToken).toBeUndefined()
   })
 })
