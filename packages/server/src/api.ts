@@ -3,6 +3,7 @@ import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
 import yn from 'yn'
 import { App } from './app'
+import { Auth } from './base/auth/auth'
 import { ChannelApi } from './channels/api'
 import { ConversationApi } from './conversations/api'
 import { HealthApi } from './health/api'
@@ -14,23 +15,26 @@ import { UserApi } from './users/api'
 export class Api {
   public readonly sockets: SocketManager
 
+  private router: Router
+  private auth: Auth
+
   private syncs: SyncApi
   private health: HealthApi
   private users: UserApi
   private conversations: ConversationApi
   private messages: MessageApi
   private channels: ChannelApi
-  private router: Router
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
+    this.auth = new Auth(app.clients)
     this.sockets = new SocketManager(this.app.sockets)
-    this.syncs = new SyncApi(this.router, this.app.syncs, this.app.clients, this.app.channels)
-    this.health = new HealthApi(this.router, this.app.clients, this.app.health)
-    this.users = new UserApi(this.router, this.app.clients, this.sockets, this.app.users, this.app.sockets)
+    this.syncs = new SyncApi(this.router, this.auth, this.app.syncs, this.app.clients, this.app.channels)
+    this.health = new HealthApi(this.router, this.auth, this.app.health)
+    this.users = new UserApi(this.router, this.auth, this.app.clients, this.sockets, this.app.users, this.app.sockets)
     this.conversations = new ConversationApi(
       this.router,
-      this.app.clients,
+      this.auth,
       this.sockets,
       this.app.users,
       this.app.conversations,
@@ -38,7 +42,7 @@ export class Api {
     )
     this.messages = new MessageApi(
       this.router,
-      this.app.clients,
+      this.auth,
       this.sockets,
       this.app.conversations,
       this.app.messages,

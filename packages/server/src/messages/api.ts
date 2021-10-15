@@ -1,7 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
-import { ApiRequest, ClientScopedApi } from '../base/api'
-import { ClientService } from '../clients/service'
+import { Auth } from '../base/auth/auth'
 import { ConversationService } from '../conversations/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
@@ -15,24 +14,20 @@ import {
 } from './schema'
 import { MessageService } from './service'
 
-export class MessageApi extends ClientScopedApi {
+export class MessageApi {
   constructor(
-    router: Router,
-    clients: ClientService,
+    private router: Router,
+    private auth: Auth,
     private sockets: SocketManager,
     private conversations: ConversationService,
     private messages: MessageService,
     private socketService: SocketService
-  ) {
-    super(router, clients)
-  }
+  ) {}
 
   async setup() {
-    this.router.use('/messages', this.extractClient.bind(this))
-
     this.router.post(
       '/messages',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = CreateMsgSchema.validate(req.body)
         if (error) {
           return res.status(400).send(error.message)
@@ -57,7 +52,7 @@ export class MessageApi extends ClientScopedApi {
 
     this.router.get(
       '/messages/:id',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = GetMsgSchema.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
@@ -80,8 +75,8 @@ export class MessageApi extends ClientScopedApi {
     )
 
     this.router.get(
-      '/messages/',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      '/messages',
+      this.auth.client.auth(async (req, res) => {
         const { error } = ListMsgSchema.validate(req.query)
         if (error) {
           return res.status(400).send(error.message)
@@ -104,7 +99,7 @@ export class MessageApi extends ClientScopedApi {
 
     this.router.delete(
       '/messages',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = DeleteMsgSchema.validate(req.query)
         if (error) {
           return res.status(400).send(error.message)

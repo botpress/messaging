@@ -2,21 +2,20 @@ import { SyncRequest } from '@botpress/messaging-base'
 import { Router } from 'express'
 import _ from 'lodash'
 import yn from 'yn'
-import { BaseApi } from '../base/api'
+import { Auth } from '../base/auth/auth'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { makeSyncRequestSchema } from './schema'
 import { SyncService } from './service'
 
-export class SyncApi extends BaseApi {
+export class SyncApi {
   constructor(
-    router: Router,
+    private router: Router,
+    private auth: Auth,
     private syncs: SyncService,
     private clients: ClientService,
     private channels: ChannelService
-  ) {
-    super(router)
-  }
+  ) {}
 
   async setup() {
     const force = !!yn(process.env.SPINNED)
@@ -25,7 +24,7 @@ export class SyncApi extends BaseApi {
 
     this.router.post(
       '/sync',
-      this.asyncMiddleware(async (req, res) => {
+      this.auth.public.auth(async (req, res) => {
         const channelsWithoutEnabled: { [channelName: string]: any } = {}
         for (const [channelName, channelConfig] of Object.entries<any>(req.body?.channels || {})) {
           if (channelConfig.enabled === false) {
