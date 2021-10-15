@@ -61,6 +61,10 @@ export class ServerCache<K, V> {
     this.lru.prune()
   }
 
+  reset() {
+    this.lru.reset()
+  }
+
   keys() {
     return this.lru.keys()
   }

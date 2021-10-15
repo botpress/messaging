@@ -3,7 +3,6 @@ import ms from 'ms'
 import yn from 'yn'
 import { App } from '../app'
 import { Service } from '../base/service'
-import { ActionSource } from '../base/source'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
@@ -14,8 +13,8 @@ import { ConversationService } from '../conversations/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
-import { Convmap } from '../mapping/convmap/types'
 import { MappingService } from '../mapping/service'
+import { Endpoint } from '../mapping/types'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
@@ -38,6 +37,7 @@ export class InstanceService extends Service {
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private logger: Logger
   private lazyLoadingEnabled!: boolean
+  private messageQueueTail: { [conversationId: string]: QueuedMessage }
 
   constructor(
     private loggerService: LoggerService,
@@ -74,6 +74,7 @@ export class InstanceService extends Service {
       this
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
+    this.messageQueueTail = {}
   }
 
   async setup() {
@@ -183,20 +184,7 @@ export class InstanceService extends Service {
       return
     }
 
-    const promises = []
     for (const convmap of convmaps) {
-      promises.push(this.sendMessageToInstance(message, source, client!.providerId, convmap))
-    }
-    await Promise.all(promises)
-  }
-
-  private async sendMessageToInstance(
-    message: Message,
-    source: ActionSource | undefined,
-    providerId: uuid,
-    convmap: Convmap
-  ) {
-    try {
       const endpoint = await this.mappingService.getEndpoint(convmap.threadId)
       const tunnel = await this.mappingService.tunnels.get(convmap.tunnelId)
 
@@ -206,16 +194,48 @@ export class InstanceService extends Service {
         (source.conduit.endpoint.sender || '*') !== endpoint.sender ||
         (source.conduit.endpoint.thread || '*') !== endpoint.thread
       ) {
-        const conduit = await this.conduitService.getByProviderAndChannel(providerId, tunnel!.channelId)
+        const conduit = await this.conduitService.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }
 
-        const instance = await this.get(conduit!.id)
-        await instance.sendToEndpoint(endpoint, message.payload)
+        const instance = await this.get(conduit.id)
+        await this.enqueueMessage({ message, endpoint, instance })
+      }
+    }
+  }
+
+  private async enqueueMessage(message: QueuedMessage) {
+    const tail = this.messageQueueTail[message.message.conversationId]
+    this.messageQueueTail[message.message.conversationId] = message
+
+    if (tail) {
+      tail.next = message
+    } else {
+      void this.runMessageQueue(message)
+    }
+  }
+
+  private async runMessageQueue(head: QueuedMessage | undefined) {
+    try {
+      while (head) {
+        await head.instance.sendToEndpoint(head.endpoint, head.message.payload)
+
+        if (this.messageQueueTail[head.message.conversationId] === head) {
+          delete this.messageQueueTail[head.message.conversationId]
+        }
+
+        head = head.next
       }
     } catch (e) {
       this.logger.error(e, 'Failed to send message to instance')
     }
   }
+}
+
+interface QueuedMessage {
+  message: Message
+  endpoint: Endpoint
+  instance: ConduitInstance<any, any>
+  next?: QueuedMessage
 }
