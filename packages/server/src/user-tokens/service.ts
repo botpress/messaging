@@ -2,14 +2,19 @@ import { uuid } from '@botpress/messaging-base'
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
+import { Batcher } from '../batching/batcher'
+import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { CryptoService } from '../crypto/service'
 import { DatabaseService } from '../database/service'
+import { UserService } from '../users/service'
 import { UserTokenTable } from './table'
 import { UserToken } from './types'
 
 export class UserTokenService extends Service {
+  public batcher!: Batcher<UserToken>
+
   private table: UserTokenTable
   private cacheById!: ServerCache<uuid, UserToken>
   private cacheTokens!: ServerCache<uuid, string>
@@ -17,17 +22,30 @@ export class UserTokenService extends Service {
   constructor(
     private db: DatabaseService,
     private cryptoService: CryptoService,
-    private cachingService: CachingService
+    private cachingService: CachingService,
+    private batchingService: BatchingService,
+    private userService: UserService
   ) {
     super()
     this.table = new UserTokenTable()
   }
 
   async setup() {
+    this.batcher = await this.batchingService.newBatcher(
+      'batcher_user_tokens',
+      [this.userService.batcher],
+      this.handleBatchFlush.bind(this)
+    )
+
     this.cacheById = await this.cachingService.newServerCache('cache_user_token_by_id')
     this.cacheTokens = await this.cachingService.newServerCache('cache_user_token_raw')
 
     await this.db.registerTable(this.table)
+  }
+
+  private async handleBatchFlush(batch: UserToken[]) {
+    const rows = batch.map((x) => this.serialize(x))
+    await this.query().insert(rows)
   }
 
   async generateToken(): Promise<string> {
@@ -42,8 +60,7 @@ export class UserTokenService extends Service {
       expiry
     }
 
-    // TODO: batching
-    await this.query().insert(this.serialize(userToken))
+    await this.batcher.push(userToken)
     this.cacheById.set(userToken.id, userToken)
 
     return userToken
@@ -55,6 +72,7 @@ export class UserTokenService extends Service {
       return cached
     }
 
+    await this.batcher.flush()
     const rows = await this.query().where({ id })
 
     if (rows?.length) {
