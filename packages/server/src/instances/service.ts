@@ -212,20 +212,20 @@ export class InstanceService extends Service {
     if (tail) {
       tail.next = message
     } else {
-      void this.dequeueMessage(message)
+      void this.runMessageQueue(message)
     }
   }
 
-  private async dequeueMessage(message: QueuedMessage) {
+  private async runMessageQueue(head: QueuedMessage | undefined) {
     try {
-      await message.instance.sendToEndpoint(message.endpoint, message.message.payload)
+      while (head) {
+        await head.instance.sendToEndpoint(head.endpoint, head.message.payload)
 
-      if (message.next) {
-        await this.dequeueMessage(message.next)
-      }
+        if (this.messageQueueTail[head.message.conversationId] === head) {
+          delete this.messageQueueTail[head.message.conversationId]
+        }
 
-      if (this.messageQueueTail[message.message.conversationId] === message) {
-        delete this.messageQueueTail[message.message.conversationId]
+        head = head.next
       }
     } catch (e) {
       this.logger.error(e, 'Failed to send message to instance')
