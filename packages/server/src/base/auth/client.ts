@@ -23,9 +23,9 @@ export class ClientAuthHandler extends AuthHandler {
         return res.sendStatus(401)
       }
 
-      const nreq = req as ClientApiRequest
-      nreq.client = client
-      return fn(nreq, res, next)
+      const clientApiReq = req as ClientApiRequest
+      clientApiReq.client = client
+      return fn(clientApiReq, res, next)
     })
   }
 }
