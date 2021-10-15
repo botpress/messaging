@@ -106,6 +106,14 @@ x-bp-messaging-client-token: `clientToken`
 
 Creates a new users
 
+GET `/api/users/:id`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
+
+Get a user by id
+
 ## Conversations
 
 POST `/api/conversations`
