@@ -29,7 +29,7 @@ export class UserApi {
 
     this.router.get(
       '/users/:id',
-      this.asyncMiddleware(async (req: ApiRequest, res) => {
+      this.auth.client.auth(async (req, res) => {
         const { error } = GetUserSchema.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
