@@ -18,21 +18,20 @@ jobs:
           node-version: '12.18.1'
           cache: 'yarn'
 
+      - name: Install python3
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: Install Tools
+        run: pip install awscli
+
       - name: Git Unshallow
         run: git fetch --prune --unshallow
 
-      - name: Get Release Details
-        id: release_details
-        uses: botpress/gh-actions/get_release_details@master
-
       - name: Fetch Node Packages
-        run: |
-          yarn
-
-      - name: Extract Branch Name
-        id: extract_branch
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: yarn
 
       - name: Build Project
         run: yarn build
@@ -40,16 +39,16 @@ jobs:
       - name: Package Binaries
         run: yarn package
 
+      - name: Extract Informations
+        id: info
+        uses: botpress/gh-actions/extract_info@master
+
       - name: Rename Binary Files
         uses: botpress/gh-actions/rename_binaries@master
 
-      - name: Create Pre-Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ./bin/messaging*
-          prerelease: true
-          name: ${{ steps.extract_branch.outputs.branch }}
-          tag_name: dev-${{ steps.extract_branch.outputs.branch }}
-          target_commitish: ${{ steps.extract_branch.outputs.branch }}
+      - name: Publish Binaries
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 sync bin s3://botpress-dev-bins/messaging/${{ steps.info.outputs.branch_sanitized }}
