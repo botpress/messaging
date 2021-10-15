@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { render, screen } from '@testing-library/react'
-import { defaultMessageConfig, renderMessage } from '../'
+import { defaultMessageConfig, renderMessage } from '../..'
 
 describe('Text renderer', () => {
   test('it renders a simple text message', () => {

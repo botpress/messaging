@@ -1,5 +1,5 @@
 import React, { Component, MouseEvent } from 'react'
-import { FileUploadHandler } from '../typings'
+import { FileUploadHandler } from '../../typings'
 
 import { FileInput } from './FileInput'
 

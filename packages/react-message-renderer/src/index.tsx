@@ -1,10 +1,9 @@
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
-import { CustomComponent } from 'renderer/Custom'
-import { Dropdown } from 'renderer/Dropdown'
 import { Message, MessageConfig, MessageType, MessageTypeHandlerProps } from 'typings'
-import { FallthroughIntl } from 'utils'
-import { Carousel, File, LoginPrompt, QuickReplies, Text, VoiceMessage } from './renderer'
+import { Carousel, File, LoginPrompt, QuickReplies, Text, VoiceMessage, Custom } from './renderer'
+import { Dropdown } from './renderer/Dropdown'
+import { FallthroughIntl } from './utils'
 
 export const defaultMessageConfig: MessageConfig = {
   escapeHTML: true,
@@ -15,7 +14,7 @@ export const defaultMessageConfig: MessageConfig = {
   onFileUpload: async (label, payload, file) => {
     return
   },
-  onMessageClicked: messageId => {
+  onMessageClicked: (messageId) => {
     return
   },
   isLastGroup: true,
@@ -93,7 +92,7 @@ export const defaultTypesRenderers = {
   visit: () => null,
   typing: () => null,
   session_reset: () => null,
-  custom: CustomComponent
+  custom: Custom
 }
 
 const defaultRenderer = new Renderer()

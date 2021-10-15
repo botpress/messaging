@@ -3,7 +3,7 @@
  */
 import { render } from '@testing-library/react'
 import { Message } from 'typings'
-import { defaultMessageConfig, renderMessage } from '../'
+import { defaultMessageConfig, renderMessage } from '../..'
 
 describe('File renderer', () => {
   test('it renders a file of unsupported mime type as a download link', () => {
@@ -80,7 +80,28 @@ describe('File renderer', () => {
     expect(el?.getAttribute('src')).toBe(url)
   })
 
-  test('it renders a video player with title and text', () => {
+  test('it renders an audio player', () => {
+    const url = 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav'
+    const component = renderMessage({
+      type: 'file',
+      payload: { file: { url, title: 'Hello Audio', storage: 'remote' } },
+      config: defaultMessageConfig
+    })
+
+    expect(component).toBeTruthy()
+    const { container } = render(component)
+
+    const el = container.querySelector('audio')
+    const src = container.querySelector('audio source')
+    expect(el).toBeInTheDocument()
+    expect(el?.hasAttribute('controls')).toBe(true)
+
+    expect(src).toBeInTheDocument()
+    expect(src?.getAttribute('src')).toBe(url)
+    expect(src?.getAttribute('type')).toBe('audio/wav')
+  })
+
+  test('it renders a video player', () => {
     const url = 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4'
     const messageData: Message<'file'> = {
       type: 'file',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MessageTypeHandlerProps } from '../typings'
+import { MessageTypeHandlerProps } from '../../typings'
 
 interface IState {
   username: string

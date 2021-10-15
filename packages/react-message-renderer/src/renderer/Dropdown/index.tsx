@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
 import Creatable from 'react-select/creatable'
 import { DropdownOption, MessageTypeHandlerProps } from 'typings'
+import { renderUnsafeHTML } from '../../utils'
 import Keyboard, { Prepend } from '../Keyboard'
-import { renderUnsafeHTML } from '../utils'
 
 export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'>) => {
   const [options, setOptions] = useState<DropdownOption[]>([])
@@ -11,7 +11,7 @@ export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'
 
   useEffect(() => {
     if (payload.options.length) {
-      setOptions(payload.options.map(x => ({ value: x.value || x.label, label: x.label })))
+      setOptions(payload.options.map((x) => ({ value: x.value || x.label, label: x.label })))
     }
   }, [])
 

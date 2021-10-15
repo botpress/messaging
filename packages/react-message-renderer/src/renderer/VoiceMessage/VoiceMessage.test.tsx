@@ -3,7 +3,7 @@
  */
 import { render } from '@testing-library/react'
 import { Message } from 'typings'
-import { defaultMessageConfig, renderMessage } from '../'
+import { defaultMessageConfig, renderMessage } from '../..'
 
 describe('VoiceMessage', () => {
   test('It renders a simple html audio element with controls', () => {

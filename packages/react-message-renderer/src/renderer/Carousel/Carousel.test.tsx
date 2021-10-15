@@ -3,9 +3,8 @@
  */
 
 import { fireEvent, render } from '@testing-library/react'
-import { ReactElement } from 'react'
 import { Message } from 'typings'
-import { defaultMessageConfig, renderMessage } from '../'
+import { defaultMessageConfig, renderMessage } from '../..'
 
 describe('Carousel & Card renderer', () => {
   const messageData: Message<'carousel'> = {

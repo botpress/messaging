@@ -32,10 +32,11 @@ export class FallthroughIntl implements InjectedIntl {
   messages: { [id: string]: string } = {}
   defaultLocale: string = 'en'
   defaultFormats: any
+
   constructor(public locale: string = 'en') {}
 
   formatDate(value: ReactIntl.DateSource, options?: ReactIntl.IntlComponent.DateTimeFormatProps): string {
-    throw new Error('Method not implemented.')
+    return new Date(value).toLocaleDateString(this.locale, options)
   }
   formatTime(value: ReactIntl.DateSource, options?: ReactIntl.IntlComponent.DateTimeFormatProps): string {
     throw new Error('Method not implemented.')
@@ -73,7 +74,7 @@ export class FallthroughIntl implements InjectedIntl {
 
 export function pick<T>(obj: T, keys: Partial<keyof T>[]): Partial<T> {
   return keys
-    .filter(key => key in obj)
+    .filter((key) => key in obj)
     .reduce((acc, key) => {
       acc[key] = obj[key]
       return acc

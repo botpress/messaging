@@ -1,3 +1,4 @@
+import { InjectedIntl } from 'react-intl'
 import { Settings as CarouselSettings } from 'react-slick'
 import { messageTypes } from './utils'
 

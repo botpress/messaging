@@ -2,7 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react'
 
 interface Props {
   children: ReactNode
-  ErrorComponent?: React.ComponentType<{ error: Error }>
+  ErrorComponent?: React.ComponentType<{ error: Error | null }>
 }
 
 interface State {
@@ -27,11 +27,11 @@ class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
-      const ErrorComponent = this.props
+      const { ErrorComponent } = this.props
       return ErrorComponent ? (
-        <ErrorComponent error={new Error('fuck')} />
+        <ErrorComponent error={this.state.error} />
       ) : (
-        <p>An error occured during component rendering</p>
+        <p>An error occured during component rendering: ${this.state.error?.message || ''}</p>
       )
     }
 

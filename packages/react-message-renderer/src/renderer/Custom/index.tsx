@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react'
-import { pick } from 'utils'
+import { CustomComponentPayload, MessageTypeHandlerProps } from '../../typings'
+import { pick } from '../../utils'
 import Keyboard from '../Keyboard'
-import { CustomComponentPayload, MessageTypeHandlerProps } from '../typings'
+import ErrorBoundary from './ErrorBoundary'
 
 const checkError = (moduleInjector: Function, payload: CustomComponentPayload): Error | null => {
   const errorPrepend = 'Custom component error: '
@@ -17,7 +18,7 @@ const checkError = (moduleInjector: Function, payload: CustomComponentPayload): 
   return null
 }
 
-export const CustomComponent: React.FC<MessageTypeHandlerProps<'custom'>> = ({ config, payload }) => {
+export const CustomComponentRenderer: React.FC<MessageTypeHandlerProps<'custom'>> = ({ config, payload }) => {
   const InjectedModuleView = config.bp?.getModuleInjector()
   const error = useMemo(() => checkError(InjectedModuleView, payload), [InjectedModuleView, payload])
   if (error) {
@@ -42,10 +43,16 @@ export const CustomComponent: React.FC<MessageTypeHandlerProps<'custom'>> = ({ c
     ...sanitizedProps,
     messageDataProps: { ...payload },
     keyboard: Keyboard,
-    children: payload.wrapped && <CustomComponent config={config} payload={payload.wrapped} />
+    children: payload.wrapped && <CustomComponentRenderer config={config} payload={payload.wrapped} />
   }
 
   return (
     <InjectedModuleView moduleName={payload.module} componentName={payload.component} lite extraProps={extraProps} />
   )
 }
+
+export const Custom: React.FC<MessageTypeHandlerProps<'custom'>> = (props) => (
+  <ErrorBoundary>
+    <CustomComponentRenderer {...props} />
+  </ErrorBoundary>
+)

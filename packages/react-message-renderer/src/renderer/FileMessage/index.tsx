@@ -1,8 +1,8 @@
 import mimeTypes from 'mime/lite'
 import React from 'react'
-import { MessageTypeHandlerProps } from '../typings'
+import { MessageTypeHandlerProps } from '../../typings'
 
-import { Text } from './Text'
+import { Text } from '../Text'
 
 export const File = ({ payload, config }: MessageTypeHandlerProps<'file' | 'video' | 'audio'>) => {
   if (!payload.file) {

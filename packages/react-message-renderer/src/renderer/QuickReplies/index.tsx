@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import * as Keyboard from '../Keyboard'
-import { MessageTypeHandlerProps, QuickReply } from '../typings'
+import { MessageTypeHandlerProps, QuickReply } from '../../typings'
+import { Prepend } from '../Keyboard'
 
 import { Button } from './Button'
 
@@ -48,11 +48,10 @@ export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply
   render() {
     const buttons = this.props.payload.quick_replies
     const keyboard = <div className={'bpw-keyboard-quick_reply'}>{buttons && this.renderKeyboard(buttons)}</div>
-
     return (
-      <Keyboard.Prepend keyboard={keyboard} visible={this.props.config.isLastGroup && this.props.config.isLastOfGroup}>
+      <Prepend keyboard={keyboard} visible={this.props.config.isLastGroup && this.props.config.isLastOfGroup}>
         {this.props.children}
-      </Keyboard.Prepend>
+      </Prepend>
     )
   }
 }

@@ -1,8 +1,8 @@
 import truncate from 'html-truncate'
 import React, { useState } from 'react'
 import ReactTextFormat from 'react-text-format'
-import { MessageTypeHandlerProps } from '../typings'
-import { renderUnsafeHTML } from '../utils'
+import { MessageTypeHandlerProps } from '../../typings'
+import { renderUnsafeHTML } from '../../utils'
 
 /**
  * A simple text element with optional markdown
@@ -37,7 +37,7 @@ export const Text = ({ payload, config }: MessageTypeHandlerProps<'text'>) => {
       <div>{message}</div>
 
       {hasShowMore && (
-        <button type="button" onClick={e => setShowMore(!showMore)} className="bpw-message-read-more">
+        <button type="button" onClick={(e) => setShowMore(!showMore)} className="bpw-message-read-more">
           {showMore &&
             intl.formatMessage({
               id: 'messages.showLess',
