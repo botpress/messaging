@@ -9,7 +9,6 @@ import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
-import { Conduit } from '../conduits/types'
 import { ConversationService } from '../conversations/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
@@ -38,7 +37,7 @@ export class InstanceService extends Service {
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private logger: Logger
   private lazyLoadingEnabled!: boolean
-  private outQueue: { [conversationId: string]: QueuedMessage }
+  private messageQueueTail: { [conversationId: string]: QueuedMessage }
 
   constructor(
     private loggerService: LoggerService,
@@ -75,7 +74,7 @@ export class InstanceService extends Service {
       this
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
-    this.outQueue = {}
+    this.messageQueueTail = {}
   }
 
   async setup() {
@@ -200,35 +199,33 @@ export class InstanceService extends Service {
           return
         }
 
-        await this.addMessageToQueue(message, endpoint, conduit)
+        const instance = await this.get(conduit.id)
+        await this.enqueueMessage({ message, endpoint, instance })
       }
     }
   }
 
-  private async addMessageToQueue(message: Message, endpoint: Endpoint, conduit: Conduit) {
-    const queued = { message, endpoint, conduit }
+  private async enqueueMessage(message: QueuedMessage) {
+    const tail = this.messageQueueTail[message.message.conversationId]
+    this.messageQueueTail[message.message.conversationId] = message
 
-    const currentQueued = this.outQueue[message.conversationId]
-    this.outQueue[message.conversationId] = queued
-
-    if (currentQueued) {
-      currentQueued.next = queued
+    if (tail) {
+      tail.next = message
     } else {
-      void this.sendMessageFromQueue(queued)
+      void this.dequeueMessage(message)
     }
   }
 
-  private async sendMessageFromQueue(queued: QueuedMessage) {
+  private async dequeueMessage(message: QueuedMessage) {
     try {
-      const instance = await this.get(queued.conduit!.id)
-      await instance.sendToEndpoint(queued.endpoint, queued.message.payload)
+      await message.instance.sendToEndpoint(message.endpoint, message.message.payload)
 
-      if (queued.next) {
-        await this.sendMessageFromQueue(queued.next)
+      if (message.next) {
+        await this.dequeueMessage(message.next)
       }
 
-      if (this.outQueue[queued.message.conversationId] === queued) {
-        delete this.outQueue[queued.message.conversationId]
+      if (this.messageQueueTail[message.message.conversationId] === message) {
+        delete this.messageQueueTail[message.message.conversationId]
       }
     } catch (e) {
       this.logger.error(e, 'Failed to send message to instance')
@@ -239,6 +236,6 @@ export class InstanceService extends Service {
 interface QueuedMessage {
   message: Message
   endpoint: Endpoint
-  conduit: Conduit
+  instance: ConduitInstance<any, any>
   next?: QueuedMessage
 }
