@@ -70,7 +70,7 @@ export class App {
     this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
-    this.userTokens = new UserTokenService(this.database, this.crypto, this.caching)
+    this.userTokens = new UserTokenService(this.database, this.crypto, this.caching, this.batching, this.users)
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
     this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
     this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
