@@ -20,7 +20,10 @@ export class ConverseService extends Service {
 
     for (const collector of collectors) {
       collector.messages.push(message)
-      this.resetCollectorTimeout(collector, 250)
+
+      if (collector.messages.length > 0) {
+        this.resetCollectorTimeout(collector, 250)
+      }
     }
   }
 
