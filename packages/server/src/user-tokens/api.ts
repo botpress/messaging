@@ -13,6 +13,7 @@ export class UserTokenApi {
   ) {}
 
   async setup() {
+    // TODO: possibily useless route (will be done with sockets instead)
     this.router.post(
       '/user/tokens',
       this.auth.client.auth(async (req, res) => {
