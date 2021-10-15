@@ -20,7 +20,7 @@ export class ClientAuthHandler extends AuthHandler {
 
       const client = await this.clients.getByIdAndToken(clientId, clientToken)
       if (!client) {
-        return res.sendStatus(403)
+        return res.sendStatus(401)
       }
 
       const nreq = req as ClientApiRequest
