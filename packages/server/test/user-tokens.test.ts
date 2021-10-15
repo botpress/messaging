@@ -9,11 +9,13 @@ import { setupApp, app } from './util/app'
 
 describe('UserTokens', () => {
   let userTokens: UserTokenService
+  let querySpy: jest.SpyInstance
   let state: { provider: Provider; client: Client; user: User; rawToken?: string; userToken?: UserToken }
 
   beforeAll(async () => {
     await setupApp()
     userTokens = app.userTokens
+    querySpy = jest.spyOn(userTokens, 'query')
 
     const provider = await app.providers.create(crypto.randomBytes(20).toString('hex'), false)
     const client = await app.clients.create(provider.id, await app.clients.generateToken())
@@ -56,11 +58,38 @@ describe('UserTokens', () => {
   test('Get user token by id', async () => {
     const userToken = await app.userTokens.getById(state.userToken!.id)
     expect(userToken).toEqual(state.userToken)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get user token by id cached', async () => {
+    const userToken = await app.userTokens.getById(state.userToken!.id)
+    expect(userToken).toEqual(state.userToken)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const userToken = await app.userTokens.getById(state.userToken!.id)
+      expect(userToken).toEqual(state.userToken)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
   test('Get user token by id and token', async () => {
     const userToken = await app.userTokens.getByIdAndToken(state.userToken!.id, state.rawToken!)
     expect(userToken).toEqual(state.userToken)
+  })
+
+  test('Get user token by id and token cached', async () => {
+    const userToken = await app.userTokens.getByIdAndToken(state.userToken!.id, state.rawToken!)
+    expect(userToken).toEqual(state.userToken)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const userToken = await app.userTokens.getByIdAndToken(state.userToken!.id, state.rawToken!)
+      expect(userToken).toEqual(state.userToken)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
   test('Get user token by id and wrong token should return undefined', async () => {
