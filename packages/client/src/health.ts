@@ -2,7 +2,7 @@ import { BaseClient } from './base'
 
 export class HealthClient extends BaseClient {
   async get(): Promise<HealthReport> {
-    return this.deserialize((await this.http.get('/health')).data)
+    return this.deserialize((await this.http.get<HealthReport>('/health')).data)
   }
 
   private deserialize(report: HealthReport) {
