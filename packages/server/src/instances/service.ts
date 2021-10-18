@@ -39,7 +39,6 @@ export class InstanceService extends Service {
   private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
   private lazyLoadingEnabled!: boolean
-  private messageQueueTail: { [threadId: string]: QueuedMessage }
 
   constructor(
     private loggerService: LoggerService,
@@ -76,7 +75,6 @@ export class InstanceService extends Service {
       this
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
-    this.messageQueueTail = {}
   }
 
   async setup() {
