@@ -27,13 +27,10 @@ export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'
     const defaultSettings: Settings = {
       dots: false,
       infinite: false,
-      responsive: [
-        { breakpoint: adjustBreakpoint(550), settings: { slidesToShow: 1 } },
-        { breakpoint: adjustBreakpoint(1024), settings: { slidesToShow: 2 } },
-        { breakpoint: adjustBreakpoint(1548), settings: { slidesToShow: 3 } },
-        { breakpoint: adjustBreakpoint(2072), settings: { slidesToShow: 4 } },
-        { breakpoint: adjustBreakpoint(10000), settings: 'unslick' }
-      ],
+      responsive: [...Array(10)].map((_, i) => ({
+        breakpoint: adjustBreakpoint(550 + i * 524),
+        settings: { slidesToShow: i + 1 }
+      })),
       slidesToScroll: 1,
       autoplay: false,
       centerMode: false,
