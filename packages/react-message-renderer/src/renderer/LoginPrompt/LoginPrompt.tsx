@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { MessageTypeHandlerProps } from '../../typings'
 
-interface IState {
+interface State {
   username: string
   password: string
 }
 
-export class LoginPrompt extends Component<MessageTypeHandlerProps<'login_prompt'>, IState> {
-  state = {
+export class LoginPrompt extends Component<MessageTypeHandlerProps<'login_prompt'>, State> {
+  state: State = {
     username: '',
     password: ''
   }
@@ -31,7 +31,7 @@ export class LoginPrompt extends Component<MessageTypeHandlerProps<'login_prompt
     event.preventDefault()
   }
 
-  render_bot_active() {
+  renderBotActive() {
     const userName = this.props.config.intl.formatMessage({
       id: 'loginForm.userName',
       defaultMessage: 'Username'
@@ -73,7 +73,7 @@ export class LoginPrompt extends Component<MessageTypeHandlerProps<'login_prompt
     )
   }
 
-  render_bot_past() {
+  renderBotPast() {
     const formTitle = this.props.config.intl.formatMessage({
       id: 'loginForm.formTitle',
       defaultMessage: 'Login form'
@@ -86,7 +86,7 @@ export class LoginPrompt extends Component<MessageTypeHandlerProps<'login_prompt
     )
   }
 
-  render_user() {
+  renderUser() {
     const providedCredentials = this.props.config.intl.formatMessage({
       id: 'loginForm.providedCredentials',
       defaultMessage: 'Login form'
@@ -101,13 +101,13 @@ export class LoginPrompt extends Component<MessageTypeHandlerProps<'login_prompt
 
   render() {
     if (!this.props.config.isBotMessage) {
-      return this.render_user()
+      return this.renderUser()
     }
 
     if (this.props.config.isLastGroup && this.props.config.isLastOfGroup) {
-      return this.render_bot_active()
+      return this.renderBotActive()
     }
 
-    return this.render_bot_past()
+    return this.renderBotPast()
   }
 }
