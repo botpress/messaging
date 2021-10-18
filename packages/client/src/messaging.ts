@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import yn from 'yn'
 import { ConversationClient } from './conversations'
 import { HealthClient } from './health'
 import { MessageClient } from './messages'
@@ -17,10 +18,10 @@ export class MessagingClient {
   messages: MessageClient
 
   constructor(options: MessagingOptions) {
-    const { url, auth, client } = options
+    const { url, auth, client, password } = options
 
-    this.http = this.configureHttpClient(client, this.getAxiosConfig({ url }))
-    this.authHttp = this.configureHttpClient(client, this.getAxiosConfig({ url, auth }))
+    this.http = this.configureHttpClient(client, this.getAxiosConfig({ url, password }))
+    this.authHttp = this.configureHttpClient(client, this.getAxiosConfig({ url, auth, password }))
 
     if (auth) {
       this.authenticate(auth.clientId, auth.clientToken)
@@ -40,16 +41,21 @@ export class MessagingClient {
   }
 
   private configureHttpClient(client: AxiosInstance | undefined, config: AxiosRequestConfig) {
+    const localConfig: AxiosRequestConfig = {}
+    if (yn(process.env.SPINNED)) {
+      localConfig.proxy = false
+    }
+
     if (client) {
-      client.defaults = { ...client.defaults, ...config }
+      client.defaults = { ...client.defaults, ...config, ...localConfig }
       return client
     } else {
-      return axios.create(config)
+      return axios.create({ ...config, ...localConfig })
     }
   }
 
-  private getAxiosConfig({ url }: MessagingOptions): AxiosRequestConfig {
-    return { baseURL: `${url}/api`, headers: {} }
+  private getAxiosConfig({ url, password }: MessagingOptions): AxiosRequestConfig {
+    return { baseURL: `${url}/api`, headers: password ? { password } : {} }
   }
 }
 
@@ -60,6 +66,8 @@ export interface MessagingOptions {
   auth?: MessagingAuth
   /** A custom axios instance giving more control over the HTTP client used internally. Optional */
   client?: AxiosInstance
+  /** Internal password of the messaging server. Optional */
+  password?: string
 }
 
 export interface MessagingAuth {
