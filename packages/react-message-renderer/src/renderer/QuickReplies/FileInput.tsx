@@ -13,7 +13,7 @@ interface State {
   value?: string
 }
 export class FileInput extends React.Component<Props, State> {
-  state = {
+  state: State = {
     value: ''
   }
 
