@@ -82,5 +82,5 @@ interface KeyboardElementsProps {
   index?: number
   visible?: boolean
   /** A keyboard can be any kind of element */
-  keyboard?: any
+  keyboard?: JSX.Element
 }
