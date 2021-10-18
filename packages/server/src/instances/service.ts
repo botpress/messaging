@@ -219,7 +219,11 @@ export class InstanceService extends Service {
   private async runMessageQueue(head: QueuedMessage | undefined) {
     try {
       while (head) {
-        await head.instance.sendToEndpoint(head.endpoint, head.message.payload)
+        try {
+          await head.instance.sendToEndpoint(head.endpoint, head.message.payload)
+        } catch (e) {
+          this.logger.error(e, 'Failed to send message to instance')
+        }
 
         if (this.messageQueueTail[head.threadId] === head) {
           delete this.messageQueueTail[head.threadId]
@@ -228,7 +232,7 @@ export class InstanceService extends Service {
         head = head.next
       }
     } catch (e) {
-      this.logger.error(e, 'Failed to send message to instance')
+      this.logger.error(e, 'Failed to run message queue')
     }
   }
 }
