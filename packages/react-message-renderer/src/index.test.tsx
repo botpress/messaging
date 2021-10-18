@@ -7,8 +7,6 @@ import { Message } from 'typings'
 import { messageTypes } from 'utils'
 import defaultRenderer, { defaultMessageConfig, defaultTypesRenderers, Renderer, renderMessage } from './'
 
-describe('Unsupported type renderer', () => {})
-
 describe('Renderer', () => {
   test('it can override a type handler and render it', () => {
     const customRenderer = new Renderer()
