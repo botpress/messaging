@@ -1,3 +1,4 @@
+import { AxiosInstance } from 'axios'
 import { InjectedIntl } from 'react-intl'
 import { Settings as CarouselSettings } from 'react-slick'
 import { messageTypes } from './utils'
@@ -42,7 +43,7 @@ export interface StudioConnector {
   /** Event emitter */
   events: any
   /** An axios instance */
-  axios: any
+  axios: AxiosInstance
   getModuleInjector: any
   loadModuleView: any
 }
