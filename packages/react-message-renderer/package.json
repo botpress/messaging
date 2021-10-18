@@ -18,6 +18,7 @@
     "react-text-format": "^2.0.28",
     "snarkdown": "^2.0.0"
   },
+  "peerDependencies": {},
   "scripts": {
     "test": "jest",
     "build": "rollup -c",
