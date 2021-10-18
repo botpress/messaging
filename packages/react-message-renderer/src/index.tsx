@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
-import { Carousel, File, LoginPrompt, QuickReplies, Text, VoiceMessage, Custom, TypingIndicator } from './renderer'
-import { Dropdown } from './renderer/Dropdown'
+import { Carousel, File, LoginPrompt, QuickReplies, Text, VoiceMessage, Custom, TypingIndicator, Dropdown } from './renderer'
 import { Message, MessageConfig, MessageType, MessageTypeHandlerProps } from './typings'
 import { FallthroughIntl } from './utils'
 
