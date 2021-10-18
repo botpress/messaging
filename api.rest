@@ -40,15 +40,32 @@ Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 
-### Send Text
-POST {{baseUrl}}/api/chat/reply
+### Create User
+POST {{baseUrl}}/api/users
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+
+### Create Conversation
+POST {{baseUrl}}/api/conversations
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
-  "channel": "{{channel}}",
+  "userId": "my-user-id"
+}
+
+### Send Text
+POST {{baseUrl}}/api/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "collect": false,
   "conversationId": "{{convoId}}",
   "payload": {
     "type": "text",
@@ -57,14 +74,13 @@ Content-Type: application/json
 }
 
 ### Send Image
-POST {{baseUrl}}/api/chat/reply
+POST {{baseUrl}}/api/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
-  "channel": "{{channel}}",
   "conversationId": "{{convoId}}",
   "payload": {
     "type": "image",
@@ -74,14 +90,13 @@ Content-Type: application/json
 }
 
 ### Send Choices
-POST {{baseUrl}}/api/chat/reply
+POST {{baseUrl}}/api/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
-  "channel": "{{channel}}",
   "conversationId": "{{convoId}}",
   "payload": {
     "type": "single-choice",
@@ -94,14 +109,13 @@ Content-Type: application/json
 }
 
 ### Send Card
-POST {{baseUrl}}/api/chat/reply
+POST {{baseUrl}}/api/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
-  "channel": "{{channel}}",
   "conversationId": "{{convoId}}",
   "payload": {
     "type": "card",
@@ -129,14 +143,13 @@ Content-Type: application/json
 }
 
 ### Send Carousel
-POST {{baseUrl}}/api/chat/reply
+POST {{baseUrl}}/api/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
-  "channel": "{{channel}}",
   "conversationId": "{{convoId}}",
   "payload": {
     "type": "carousel",

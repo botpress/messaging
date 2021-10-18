@@ -2,6 +2,7 @@ import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
 import { ConversationService } from '../conversations/service'
+import { ConverseService } from '../converse/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
 import {
@@ -21,6 +22,7 @@ export class MessageApi {
     private sockets: SocketManager,
     private conversations: ConversationService,
     private messages: MessageService,
+    private converse: ConverseService,
     private socketService: SocketService
   ) {}
 
@@ -33,7 +35,7 @@ export class MessageApi {
           return res.status(400).send(error.message)
         }
 
-        const { conversationId, authorId, payload } = req.body
+        const { conversationId, authorId, payload, collect } = req.body
         const conversation = await this.conversations.get(conversationId)
 
         if (!conversation) {
@@ -42,11 +44,24 @@ export class MessageApi {
           return res.sendStatus(403)
         }
 
-        const message = await this.messages.create(conversationId, authorId, payload, {
-          client: { id: req.client!.id }
-        })
+        const collector = collect ? this.converse.collect(conversationId) : undefined
 
-        res.send(message)
+        const message = await this.messages.create(
+          conversationId,
+          authorId,
+          payload,
+          authorId
+            ? undefined
+            : {
+                client: { id: req.client!.id }
+              }
+        )
+
+        if (collect) {
+          res.send(await collector)
+        } else {
+          res.send(message)
+        }
       })
     )
 
