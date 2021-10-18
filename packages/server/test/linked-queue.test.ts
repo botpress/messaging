@@ -1,7 +1,7 @@
 import { LinkedQueue } from '../src/instances/queue'
 
 describe('Linked Queue', () => {
-  const state: { queue?: LinkedQueue<number> } = {}
+  const state: { queue?: LinkedQueue<number>; value?: number } = {}
 
   beforeAll(async () => {})
 
@@ -23,9 +23,28 @@ describe('Linked Queue', () => {
     }).toThrow()
   })
 
+  test('Peek when empty should throw error', async () => {
+    expect(() => {
+      state.queue!.peek()
+    }).toThrow()
+  })
+
   test('Equeue and peek', async () => {
-    const value = 14
-    state.queue!.enqueue(value)
-    expect(state.queue!.peek()).toBe(value)
+    state.value = 14
+    state.queue!.enqueue(state.value)
+    expect(state.queue!.count).toBe(1)
+    expect(state.queue!.peek()).toBe(state.value)
+  })
+
+  test('Peek should return correct value', async () => {
+    const value = state.queue!.peek()
+    expect(value).toBe(state.value)
+    expect(state.queue!.count).toBe(1)
+  })
+
+  test('Dequeue should return correct value', async () => {
+    const value = state.queue!.dequeue()
+    expect(value).toBe(state.value)
+    expect(state.queue!.count).toBe(0)
   })
 })
