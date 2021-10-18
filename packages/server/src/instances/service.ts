@@ -22,6 +22,7 @@ import { StatusService } from '../status/service'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
+import { LinkedQueue } from './queue'
 import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
@@ -37,7 +38,7 @@ export class InstanceService extends Service {
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private logger: Logger
   private lazyLoadingEnabled!: boolean
-  private messageQueueTail: { [threadId: string]: QueuedMessage }
+  private threadQueue: { [threadId: uuid]: LinkedQueue<QueuedMessage> }
 
   constructor(
     private loggerService: LoggerService,
@@ -74,7 +75,7 @@ export class InstanceService extends Service {
       this
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
-    this.messageQueueTail = {}
+    this.threadQueue = {}
   }
 
   async setup() {
@@ -184,63 +185,70 @@ export class InstanceService extends Service {
       return
     }
 
-    for (const convmap of convmaps) {
-      const endpoint = await this.mappingService.getEndpoint(convmap.threadId)
-      const tunnel = await this.mappingService.tunnels.get(convmap.tunnelId)
+    for (const { threadId, tunnelId } of convmaps) {
+      const endpoint = await this.mappingService.getEndpoint(threadId)
+      const tunnel = await this.mappingService.tunnels.get(tunnelId)
 
-      if (
-        !source?.conduit ||
-        (source.conduit.endpoint.identity || '*') !== endpoint.identity ||
-        (source.conduit.endpoint.sender || '*') !== endpoint.sender ||
-        (source.conduit.endpoint.thread || '*') !== endpoint.thread
-      ) {
+      if (!source?.conduit?.endpoint || !this.endpointEqual(source.conduit.endpoint, endpoint)) {
         const conduit = await this.conduitService.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }
 
         const instance = await this.get(conduit.id)
-        await this.enqueueMessage({ threadId: convmap.threadId, message, endpoint, instance })
+        const queue = this.getMessageQueue(threadId)
+
+        const isEmpty = queue.empty()
+        queue.enqueue({ message, endpoint })
+
+        if (isEmpty) {
+          void this.runMessageQueue(threadId, instance, queue)
+        }
       }
     }
   }
 
-  private async enqueueMessage(message: QueuedMessage) {
-    const tail = this.messageQueueTail[message.threadId]
-    this.messageQueueTail[message.threadId] = message
+  private getMessageQueue(threadId: uuid) {
+    let queue = this.threadQueue[threadId]
 
-    if (tail) {
-      tail.next = message
-    } else {
-      void this.runMessageQueue(message)
+    if (!queue) {
+      queue = new LinkedQueue<QueuedMessage>()
+      this.threadQueue[threadId] = queue
     }
+
+    return queue
   }
 
-  private async runMessageQueue(head: QueuedMessage | undefined) {
+  private async runMessageQueue(
+    threadId: uuid,
+    instance: ConduitInstance<any, any>,
+    queue: LinkedQueue<QueuedMessage>
+  ) {
     try {
-      while (head) {
+      while (!queue.empty()) {
+        const message = queue.peek()
+
         try {
-          await head.instance.sendToEndpoint(head.endpoint, head.message.payload)
+          await instance.sendToEndpoint(message.endpoint, message.message.payload)
         } catch (e) {
           this.logger.error(e, 'Failed to send message to instance')
         }
 
-        if (this.messageQueueTail[head.threadId] === head) {
-          delete this.messageQueueTail[head.threadId]
-        }
-
-        head = head.next
+        queue.dequeue()
       }
+
+      delete this.threadQueue[threadId]
     } catch (e) {
       this.logger.error(e, 'Failed to run message queue')
     }
   }
+
+  private endpointEqual(a: Endpoint, b: Endpoint) {
+    return (a.identity || '*') !== b.identity || (a.sender || '*') !== b.sender || (a.thread || '*') !== b.thread
+  }
 }
 
 interface QueuedMessage {
-  threadId: uuid
   message: Message
   endpoint: Endpoint
-  instance: ConduitInstance<any, any>
-  next?: QueuedMessage
 }
