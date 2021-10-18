@@ -3,7 +3,6 @@ import ms from 'ms'
 import yn from 'yn'
 import { App } from '../app'
 import { Service } from '../base/service'
-import { ActionSource } from '../base/source'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
@@ -14,8 +13,8 @@ import { ConversationService } from '../conversations/service'
 import { DistributedService } from '../distributed/service'
 import { LoggerService } from '../logger/service'
 import { Logger } from '../logger/types'
-import { Convmap } from '../mapping/convmap/types'
 import { MappingService } from '../mapping/service'
+import { Endpoint } from '../mapping/types'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
@@ -23,6 +22,7 @@ import { StatusService } from '../status/service'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
+import { LinkedQueue } from './queue'
 import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
@@ -36,6 +36,7 @@ export class InstanceService extends Service {
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
+  private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
   private lazyLoadingEnabled!: boolean
 
@@ -88,6 +89,8 @@ export class InstanceService extends Service {
       max: 50000,
       maxAge: ms('30min')
     })
+
+    this.messageQueueCache = await this.cachingService.newServerCache('cache_thread_queues_cache')
 
     await this.invalidator.setup(this.cache)
 
@@ -183,39 +186,66 @@ export class InstanceService extends Service {
       return
     }
 
-    const promises = []
-    for (const convmap of convmaps) {
-      promises.push(this.sendMessageToInstance(message, source, client!.providerId, convmap))
-    }
-    await Promise.all(promises)
-  }
+    for (const { threadId, tunnelId } of convmaps) {
+      const endpoint = await this.mappingService.getEndpoint(threadId)
+      const tunnel = await this.mappingService.tunnels.get(tunnelId)
 
-  private async sendMessageToInstance(
-    message: Message,
-    source: ActionSource | undefined,
-    providerId: uuid,
-    convmap: Convmap
-  ) {
-    try {
-      const endpoint = await this.mappingService.getEndpoint(convmap.threadId)
-      const tunnel = await this.mappingService.tunnels.get(convmap.tunnelId)
-
-      if (
-        !source?.conduit ||
-        (source.conduit.endpoint.identity || '*') !== endpoint.identity ||
-        (source.conduit.endpoint.sender || '*') !== endpoint.sender ||
-        (source.conduit.endpoint.thread || '*') !== endpoint.thread
-      ) {
-        const conduit = await this.conduitService.getByProviderAndChannel(providerId, tunnel!.channelId)
+      if (!source?.conduit?.endpoint || !this.endpointEqual(source.conduit.endpoint, endpoint)) {
+        const conduit = await this.conduitService.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }
 
-        const instance = await this.get(conduit!.id)
-        await instance.sendToEndpoint(endpoint, message.payload)
+        const instance = await this.get(conduit.id)
+        const queue = this.getMessageQueue(threadId)
+
+        const isEmpty = queue.empty()
+        queue.enqueue({ instance, message, endpoint })
+
+        if (isEmpty) {
+          void this.runMessageQueue(queue)
+        }
       }
-    } catch (e) {
-      this.logger.error(e, 'Failed to send message to instance')
     }
   }
+
+  private getMessageQueue(threadId: uuid) {
+    const cached = this.messageQueueCache.get(threadId)
+    if (cached) {
+      return cached
+    }
+
+    const queue = new LinkedQueue<QueuedMessage>()
+    this.messageQueueCache.set(threadId, queue)
+
+    return queue
+  }
+
+  private async runMessageQueue(queue: LinkedQueue<QueuedMessage>) {
+    try {
+      while (!queue.empty()) {
+        const item = queue.peek()
+
+        try {
+          await item.instance.sendToEndpoint(item.endpoint, item.message.payload)
+        } catch (e) {
+          this.logger.error(e, 'Failed to send message to instance')
+        }
+
+        queue.dequeue()
+      }
+    } catch (e) {
+      this.logger.error(e, 'Failed to run message queue')
+    }
+  }
+
+  private endpointEqual(a: Endpoint, b: Endpoint) {
+    return (a.identity || '*') !== b.identity || (a.sender || '*') !== b.sender || (a.thread || '*') !== b.thread
+  }
+}
+
+interface QueuedMessage {
+  instance: ConduitInstance<any, any>
+  message: Message
+  endpoint: Endpoint
 }
