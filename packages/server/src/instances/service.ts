@@ -36,9 +36,9 @@ export class InstanceService extends Service {
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
+  private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
   private lazyLoadingEnabled!: boolean
-  private threadQueue: { [threadId: uuid]: LinkedQueue<QueuedMessage> }
 
   constructor(
     private loggerService: LoggerService,
@@ -75,7 +75,6 @@ export class InstanceService extends Service {
       this
     )
     this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
-    this.threadQueue = {}
   }
 
   async setup() {
@@ -90,6 +89,8 @@ export class InstanceService extends Service {
       max: 50000,
       maxAge: ms('30min')
     })
+
+    this.messageQueueCache = await this.cachingService.newServerCache('cache_thread_queues_cache')
 
     await this.invalidator.setup(this.cache)
 
@@ -199,45 +200,40 @@ export class InstanceService extends Service {
         const queue = this.getMessageQueue(threadId)
 
         const isEmpty = queue.empty()
-        queue.enqueue({ message, endpoint })
+        queue.enqueue({ instance, message, endpoint })
 
         if (isEmpty) {
-          void this.runMessageQueue(threadId, instance, queue)
+          void this.runMessageQueue(queue)
         }
       }
     }
   }
 
   private getMessageQueue(threadId: uuid) {
-    let queue = this.threadQueue[threadId]
-
-    if (!queue) {
-      queue = new LinkedQueue<QueuedMessage>()
-      this.threadQueue[threadId] = queue
+    const cached = this.messageQueueCache.get(threadId)
+    if (cached) {
+      return cached
     }
+
+    const queue = new LinkedQueue<QueuedMessage>()
+    this.messageQueueCache.set(threadId, queue)
 
     return queue
   }
 
-  private async runMessageQueue(
-    threadId: uuid,
-    instance: ConduitInstance<any, any>,
-    queue: LinkedQueue<QueuedMessage>
-  ) {
+  private async runMessageQueue(queue: LinkedQueue<QueuedMessage>) {
     try {
       while (!queue.empty()) {
-        const message = queue.peek()
+        const item = queue.peek()
 
         try {
-          await instance.sendToEndpoint(message.endpoint, message.message.payload)
+          await item.instance.sendToEndpoint(item.endpoint, item.message.payload)
         } catch (e) {
           this.logger.error(e, 'Failed to send message to instance')
         }
 
         queue.dequeue()
       }
-
-      delete this.threadQueue[threadId]
     } catch (e) {
       this.logger.error(e, 'Failed to run message queue')
     }
@@ -249,6 +245,7 @@ export class InstanceService extends Service {
 }
 
 interface QueuedMessage {
+  instance: ConduitInstance<any, any>
   message: Message
   endpoint: Endpoint
 }
