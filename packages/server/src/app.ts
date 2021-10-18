@@ -4,6 +4,7 @@ import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
+import { ConverseService } from './converse/service'
 import { CryptoService } from './crypto/service'
 import { DatabaseService } from './database/service'
 import { DistributedService } from './distributed/service'
@@ -45,6 +46,7 @@ export class App {
   userTokens: UserTokenService
   conversations: ConversationService
   messages: MessageService
+  converse: ConverseService
   mapping: MappingService
   status: StatusService
   instances: InstanceService
@@ -73,6 +75,7 @@ export class App {
     this.userTokens = new UserTokenService(this.database, this.crypto, this.caching, this.batching, this.users)
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
     this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
+    this.converse = new ConverseService(this.messages)
     this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
     this.status = new StatusService(this.database, this.distributed, this.caching, this.conduits)
     this.instances = new InstanceService(
@@ -142,6 +145,7 @@ export class App {
     await this.userTokens.setup()
     await this.conversations.setup()
     await this.messages.setup()
+    await this.converse.setup()
     await this.mapping.setup()
     await this.status.setup()
     await this.instances.setup()

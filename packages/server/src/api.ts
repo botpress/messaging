@@ -46,6 +46,7 @@ export class Api {
       this.sockets,
       this.app.conversations,
       this.app.messages,
+      this.app.converse,
       this.app.sockets
     )
     this.channels = new ChannelApi(this.root, this.app)
