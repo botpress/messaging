@@ -37,7 +37,7 @@ export class InstanceService extends Service {
   private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private logger: Logger
   private lazyLoadingEnabled!: boolean
-  private messageQueueTail: { [conversationId: string]: QueuedMessage }
+  private messageQueueTail: { [threadId: string]: QueuedMessage }
 
   constructor(
     private loggerService: LoggerService,
@@ -200,14 +200,14 @@ export class InstanceService extends Service {
         }
 
         const instance = await this.get(conduit.id)
-        await this.enqueueMessage({ message, endpoint, instance })
+        await this.enqueueMessage({ threadId: convmap.threadId, message, endpoint, instance })
       }
     }
   }
 
   private async enqueueMessage(message: QueuedMessage) {
-    const tail = this.messageQueueTail[message.message.conversationId]
-    this.messageQueueTail[message.message.conversationId] = message
+    const tail = this.messageQueueTail[message.threadId]
+    this.messageQueueTail[message.threadId] = message
 
     if (tail) {
       tail.next = message
@@ -219,21 +219,26 @@ export class InstanceService extends Service {
   private async runMessageQueue(head: QueuedMessage | undefined) {
     try {
       while (head) {
-        await head.instance.sendToEndpoint(head.endpoint, head.message.payload)
+        try {
+          await head.instance.sendToEndpoint(head.endpoint, head.message.payload)
+        } catch (e) {
+          this.logger.error(e, 'Failed to send message to instance')
+        }
 
-        if (this.messageQueueTail[head.message.conversationId] === head) {
-          delete this.messageQueueTail[head.message.conversationId]
+        if (this.messageQueueTail[head.threadId] === head) {
+          delete this.messageQueueTail[head.threadId]
         }
 
         head = head.next
       }
     } catch (e) {
-      this.logger.error(e, 'Failed to send message to instance')
+      this.logger.error(e, 'Failed to run message queue')
     }
   }
 }
 
 interface QueuedMessage {
+  threadId: uuid
   message: Message
   endpoint: Endpoint
   instance: ConduitInstance<any, any>
