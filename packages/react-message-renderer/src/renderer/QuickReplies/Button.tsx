@@ -9,7 +9,7 @@ interface Props {
   onFileUpload: FileUploadHandler
   preventDoubleClick?: boolean
   onButtonClick?: (label: string, payload: any) => void
-  onUploadError?: (error: any) => void
+  onUploadError?: (error: unknown) => void
 }
 
 /**
