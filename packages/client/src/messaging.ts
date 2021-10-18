@@ -49,7 +49,7 @@ export class MessagingClient {
   }
 
   private getAxiosConfig({ url }: MessagingOptions): AxiosRequestConfig {
-    return { baseURL: `${url}/api`, headers: {} }
+    return { baseURL: `${url}/api` }
   }
 }
 
