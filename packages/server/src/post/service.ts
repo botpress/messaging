@@ -55,7 +55,7 @@ export class PostService extends Service {
     } catch (e) {
       this.logger.warn(
         `Unabled to reach webhook after ${this.attempts} attempts ${clc.blackBright(url)} ${clc.blackBright(
-          `Error: ${e.message}`
+          `Error: ${(e as Error).message}`
         )}`
       )
     }

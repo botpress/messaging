@@ -66,7 +66,7 @@ export class VonageChannel extends Channel<VonageConduit> {
         decoded.api_key === conduit.config.apiKey &&
         crypto.createHash('sha256').update(JSON.stringify(body)).digest('hex') === decoded.payload_hash
       )
-    } catch (err) {
+    } catch (e) {
       return false
     }
   }
