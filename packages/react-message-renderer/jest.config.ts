@@ -12,7 +12,8 @@ const config: Config.InitialOptions = {
   testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/dist'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   verbose: true,
-  moduleDirectories: ['node_modules', 'src']
+  moduleDirectories: ['node_modules', 'src'],
+  testEnvironment: 'jsdom'
 }
 
 export default config

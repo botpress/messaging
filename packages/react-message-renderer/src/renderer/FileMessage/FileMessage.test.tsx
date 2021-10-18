@@ -1,6 +1,3 @@
-/**
- * @jest-environment jsdom
- */
 import { render } from '@testing-library/react'
 import { Message } from 'typings'
 import { defaultMessageConfig, renderMessage } from '../..'
