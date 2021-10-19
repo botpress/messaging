@@ -1,14 +1,13 @@
 {
-  "name": "@botpress/messaging-server",
-  "version": "0.1.14",
-  "main": "index.ts",
+  "name": "@botpress/messaging-engine",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn --silent && tsc --build",
-    "postbuild": "node ./dist/meta/build",
-    "watch": "yarn --silent && tsc --build --watch",
-    "start": "node dist/index.js",
-    "dev": "yarn --silent && ts-node-dev --inspect --inspect-publish-uid=http --transpile-only src/index.ts"
+    "watch": "yarn --silent && tsc --build --watch"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -26,7 +25,6 @@
   },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",
-    "@botpress/messaging-engine": "0.0.1",
     "@sentry/node": "^6.11.0",
     "@slack/events-api": "^2.3.2",
     "@slack/interactive-messages": "^1.5.0",

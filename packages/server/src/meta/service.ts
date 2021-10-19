@@ -1,5 +1,5 @@
+import { DatabaseService } from '@botpress/messaging-engine'
 import { Service } from '../base/service'
-import { DatabaseService } from '../database/service'
 import { MetaTable } from './table'
 import { ServerMetadata, ServerMetadataSchema, ServerMetaEntry } from './types'
 

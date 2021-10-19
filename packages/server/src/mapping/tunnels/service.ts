@@ -1,10 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
+import { DatabaseService, CachingService, ServerCache2D, ServerCache } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../../base/service'
-import { ServerCache } from '../../caching/cache'
-import { ServerCache2D } from '../../caching/cache2D'
-import { CachingService } from '../../caching/service'
-import { DatabaseService } from '../../database/service'
 import { TunnelTable } from './table'
 import { Tunnel } from './types'
 

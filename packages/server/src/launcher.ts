@@ -1,3 +1,4 @@
+import { Logger } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import { Express } from 'express'
 import { createHttpTerminator, HttpTerminator } from 'http-terminator'
@@ -9,7 +10,6 @@ import yn from 'yn'
 import { Api } from './api'
 import { App } from './app'
 import { ShutDownSignal } from './base/errors'
-import { Logger } from './logger/types'
 
 const pkg = require('../package.json')
 

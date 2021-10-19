@@ -1,11 +1,7 @@
 import { User, uuid } from '@botpress/messaging-base'
+import { Batcher, BatchingService, ServerCache, CachingService, DatabaseService } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { Service } from '../base/service'
-import { Batcher } from '../batching/batcher'
-import { BatchingService } from '../batching/service'
-import { ServerCache } from '../caching/cache'
-import { CachingService } from '../caching/service'
-import { DatabaseService } from '../database/service'
 import { UserEmitter, UserEvents, UserWatcher } from './events'
 import { UserTable } from './table'
 

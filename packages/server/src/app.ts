@@ -1,17 +1,11 @@
-import { BatchingService } from './batching/service'
-import { CachingService } from './caching/service'
+import { Engine } from '@botpress/messaging-engine'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
 import { ConverseService } from './converse/service'
-import { CryptoService } from './crypto/service'
-import { DatabaseService } from './database/service'
-import { DistributedService } from './distributed/service'
 import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
-import { KvsService } from './kvs/service'
-import { LoggerService } from './logger/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { MetaService } from './meta/service'
@@ -25,21 +19,14 @@ import { SyncService } from './sync/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
-export class App {
-  logger: LoggerService
-  database: DatabaseService
+export class App extends Engine {
   meta: MetaService
   migration: MigrationService
-  crypto: CryptoService
-  distributed: DistributedService
-  caching: CachingService
-  batching: BatchingService
   post: PostService
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
   webhooks: WebhookService
-  kvs: KvsService
   conduits: ConduitService
   users: UserService
   conversations: ConversationService
@@ -54,20 +41,14 @@ export class App {
   stream: StreamService
 
   constructor() {
-    this.logger = new LoggerService()
-    this.database = new DatabaseService()
+    super()
     this.meta = new MetaService(this.database)
     this.migration = new MigrationService(this.database, this.meta)
-    this.crypto = new CryptoService()
-    this.distributed = new DistributedService()
-    this.caching = new CachingService(this.distributed)
-    this.batching = new BatchingService()
     this.post = new PostService()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
-    this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
@@ -123,20 +104,15 @@ export class App {
   }
 
   async setup() {
-    await this.logger.setup()
-    await this.database.setup()
+    await super.setup()
+
     await this.meta.setup()
     await this.migration.setup()
-    await this.crypto.setup()
-    await this.distributed.setup()
-    await this.caching.setup()
-    await this.batching.setup()
     await this.post.setup()
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
     await this.webhooks.setup()
-    await this.kvs.setup()
     await this.conduits.setup()
     await this.users.setup()
     await this.conversations.setup()

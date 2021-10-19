@@ -1,10 +1,10 @@
 import { uuid } from '@botpress/messaging-base'
+import { Logger } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import { NextFunction, Request, Response, Router } from 'express'
 import Joi from 'joi'
 import yn from 'yn'
 import { App } from '../../app'
-import { Logger } from '../../logger/types'
 import { ConduitInstance } from './conduit'
 
 export abstract class Channel<TConduit extends ConduitInstance<any, any>> {

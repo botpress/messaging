@@ -1,9 +1,9 @@
+import { Logger } from '@botpress/messaging-engine'
 import axios, { AxiosRequestConfig } from 'axios'
 import clc from 'cli-color'
 import { backOff } from 'exponential-backoff'
 
 import { Service } from '../base/service'
-import { Logger } from '../logger/types'
 
 export class PostService extends Service {
   private readonly attempts = 10
