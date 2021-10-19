@@ -8,6 +8,7 @@ import { Collector } from './types'
 
 export class ConverseService extends Service {
   private collectors!: ServerCache<uuid, Collector[]>
+  private hintCache!: ServerCache<uuid, uuid>
 
   constructor(private caching: CachingService, private messages: MessageService) {
     super()
@@ -17,6 +18,7 @@ export class ConverseService extends Service {
     this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
 
     this.collectors = await this.caching.newServerCache('cache_converse_collectors', {})
+    this.hintCache = await this.caching.newServerCache('cache_converse_hints')
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
@@ -25,11 +27,18 @@ export class ConverseService extends Service {
       return
     }
 
+    const hint = this.hintCache.get(message.id)
     const collectors = this.collectors.get(message.conversationId) || []
 
     for (const collector of collectors) {
-      collector.messages.push(message)
+      if (!hint || hint === collector.messageId) {
+        collector.messages.push(message)
+      }
     }
+  }
+
+  hintRespondingTo(messageId: uuid, respondingTo: uuid) {
+    this.hintCache.set(messageId, respondingTo)
   }
 
   async collect(messageId: uuid, conversationId: uuid): Promise<Message[]> {
