@@ -17,10 +17,11 @@ export class MessagingClient {
   messages: MessageClient
 
   constructor(options: MessagingOptions) {
-    const { url, auth, client } = options
+    const { auth } = options
 
-    this.http = this.configureHttpClient(client, this.getAxiosConfig({ url }))
-    this.authHttp = this.configureHttpClient(client, this.getAxiosConfig({ url, auth }))
+    const config = this.getAxiosConfig(options)
+    this.http = axios.create(config)
+    this.authHttp = axios.create(config)
 
     if (auth) {
       this.authenticate(auth.clientId, auth.clientToken)
@@ -39,20 +40,10 @@ export class MessagingClient {
     this.authHttp.defaults.headers.common['x-bp-messaging-client-token'] = clientToken
   }
 
-  private configureHttpClient(client: AxiosInstance | undefined, config: AxiosRequestConfig) {
-    if (client) {
-      client.interceptors.request.use((value) => {
-        return { ...value, ...config }
-      })
+  private getAxiosConfig({ url, config }: MessagingOptions): AxiosRequestConfig {
+    const defaultConfig: AxiosRequestConfig = { baseURL: `${url}/api` }
 
-      return client
-    } else {
-      return axios.create(config)
-    }
-  }
-
-  private getAxiosConfig({ url }: MessagingOptions): AxiosRequestConfig {
-    return { baseURL: `${url}/api` }
+    return { ...config, ...defaultConfig }
   }
 }
 
@@ -61,8 +52,8 @@ export interface MessagingOptions {
   url: string
   /** Client authentication to access client owned resources. Optional */
   auth?: MessagingAuth
-  /** A custom axios instance giving more control over the HTTP client used internally. Optional */
-  client?: AxiosInstance
+  /** A custom axios config giving more control over the HTTP client used internally. Optional */
+  config?: Omit<AxiosRequestConfig, 'baseURL'>
 }
 
 export interface MessagingAuth {
