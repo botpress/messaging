@@ -1,5 +1,5 @@
 {
-  "name": "react-message-renderer",
+  "name": "@botpress/messaging-components",
   "version": "0.0.1",
   "private": true,
   "publisher": "Botpress inc.",
