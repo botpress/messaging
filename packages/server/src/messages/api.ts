@@ -62,7 +62,7 @@ export class MessageApi {
         )
 
         if (collect) {
-          res.send(await collector)
+          res.send({ responses: await collector })
         } else {
           res.send(message)
         }
