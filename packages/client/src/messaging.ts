@@ -35,13 +35,16 @@ export class MessagingClient {
 
   public authenticate(clientId: string, clientToken: string) {
     this.auth = { clientId, clientToken }
-    this.authHttp.defaults.headers['x-bp-messaging-client-id'] = clientId
-    this.authHttp.defaults.headers['x-bp-messaging-client-token'] = clientToken
+    this.authHttp.defaults.headers.common['x-bp-messaging-client-id'] = clientId
+    this.authHttp.defaults.headers.common['x-bp-messaging-client-token'] = clientToken
   }
 
   private configureHttpClient(client: AxiosInstance | undefined, config: AxiosRequestConfig) {
     if (client) {
-      client.defaults = { ...client.defaults, ...config }
+      client.interceptors.request.use((value) => {
+        return { ...value, ...config }
+      })
+
       return client
     } else {
       return axios.create(config)
@@ -49,7 +52,7 @@ export class MessagingClient {
   }
 
   private getAxiosConfig({ url }: MessagingOptions): AxiosRequestConfig {
-    return { baseURL: `${url}/api`, headers: {} }
+    return { baseURL: `${url}/api` }
   }
 }
 
