@@ -16,19 +16,20 @@ export class ConverseService extends Service {
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
+    if (message.authorId) {
+      // we only collect bot messages
+      return
+    }
+
     const collectors = this.collectors[message.conversationId] || []
 
     for (const collector of collectors) {
       collector.messages.push(message)
-
-      if (collector.messages.length > 0) {
-        this.resetCollectorTimeout(collector, 250)
-      }
     }
   }
 
-  async collect(conversationId: uuid): Promise<Message[]> {
-    const collector = this.addCollector(conversationId)
+  async collect(messageId: uuid, conversationId: uuid): Promise<Message[]> {
+    const collector = this.addCollector(messageId, conversationId)
     this.resetCollectorTimeout(collector, 5000)
 
     return new Promise<Message[]>((resolve) => {
@@ -36,12 +37,27 @@ export class ConverseService extends Service {
     })
   }
 
-  private addCollector(conversationId: uuid): Collector {
+  async stopCollecting(messageId: uuid, conversationId: uuid) {
+    const collectors = this.collectors[conversationId] || []
+
+    for (const collector of collectors) {
+      if (collector.messageId === messageId) {
+        clearTimeout(collector.timeout!)
+
+        if (collector.resolve) {
+          collector.resolve(collector.messages)
+        }
+      }
+    }
+  }
+
+  private addCollector(messageId: uuid, conversationId: uuid): Collector {
     if (!this.collectors[conversationId]) {
       this.collectors[conversationId] = []
     }
 
     const collector: Collector = {
+      messageId,
       conversationId,
       messages: []
     }
@@ -70,6 +86,7 @@ export class ConverseService extends Service {
     collector.timeout = setTimeout(() => {
       this.removeCollector(collector)
       collector.resolve!(collector.messages)
+      collector.resolve = undefined
     }, time)
   }
 }

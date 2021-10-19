@@ -7,6 +7,10 @@ export const CreateMsgSchema = Joi.object({
   payload: Joi.object().required()
 })
 
+export const TurnMsgSchema = Joi.object({
+  id: Joi.string().guid().required()
+})
+
 export const GetMsgSchema = Joi.object({
   id: Joi.string().guid().required()
 })
