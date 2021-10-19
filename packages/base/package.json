@@ -7,7 +7,8 @@
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch"
+    "watch": "yarn --silent && tsc --build --watch",
+    "prepublishOnly": "yarn --silent && tsc --build"
   },
   "files": [
     "dist"
