@@ -1,18 +1,22 @@
 import { Message, uuid } from '@botpress/messaging-base'
 import { Service } from '../base/service'
+import { ServerCache } from '../caching/cache'
+import { CachingService } from '../caching/service'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { Collector } from './types'
 
 export class ConverseService extends Service {
-  private collectors: { [conversationId: string]: Collector[] } = {}
+  private collectors!: ServerCache<uuid, Collector[]>
 
-  constructor(private messages: MessageService) {
+  constructor(private caching: CachingService, private messages: MessageService) {
     super()
   }
 
   async setup() {
     this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
+
+    this.collectors = await this.caching.newServerCache('cache_converse_collectors', {})
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
@@ -21,7 +25,7 @@ export class ConverseService extends Service {
       return
     }
 
-    const collectors = this.collectors[message.conversationId] || []
+    const collectors = this.collectors.get(message.conversationId) || []
 
     for (const collector of collectors) {
       collector.messages.push(message)
@@ -38,7 +42,7 @@ export class ConverseService extends Service {
   }
 
   async stopCollecting(messageId: uuid, conversationId: uuid) {
-    const collectors = this.collectors[conversationId] || []
+    const collectors = this.collectors.get(conversationId) || []
 
     for (const collector of collectors) {
       if (collector.messageId === messageId) {
@@ -52,8 +56,11 @@ export class ConverseService extends Service {
   }
 
   private addCollector(messageId: uuid, conversationId: uuid): Collector {
-    if (!this.collectors[conversationId]) {
-      this.collectors[conversationId] = []
+    let collectors = this.collectors.get(conversationId)
+
+    if (!collectors) {
+      collectors = []
+      this.collectors.set(conversationId, collectors)
     }
 
     const collector: Collector = {
@@ -62,7 +69,7 @@ export class ConverseService extends Service {
       messages: []
     }
 
-    this.collectors[conversationId].push(collector)
+    collectors.push(collector)
 
     return collector
   }
@@ -70,11 +77,12 @@ export class ConverseService extends Service {
   private removeCollector(collector: Collector) {
     const { conversationId } = collector
 
-    const index = this.collectors[conversationId].indexOf(collector)
-    this.collectors[conversationId].splice(index, 1)
+    const collectors = this.collectors.get(conversationId)!
+    const index = collectors.indexOf(collector)
+    collectors.splice(index, 1)
 
-    if (this.collectors[conversationId].length === 0) {
-      delete this.collectors[conversationId]
+    if (collectors.length === 0) {
+      this.collectors.del(conversationId)
     }
   }
 
