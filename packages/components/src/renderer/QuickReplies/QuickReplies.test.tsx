@@ -1,9 +1,9 @@
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, prettyDOM, render, waitFor } from '@testing-library/react'
 import { defaultMessageConfig } from 'index'
 import React from 'react'
-import { QuickReplies } from 'renderer'
 import Keyboard from 'renderer/Keyboard'
 import { Payload } from '../../typings'
+import { QuickReplies } from '.'
 import { Button } from './Button'
 
 describe('Quick Reply Button element', () => {
@@ -86,10 +86,3 @@ describe('Quick Reply Button element', () => {
     expect(onFileUpload).toHaveBeenCalledWith(label, 'BOTPRESS.IMAGE_UPLOAD', testFile)
   })
 })
-
-// WIP
-// describe('Quick Reply renderer', () => {
-//   test('it renders the button array correctly', () => {
-//     expect(true).toBeTruthy() // TODO: Write this test
-//   })
-// })

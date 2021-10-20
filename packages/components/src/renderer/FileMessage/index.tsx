@@ -2,14 +2,12 @@ import mimeTypes from 'mime/lite'
 import React from 'react'
 import { MessageTypeHandlerProps } from '../../typings'
 
-import { Text } from '../Text'
-
-export const File = ({ payload, config }: MessageTypeHandlerProps<'file' | 'video' | 'audio'>) => {
-  if (!payload.file) {
+export const File = ({ payload }: MessageTypeHandlerProps<'file' | 'video' | 'audio'>) => {
+  if (!payload) {
     return null
   }
 
-  const { url, title, storage, text } = payload.file
+  const { url, title } = payload
 
   let extension = ''
   try {
@@ -21,18 +19,6 @@ export const File = ({ payload, config }: MessageTypeHandlerProps<'file' | 'vide
   }
 
   const mime = mimeTypes.getType(extension)
-
-  if (text) {
-    return <Text payload={{ text, markdown: false }} config={config} />
-  }
-
-  if (storage === 'local') {
-    return (
-      <div className={'bpw-file-message'}>
-        <div>{title} (local)</div>
-      </div>
-    )
-  }
 
   if (mime?.includes('image/')) {
     return (

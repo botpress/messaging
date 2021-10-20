@@ -7,7 +7,7 @@ describe('File renderer', () => {
     const url = 'http://example.org/file.txt'
     const component = renderMessage({
       type: 'file',
-      payload: { file: { url } },
+      payload: { url },
       config: defaultMessageConfig
     })
 
@@ -23,7 +23,7 @@ describe('File renderer', () => {
     const url = 'http://example.org/file.ifThisMimeTypeExistsSwitchCareers'
     const component = renderMessage({
       type: 'file',
-      payload: { file: { url } },
+      payload: { url },
       config: defaultMessageConfig
     })
 
@@ -39,7 +39,7 @@ describe('File renderer', () => {
     const url = 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4'
     const component = renderMessage({
       type: 'file',
-      payload: { file: { url } },
+      payload: { url },
       config: defaultMessageConfig
     })
 
@@ -61,9 +61,7 @@ describe('File renderer', () => {
     const component = renderMessage({
       type: 'file',
       payload: {
-        file: {
-          url
-        }
+        url
       },
       config: defaultMessageConfig
     })
@@ -81,7 +79,7 @@ describe('File renderer', () => {
     const url = 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav'
     const component = renderMessage({
       type: 'file',
-      payload: { file: { url, title: 'Hello Audio', storage: 'remote' } },
+      payload: { url, title: 'Hello Audio' },
       config: defaultMessageConfig
     })
 
@@ -102,7 +100,7 @@ describe('File renderer', () => {
     const url = 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4'
     const messageData: Message<'file'> = {
       type: 'file',
-      payload: { file: { url, title: 'Hello Video', storage: 'remote' } },
+      payload: { url, title: 'Hello Video' },
       config: defaultMessageConfig
     }
 

@@ -16,25 +16,23 @@ export const VoiceMessage: FC<MessageTypeHandlerProps<'voice'>> = ({ payload, co
 
   useEffect(() => {
     // Simulate an autoplay by playing every voice messages of a single message group one after the other
-    if (payload.file.autoPlay && payload.shouldPlay) {
+    if (payload.autoPlay && config.shouldPlay) {
       audioRef.current?.play().catch((err: Error) => {
         console.error(`An error occured while playing the voice message: ${err.message}`)
       })
     }
-  }, [payload.file.autoPlay, payload.shouldPlay])
+  }, [payload.autoPlay, config.shouldPlay])
 
-  if (!payload.file) {
+  if (!payload.audio) {
     return null
   }
 
-  const { audio } = payload.file
-
-  const extension = path.extname(audio)
+  const extension = path.extname(payload.audio)
   const mime = mimeTypes.getType(extension)
 
   return (
     <audio controls ref={audioRef}>
-      <source src={audio} type={mime || 'audio/mpeg'} />
+      <source src={payload.audio} type={mime || 'audio/mpeg'} />
     </audio>
   )
 }

@@ -33,6 +33,7 @@ export interface MessageConfig {
   isBotMessage: boolean
   bp?: StudioConnector
   store?: LiteStore
+  shouldPlay?: boolean // used for voice message only
   onSendData: (data: any) => Promise<void>
   onFileUpload: FileUploadHandler
   onMessageClicked: (messageId?: uuid) => void
@@ -58,12 +59,8 @@ export interface Message<T extends MessageType> {
   config: MessageConfig
 }
 interface FilePayload {
-  file: {
-    url: string
-    title?: string
-    storage?: 'local' | string
-    text?: string
-  }
+  url: string
+  title?: string
 }
 
 export interface TextMessagePayload {
@@ -73,21 +70,40 @@ export interface TextMessagePayload {
 }
 
 export interface CardPayload {
-  picture: string
+  picture?: string
   title: string
-  subtitle: string
+  subtitle?: string
   buttons: CardButton[]
 }
 
+// TODO: Improve this typing
 export interface CardButton {
-  url?: string
+  type: 'say_something' | 'open_url' | 'postback'
   title: string
-  type?: 'postback' | 'say_something' | string
+  url?: string
   payload?: any
   text?: string
 }
+// Can be either one of these types:
+// {
+//   type: 'say_something'
+//   title: string
+//   text: string
+// }
+// {
+//   type: 'open_url'
+//   title: string
+//   url: string
+// }
+
+// {
+//   type: 'postback'
+//   title: string
+//   payload: any
+// }
 
 export interface CarouselPayload {
+  // maybe text: string
   carousel: {
     elements: CardPayload[]
     settings?: CarouselSettings
@@ -121,18 +137,13 @@ export interface QuickReplyPayload extends TextMessagePayload {
   disableFreeText?: boolean
 }
 
-export interface LoginPromptPayload {}
-
 export interface VoiceMessagePayload {
-  shouldPlay: boolean
-  file: {
-    audio: string
-    autoPlay: boolean
-  }
+  audio: string
+  autoPlay: boolean
 }
 
 export interface CustomComponentPayload
-  extends Optional<
+  extends Partial<
     Pick<
       MessageConfig,
       | 'messageId'
@@ -152,17 +163,17 @@ export interface CustomComponentPayload
 }
 
 export type Payload<T extends MessageType> = T extends 'text'
-  ? TextMessagePayload
+  ? TextMessagePayload // checked OK - '
   : T extends 'file'
-  ? FilePayload
+  ? FilePayload // checked OK
   : T extends 'audio'
-  ? FilePayload
+  ? FilePayload // checked OK
   : T extends 'video'
-  ? FilePayload
+  ? FilePayload // checked OK
   : T extends 'carousel'
-  ? CarouselPayload
+  ? CarouselPayload // checked OK - view comment
   : T extends 'login_prompt'
-  ? LoginPromptPayload
+  ? { username?: string } // checked OK
   : T extends 'quick_reply'
   ? QuickReplyPayload
   : T extends 'visit'

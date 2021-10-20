@@ -1,7 +1,17 @@
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
-import { Carousel, File, LoginPrompt, QuickReplies, Text, VoiceMessage, Custom, TypingIndicator, Dropdown } from './renderer'
-import { Message, MessageConfig, MessageType, MessageTypeHandlerProps } from './typings'
+import {
+  Carousel,
+  File,
+  LoginPrompt,
+  QuickReplies,
+  Text,
+  VoiceMessage,
+  Custom,
+  TypingIndicator,
+  Dropdown
+} from './renderer'
+import { Message, MessageConfig, MessageType, MessageTypeHandlerProps, Payload } from './typings'
 import { FallthroughIntl } from './utils'
 
 export const defaultMessageConfig: MessageConfig = {
@@ -97,5 +107,13 @@ export const defaultTypesRenderers = {
 const defaultRenderer = new Renderer()
 
 defaultRenderer.register(defaultTypesRenderers)
+
+// TODO: This is for backwards compatibility. Remove in the future
+defaultRenderer.set('custom', ({ payload, config }) => {
+  if (payload.module === 'extensions' && payload.component === 'Dropdown') {
+    return <Dropdown payload={payload as any} config={config} />
+  }
+  return <Custom payload={payload} config={config} />
+})
 
 export default defaultRenderer

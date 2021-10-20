@@ -15,11 +15,8 @@ export const Primary = Template.bind({})
 
 Primary.args = {
   payload: {
-    file: {
-      audio: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav',
-      autoPlay: true
-    },
-    shouldPlay: true
+    audio: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav',
+    autoPlay: true
   },
-  config: defaultMessageConfig
+  config: { ...defaultMessageConfig, shouldPlay: true }
 }

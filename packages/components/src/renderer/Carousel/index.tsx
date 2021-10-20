@@ -70,23 +70,23 @@ export const Card = ({ picture, title, subtitle, buttons, onSendData = async () 
         </div>
         <div className={'bpw-card-buttons'}>
           {buttons.map((btn: CardButton) => {
-            if (btn.url) {
+            if (btn.type === 'open_url') {
               return (
                 <a
                   href={btn.url}
                   key={`1-${btn.title}`}
-                  target={/^javascript:/.test(btn.url) ? '_self' : '_blank'}
+                  target={/^javascript:/.test(btn.url || '') ? '_self' : '_blank'}
                   className={'bpw-card-action'}
                 >
                   {btn.title || btn}
-                  {/^javascript:/.test(btn.url) ? null : <i className={'bpw-card-external-icon'} />}
+                  {/^javascript:/.test(btn.url || '') ? null : <i className={'bpw-card-external-icon'} />}
                 </a>
               )
-            } else if (btn.type === 'postback' || btn.payload) {
+            } else if (btn.type === 'say_something') {
               return (
                 <a
                   onClick={async () => {
-                    await onSendData({ type: 'postback', payload: btn.payload })
+                    await onSendData({ type: 'say_something', text: btn.text })
                   }}
                   key={`2-${btn.title}`}
                   className={'bpw-card-action'}
@@ -94,11 +94,11 @@ export const Card = ({ picture, title, subtitle, buttons, onSendData = async () 
                   {btn.title || btn}
                 </a>
               )
-            } else if (btn.type === 'say_something' || btn.text) {
+            } else if (btn.type === 'postback') {
               return (
                 <a
                   onClick={async () => {
-                    await onSendData({ type: 'say_something', text: btn.text })
+                    await onSendData({ type: 'postback', payload: btn.payload })
                   }}
                   key={`2-${btn.title}`}
                   className={'bpw-card-action'}

@@ -6,8 +6,8 @@ describe('VoiceMessage', () => {
   test('It renders a simple html audio element with controls', () => {
     const message: Message<'voice'> = {
       type: 'voice',
-      payload: { file: { audio: 'http://example.org/sample.mp3', autoPlay: false }, shouldPlay: true },
-      config: defaultMessageConfig
+      payload: { audio: 'http://example.org/sample.mp3', autoPlay: false },
+      config: { ...defaultMessageConfig, shouldPlay: true }
     }
 
     const messageEl = renderMessage(message)
@@ -18,7 +18,7 @@ describe('VoiceMessage', () => {
     const audioEl = container.getElementsByTagName('audio')[0]
     const sourceEl = container.getElementsByTagName('source')[0]
 
-    expect(sourceEl).toHaveAttribute('src', message.payload.file.audio)
+    expect(sourceEl).toHaveAttribute('src', message.payload.audio)
     expect(audioEl).toHaveAttribute('controls')
     expect(sourceEl).toHaveAttribute('type', 'audio/mpeg')
   })

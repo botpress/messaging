@@ -15,9 +15,7 @@ export const Image = Template.bind({})
 
 Image.args = {
   payload: {
-    file: {
-      url: 'https://via.placeholder.com/400.jpg'
-    }
+    url: 'https://via.placeholder.com/400.jpg'
   },
   config: defaultMessageConfig
 }
@@ -26,11 +24,8 @@ export const Video = Template.bind({})
 
 Video.args = {
   payload: {
-    file: {
-      url: 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4',
-      title: 'Hello Video',
-      storage: 'remote'
-    }
+    url: 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4',
+    title: 'Hello Video'
   },
   config: defaultMessageConfig
 }
@@ -39,7 +34,8 @@ export const Audio = Template.bind({})
 
 Audio.args = {
   payload: {
-    file: { url: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav', title: 'Hello Audio', storage: 'remote' }
+    url: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav',
+    title: 'Hello Audio'
   },
   config: defaultMessageConfig
 }

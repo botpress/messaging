@@ -3,7 +3,7 @@ import { FileUploadHandler } from '../../typings'
 
 import { FileInput } from './FileInput'
 
-interface Props {
+export interface ButtonProps {
   label: string
   payload: any
   onFileUpload: FileUploadHandler
@@ -19,8 +19,8 @@ interface Props {
  * @param {function} onButtonClicked Called when the button is clicked with the label and the payload
  * @param {function} onFileUpload This is called when a file is uploaded
  */
-export class Button extends Component<Props> {
-  constructor(props: Props) {
+export class Button extends Component<ButtonProps> {
+  constructor(props: ButtonProps) {
     super(props)
   }
 
