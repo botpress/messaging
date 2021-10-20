@@ -30,7 +30,7 @@ export class TwilioChannel extends Channel<TwilioConduit> {
         const conduit = res.locals.conduit as TwilioConduit
         const signature = req.headers['x-twilio-signature'] as string
 
-        if (process.env.TWILIO_TESTING) {
+        if (yn(process.env.TWILIO_TESTING)) {
           await conduit.receive(req.body)
           res.sendStatus(200)
         } else if (
