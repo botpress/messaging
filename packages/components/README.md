@@ -5,7 +5,7 @@
 ```typescript
 import React from 'react'
 import ReactDOM from 'react-dom'
-import renderer, { defaultMessageConfig, Message } from 'botpress/messaging/react-renderer'
+import renderer, { defaultMessageConfig, Message } from '@botpress/messaging-components'
 
 const messageData: Message<'carousel'> = {
   type: 'carousel',
