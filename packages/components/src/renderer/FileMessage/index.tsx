@@ -1,5 +1,6 @@
 import mimeTypes from 'mime/lite'
 import React from 'react'
+import path from 'path'
 import { MessageTypeHandlerProps } from '../../typings'
 
 export const File = ({ payload }: MessageTypeHandlerProps<'file' | 'video' | 'audio'>) => {
@@ -15,7 +16,8 @@ export const File = ({ payload }: MessageTypeHandlerProps<'file' | 'video' | 'au
 
     extension = validUrl.pathname
   } catch (error) {
-    return null
+    // Try using path.extname since url might be relative.
+    extension = path.extname(url)
   }
 
   const mime = mimeTypes.getType(extension)
