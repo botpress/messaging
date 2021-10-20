@@ -163,17 +163,17 @@ export interface CustomComponentPayload
 }
 
 export type Payload<T extends MessageType> = T extends 'text'
-  ? TextMessagePayload // checked OK - '
+  ? TextMessagePayload
   : T extends 'file'
-  ? FilePayload // checked OK
+  ? FilePayload
   : T extends 'audio'
-  ? FilePayload // checked OK
+  ? FilePayload
   : T extends 'video'
-  ? FilePayload // checked OK
+  ? FilePayload
   : T extends 'carousel'
-  ? CarouselPayload // checked OK - view comment
+  ? CarouselPayload
   : T extends 'login_prompt'
-  ? { username?: string } // checked OK
+  ? { username?: string }
   : T extends 'quick_reply'
   ? QuickReplyPayload
   : T extends 'visit'
