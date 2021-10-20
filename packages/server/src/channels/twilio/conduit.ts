@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { Twilio } from 'twilio'
+import yn from 'yn'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
