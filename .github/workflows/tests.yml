@@ -18,3 +18,7 @@ jobs:
       - name: Run tests
         run: |
           yarn test --coverage --verbose
+      # TODO: Merge all tests into root jest config and remove this
+      - name: Run Components tests
+        run: |
+          yarn workspace @botpress/messaging-components test
