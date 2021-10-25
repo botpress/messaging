@@ -97,45 +97,45 @@ export class ConversationApi {
       })
     )
 
-    this.sockets.handle('conversations.create', CreateConvoSocketSchema, async (socket, message) => {
-      const user = await this.users.get(message.userId)
+    this.sockets.handle('conversations.create', CreateConvoSocketSchema, async (socket) => {
+      const user = await this.users.get(socket.userId)
       const conversation = await this.conversations.create(user!.clientId, user!.id)
 
-      this.sockets.reply(socket, message, conversation)
+      socket.reply(conversation)
     })
 
-    this.sockets.handle('conversations.get', GetConvoSocketSchema, async (socket, message) => {
-      const { id } = message.data
+    this.sockets.handle('conversations.get', GetConvoSocketSchema, async (socket) => {
+      const { id } = socket.data
       const conversation = await this.conversations.get(id)
 
-      if (!conversation || conversation.userId !== message.userId) {
-        return this.sockets.reply(socket, message, undefined)
+      if (!conversation || conversation.userId !== socket.userId) {
+        return socket.reply(undefined)
       }
 
-      this.sockets.reply(socket, message, conversation)
+      socket.reply(conversation)
     })
 
-    this.sockets.handle('conversations.list', ListConvoSocketSchema, async (socket, message) => {
-      const { limit } = message.data
-      const user = await this.users.get(message.userId)
-      this.sockets.reply(socket, message, await this.conversations.listByUserId(user!.clientId, message.userId, +limit))
+    this.sockets.handle('conversations.list', ListConvoSocketSchema, async (socket) => {
+      const { limit } = socket.data
+
+      const user = await this.users.get(socket.userId)
+      const conversations = await this.conversations.listByUserId(user!.clientId, socket.userId, +limit)
+
+      socket.reply(conversations)
     })
 
-    this.sockets.handle('conversations.delete', DeleteConvoSocketSchema, async (socket, message) => {
-      const { id } = message.data
+    this.sockets.handle('conversations.delete', DeleteConvoSocketSchema, async (socket) => {
+      const { id } = socket.data
       const conversation = await this.conversations.get(id)
 
       if (!conversation) {
-        return this.sockets.reply(socket, message, false)
-      } else if (conversation.userId !== message.userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'conversation does not belong to user'
-        })
+        return socket.reply(false)
+      } else if (conversation.userId !== socket.userId) {
+        return socket.forbid('Conversation does not belong to user')
       }
 
       const deleted = await this.conversations.delete(id)
-      this.sockets.reply(socket, message, deleted > 0)
+      socket.reply(deleted > 0)
     })
   }
 }

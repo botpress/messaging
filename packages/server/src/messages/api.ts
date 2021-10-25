@@ -151,38 +151,30 @@ export class MessageApi {
       })
     )
 
-    this.sockets.handle('messages.create', CreateMsgSocketSchema, async (socket, message) => {
-      const { conversationId, payload } = message.data
+    this.sockets.handle('messages.create', CreateMsgSocketSchema, async (socket) => {
+      const { conversationId, payload } = socket.data
       const conversation = await this.conversations.get(conversationId)
 
-      if (!conversation) {
-        return this.sockets.reply(socket, message, { error: true, message: 'conversation does not exist' })
-      } else if (conversation.userId !== message.userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'conversation does not belong to that user'
-        })
+      if (!conversation || conversation.userId !== socket.userId) {
+        return socket.notFound('Conversation does not exist')
       }
 
-      const msg = await this.messages.create(conversationId, message.userId, payload, { socket: { id: socket.id } })
-      this.sockets.reply(socket, message, msg)
+      const message = await this.messages.create(conversationId, socket.userId, payload, {
+        socket: { id: socket.socket.id }
+      })
+      socket.reply(message)
     })
 
-    this.sockets.handle('messages.list', ListMsgSocketSchema, async (socket, message) => {
-      const { conversationId, limit } = message.data
+    this.sockets.handle('messages.list', ListMsgSocketSchema, async (socket) => {
+      const { conversationId, limit } = socket.data
       const conversation = await this.conversations.get(conversationId)
 
-      if (!conversation) {
-        return this.sockets.reply(socket, message, { error: true, message: 'conversation does not exist' })
-      } else if (conversation.userId !== message.userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'conversation does not belong to that user'
-        })
+      if (!conversation || conversation.userId !== socket.userId) {
+        return socket.notFound('Conversation does not exist')
       }
 
       const messages = await this.messages.listByConversationId(conversationId, limit)
-      this.sockets.reply(socket, message, messages)
+      socket.reply(messages)
     })
   }
 }

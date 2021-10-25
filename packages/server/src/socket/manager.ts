@@ -41,8 +41,13 @@ export class SocketManager {
     })
   }
 
-  public handle(type: string, schema: Joi.ObjectSchema<any>, callback: SocketHandler, checkUserId?: boolean) {
-    this.handlers[type] = async (socket: Socket.Socket, message: SocketRequest) => {
+  public handle(
+    type: string,
+    schema: Joi.ObjectSchema<any>,
+    callback: (socket: SocketRequest) => Promise<void>,
+    checkUserId?: boolean
+  ) {
+    this.handlers[type] = async (socket: Socket.Socket, message: SocketMessage) => {
       // TODO: remove this
       if (checkUserId !== false) {
         const userId = this.sockets.getUserId(socket)
@@ -60,11 +65,11 @@ export class SocketManager {
         return this.reply(socket, message, { error: true, message: error.message })
       }
 
-      await callback(socket, message)
+      await callback(new SocketRequest(this, socket, message, message.userId))
     }
   }
 
-  public reply(socket: Socket.Socket, message: SocketRequest, data: any) {
+  public reply(socket: Socket.Socket, message: SocketMessage, data: any) {
     socket.send({
       request: message.request,
       data
@@ -91,19 +96,19 @@ export class SocketManager {
     })
   }
 
-  private async handleSocketMessage(socket: Socket.Socket, data: SocketRequest) {
+  private async handleSocketMessage(socket: Socket.Socket, message: SocketMessage) {
     try {
-      this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
+      this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, message)
 
-      if (!this.handlers[data.type]) {
-        return this.reply(socket, data, { error: true, message: `route ${data.type} does not exist` })
+      if (!this.handlers[message.type]) {
+        return this.reply(socket, message, { error: true, message: `route ${message.type} does not exist` })
       }
 
-      await this.handlers[data.type](socket, data)
+      await this.handlers[message.type](socket, message)
     } catch (e) {
-      this.logger.error(e, 'An error occured receiving a socket message', data)
+      this.logger.error(e, 'An error occured receiving a socket message', message)
 
-      return this.reply(socket, data, { error: true, message: 'an error occurred' })
+      return this.reply(socket, message, { error: true, message: 'an error occurred' })
     }
   }
 
@@ -117,11 +122,36 @@ export class SocketManager {
   }
 }
 
-export type SocketHandler = (socket: Socket.Socket, data: SocketRequest) => Promise<void>
+export type SocketHandler = (socket: Socket.Socket, data: SocketMessage) => Promise<void>
 
-export interface SocketRequest {
+export interface SocketMessage {
   request: string
   type: string
   data: any
   userId: uuid
+}
+
+export class SocketRequest {
+  public get data() {
+    return this.message.data
+  }
+
+  public constructor(
+    private manager: SocketManager,
+    public readonly socket: Socket.Socket,
+    private message: SocketMessage,
+    public readonly userId: uuid
+  ) {}
+
+  public reply(data: any) {
+    this.manager.reply(this.socket, this.message, data)
+  }
+
+  public forbid(message: string) {
+    this.manager.reply(this.socket, this.message, { error: true, message })
+  }
+
+  public notFound(message: string) {
+    this.manager.reply(this.socket, this.message, { error: true, message })
+  }
 }

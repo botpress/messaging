@@ -50,19 +50,20 @@ export class UserApi {
       })
     )
 
-    this.sockets.handle('users.get', GetUserSocketSchema, async (socket, message) => {
-      this.sockets.reply(socket, message, await this.users.get(message.userId))
+    this.sockets.handle('users.get', GetUserSocketSchema, async (socket) => {
+      socket.reply(await this.users.get(socket.userId))
     })
 
+    // TODO: this should be done when establishing the socket connection
     this.sockets.handle(
       'users.auth',
       AuthUserSocketSchema,
-      async (socket, message) => {
-        const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = message.data
+      async (socket) => {
+        const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = socket.data
 
         const client = await this.clients.getById(clientId)
         if (!client) {
-          return this.sockets.reply(socket, message, { error: true, message: 'client not found' })
+          return socket.notFound('Client not found')
         }
 
         // TODO: refactor here
@@ -87,8 +88,8 @@ export class UserApi {
           token = `${userToken.id}.${tokenRaw}`
         }
 
-        this.socketService.registerForUser(socket, user!.id)
-        this.sockets.reply(socket, message, { id: user!.id, token })
+        this.socketService.registerForUser(socket.socket, user!.id)
+        socket.reply({ id: user!.id, token })
       },
       false
     )
