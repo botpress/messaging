@@ -8,14 +8,14 @@ import { UserService } from './service'
 
 export class UserSocket {
   constructor(
-    private clients: ClientService,
     private sockets: SocketManager,
+    private clients: ClientService,
     private users: UserService,
     private userTokens: UserTokenService,
     private socketService: SocketService
   ) {}
 
-  async setup() {
+  setup() {
     // TODO: this should be done when establishing the socket connection
     this.sockets.handle('users.auth', AuthUserSocketSchema, this.auth.bind(this), false)
     this.sockets.handle('users.get', GetUserSocketSchema, this.get.bind(this))

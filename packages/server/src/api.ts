@@ -6,43 +6,30 @@ import { App } from './app'
 import { Auth } from './base/auth/auth'
 import { ChannelApi } from './channels/api'
 import { ConversationApi } from './conversations/api'
-import { ConversationSocket } from './conversations/socket'
 import { HealthApi } from './health/api'
 import { MessageApi } from './messages/api'
-import { MessageSocket } from './messages/socket'
-import { SocketManager } from './socket/manager'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
-import { UserSocket } from './users/socket'
 
 export class Api {
-  public readonly sockets: SocketManager
-
   private router: Router
   private auth: Auth
 
   private syncs: SyncApi
   private health: HealthApi
   private users: UserApi
-  private usersS: UserSocket
   private conversations: ConversationApi
-  private conversationsS: ConversationSocket
   private messages: MessageApi
-  private messagesS: MessageSocket
   private channels: ChannelApi
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
     this.auth = new Auth(app.clients)
-    this.sockets = new SocketManager(this.app.sockets)
     this.syncs = new SyncApi(this.router, this.auth, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.auth, this.app.health)
     this.users = new UserApi(this.router, this.auth, this.app.users)
-    this.usersS = new UserSocket(this.app.clients, this.sockets, this.app.users, this.app.userTokens, this.app.sockets)
     this.conversations = new ConversationApi(this.router, this.auth, this.app.conversations)
-    this.conversationsS = new ConversationSocket(this.sockets, this.app.users, this.app.conversations)
     this.messages = new MessageApi(this.router, this.auth, this.app.conversations, this.app.messages, this.app.converse)
-    this.messagesS = new MessageSocket(this.sockets, this.app.conversations, this.app.messages)
     this.channels = new ChannelApi(this.root, this.app)
   }
 
@@ -60,11 +47,8 @@ export class Api {
     await this.syncs.setup()
     await this.health.setup()
     await this.users.setup()
-    this.usersS.setup()
     await this.conversations.setup()
-    this.conversationsS.setup()
     await this.messages.setup()
-    this.messagesS.setup()
     await this.channels.setup()
 
     this.setupApmErrorHandler()

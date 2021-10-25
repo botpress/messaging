@@ -10,6 +10,7 @@ import { Api } from './api'
 import { App } from './app'
 import { ShutDownSignal } from './base/errors'
 import { Logger } from './logger/types'
+import { Socket } from './socket'
 
 const pkg = require('../package.json')
 
@@ -19,7 +20,7 @@ export class Launcher {
   private httpTerminator: HttpTerminator | undefined
   private readonly shutdownTimeout: number = ms('5s')
 
-  constructor(private express: Express, private app: App, private api: Api) {
+  constructor(private express: Express, private app: App, private api: Api, private socket: Socket) {
     this.logger = new Logger('Launcher')
 
     process.on('uncaughtException', async (e) => {
@@ -56,6 +57,7 @@ export class Launcher {
       this.printChannels()
 
       await this.api.setup()
+      await this.socket.setup()
 
       let port = process.env.PORT
       if (!port) {
@@ -64,7 +66,7 @@ export class Launcher {
       }
 
       const server = this.express.listen(port)
-      await this.api.sockets.setup(server)
+      await this.socket.manager.setup(server)
       this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
 
       if (!yn(process.env.SPINNED)) {
@@ -97,7 +99,7 @@ export class Launcher {
 
       this.logger.info('Server gracefully closing down...')
 
-      await this.api.sockets.destroy()
+      await this.socket.manager.destroy()
       await this.httpTerminator?.terminate()
       await this.app.destroy()
 

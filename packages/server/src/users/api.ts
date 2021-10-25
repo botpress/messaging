@@ -6,7 +6,7 @@ import { UserService } from './service'
 export class UserApi {
   constructor(private router: Router, private auth: Auth, private users: UserService) {}
 
-  setup() {
+  async setup() {
     this.router.post(
       '/users',
       this.auth.client.auth(async (req, res) => {
