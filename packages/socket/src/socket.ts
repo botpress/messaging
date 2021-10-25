@@ -51,9 +51,7 @@ export class MessagingSocket {
   }
 
   async getUser(): Promise<User | undefined> {
-    return this.request('users.get', {
-      id: this.userId
-    })
+    return this.request('users.get', {})
   }
 
   switchConversation(id: uuid | undefined) {

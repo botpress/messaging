@@ -51,17 +51,7 @@ export class UserApi {
     )
 
     this.sockets.handle('users.get', GetUserSocketSchema, async (socket, message) => {
-      const { id } = message.data
-
-      if (id !== message.userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'cannot fetch data of other users'
-        })
-      }
-
-      const user = await this.users.get(id)
-      this.sockets.reply(socket, message, user)
+      this.sockets.reply(socket, message, await this.users.get(message.userId))
     })
 
     this.sockets.handle(
