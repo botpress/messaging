@@ -9,6 +9,7 @@ import { Collector } from './types'
 export class ConverseService extends Service {
   private collectors!: ServerCache<uuid, Collector[]>
   private incomingIdCache!: ServerCache<uuid, uuid>
+  private collectingForMessageCache!: ServerCache<uuid, boolean>
 
   constructor(private caching: CachingService, private messages: MessageService) {
     super()
@@ -18,7 +19,8 @@ export class ConverseService extends Service {
     this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
 
     this.collectors = await this.caching.newServerCache('cache_converse_collectors', {})
-    this.incomingIdCache = await this.caching.newServerCache('cache_converse_hints')
+    this.incomingIdCache = await this.caching.newServerCache('cache_converse_incoming_id')
+    this.collectingForMessageCache = await this.caching.newServerCache('cache_converse_collecting_for_message')
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
@@ -41,9 +43,15 @@ export class ConverseService extends Service {
     this.incomingIdCache.set(messageId, incomingId)
   }
 
+  isCollectingForMessage(messageId: uuid) {
+    return !!this.collectingForMessageCache.get(messageId)
+  }
+
   async collect(messageId: uuid, conversationId: uuid): Promise<Message[]> {
     const collector = this.addCollector(messageId, conversationId)
     this.resetCollectorTimeout(collector, 5000)
+
+    this.collectingForMessageCache.set(messageId, true)
 
     return new Promise<Message[]>((resolve) => {
       collector.resolve = resolve

@@ -87,7 +87,7 @@ export class MessageApi {
           return res.sendStatus(404)
         }
 
-        const conversation = await this.conversations.get(id)
+        const conversation = await this.conversations.get(message.conversationId)
         if (!conversation) {
           return res.sendStatus(404)
         } else if (conversation.clientId !== req.client!.id) {

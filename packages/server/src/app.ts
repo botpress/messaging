@@ -118,6 +118,7 @@ export class App {
       this.users,
       this.conversations,
       this.messages,
+      this.converse,
       this.mapping
     )
   }

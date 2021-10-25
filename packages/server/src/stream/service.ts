@@ -8,6 +8,7 @@ import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConversationEvents } from '../conversations/events'
 import { ConversationService } from '../conversations/service'
+import { ConverseService } from '../converse/service'
 import { HealthEvents } from '../health/events'
 import { HealthService } from '../health/service'
 import { Logger } from '../logger/types'
@@ -34,6 +35,7 @@ export class StreamService extends Service {
     private users: UserService,
     private conversations: ConversationService,
     private messages: MessageService,
+    private converse: ConverseService,
     private mapping: MappingService
   ) {
     super()
@@ -73,7 +75,12 @@ export class StreamService extends Service {
 
       await this.stream(
         'message.new',
-        { channel: await this.getChannel(conversation!.id), conversationId: conversation!.id, message },
+        {
+          channel: await this.getChannel(conversation!.id),
+          conversationId: conversation!.id,
+          collect: this.converse.isCollectingForMessage(message.id),
+          message
+        },
         conversation!.clientId,
         conversation!.userId,
         source
