@@ -1,4 +1,5 @@
 import { BoardLinker } from './linker'
+import 'regenerator-runtime/runtime'
 
 new BoardLinker(
   document.getElementById('board-linker')!,

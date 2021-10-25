@@ -73,7 +73,8 @@ export class BoardLinker {
           text('Link', button)
         })
 
-        form.onsubmit = () => {
+        form.onsubmit = (e) => {
+          e.preventDefault()
           void this.create()
           return false
         }
