@@ -81,10 +81,17 @@ export class MessageApi {
         }
 
         const { id } = req.params
-        const message = await this.messages.get(id)
 
+        const message = await this.messages.get(id)
         if (!message) {
           return res.sendStatus(404)
+        }
+
+        const conversation = await this.conversations.get(id)
+        if (!conversation) {
+          return res.sendStatus(404)
+        } else if (conversation.clientId !== req.client!.id) {
+          return res.sendStatus(403)
         }
 
         await this.converse.stopCollecting(message.id, message.conversationId)
