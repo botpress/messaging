@@ -9,3 +9,7 @@ export const AuthUserSocketSchema = Joi.object({
 export const GetUserSchema = Joi.object({
   id: Joi.string().guid().required()
 })
+
+export const GetUserSocketSchema = Joi.object({
+  id: Joi.string().guid().required()
+})

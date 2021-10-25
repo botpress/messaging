@@ -5,7 +5,7 @@ import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
 import { UserTokenService } from '../user-tokens/service'
-import { AuthUserSocketSchema, GetUserSchema } from './schema'
+import { AuthUserSocketSchema, GetUserSchema, GetUserSocketSchema } from './schema'
 import { UserService } from './service'
 
 export class UserApi {
@@ -49,6 +49,33 @@ export class UserApi {
         res.send(user)
       })
     )
+
+    this.sockets.handle('users.get', async (socket, message) => {
+      const { error } = GetUserSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
+
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
+
+      const { id } = message.data
+
+      if (id !== userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'cannot fetch data of other users'
+        })
+      }
+
+      const user = await this.users.get(id)
+      this.sockets.reply(socket, message, user)
+    })
 
     this.sockets.handle('users.auth', async (socket, message) => {
       const { error } = AuthUserSocketSchema.validate(message.data)
