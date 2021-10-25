@@ -146,7 +146,7 @@ export class BoardLinker {
       })
     }
 
-    this.webchat.socket.com.events.on(SocketComEvents.Connect, async (e) => {
+    this.webchat.socket.on('connect', async (e) => {
       localStorage.setItem('bp-host', host)
       this.inputHost.placeholder = host
       this.inputHost.value = ''

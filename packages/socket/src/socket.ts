@@ -1,27 +1,131 @@
-import { uuid } from '@botpress/messaging-base'
+import { Conversation, Message, User, uuid } from '@botpress/messaging-base'
+import { SocketComEvents } from '.'
 import { SocketCom } from './com'
-import { ConversationSocket } from './conversations'
-import { MessageSocket } from './messages'
-import { UserSocket } from './users'
 
 export class MessagingSocket {
   public readonly clientId: uuid
-  public readonly com: SocketCom
-  public readonly users: UserSocket
-  public readonly conversations: ConversationSocket
-  public readonly messages: MessageSocket
+  private readonly com: SocketCom
+
+  public userId: uuid | undefined
+  public conversationId: uuid | undefined
+  public token: string | undefined
 
   constructor(options: MessagingSocketOptions) {
     this.clientId = options.clientId
-    this.com = new SocketCom(options.url, options.manualConnect)
-    this.users = new UserSocket(this.com, this.clientId)
-    this.conversations = new ConversationSocket(this.com)
-    this.messages = new MessageSocket(this.com)
+    this.com = new SocketCom(options.url)
+  }
+
+  on(eventId: any, callback: ((data: any) => Promise<void>) | ((data: any) => void)) {
+    // Garbage refact this
+
+    if (eventId === 'connect') {
+      this.com.events.on(SocketComEvents.Connect, <any>callback)
+    } else {
+      this.com.events.on(SocketComEvents.Message, async (data) => {
+        if (data.type === eventId) {
+          await callback(data.data.data)
+        }
+      })
+    }
+  }
+
+  async connect(info?: UserInfo) {
+    this.com.connect()
+    await this.authUser(info)
+    await this.createConversation()
+  }
+
+  async authUser(info?: UserInfo): Promise<UserInfo> {
+    const result = await this.request<UserInfo>('users.auth', {
+      clientId: this.clientId,
+      ...(info || {})
+    })
+
+    if (result.id === info?.id && !result.token) {
+      result.token = info.token
+    }
+
+    this.userId = result.id
+
+    return result
+  }
+
+  async getUser(): Promise<User | undefined> {
+    return this.request('users.get', {
+      id: this.userId
+    })
+  }
+
+  switchConversation(id: uuid | undefined) {
+    this.conversationId = id
+  }
+
+  async createConversation(options?: { switch: boolean }): Promise<Conversation> {
+    const conversation = await this.request<Conversation>('conversations.create', {})
+
+    if (options?.switch !== false) {
+      this.switchConversation(conversation.id)
+    }
+
+    return conversation
+  }
+
+  async getConversation(id?: uuid): Promise<Conversation | undefined> {
+    return this.request('conversations.get', {
+      id: id || this.conversationId
+    })
+  }
+
+  async deleteConversation(id?: uuid): Promise<boolean> {
+    const deleted = await this.request<boolean>('conversations.delete', {
+      id: id || this.conversationId
+    })
+
+    if (deleted) {
+      this.switchConversation(undefined)
+    }
+
+    return deleted
+  }
+
+  async listConversations(limit?: number): Promise<Conversation[]> {
+    return this.request('conversations.list', {
+      limit: limit || 20
+    })
+  }
+
+  async sendText(text: string): Promise<Message> {
+    return this.request('messages.create', {
+      conversationId: this.conversationId,
+      payload: { type: 'text', text }
+    })
+  }
+
+  async sendPayload(payload: any): Promise<Message> {
+    return this.request('messages.create', {
+      conversationId: this.conversationId,
+      payload
+    })
+  }
+
+  async listMessages(limit?: number): Promise<Message[]> {
+    return this.request('messages.list', {
+      conversationId: this.conversationId,
+      limit: limit || 20
+    })
+  }
+
+  protected request<T>(type: string, data: any) {
+    return this.com.request<T>(type, data)
   }
 }
 
 export interface MessagingSocketOptions {
   url: string
   clientId: uuid
-  manualConnect: boolean
+}
+
+export interface UserInfo {
+  id: uuid
+  token: string
 }

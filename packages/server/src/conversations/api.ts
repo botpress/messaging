@@ -137,16 +137,8 @@ export class ConversationApi {
       const { id } = message.data
       const conversation = await this.conversations.get(id)
 
-      if (!conversation) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'conversation not found'
-        })
-      } else if (conversation.userId !== userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'conversation does not belong to user'
-        })
+      if (!conversation || conversation.userId !== userId) {
+        return this.sockets.reply(socket, message, undefined)
       }
 
       this.sockets.reply(socket, message, conversation)
@@ -189,10 +181,7 @@ export class ConversationApi {
       const conversation = await this.conversations.get(id)
 
       if (!conversation) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'conversation not found'
-        })
+        return this.sockets.reply(socket, message, false)
       } else if (conversation.userId !== userId) {
         return this.sockets.reply(socket, message, {
           error: true,
@@ -202,31 +191,6 @@ export class ConversationApi {
 
       const deleted = await this.conversations.delete(id)
       this.sockets.reply(socket, message, deleted > 0)
-    })
-
-    this.sockets.handle('conversations.use', async (socket, message) => {
-      const { error } = UseConvoSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-      const { conversationId }: { conversationId?: string } = message.data
-
-      const user = await this.users.get(userId)
-      let conversation = conversationId && (await this.conversations.get(conversationId))
-
-      if (!conversation || conversation.userId !== userId) {
-        conversation = await this.conversations.create(user!.clientId, userId)
-      }
-
-      this.sockets.reply(socket, message, conversation)
     })
   }
 }
