@@ -15,7 +15,7 @@ export class MessageSocket {
     this.sockets.handle('messages.list', ListMsgSocketSchema, this.list.bind(this))
   }
 
-  private async create(socket: SocketRequest) {
+  async create(socket: SocketRequest) {
     const { conversationId, payload } = socket.data
     const conversation = await this.conversations.get(conversationId)
 
@@ -29,7 +29,7 @@ export class MessageSocket {
     socket.reply(message)
   }
 
-  private async list(socket: SocketRequest) {
+  async list(socket: SocketRequest) {
     const { conversationId, limit } = socket.data
     const conversation = await this.conversations.get(conversationId)
 

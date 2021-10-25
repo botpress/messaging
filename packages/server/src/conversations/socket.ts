@@ -13,14 +13,14 @@ export class ConversationSocket {
     this.sockets.handle('conversations.delete', DeleteConvoSocketSchema, this.delete.bind(this))
   }
 
-  private async create(socket: SocketRequest) {
+  async create(socket: SocketRequest) {
     const user = await this.users.get(socket.userId)
     const conversation = await this.conversations.create(user!.clientId, user!.id)
 
     socket.reply(conversation)
   }
 
-  private async get(socket: SocketRequest) {
+  async get(socket: SocketRequest) {
     const { id } = socket.data
     const conversation = await this.conversations.get(id)
 
@@ -31,7 +31,7 @@ export class ConversationSocket {
     socket.reply(conversation)
   }
 
-  private async list(socket: SocketRequest) {
+  async list(socket: SocketRequest) {
     const { limit } = socket.data
 
     const user = await this.users.get(socket.userId)
@@ -40,7 +40,7 @@ export class ConversationSocket {
     socket.reply(conversations)
   }
 
-  private async delete(socket: SocketRequest) {
+  async delete(socket: SocketRequest) {
     const { id } = socket.data
     const conversation = await this.conversations.get(id)
 

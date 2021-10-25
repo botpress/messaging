@@ -21,7 +21,7 @@ export class UserSocket {
     this.sockets.handle('users.get', GetUserSocketSchema, this.get.bind(this))
   }
 
-  private async auth(socket: SocketRequest) {
+  async auth(socket: SocketRequest) {
     const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = socket.data
 
     const client = await this.clients.getById(clientId)
@@ -55,7 +55,7 @@ export class UserSocket {
     socket.reply({ id: user!.id, token })
   }
 
-  private async get(socket: SocketRequest) {
+  async get(socket: SocketRequest) {
     socket.reply(await this.users.get(socket.userId))
   }
 }
