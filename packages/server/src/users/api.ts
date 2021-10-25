@@ -4,6 +4,7 @@ import { Auth } from '../base/auth/auth'
 import { ClientService } from '../clients/service'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
+import { UserTokenService } from '../user-tokens/service'
 import { AuthUserSocketSchema, GetUserSchema } from './schema'
 import { UserService } from './service'
 
@@ -14,6 +15,7 @@ export class UserApi {
     private clients: ClientService,
     private sockets: SocketManager,
     private users: UserService,
+    private userTokens: UserTokenService,
     private socketService: SocketService
   ) {}
 
@@ -54,21 +56,38 @@ export class UserApi {
         return this.sockets.reply(socket, message, { error: true, message: error.message })
       }
 
-      const { clientId, userId, userToken }: { clientId: uuid; userId: uuid; userToken: string } = message.data
+      const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = message.data
 
       const client = await this.clients.getById(clientId)
       if (!client) {
         return this.sockets.reply(socket, message, { error: true, message: 'client not found' })
       }
 
-      // TODO: use user token to validate user
-      let user = userId && (await this.users.get(userId))
+      // TODO: refactor here
+
+      let success = true
+      let user = userId ? await this.users.get(userId) : undefined
+      let token = undefined
+
       if (!user || user.clientId !== client.id) {
-        user = await this.users.create(client.id)
+        success = false
+      } else {
+        const [userTokenId, userTokenToken] = userTokenRaw.split('.')
+        const userToken = await this.userTokens.getByIdAndToken(userTokenId, userTokenToken)
+        if (!userToken) {
+          success = false
+        }
       }
 
-      this.socketService.registerForUser(socket, user.id)
-      this.sockets.reply(socket, message, user)
+      if (!success) {
+        user = await this.users.create(clientId)
+        const tokenRaw = await this.userTokens.generateToken()
+        const userToken = await this.userTokens.create(user.id, tokenRaw, undefined)
+        token = `${userToken.id}.${tokenRaw}`
+      }
+
+      this.socketService.registerForUser(socket, user!.id)
+      this.sockets.reply(socket, message, { id: user!.id, token })
     })
   }
 }
