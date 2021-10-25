@@ -86,30 +86,30 @@ export class UserTokenService extends Service {
     }
   }
 
-  async verifyToken(id: string, token: string): Promise<boolean> {
+  async verifyToken(id: string, token: string): Promise<UserToken | undefined> {
     const userToken = await this.getById(id)
     if (!userToken) {
-      return false
+      return undefined
     }
 
     if (userToken.expiry && Date.now() > userToken.expiry.getTime()) {
-      return false
+      return undefined
     }
 
     const cachedToken = this.cacheTokens.get(id)
     if (cachedToken) {
       if (token === cachedToken) {
-        return true
+        return userToken
       } else {
-        return false
+        return undefined
       }
     }
 
     if (await this.cryptoService.compareHash(userToken.token, token)) {
       this.cacheTokens.set(id, token)
-      return true
+      return userToken
     } else {
-      return false
+      return undefined
     }
   }
 
