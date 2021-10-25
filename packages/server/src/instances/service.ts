@@ -126,7 +126,7 @@ export class InstanceService extends Service {
     } catch (e) {
       this.cache.del(conduitId)
 
-      await this.statusService.addError(conduitId, e)
+      await this.statusService.addError(conduitId, e as Error)
       instance.logger.error(e, 'Error trying to initialize conduit')
 
       return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
@@ -157,7 +157,7 @@ export class InstanceService extends Service {
     } catch (e) {
       this.cache.del(conduitId)
 
-      await this.statusService.addError(conduitId, e)
+      await this.statusService.addError(conduitId, e as Error)
       instance.logger.error(e, 'Error trying to setup conduit')
 
       await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)

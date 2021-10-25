@@ -26,6 +26,7 @@ export interface MessagingEnv {
   MIGRATE_CMD?: string
   MIGRATE_DRYRUN?: string
   TESTMIG_DB_VERSION?: string
+  TWILIO_TESTING?: string
 }
 
 declare global {

@@ -1,3 +1,21 @@
+## [0.1.15](https://github.com/botpress/messaging/compare/v0.1.14...v0.1.15) (2021-10-19)
+
+
+### Bug Fixes
+
+* **channels:** fix typing indicators always on ([#201](https://github.com/botpress/messaging/issues/201)) ([9015457](https://github.com/botpress/messaging/commit/901545795897e05775c8efdedd0165841f1f0086))
+* **client:** fix adding custom headers ([#212](https://github.com/botpress/messaging/issues/212)) ([b92ca08](https://github.com/botpress/messaging/commit/b92ca08124dd914673f836d0885d39c84615d697))
+* **repo:** typing errors due to unknow error type ([#213](https://github.com/botpress/messaging/issues/213)) ([b13114e](https://github.com/botpress/messaging/commit/b13114e352ceff41f02c7aa1ebb15a9ebf2cc34b))
+
+
+### Features
+
+* **api:** add a route to get user info ([#195](https://github.com/botpress/messaging/issues/195)) ([7441823](https://github.com/botpress/messaging/commit/744182315f44d8211de3ff13654962d3d19a855e)), closes [#197](https://github.com/botpress/messaging/issues/197) [#198](https://github.com/botpress/messaging/issues/198)
+* **converse:** converse api ([#194](https://github.com/botpress/messaging/issues/194)) ([f4ecbca](https://github.com/botpress/messaging/commit/f4ecbcac401e985af2a40eb6815721df3b1c2f63))
+* **instances:** message queue ([#207](https://github.com/botpress/messaging/issues/207)) ([335cf3c](https://github.com/botpress/messaging/commit/335cf3c32851057c0f07674167e5d73e8f16b1df))
+
+
+
 ## [0.1.14](https://github.com/botpress/messaging/compare/v0.1.13...v0.1.14) (2021-10-14)
 
 
