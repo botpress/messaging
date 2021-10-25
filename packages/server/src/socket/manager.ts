@@ -73,9 +73,16 @@ export class SocketManager {
   private async handleSocketMessage(socket: Socket.Socket, data: SocketRequest) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
-      await this.handlers[data?.type]?.(socket, data)
+
+      if (!this.handlers[data.type]) {
+        return this.reply(socket, data, { error: true, message: 'route does not exist' })
+      }
+
+      await this.handlers[data.type](socket, data)
     } catch (e) {
       this.logger.error(e, 'An error occured receiving a socket message', data)
+
+      return this.reply(socket, data, { error: true, message: 'an error occurred' })
     }
   }
 
