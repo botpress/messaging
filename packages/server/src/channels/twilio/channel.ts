@@ -1,5 +1,7 @@
+import clc from 'cli-color'
 import express, { Request } from 'express'
 import { validateRequest } from 'twilio'
+import yn from 'yn'
 import { Channel } from '../base/channel'
 import { TwilioConduit } from './conduit'
 import { TwilioConfigSchema } from './config'
@@ -22,6 +24,10 @@ export class TwilioChannel extends Channel<TwilioConduit> {
   }
 
   async setupRoutes() {
+    if (yn(process.env.TWILIO_TESTING)) {
+      this.logger.window([clc.red('TWILIO TESTING IS ENABLED')])
+    }
+
     this.router.use(express.urlencoded({ extended: true }))
 
     this.router.post(
@@ -30,7 +36,10 @@ export class TwilioChannel extends Channel<TwilioConduit> {
         const conduit = res.locals.conduit as TwilioConduit
         const signature = req.headers['x-twilio-signature'] as string
 
-        if (
+        if (yn(process.env.TWILIO_TESTING)) {
+          await conduit.receive(req.body)
+          res.sendStatus(200)
+        } else if (
           validateRequest(conduit.config.authToken, signature, conduit.webhookUrl, req.body) ||
           (await this.verifyLegacy(conduit, signature, req))
         ) {
