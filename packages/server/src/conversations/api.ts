@@ -1,27 +1,10 @@
 import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
-import { SocketManager } from '../socket/manager'
-import { UserService } from '../users/service'
-import {
-  CreateConvoSchema,
-  CreateConvoSocketSchema,
-  DeleteConvoSocketSchema,
-  GetConvoSchema,
-  GetConvoSocketSchema,
-  ListConvoSocketSchema,
-  ListConvosSchema,
-  RecentConvoSchema
-} from './schema'
+import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema } from './schema'
 import { ConversationService } from './service'
 
 export class ConversationApi {
-  constructor(
-    private router: Router,
-    private auth: Auth,
-    private sockets: SocketManager,
-    private users: UserService,
-    private conversations: ConversationService
-  ) {}
+  constructor(private router: Router, private auth: Auth, private conversations: ConversationService) {}
 
   async setup() {
     this.router.post(
@@ -96,46 +79,5 @@ export class ConversationApi {
         res.send(conversation)
       })
     )
-
-    this.sockets.handle('conversations.create', CreateConvoSocketSchema, async (socket) => {
-      const user = await this.users.get(socket.userId)
-      const conversation = await this.conversations.create(user!.clientId, user!.id)
-
-      socket.reply(conversation)
-    })
-
-    this.sockets.handle('conversations.get', GetConvoSocketSchema, async (socket) => {
-      const { id } = socket.data
-      const conversation = await this.conversations.get(id)
-
-      if (!conversation || conversation.userId !== socket.userId) {
-        return socket.reply(undefined)
-      }
-
-      socket.reply(conversation)
-    })
-
-    this.sockets.handle('conversations.list', ListConvoSocketSchema, async (socket) => {
-      const { limit } = socket.data
-
-      const user = await this.users.get(socket.userId)
-      const conversations = await this.conversations.listByUserId(user!.clientId, socket.userId, +limit)
-
-      socket.reply(conversations)
-    })
-
-    this.sockets.handle('conversations.delete', DeleteConvoSocketSchema, async (socket) => {
-      const { id } = socket.data
-      const conversation = await this.conversations.get(id)
-
-      if (!conversation) {
-        return socket.reply(false)
-      } else if (conversation.userId !== socket.userId) {
-        return socket.forbid('Conversation does not belong to user')
-      }
-
-      const deleted = await this.conversations.delete(id)
-      socket.reply(deleted > 0)
-    })
   }
 }

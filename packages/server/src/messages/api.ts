@@ -3,22 +3,13 @@ import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
-import { SocketManager } from '../socket/manager'
-import {
-  CreateMsgSchema,
-  CreateMsgSocketSchema,
-  DeleteMsgSchema,
-  GetMsgSchema,
-  ListMsgSchema,
-  ListMsgSocketSchema
-} from './schema'
+import { CreateMsgSchema, DeleteMsgSchema, GetMsgSchema, ListMsgSchema } from './schema'
 import { MessageService } from './service'
 
 export class MessageApi {
   constructor(
     private router: Router,
     private auth: Auth,
-    private sockets: SocketManager,
     private conversations: ConversationService,
     private messages: MessageService,
     private converse: ConverseService
@@ -150,31 +141,5 @@ export class MessageApi {
         res.send({ count: deleted })
       })
     )
-
-    this.sockets.handle('messages.create', CreateMsgSocketSchema, async (socket) => {
-      const { conversationId, payload } = socket.data
-      const conversation = await this.conversations.get(conversationId)
-
-      if (!conversation || conversation.userId !== socket.userId) {
-        return socket.notFound('Conversation does not exist')
-      }
-
-      const message = await this.messages.create(conversationId, socket.userId, payload, {
-        socket: { id: socket.socket.id }
-      })
-      socket.reply(message)
-    })
-
-    this.sockets.handle('messages.list', ListMsgSocketSchema, async (socket) => {
-      const { conversationId, limit } = socket.data
-      const conversation = await this.conversations.get(conversationId)
-
-      if (!conversation || conversation.userId !== socket.userId) {
-        return socket.notFound('Conversation does not exist')
-      }
-
-      const messages = await this.messages.listByConversationId(conversationId, limit)
-      socket.reply(messages)
-    })
   }
 }
