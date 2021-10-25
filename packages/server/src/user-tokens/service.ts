@@ -12,6 +12,8 @@ import { UserService } from '../users/service'
 import { UserTokenTable } from './table'
 import { UserToken } from './types'
 
+export const USER_TOKEN_LENGTH = 66
+
 export class UserTokenService extends Service {
   public batcher!: Batcher<UserToken>
 
@@ -49,7 +51,7 @@ export class UserTokenService extends Service {
   }
 
   async generateToken(): Promise<string> {
-    return crypto.randomBytes(66).toString('base64')
+    return crypto.randomBytes(USER_TOKEN_LENGTH).toString('base64')
   }
 
   async create(userId: uuid, token: string, expiry: Date | undefined): Promise<UserToken> {
