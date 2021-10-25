@@ -1,5 +1,6 @@
 import clc from 'cli-color'
 import { Server } from 'http'
+import Joi from 'joi'
 import Socket from 'socket.io'
 import yn from 'yn'
 import { Logger } from '../logger/types'
@@ -39,8 +40,15 @@ export class SocketManager {
     })
   }
 
-  public handle(type: string, callback: SocketHandler) {
-    this.handlers[type] = callback
+  public handle(type: string, schema: Joi.ObjectSchema<any>, callback: SocketHandler) {
+    this.handlers[type] = async (socket: Socket.Socket, message: SocketRequest) => {
+      const { error } = schema.validate(message.data)
+      if (error) {
+        return this.reply(socket, message, { error: true, message: error.message })
+      }
+
+      await callback(socket, message)
+    }
   }
 
   public reply(socket: Socket.Socket, message: SocketRequest, data: any) {

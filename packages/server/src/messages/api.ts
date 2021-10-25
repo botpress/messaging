@@ -153,12 +153,7 @@ export class MessageApi {
       })
     )
 
-    this.sockets.handle('messages.create', async (socket, message) => {
-      const { error } = CreateMsgSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('messages.create', CreateMsgSocketSchema, async (socket, message) => {
       const userId = this.socketService.getUserId(socket)
       if (!userId) {
         return this.sockets.reply(socket, message, {
@@ -183,12 +178,7 @@ export class MessageApi {
       this.sockets.reply(socket, message, msg)
     })
 
-    this.sockets.handle('messages.list', async (socket, message) => {
-      const { error } = ListMsgSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('messages.list', ListMsgSocketSchema, async (socket, message) => {
       const userId = this.socketService.getUserId(socket)
       if (!userId) {
         return this.sockets.reply(socket, message, {

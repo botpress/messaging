@@ -100,12 +100,7 @@ export class ConversationApi {
       })
     )
 
-    this.sockets.handle('conversations.create', async (socket, message) => {
-      const { error } = CreateConvoSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('conversations.create', CreateConvoSocketSchema, async (socket, message) => {
       const userId = this.socketService.getUserId(socket)
       if (!userId) {
         return this.sockets.reply(socket, message, {
@@ -120,12 +115,7 @@ export class ConversationApi {
       this.sockets.reply(socket, message, conversation)
     })
 
-    this.sockets.handle('conversations.get', async (socket, message) => {
-      const { error } = GetConvoSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('conversations.get', GetConvoSocketSchema, async (socket, message) => {
       const userId = this.socketService.getUserId(socket)
       if (!userId) {
         return this.sockets.reply(socket, message, {
@@ -144,12 +134,7 @@ export class ConversationApi {
       this.sockets.reply(socket, message, conversation)
     })
 
-    this.sockets.handle('conversations.list', async (socket, message) => {
-      const { error } = ListConvoSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('conversations.list', ListConvoSocketSchema, async (socket, message) => {
       const userId = this.socketService.getUserId(socket)
       if (!userId) {
         return this.sockets.reply(socket, message, {
@@ -163,12 +148,7 @@ export class ConversationApi {
       this.sockets.reply(socket, message, await this.conversations.listByUserId(user!.clientId, userId, +limit))
     })
 
-    this.sockets.handle('conversations.delete', async (socket, message) => {
-      const { error } = DeleteConvoSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('conversations.delete', DeleteConvoSocketSchema, async (socket, message) => {
       const userId = this.socketService.getUserId(socket)
       if (!userId) {
         return this.sockets.reply(socket, message, {

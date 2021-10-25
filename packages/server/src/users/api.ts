@@ -50,12 +50,7 @@ export class UserApi {
       })
     )
 
-    this.sockets.handle('users.get', async (socket, message) => {
-      const { error } = GetUserSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('users.get', GetUserSocketSchema, async (socket, message) => {
       const userId = this.socketService.getUserId(socket)
       if (!userId) {
         return this.sockets.reply(socket, message, {
@@ -77,12 +72,7 @@ export class UserApi {
       this.sockets.reply(socket, message, user)
     })
 
-    this.sockets.handle('users.auth', async (socket, message) => {
-      const { error } = AuthUserSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
+    this.sockets.handle('users.auth', AuthUserSocketSchema, async (socket, message) => {
       const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = message.data
 
       const client = await this.clients.getById(clientId)
