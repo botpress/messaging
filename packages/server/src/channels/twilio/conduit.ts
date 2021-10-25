@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { Twilio } from 'twilio'
+import yn from 'yn'
 import { ConduitInstance, EndpointContent } from '../base/conduit'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
@@ -15,7 +16,9 @@ export class TwilioConduit extends ConduitInstance<TwilioConfig, TwilioContext> 
   public webhookUrl!: string
 
   protected async setupConnection() {
-    this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
+    if (!yn(process.env.TWILIO_TESTING)) {
+      this.twilio = new Twilio(this.config.accountSID, this.config.authToken)
+    }
     this.webhookUrl = await this.getRoute()
 
     await this.printWebhook()

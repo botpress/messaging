@@ -61,12 +61,12 @@ export class Logger {
     )
   }
 
-  error(error: Error | undefined, message?: string, data?: Param) {
+  error(error: Error | undefined | unknown, message?: string, data?: Param) {
     if (message?.length && message[message.length - 1] !== '.') {
       message += '.'
     }
 
-    this.printPrefix([message, data, error?.stack], LoggerLevel.Error)
+    this.printPrefix([message, data, error instanceof Error ? error.stack : undefined], LoggerLevel.Error)
   }
 
   private center(text: string, width: number) {

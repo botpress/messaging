@@ -12,7 +12,7 @@
   "dependencies": {
     "@botpress/webchat": "0.0.1",
     "@botpress/webchat-skin": "0.0.1",
-    "@botpress/messaging-client": "0.0.4",
+    "@botpress/messaging-client": "",
     "axios": "^0.21.1"
   }
 }
