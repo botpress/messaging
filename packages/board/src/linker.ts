@@ -8,6 +8,7 @@ export class BoardLinker {
   private inputHost!: HTMLInputElement
   private inputClientId!: HTMLInputElement
   private inputUserId!: HTMLInputElement
+  private inputUserToken!: HTMLInputElement
   private inputConversationId!: HTMLInputElement
 
   private webchat?: Webchat
@@ -57,6 +58,16 @@ export class BoardLinker {
         this.inputUserId = element('input', form, (input) => {
           input.type = 'text'
           input.name = 'bp-userId-input'
+        })
+        element('br', form)
+        element('label', form, (label) => {
+          label.htmlFor = 'bp-userToken-input'
+          text('userToken', label)
+        })
+        element('br', form)
+        this.inputUserToken = element('input', form, (input) => {
+          input.type = 'text'
+          input.name = 'bp-userToken-input'
         })
         element('br', form)
         element('label', form, (label) => {
@@ -115,7 +126,18 @@ export class BoardLinker {
 
     if (this.inputUserId.value.length) {
       this.webchat.user.events.on(UserEvents.Choose, async (e) => {
-        e.choice = this.inputUserId.value
+        if (!e.choice) {
+          e.choice = <any>{}
+        }
+        e.choice!.id = this.inputUserToken.value
+      })
+    }
+    if (this.inputUserToken.value.length) {
+      this.webchat.user.events.on(UserEvents.Choose, async (e) => {
+        if (!e.choice) {
+          e.choice = <any>{}
+        }
+        e.choice!.token = this.inputUserToken.value
       })
     }
     if (this.inputConversationId.value.length) {
@@ -135,6 +157,9 @@ export class BoardLinker {
       localStorage.setItem('bp-board-client', clientId)
       this.inputUserId.placeholder = e.value?.id || ''
       this.inputUserId.value = ''
+
+      this.inputUserToken.placeholder = e.value?.token || ''
+      this.inputUserToken.value = ''
     })
     this.webchat.conversation.events.on(ConversationEvents.Set, async (e) => {
       this.inputConversationId.placeholder = e.value?.id || ''

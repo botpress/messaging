@@ -4,6 +4,7 @@ import { UserEvents, UserSetEvent } from '@botpress/webchat/src/user/events'
 
 export class BoardWatcher {
   private textUserId!: Text
+  private textUserToken!: Text
   private textConversationId!: Text
 
   constructor(private parent: HTMLElement, private webchat: Webchat) {
@@ -33,6 +34,12 @@ export class BoardWatcher {
         })
         element('li', ul, (li) => {
           element('code', li, (code) => {
+            text('userToken ', code)
+          })
+          this.textUserToken = text('', li)
+        })
+        element('li', ul, (li) => {
+          element('code', li, (code) => {
             text('conversationId ', code)
           })
           this.textConversationId = text('', li)
@@ -48,6 +55,7 @@ export class BoardWatcher {
 
   private async handleUserSet(e: UserSetEvent) {
     this.textUserId.textContent = e.value?.id || ''
+    this.textUserToken.textContent = e.value?.token || ''
   }
 
   private async handleConversationSet(e: ConversationSetEvent) {
