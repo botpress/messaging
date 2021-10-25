@@ -3,7 +3,17 @@ import { Auth } from '../base/auth/auth'
 import { SocketManager } from '../socket/manager'
 import { SocketService } from '../socket/service'
 import { UserService } from '../users/service'
-import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema, UseConvoSocketSchema } from './schema'
+import {
+  CreateConvoSchema,
+  CreateConvoSocketSchema,
+  DeleteConvoSocketSchema,
+  GetConvoSchema,
+  GetConvoSocketSchema,
+  ListConvoSocketSchema,
+  ListConvosSchema,
+  RecentConvoSchema,
+  UseConvoSocketSchema
+} from './schema'
 import { ConversationService } from './service'
 
 export class ConversationApi {
@@ -89,6 +99,110 @@ export class ConversationApi {
         res.send(conversation)
       })
     )
+
+    this.sockets.handle('conversations.create', async (socket, message) => {
+      const { error } = CreateConvoSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
+
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
+
+      const user = await this.users.get(userId)
+      const conversation = await this.conversations.create(user!.clientId, user!.id)
+
+      this.sockets.reply(socket, message, conversation)
+    })
+
+    this.sockets.handle('conversations.get', async (socket, message) => {
+      const { error } = GetConvoSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
+
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
+
+      const { id } = message.data
+      const conversation = await this.conversations.get(id)
+
+      if (!conversation) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'conversation not found'
+        })
+      } else if (conversation.userId !== userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'conversation does not belong to user'
+        })
+      }
+
+      this.sockets.reply(socket, message, conversation)
+    })
+
+    this.sockets.handle('conversations.list', async (socket, message) => {
+      const { error } = ListConvoSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
+
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
+
+      const { limit } = message.data
+      const user = await this.users.get(userId)
+      this.sockets.reply(socket, message, await this.conversations.listByUserId(user!.clientId, userId, +limit))
+    })
+
+    this.sockets.handle('conversations.delete', async (socket, message) => {
+      const { error } = DeleteConvoSocketSchema.validate(message.data)
+      if (error) {
+        return this.sockets.reply(socket, message, { error: true, message: error.message })
+      }
+
+      const userId = this.socketService.getUserId(socket)
+      if (!userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
+      }
+
+      const { id } = message.data
+      const conversation = await this.conversations.get(id)
+
+      if (!conversation) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'conversation not found'
+        })
+      } else if (conversation.userId !== userId) {
+        return this.sockets.reply(socket, message, {
+          error: true,
+          message: 'conversation does not belong to user'
+        })
+      }
+
+      const deleted = await this.conversations.delete(id)
+      this.sockets.reply(socket, message, deleted > 0)
+    })
 
     this.sockets.handle('conversations.use', async (socket, message) => {
       const { error } = UseConvoSocketSchema.validate(message.data)

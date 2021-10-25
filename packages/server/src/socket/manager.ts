@@ -75,7 +75,7 @@ export class SocketManager {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
 
       if (!this.handlers[data.type]) {
-        return this.reply(socket, data, { error: true, message: 'route does not exist' })
+        return this.reply(socket, data, { error: true, message: `route ${data.type} does not exist` })
       }
 
       await this.handlers[data.type](socket, data)
