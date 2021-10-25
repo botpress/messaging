@@ -7,11 +7,21 @@ export class UserSocket extends BaseSocket {
     super(com)
   }
 
-  public async auth(userId: uuid | undefined, userToken: string | undefined): Promise<User> {
-    return this.request<User>('users.auth', {
+  public async auth(info?: UserInfo): Promise<UserInfo> {
+    const result = await this.request<UserInfo>('users.auth', {
       clientId: this.clientId,
-      userId,
-      userToken
+      ...(info || {})
     })
+
+    if (result.id === info?.id && !result.token) {
+      result.token = info.token
+    }
+
+    return result
   }
+}
+
+export interface UserInfo {
+  id: uuid
+  token: string
 }
