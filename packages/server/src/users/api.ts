@@ -73,8 +73,7 @@ export class UserApi {
         success = false
       } else {
         const [userTokenId, userTokenToken] = userTokenRaw.split('.')
-        const userToken = await this.userTokens.getByIdAndToken(userTokenId, userTokenToken)
-        if (!userToken) {
+        if (!(await this.userTokens.verifyToken(userTokenId, userTokenToken))) {
           success = false
         }
       }
