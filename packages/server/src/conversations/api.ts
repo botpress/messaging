@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
 import { SocketManager } from '../socket/manager'
-import { SocketService } from '../socket/service'
 import { UserService } from '../users/service'
 import {
   CreateConvoSchema,
@@ -11,8 +10,7 @@ import {
   GetConvoSocketSchema,
   ListConvoSocketSchema,
   ListConvosSchema,
-  RecentConvoSchema,
-  UseConvoSocketSchema
+  RecentConvoSchema
 } from './schema'
 import { ConversationService } from './service'
 
@@ -22,8 +20,7 @@ export class ConversationApi {
     private auth: Auth,
     private sockets: SocketManager,
     private users: UserService,
-    private conversations: ConversationService,
-    private socketService: SocketService
+    private conversations: ConversationService
   ) {}
 
   async setup() {
@@ -101,33 +98,17 @@ export class ConversationApi {
     )
 
     this.sockets.handle('conversations.create', CreateConvoSocketSchema, async (socket, message) => {
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-
-      const user = await this.users.get(userId)
+      const user = await this.users.get(message.userId)
       const conversation = await this.conversations.create(user!.clientId, user!.id)
 
       this.sockets.reply(socket, message, conversation)
     })
 
     this.sockets.handle('conversations.get', GetConvoSocketSchema, async (socket, message) => {
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-
       const { id } = message.data
       const conversation = await this.conversations.get(id)
 
-      if (!conversation || conversation.userId !== userId) {
+      if (!conversation || conversation.userId !== message.userId) {
         return this.sockets.reply(socket, message, undefined)
       }
 
@@ -135,34 +116,18 @@ export class ConversationApi {
     })
 
     this.sockets.handle('conversations.list', ListConvoSocketSchema, async (socket, message) => {
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-
       const { limit } = message.data
-      const user = await this.users.get(userId)
-      this.sockets.reply(socket, message, await this.conversations.listByUserId(user!.clientId, userId, +limit))
+      const user = await this.users.get(message.userId)
+      this.sockets.reply(socket, message, await this.conversations.listByUserId(user!.clientId, message.userId, +limit))
     })
 
     this.sockets.handle('conversations.delete', DeleteConvoSocketSchema, async (socket, message) => {
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-
       const { id } = message.data
       const conversation = await this.conversations.get(id)
 
       if (!conversation) {
         return this.sockets.reply(socket, message, false)
-      } else if (conversation.userId !== userId) {
+      } else if (conversation.userId !== message.userId) {
         return this.sockets.reply(socket, message, {
           error: true,
           message: 'conversation does not belong to user'

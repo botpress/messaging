@@ -4,7 +4,6 @@ import { Auth } from '../base/auth/auth'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
 import { SocketManager } from '../socket/manager'
-import { SocketService } from '../socket/service'
 import {
   CreateMsgSchema,
   CreateMsgSocketSchema,
@@ -22,8 +21,7 @@ export class MessageApi {
     private sockets: SocketManager,
     private conversations: ConversationService,
     private messages: MessageService,
-    private converse: ConverseService,
-    private socketService: SocketService
+    private converse: ConverseService
   ) {}
 
   async setup() {
@@ -154,45 +152,29 @@ export class MessageApi {
     )
 
     this.sockets.handle('messages.create', CreateMsgSocketSchema, async (socket, message) => {
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-
       const { conversationId, payload } = message.data
       const conversation = await this.conversations.get(conversationId)
 
       if (!conversation) {
         return this.sockets.reply(socket, message, { error: true, message: 'conversation does not exist' })
-      } else if (conversation.userId !== userId) {
+      } else if (conversation.userId !== message.userId) {
         return this.sockets.reply(socket, message, {
           error: true,
           message: 'conversation does not belong to that user'
         })
       }
 
-      const msg = await this.messages.create(conversationId, userId, payload, { socket: { id: socket.id } })
+      const msg = await this.messages.create(conversationId, message.userId, payload, { socket: { id: socket.id } })
       this.sockets.reply(socket, message, msg)
     })
 
     this.sockets.handle('messages.list', ListMsgSocketSchema, async (socket, message) => {
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-
       const { conversationId, limit } = message.data
       const conversation = await this.conversations.get(conversationId)
 
       if (!conversation) {
         return this.sockets.reply(socket, message, { error: true, message: 'conversation does not exist' })
-      } else if (conversation.userId !== userId) {
+      } else if (conversation.userId !== message.userId) {
         return this.sockets.reply(socket, message, {
           error: true,
           message: 'conversation does not belong to that user'

@@ -1,3 +1,4 @@
+import { uuid } from '@botpress/messaging-base'
 import clc from 'cli-color'
 import { Server } from 'http'
 import Joi from 'joi'
@@ -40,8 +41,20 @@ export class SocketManager {
     })
   }
 
-  public handle(type: string, schema: Joi.ObjectSchema<any>, callback: SocketHandler) {
+  public handle(type: string, schema: Joi.ObjectSchema<any>, callback: SocketHandler, checkUserId?: boolean) {
     this.handlers[type] = async (socket: Socket.Socket, message: SocketRequest) => {
+      // TODO: remove this
+      if (checkUserId !== false) {
+        const userId = this.sockets.getUserId(socket)
+        if (!userId) {
+          return this.reply(socket, message, {
+            error: true,
+            message: 'socket does not have user rights'
+          })
+        }
+        message.userId = userId
+      }
+
       const { error } = schema.validate(message.data)
       if (error) {
         return this.reply(socket, message, { error: true, message: error.message })
@@ -110,4 +123,5 @@ export interface SocketRequest {
   request: string
   type: string
   data: any
+  userId: uuid
 }

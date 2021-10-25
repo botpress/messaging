@@ -51,17 +51,9 @@ export class UserApi {
     )
 
     this.sockets.handle('users.get', GetUserSocketSchema, async (socket, message) => {
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-
       const { id } = message.data
 
-      if (id !== userId) {
+      if (id !== message.userId) {
         return this.sockets.reply(socket, message, {
           error: true,
           message: 'cannot fetch data of other users'
@@ -72,38 +64,43 @@ export class UserApi {
       this.sockets.reply(socket, message, user)
     })
 
-    this.sockets.handle('users.auth', AuthUserSocketSchema, async (socket, message) => {
-      const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = message.data
+    this.sockets.handle(
+      'users.auth',
+      AuthUserSocketSchema,
+      async (socket, message) => {
+        const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = message.data
 
-      const client = await this.clients.getById(clientId)
-      if (!client) {
-        return this.sockets.reply(socket, message, { error: true, message: 'client not found' })
-      }
-
-      // TODO: refactor here
-
-      let success = true
-      let user = userId ? await this.users.get(userId) : undefined
-      let token = undefined
-
-      if (!user || user.clientId !== client.id) {
-        success = false
-      } else {
-        const [userTokenId, userTokenToken] = userTokenRaw.split('.')
-        if (!(await this.userTokens.verifyToken(userTokenId, userTokenToken))) {
-          success = false
+        const client = await this.clients.getById(clientId)
+        if (!client) {
+          return this.sockets.reply(socket, message, { error: true, message: 'client not found' })
         }
-      }
 
-      if (!success) {
-        user = await this.users.create(clientId)
-        const tokenRaw = await this.userTokens.generateToken()
-        const userToken = await this.userTokens.create(user.id, tokenRaw, undefined)
-        token = `${userToken.id}.${tokenRaw}`
-      }
+        // TODO: refactor here
 
-      this.socketService.registerForUser(socket, user!.id)
-      this.sockets.reply(socket, message, { id: user!.id, token })
-    })
+        let success = true
+        let user = userId ? await this.users.get(userId) : undefined
+        let token = undefined
+
+        if (!user || user.clientId !== client.id) {
+          success = false
+        } else {
+          const [userTokenId, userTokenToken] = userTokenRaw.split('.')
+          if (!(await this.userTokens.verifyToken(userTokenId, userTokenToken))) {
+            success = false
+          }
+        }
+
+        if (!success) {
+          user = await this.users.create(clientId)
+          const tokenRaw = await this.userTokens.generateToken()
+          const userToken = await this.userTokens.create(user.id, tokenRaw, undefined)
+          token = `${userToken.id}.${tokenRaw}`
+        }
+
+        this.socketService.registerForUser(socket, user!.id)
+        this.sockets.reply(socket, message, { id: user!.id, token })
+      },
+      false
+    )
   }
 }

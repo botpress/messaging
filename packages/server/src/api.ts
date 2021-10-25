@@ -45,8 +45,7 @@ export class Api {
       this.auth,
       this.sockets,
       this.app.users,
-      this.app.conversations,
-      this.app.sockets
+      this.app.conversations
     )
     this.messages = new MessageApi(
       this.router,
@@ -54,8 +53,7 @@ export class Api {
       this.sockets,
       this.app.conversations,
       this.app.messages,
-      this.app.converse,
-      this.app.sockets
+      this.app.converse
     )
     this.channels = new ChannelApi(this.root, this.app)
   }
