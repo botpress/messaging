@@ -16,7 +16,7 @@ export class SocketManager {
 
   async setup(server: Server) {
     if (yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
-      this.ws = new Socket.Server(server, { cors: { origin: '*' } })
+      this.ws = new Socket.Server(server, { serveClient: false, cors: { origin: '*' } })
       this.ws.on('connection', this.handleSocketConnection.bind(this))
     }
   }
