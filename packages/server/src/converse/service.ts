@@ -47,9 +47,11 @@ export class ConverseService extends Service {
     return !!this.collectingForMessageCache.get(messageId)
   }
 
-  async collect(messageId: uuid, conversationId: uuid): Promise<Message[]> {
+  async collect(messageId: uuid, conversationId: uuid, timeout: number): Promise<Message[]> {
     const collector = this.addCollector(messageId, conversationId)
-    this.resetCollectorTimeout(collector, 5000)
+    if (timeout !== 0) {
+      this.resetCollectorTimeout(collector, timeout || 5000)
+    }
 
     this.collectingForMessageCache.set(messageId, true)
 

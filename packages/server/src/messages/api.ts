@@ -37,7 +37,7 @@ export class MessageApi {
           return res.status(400).send(error.message)
         }
 
-        const { conversationId, authorId, payload, collect, incomingId } = req.body
+        const { conversationId, authorId, payload, collect, incomingId, timeout } = req.body
         const conversation = await this.conversations.get(conversationId)
 
         if (!conversation) {
@@ -47,7 +47,7 @@ export class MessageApi {
         }
 
         const messageId = uuidv4()
-        const collector = collect ? this.converse.collect(messageId, conversationId) : undefined
+        const collector = collect ? this.converse.collect(messageId, conversationId, +timeout) : undefined
         if (incomingId) {
           this.converse.setIncomingId(messageId, incomingId)
         }
