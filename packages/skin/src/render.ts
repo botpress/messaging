@@ -59,7 +59,9 @@ export class WebchatRenderer {
           input.type = 'text'
           input.name = 'bp-message-input'
 
-          form.onsubmit = () => {
+          form.onsubmit = (e) => {
+            e.preventDefault()
+
             if (input.value.trim().length) {
               void this.webchat.messages.send(input.value.trim())
             }
