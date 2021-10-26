@@ -11,12 +11,12 @@ const Api = {
   }),
 
   List: ReqSchema({
-    params: { id: Joi.string().guid().required() },
+    params: { userId: Joi.string().guid().required() },
     query: { limit: Joi.number().optional() }
   }),
 
   Recent: ReqSchema({
-    params: { id: Joi.string().guid().required() }
+    params: { userId: Joi.string().guid().required() }
   })
 }
 
