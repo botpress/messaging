@@ -18,13 +18,16 @@ const Api = {
   }),
 
   List: Joi.object({
-    conversationId: Joi.string().guid().required(),
-    limit: Joi.number().required()
+    query: Joi.object({ limit: Joi.number().optional() }).optional(),
+    params: Joi.object({ id: Joi.string().guid().required() }).required()
   }),
 
   Delete: Joi.object({
-    id: Joi.string().guid().optional(),
-    conversationId: Joi.string().guid().optional()
+    id: Joi.string().guid().required()
+  }),
+
+  DeleteByConversation: Joi.object({
+    id: Joi.string().guid().required()
   })
 }
 

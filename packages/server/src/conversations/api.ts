@@ -10,8 +10,8 @@ export class ConversationApi {
   async setup() {
     this.router.post('/conversations', this.auth.client.auth(this.create.bind(this)))
     this.router.get('/conversations/:id', this.auth.client.auth(this.get.bind(this)))
-    this.router.get('/conversations', this.auth.client.auth(this.list.bind(this)))
-    this.router.get('/conversations/:userId/recent', this.auth.client.auth(this.recent.bind(this)))
+    this.router.get('/conversations/user/:id', this.auth.client.auth(this.list.bind(this)))
+    this.router.get('/conversations/user/:id/recent', this.auth.client.auth(this.recent.bind(this)))
   }
 
   async create(req: ClientApiRequest, res: Response) {
@@ -45,14 +45,15 @@ export class ConversationApi {
   }
 
   async list(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.List.validate(req.query)
+    const { error } = Schema.Api.List.validate({ query: req.query, params: req.params })
     if (error) {
       return res.status(400).send(error.message)
     }
 
-    const { userId, limit } = req.query
-    const conversations = await this.conversations.listByUserId(req.client!.id, userId as string, +(limit as string))
+    const { id } = req.params
+    const { limit } = req.query
 
+    const conversations = await this.conversations.listByUserId(req.client!.id, id as string, <any>limit || 20)
     res.send(conversations)
   }
 
@@ -62,10 +63,10 @@ export class ConversationApi {
       return res.status(400).send(error.message)
     }
 
-    const { userId } = req.params
-    let conversation = await this.conversations.getMostRecent(req.client!.id, userId)
+    const { id } = req.params
+    let conversation = await this.conversations.getMostRecent(req.client!.id, id)
     if (!conversation) {
-      conversation = await this.conversations.create(req.client!.id, userId)
+      conversation = await this.conversations.create(req.client!.id, id)
     }
 
     res.send(conversation)

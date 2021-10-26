@@ -20,8 +20,9 @@ export class MessageApi {
     this.router.post('/messages', this.auth.client.auth(this.create.bind(this)))
     this.router.post('/messages/collect', this.auth.client.auth(this.collect.bind(this)))
     this.router.get('/messages/:id', this.auth.client.auth(this.get.bind(this)))
-    this.router.get('/messages', this.auth.client.auth(this.list.bind(this)))
-    this.router.delete('/messages', this.auth.client.auth(this.delete.bind(this)))
+    this.router.get('/messages/conversation/:id', this.auth.client.auth(this.list.bind(this)))
+    this.router.delete('/messages/:id', this.auth.client.auth(this.delete.bind(this)))
+    this.router.delete('/messages/conversation/:id', this.auth.client.auth(this.deleteByConversation.bind(this)))
   }
 
   async create(req: ClientApiRequest, res: Response) {
@@ -92,13 +93,15 @@ export class MessageApi {
   }
 
   async list(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.List.validate(req.query)
+    const { error } = Schema.Api.List.validate({ query: req.query, params: req.params })
     if (error) {
       return res.status(400).send(error.message)
     }
 
-    const { conversationId, limit } = req.query
-    const conversation = await this.conversations.get(conversationId as uuid)
+    const { id } = req.params
+    const { limit } = req.query
+
+    const conversation = await this.conversations.get(id as uuid)
 
     if (!conversation) {
       return res.sendStatus(404)
@@ -106,46 +109,47 @@ export class MessageApi {
       return res.sendStatus(403)
     }
 
-    const messages = await this.messages.listByConversationId(conversationId as uuid, +(limit as string))
-
+    const messages = await this.messages.listByConversationId(id as uuid, <any>limit || 20)
     res.send(messages)
   }
 
   async delete(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.Delete.validate(req.query)
+    const { error } = Schema.Api.Delete.validate(req.params)
     if (error) {
       return res.status(400).send(error.message)
     }
 
-    const { id, conversationId } = req.query
-    let deleted: number
-
-    if (id) {
-      const message = await this.messages.get(id as uuid)
-      if (!message) {
-        return res.sendStatus(400)
-      }
-
-      const conversation = await this.conversations.get(message.conversationId)
-      if (conversation!.clientId !== req.client!.id) {
-        return res.sendStatus(403)
-      }
-
-      deleted = await this.messages.delete(id as uuid)
-    } else if (conversationId) {
-      const conversation = await this.conversations.get(conversationId as string)
-
-      if (!conversation) {
-        return res.sendStatus(400)
-      } else if (conversation!.clientId !== req.client!.id) {
-        return res.sendStatus(403)
-      }
-
-      deleted = await this.messages.deleteByConversationId(conversationId as uuid)
-    } else {
+    const { id } = req.params
+    const message = await this.messages.get(id)
+    if (!message) {
       return res.sendStatus(400)
     }
 
+    const conversation = await this.conversations.get(message.conversationId)
+    if (conversation!.clientId !== req.client!.id) {
+      return res.sendStatus(403)
+    }
+
+    const deleted = await this.messages.delete(id)
+    res.send({ count: deleted })
+  }
+
+  async deleteByConversation(req: ClientApiRequest, res: Response) {
+    const { error } = Schema.Api.DeleteByConversation.validate(req.params)
+    if (error) {
+      return res.status(400).send(error.message)
+    }
+
+    const { id } = req.params
+    const conversation = await this.conversations.get(id)
+
+    if (!conversation) {
+      return res.sendStatus(400)
+    } else if (conversation!.clientId !== req.client!.id) {
+      return res.sendStatus(403)
+    }
+
+    const deleted = await this.messages.deleteByConversationId(id)
     res.send({ count: deleted })
   }
 }

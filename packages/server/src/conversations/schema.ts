@@ -10,12 +10,12 @@ const Api = {
   }),
 
   List: Joi.object({
-    userId: Joi.string().guid().required(),
-    limit: Joi.number().required()
+    query: Joi.object({ limit: Joi.number().optional() }).optional(),
+    params: Joi.object({ id: Joi.string().guid().required() }).required()
   }),
 
   Recent: Joi.object({
-    userId: Joi.string().guid().required()
+    id: Joi.string().guid().required()
   })
 }
 
