@@ -6,15 +6,28 @@ import { SocketEmitter } from './emitter'
 export class MessagingSocket extends SocketEmitter<{
   connect: undefined
   disconnect: undefined
-  user: UserInfo | undefined
+  login: UserCredentials
+  user: uuid | undefined
   conversation: uuid | undefined
   message: Message
 }> {
   public readonly clientId: uuid
-  private readonly com: SocketCom
 
-  private user: UserInfo | undefined
-  private conversationId: uuid | undefined
+  public get creds() {
+    return this._creds
+  }
+
+  public get userId() {
+    return this._creds?.userId
+  }
+
+  public get conversationId() {
+    return this._conversationId
+  }
+
+  private readonly com: SocketCom
+  private _creds: UserCredentials | undefined
+  private _conversationId: uuid | undefined
 
   constructor(options: MessagingSocketOptions) {
     super()
@@ -28,12 +41,12 @@ export class MessagingSocket extends SocketEmitter<{
     })
   }
 
-  async connect(options?: { auto: boolean; info?: UserInfo }) {
+  async connect(options?: { autoLogin: boolean; creds?: UserCredentials }) {
     this.com.connect()
     await this.emit('connect', undefined)
 
-    if (options?.auto !== false) {
-      await this.authUser(options?.info)
+    if (options?.autoLogin !== false) {
+      await this.login(options?.creds)
       await this.createConversation()
     }
   }
@@ -43,30 +56,32 @@ export class MessagingSocket extends SocketEmitter<{
     await this.emit('disconnect', undefined)
   }
 
-  async authUser(info?: UserInfo): Promise<UserInfo> {
-    const result = await this.request<UserInfo>('users.auth', {
+  async login(creds?: UserCredentials): Promise<UserCredentials> {
+    const result = await this.request<UserCredentials>('users.auth', {
       clientId: this.clientId,
-      ...(info || {})
+      ...(creds || {})
     })
 
-    if (result.userId === info?.userId && !result.userToken) {
-      result.userToken = info.userToken
+    if (result.userId === creds?.userId && !result.userToken) {
+      result.userToken = creds.userToken
     }
 
-    this.user = result
-    await this.emit('user', { ...this.user })
+    this._creds = result
+
+    await this.emit('login', this._creds)
+    await this.emit('user', this._creds.userId)
 
     return result
   }
 
-  getUser(): Promise<User | undefined> {
+  async getUser(): Promise<User | undefined> {
     return this.request('users.get', {})
   }
 
   async switchConversation(id: uuid | undefined) {
-    this.conversationId = id
+    this._conversationId = id
 
-    await this.emit('conversation', this.conversationId)
+    await this.emit('conversation', this._conversationId)
   }
 
   async createConversation(options?: { switch: boolean }): Promise<Conversation> {
@@ -81,13 +96,13 @@ export class MessagingSocket extends SocketEmitter<{
 
   async getConversation(id?: uuid): Promise<Conversation | undefined> {
     return this.request('conversations.get', {
-      id: id || this.conversationId
+      id: id || this._conversationId
     })
   }
 
   async deleteConversation(id?: uuid): Promise<boolean> {
     const deleted = await this.request<boolean>('conversations.delete', {
-      id: id || this.conversationId
+      id: id || this._conversationId
     })
 
     if (deleted) {
@@ -105,21 +120,21 @@ export class MessagingSocket extends SocketEmitter<{
 
   async sendText(text: string): Promise<Message> {
     return this.request('messages.create', {
-      conversationId: this.conversationId,
+      conversationId: this._conversationId,
       payload: { type: 'text', text }
     })
   }
 
   async sendPayload(payload: any): Promise<Message> {
     return this.request('messages.create', {
-      conversationId: this.conversationId,
+      conversationId: this._conversationId,
       payload
     })
   }
 
   async listMessages(limit?: number): Promise<Message[]> {
     return this.request('messages.list', {
-      conversationId: this.conversationId,
+      conversationId: this._conversationId,
       limit: limit || 20
     })
   }
@@ -129,20 +144,12 @@ export class MessagingSocket extends SocketEmitter<{
   }
 }
 
-export enum MessagingEvents {
-  Connect = 'connect',
-  Disconnect = 'disconnect',
-  User = 'user',
-  Conversation = 'conversation',
-  Message = 'message'
-}
-
 export interface MessagingSocketOptions {
   url: string
   clientId: uuid
 }
 
-export interface UserInfo {
+export interface UserCredentials {
   userId: uuid
   userToken: string
 }

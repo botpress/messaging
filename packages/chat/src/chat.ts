@@ -29,7 +29,7 @@ export class Webchat {
     await this.storage.setup()
     await this.locale.setup()
     await this.lang.setup()
-    await this.socket.connect({ auto: false })
+    await this.socket.connect({ autoLogin: false })
     await this.user.setup()
     await this.conversation.setup()
     await this.messages.setup()
