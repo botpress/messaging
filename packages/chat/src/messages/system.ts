@@ -19,13 +19,15 @@ export class WebchatMessages extends WebchatSystem {
   }
 
   private async setupMessageReception() {
-    this.socket.on('message.new', async (message) => {
-      await this.emitter.emit(MessagesEvents.Receive, [message.message])
+    this.socket.com.events.on(SocketComEvents.Message, async (message) => {
+      if (message.type === 'message.new') {
+        await this.emitter.emit(MessagesEvents.Receive, [message.data.data.message])
+      }
     })
   }
 
   private async setupInitialMessages() {
-    const messages = await this.socket.listMessages()
+    const messages = await this.socket.messages.list(this.conversation.get()!.id, 20)
     await this.emitter.emit(MessagesEvents.Receive, messages.reverse())
   }
 
@@ -36,7 +38,7 @@ export class WebchatMessages extends WebchatSystem {
     }
     await this.emitter.emit(MessagesEvents.Send, [payload])
 
-    const message = await this.socket.sendPayload(payload)
+    const message = await this.socket.messages.create(this.conversation.get()!.id, payload)
     await this.emitter.emit(MessagesEvents.Receive, [message])
     return message
   }
