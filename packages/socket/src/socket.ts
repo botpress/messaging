@@ -29,10 +29,17 @@ export class MessagingSocket {
     }
   }
 
-  async connect(info?: UserInfo) {
+  async connect(options?: { auto: boolean; info?: UserInfo }) {
     this.com.connect()
-    await this.authUser(info)
-    await this.createConversation()
+
+    if (options?.auto !== false) {
+      await this.authUser(options?.info)
+      await this.createConversation()
+    }
+  }
+
+  async disconnect() {
+    this.com.disconnect()
   }
 
   async authUser(info?: UserInfo): Promise<UserInfo> {
@@ -50,7 +57,7 @@ export class MessagingSocket {
     return result
   }
 
-  async getUser(): Promise<User | undefined> {
+  getUser(): Promise<User | undefined> {
     return this.request('users.get', {})
   }
 
