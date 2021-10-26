@@ -129,7 +129,7 @@ export class BoardLinker {
         if (!e.choice) {
           e.choice = <any>{}
         }
-        e.choice!.id = this.inputUserToken.value
+        e.choice!.userId = this.inputUserToken.value
       })
     }
     if (this.inputUserToken.value.length) {
@@ -137,7 +137,7 @@ export class BoardLinker {
         if (!e.choice) {
           e.choice = <any>{}
         }
-        e.choice!.token = this.inputUserToken.value
+        e.choice!.userToken = this.inputUserToken.value
       })
     }
     if (this.inputConversationId.value.length) {
@@ -146,7 +146,7 @@ export class BoardLinker {
       })
     }
 
-    this.webchat.socket.on('connect', async (e) => {
+    this.webchat.socket.on('connect', async () => {
       localStorage.setItem('bp-host', host)
       this.inputHost.placeholder = host
       this.inputHost.value = ''
@@ -155,10 +155,10 @@ export class BoardLinker {
     this.inputClientId.placeholder = clientId
     this.webchat.user.events.on(UserEvents.Set, async (e) => {
       localStorage.setItem('bp-board-client', clientId)
-      this.inputUserId.placeholder = e.value?.id || ''
+      this.inputUserId.placeholder = e.value?.userId || ''
       this.inputUserId.value = ''
 
-      this.inputUserToken.placeholder = e.value?.token || ''
+      this.inputUserToken.placeholder = e.value?.userToken || ''
       this.inputUserToken.value = ''
     })
     this.webchat.conversation.events.on(ConversationEvents.Set, async (e) => {

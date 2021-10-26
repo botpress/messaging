@@ -11,8 +11,8 @@ const Socket = {
 
   Auth: Joi.object({
     clientId: Joi.string().guid().required(),
-    id: Joi.string().guid().optional(),
-    token: Joi.string().optional()
+    userId: Joi.string().guid().optional(),
+    userToken: Joi.string().optional()
   })
 }
 
