@@ -26,7 +26,7 @@ const Api = {
 
   List: ReqSchema({
     params: {
-      id: Joi.string().guid().required()
+      conversationId: Joi.string().guid().required()
     },
     query: {
       limit: Joi.number().optional()
@@ -41,7 +41,7 @@ const Api = {
 
   DeleteByConversation: ReqSchema({
     params: {
-      id: Joi.string().guid().required()
+      conversationId: Joi.string().guid().required()
     }
   })
 }

@@ -72,7 +72,7 @@ export class MessageService extends Service {
     return message
   }
 
-  public async delete(id: uuid): Promise<number> {
+  public async delete(id: uuid): Promise<void> {
     await this.batcher.flush()
 
     const message = await this.get(id)
