@@ -22,7 +22,11 @@ export class UserSocket {
   }
 
   async auth(socket: SocketRequest) {
-    const { clientId, id: userId, token: userTokenRaw }: { clientId: uuid; id: uuid; token: string } = socket.data
+    const {
+      clientId,
+      userId,
+      userToken: userTokenRaw
+    }: { clientId: uuid; userId: uuid; userToken: string } = socket.data
 
     const client = await this.clients.getById(clientId)
     if (!client) {
@@ -52,7 +56,7 @@ export class UserSocket {
     }
 
     this.socketService.registerForUser(socket.socket, user!.id)
-    socket.reply({ id: user!.id, token })
+    socket.reply({ userId: user!.id, userToken: token })
   }
 
   async get(socket: SocketRequest) {

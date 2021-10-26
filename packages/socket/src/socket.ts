@@ -1,51 +1,75 @@
 import { Conversation, Message, User, uuid } from '@botpress/messaging-base'
 import { SocketComEvents } from '.'
 import { SocketCom } from './com'
+import { SocketEmitter } from './emitter'
 
-export class MessagingSocket {
+export class MessagingSocket extends SocketEmitter<{
+  connect: undefined
+  disconnect: undefined
+  login: UserCredentials
+  user: uuid | undefined
+  conversation: uuid | undefined
+  message: Message
+}> {
   public readonly clientId: uuid
-  private readonly com: SocketCom
 
-  public userId: uuid | undefined
-  public conversationId: uuid | undefined
-  public token: string | undefined
+  public get creds() {
+    return this._creds
+  }
+
+  public get userId() {
+    return this._creds?.userId
+  }
+
+  public get conversationId() {
+    return this._conversationId
+  }
+
+  private readonly com: SocketCom
+  private _creds: UserCredentials | undefined
+  private _conversationId: uuid | undefined
 
   constructor(options: MessagingSocketOptions) {
+    super()
     this.clientId = options.clientId
     this.com = new SocketCom(options.url)
+
+    this.com.events.on(SocketComEvents.Message, async (e) => {
+      if (e.type === 'message.new') {
+        await this.emit('message', e.data.data.message)
+      }
+    })
   }
 
-  on(eventId: any, callback: ((data: any) => Promise<void>) | ((data: any) => void)) {
-    // Garbage refact this
+  async connect(options?: { autoLogin: boolean; creds?: UserCredentials }) {
+    this.com.connect()
+    await this.emit('connect', undefined)
 
-    if (eventId === 'connect') {
-      this.com.events.on(SocketComEvents.Connect, <any>callback)
-    } else {
-      this.com.events.on(SocketComEvents.Message, async (data) => {
-        if (data.type === eventId) {
-          await callback(data.data.data)
-        }
-      })
+    if (options?.autoLogin !== false) {
+      await this.login(options?.creds)
+      await this.createConversation()
     }
   }
 
-  async connect(info?: UserInfo) {
-    this.com.connect()
-    await this.authUser(info)
-    await this.createConversation()
+  async disconnect() {
+    this.com.disconnect()
+    await this.emit('disconnect', undefined)
   }
 
-  async authUser(info?: UserInfo): Promise<UserInfo> {
-    const result = await this.request<UserInfo>('users.auth', {
+  async login(creds?: UserCredentials): Promise<UserCredentials> {
+    const result = await this.request<UserCredentials>('users.auth', {
       clientId: this.clientId,
-      ...(info || {})
+      ...(creds || {})
     })
 
-    if (result.id === info?.id && !result.token) {
-      result.token = info.token
+    if (result.userId === creds?.userId && !result.userToken) {
+      result.userToken = creds.userToken
     }
 
-    this.userId = result.id
+    this._creds = result
+
+    await this.emit('login', this._creds)
+    await this.emit('user', this._creds.userId)
 
     return result
   }
@@ -54,15 +78,17 @@ export class MessagingSocket {
     return this.request('users.get', {})
   }
 
-  switchConversation(id: uuid | undefined) {
-    this.conversationId = id
+  async switchConversation(id: uuid | undefined) {
+    this._conversationId = id
+
+    await this.emit('conversation', this._conversationId)
   }
 
   async createConversation(options?: { switch: boolean }): Promise<Conversation> {
     const conversation = await this.request<Conversation>('conversations.create', {})
 
     if (options?.switch !== false) {
-      this.switchConversation(conversation.id)
+      await this.switchConversation(conversation.id)
     }
 
     return conversation
@@ -70,17 +96,17 @@ export class MessagingSocket {
 
   async getConversation(id?: uuid): Promise<Conversation | undefined> {
     return this.request('conversations.get', {
-      id: id || this.conversationId
+      id: id || this._conversationId
     })
   }
 
   async deleteConversation(id?: uuid): Promise<boolean> {
     const deleted = await this.request<boolean>('conversations.delete', {
-      id: id || this.conversationId
+      id: id || this._conversationId
     })
 
     if (deleted) {
-      this.switchConversation(undefined)
+      await this.switchConversation(undefined)
     }
 
     return deleted
@@ -94,21 +120,21 @@ export class MessagingSocket {
 
   async sendText(text: string): Promise<Message> {
     return this.request('messages.create', {
-      conversationId: this.conversationId,
+      conversationId: this._conversationId,
       payload: { type: 'text', text }
     })
   }
 
   async sendPayload(payload: any): Promise<Message> {
     return this.request('messages.create', {
-      conversationId: this.conversationId,
+      conversationId: this._conversationId,
       payload
     })
   }
 
   async listMessages(limit?: number): Promise<Message[]> {
     return this.request('messages.list', {
-      conversationId: this.conversationId,
+      conversationId: this._conversationId,
       limit: limit || 20
     })
   }
@@ -123,7 +149,7 @@ export interface MessagingSocketOptions {
   clientId: uuid
 }
 
-export interface UserInfo {
-  id: uuid
-  token: string
+export interface UserCredentials {
+  userId: uuid
+  userToken: string
 }
