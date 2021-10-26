@@ -1,3 +1,4 @@
+import { uuid } from '@botpress/messaging-base'
 import { Response } from 'express'
 import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
@@ -13,18 +14,16 @@ export class UserApi {
   }
 
   async create(req: ClientApiRequest, res: Response) {
-    const user = await this.users.create(req.client!.id)
-    res.send(user)
+    const user = await this.users.create(req.client.id)
+    res.status(201).send(user)
   }
 
   async get(req: ClientApiRequest, res: Response) {
-    const { id } = req.params
-    const user = await this.users.get(id)
+    const id = req.params.id as uuid
 
-    if (user && user.clientId !== req.client!.id) {
-      return res.sendStatus(403)
-    } else if (!user) {
-      return res.sendStatus(404)
+    const user = await this.users.get(id)
+    if (!user || user.clientId !== req.client.id) {
+      return res.send(undefined)
     }
 
     res.send(user)

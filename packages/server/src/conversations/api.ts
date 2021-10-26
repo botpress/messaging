@@ -19,7 +19,7 @@ export class ConversationApi {
     const userId = req.body.userId as uuid
 
     const conversation = await this.conversations.create(req.client!.id, userId)
-    res.send(conversation)
+    res.status(201).send(conversation)
   }
 
   async get(req: ClientApiRequest, res: Response) {
