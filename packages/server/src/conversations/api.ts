@@ -1,5 +1,6 @@
-import { Router } from 'express'
+import { Response, Router } from 'express'
 import { Auth } from '../base/auth/auth'
+import { ClientApiRequest } from '../base/auth/client'
 import { Schema } from './schema'
 import { ConversationService } from './service'
 
@@ -7,77 +8,66 @@ export class ConversationApi {
   constructor(private router: Router, private auth: Auth, private conversations: ConversationService) {}
 
   async setup() {
-    this.router.post(
-      '/conversations',
-      this.auth.client.auth(async (req, res) => {
-        const { error } = Schema.Api.Create.validate(req.body)
-        if (error) {
-          return res.status(400).send(error.message)
-        }
+    this.router.post('/conversations', this.auth.client.auth(this.create.bind(this)))
+    this.router.get('/conversations/:id', this.auth.client.auth(this.get.bind(this)))
+    this.router.get('/conversations', this.auth.client.auth(this.list.bind(this)))
+    this.router.get('/conversations/:userId/recent', this.auth.client.auth(this.recent.bind(this)))
+  }
 
-        const { userId } = req.body
-        const conversation = await this.conversations.create(req.client!.id, userId)
+  async create(req: ClientApiRequest, res: Response) {
+    const { error } = Schema.Api.Create.validate(req.body)
+    if (error) {
+      return res.status(400).send(error.message)
+    }
 
-        res.send(conversation)
-      })
-    )
+    const { userId } = req.body
+    const conversation = await this.conversations.create(req.client!.id, userId)
 
-    this.router.get(
-      '/conversations/:id',
-      this.auth.client.auth(async (req, res) => {
-        const { error } = Schema.Api.Get.validate(req.params)
-        if (error) {
-          return res.status(400).send(error.message)
-        }
+    res.send(conversation)
+  }
 
-        const { id } = req.params
-        const conversation = await this.conversations.get(id)
+  async get(req: ClientApiRequest, res: Response) {
+    const { error } = Schema.Api.Get.validate(req.params)
+    if (error) {
+      return res.status(400).send(error.message)
+    }
 
-        if (conversation && conversation.clientId !== req.client!.id) {
-          return res.sendStatus(403)
-        } else if (!conversation) {
-          return res.sendStatus(404)
-        }
+    const { id } = req.params
+    const conversation = await this.conversations.get(id)
 
-        res.send(conversation)
-      })
-    )
+    if (conversation && conversation.clientId !== req.client!.id) {
+      return res.sendStatus(403)
+    } else if (!conversation) {
+      return res.sendStatus(404)
+    }
 
-    this.router.get(
-      '/conversations',
-      this.auth.client.auth(async (req, res) => {
-        const { error } = Schema.Api.List.validate(req.query)
-        if (error) {
-          return res.status(400).send(error.message)
-        }
+    res.send(conversation)
+  }
 
-        const { userId, limit } = req.query
-        const conversations = await this.conversations.listByUserId(
-          req.client!.id,
-          userId as string,
-          +(limit as string)
-        )
+  async list(req: ClientApiRequest, res: Response) {
+    const { error } = Schema.Api.List.validate(req.query)
+    if (error) {
+      return res.status(400).send(error.message)
+    }
 
-        res.send(conversations)
-      })
-    )
+    const { userId, limit } = req.query
+    const conversations = await this.conversations.listByUserId(req.client!.id, userId as string, +(limit as string))
 
-    this.router.get(
-      '/conversations/:userId/recent',
-      this.auth.client.auth(async (req, res) => {
-        const { error } = Schema.Api.Recent.validate(req.params)
-        if (error) {
-          return res.status(400).send(error.message)
-        }
+    res.send(conversations)
+  }
 
-        const { userId } = req.params
-        let conversation = await this.conversations.getMostRecent(req.client!.id, userId)
-        if (!conversation) {
-          conversation = await this.conversations.create(req.client!.id, userId)
-        }
+  async recent(req: ClientApiRequest, res: Response) {
+    const { error } = Schema.Api.Recent.validate(req.params)
+    if (error) {
+      return res.status(400).send(error.message)
+    }
 
-        res.send(conversation)
-      })
-    )
+    const { userId } = req.params
+    let conversation = await this.conversations.getMostRecent(req.client!.id, userId)
+    if (!conversation) {
+      conversation = await this.conversations.create(req.client!.id, userId)
+    }
+
+    res.send(conversation)
   }
 }
