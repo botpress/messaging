@@ -36,14 +36,17 @@ export class MessagingSocket extends SocketEmitter<{
 
     this.com.events.on(SocketComEvents.Message, async (e) => {
       if (e.type === 'message.new') {
-        await this.emit('message', e.data.data.message)
+        await this.emit('message', e.data.message)
       }
+    })
+
+    this.com.events.on(SocketComEvents.Connect, async (e) => {
+      await this.emit('connect', undefined)
     })
   }
 
   async connect(options?: { autoLogin: boolean; creds?: UserCredentials }) {
     this.com.connect()
-    await this.emit('connect', undefined)
 
     if (options?.autoLogin !== false) {
       await this.login(options?.creds)
