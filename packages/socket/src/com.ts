@@ -24,7 +24,7 @@ export class SocketCom {
 
     this.socket.on('message', async (message) => {
       if (this.pending[message.request]) {
-        if (message.data.error) {
+        if (message.data?.error) {
           this.pending[message.request].reject(message.data.message)
         } else {
           this.pending[message.request].resolve(message.data)
