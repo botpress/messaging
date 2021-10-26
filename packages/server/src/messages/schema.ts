@@ -1,33 +1,48 @@
 import Joi from 'joi'
+import { ReqSchema } from '../base/schema'
 
 const Api = {
-  Create: Joi.object({
-    conversationId: Joi.string().guid().required(),
-    authorId: Joi.string().guid().optional(),
-    payload: Joi.object().required()
+  Create: ReqSchema({
+    body: {
+      conversationId: Joi.string().guid().required(),
+      authorId: Joi.string().guid().optional(),
+      payload: Joi.object().required()
+    }
   }),
 
-  Collect: Joi.object({
-    conversationId: Joi.string().guid().required(),
-    authorId: Joi.string().guid().required(),
-    payload: Joi.object().required()
+  Collect: ReqSchema({
+    body: {
+      conversationId: Joi.string().guid().required(),
+      authorId: Joi.string().guid().required(),
+      payload: Joi.object().required()
+    }
   }),
 
-  Get: Joi.object({
-    id: Joi.string().guid().required()
+  Get: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
+    }
   }),
 
-  List: Joi.object({
-    query: Joi.object({ limit: Joi.number().optional() }).optional(),
-    params: Joi.object({ id: Joi.string().guid().required() }).required()
+  List: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
+    },
+    query: {
+      limit: Joi.number().optional()
+    }
   }),
 
-  Delete: Joi.object({
-    id: Joi.string().guid().required()
+  Delete: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
+    }
   }),
 
-  DeleteByConversation: Joi.object({
-    id: Joi.string().guid().required()
+  DeleteByConversation: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
+    }
   })
 }
 
@@ -35,12 +50,12 @@ const Socket = {
   Create: Joi.object({
     conversationId: Joi.string().guid().required(),
     payload: Joi.object().required()
-  }),
+  }).required(),
 
   List: Joi.object({
     conversationId: Joi.string().guid().required(),
     limit: Joi.number().required()
-  })
+  }).required()
 }
 
 export const Schema = { Api, Socket }

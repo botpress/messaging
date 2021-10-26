@@ -1,6 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
-import { Router, Response } from 'express'
-import { Auth } from '../base/auth/auth'
+import { Response } from 'express'
+import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
@@ -9,31 +9,24 @@ import { MessageService } from './service'
 
 export class MessageApi {
   constructor(
-    private router: Router,
-    private auth: Auth,
     private conversations: ConversationService,
     private messages: MessageService,
     private converse: ConverseService
   ) {}
 
-  async setup() {
-    this.router.post('/messages', this.auth.client.auth(this.create.bind(this)))
-    this.router.post('/messages/collect', this.auth.client.auth(this.collect.bind(this)))
-    this.router.get('/messages/:id', this.auth.client.auth(this.get.bind(this)))
-    this.router.get('/messages/conversation/:id', this.auth.client.auth(this.list.bind(this)))
-    this.router.delete('/messages/:id', this.auth.client.auth(this.delete.bind(this)))
-    this.router.delete('/messages/conversation/:id', this.auth.client.auth(this.deleteByConversation.bind(this)))
+  setup(router: ApiManager) {
+    router.post('/messages', Schema.Api.Create, this.create.bind(this))
+    router.post('/messages/collect', Schema.Api.Collect, this.collect.bind(this))
+    router.get('/messages/:id', Schema.Api.Get, this.get.bind(this))
+    router.get('/messages/conversation/:id', Schema.Api.List, this.list.bind(this))
+    router.delete('/messages/:id', Schema.Api.Delete, this.delete.bind(this))
+    router.delete('/messages/conversation/:id', Schema.Api.DeleteByConversation, this.deleteByConversation.bind(this))
   }
 
   async create(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.Create.validate(req.body)
-    if (error) {
-      return res.status(400).send(error.message)
-    }
-
     const { conversationId, authorId, payload } = req.body
-    const conversation = await this.conversations.get(conversationId)
 
+    const conversation = await this.conversations.get(conversationId)
     if (!conversation) {
       return res.sendStatus(404)
     } else if (conversation.clientId !== req.client!.id) {
@@ -51,14 +44,9 @@ export class MessageApi {
   }
 
   async collect(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.Collect.validate(req.body)
-    if (error) {
-      return res.status(400).send(error.message)
-    }
-
     const { conversationId, authorId, payload } = req.body
-    const conversation = await this.conversations.get(conversationId)
 
+    const conversation = await this.conversations.get(conversationId)
     if (!conversation) {
       return res.sendStatus(404)
     } else if (conversation.clientId !== req.client!.id) {
@@ -72,14 +60,9 @@ export class MessageApi {
   }
 
   async get(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.Get.validate(req.params)
-    if (error) {
-      return res.status(400).send(error.message)
-    }
-
     const { id } = req.params
-    const message = await this.messages.get(id)
 
+    const message = await this.messages.get(id)
     if (!message) {
       return res.sendStatus(404)
     }
@@ -93,16 +76,10 @@ export class MessageApi {
   }
 
   async list(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.List.validate({ query: req.query, params: req.params })
-    if (error) {
-      return res.status(400).send(error.message)
-    }
-
     const { id } = req.params
     const { limit } = req.query
 
     const conversation = await this.conversations.get(id as uuid)
-
     if (!conversation) {
       return res.sendStatus(404)
     } else if (conversation.clientId !== req.client!.id) {
@@ -114,12 +91,8 @@ export class MessageApi {
   }
 
   async delete(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.Delete.validate(req.params)
-    if (error) {
-      return res.status(400).send(error.message)
-    }
-
     const { id } = req.params
+
     const message = await this.messages.get(id)
     if (!message) {
       return res.sendStatus(400)
@@ -135,14 +108,9 @@ export class MessageApi {
   }
 
   async deleteByConversation(req: ClientApiRequest, res: Response) {
-    const { error } = Schema.Api.DeleteByConversation.validate(req.params)
-    if (error) {
-      return res.status(400).send(error.message)
-    }
-
     const { id } = req.params
-    const conversation = await this.conversations.get(id)
 
+    const conversation = await this.conversations.get(id)
     if (!conversation) {
       return res.sendStatus(400)
     } else if (conversation!.clientId !== req.client!.id) {

@@ -3,6 +3,7 @@ import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
 import yn from 'yn'
 import { App } from './app'
+import { ApiManager } from './base/api-manager'
 import { Auth } from './base/auth/auth'
 import { ChannelApi } from './channels/api'
 import { ConversationApi } from './conversations/api'
@@ -14,6 +15,7 @@ import { UserApi } from './users/api'
 export class Api {
   private router: Router
   private auth: Auth
+  private manager: ApiManager
 
   private syncs: SyncApi
   private health: HealthApi
@@ -25,11 +27,14 @@ export class Api {
   constructor(private app: App, private root: Router) {
     this.router = Router()
     this.auth = new Auth(app.clients)
-    this.syncs = new SyncApi(this.router, this.auth, this.app.syncs, this.app.clients, this.app.channels)
-    this.health = new HealthApi(this.router, this.auth, this.app.health)
-    this.users = new UserApi(this.router, this.auth, this.app.users)
-    this.conversations = new ConversationApi(this.router, this.auth, this.app.conversations)
-    this.messages = new MessageApi(this.router, this.auth, this.app.conversations, this.app.messages, this.app.converse)
+    this.manager = new ApiManager(this.router, this.auth)
+
+    this.syncs = new SyncApi(this.app.syncs, this.app.clients, this.app.channels)
+    this.health = new HealthApi(this.app.health)
+    this.users = new UserApi(this.app.users)
+    this.conversations = new ConversationApi(this.app.conversations)
+    this.messages = new MessageApi(this.app.conversations, this.app.messages, this.app.converse)
+
     this.channels = new ChannelApi(this.root, this.app)
   }
 
@@ -44,11 +49,12 @@ export class Api {
     this.router.use(express.json())
     this.router.use(express.urlencoded({ extended: true }))
 
-    await this.syncs.setup()
-    await this.health.setup()
-    await this.users.setup()
-    await this.conversations.setup()
-    await this.messages.setup()
+    this.syncs.setup(this.router, this.auth)
+    this.health.setup(this.manager)
+    this.users.setup(this.manager)
+    this.conversations.setup(this.manager)
+    this.messages.setup(this.manager)
+
     await this.channels.setup()
 
     this.setupApmErrorHandler()

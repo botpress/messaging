@@ -1,38 +1,39 @@
 import Joi from 'joi'
+import { ReqSchema } from '../base/schema'
 
 const Api = {
-  Create: Joi.object({
-    userId: Joi.string().guid().required()
+  Create: ReqSchema({
+    body: { userId: Joi.string().guid().required() }
   }),
 
-  Get: Joi.object({
-    id: Joi.string().guid().required()
+  Get: ReqSchema({
+    params: { id: Joi.string().guid().required() }
   }),
 
-  List: Joi.object({
-    query: Joi.object({ limit: Joi.number().optional() }).optional(),
-    params: Joi.object({ id: Joi.string().guid().required() }).required()
+  List: ReqSchema({
+    params: { id: Joi.string().guid().required() },
+    query: { limit: Joi.number().optional() }
   }),
 
-  Recent: Joi.object({
-    id: Joi.string().guid().required()
+  Recent: ReqSchema({
+    params: { id: Joi.string().guid().required() }
   })
 }
 
 const Socket = {
-  Create: Joi.object({}),
+  Create: Joi.object({}).required(),
 
   Get: Joi.object({
     id: Joi.string().guid().required()
-  }),
+  }).required(),
 
   List: Joi.object({
     limit: Joi.number().required()
-  }),
+  }).required(),
 
   Delete: Joi.object({
     id: Joi.string().guid().required()
-  })
+  }).required()
 }
 
 export const Schema = { Api, Socket }
