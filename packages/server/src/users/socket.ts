@@ -3,7 +3,7 @@ import { ClientService } from '../clients/service'
 import { SocketManager, SocketRequest } from '../socket/manager'
 import { SocketService } from '../socket/service'
 import { UserTokenService } from '../user-tokens/service'
-import { AuthUserSocketSchema, GetUserSocketSchema } from './schema'
+import { Schema } from './schema'
 import { UserService } from './service'
 
 export class UserSocket {
@@ -17,8 +17,8 @@ export class UserSocket {
 
   setup() {
     // TODO: this should be done when establishing the socket connection
-    this.sockets.handle('users.auth', AuthUserSocketSchema, this.auth.bind(this), false)
-    this.sockets.handle('users.get', GetUserSocketSchema, this.get.bind(this))
+    this.sockets.handle('users.auth', Schema.Socket.Auth, this.auth.bind(this), false)
+    this.sockets.handle('users.get', Schema.Socket.Get, this.get.bind(this))
   }
 
   async auth(socket: SocketRequest) {

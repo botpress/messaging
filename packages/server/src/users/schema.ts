@@ -1,13 +1,19 @@
 import Joi from 'joi'
 
-export const GetUserSchema = Joi.object({
-  id: Joi.string().guid().required()
-})
+const Api = {
+  Get: Joi.object({
+    id: Joi.string().guid().required()
+  })
+}
 
-export const GetUserSocketSchema = Joi.object({})
+const Socket = {
+  Get: Joi.object({}),
 
-export const AuthUserSocketSchema = Joi.object({
-  clientId: Joi.string().guid().required(),
-  id: Joi.string().guid().optional(),
-  token: Joi.string().optional()
-})
+  Auth: Joi.object({
+    clientId: Joi.string().guid().required(),
+    id: Joi.string().guid().optional(),
+    token: Joi.string().optional()
+  })
+}
+
+export const Schema = { Api, Socket }

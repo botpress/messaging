@@ -1,6 +1,6 @@
 import { ConversationService } from '../conversations/service'
 import { SocketManager, SocketRequest } from '../socket/manager'
-import { CreateMsgSocketSchema, ListMsgSocketSchema } from './schema'
+import { Schema } from './schema'
 import { MessageService } from './service'
 
 export class MessageSocket {
@@ -11,8 +11,8 @@ export class MessageSocket {
   ) {}
 
   setup() {
-    this.sockets.handle('messages.create', CreateMsgSocketSchema, this.create.bind(this))
-    this.sockets.handle('messages.list', ListMsgSocketSchema, this.list.bind(this))
+    this.sockets.handle('messages.create', Schema.Socket.Create, this.create.bind(this))
+    this.sockets.handle('messages.list', Schema.Socket.List, this.list.bind(this))
   }
 
   async create(socket: SocketRequest) {

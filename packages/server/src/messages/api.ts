@@ -3,7 +3,7 @@ import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
-import { CreateMsgSchema, DeleteMsgSchema, GetMsgSchema, ListMsgSchema } from './schema'
+import { Schema } from './schema'
 import { MessageService } from './service'
 
 export class MessageApi {
@@ -19,7 +19,7 @@ export class MessageApi {
     this.router.post(
       '/messages',
       this.auth.client.auth(async (req, res) => {
-        const { error } = CreateMsgSchema.validate(req.body)
+        const { error } = Schema.Api.Create.validate(req.body)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -57,7 +57,7 @@ export class MessageApi {
     this.router.get(
       '/messages/:id',
       this.auth.client.auth(async (req, res) => {
-        const { error } = GetMsgSchema.validate(req.params)
+        const { error } = Schema.Api.Get.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -81,7 +81,7 @@ export class MessageApi {
     this.router.get(
       '/messages',
       this.auth.client.auth(async (req, res) => {
-        const { error } = ListMsgSchema.validate(req.query)
+        const { error } = Schema.Api.List.validate(req.query)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -104,7 +104,7 @@ export class MessageApi {
     this.router.delete(
       '/messages',
       this.auth.client.auth(async (req, res) => {
-        const { error } = DeleteMsgSchema.validate(req.query)
+        const { error } = Schema.Api.Delete.validate(req.query)
         if (error) {
           return res.status(400).send(error.message)
         }

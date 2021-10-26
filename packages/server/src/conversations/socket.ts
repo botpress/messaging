@@ -1,16 +1,16 @@
 import { SocketManager, SocketRequest } from '../socket/manager'
 import { UserService } from '../users/service'
-import { CreateConvoSocketSchema, DeleteConvoSocketSchema, GetConvoSocketSchema, ListConvoSocketSchema } from './schema'
+import { Schema } from './schema'
 import { ConversationService } from './service'
 
 export class ConversationSocket {
   constructor(private sockets: SocketManager, private users: UserService, private conversations: ConversationService) {}
 
   setup() {
-    this.sockets.handle('conversations.create', CreateConvoSocketSchema, this.create.bind(this))
-    this.sockets.handle('conversations.get', GetConvoSocketSchema, this.get.bind(this))
-    this.sockets.handle('conversations.list', ListConvoSocketSchema, this.list.bind(this))
-    this.sockets.handle('conversations.delete', DeleteConvoSocketSchema, this.delete.bind(this))
+    this.sockets.handle('conversations.create', Schema.Socket.Create, this.create.bind(this))
+    this.sockets.handle('conversations.get', Schema.Socket.Get, this.get.bind(this))
+    this.sockets.handle('conversations.list', Schema.Socket.List, this.list.bind(this))
+    this.sockets.handle('conversations.delete', Schema.Socket.Delete, this.delete.bind(this))
   }
 
   async create(socket: SocketRequest) {
@@ -50,7 +50,7 @@ export class ConversationSocket {
       return socket.forbid('Conversation does not belong to user')
     }
 
-    const deleted = await this.conversations.delete(id)
-    socket.reply(deleted > 0)
+    await this.conversations.delete(id)
+    socket.reply(true)
   }
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
-import { GetUserSchema } from './schema'
+import { Schema } from './schema'
 import { UserService } from './service'
 
 export class UserApi {
@@ -19,7 +19,7 @@ export class UserApi {
     this.router.get(
       '/users/:id',
       this.auth.client.auth(async (req, res) => {
-        const { error } = GetUserSchema.validate(req.params)
+        const { error } = Schema.Api.Get.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
         }

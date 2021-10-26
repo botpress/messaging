@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
-import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema } from './schema'
+import { Schema } from './schema'
 import { ConversationService } from './service'
 
 export class ConversationApi {
@@ -10,7 +10,7 @@ export class ConversationApi {
     this.router.post(
       '/conversations',
       this.auth.client.auth(async (req, res) => {
-        const { error } = CreateConvoSchema.validate(req.body)
+        const { error } = Schema.Api.Create.validate(req.body)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -25,7 +25,7 @@ export class ConversationApi {
     this.router.get(
       '/conversations/:id',
       this.auth.client.auth(async (req, res) => {
-        const { error } = GetConvoSchema.validate(req.params)
+        const { error } = Schema.Api.Get.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -44,9 +44,9 @@ export class ConversationApi {
     )
 
     this.router.get(
-      '/conversations/',
+      '/conversations',
       this.auth.client.auth(async (req, res) => {
-        const { error } = ListConvosSchema.validate(req.query)
+        const { error } = Schema.Api.List.validate(req.query)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -65,7 +65,7 @@ export class ConversationApi {
     this.router.get(
       '/conversations/:userId/recent',
       this.auth.client.auth(async (req, res) => {
-        const { error } = RecentConvoSchema.validate(req.params)
+        const { error } = Schema.Api.Recent.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
         }
