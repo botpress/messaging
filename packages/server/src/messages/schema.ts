@@ -2,9 +2,14 @@ import Joi from 'joi'
 
 const Api = {
   Create: Joi.object({
-    collect: Joi.boolean().optional(),
     conversationId: Joi.string().guid().required(),
     authorId: Joi.string().guid().optional(),
+    payload: Joi.object().required()
+  }),
+
+  Collect: Joi.object({
+    conversationId: Joi.string().guid().required(),
+    authorId: Joi.string().guid().required(),
     payload: Joi.object().required()
   }),
 

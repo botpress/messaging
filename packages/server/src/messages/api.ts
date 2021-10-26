@@ -18,6 +18,7 @@ export class MessageApi {
 
   async setup() {
     this.router.post('/messages', this.auth.client.auth(this.create.bind(this)))
+    this.router.post('/messages/collect', this.auth.client.auth(this.collect.bind(this)))
     this.router.get('/messages/:id', this.auth.client.auth(this.get.bind(this)))
     this.router.get('/messages', this.auth.client.auth(this.list.bind(this)))
     this.router.delete('/messages', this.auth.client.auth(this.delete.bind(this)))
@@ -29,7 +30,7 @@ export class MessageApi {
       return res.status(400).send(error.message)
     }
 
-    const { conversationId, authorId, payload, collect } = req.body
+    const { conversationId, authorId, payload } = req.body
     const conversation = await this.conversations.get(conversationId)
 
     if (!conversation) {
@@ -38,24 +39,35 @@ export class MessageApi {
       return res.sendStatus(403)
     }
 
-    const collector = collect ? this.converse.collect(conversationId) : undefined
+    const source = authorId
+      ? undefined
+      : {
+          client: { id: req.client!.id }
+        }
+    const message = await this.messages.create(conversationId, authorId, payload, source)
 
-    const message = await this.messages.create(
-      conversationId,
-      authorId,
-      payload,
-      authorId
-        ? undefined
-        : {
-            client: { id: req.client!.id }
-          }
-    )
+    res.send(message)
+  }
 
-    if (collect) {
-      res.send(await collector)
-    } else {
-      res.send(message)
+  async collect(req: ClientApiRequest, res: Response) {
+    const { error } = Schema.Api.Collect.validate(req.body)
+    if (error) {
+      return res.status(400).send(error.message)
     }
+
+    const { conversationId, authorId, payload } = req.body
+    const conversation = await this.conversations.get(conversationId)
+
+    if (!conversation) {
+      return res.sendStatus(404)
+    } else if (conversation.clientId !== req.client!.id) {
+      return res.sendStatus(403)
+    }
+
+    const collector = this.converse.collect(conversationId)
+    await this.messages.create(conversationId, authorId, payload)
+
+    res.send(await collector)
   }
 
   async get(req: ClientApiRequest, res: Response) {
