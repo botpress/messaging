@@ -3,8 +3,16 @@ import { BaseClient } from './base'
 import { handleNotFound } from './errors'
 
 export class MessageClient extends BaseClient {
-  async create(conversationId: string, authorId: string | undefined, payload: any): Promise<Message> {
-    return this.deserialize((await this.http.post<Message>('/messages', { conversationId, authorId, payload })).data)
+  async create(
+    conversationId: string,
+    authorId: string | undefined,
+    payload: any,
+    flags?: { incomingId: string }
+  ): Promise<Message> {
+    return this.deserialize(
+      (await this.http.post<Message>('/messages', { conversationId, authorId, payload, incomingId: flags?.incomingId }))
+        .data
+    )
   }
 
   async get(id: string): Promise<Message | undefined> {
@@ -23,6 +31,10 @@ export class MessageClient extends BaseClient {
 
   async delete(filters: { id?: string; conversationId?: string }): Promise<number> {
     return (await this.http.delete<{ count: number }>('/messages', { params: filters })).data.count
+  }
+
+  async endTurn(id: string) {
+    await this.http.post(`/messages/turn/${id}`)
   }
 
   public deserialize(message: Message): Message {

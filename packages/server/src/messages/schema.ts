@@ -5,7 +5,13 @@ const Api = {
     collect: Joi.boolean().optional(),
     conversationId: Joi.string().guid().required(),
     authorId: Joi.string().guid().optional(),
-    payload: Joi.object().required()
+    payload: Joi.object().required(),
+    incomingId: Joi.string().guid().optional(),
+    timeout: Joi.number().min(0).optional()
+  }),
+
+  Turn: Joi.object({
+    id: Joi.string().guid().required()
   }),
 
   Get: Joi.object({
