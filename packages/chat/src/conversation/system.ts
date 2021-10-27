@@ -22,7 +22,7 @@ export class WebchatConversation extends WebchatSystem {
     const event = { choice: saved }
     await this.emitter.emit(ConversationEvents.Choose, event)
 
-    let conversation = await this.socket.getConversation(event.choice)
+    let conversation = event.choice && (await this.socket.getConversation(event.choice))
     if (!conversation) {
       conversation = await this.socket.createConversation()
     } else {

@@ -19,7 +19,7 @@ export class Webchat {
     this.storage = new WebchatStorage()
     this.locale = new WebchateLocale()
     this.lang = new WebchatLang(this.locale)
-    this.socket = new MessagingSocket({ url, clientId, manualConnect: true })
+    this.socket = new MessagingSocket({ url, clientId })
     this.user = new WebchatUser(this.storage, this.socket)
     this.conversation = new WebchatConversation(this.storage, this.socket)
     this.messages = new WebchatMessages(this.socket, this.conversation)
@@ -29,13 +29,13 @@ export class Webchat {
     await this.storage.setup()
     await this.locale.setup()
     await this.lang.setup()
-    await this.socket.com.connect()
+    await this.socket.connect({ autoLogin: false })
     await this.user.setup()
     await this.conversation.setup()
     await this.messages.setup()
   }
 
   public async destroy() {
-    this.socket.com.disconnect()
+    this.socket.disconnect()
   }
 }

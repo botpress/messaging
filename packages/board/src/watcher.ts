@@ -54,8 +54,8 @@ export class BoardWatcher {
   }
 
   private async handleUserSet(e: UserSetEvent) {
-    this.textUserId.textContent = e.value?.id || ''
-    this.textUserToken.textContent = e.value?.token || ''
+    this.textUserId.textContent = e.value?.userId || ''
+    this.textUserToken.textContent = e.value?.userToken || ''
   }
 
   private async handleConversationSet(e: ConversationSetEvent) {

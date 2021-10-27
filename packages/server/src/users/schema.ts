@@ -14,9 +14,9 @@ const Socket = {
 
   Auth: Joi.object({
     clientId: Joi.string().guid().required(),
-    id: Joi.string().guid().optional(),
-    token: Joi.string().optional()
-  }).required()
+    userId: Joi.string().guid().optional(),
+    userToken: Joi.string().optional()
+  })
 }
 
 export const Schema = { Api, Socket }
