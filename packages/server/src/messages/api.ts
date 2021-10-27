@@ -1,5 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import { Response } from 'express'
+import { v4 as uuidv4 } from 'uuid'
 import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
 import { ConversationService } from '../conversations/service'
@@ -46,17 +47,28 @@ export class MessageApi {
   }
 
   async collect(req: ClientApiRequest, res: Response) {
-    const { conversationId, authorId, payload } = req.body as { conversationId: uuid; authorId: uuid; payload: any }
+    const { conversationId, authorId, payload, incomingId, timeout } = req.body as {
+      conversationId: uuid
+      authorId: uuid
+      payload: any
+      incomingId: uuid
+      timeout: string
+    }
 
     const conversation = await this.conversations.get(conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
 
-    const collector = this.converse.collect(conversationId)
-    await this.messages.create(conversationId, authorId, payload)
+    const messageId = uuidv4()
+    const collector = this.converse.collect(messageId, conversationId, +timeout)
+    if (incomingId) {
+      this.converse.setIncomingId(messageId, incomingId)
+    }
 
-    res.send(await collector)
+    const message = await this.messages.create(conversationId, authorId, payload)
+
+    res.send({ message, responses: await collector })
   }
 
   async get(req: ClientApiRequest, res: Response) {

@@ -14,7 +14,9 @@ const Api = {
     body: {
       conversationId: Joi.string().guid().required(),
       authorId: Joi.string().guid().required(),
-      payload: Joi.object().required()
+      payload: Joi.object().required(),
+      incomingId: Joi.string().guid().optional(),
+      timeout: Joi.number().min(0).optional()
     }
   }),
 
