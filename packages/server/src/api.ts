@@ -31,7 +31,15 @@ export class Api {
     this.sockets = new SocketManager(this.app.sockets)
     this.syncs = new SyncApi(this.router, this.auth, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.auth, this.app.health)
-    this.users = new UserApi(this.router, this.auth, this.app.clients, this.sockets, this.app.users, this.app.sockets)
+    this.users = new UserApi(
+      this.router,
+      this.auth,
+      this.app.clients,
+      this.sockets,
+      this.app.users,
+      this.app.userTokens,
+      this.app.sockets
+    )
     this.conversations = new ConversationApi(
       this.router,
       this.auth,
