@@ -53,10 +53,11 @@ export class MessageService extends Service {
     conversationId: uuid,
     authorId: uuid | undefined,
     payload: any,
-    source?: ActionSource
+    source?: ActionSource,
+    forceId?: uuid
   ): Promise<Message> {
     const message = {
-      id: uuidv4(),
+      id: forceId || uuidv4(),
       conversationId,
       authorId,
       sentOn: new Date(),
