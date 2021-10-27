@@ -33,7 +33,7 @@ export class MessageClient extends BaseClient {
     return (await this.http.delete<{ count: number }>('/messages', { params: filters })).data.count
   }
 
-  async turn(id: string) {
+  async endTurn(id: string) {
     await this.http.post(`/messages/turn/${id}`)
   }
 

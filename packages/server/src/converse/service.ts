@@ -1,10 +1,13 @@
 import { Message, uuid } from '@botpress/messaging-base'
+import ms from 'ms'
 import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { Collector } from './types'
+
+const DEFAULT_COLLECT_TIMEOUT = ms('10s')
 
 export class ConverseService extends Service {
   private collectors!: ServerCache<uuid, Collector[]>
@@ -50,7 +53,7 @@ export class ConverseService extends Service {
   async collect(messageId: uuid, conversationId: uuid, timeout: number): Promise<Message[]> {
     const collector = this.addCollector(messageId, conversationId)
     if (timeout !== 0) {
-      this.resetCollectorTimeout(collector, timeout || 5000)
+      this.resetCollectorTimeout(collector, timeout || DEFAULT_COLLECT_TIMEOUT)
     }
 
     this.collectingForMessageCache.set(messageId, true)
@@ -62,15 +65,11 @@ export class ConverseService extends Service {
 
   async stopCollecting(messageId: uuid, conversationId: uuid) {
     const collectors = this.collectors.get(conversationId) || []
+    const childCollectors = collectors.filter((x) => x.messageId === messageId)
 
-    for (const collector of collectors) {
-      if (collector.messageId === messageId) {
-        clearTimeout(collector.timeout!)
-
-        if (collector.resolve) {
-          collector.resolve(collector.messages)
-        }
-      }
+    for (const collector of childCollectors) {
+      clearTimeout(collector.timeout!)
+      this.removeCollector(collector)
     }
   }
 
@@ -98,10 +97,17 @@ export class ConverseService extends Service {
 
     const collectors = this.collectors.get(conversationId)!
     const index = collectors.indexOf(collector)
-    collectors.splice(index, 1)
+    if (index >= 0) {
+      collectors.splice(index, 1)
+    }
 
-    if (collectors.length === 0) {
+    if (!collectors.length) {
       this.collectors.del(conversationId)
+    }
+
+    if (collector.resolve) {
+      collector.resolve(collector.messages)
+      collector.resolve = undefined
     }
   }
 
@@ -112,8 +118,6 @@ export class ConverseService extends Service {
 
     collector.timeout = setTimeout(() => {
       this.removeCollector(collector)
-      collector.resolve!(collector.messages)
-      collector.resolve = undefined
     }, time)
   }
 }

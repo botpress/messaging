@@ -6,7 +6,7 @@ export const CreateMsgSchema = Joi.object({
   authorId: Joi.string().guid().optional(),
   payload: Joi.object().required(),
   incomingId: Joi.string().guid().optional(),
-  timeout: Joi.number().optional()
+  timeout: Joi.number().min(0).optional()
 })
 
 export const TurnMsgSchema = Joi.object({
