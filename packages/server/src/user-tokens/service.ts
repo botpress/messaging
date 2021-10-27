@@ -1,6 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
+import yn from 'yn'
 import { Service } from '../base/service'
 import { Batcher } from '../batching/batcher'
 import { BatchingService } from '../batching/service'
@@ -33,6 +34,11 @@ export class UserTokenService extends Service {
   }
 
   async setup() {
+    if (!yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
+      // let's not create a table we don't need for now
+      return
+    }
+
     this.batcher = await this.batchingService.newBatcher(
       'batcher_user_tokens',
       [this.userService.batcher],

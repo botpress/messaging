@@ -13,6 +13,7 @@ describe('UserTokens', () => {
   let state: { provider: Provider; client: Client; user: User; rawToken?: string; userToken?: UserToken }
 
   beforeAll(async () => {
+    process.env.ENABLE_EXPERIMENTAL_SOCKETS = '1'
     await setupApp()
     userTokens = app.userTokens
     querySpy = jest.spyOn(userTokens, 'query')
