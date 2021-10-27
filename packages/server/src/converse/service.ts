@@ -36,7 +36,7 @@ export class ConverseService extends Service {
     const collectors = this.collectors.get(message.conversationId) || []
 
     for (const collector of collectors) {
-      if (!incomingId || incomingId === collector.messageId) {
+      if (!incomingId || incomingId === collector.incomingId) {
         collector.messages.push(message)
       }
     }
@@ -65,7 +65,7 @@ export class ConverseService extends Service {
 
   async stopCollecting(messageId: uuid, conversationId: uuid) {
     const collectors = this.collectors.get(conversationId) || []
-    const childCollectors = collectors.filter((x) => x.messageId === messageId)
+    const childCollectors = collectors.filter((x) => x.incomingId === messageId)
 
     for (const collector of childCollectors) {
       clearTimeout(collector.timeout!)
@@ -83,7 +83,7 @@ export class ConverseService extends Service {
     }
 
     const collector: Collector = {
-      messageId,
+      incomingId: messageId,
       conversationId,
       messages: []
     }
