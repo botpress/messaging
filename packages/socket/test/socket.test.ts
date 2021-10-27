@@ -12,6 +12,7 @@ describe('Socket Client', () => {
     conversation?: Conversation
     message1?: Message
     message2?: Message
+    conversation2?: Conversation
   } = {}
 
   test('Connect', async () => {
@@ -82,6 +83,30 @@ describe('Socket Client', () => {
     expect(message?.payload).toEqual(payload)
 
     state.message2 = message!
+  })
+
+  test('ListMessages', async () => {
+    const messages = await state.socket?.listMessages()
+
+    expect(messages).toEqual([state.message2, state.message1])
+  })
+
+  test('CreateConversation And Switch', async () => {
+    const conversation = await state.socket?.createConversation()
+
+    expect(conversation?.clientId).toBe(CLIENT_ID)
+    expect(conversation?.userId).toBe(state.userId)
+
+    expect(state.socket?.conversationId).not.toEqual(state.conversation?.id)
+
+    state.conversation2 = conversation
+  })
+
+  test('ListConversations', async () => {
+    const conversations = await state.socket?.listConversations()
+    conversations?.map((x) => delete (<any>x).lastMessage)
+
+    expect(conversations).toEqual([state.conversation, state.conversation2])
   })
 
   test('Disconnect', async () => {
