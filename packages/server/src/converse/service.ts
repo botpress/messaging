@@ -70,6 +70,7 @@ export class ConverseService extends Service {
     for (const collector of childCollectors) {
       clearTimeout(collector.timeout!)
       this.removeCollector(collector)
+      this.resolveCollect(collector)
     }
   }
 
@@ -92,6 +93,13 @@ export class ConverseService extends Service {
     return collector
   }
 
+  private resolveCollect(collector: Collector) {
+    if (collector.resolve) {
+      collector.resolve(collector.messages)
+      collector.resolve = undefined
+    }
+  }
+
   private removeCollector(collector: Collector) {
     const { conversationId } = collector
 
@@ -104,11 +112,6 @@ export class ConverseService extends Service {
     if (!collectors.length) {
       this.collectors.del(conversationId)
     }
-
-    if (collector.resolve) {
-      collector.resolve(collector.messages)
-      collector.resolve = undefined
-    }
   }
 
   private resetCollectorTimeout(collector: Collector, time: number) {
@@ -118,6 +121,7 @@ export class ConverseService extends Service {
 
     collector.timeout = setTimeout(() => {
       this.removeCollector(collector)
+      this.resolveCollect(collector)
     }, time)
   }
 }
