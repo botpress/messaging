@@ -1,6 +1,5 @@
 import { Conversation, Message, User, uuid } from '@botpress/messaging-base'
-import { SocketComEvents } from '.'
-import { SocketCom } from './com'
+import { SocketCom, SocketComEvents } from './com'
 import { SocketEmitter } from './emitter'
 
 export class MessagingSocket extends SocketEmitter<{

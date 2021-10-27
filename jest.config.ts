@@ -15,7 +15,7 @@ const config: Config.InitialOptions = {
 
   projects: [
     {
-      testMatch: ['<rootDir>/packages/server/test/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/packages/server/test/**/(*.)test.ts', '<rootDir>/packages/socket/test/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
