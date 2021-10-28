@@ -64,7 +64,7 @@ export class Api {
     this.setupApm()
     await this.setupPassword()
 
-    this.root.get('/version', this.version)
+    this.root.get('/version', this.version.bind(this))
     this.root.get('/status', this.status)
     this.root.use('/api', this.router)
     this.router.use(cors())
