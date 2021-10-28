@@ -1,5 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import { Router } from 'express'
+import { v4 as uuidv4 } from 'uuid'
 import { Auth } from '../base/auth/auth'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
@@ -11,7 +12,8 @@ import {
   DeleteMsgSchema,
   GetMsgSchema,
   ListMsgSchema,
-  ListMsgSocketSchema
+  ListMsgSocketSchema,
+  TurnMsgSchema
 } from './schema'
 import { MessageService } from './service'
 
@@ -35,7 +37,7 @@ export class MessageApi {
           return res.status(400).send(error.message)
         }
 
-        const { conversationId, authorId, payload, collect } = req.body
+        const { conversationId, authorId, payload, collect, incomingId, timeout } = req.body
         const conversation = await this.conversations.get(conversationId)
 
         if (!conversation) {
@@ -44,7 +46,11 @@ export class MessageApi {
           return res.sendStatus(403)
         }
 
-        const collector = collect ? this.converse.collect(conversationId) : undefined
+        const messageId = uuidv4()
+        const collector = collect ? this.converse.collect(messageId, conversationId, +timeout) : undefined
+        if (incomingId) {
+          this.converse.setIncomingId(messageId, incomingId)
+        }
 
         const message = await this.messages.create(
           conversationId,
@@ -54,14 +60,42 @@ export class MessageApi {
             ? undefined
             : {
                 client: { id: req.client!.id }
-              }
+              },
+          messageId
         )
 
         if (collect) {
-          res.send(await collector)
+          res.send({ message, responses: await collector })
         } else {
           res.send(message)
         }
+      })
+    )
+
+    this.router.post(
+      '/messages/turn/:id',
+      this.auth.client.auth(async (req, res) => {
+        const { error } = TurnMsgSchema.validate(req.params)
+        if (error) {
+          return res.status(400).send(error.message)
+        }
+
+        const { id } = req.params
+
+        const message = await this.messages.get(id)
+        if (!message) {
+          return res.sendStatus(404)
+        }
+
+        const conversation = await this.conversations.get(message.conversationId)
+        if (!conversation) {
+          return res.sendStatus(404)
+        } else if (conversation.clientId !== req.client!.id) {
+          return res.sendStatus(403)
+        }
+
+        await this.converse.stopCollecting(message.id, message.conversationId)
+        res.sendStatus(200)
       })
     )
 

@@ -4,7 +4,13 @@ export const CreateMsgSchema = Joi.object({
   collect: Joi.boolean().optional(),
   conversationId: Joi.string().guid().required(),
   authorId: Joi.string().guid().optional(),
-  payload: Joi.object().required()
+  payload: Joi.object().required(),
+  incomingId: Joi.string().guid().optional(),
+  timeout: Joi.number().min(0).optional()
+})
+
+export const TurnMsgSchema = Joi.object({
+  id: Joi.string().guid().required()
 })
 
 export const GetMsgSchema = Joi.object({
