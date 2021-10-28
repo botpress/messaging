@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-server",
-  "version": "0.1.16",
+  "version": "0.1.15",
   "main": "index.ts",
   "license": "AGPL-3.0",
   "scripts": {
