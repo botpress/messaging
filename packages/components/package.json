@@ -1,11 +1,10 @@
 {
   "name": "@botpress/messaging-components",
   "version": "0.0.1",
-  "private": true,
-  "publisher": "Botpress inc.",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
   "types": "./src/typings.d.ts",
+  "module": "dist/index.esm.js",
+  "license": "AGPL-3.0",
   "dependencies": {
     "html-truncate": "^1.2.2",
     "mime": "^2.5.2",
