@@ -8,13 +8,10 @@ import { ChannelApi } from './channels/api'
 import { ConversationApi } from './conversations/api'
 import { HealthApi } from './health/api'
 import { MessageApi } from './messages/api'
-import { SocketManager } from './socket/manager'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
 
 export class Api {
-  public readonly sockets: SocketManager
-
   private router: Router
   private auth: Auth
 
@@ -28,35 +25,11 @@ export class Api {
   constructor(private app: App, private root: Router) {
     this.router = Router()
     this.auth = new Auth(app.clients)
-    this.sockets = new SocketManager(this.app.sockets)
     this.syncs = new SyncApi(this.router, this.auth, this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.router, this.auth, this.app.health)
-    this.users = new UserApi(
-      this.router,
-      this.auth,
-      this.app.clients,
-      this.sockets,
-      this.app.users,
-      this.app.userTokens,
-      this.app.sockets
-    )
-    this.conversations = new ConversationApi(
-      this.router,
-      this.auth,
-      this.sockets,
-      this.app.users,
-      this.app.conversations,
-      this.app.sockets
-    )
-    this.messages = new MessageApi(
-      this.router,
-      this.auth,
-      this.sockets,
-      this.app.conversations,
-      this.app.messages,
-      this.app.converse,
-      this.app.sockets
-    )
+    this.users = new UserApi(this.router, this.auth, this.app.users)
+    this.conversations = new ConversationApi(this.router, this.auth, this.app.conversations)
+    this.messages = new MessageApi(this.router, this.auth, this.app.conversations, this.app.messages, this.app.converse)
     this.channels = new ChannelApi(this.root, this.app)
   }
 

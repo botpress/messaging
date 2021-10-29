@@ -8,13 +8,9 @@ export class SocketCom {
   private socket!: Socket
   private pending: { [request: string]: { resolve: (value: any) => void; reject: (reason?: any) => void } } = {}
 
-  constructor(private url: string, private manualConnect: boolean) {
+  constructor(private url: string) {
     this.emitter = new SocketComEmitter()
     this.events = this.emitter
-
-    if (!this.manualConnect) {
-      this.connect()
-    }
   }
 
   connect() {
@@ -28,7 +24,7 @@ export class SocketCom {
 
     this.socket.on('message', async (message) => {
       if (this.pending[message.request]) {
-        if (message.data.error) {
+        if (message.data?.error) {
           this.pending[message.request].reject(message.data.message)
         } else {
           this.pending[message.request].resolve(message.data)

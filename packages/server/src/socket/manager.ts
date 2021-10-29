@@ -1,5 +1,7 @@
+import { uuid } from '@botpress/messaging-base'
 import clc from 'cli-color'
 import { Server } from 'http'
+import Joi from 'joi'
 import Socket from 'socket.io'
 import yn from 'yn'
 import { Logger } from '../logger/types'
@@ -14,7 +16,7 @@ export class SocketManager {
 
   async setup(server: Server) {
     if (yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
-      this.ws = new Socket.Server(server, { cors: { origin: '*' } })
+      this.ws = new Socket.Server(server, { serveClient: false, cors: { origin: '*' } })
       this.ws.on('connection', this.handleSocketConnection.bind(this))
     }
   }
@@ -39,11 +41,35 @@ export class SocketManager {
     })
   }
 
-  public handle(type: string, callback: SocketHandler) {
-    this.handlers[type] = callback
+  public handle(
+    type: string,
+    schema: Joi.ObjectSchema<any>,
+    callback: (socket: SocketRequest) => Promise<void>,
+    checkUserId?: boolean
+  ) {
+    this.handlers[type] = async (socket: Socket.Socket, message: SocketMessage) => {
+      // TODO: remove this
+      if (checkUserId !== false) {
+        const userId = this.sockets.getUserId(socket)
+        if (!userId) {
+          return this.reply(socket, message, {
+            error: true,
+            message: 'socket does not have user rights'
+          })
+        }
+        message.userId = userId
+      }
+
+      const { error } = schema.validate(message.data)
+      if (error) {
+        return this.reply(socket, message, { error: true, message: error.message })
+      }
+
+      await callback(new SocketRequest(this, socket, message, message.userId))
+    }
   }
 
-  public reply(socket: Socket.Socket, message: SocketRequest, data: any) {
+  public reply(socket: Socket.Socket, message: SocketMessage, data: any) {
     socket.send({
       request: message.request,
       data
@@ -70,12 +96,19 @@ export class SocketManager {
     })
   }
 
-  private async handleSocketMessage(socket: Socket.Socket, data: SocketRequest) {
+  private async handleSocketMessage(socket: Socket.Socket, message: SocketMessage) {
     try {
-      this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, data)
-      await this.handlers[data?.type]?.(socket, data)
+      this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, message)
+
+      if (!this.handlers[message.type]) {
+        return this.reply(socket, message, { error: true, message: `route ${message.type} does not exist` })
+      }
+
+      await this.handlers[message.type](socket, message)
     } catch (e) {
-      this.logger.error(e, 'An error occured receiving a socket message', data)
+      this.logger.error(e, 'An error occured receiving a socket message', message)
+
+      return this.reply(socket, message, { error: true, message: 'an error occurred' })
     }
   }
 
@@ -89,10 +122,36 @@ export class SocketManager {
   }
 }
 
-export type SocketHandler = (socket: Socket.Socket, data: SocketRequest) => Promise<void>
+export type SocketHandler = (socket: Socket.Socket, data: SocketMessage) => Promise<void>
 
-export interface SocketRequest {
+export interface SocketMessage {
   request: string
   type: string
   data: any
+  userId: uuid
+}
+
+export class SocketRequest {
+  public get data() {
+    return this.message.data
+  }
+
+  public constructor(
+    private manager: SocketManager,
+    public readonly socket: Socket.Socket,
+    private message: SocketMessage,
+    public readonly userId: uuid
+  ) {}
+
+  public reply(data: any) {
+    this.manager.reply(this.socket, this.message, data)
+  }
+
+  public forbid(message: string) {
+    this.manager.reply(this.socket, this.message, { error: true, message })
+  }
+
+  public notFound(message: string) {
+    this.manager.reply(this.socket, this.message, { error: true, message })
+  }
 }

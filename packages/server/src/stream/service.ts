@@ -116,7 +116,7 @@ export class StreamService extends Service {
       const sockets = this.sockets.listByUser(userId)
       for (const socket of sockets) {
         if (source?.socket?.id !== socket.id) {
-          socket.send({ type, data })
+          socket.send(data)
         }
       }
     }

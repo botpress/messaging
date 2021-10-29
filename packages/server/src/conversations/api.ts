@@ -1,26 +1,16 @@
 import { Router } from 'express'
 import { Auth } from '../base/auth/auth'
-import { SocketManager } from '../socket/manager'
-import { SocketService } from '../socket/service'
-import { UserService } from '../users/service'
-import { CreateConvoSchema, GetConvoSchema, ListConvosSchema, RecentConvoSchema, UseConvoSocketSchema } from './schema'
+import { Schema } from './schema'
 import { ConversationService } from './service'
 
 export class ConversationApi {
-  constructor(
-    private router: Router,
-    private auth: Auth,
-    private sockets: SocketManager,
-    private users: UserService,
-    private conversations: ConversationService,
-    private socketService: SocketService
-  ) {}
+  constructor(private router: Router, private auth: Auth, private conversations: ConversationService) {}
 
   async setup() {
     this.router.post(
       '/conversations',
       this.auth.client.auth(async (req, res) => {
-        const { error } = CreateConvoSchema.validate(req.body)
+        const { error } = Schema.Api.Create.validate(req.body)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -35,7 +25,7 @@ export class ConversationApi {
     this.router.get(
       '/conversations/:id',
       this.auth.client.auth(async (req, res) => {
-        const { error } = GetConvoSchema.validate(req.params)
+        const { error } = Schema.Api.Get.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -54,9 +44,9 @@ export class ConversationApi {
     )
 
     this.router.get(
-      '/conversations/',
+      '/conversations',
       this.auth.client.auth(async (req, res) => {
-        const { error } = ListConvosSchema.validate(req.query)
+        const { error } = Schema.Api.List.validate(req.query)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -75,7 +65,7 @@ export class ConversationApi {
     this.router.get(
       '/conversations/:userId/recent',
       this.auth.client.auth(async (req, res) => {
-        const { error } = RecentConvoSchema.validate(req.params)
+        const { error } = Schema.Api.Recent.validate(req.params)
         if (error) {
           return res.status(400).send(error.message)
         }
@@ -89,30 +79,5 @@ export class ConversationApi {
         res.send(conversation)
       })
     )
-
-    this.sockets.handle('conversations.use', async (socket, message) => {
-      const { error } = UseConvoSocketSchema.validate(message.data)
-      if (error) {
-        return this.sockets.reply(socket, message, { error: true, message: error.message })
-      }
-
-      const userId = this.socketService.getUserId(socket)
-      if (!userId) {
-        return this.sockets.reply(socket, message, {
-          error: true,
-          message: 'socket does not have user rights'
-        })
-      }
-      const { conversationId }: { conversationId?: string } = message.data
-
-      const user = await this.users.get(userId)
-      let conversation = conversationId && (await this.conversations.get(conversationId))
-
-      if (!conversation || conversation.userId !== userId) {
-        conversation = await this.conversations.create(user!.clientId, userId)
-      }
-
-      this.sockets.reply(socket, message, conversation)
-    })
   }
 }
