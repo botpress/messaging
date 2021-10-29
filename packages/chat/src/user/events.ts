@@ -1,4 +1,5 @@
-import { Emitter, User, uuid } from '@botpress/messaging-base'
+import { Emitter, uuid } from '@botpress/messaging-base'
+import { UserCredentials } from '@botpress/messaging-socket'
 
 export enum UserEvents {
   Choose = 'choose',
@@ -6,12 +7,12 @@ export enum UserEvents {
 }
 
 export interface UserSetEvent {
-  previous: User | undefined
-  value: User | undefined
+  previous: UserCredentials | undefined
+  value: UserCredentials | undefined
 }
 
 export interface UserChooseEvent {
-  choice: uuid | undefined
+  choice: UserCredentials | undefined
 }
 
 export class UserEmitter extends Emitter<{
