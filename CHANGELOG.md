@@ -1,3 +1,20 @@
+## [0.1.16](https://github.com/botpress/messaging/compare/v0.1.15...v0.1.16) (2021-10-28)
+
+
+### Bug Fixes
+
+* **client:** fix handling of not found errors ([#219](https://github.com/botpress/messaging/issues/219)) ([025f290](https://github.com/botpress/messaging/commit/025f290df02d474f41fd99beed0a08fd5255f5e5))
+
+
+### Features
+
+* **components:** implement ui components package ([#208](https://github.com/botpress/messaging/issues/208)) ([a469775](https://github.com/botpress/messaging/commit/a46977536f48dbf3a8bcfbb5fff911a061caf00b)), closes [#210](https://github.com/botpress/messaging/issues/210)
+* **converse:** close collector when the bot has finished processing ([#217](https://github.com/botpress/messaging/issues/217)) ([ccb2154](https://github.com/botpress/messaging/commit/ccb215467d0f2bd074f0f7ec2064064ef35c1484))
+* **twilio:** twilio testing ([#221](https://github.com/botpress/messaging/issues/221)) ([877d448](https://github.com/botpress/messaging/commit/877d448e19d182eff7ac51480a049ef70775191a))
+* **user-tokens:** implement user tokens ([#203](https://github.com/botpress/messaging/issues/203)) ([c27fb4d](https://github.com/botpress/messaging/commit/c27fb4dce039cf9ee32ccc048d5b68d8d8422712))
+
+
+
 ## [0.1.15](https://github.com/botpress/messaging/compare/v0.1.14...v0.1.15) (2021-10-19)
 
 
