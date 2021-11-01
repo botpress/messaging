@@ -28,12 +28,16 @@ export class SmoochCarouselRenderer extends CarouselRenderer {
     context.actions.push({
       text: button.title,
       type: 'postback',
-      payload: button.payload
+      payload: `postback::${button.payload}`
     })
   }
 
   renderButtonSay(context: Context, button: ActionSaySomething) {
-    // TODO: not supported?
+    context.actions.push({
+      text: button.title,
+      type: 'postback',
+      payload: `say::${button.text}`
+    })
   }
 
   endRenderCard(context: Context, card: CardContent) {
