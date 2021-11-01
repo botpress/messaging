@@ -5,9 +5,10 @@ import { SmoochContext } from '../context'
 
 export class SmoochTextRenderer extends TextRenderer {
   renderText(context: SmoochContext, payload: TextContent): void {
+    let text = payload.text
+
     if (payload.markdown) {
-      const cleanText = removeMd(payload.text)
-      payload.text = String(cleanText)
+      text = removeMd(text)
     }
 
     context.messages.push({ type: 'text', text: payload.text })
