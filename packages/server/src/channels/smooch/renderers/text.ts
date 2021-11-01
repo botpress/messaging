@@ -1,5 +1,4 @@
-import { remark } from 'remark'
-import strip from 'strip-markdown'
+import removeMd from 'remove-markdown'
 import { TextContent } from '../../../content/types'
 import { TextRenderer } from '../../base/renderers/text'
 import { SmoochContext } from '../context'
@@ -7,7 +6,7 @@ import { SmoochContext } from '../context'
 export class SmoochTextRenderer extends TextRenderer {
   renderText(context: SmoochContext, payload: TextContent): void {
     if (payload.markdown) {
-      const cleanText = remark().use(strip).processSync(payload.text)
+      const cleanText = removeMd(payload.text)
       payload.text = String(cleanText)
     }
 
