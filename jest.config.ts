@@ -15,13 +15,38 @@ const config: Config.InitialOptions = {
 
   projects: [
     {
-      testMatch: ['<rootDir>/packages/server/test/**/(*.)test.ts'],
+      rootDir: 'packages/server',
+      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
         ...tsjPreset.transform
       },
       clearMocks: true
+    },
+    {
+      rootDir: 'packages/socket',
+      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
+      displayName: { name: 'Socket', color: 'yellow' },
+      testEnvironment: 'node',
+      transform: {
+        ...tsjPreset.transform
+      },
+      clearMocks: true
+    },
+    {
+      rootDir: 'packages/components',
+      testMatch: ['<rootDir>/src/**/(*.)test.tsx'],
+      displayName: { name: 'Components', color: 'red' },
+      roots: ['.'],
+      transform: {
+        ...tsjPreset.transform,
+        '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform'
+      },
+      testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/dist'],
+      setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+      moduleDirectories: ['node_modules', 'src'],
+      testEnvironment: 'jsdom'
     }
   ]
 }
