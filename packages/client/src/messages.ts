@@ -1,6 +1,5 @@
 import { Message } from '@botpress/messaging-base'
 import { BaseClient } from './base'
-import { handleNotFound } from './errors'
 
 export class MessageClient extends BaseClient {
   async create(
@@ -16,19 +15,21 @@ export class MessageClient extends BaseClient {
   }
 
   async get(id: string): Promise<Message | undefined> {
-    return handleNotFound(async () => {
-      this.deserialize((await this.http.get<Message>(`/messages/${id}`)).data)
-    }, undefined)
+    const message = (await this.http.get<Message>(`/messages/${id}`)).data
+    if (message) {
+      return this.deserialize(message)
+    } else {
+      return undefined
+    }
   }
 
-  async list(conversationId: string, limit: number): Promise<Message[]> {
-    return handleNotFound(async () => {
-      return (await this.http.get<Message[]>('/messages', { params: { conversationId, limit } })).data.map((x) =>
-        this.deserialize(x)
-      )
-    }, [])
+  async list(conversationId: string, limit?: number): Promise<Message[]> {
+    return (await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, { params: { limit } })).data.map(
+      (x) => this.deserialize(x)
+    )
   }
 
+  // TODO: this is incorrect
   async delete(filters: { id?: string; conversationId?: string }): Promise<number> {
     return (await this.http.delete<{ count: number }>('/messages', { params: filters })).data.count
   }

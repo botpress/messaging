@@ -6,7 +6,8 @@ const Api = {
     body: {
       conversationId: Joi.string().guid().required(),
       authorId: Joi.string().guid().optional(),
-      payload: Joi.object().required()
+      payload: Joi.object().required(),
+      incomingId: Joi.string().guid().optional()
     }
   }),
 
@@ -15,7 +16,6 @@ const Api = {
       conversationId: Joi.string().guid().required(),
       authorId: Joi.string().guid().required(),
       payload: Joi.object().required(),
-      incomingId: Joi.string().guid().optional(),
       timeout: Joi.number().min(0).optional()
     }
   }),
@@ -44,6 +44,12 @@ const Api = {
   DeleteByConversation: ReqSchema({
     params: {
       conversationId: Joi.string().guid().required()
+    }
+  }),
+
+  Turn: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
     }
   })
 }

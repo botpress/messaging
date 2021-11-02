@@ -26,14 +26,25 @@ export class MessageApi {
       Schema.Api.DeleteByConversation,
       this.deleteByConversation.bind(this)
     )
+    router.post('/messages/turn/:id', Schema.Api.Turn, this.turn.bind(this))
   }
 
   async create(req: ClientApiRequest, res: Response) {
-    const { conversationId, authorId, payload } = req.body as { conversationId: uuid; authorId: uuid; payload: any }
+    const { conversationId, authorId, payload, incomingId } = req.body as {
+      conversationId: uuid
+      authorId: uuid
+      payload: any
+      incomingId: uuid
+    }
 
     const conversation = await this.conversations.get(conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
+    }
+
+    const messageId = uuidv4()
+    if (incomingId) {
+      this.converse.setIncomingId(messageId, incomingId)
     }
 
     const source = authorId
@@ -41,17 +52,16 @@ export class MessageApi {
       : {
           client: { id: req.client!.id }
         }
-    const message = await this.messages.create(conversationId, authorId, payload, source)
+    const message = await this.messages.create(conversationId, authorId, payload, source, messageId)
 
     res.status(201).send(message)
   }
 
   async collect(req: ClientApiRequest, res: Response) {
-    const { conversationId, authorId, payload, incomingId, timeout } = req.body as {
+    const { conversationId, authorId, payload, timeout } = req.body as {
       conversationId: uuid
       authorId: uuid
       payload: any
-      incomingId: uuid
       timeout: string
     }
 
@@ -62,11 +72,7 @@ export class MessageApi {
 
     const messageId = uuidv4()
     const collector = this.converse.collect(messageId, conversationId, +timeout)
-    if (incomingId) {
-      this.converse.setIncomingId(messageId, incomingId)
-    }
-
-    const message = await this.messages.create(conversationId, authorId, payload)
+    const message = await this.messages.create(conversationId, authorId, payload, undefined, messageId)
 
     res.send({ message, responses: await collector })
   }
@@ -127,5 +133,24 @@ export class MessageApi {
 
     const deleted = await this.messages.deleteByConversationId(conversationId)
     res.send({ count: deleted })
+  }
+
+  async turn(req: ClientApiRequest, res: Response) {
+    const { id } = req.params
+
+    const message = await this.messages.get(id)
+    if (!message) {
+      return res.sendStatus(404)
+    }
+
+    const conversation = await this.conversations.get(message.conversationId)
+    if (!conversation) {
+      return res.sendStatus(404)
+    } else if (conversation.clientId !== req.client!.id) {
+      return res.sendStatus(403)
+    }
+
+    await this.converse.stopCollecting(message.id, message.conversationId)
+    res.sendStatus(200)
   }
 }
