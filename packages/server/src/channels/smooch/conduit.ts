@@ -10,6 +10,9 @@ import { SmoochMessage, SmoochPayload, SmoochContext, SmoochWebhook, SmoochActio
 import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
 
+export const SAY_PREFIX = 'say::'
+export const POSTBACK_PREFIX = 'postback::'
+
 export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> {
   private smooch: any
   public secret!: string
@@ -70,10 +73,10 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
     const postback = payload.message.action?.payload
     let content
 
-    if (postback?.startsWith('say::')) {
-      content = { type: 'say_something', text: postback.replace('say::', '') }
-    } else if (postback?.startsWith('postback::')) {
-      content = { type: 'postback', payload: postback.replace('postback::', '') }
+    if (postback?.startsWith(SAY_PREFIX)) {
+      content = { type: 'say_something', text: postback.replace(SAY_PREFIX, '') }
+    } else if (postback?.startsWith(POSTBACK_PREFIX)) {
+      content = { type: 'postback', payload: postback.replace(POSTBACK_PREFIX, '') }
     } else {
       content = { type: 'text', text: payload.message.text }
     }
