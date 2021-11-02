@@ -35,7 +35,9 @@ export class SmoochChannel extends Channel<SmoochConduit> {
 
         if (req.headers['x-api-key'] === conduit.secret) {
           const body = req.body as SmoochPayload
-          for (const message of body.messages) {
+
+          // postbacks is used when a button is clicked
+          for (const message of body.messages || body.postbacks) {
             await conduit.receive({ context: body, message })
           }
           res.sendStatus(200)

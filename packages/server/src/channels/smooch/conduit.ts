@@ -6,9 +6,12 @@ import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { SmoochConfig } from './config'
-import { SmoochMessage, SmoochPayload, SmoochContext, SmoochWebhook } from './context'
+import { SmoochMessage, SmoochPayload, SmoochContext, SmoochWebhook, SmoochAction } from './context'
 import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
+
+export const SAY_PREFIX = 'say::'
+export const POSTBACK_PREFIX = 'postback::'
 
 export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> {
   private smooch: any
@@ -31,7 +34,7 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
       webhook = (
         await this.smooch.webhooks.create({
           target,
-          triggers: ['message:appUser']
+          triggers: ['message:appUser', 'postback']
         })
       ).webhook
     }
@@ -62,9 +65,24 @@ export class SmoochConduit extends ConduitInstance<SmoochConfig, SmoochContext> 
     return SmoochSenders
   }
 
-  public async extractEndpoint(payload: { context: SmoochPayload; message: SmoochMessage }): Promise<EndpointContent> {
+  public async extractEndpoint(payload: {
+    context: SmoochPayload
+    message: SmoochMessage
+    action: SmoochAction
+  }): Promise<EndpointContent> {
+    const postback = payload.message.action?.payload
+    let content
+
+    if (postback?.startsWith(SAY_PREFIX)) {
+      content = { type: 'say_something', text: postback.replace(SAY_PREFIX, '') }
+    } else if (postback?.startsWith(POSTBACK_PREFIX)) {
+      content = { type: 'postback', payload: postback.replace(POSTBACK_PREFIX, '') }
+    } else {
+      content = { type: 'text', text: payload.message.text }
+    }
+
     return {
-      content: { type: 'text', text: payload.message.text },
+      content,
       thread: payload.context.conversation._id,
       sender: payload.context.appUser._id
     }

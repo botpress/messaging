@@ -1,5 +1,6 @@
 import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../../content/types'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
+import { POSTBACK_PREFIX, SAY_PREFIX } from '../conduit'
 import { SmoochCard, SmoochAction, SmoochContext } from '../context'
 
 type Context = CarouselContext<SmoochContext> & {
@@ -28,12 +29,16 @@ export class SmoochCarouselRenderer extends CarouselRenderer {
     context.actions.push({
       text: button.title,
       type: 'postback',
-      payload: button.payload
+      payload: `${POSTBACK_PREFIX}${button.payload}`
     })
   }
 
   renderButtonSay(context: Context, button: ActionSaySomething) {
-    // TODO: not supported?
+    context.actions.push({
+      text: button.title,
+      type: 'postback',
+      payload: `${SAY_PREFIX}${button.text}`
+    })
   }
 
   endRenderCard(context: Context, card: CardContent) {
