@@ -28,8 +28,13 @@ export class MessengerConduit extends ConduitInstance<MessengerConfig, Messenger
       const provider = await this.app.providers.getById(conduit!.providerId)
       const channel = this.app.channels.getById(conduit!.channelId) as MessengerChannel
 
-      const pageId = await this.client.getPageId()
-      channel.registerPageId(pageId, provider!.name)
+      try {
+        const pageId = await this.client.getPageId()
+        channel.registerPageId(pageId, provider!.name)
+      } catch {
+        // when in live mode this call can fail. we can work around it for new users since they are supposed to use the botId in the url
+        // we don't show an error because this is correct usage
+      }
     }
 
     await this.printWebhook()

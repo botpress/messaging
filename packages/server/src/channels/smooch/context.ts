@@ -24,6 +24,7 @@ export interface SmoochPayload {
   app: { _id: string }
   version: '1.1'
   messages: SmoochMessage[]
+  postbacks: SmoochMessage[]
   appUser: SmoochAppUser
   conversation: { _id: string }
 }
@@ -51,6 +52,7 @@ export interface SmoochMessage {
     /** web, messenger, telegram, wechat, twilio, etc */
     type: string
   }
+  action?: SmoochAction
 }
 
 export interface SmoochCard {
