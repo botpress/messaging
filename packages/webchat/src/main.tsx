@@ -124,7 +124,7 @@ class Web extends React.Component<MainProps> {
     const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
 
     const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, config)
-    userConfig.reference = config.ref || ref
+    userConfig.reference = config?.ref || ref
 
     this.props.updateConfig!(userConfig, this.props.bp)
 

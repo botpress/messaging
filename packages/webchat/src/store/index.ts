@@ -1,3 +1,4 @@
+import axios from 'axios'
 import isBefore from 'date-fns/is_before'
 import isValid from 'date-fns/is_valid'
 import merge from 'lodash/merge'
@@ -421,7 +422,7 @@ class RootStore {
 
     if (!this.api) {
       this.bp = bp!
-      this.api = new WebchatApi('', bp!.axios)
+      this.api = new WebchatApi('', axios.create())
     }
 
     this._applyConfig()
