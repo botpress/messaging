@@ -3,6 +3,9 @@
   "references": [
     {
       "path": "../socket"
+    },
+    {
+      "path": "../components"
     }
   ],
 

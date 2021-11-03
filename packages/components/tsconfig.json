@@ -16,7 +16,8 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "noImplicitAny": false,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "composite": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "build", "dist", "example", "rollup.config.ts", "webpack.config.js"]
