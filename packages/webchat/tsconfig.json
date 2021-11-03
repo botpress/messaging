@@ -19,7 +19,9 @@
     "sourceMap": false,
 
     // Because original webchat was written with decorators
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    // We use react
+    "jsx": "react"
   },
   "exclude": ["dist", "node_modules"]
 }
