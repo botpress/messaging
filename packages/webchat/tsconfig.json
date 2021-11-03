@@ -24,7 +24,9 @@
     // Because original webchat was written with decorators
     "experimentalDecorators": true,
     // We use react
-    "jsx": "react"
+    "jsx": "react",
+    "resolveJsonModule": true
   },
+  "include": ["src", "src/**/*.json"],
   "exclude": ["dist", "node_modules"]
 }
