@@ -1,34 +1,9 @@
 import ReactGA from 'react-ga'
 import snarkdown from 'snarkdown'
 
-export const getOverridedComponent = (overrides, componentName) => {
-  if (overrides?.[componentName]) {
-    const { module, component } = overrides[componentName]
-    if (module && component) {
-      return window.botpress[module][component]
-    }
-  }
-}
-
 export const isIE = window.navigator.userAgent.match(/MSIE|Trident/) !== null
 
-export const asyncDebounce = async timeMs => {
-  let lastClickInMs = undefined
-
-  const debounce = promise => {
-    const now = Date.now()
-    if (!lastClickInMs) {
-      lastClickInMs = now
-    }
-
-    if (now - lastClickInMs > timeMs) {
-      lastClickInMs = now
-      return promise
-    }
-  }
-}
-
-export const downloadFile = (name, blob) => {
+export const downloadFile = (name: string, blob: Blob) => {
   const url = window.URL.createObjectURL(blob)
   const link = document.createElement('a')
 

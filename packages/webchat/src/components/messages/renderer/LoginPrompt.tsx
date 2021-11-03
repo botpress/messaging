@@ -9,9 +9,9 @@ class LoginPromptClass extends Component<Renderer.Message & InjectedIntlProps> {
     password: ''
   }
 
-  handleInputChanged = event => this.setState({ [event.target.name]: event.target.value })
+  handleInputChanged = (event: any) => this.setState({ [event.target.name]: event.target.value })
 
-  handleFormSubmit = event => {
+  handleFormSubmit = (event: any) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.props.onSendData?.({
       type: 'login_prompt',

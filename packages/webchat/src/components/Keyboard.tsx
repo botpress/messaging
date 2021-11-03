@@ -4,12 +4,12 @@ import * as ReactDOM from 'react-dom'
 class KeyboardElements extends React.Component<KeyboardElementsProps> {
   private container: HTMLElement
 
-  constructor(props) {
+  constructor(props: KeyboardElementsProps) {
     super(props)
     this.container = document.createElement('div')
   }
 
-  insertChildAt(child, index = 0, parent) {
+  insertChildAt(child: HTMLElement, index = 0, parent: HTMLDivElement) {
     if (index >= parent.children.length) {
       parent.appendChild(child)
     } else {
@@ -19,9 +19,9 @@ class KeyboardElements extends React.Component<KeyboardElementsProps> {
 
   componentDidMount() {
     if (this.props.append) {
-      this.insertChildAt(this.container, this.props.index, Default.appendRef.current)
+      this.insertChildAt(this.container, this.props.index, Default.appendRef.current!)
     } else {
-      this.insertChildAt(this.container, this.props.index, Default.prependRef.current)
+      this.insertChildAt(this.container, this.props.index, Default.prependRef.current!)
     }
   }
 

@@ -32,7 +32,7 @@ class Message extends Component<MessageProps> {
         text={message}
         intl={this.props.intl}
         maxLength={this.props.payload.trimLength}
-        escapeHTML={this.props.store.escapeHTML}
+        escapeHTML={this.props.store!.escapeHTML}
       />
     )
   }
@@ -66,27 +66,27 @@ class Message extends Component<MessageProps> {
   }
 
   render_audio() {
-    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store.escapeHTML} />
+    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store!.escapeHTML} />
   }
 
   render_video() {
-    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store.escapeHTML} />
+    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store!.escapeHTML} />
   }
 
   render_image() {
-    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store.escapeHTML} />
+    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store!.escapeHTML} />
   }
 
   render_file() {
-    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store.escapeHTML} />
+    return <FileMessage file={this.props.payload} escapeTextHTML={this.props.store!.escapeHTML} />
   }
 
   render_voice() {
     return (
       <VoiceMessage
         file={this.props.payload}
-        shouldPlay={this.props.shouldPlay}
-        onAudioEnded={this.props.onAudioEnded}
+        shouldPlay={this.props.shouldPlay!}
+        onAudioEnded={this.props.onAudioEnded!}
       />
     )
   }
@@ -102,7 +102,7 @@ class Message extends Component<MessageProps> {
       return this.render_dropdown()
     }
 
-    const InjectedModuleView = this.props.store.bp.getModuleInjector()
+    const InjectedModuleView = this.props.store!.bp.getModuleInjector()
 
     const messageDataProps = { ...this.props.payload }
     delete messageDataProps.module
@@ -132,7 +132,7 @@ class Message extends Component<MessageProps> {
   }
 
   render_session_reset() {
-    return this.render_text(this.props.store.intl.formatMessage({ id: 'store.resetSessionMessage' }))
+    return this.render_text(this.props.store!.intl.formatMessage({ id: 'store.resetSessionMessage' }))
   }
 
   render_visit() {
@@ -144,23 +144,23 @@ class Message extends Component<MessageProps> {
   }
 
   render_dropdown() {
-    return <Dropdown {...this.props} {...this.props.payload} escapeHTML={this.props.store.escapeHTML}></Dropdown>
+    return <Dropdown {...this.props} {...this.props.payload} escapeHTML={this.props.store!.escapeHTML}></Dropdown>
   }
 
-  handleContextMenu = e => {
+  handleContextMenu = (e: any) => {
     showContextMenu(e, this.props)
   }
 
   renderTimestamp() {
     return (
       <span className="bpw-message-timestamp">
-        {this.props.store.intl.formatTime(new Date(this.props.sentOn), { hour: 'numeric', minute: 'numeric' })}
+        {this.props.store!.intl.formatTime(new Date(this.props.sentOn!), { hour: 'numeric', minute: 'numeric' })}
       </span>
     )
   }
 
   async onMessageClicked() {
-    await this.props.store.loadEventInDebugger(this.props.messageId, true)
+    await this.props.store!.loadEventInDebugger(this.props.messageId!, true)
   }
 
   render() {
@@ -170,9 +170,9 @@ class Message extends Component<MessageProps> {
 
     const type = this.props.type || (this.props.payload && this.props.payload.type)
     const wrappedType = this.props.payload && this.props.payload.wrapped && this.props.payload.wrapped.type
-    const renderer = (this[`render_${type}`] || this.render_unsupported).bind(this)
+    const renderer = ((this as any)[`render_${type}`] || this.render_unsupported).bind(this)
     const wrappedClass = `bpw-bubble-${wrappedType}`
-    const isEmulator = this.props.store.config.isEmulator
+    const isEmulator = this.props.store!.config.isEmulator
 
     const rendered = renderer()
     if (rendered === null) {
@@ -206,13 +206,13 @@ class Message extends Component<MessageProps> {
           onContextMenu={type !== 'session_reset' ? this.handleContextMenu : () => {}}
         >
           <span className="sr-only">
-            {this.props.store.intl.formatMessage({
+            {this.props.store!.intl.formatMessage({
               id: this.props.isBotMessage ? 'message.botSaid' : 'message.iSaid',
               defaultMessage: this.props.isBotMessage ? 'Virtual assistant said : ' : 'I said : '
             })}
           </span>
           {rendered}
-          {this.props.store.config.showTimestamp && this.renderTimestamp()}
+          {this.props.store!.config.showTimestamp && this.renderTimestamp()}
         </div>
         {this.props.inlineFeedback}
       </div>

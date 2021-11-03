@@ -83,7 +83,7 @@ const VoiceRecorder: FC<Props> = (props: Props) => {
   const stopRecording = () => {
     if (mediaRecorder.current?.state !== 'inactive') {
       mediaRecorder.current?.stop()
-      mediaStream.current && mediaStream.current.getTracks().forEach(track => track.stop())
+      mediaStream.current && mediaStream.current.getTracks().forEach((track) => track.stop())
       mediaChunks.current = []
 
       setIsRecording(false)
@@ -97,7 +97,7 @@ const VoiceRecorder: FC<Props> = (props: Props) => {
   }
 
   const startRecording = async () => {
-    if (!mediaStream.current || mediaStream.current.getTracks().some(track => track.readyState === 'ended')) {
+    if (!mediaStream.current || mediaStream.current.getTracks().some((track) => track.readyState === 'ended')) {
       await getMediaStream()
     }
 

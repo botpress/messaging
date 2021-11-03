@@ -18,21 +18,21 @@ export class QuickReplies extends Component<Renderer.QuickReply> {
   componentDidMount() {
     this.props.isLastGroup &&
       this.props.isLastOfGroup &&
-      this.props.store.composer.setLocked(this.props.disableFreeText)
+      this.props.store!.composer.setLocked(this.props.disableFreeText)
   }
 
   componentWillUnmount() {
-    this.props.store.composer.setLocked(false)
+    this.props.store!.composer.setLocked(false)
   }
 
-  handleButtonClicked = (title, payload) => {
+  handleButtonClicked = (title: string, payload: any) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     this.props.onSendData?.({
       type: 'quick_reply',
       text: title,
       payload
     })
-    this.props.store.composer.setLocked(false)
+    this.props.store!.composer.setLocked(false)
   }
 
   renderKeyboard(buttons: Renderer.QuickReplyButton[]) {

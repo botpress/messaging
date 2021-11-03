@@ -11,7 +11,7 @@ import { renderUnsafeHTML } from '../../utils'
 
 import Avatar from './Avatar'
 
-const CoverPicture = ({ botInfo }) => (
+const CoverPicture = ({ botInfo }: { botInfo: any }) => (
   <div className={'bpw-botinfo-cover-picture-wrapper'}>
     <img
       className={'bpw-botinfo-cover-picture'}
@@ -24,21 +24,21 @@ const CoverPicture = ({ botInfo }) => (
 )
 
 class BotInfoPage extends React.Component<BotInfoProps> {
-  private btnEl: HTMLElement
+  private btnEl!: HTMLElement
 
   componentDidMount() {
     this.btnEl?.focus()
   }
 
-  renderDescription(text) {
-    const html = renderUnsafeHTML(text, this.props.escapeHTML)
+  renderDescription(text: string) {
+    const html = renderUnsafeHTML(text, this.props.escapeHTML!)
 
     return <div className={'bpw-botinfo-description'} dangerouslySetInnerHTML={{ __html: html }} />
   }
 
   changeLanguage = async (e: any) => {
     const lang = e.target.value
-    await this.props.updatePreferredLanguage(lang)
+    await this.props.updatePreferredLanguage!(lang)
   }
 
   render() {
@@ -52,65 +52,65 @@ class BotInfoPage extends React.Component<BotInfoProps> {
       >
         <CoverPicture botInfo={botInfo} />
         <div className={'bpw-botinfo-summary'}>
-          <Avatar name={botName} avatarUrl={avatarUrl} height={64} width={64} />
+          <Avatar name={botName!} avatarUrl={avatarUrl!} height={64} width={64} />
           <h3>{botName}</h3>
-          {this.renderDescription(botInfo.description)}
+          {this.renderDescription(botInfo!.description)}
         </div>
-        {botInfo.details && (
+        {botInfo!.details && (
           <React.Fragment>
             <div className={'bpw-botinfo-links'}>
-              {botInfo.details.phoneNumber && (
+              {botInfo!.details.phoneNumber && (
                 <div className={'bpw-botinfo-link'}>
                   <i>
                     <PhoneIcon />
                   </i>
-                  <a target={'_blank'} href={`tel:${botInfo.details.phoneNumber}`}>
-                    {botInfo.details.phoneNumber}
+                  <a target={'_blank'} href={`tel:${botInfo!.details.phoneNumber}`}>
+                    {botInfo!.details.phoneNumber}
                   </a>
                 </div>
               )}
-              {botInfo.details.website && (
+              {botInfo!.details.website && (
                 <div className={'bpw-botinfo-link'}>
                   <i>
                     <WebsiteIcon />
                   </i>
-                  <a target={'_blank'} href={botInfo.details.website}>
-                    {botInfo.details.website}
+                  <a target={'_blank'} href={botInfo!.details.website}>
+                    {botInfo!.details.website}
                   </a>
                 </div>
               )}
-              {botInfo.details.emailAddress && (
+              {botInfo!.details.emailAddress && (
                 <div className={'bpw-botinfo-link'}>
                   <i>
                     <EmailIcon />
                   </i>
-                  <a target={'_blank'} href={`mailto:${botInfo.details.emailAddress}`}>
-                    {botInfo.details.emailAddress}
+                  <a target={'_blank'} href={`mailto:${botInfo!.details.emailAddress}`}>
+                    {botInfo!.details.emailAddress}
                   </a>
                 </div>
               )}
             </div>
-            {botInfo.details.termsConditions && (
+            {botInfo!.details.termsConditions && (
               <div className={'bpw-botinfo-terms'}>
-                <a target={'_blank'} href={botInfo.details.termsConditions}>
+                <a target={'_blank'} href={botInfo!.details.termsConditions}>
                   <FormattedMessage id={'botInfo.termsAndConditions'} />
                 </a>
               </div>
             )}
-            {botInfo.details.privacyPolicy && (
+            {botInfo!.details.privacyPolicy && (
               <div className={'bpw-botinfo-terms'}>
-                <a target={'_blank'} href={botInfo.details.privacyPolicy}>
+                <a target={'_blank'} href={botInfo!.details.privacyPolicy}>
                   <FormattedMessage id={'botInfo.privacyPolicy'} />
                 </a>
               </div>
             )}
           </React.Fragment>
         )}
-        {botInfo.languages.length > 1 && (
+        {botInfo!.languages.length > 1 && (
           <div className={'bpw-botinfo-preferred-language'}>
             <FormattedMessage id={'botInfo.preferredLanguage'} />
             <select value={this.props.preferredLanguage} onChange={this.changeLanguage}>
-              {botInfo.languages.map(lang => (
+              {botInfo!.languages.map((lang) => (
                 <option key={lang} value={lang}>
                   {lang.toUpperCase()}
                 </option>
@@ -120,9 +120,9 @@ class BotInfoPage extends React.Component<BotInfoProps> {
         )}
         <button
           tabIndex={1}
-          ref={el => (this.btnEl = el)}
+          ref={(el) => (this.btnEl = el!)}
           className={'bpw-botinfo-start-button'}
-          onClick={onDismiss.bind(this, undefined)}
+          onClick={onDismiss!.bind(this, undefined)}
         >
           {this.props.isConversationStarted ? (
             <FormattedMessage id={'botInfo.backToConversation'} />

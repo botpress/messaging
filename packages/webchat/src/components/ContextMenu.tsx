@@ -1,10 +1,10 @@
 import { ContextMenu, Menu, MenuItem } from '@blueprintjs/core'
 import React from 'react'
 
-function MessageMenu(props) {
+function MessageMenu(props: any) {
   return (
     <Menu>
-      {props.customActions.map(action => {
+      {props.customActions.map((action: any) => {
         return (
           <MenuItem key={action.id} text={action.label} onClick={action.onClick.bind(this, action.id, props.element)} />
         )

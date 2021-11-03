@@ -1,6 +1,6 @@
 import '@blueprintjs/core/lib/css/blueprint.css'
 import { configure } from 'mobx'
-import { inject, observer, Provider } from 'mobx-react'
+import { observer, Provider } from 'mobx-react'
 import React from 'react'
 import { IntlProvider } from 'react-intl'
 
@@ -9,8 +9,8 @@ import { RootStore } from './store'
 import { defaultLocale, translations } from './translations'
 configure({ enforceActions: 'observed' })
 
-export const Embedded = props => new Wrapper(props, false)
-export const Fullscreen = props => new Wrapper(props, true)
+export const Embedded = (props: any) => new Wrapper(props, false)
+export const Fullscreen = (props: any) => new Wrapper(props, true)
 
 interface State {
   fullscreen: any
@@ -20,7 +20,7 @@ interface State {
 interface Props {}
 
 class ExposedWebChat extends React.Component<Props, State> {
-  constructor(props, fullscreen) {
+  constructor(props: any, fullscreen: any) {
     super(props)
 
     this.state = {

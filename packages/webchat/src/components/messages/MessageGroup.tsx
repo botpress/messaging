@@ -26,7 +26,7 @@ class MessageGroup extends React.Component<Props> {
    * - payload: all the data (raw, whatever) that is necessary to display the element
    * - type: extracted from payload for easy sorting
    */
-  convertPayloadFromOldFormat = data => {
+  convertPayloadFromOldFormat = (data: any) => {
     let payload = data.payload || data.message_data || data.message_raw || { text: data.message_text }
     if (!payload.type) {
       payload.type = data.message_type || data.message_data?.type || 'text'
@@ -57,14 +57,14 @@ class MessageGroup extends React.Component<Props> {
     if (this.state.audioPlayingIndex >= this.props.messages.length - 1) {
       this.state.audioPlayingIndex = -1
     } else {
-      this.setState({ ...this.state, audioPlayingIndex: this.state.audioPlayingIndex += 1 })
+      this.setState({ ...this.state, audioPlayingIndex: (this.state.audioPlayingIndex += 1) })
     }
   }
 
   render() {
     const { messages, avatar, isBot, showUserName, userName } = this.props
 
-    const fromLabel = this.props.store.intl.formatMessage({
+    const fromLabel = this.props.store!.intl.formatMessage({
       id: this.props.isBot ? 'message.fromBotLabel' : 'message.fromMeLabel',
       defaultMessage: 'Me'
     })
@@ -107,10 +107,10 @@ class MessageGroup extends React.Component<Props> {
                   inlineFeedback={
                     showInlineFeedback && (
                       <InlineFeedback
-                        intl={this.props.store.intl}
+                        intl={this.props.store!.intl}
                         messageId={message.id}
                         onFeedback={this.props.onFeedback}
-                        messageFeedbacks={this.props.store.messageFeedbacks}
+                        messageFeedbacks={this.props.store!.messageFeedbacks}
                       />
                     )
                   }

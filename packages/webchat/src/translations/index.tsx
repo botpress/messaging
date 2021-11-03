@@ -23,10 +23,10 @@ type Locale = 'browser' | string
 
 const DEFAULT_LOCALE = 'en'
 const STORAGE_KEY = 'bp/channel-web/user-lang'
-const translations = { en, fr, pt, es, ar, ru, uk, de, it }
+const translations: { [lang: string]: any } = { en, fr, pt, es, ar, ru, uk, de, it }
 
 const cleanLanguageCode = (str: string) => str.split('-')[0]
-const getNavigatorLanguage = () => cleanLanguageCode(navigator.language || navigator['userLanguage'] || '')
+const getNavigatorLanguage = () => cleanLanguageCode(navigator.language || (navigator as any)['userLanguage'] || '')
 const getStorageLanguage = () => cleanLanguageCode(window.BP_STORAGE?.get(STORAGE_KEY) || '')
 
 // Desired precedence

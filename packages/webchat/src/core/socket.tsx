@@ -2,14 +2,14 @@ import { Config, StudioConnector } from '../typings'
 
 export default class BpSocket {
   private events: any
-  private userIdScope: string
+  private userIdScope?: string
   private chatId: string | undefined
 
-  public onClear: (event: any) => void
-  public onMessage: (event: any) => void
-  public onTyping: (event: any) => void
-  public onData: (event: any) => void
-  public onUserIdChanged: (userId: string) => void
+  public onClear!: (event: any) => void
+  public onMessage!: (event: any) => void
+  public onTyping!: (event: any) => void
+  public onData!: (event: any) => void
+  public onUserIdChanged!: (userId: string) => void
 
   constructor(bp: StudioConnector, config: Config) {
     this.events = bp?.events

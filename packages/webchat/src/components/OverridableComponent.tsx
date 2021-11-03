@@ -5,7 +5,7 @@ import { RootStore } from '../store'
 import { Overrides } from '../typings'
 
 class OverridableComponent extends React.Component<Props, State> {
-  state = {
+  state: State = {
     components: undefined
   }
 
@@ -13,13 +13,13 @@ class OverridableComponent extends React.Component<Props, State> {
     this.loadComponents()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: Props) {
     if (prevProps.overrides !== this.props.overrides) {
       this.loadComponents()
     }
   }
 
-  componentDidCatch(error, info) {
+  componentDidCatch(error: any, info: any) {
     console.error(`Error in overridable component ${this.props.name}. Loading original component.`, error, info)
     this.setState({ components: [{ key: 'original', element: this.props.original }] })
   }
@@ -34,14 +34,16 @@ class OverridableComponent extends React.Component<Props, State> {
         key: `${module}:${component}`,
         element: window.botpress[module]?.[component]
       }))
-      .filter(x => x.element)
+      .filter((x) => x.element)
   }
 
   render() {
     const { components } = this.state
 
     return components
-      ? components.map(({ element: Element, key }) => Element && <Element key={key} {...this.props} />)
+      ? components.map(
+          ({ element: Element, key }: { element: any; key: any }) => Element && <Element key={key} {...this.props} />
+        )
       : null
   }
 }

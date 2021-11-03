@@ -51,7 +51,7 @@ class ViewStore {
   public disableAnimations = false
 
   @observable
-  public highlightedMessages = []
+  public highlightedMessages: string[] = []
 
   constructor(rootStore: RootStore, fullscreen: boolean) {
     this.rootStore = rootStore
@@ -301,7 +301,7 @@ class ViewStore {
   }
 
   @action.bound
-  private _endAnimation(finalView) {
+  private _endAnimation(finalView: string) {
     setTimeout(() => {
       runInAction(() => {
         this.activeView = finalView
@@ -311,17 +311,23 @@ class ViewStore {
     setTimeout(() => {
       this._updateTransitions({
         widgetTransition: undefined,
-        sideTransition: this.transitions.sideTransition === 'fadeIn' && 'fadeIn'
+        sideTransition: this.transitions.sideTransition === 'fadeIn' ? 'fadeIn' : undefined
       })
     }, constants.ANIM_DURATION * 2.1)
   }
 
   @action.bound
-  private _updateTransitions(trans) {
-    this.transitions = trans
+  private _updateTransitions({
+    widgetTransition,
+    sideTransition
+  }: {
+    widgetTransition?: string
+    sideTransition?: string
+  }) {
+    this.transitions = { widgetTransition, sideTransition }
   }
 
-  private _getFocusOrder(current) {
+  private _getFocusOrder(current: string) {
     if (current === 'header') {
       return { prev: 'input', next: 'convo' }
     } else if (current === 'input' && !this.isConversationsDisplayed && !this.isBotInfoDisplayed) {

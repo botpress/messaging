@@ -7,7 +7,7 @@ import '../../../../../../assets/slick/slick.css'
 import { Renderer } from '../../../typings'
 
 export class Carousel extends React.Component<ICarouselProps, ICarouselState> {
-  private ref
+  private ref!: HTMLDivElement
 
   public state = {
     adjustedWidth: 0
@@ -22,7 +22,7 @@ export class Carousel extends React.Component<ICarouselProps, ICarouselState> {
     const elements = carousel.elements || []
 
     // Breakpoints must be adjusted since the carousel is based on the page width, and not its parent component
-    const adjustBreakpoint = size => size - this.state.adjustedWidth
+    const adjustBreakpoint = (size: number) => size - this.state.adjustedWidth
 
     const defaultSettings = {
       dots: false,
@@ -50,14 +50,14 @@ export class Carousel extends React.Component<ICarouselProps, ICarouselState> {
 
   render() {
     return (
-      <div ref={el => (this.ref = el)} style={{ width: '100%', ...this.props.style }}>
+      <div ref={(el) => (this.ref = el!)} style={{ width: '100%', ...this.props.style }}>
         {this.state.adjustedWidth && this.renderCarousel()}
       </div>
     )
   }
 }
 
-export const Card = props => {
+export const Card = (props: any) => {
   const { picture, title, subtitle, buttons } = props.element as Renderer.Card
 
   return (
