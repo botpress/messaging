@@ -354,7 +354,7 @@ class RootStore {
 
   @action.bound
   async extractFeedback(messages: Message[]): Promise<void> {
-    const feedbackMessageIds = messages.filter(x => x.payload && x.payload.collectFeedback).map(x => x.id)
+    const feedbackMessageIds = messages.filter((x) => x.payload && x.payload.collectFeedback).map((x) => x.id)
 
     const feedbackInfo = await this.api.getMessageIdsFeedbackInfo(feedbackMessageIds)
     runInAction('-> setFeedbackInfo', () => {

@@ -216,7 +216,7 @@ class ViewStore {
 
   @action.bound
   addCustomAction(newAction: CustomAction) {
-    if (this.customActions.find(act => act.id === newAction.id)) {
+    if (this.customActions.find((act) => act.id === newAction.id)) {
       console.error("Can't add another action with the same ID.")
       return
     }
@@ -226,12 +226,12 @@ class ViewStore {
 
   @action.bound
   removeCustomAction(actionId: string) {
-    this.customActions = this.customActions.filter(btn => btn.id !== actionId)
+    this.customActions = this.customActions.filter((btn) => btn.id !== actionId)
   }
 
   @action.bound
   addHeaderButton(newButton: CustomButton) {
-    if (this.customButtons.find(btn => btn.id === newButton.id)) {
+    if (this.customButtons.find((btn) => btn.id === newButton.id)) {
       console.error("Can't add another button with the same ID.")
       return
     }
@@ -247,13 +247,13 @@ class ViewStore {
   /** Updates one or multiple properties of a specific button */
   @action.bound
   updateHeaderButton(buttonId: string, newProps: Partial<CustomButton>) {
-    const button = this.customButtons.find(btn => btn.id === buttonId)
+    const button = this.customButtons.find((btn) => btn.id === buttonId)
     button && merge(button, newProps)
   }
 
   @action.bound
   removeHeaderButton(buttonId: string) {
-    this.customButtons = this.customButtons.filter(btn => btn.id !== buttonId)
+    this.customButtons = this.customButtons.filter((btn) => btn.id !== buttonId)
   }
 
   @action.bound
