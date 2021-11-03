@@ -38,16 +38,13 @@ export class ExposedWebChat extends React.Component<Props, State> {
     const { botUILanguage: locale } = store
 
     return (
-      <div>
-        <h3>This is the bp webchat</h3>
-        <Provider store={store}>
-          <IntlProvider locale={locale} messages={translations[locale]} defaultLocale={defaultLocale}>
-            <React.Fragment>
-              <Chat store={store} {...this.props} />
-            </React.Fragment>
-          </IntlProvider>
-        </Provider>
-      </div>
+      <Provider store={store}>
+        <IntlProvider locale={locale} messages={translations[locale]} defaultLocale={defaultLocale}>
+          <React.Fragment>
+            <Chat store={store} {...this.props} />
+          </React.Fragment>
+        </IntlProvider>
+      </Provider>
     )
   }
 }
