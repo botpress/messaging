@@ -16,7 +16,10 @@
     // Specific settings for npm package
     "target": "es6",
     "declaration": true,
-    "sourceMap": false
+    "sourceMap": false,
+
+    // Because original webchat was written with decorators
+    "experimentalDecorators": true
   },
   "exclude": ["dist", "node_modules"]
 }
