@@ -2,8 +2,9 @@ import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 
-import confirmDialog from '../../../../../../packages/ui-shared-lite/ConfirmDialog'
-import MoreOptions from '../../../../../../packages/ui-shared-lite/MoreOptions'
+// TODO: put this back
+// import confirmDialog from '../../../../../../packages/ui-shared-lite/ConfirmDialog'
+// import MoreOptions from '../../../../../../packages/ui-shared-lite/MoreOptions'
 import Close from '../icons/Close'
 import Delete from '../icons/Delete'
 import Download from '../icons/Download'
@@ -77,6 +78,8 @@ class Header extends React.Component<HeaderProps> {
   }
 
   handleDeleteConversation = async () => {
+    // TODO: put this back
+    /*
     if (
       await confirmDialog(
         this.props.intl!.formatMessage({
@@ -94,6 +97,7 @@ class Header extends React.Component<HeaderProps> {
     ) {
       await this.props.deleteConversation!()
     }
+    */
   }
 
   renderDeleteConversationButton() {
@@ -280,7 +284,7 @@ class Header extends React.Component<HeaderProps> {
           <span className="bpw-emulator-header-tab">Emulator</span>
           <div>
             <span className="bpw-emulator-buttons">{this.props.showResetButton && this.renderResetButton()}</span>
-            <MoreOptions show={this.state.showingOption} onToggle={this.setShowingOption} items={optionsItems} />
+            {/* <MoreOptions show={this.state.showingOption} onToggle={this.setShowingOption} items={optionsItems} /> */}
           </div>
         </div>
       )

@@ -396,6 +396,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   displayWidgetView: store.view.displayWidgetView,
   setLoadingCompleted: store.view.setLoadingCompleted,
   sendFeedback: store.sendFeedback
+  // @ts-ignore
 }))(injectIntl(observer(Web)))
 
 type MainProps = { store: RootStore } & Pick<

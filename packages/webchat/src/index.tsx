@@ -38,7 +38,8 @@ class ExposedWebChat extends React.Component<Props, State> {
       <Provider store={store}>
         <IntlProvider locale={locale} messages={translations[locale]} defaultLocale={defaultLocale}>
           <React.Fragment>
-            <Chat {...this.props} />
+            {/** TODO: what the fuck */}
+            <Chat store={undefined as any} {...this.props} />
           </React.Fragment>
         </IntlProvider>
       </Provider>

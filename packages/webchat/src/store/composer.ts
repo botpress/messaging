@@ -31,7 +31,7 @@ class ComposerStore {
     this.rootStore = rootStore
 
     if (window.BP_STORAGE) {
-      this._sentHistory = window.BP_STORAGE.get<string[]>(SENT_HISTORY_KEY) || []
+      this._sentHistory = window.BP_STORAGE.get(SENT_HISTORY_KEY) || []
     }
   }
 

@@ -2,8 +2,9 @@ import cx from 'classnames'
 import mime from 'mime/lite'
 import React, { FC, useCallback, useState, useEffect, useRef, Fragment } from 'react'
 
-import Cancel from '../../../../../../packages/ui-shared-lite/Icons/Cancel'
-import Microphone from '../../../../../../packages/ui-shared-lite/Icons/Microphone'
+// TODO: put this back
+// import Cancel from '../../../../../../packages/ui-shared-lite/Icons/Cancel'
+// import Microphone from '../../../../../../packages/ui-shared-lite/Icons/Microphone'
 
 interface Props {
   onDone: (voice: Buffer, ext: string) => Promise<void>
@@ -36,7 +37,7 @@ const VoiceRecorder: FC<Props> = (props: Props) => {
       mediaRecorder.current?.removeEventListener('dataavailable', onResult)
       props.onStart && mediaRecorder.current?.removeEventListener('start', props.onStart)
       mediaRecorder.current?.removeEventListener('stop', onStop)
-      mediaRecorder.current?.removeEventListener('error', onError)
+      mediaRecorder.current?.removeEventListener('error', onError as any)
     }
   }, [])
 
@@ -107,7 +108,7 @@ const VoiceRecorder: FC<Props> = (props: Props) => {
       mediaRecorder.current.addEventListener('dataavailable', onResult)
       props.onStart && mediaRecorder.current.addEventListener('start', props.onStart)
       mediaRecorder.current.addEventListener('stop', onStop)
-      mediaRecorder.current.addEventListener('error', onError)
+      mediaRecorder.current.addEventListener('error', onError as any)
 
       mediaRecorder.current.start()
       setIsRecording(true)
@@ -123,11 +124,13 @@ const VoiceRecorder: FC<Props> = (props: Props) => {
     <Fragment>
       {isRecording && (
         <button className={cx('bpw-send-button', props.className)} onClick={cancelRecording}>
-          <Cancel fill="#ff0000" />
+          {/* TODO: add this back
+           <Cancel fill="#ff0000" /> */}
         </button>
       )}
       <button className={cx('bpw-send-button', props.className)} onClick={isRecording ? stopRecording : startRecording}>
-        <Microphone fill={isRecording ? '#f1f1f1' : 'black'} />
+        {/* TODO: add this back
+         <Microphone fill={isRecording ? '#f1f1f1' : 'black'} /> */}
       </button>
     </Fragment>
   )
