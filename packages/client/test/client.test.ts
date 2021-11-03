@@ -1,16 +1,12 @@
-import { Conversation, Message, MessagingClient, User } from '../src'
-
-// TODO: improve this test to be more automated. Right now it requires starting
-// a messaging server on port 3100 and pasting an existing client id in the CLIENT_ID variable.
-
-const CLIENT_ID = '6a15e73d-5edc-4b90-9d2b-bf8fd0a133c1'
-const CLIENT_TOKEN = 'KVOQeASHZCBxgUlCdxH24VevJgFCGfrJ7gMKDgoK7uDoPUd82qQU1WgApN82DfHPsGRZZUf+AAsep6VoDEZLY9KZ'
+import { Conversation, Message, MessagingClient, User, uuid } from '../src'
 
 const FAKE_UUID = '6a15e73d-5edc-4b90-9d2b-bf8fd0a133c1'
 
 describe('Http Client', () => {
   const state: {
     client?: MessagingClient
+    clientId?: uuid
+    clientToken?: string
     user?: User
     conversation?: Conversation
     message?: Message
@@ -18,16 +14,27 @@ describe('Http Client', () => {
 
   test('Create client', async () => {
     const client = new MessagingClient({
-      url: 'http://localhost:3100',
-      auth: { clientId: CLIENT_ID, clientToken: CLIENT_TOKEN }
+      url: 'http://localhost:3100'
     })
 
     state.client = client
   })
 
+  test('Sync', async () => {
+    const res = await state.client?.syncs.sync({})
+    expect(res!.id).toBeDefined()
+    expect(res!.token).toBeDefined()
+    expect(res!.webhooks).toEqual([])
+
+    state.clientId = res!.id
+    state.clientToken = res!.token
+
+    state.client!.authenticate(res!.id, res!.token)
+  })
+
   test('Create user', async () => {
     const user = await state.client!.users.create()
-    expect(user.clientId).toBe(CLIENT_ID)
+    expect(user.clientId).toBe(state.clientId)
     expect(user.id).toBeDefined()
 
     state.user = user
@@ -45,7 +52,7 @@ describe('Http Client', () => {
 
   test('Create conversation', async () => {
     const conversation = await state.client!.conversations.create(state.user!.id)
-    expect(conversation.clientId).toBe(CLIENT_ID)
+    expect(conversation.clientId).toBe(state.clientId)
     expect(conversation.userId).toBe(state.user!.id)
     expect(conversation.id).toBeDefined()
     expect(conversation.createdOn).toBeDefined()
