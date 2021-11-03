@@ -19,7 +19,7 @@ interface State {
 
 interface Props {}
 
-class ExposedWebChat extends React.Component<Props, State> {
+export class ExposedWebChat extends React.Component<Props, State> {
   constructor(props: any, fullscreen: any) {
     super(props)
 

@@ -9,6 +9,9 @@
     },
     {
       "path": "../client"
+    },
+    {
+      "path": "../webchat"
     }
   ],
 
@@ -21,7 +24,8 @@
 
     // Specific settings for frontend
     "target": "es6",
-    "lib": ["dom"]
+    "lib": ["dom"],
+    "jsx": "react"
   },
   "exclude": ["dist", "node_modules"]
 }
