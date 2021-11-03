@@ -1,4 +1,5 @@
-import '@blueprintjs/core/lib/css/blueprint.css'
+// TODO: figure out what to do with this
+// import '@blueprintjs/core/lib/css/blueprint.css'
 import { configure } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import React from 'react'
