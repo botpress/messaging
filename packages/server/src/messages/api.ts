@@ -111,16 +111,16 @@ export class MessageApi {
 
     const message = await this.messages.get(id)
     if (!message) {
-      return res.sendStatus(404)
+      return res.send(false)
     }
 
     const conversation = await this.conversations.get(message.conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
-      return res.sendStatus(404)
+      return res.send(false)
     }
 
     await this.messages.delete(id)
-    res.sendStatus(200)
+    res.send(true)
   }
 
   async deleteByConversation(req: ClientApiRequest, res: Response) {

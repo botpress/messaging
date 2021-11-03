@@ -95,4 +95,14 @@ describe('Http Client', () => {
     const message = await state.client!.messages.get(FAKE_UUID)
     expect(message).toBeUndefined()
   })
+
+  test('Delete message', async () => {
+    const deleted = await state.client!.messages.delete(state.message!.id)
+    expect(deleted).toEqual(true)
+  })
+
+  test('Delete deleted message that does not exist', async () => {
+    const deleted = await state.client!.messages.delete(state.message!.id)
+    expect(deleted).toEqual(false)
+  })
 })
