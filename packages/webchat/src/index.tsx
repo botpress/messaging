@@ -15,7 +15,7 @@ export const Fullscreen = (props: any) => new Wrapper(props, true)
 
 interface State {
   fullscreen: any
-  store: any
+  store: RootStore
 }
 
 interface Props {}
@@ -28,6 +28,8 @@ export class ExposedWebChat extends React.Component<Props, State> {
       fullscreen,
       store: new RootStore({ fullscreen })
     }
+
+    this.state.store.updateConfig({} as any)
   }
 
   render() {

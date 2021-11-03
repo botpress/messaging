@@ -109,7 +109,7 @@ class Web extends React.Component<MainProps> {
   }
 
   postMessageToParent(type: string, value: any) {
-    window.parent?.postMessage({ type, value, chatId: this.config.chatId }, '*')
+    window.parent?.postMessage({ type, value, chatId: this.config?.chatId }, '*')
   }
 
   extractConfig(): Config {
@@ -344,10 +344,6 @@ class Web extends React.Component<MainProps> {
   }
 
   render() {
-    if (!this.props.isWebchatReady) {
-      return null
-    }
-
     return (
       <div onFocus={this.handleResetUnreadCount}>
         {this.applyAndRenderStyle()}
