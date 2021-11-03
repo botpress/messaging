@@ -1,6 +1,6 @@
-import { Webchat, ConversationEvents, ConversationSetEvent } from '@botpress/webchat'
-import { text, element } from '@botpress/webchat-skin'
-import { UserEvents, UserSetEvent } from '@botpress/webchat/src/user/events'
+import { Webchat, ConversationEvents, ConversationSetEvent } from '@botpress/chat'
+import { text, element } from '@botpress/chat-skin'
+import { UserEvents, UserSetEvent } from '@botpress/chat/src/user/events'
 
 export class BoardWatcher {
   private textUserId!: Text
