@@ -5,11 +5,13 @@ import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
+import { UserService } from '../users/service'
 import { Schema } from './schema'
 import { MessageService } from './service'
 
 export class MessageApi {
   constructor(
+    private users: UserService,
     private conversations: ConversationService,
     private messages: MessageService,
     private converse: ConverseService
@@ -37,6 +39,13 @@ export class MessageApi {
       incomingId: uuid
     }
 
+    if (authorId) {
+      const author = await this.users.get(authorId)
+      if (!author || author.clientId !== req.client.id) {
+        return res.sendStatus(404)
+      }
+    }
+
     const conversation = await this.conversations.get(conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
@@ -61,8 +70,13 @@ export class MessageApi {
     const { conversationId, authorId, payload, timeout } = req.body as {
       conversationId: uuid
       authorId: uuid
-      payload: any
+      payload: unknown
       timeout: string
+    }
+
+    const author = await this.users.get(authorId)
+    if (!author || author.clientId !== req.client.id) {
+      return res.sendStatus(404)
     }
 
     const conversation = await this.conversations.get(conversationId)
@@ -74,7 +88,7 @@ export class MessageApi {
     const collector = this.converse.collect(messageId, conversationId, +timeout)
     const message = await this.messages.create(conversationId, authorId, payload, undefined, messageId)
 
-    res.send({ message, responses: await collector })
+    res.status(201).send({ message, responses: await collector })
   }
 
   async get(req: ClientApiRequest, res: Response) {
@@ -107,7 +121,7 @@ export class MessageApi {
   }
 
   async delete(req: ClientApiRequest, res: Response) {
-    const { id } = req.params
+    const id = req.params.id as uuid
 
     const message = await this.messages.get(id)
     if (!message) {
@@ -136,7 +150,7 @@ export class MessageApi {
   }
 
   async turn(req: ClientApiRequest, res: Response) {
-    const { id } = req.params
+    const id = req.params.id as uuid
 
     const message = await this.messages.get(id)
     if (!message) {
@@ -144,10 +158,8 @@ export class MessageApi {
     }
 
     const conversation = await this.conversations.get(message.conversationId)
-    if (!conversation) {
+    if (!conversation || conversation.clientId !== req.client!.id) {
       return res.sendStatus(404)
-    } else if (conversation.clientId !== req.client!.id) {
-      return res.sendStatus(403)
     }
 
     await this.converse.stopCollecting(message.id, message.conversationId)
