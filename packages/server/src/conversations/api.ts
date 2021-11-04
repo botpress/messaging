@@ -15,6 +15,7 @@ export class ConversationApi {
     router.post('/conversations', Schema.Api.Create, this.create.bind(this))
     router.get('/conversations/:id', Schema.Api.Get, this.get.bind(this))
     router.get('/conversations/user/:userId', Schema.Api.List, this.list.bind(this))
+    // TODO: remove this route
     router.get('/conversations/user/:userId/recent', Schema.Api.Recent, this.recent.bind(this))
   }
 
