@@ -17,6 +17,7 @@ export const downloadFile = (name: string, blob: Blob) => {
   window.URL.revokeObjectURL(url)
 }
 
+// TODO: 18 - this function is likely not necessary anymore.
 export const checkLocationOrigin = () => {
   if (!window.location.origin) {
     const { protocol, hostname, port } = window.location
@@ -25,9 +26,11 @@ export const checkLocationOrigin = () => {
   }
 }
 
+// TODO: 19 - what is analytics. How does this work?
 export const initializeAnalytics = () => {
   if (window.SEND_USAGE_STATS) {
     try {
+      // TODO: 20 - wtf is this?
       // @ts-ignore
       ReactGA.initialize('UA-90044826-2', {
         gaOptions: {

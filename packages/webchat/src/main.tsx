@@ -34,10 +34,15 @@ class Web extends React.Component<MainProps> {
   }
 
   async componentDidMount() {
+    // TODO: 1 - we need to get this from somewhere else. CDN of audio file?
     this.audio = new Audio(`${window.ROOT_PATH}/assets/modules/channel-web/notification.mp3`)
+    // TODO: 2 - can we remove intl?
     this.props.store.setIntlProvider(this.props.intl!)
+
+    // TODO: 3 - we migth want to watch how much we use global variables with window. Why is this globally available
     window.store = this.props.store
 
+    // TODO: 4 - iframe api? Why do we need that?
     window.addEventListener('message', this.handleIframeApi)
     window.addEventListener('keydown', (e) => {
       if (!this.props.config!.closeOnEscape) {
@@ -45,6 +50,7 @@ class Web extends React.Component<MainProps> {
       }
       if (e.key === 'Escape') {
         this.props.hideChat!()
+        // TODO: 5 - what to do with emulator mode?
         if (this.props.config!.isEmulator) {
           window.parent.document!.getElementById('mainLayout')!.focus()
         }
@@ -76,6 +82,7 @@ class Web extends React.Component<MainProps> {
     if (this.props.activeView === 'side' || this.props.isFullscreen) {
       this.hasBeenInitialized = true
 
+      // TODO: 17 - isn't this duplicated logic? Why are we doing this again?
       if (this.isLazySocket() || !this.socket) {
         await this.initializeSocket()
       }
@@ -88,19 +95,30 @@ class Web extends React.Component<MainProps> {
   async load() {
     this.config = this.extractConfig()
 
+    // TODO: 6 - this implies iframe as well. Do we need this? Why?
     if (this.config.exposeStore) {
       const storePath = this.config.chatId ? `${this.config.chatId}.webchat_store` : 'webchat_store'
       set(window.parent, storePath, this.props.store)
     }
 
-    this.config.overrides && this.loadOverrides(this.config.overrides)
+    if (this.config.overrides) {
+      this.loadOverrides(this.config.overrides)
+    }
 
-    this.config.containerWidth && this.postMessageToParent('setWidth', this.config.containerWidth)
+    // TODO: 7 - again with the iframe stuff. Why do we need this.
+    if (this.config.containerWidth) {
+      this.postMessageToParent('setWidth', this.config.containerWidth)
+    }
 
-    this.config.reference && this.props.setReference!()
+    // TODO: 8 - what is reference?
+    if (this.config.reference) {
+      await this.props.setReference!()
+    }
 
+    // TODO: 9 - don't think we need to fetch bot info from a backend. All this can be set at the frontend level
     await this.props.fetchBotInfo!()
 
+    // TODO: 10 - That's something we should still have as configurable. We just don't start the socket connection right away
     if (!this.isLazySocket()) {
       await this.initializeSocket()
     }
@@ -120,6 +138,7 @@ class Web extends React.Component<MainProps> {
         return options
       }
     }
+    // TODO: 14 - parsing the config from the url is something that we don't need to do ourselves imho
     const { options, ref } = queryString.parse(location.search)
     const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
 
@@ -139,7 +158,8 @@ class Web extends React.Component<MainProps> {
     this.socket.onData = this.handleDataMessage
     this.socket.onUserIdChanged = this.props.setUserId!
 
-    this.config.userId && this.socket.changeUserId(this.config.userId)
+    // TODO: 16 - Can't do that
+    // this.config.userId && this.socket.changeUserId(this.config.userId)
 
     this.socket.setup()
     await this.socket.waitForUserId()
@@ -148,6 +168,7 @@ class Web extends React.Component<MainProps> {
   loadOverrides(overrides: Overrides) {
     try {
       for (const override of _values(overrides)) {
+        // TODO: 15 - load module view this can't work
         override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
       }
     } catch (err: any) {
@@ -156,6 +177,7 @@ class Web extends React.Component<MainProps> {
   }
 
   setupObserver() {
+    // TODO: 11 - we observe because we expect the direct value to be modified?
     observe(this.props.config!, 'userId', async (data: any) => {
       if (!data.oldValue || data.oldValue === data.newValue) {
         return
@@ -168,12 +190,15 @@ class Web extends React.Component<MainProps> {
     })
 
     observe(this.props.config!, 'overrides', (data: any) => {
+      // TODO: 12 - we didn't check if window.parent was set the first time
+      // we loaded overrideds, so why do we do now?
       if (data.newValue && window.parent) {
         this.loadOverrides(data.newValue)
       }
     })
 
     observe(this.props.dimensions!, 'container', (data: any) => {
+      // TODO: 13 - the first time we do setWith we do it with props.containerWidth. Why the sudden change to props.dimensions?
       if (data.newValue && window.parent) {
         this.postMessageToParent('setWidth', data.newValue)
       }
