@@ -1,5 +1,6 @@
 import { SyncRequest } from '@botpress/messaging-base'
-import { Router } from 'express'
+import { Request, Router, Response } from 'express'
+import Joi from 'joi'
 import _ from 'lodash'
 import yn from 'yn'
 import { Auth } from '../base/auth/auth'
@@ -9,53 +10,48 @@ import { makeSyncRequestSchema } from './schema'
 import { SyncService } from './service'
 
 export class SyncApi {
-  constructor(
-    private router: Router,
-    private auth: Auth,
-    private syncs: SyncService,
-    private clients: ClientService,
-    private channels: ChannelService
-  ) {}
+  private force!: boolean
+  private schema!: Joi.ObjectSchema
 
-  async setup() {
-    const force = !!yn(process.env.SPINNED)
+  constructor(private syncs: SyncService, private clients: ClientService, private channels: ChannelService) {}
 
-    const requestSchema = makeSyncRequestSchema(this.channels.list())
+  setup(router: Router, auth: Auth) {
+    this.force = !!yn(process.env.SPINNED)
+    this.schema = makeSyncRequestSchema(this.channels.list())
 
-    this.router.post(
-      '/sync',
-      this.auth.public.auth(async (req, res) => {
-        const channelsWithoutEnabled: { [channelName: string]: any } = {}
-        for (const [channelName, channelConfig] of Object.entries<any>(req.body?.channels || {})) {
-          if (channelConfig.enabled === false) {
-            continue
-          }
+    router.post('/sync', auth.public.auth(this.sync.bind(this)))
+  }
 
-          channelsWithoutEnabled[channelName] = _.omit(channelConfig, ['enabled'])
-        }
-        const bodyWithoutEnabled = { ...(req.body || {}), channels: channelsWithoutEnabled }
+  async sync(req: Request, res: Response) {
+    const channelsWithoutEnabled: { [channelName: string]: any } = {}
+    for (const [channelName, channelConfig] of Object.entries<any>(req.body?.channels || {})) {
+      if (channelConfig.enabled === false) {
+        continue
+      }
 
-        const { error, value } = requestSchema.validate(bodyWithoutEnabled)
-        if (error) {
-          return res.status(400).send(error.message)
-        }
+      channelsWithoutEnabled[channelName] = _.omit(channelConfig, ['enabled'])
+    }
+    const bodyWithoutEnabled = { ...(req.body || {}), channels: channelsWithoutEnabled }
 
-        const sync = value as SyncRequest
+    const { error, value } = this.schema.validate(bodyWithoutEnabled)
+    if (error) {
+      return res.status(400).send(error.message)
+    }
 
-        // We forbid sync requests that act on existing clients (valid clientId) but don't provide the correct token
-        // A sync request will accept a incorrect client id (we assume the client was deleted a provide a new client id in response)
-        // A sync request will also accept no client id (we assume the caller wants a new client id and we send it as a response)
-        if (sync.id) {
-          const client = await this.clients.getById(sync.id)
-          if (client && (!sync.token || !(await this.clients.getByIdAndToken(sync.id, sync.token)))) {
-            return res.sendStatus(403)
-          }
-        }
+    const sync = value as SyncRequest
 
-        const result = await this.syncs.sync(sync, { name: force })
+    // We forbid sync requests that act on existing clients (valid clientId) but don't provide the correct token
+    // A sync request will accept a incorrect client id (we assume the client was deleted a provide a new client id in response)
+    // A sync request will also accept no client id (we assume the caller wants a new client id and we send it as a response)
+    if (sync.id) {
+      const client = await this.clients.getById(sync.id)
+      if (client && (!sync.token || !(await this.clients.getByIdAndToken(sync.id, sync.token)))) {
+        return res.sendStatus(403)
+      }
+    }
 
-        res.send(result)
-      })
-    )
+    const result = await this.syncs.sync(sync, { name: this.force })
+
+    res.send(result)
   }
 }

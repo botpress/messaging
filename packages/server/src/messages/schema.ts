@@ -1,31 +1,56 @@
 import Joi from 'joi'
+import { ReqSchema } from '../base/schema'
 
 const Api = {
-  Create: Joi.object({
-    collect: Joi.boolean().optional(),
-    conversationId: Joi.string().guid().required(),
-    authorId: Joi.string().guid().optional(),
-    payload: Joi.object().required(),
-    incomingId: Joi.string().guid().optional(),
-    timeout: Joi.number().min(0).optional()
+  Create: ReqSchema({
+    body: {
+      conversationId: Joi.string().guid().required(),
+      authorId: Joi.string().guid().optional(),
+      payload: Joi.object().required(),
+      incomingId: Joi.string().guid().optional()
+    }
   }),
 
-  Turn: Joi.object({
-    id: Joi.string().guid().required()
+  Collect: ReqSchema({
+    body: {
+      conversationId: Joi.string().guid().required(),
+      authorId: Joi.string().guid().required(),
+      payload: Joi.object().required(),
+      timeout: Joi.number().min(0).max(50000).optional()
+    }
   }),
 
-  Get: Joi.object({
-    id: Joi.string().guid().required()
+  Get: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
+    }
   }),
 
-  List: Joi.object({
-    conversationId: Joi.string().guid().required(),
-    limit: Joi.number().required()
+  List: ReqSchema({
+    params: {
+      conversationId: Joi.string().guid().required()
+    },
+    query: {
+      limit: Joi.number().min(0).optional()
+    }
   }),
 
-  Delete: Joi.object({
-    id: Joi.string().guid().optional(),
-    conversationId: Joi.string().guid().optional()
+  Delete: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
+    }
+  }),
+
+  DeleteByConversation: ReqSchema({
+    params: {
+      conversationId: Joi.string().guid().required()
+    }
+  }),
+
+  Turn: ReqSchema({
+    params: {
+      id: Joi.string().guid().required()
+    }
   })
 }
 
@@ -33,12 +58,12 @@ const Socket = {
   Create: Joi.object({
     conversationId: Joi.string().guid().required(),
     payload: Joi.object().required()
-  }),
+  }).required(),
 
   List: Joi.object({
     conversationId: Joi.string().guid().required(),
     limit: Joi.number().required()
-  })
+  }).required()
 }
 
 export const Schema = { Api, Socket }

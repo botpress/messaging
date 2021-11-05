@@ -84,18 +84,6 @@ x-bp-messaging-client-token: `clientToken`
 
 Provides information on configured channels
 
-## Chat
-
-POST `/api/chat/reply/`
-
-x-bp-messaging-client-id: `clientId`
-
-x-bp-messaging-client-token: `clientToken`
-
-- `channel`: Channel to send the message to
-- `conversationId`: Id of conversation to send the message to
-- `payload`: Content of the message to send (ex: `{ "type": "text", "text": "Hello!" }`)
-
 ## Users
 
 POST `/api/users`
@@ -134,7 +122,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Gets a conversation by id
 
-GET `/api/conversations?userId=&limit=`
+GET `/api/conversations/user/:userId?limit=`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -142,7 +130,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Lists the conversations of a user
 
-GET `/api/conversations/:userId/recent`
+GET `/api/conversations/user/:userId/recent`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -164,6 +152,19 @@ x-bp-messaging-client-token: `clientToken`
 
 Creates a new message
 
+POST `/api/messages/collect`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
+
+- `conversationId`: Id of the conversation
+- `authorId`: Id of the writer of the message
+- `payload`: Content of the message
+- `timeout`: Optional. Timeout for the message collection (max 50s)
+
+Creates a new message and collects responses
+
 GET `/api/messages/:id`
 
 x-bp-messaging-client-id: `clientId`
@@ -172,7 +173,15 @@ x-bp-messaging-client-token: `clientToken`
 
 Gets a message by id
 
-GET `/api/messages?conversationId=&limit=`
+DELETE `/api/messages/:id`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
+
+Deletes a message by id
+
+GET `/api/messages/conversation/:conversationId?limit=`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -180,10 +189,10 @@ x-bp-messaging-client-token: `clientToken`
 
 List messages of a conversation
 
-DELETE `/api/messages?id=&conversationId=`
+DELETE `/api/messages/conversation/:conversationId`
 
 x-bp-messaging-client-id: `clientId`
 
 x-bp-messaging-client-token: `clientToken`
 
-Deletes messages. Can filter by id or by conversation id.
+Deletes all messages of a conversation

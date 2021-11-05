@@ -2,7 +2,7 @@
 // @baseUrl =  https://messaging.botpress.dev/
 @clientId = YOUR_CLIENT_ID
 @clientToken = YOUR_TOKEN
-@channel= YOUR_CHANNEL
+@userId = YOUR_USER_ID
 @convoId = YOUR_CONVO_ID
 
 ### Auth messaging cloud
@@ -54,7 +54,7 @@ x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
-  "userId": "my-user-id"
+  "userId": "{{userId}}"
 }
 
 ### Send Text
@@ -65,11 +65,27 @@ x-bp-messaging-client-token: {{clientToken}}
 Content-Type: application/json
 
 {
-  "collect": false,
   "conversationId": "{{convoId}}",
+  "authorId": null,
   "payload": {
     "type": "text",
     "text": "Hello this is a text message!"
+  }
+}
+
+### Converse
+POST {{baseUrl}}/api/messages/collect
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "authorId": "{{userId}}",
+  "payload": {
+    "type": "text",
+    "text": "Hello this is a converse message!"
   }
 }
 
