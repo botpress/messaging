@@ -32,7 +32,7 @@
     "@slack/rtm-api": "^5.0.3",
     "@slack/web-api": "^5.8.0",
     "@vonage/server-sdk": "2.10.7-beta-2",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.7.2",
     "bluebird-global": "^1.0.1",
