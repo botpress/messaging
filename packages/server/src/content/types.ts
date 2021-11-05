@@ -1,57 +1,74 @@
-export interface Content {
-  type: string
+export const messageTypes = [
+  'text',
+  'audio',
+  'file',
+  'video',
+  'image',
+  'dropdown',
+  'visit',
+  'voice',
+  'typing',
+  'card',
+  'carousel',
+  'location',
+  'single-choice',
+  'login_prompt',
+  'quick_reply',
+  'session_reset',
+  'custom',
+  'unsupported' // This is a special type that is used as fallback for unsupported message types at runtime
+] as const
+
+type MessageTypeTuple = typeof messageTypes
+
+export type MessageType = MessageTypeTuple[number]
+
+export interface Content<T extends MessageType> {
+  type: T
 }
 
-export interface TextContent extends Content {
-  type: 'text'
+export interface TextContent extends Content<'text'> {
   text: string
   markdown?: boolean
 }
 
-export interface ImageContent extends Content {
-  type: 'image'
+export interface ImageContent extends Content<'image'> {
   image: string
   title?: string
 }
 
-export interface AudioContent extends Content {
-  type: 'audio'
+export interface AudioContent extends Content<'audio'> {
   audio: string
   title?: string
 }
 
-export interface VoiceContent extends Content {
-  type: 'voice'
+export interface VoiceContent extends Content<'voice'> {
   audio: string
 }
 
-export interface VideoContent extends Content {
-  type: 'video'
+export interface VideoContent extends Content<'video'> {
   video: string
   title?: string
 }
 
-export interface FileContent extends Content {
+export interface FileContent extends Content<'file'> {
   type: 'file'
   file: string
   title?: string
 }
 
-export interface CarouselContent extends Content {
-  type: 'carousel'
+export interface CarouselContent extends Content<'carousel'> {
   items: CardContent[]
 }
 
-export interface CardContent extends Content {
-  type: 'card'
+export interface CardContent extends Content<'card'> {
   title: string
   subtitle?: string
   image?: string
   actions: ActionButton[]
 }
 
-export interface LocationContent extends Content {
-  type: 'location'
+export interface LocationContent extends Content<'location'> {
   latitude: number
   longitude: number
   address?: string
@@ -92,8 +109,7 @@ export interface ActionPostback extends ActionButton {
   payload: string
 }
 
-export interface ChoiceContent extends Content {
-  type: 'single-choice'
+export interface ChoiceContent extends Content<'single-choice'> {
   text: string
   choices: ChoiceOption[]
 }
@@ -101,4 +117,10 @@ export interface ChoiceContent extends Content {
 export interface ChoiceOption {
   title: string
   value: string
+}
+
+export interface CustomComponentContent extends Content<'custom'> {
+  module: string
+  component: string
+  wrapped?: any
 }

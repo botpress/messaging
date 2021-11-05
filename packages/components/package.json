@@ -26,7 +26,8 @@
     "build-storybook": "build-storybook"
   },
   "files": [
-    "dist"
+    "dist",
+    "src/typings.d.ts"
   ],
   "devDependencies": {
     "@babel/core": "^7.15.8",

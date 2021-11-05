@@ -1,22 +1,6 @@
+import { Content } from '@botpress/messaging-server/content-types'
 import { InjectedIntl } from 'react-intl'
 import snarkdown from 'snarkdown'
-
-export const messageTypes = [
-  'text',
-  'audio',
-  'video',
-  'file',
-  'dropdown',
-  'visit',
-  'voice',
-  'typing',
-  'carousel',
-  'login_prompt',
-  'quick_reply',
-  'session_reset',
-  'custom',
-  'unsupported' // This is a special type that is used as fallback for unsupported message types at runtime
-] as const
 
 export const renderUnsafeHTML = (message: string = '', escaped: boolean): string => {
   if (escaped) {
@@ -25,6 +9,10 @@ export const renderUnsafeHTML = (message: string = '', escaped: boolean): string
 
   const html = snarkdown(message)
   return html.replace(/<a href/gi, '<a target="_blank" href')
+}
+
+const audio: Content<'audio'> = {
+  type: 'audio'
 }
 
 export class FallthroughIntl implements InjectedIntl {

@@ -16,7 +16,10 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "noImplicitAny": false,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "@botpress/messaging-server/content-types": ["../../server/src/content/types.ts"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules", "build", "dist", "example", "rollup.config.ts", "webpack.config.js"]
