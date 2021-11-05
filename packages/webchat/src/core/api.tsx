@@ -1,57 +1,19 @@
+import { MessagingSocket } from '@botpress/messaging-socket'
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
 import get from 'lodash/get'
 import uuidgen from 'uuid'
 import { EventFeedback, uuid } from '../typings'
 
 export default class WebchatApi {
-  private axios: AxiosInstance
+  private axios!: AxiosInstance
   private axiosConfig!: AxiosRequestConfig
-  private userId: string
-  private botId?: string
+  private userId!: string
 
-  constructor(userId: string, axiosInstance: AxiosInstance) {
-    this.userId = userId
-    this.axios = axiosInstance
-    this.axios.interceptors.request.use(
-      (config) => {
-        if (!config.url!.includes('/botInfo')) {
-          const prefix = config.url!.indexOf('?') > 0 ? '&' : '?'
-          config.url = `${config.url}${prefix}__ts=${new Date().getTime()}`
-        }
-        return config
-      },
-      (error) => {
-        return Promise.reject(error)
-      }
-    )
-
-    this.updateAxiosConfig()
-  }
+  constructor(private socket: MessagingSocket) {}
 
   private get baseUserPayload() {
     return {
       webSessionId: window.__BP_VISITOR_SOCKET_ID
-    }
-  }
-
-  updateUserId(userId: string) {
-    this.userId = userId
-  }
-
-  updateAxiosConfig(config?: { botId?: string; externalAuthToken?: string }) {
-    this.botId = config?.botId
-    this.axiosConfig = config?.botId
-      ? { baseURL: `${window.location.origin}${window.BOT_API_PATH}/mod/channel-web` }
-      : { baseURL: `${window.BOT_API_PATH}/mod/channel-web` }
-
-    if (config?.externalAuthToken) {
-      this.axiosConfig = {
-        ...this.axiosConfig,
-        headers: {
-          ExternalAuth: `Bearer ${config?.externalAuthToken}`,
-          'X-BP-ExternalAuth': `Bearer ${config?.externalAuthToken}`
-        }
-      }
     }
   }
 
@@ -83,8 +45,8 @@ export default class WebchatApi {
 
   async fetchConversations() {
     try {
-      const { data } = await this.axios.post('/conversations/list', this.baseUserPayload, this.axiosConfig)
-      return data
+      const convos = await this.socket.listConversations()
+      return convos
     } catch (err) {
       console.error('Error while fetching convos', err)
     }
@@ -92,12 +54,9 @@ export default class WebchatApi {
 
   async fetchConversation(conversationId: uuid) {
     try {
-      const { data } = await this.axios.post(
-        '/conversations/get',
-        { ...this.baseUserPayload, conversationId },
-        this.axiosConfig
-      )
-      return data
+      const conversation = await this.socket.getConversation(conversationId)
+      const messages = await this.socket.listMessages()
+      return { ...conversation, messages }
     } catch (err) {
       await this.handleApiError(err)
     }
@@ -143,7 +102,7 @@ export default class WebchatApi {
 
   async sendMessage(payload: any, conversationId: uuid): Promise<void> {
     try {
-      return this.axios.post('/messages', { ...this.baseUserPayload, conversationId, payload }, this.axiosConfig)
+      await this.socket.sendPayload(payload)
     } catch (err) {
       await this.handleApiError(err)
     }
@@ -230,11 +189,6 @@ export default class WebchatApi {
     if (data && typeof data === 'string' && data.includes('BP_CONV_NOT_FOUND')) {
       console.error('Conversation not found, starting a new one...')
       await this.createConversation()
-    }
-
-    if (data.errorCode === 'BP_0401') {
-      this.updateAxiosConfig({ botId: this.botId, externalAuthToken: undefined })
-      console.error('External token expired or invalid. Removed from future requests')
     }
   }
 }

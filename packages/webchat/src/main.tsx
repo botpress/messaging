@@ -88,6 +88,7 @@ class Web extends React.Component<MainProps> {
       }
 
       await this.socket.waitForUserId()
+      this.props.store.setSocket(this.socket.socket)
       await this.props.initializeChat!()
     }
   }
@@ -116,7 +117,7 @@ class Web extends React.Component<MainProps> {
     }
 
     // TODO: 9 - don't think we need to fetch bot info from a backend. All this can be set at the frontend level
-    await this.props.fetchBotInfo!()
+    // await this.props.fetchBotInfo!()
 
     // TODO: 10 - That's something we should still have as configurable. We just don't start the socket connection right away
     if (!this.isLazySocket()) {
@@ -145,13 +146,13 @@ class Web extends React.Component<MainProps> {
     const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, config)
     userConfig.reference = config?.ref || ref
 
-    this.props.updateConfig!(userConfig, this.props.bp)
+    this.props.updateConfig!(userConfig)
 
     return userConfig
   }
 
   async initializeSocket() {
-    this.socket = new BpSocket(this.props.bp!, this.config)
+    this.socket = new BpSocket(this.config)
     this.socket.onClear = this.handleClearMessages
     this.socket.onMessage = this.handleNewMessage
     this.socket.onTyping = this.handleTyping
@@ -163,13 +164,14 @@ class Web extends React.Component<MainProps> {
 
     this.socket.setup()
     await this.socket.waitForUserId()
+    this.props.store.setSocket(this.socket.socket)
   }
 
   loadOverrides(overrides: Overrides) {
     try {
       for (const override of _values(overrides)) {
         // TODO: 15 - load module view this can't work
-        override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
+        // override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
       }
     } catch (err: any) {
       console.error('Error while loading overrides', err.message)
@@ -183,7 +185,7 @@ class Web extends React.Component<MainProps> {
         return
       }
 
-      this.socket.changeUserId(data.newValue)
+      // this.socket.changeUserId(data.newValue)
       this.socket.setup()
       await this.socket.waitForUserId()
       await this.props.initializeChat!()
@@ -422,7 +424,6 @@ export default inject(({ store }: { store: RootStore }) => ({
 
 type MainProps = { store: RootStore } & Pick<
   StoreDef,
-  | 'bp'
   | 'config'
   | 'initializeChat'
   | 'botInfo'
