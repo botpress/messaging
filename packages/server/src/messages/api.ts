@@ -134,7 +134,7 @@ export class MessageApi {
     }
 
     await this.messages.delete(id)
-    res.send(true)
+    res.sendStatus(204)
   }
 
   async deleteByConversation(req: ClientApiRequest, res: Response) {
