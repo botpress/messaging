@@ -14,9 +14,11 @@ export class ConversationClient extends BaseClient {
   }
 
   async list(userId: string, limit?: number): Promise<ConversationWithLastMessage[]> {
-    return (await this.http.get<Conversation[]>(`/conversations/user/${userId}`, { params: { limit } })).data.map((x) =>
-      this.deserialize(x)
-    )
+    return handleNotFound(async () => {
+      return (await this.http.get<Conversation[]>(`/conversations/user/${userId}`, { params: { limit } })).data.map(
+        (x) => this.deserialize(x)
+      )
+    }, [])
   }
 
   async getRecent(userId: string): Promise<Conversation> {

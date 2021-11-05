@@ -22,9 +22,11 @@ export class MessageClient extends BaseClient {
   }
 
   async list(conversationId: uuid, limit?: number): Promise<Message[]> {
-    return (await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, { params: { limit } })).data.map(
-      (x) => this.deserialize(x)
-    )
+    return handleNotFound(async () => {
+      return (
+        await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, { params: { limit } })
+      ).data.map((x) => this.deserialize(x))
+    }, [])
   }
 
   async delete(id: uuid): Promise<boolean> {
@@ -35,7 +37,9 @@ export class MessageClient extends BaseClient {
   }
 
   async deleteByConversation(conversationId: uuid): Promise<number> {
-    return (await this.http.delete<{ count: number }>(`/messages/conversation/${conversationId}`)).data.count
+    return handleNotFound(async () => {
+      return (await this.http.delete<{ count: number }>(`/messages/conversation/${conversationId}`)).data.count
+    }, 0)
   }
 
   async endTurn(id: uuid) {

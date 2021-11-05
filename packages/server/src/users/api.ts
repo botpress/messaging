@@ -23,7 +23,7 @@ export class UserApi {
 
     const user = await this.users.get(id)
     if (!user || user.clientId !== req.client.id) {
-      return res.send(undefined)
+      return res.sendStatus(404)
     }
 
     res.send(user)
