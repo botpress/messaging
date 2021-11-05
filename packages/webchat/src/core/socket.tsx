@@ -1,4 +1,4 @@
-import { Message, MessagingSocket } from '@botpress/messaging-socket'
+import { Message, MessagingSocket, UserCredentials } from '@botpress/messaging-socket'
 import { Config } from '../typings'
 
 export default class BpSocket {
@@ -54,15 +54,46 @@ export default class BpSocket {
     }
 
     this.waitingForUser = new Promise<void>(async (resolve, reject) => {
-      await this.socket.connect()
+      const creds = this.getStorage<UserCredentials>('creds')
+      await this.socket.connect({ autoLogin: true, creds })
 
-      const userId = this.socket.userId!
-      window.__BP_VISITOR_ID = userId
-      this.onUserIdChanged(userId)
-      this.postToParent('', { userId })
-      resolve()
+      if (this.socket.userId) {
+        const userId = this.socket.userId!
+        window.__BP_VISITOR_ID = userId
+
+        this.onUserIdChanged(userId)
+        this.postToParent('', { userId })
+
+        this.setStorage('creds', this.socket.creds)
+        resolve()
+      } else {
+        this.waitingForUser = undefined
+        reject()
+      }
     })
 
     return this.waitingForUser
+  }
+
+  public getStorage<T>(key: string): T | undefined {
+    const stored = localStorage.getItem(this.getStorageKey(key))
+    if (!stored) {
+      return undefined
+    }
+
+    try {
+      const val = JSON.parse(stored)
+      return val
+    } catch {
+      return undefined
+    }
+  }
+
+  public setStorage<T>(key: string, object: T) {
+    localStorage.setItem(this.getStorageKey(key), JSON.stringify(object))
+  }
+
+  private getStorageKey(key: string) {
+    return `bp-chat-${key}`
   }
 }
