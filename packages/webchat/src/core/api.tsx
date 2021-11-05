@@ -56,6 +56,7 @@ export default class WebchatApi {
   async fetchConversation(conversationId: uuid) {
     try {
       const conversation = await this.socket.socket.getConversation(conversationId)
+      this.socket.socket.switchConversation(conversation!.id)
       const messages = await this.socket.socket.listMessages()
       return { ...conversation, messages }
     } catch (err) {
