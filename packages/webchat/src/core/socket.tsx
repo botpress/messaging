@@ -1,4 +1,4 @@
-import { MessagingSocket } from '@botpress/messaging-socket'
+import { Message, MessagingSocket } from '@botpress/messaging-socket'
 import { Config } from '../typings'
 
 export default class BpSocket {
@@ -34,6 +34,12 @@ export default class BpSocket {
     // firehose events to parent page
     // TODO: why do we need this
     // this.events.onAny(this.postToParent)
+  }
+
+  public async sendPayload(payload: any): Promise<Message> {
+    const message = await this.socket.sendPayload(payload)
+    this.onMessage(message)
+    return message
   }
 
   public postToParent = (_type: string, payload: any) => {

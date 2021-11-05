@@ -7,6 +7,7 @@ import { InjectedIntl } from 'react-intl'
 
 import WebchatApi from '../core/api'
 import constants from '../core/constants'
+import BpSocket from '../core/socket'
 import { getUserLocale, initializeLocale } from '../translations'
 import {
   BotInfo,
@@ -83,7 +84,7 @@ class RootStore {
   }
 
   @action.bound
-  setSocket(socket: MessagingSocket) {
+  setSocket(socket: BpSocket) {
     this.api = new WebchatApi(socket)
   }
 

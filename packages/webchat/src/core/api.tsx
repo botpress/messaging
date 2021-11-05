@@ -1,15 +1,16 @@
-import { MessagingSocket } from '@botpress/messaging-socket'
+import { Message } from '@botpress/messaging-socket'
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
 import get from 'lodash/get'
 import uuidgen from 'uuid'
 import { EventFeedback, uuid } from '../typings'
+import BpSocket from './socket'
 
 export default class WebchatApi {
   private axios!: AxiosInstance
   private axiosConfig!: AxiosRequestConfig
   private userId!: string
 
-  constructor(private socket: MessagingSocket) {}
+  constructor(private socket: BpSocket) {}
 
   private get baseUserPayload() {
     return {
@@ -45,7 +46,7 @@ export default class WebchatApi {
 
   async fetchConversations() {
     try {
-      const convos = await this.socket.listConversations()
+      const convos = await this.socket.socket.listConversations()
       return convos
     } catch (err) {
       console.error('Error while fetching convos', err)
@@ -54,8 +55,8 @@ export default class WebchatApi {
 
   async fetchConversation(conversationId: uuid) {
     try {
-      const conversation = await this.socket.getConversation(conversationId)
-      const messages = await this.socket.listMessages()
+      const conversation = await this.socket.socket.getConversation(conversationId)
+      const messages = await this.socket.socket.listMessages()
       return { ...conversation, messages }
     } catch (err) {
       await this.handleApiError(err)
@@ -100,9 +101,9 @@ export default class WebchatApi {
     }
   }
 
-  async sendMessage(payload: any, conversationId: uuid): Promise<void> {
+  async sendMessage(payload: any, conversationId: uuid): Promise<Message | undefined> {
     try {
-      await this.socket.sendPayload(payload)
+      return this.socket.sendPayload(payload)
     } catch (err) {
       await this.handleApiError(err)
     }

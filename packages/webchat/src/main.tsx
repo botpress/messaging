@@ -88,7 +88,7 @@ class Web extends React.Component<MainProps> {
       }
 
       await this.socket.waitForUserId()
-      this.props.store.setSocket(this.socket.socket)
+      this.props.store.setSocket(this.socket)
       await this.props.initializeChat!()
     }
   }
@@ -164,7 +164,7 @@ class Web extends React.Component<MainProps> {
 
     this.socket.setup()
     await this.socket.waitForUserId()
-    this.props.store.setSocket(this.socket.socket)
+    this.props.store.setSocket(this.socket)
   }
 
   loadOverrides(overrides: Overrides) {
