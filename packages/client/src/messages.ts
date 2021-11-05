@@ -22,11 +22,9 @@ export class MessageClient extends BaseClient {
   }
 
   async list(conversationId: uuid, limit?: number): Promise<Message[]> {
-    return handleNotFound(async () => {
-      return (
-        await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, { params: { limit } })
-      ).data.map((x) => this.deserialize(x))
-    }, [])
+    return (await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, { params: { limit } })).data.map(
+      (x) => this.deserialize(x)
+    )
   }
 
   async delete(id: uuid): Promise<boolean> {
