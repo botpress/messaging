@@ -36,7 +36,7 @@ export class ConversationApi {
 
     const conversation = await this.conversations.get(id)
     if (!conversation || conversation.clientId !== req.client.id) {
-      return res.send(undefined)
+      return res.sendStatus(404)
     }
 
     res.send(conversation)

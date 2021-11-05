@@ -96,12 +96,12 @@ export class MessageApi {
 
     const message = await this.messages.get(id)
     if (!message) {
-      return res.send(undefined)
+      return res.sendStatus(404)
     }
 
     const conversation = await this.conversations.get(message.conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
-      return res.send(undefined)
+      return res.sendStatus(404)
     }
 
     res.send(message)
@@ -125,12 +125,12 @@ export class MessageApi {
 
     const message = await this.messages.get(id)
     if (!message) {
-      return res.send(false)
+      return res.sendStatus(404)
     }
 
     const conversation = await this.conversations.get(message.conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
-      return res.send(false)
+      return res.sendStatus(404)
     }
 
     await this.messages.delete(id)
