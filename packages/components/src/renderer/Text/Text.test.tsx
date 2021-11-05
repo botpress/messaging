@@ -5,8 +5,8 @@ describe('Text renderer', () => {
   test('it renders a simple text message', () => {
     const text = 'Hello World!'
     const messageComponent = renderMessage({
-      type: 'text',
-      payload: {
+      content: {
+        type: 'text',
         text,
         markdown: false
       },
@@ -20,8 +20,8 @@ describe('Text renderer', () => {
   test('it renders clickable links in a non-markdown text message', () => {
     const text = 'Please go check out botpress.com'
     const messageComponent = renderMessage({
-      type: 'text',
-      payload: {
+      content: {
+        type: 'text',
         text,
         markdown: false
       },
@@ -39,8 +39,8 @@ describe('Text renderer', () => {
     const text = '**Hello** *World*! go check out [botpress](https://botpress.com)'
 
     const component = renderMessage({
-      type: 'text',
-      payload: {
+      content: {
+        type: 'text',
         text,
         markdown: true
       },

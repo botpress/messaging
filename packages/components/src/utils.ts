@@ -1,4 +1,3 @@
-import { Content } from '@botpress/messaging-server/content-types'
 import { InjectedIntl } from 'react-intl'
 import snarkdown from 'snarkdown'
 
@@ -9,10 +8,6 @@ export const renderUnsafeHTML = (message: string = '', escaped: boolean): string
 
   const html = snarkdown(message)
   return html.replace(/<a href/gi, '<a target="_blank" href')
-}
-
-const audio: Content<'audio'> = {
-  type: 'audio'
 }
 
 export class FallthroughIntl implements InjectedIntl {

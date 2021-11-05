@@ -1,6 +1,8 @@
 import { Content, MessageType } from '@botpress/messaging-server/content-types'
 import { AxiosInstance } from 'axios'
+import React from 'react'
 import { InjectedIntl } from 'react-intl'
+
 declare global {
   export interface Window {
     botpress?: StudioConnector
@@ -33,8 +35,7 @@ export interface MessageConfig {
   shouldPlay?: boolean // used for voice message only
   onSendData: (data: any) => Promise<void>
   onFileUpload: FileUploadHandler
-  onMessageClicked: (messageId?: uuid) => void
-  onAudioEnded?: React.EventHandler<React.SyntheticEvent<HTMLMediaElement, HTMLMediaElementEventMap['ended']>>
+  onAudioEnded?: (this: HTMLMediaElement, ev: HTMLMediaElementEventMap['ended']) => void
 }
 
 export interface StudioConnector {
@@ -51,6 +52,6 @@ export interface Message<T extends MessageType> {
   config: MessageConfig
 }
 
-export type MessageTypeHandlerProps<T extends MessageType> = Omit<Message<T>, 'type'> & {
-  type?: T // makes passing type prop to Components optional
+export type MessageTypeHandlerProps<T extends MessageType> = Content<T> & {
+  config: MessageConfig
 }

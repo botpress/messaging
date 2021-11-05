@@ -14,9 +14,7 @@ const Template: ComponentStory<typeof Text> = (args) => <Text {...args} />
 export const Primary = Template.bind({})
 
 Primary.args = {
-  payload: {
-    text: 'Hello *World*',
-    markdown: true
-  },
+  text: 'Hello *World*',
+  markdown: true,
   config: defaultMessageConfig
 }

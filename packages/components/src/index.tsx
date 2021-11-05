@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
+import { Audio, Video } from 'renderer/FileMessage'
 import {
   Carousel,
   File,
@@ -21,9 +22,6 @@ export const defaultMessageConfig: MessageConfig = {
     return
   },
   onFileUpload: async (label, payload, file) => {
-    return
-  },
-  onMessageClicked: (messageId) => {
     return
   },
   isLastGroup: true,
@@ -93,9 +91,9 @@ export const defaultTypesRenderers = {
   login_prompt: LoginPrompt,
   carousel: Carousel,
   file: File,
-  video: File,
-  audio: File,
-  image: File,
+  video: Video,
+  audio: Audio,
+  image: Image,
   dropdown: Dropdown,
   voice: VoiceMessage,
   visit: () => null,
