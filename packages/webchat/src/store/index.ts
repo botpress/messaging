@@ -265,7 +265,7 @@ class RootStore {
         this.view.showBotInfo()
       }
 
-      this.conversations = conversations
+      this.conversations = conversations!
     })
   }
 
@@ -277,7 +277,9 @@ class RootStore {
       return this.createConversation()
     }
 
-    const conversation: CurrentConversation = await this.api.fetchConversation(convoId || this._getCurrentConvoId()!)!
+    const conversation: CurrentConversation = (await this.api.fetchConversation(
+      convoId || this._getCurrentConvoId()!
+    )!) as CurrentConversation
     if (conversation?.messages) {
       conversation.messages = conversation.messages.sort(
         (a, b) => new Date(a.sentOn).getTime() - new Date(b.sentOn).getTime()
@@ -333,7 +335,7 @@ class RootStore {
 
   @action.bound
   async setReference(): Promise<void> {
-    return this.api.setReference(this.config.reference, this.currentConversationId)
+    return this.api.setReference(this.config.reference!, this.currentConversationId)
   }
 
   @action.bound

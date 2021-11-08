@@ -2,6 +2,7 @@ import { Message } from '@botpress/messaging-socket'
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
 import get from 'lodash/get'
 import uuidgen from 'uuid'
+import { RecentConversation } from '..'
 import { EventFeedback, uuid } from '../typings'
 import BpSocket from './socket'
 
@@ -47,7 +48,7 @@ export default class WebchatApi {
   async fetchConversations() {
     try {
       const convos = await this.socket.socket.listConversations()
-      return convos
+      return convos as RecentConversation[]
     } catch (err) {
       console.error('Error while fetching convos', err)
     }

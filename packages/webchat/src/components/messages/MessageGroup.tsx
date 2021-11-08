@@ -129,7 +129,6 @@ class MessageGroup extends React.Component<Props> {
                   sentOn={message.sentOn}
                   onSendData={this.props.onSendData}
                   onFileUpload={this.props.onFileUpload}
-                  bp={this.props.bp}
                   store={this.props.store}
                   onAudioEnded={this.onAudioEnded}
                   shouldPlay={this.state.audioPlayingIndex === i}
@@ -145,7 +144,6 @@ class MessageGroup extends React.Component<Props> {
 
 export default inject(({ store }: { store: RootStore }) => ({
   store,
-  bp: store.bp,
   onFeedback: store.sendFeedback,
   onSendData: store.sendData,
   onFileUpload: store.uploadFile,
@@ -165,4 +163,4 @@ type Props = {
   onFeedback?: any
   store?: RootStore
   highlightedMessages?: string[]
-} & Pick<StoreDef, 'showUserName' | 'messageWrapper' | 'bp'>
+} & Pick<StoreDef, 'showUserName' | 'messageWrapper'>
