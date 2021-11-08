@@ -60,12 +60,11 @@ export default class BpSocket {
 
       if (this.socket.userId) {
         const userId = this.socket.userId!
-        window.__BP_VISITOR_ID = userId
+        this.setStorage('creds', this.socket.creds)
 
         this.onUserIdChanged(userId)
         this.postToParent('', { userId })
 
-        this.setStorage('creds', this.socket.creds)
         resolve()
       } else {
         this.waitingForUser = undefined
