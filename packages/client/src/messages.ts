@@ -15,12 +15,9 @@ export class MessageClient extends BaseClient {
   }
 
   async get(id: uuid): Promise<Message | undefined> {
-    const message = (await this.http.get<Message>(`/messages/${id}`)).data
-    if (message) {
-      return this.deserialize(message)
-    } else {
-      return undefined
-    }
+    return handleNotFound(async () => {
+      return this.deserialize((await this.http.get<Message>(`/messages/${id}`)).data)
+    }, undefined)
   }
 
   async list(conversationId: uuid, limit?: number): Promise<Message[]> {
@@ -30,11 +27,16 @@ export class MessageClient extends BaseClient {
   }
 
   async delete(id: uuid): Promise<boolean> {
-    return (await this.http.delete<boolean>(`/messages/${id}`)).data
+    return handleNotFound(async () => {
+      await this.http.delete<boolean>(`/messages/${id}`)
+      return true
+    }, false)
   }
 
   async deleteByConversation(conversationId: uuid): Promise<number> {
-    return (await this.http.delete<{ count: number }>(`/messages/conversation/${conversationId}`)).data.count
+    return handleNotFound(async () => {
+      return (await this.http.delete<{ count: number }>(`/messages/conversation/${conversationId}`)).data.count
+    }, 0)
   }
 
   async endTurn(id: uuid) {

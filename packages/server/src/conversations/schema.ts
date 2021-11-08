@@ -12,7 +12,7 @@ const Api = {
 
   List: ReqSchema({
     params: { userId: Joi.string().guid().required() },
-    query: { limit: Joi.number().optional() }
+    query: { limit: Joi.number().min(0).optional() }
   }),
 
   Recent: ReqSchema({

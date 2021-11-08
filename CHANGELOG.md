@@ -1,3 +1,19 @@
+## [0.1.17](https://github.com/botpress/messaging/compare/v0.1.16...v0.1.17) (2021-11-05)
+
+
+### Bug Fixes
+
+* **channels:** fixes for smooch and messenger ([#229](https://github.com/botpress/messaging/issues/229)) ([42a1d5b](https://github.com/botpress/messaging/commit/42a1d5bdceaf5ba6214db438d6a53e284a9862d9)), closes [#227](https://github.com/botpress/messaging/issues/227) [#230](https://github.com/botpress/messaging/issues/230)
+
+
+### Features
+
+* **api:** refact implementation ([#223](https://github.com/botpress/messaging/issues/223)) ([c8aa881](https://github.com/botpress/messaging/commit/c8aa881a45f754610f628d4d3bee561103138fb9))
+* **socket:** socket package ([#222](https://github.com/botpress/messaging/issues/222)) ([4c1141e](https://github.com/botpress/messaging/commit/4c1141e56001b0795988706bd10b8806b3ee54b5))
+* **test-ui:** update testing ui for new socket ([#224](https://github.com/botpress/messaging/issues/224)) ([326f65e](https://github.com/botpress/messaging/commit/326f65eed3f45760205557f1564275f61a0d2464))
+
+
+
 ## [0.1.16](https://github.com/botpress/messaging/compare/v0.1.15...v0.1.16) (2021-10-28)
 
 
