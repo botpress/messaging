@@ -3,6 +3,17 @@ import { ExposedWebChat, Config } from '@botpress/webchat'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+// Uncomment this for the test webchat
+/*
+import { BoardLinker } from './linker'
+
+new BoardLinker(
+  document.getElementById('board-linker')!,
+  document.getElementById('webchat')!,
+  document.getElementById('board-watcher')!
+)
+*/
+
 const webchatConfig: Config = {
   botId: undefined,
   externalAuthToken: undefined,
@@ -46,4 +57,4 @@ const webchatConfig: Config = {
   className: undefined
 }
 
-ReactDOM.render(<ExposedWebChat config={webchatConfig} fullscreen={true} />, document.getElementById('oldwebchat'))
+ReactDOM.render(<ExposedWebChat config={webchatConfig} fullscreen={false} />, document.getElementById('oldwebchat'))
