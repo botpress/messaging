@@ -9,30 +9,28 @@ import { defaultLocale, translations } from './translations'
 import { Config } from './typings'
 configure({ enforceActions: 'observed' })
 
-export const Embedded = (props: any) => new Wrapper(props, false)
-export const Fullscreen = (props: any) => new Wrapper(props, true)
+export const Embedded = (props: any) => new Wrapper({ ...props, fullscreen: false })
+export const Fullscreen = (props: any) => new Wrapper({ ...props, fullscreen: true })
 
 interface State {
-  fullscreen: any
   store: RootStore
 }
 
 interface Props {
   config: Config
+  fullscreen?: boolean
 }
 
 export class ExposedWebChat extends React.Component<Props, State> {
-  constructor(props: any, fullscreen: any) {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
-      fullscreen,
-      store: new RootStore({ fullscreen })
+      store: new RootStore({ fullscreen: props.fullscreen! })
     }
   }
 
   render() {
-    const { fullscreen } = this.state
     const store = this.state.store
     const { botUILanguage: locale } = store
 
@@ -48,6 +46,7 @@ export class ExposedWebChat extends React.Component<Props, State> {
   }
 }
 
+// TODO: what does this observer do?
 const Wrapper = observer(ExposedWebChat)
 
 /**
