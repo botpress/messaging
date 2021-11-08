@@ -1,7 +1,7 @@
 export { Carousel, Card } from './Carousel'
 export { Custom } from './Custom'
 export { Dropdown } from './Dropdown'
-export { File, Audio, Video } from './FileMessage'
+export { File, Audio, Video, Image } from './FileMessage'
 export { LoginPrompt } from './LoginPrompt/LoginPrompt'
 export { QuickReplies } from './QuickReplies'
 export { Text } from './Text'
