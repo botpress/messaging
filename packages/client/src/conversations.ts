@@ -1,5 +1,6 @@
 import { Conversation, ConversationWithLastMessage } from '@botpress/messaging-base'
 import { BaseClient } from './base'
+import { handleNotFound } from './errors'
 
 export class ConversationClient extends BaseClient {
   async create(userId: string): Promise<Conversation> {
@@ -7,12 +8,9 @@ export class ConversationClient extends BaseClient {
   }
 
   async get(id: string): Promise<Conversation | undefined> {
-    const conversation = (await this.http.get<Conversation>(`/conversations/${id}`)).data
-    if (conversation) {
-      return this.deserialize(conversation)
-    } else {
-      return undefined
-    }
+    return handleNotFound(async () => {
+      return this.deserialize((await this.http.get<Conversation>(`/conversations/${id}`)).data)
+    }, undefined)
   }
 
   async list(userId: string, limit?: number): Promise<ConversationWithLastMessage[]> {

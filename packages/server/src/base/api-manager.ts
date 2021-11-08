@@ -28,7 +28,7 @@ export class ApiManager {
           return res.status(400).send(error.message)
         }
 
-        await fn(req, res, <any>undefined)
+        await fn(req, res)
       })
     )
   }
