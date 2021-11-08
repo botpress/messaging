@@ -17,6 +17,7 @@ import { Config, Message, Overrides, uuid } from './typings'
 import { checkLocationOrigin, initializeAnalytics, isIE, trackMessage, trackWebchatState } from './utils'
 
 const _values = (obj: Overrides) => Object.keys(obj).map((x) => obj[x])
+const DEFAULT_TYPING_DELAY = 500
 
 class Web extends React.Component<MainProps> {
   private config!: Config
@@ -252,6 +253,11 @@ class Web extends React.Component<MainProps> {
   }
 
   handleNewMessage = async (event: Message) => {
+    if (event.authorId === undefined) {
+      const value = (event.payload.type === 'typing' ? event.payload.value : undefined) || DEFAULT_TYPING_DELAY
+      await this.handleTyping({ ...event, timeInMs: value })
+    }
+
     if (event.payload?.type === 'visit') {
       // don't do anything, it's the system message
       return

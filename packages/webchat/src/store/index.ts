@@ -393,9 +393,12 @@ class RootStore {
       return
     }
 
+    // TODO: this can't work. We can't create events directly
+    /*
     if (!constants.MESSAGE_TYPES.includes(data.type)) {
       return this.api.sendEvent(data, this.currentConversationId)
     }
+    */
 
     await this.api.sendMessage(data, this.currentConversationId)
   }

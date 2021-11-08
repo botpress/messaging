@@ -94,6 +94,8 @@ export default class WebchatApi {
     }
   }
 
+  // TODO: we don't have a /events route available for this
+  /*
   async sendEvent(payload: any, conversationId: uuid): Promise<void> {
     try {
       return this.axios.post('/events', { ...this.baseUserPayload, conversationId, payload }, this.axiosConfig)
@@ -101,6 +103,7 @@ export default class WebchatApi {
       await this.handleApiError(err)
     }
   }
+  */
 
   async sendMessage(payload: any, conversationId: uuid): Promise<Message | undefined> {
     try {
