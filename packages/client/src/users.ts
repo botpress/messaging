@@ -1,5 +1,6 @@
 import { User } from '@botpress/messaging-base'
 import { BaseClient } from './base'
+import { handleNotFound } from './errors'
 
 export class UserClient extends BaseClient {
   async create(): Promise<User> {
@@ -7,6 +8,8 @@ export class UserClient extends BaseClient {
   }
 
   async get(id: string): Promise<User | undefined> {
-    return (await this.http.get<User>(`/users/${id}`)).data || undefined
+    return handleNotFound(async () => {
+      return (await this.http.get<User>(`/users/${id}`)).data
+    }, undefined)
   }
 }

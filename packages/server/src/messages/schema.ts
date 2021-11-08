@@ -16,7 +16,7 @@ const Api = {
       conversationId: Joi.string().guid().required(),
       authorId: Joi.string().guid().required(),
       payload: Joi.object().required(),
-      timeout: Joi.number().min(0).optional()
+      timeout: Joi.number().min(0).max(50000).optional()
     }
   }),
 
@@ -31,7 +31,7 @@ const Api = {
       conversationId: Joi.string().guid().required()
     },
     query: {
-      limit: Joi.number().optional()
+      limit: Joi.number().min(0).optional()
     }
   }),
 

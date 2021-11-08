@@ -23,7 +23,17 @@ export class SyncApi {
   }
 
   async sync(req: Request, res: Response) {
-    const { error, value } = this.schema.validate(req.body)
+    const channelsWithoutEnabled: { [channelName: string]: any } = {}
+    for (const [channelName, channelConfig] of Object.entries<any>(req.body?.channels || {})) {
+      if (channelConfig.enabled === false) {
+        continue
+      }
+
+      channelsWithoutEnabled[channelName] = _.omit(channelConfig, ['enabled'])
+    }
+    const bodyWithoutEnabled = { ...(req.body || {}), channels: channelsWithoutEnabled }
+
+    const { error, value } = this.schema.validate(bodyWithoutEnabled)
     if (error) {
       return res.status(400).send(error.message)
     }

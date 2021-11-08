@@ -32,8 +32,8 @@ export class Api {
     this.syncs = new SyncApi(this.app.syncs, this.app.clients, this.app.channels)
     this.health = new HealthApi(this.app.health)
     this.users = new UserApi(this.app.users)
-    this.conversations = new ConversationApi(this.app.conversations)
-    this.messages = new MessageApi(this.app.conversations, this.app.messages, this.app.converse)
+    this.conversations = new ConversationApi(this.app.users, this.app.conversations)
+    this.messages = new MessageApi(this.app.users, this.app.conversations, this.app.messages, this.app.converse)
 
     this.channels = new ChannelApi(this.root, this.app)
   }
