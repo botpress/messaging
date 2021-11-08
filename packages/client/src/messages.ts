@@ -1,5 +1,6 @@
 import { Message, uuid } from '@botpress/messaging-base'
 import { BaseClient } from './base'
+import { handleNotFound } from './errors'
 
 export class MessageClient extends BaseClient {
   async create(
