@@ -57,4 +57,4 @@ const webchatConfig: Config = {
   className: undefined
 }
 
-ReactDOM.render(<ExposedWebChat config={webchatConfig} fullscreen={false} />, document.getElementById('oldwebchat'))
+ReactDOM.render(<ExposedWebChat config={webchatConfig} fullscreen={true} />, document.getElementById('oldwebchat'))
