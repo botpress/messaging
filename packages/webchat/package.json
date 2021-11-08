@@ -15,7 +15,6 @@
   "devDependencies": {},
   "dependencies": {
     "@botpress/messaging-socket": "0.0.1",
-    "@botpress/messaging-components": "0.0.1",
     "mobx-react": "^5.4.4"
   }
 }
