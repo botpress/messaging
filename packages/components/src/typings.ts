@@ -1,5 +1,5 @@
-import { Content, MessageType } from '@botpress/messaging-server/content-types'
 import { AxiosInstance } from 'axios'
+import { Content, MessageType } from 'content-typings'
 import React from 'react'
 import { InjectedIntl } from 'react-intl'
 
@@ -52,6 +52,6 @@ export interface Message<T extends MessageType> {
   config: MessageConfig
 }
 
-export type MessageTypeHandlerProps<T extends MessageType> = Content<T> & {
+export type MessageTypeHandlerProps<T extends MessageType> = Omit<Content<T>, 'type'> & {
   config: MessageConfig
 }

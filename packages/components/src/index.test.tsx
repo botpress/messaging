@@ -1,26 +1,26 @@
 import { render, screen } from '@testing-library/react'
+import { messageTypes } from 'content-typings'
 import React from 'react'
 import { Message } from 'typings'
-import { messageTypes } from 'utils'
 import defaultRenderer, { defaultMessageConfig, defaultTypesRenderers, Renderer, renderMessage } from './'
 
 describe('Renderer', () => {
   test('it can override a type handler and render it', () => {
     const customRenderer = new Renderer()
     customRenderer.register(defaultTypesRenderers)
-    customRenderer.set('custom', ({ payload }) => (
+    customRenderer.set('custom', ({ component, module }) => (
       <div>
-        Custom {payload.module} {payload.component}
+        Custom {module} {component}
       </div>
     ))
     const component = renderMessage(
-      { type: 'custom', payload: { module: 'test', component: 'test' }, config: defaultMessageConfig },
+      { content: { type: 'custom', module: 'testmodule', component: 'testcomponent' }, config: defaultMessageConfig },
       customRenderer
     )
 
     expect(component).toBeTruthy()
     render(component)
-    expect(screen.getByText('Custom test test')).toBeInTheDocument()
+    expect(screen.getByText('Custom testmodule testcomponent')).toBeInTheDocument()
   })
 
   test('it can get the valid default text component', () => {
@@ -29,8 +29,8 @@ describe('Renderer', () => {
     expect(textRenderer).toBeTruthy()
 
     const reactEl = React.createElement(textRenderer, {
-      type: 'text',
-      payload: { text: 'test', markdown: false },
+      text: 'test',
+      markdown: false,
       config: defaultMessageConfig
     })
 
@@ -41,15 +41,18 @@ describe('Renderer', () => {
 
   test('it renders "unsupported message type" message on non-existant types', () => {
     const nonExistantType = 'non-existant'
-    const component = renderMessage({ type: nonExistantType, payload: {}, config: defaultMessageConfig } as Message<
-      any
-    >)
+    const component = renderMessage({
+      content: {
+        type: nonExistantType
+      },
+      config: defaultMessageConfig
+    } as Message<never>)
     expect(component).toBeTruthy()
     render(component)
     expect(screen.getByText(`Unsupported message type: ${nonExistantType}`)).toBeInTheDocument()
   })
 
-  test.each(messageTypes)('type "%s" has an assigned default renderer', type => {
+  test.each(messageTypes)('type "%s" has an assigned default renderer', (type) => {
     if (type !== 'unsupported') {
       expect(defaultTypesRenderers[type]).toBeTruthy()
     }

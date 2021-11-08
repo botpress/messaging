@@ -22,7 +22,8 @@ export const CustomComponentRenderer: React.FC<MessageTypeHandlerProps<'custom'>
   config,
   component,
   module,
-  wrapped
+  wrapped,
+  ...payload
 }) => {
   const InjectedModuleView = config.bp?.getModuleInjector()
 
@@ -53,12 +54,10 @@ export const CustomComponentRenderer: React.FC<MessageTypeHandlerProps<'custom'>
     ...sanitizedProps,
     messageDataProps: { ...payload },
     keyboard: Keyboard,
-    children: payload.wrapped && <CustomComponentRenderer config={config} payload={payload.wrapped} />
+    children: wrapped && <CustomComponentRenderer config={config} component={component} module={module} {...payload} />
   }
 
-  return (
-    <InjectedModuleView moduleName={payload.module} componentName={payload.component} lite extraProps={extraProps} />
-  )
+  return <InjectedModuleView moduleName={module} componentName={component} lite extraProps={extraProps} />
 }
 
 export const Custom: React.FC<MessageTypeHandlerProps<'custom'>> = (props) => (

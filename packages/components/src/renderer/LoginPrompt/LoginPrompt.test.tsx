@@ -4,8 +4,9 @@ import { defaultMessageConfig, renderMessage } from '../..'
 describe('LoginPrompt', () => {
   test('renders correctly when last message', () => {
     const component = renderMessage({
-      type: 'login_prompt',
-      payload: {},
+      content: {
+        type: 'login_prompt'
+      },
       config: defaultMessageConfig
     })
 
@@ -31,8 +32,9 @@ describe('LoginPrompt', () => {
     const onSendData = jest.fn()
 
     const component = renderMessage({
-      type: 'login_prompt',
-      payload: {},
+      content: {
+        type: 'login_prompt'
+      },
       config: { ...defaultMessageConfig, onSendData }
     })
 

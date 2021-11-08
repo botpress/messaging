@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react'
-import { Message } from 'typings'
 import { defaultMessageConfig, renderMessage } from '../..'
 
 describe('File renderer', () => {
@@ -34,7 +33,7 @@ describe('File renderer', () => {
     expect(el?.hasAttribute('controls')).toBe(true)
 
     expect(src).toBeInTheDocument()
-    expect(src?.getAttribute('src')).toBe(url)
+    expect(src?.getAttribute('src')).toBe(video)
     expect(src?.getAttribute('type')).toBe('video/mp4')
   })
 

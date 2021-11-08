@@ -1,27 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import Select from 'react-select'
+import React, { useEffect, useMemo, useState } from 'react'
+import Select, { MultiValue } from 'react-select'
 import Creatable from 'react-select/creatable'
-import { DropdownOption, MessageTypeHandlerProps } from 'typings'
-import { renderUnsafeHTML } from '../../utils'
+import { MessageTypeHandlerProps } from 'typings'
 import Keyboard, { Prepend } from '../Keyboard'
 
-export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'>) => {
-  const [options, setOptions] = useState<DropdownOption[]>([])
+export const Dropdown = ({
+  choices,
+  text,
+  placeholderText,
+  allowMultiple,
+  allowCreation,
+  displayInKeyboard,
+  buttonText,
+  config
+}: MessageTypeHandlerProps<'dropdown'>) => {
   const [selectedOption, setSelectedOption] = useState<any>()
-
-  useEffect(() => {
-    if (payload.options.length) {
-      setOptions(payload.options.map((x) => ({ value: x.value || x.label, label: x.label })))
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!payload.buttonText) {
-      sendChoice().catch(console.error)
-    }
-  }, [selectedOption])
+  const options = useMemo(() => choices.map((choice) => ({ label: choice.title, value: choice.value })), [choices])
 
   const sendChoice = async () => {
+    console.log('sendChoice')
     if (!selectedOption) {
       return
     }
@@ -36,17 +33,31 @@ export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'
     await config.onSendData({ type: 'quick_reply', text: label, payload: value || label })
   }
 
+  useEffect(() => {
+    console.log('selected: ', selectedOption)
+    if (buttonText) {
+      return
+    }
+    try {
+      void (async () => {
+        await sendChoice()
+      })()
+    } catch (err) {
+      console.error(err)
+    }
+  }, [selectedOption])
+
   const renderSelect = (inKeyboard: boolean) => {
     return (
       <div className={inKeyboard ? 'bpw-keyboard-quick_reply-dropdown' : ''}>
-        <div style={{ width: payload.width || '100%', display: 'inline-block' }}>
-          {payload.allowCreation ? (
+        <div style={{ width: '100%', display: 'inline-block' }}>
+          {allowCreation ? (
             <Creatable
               value={selectedOption}
               onChange={setSelectedOption}
               options={options}
-              placeholder={payload.placeholderText}
-              isMulti={payload.allowMultiple}
+              placeholder={placeholderText}
+              isMulti={allowMultiple}
               menuPlacement={'top'}
             />
           ) : (
@@ -54,16 +65,16 @@ export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'
               value={selectedOption}
               onChange={setSelectedOption}
               options={options}
-              placeholder={payload.placeholderText}
-              isMulti={payload.allowMultiple}
+              placeholder={placeholderText}
+              isMulti={allowMultiple}
               menuPlacement={'top'}
             />
           )}
         </div>
 
-        {payload.buttonText && (
+        {displayInKeyboard && (
           <button className="bpw-button" onClick={sendChoice}>
-            {payload.buttonText}
+            {buttonText}
           </button>
         )}
       </div>
@@ -71,16 +82,9 @@ export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'
   }
 
   const shouldDisplay = config.isLastGroup && config.isLastOfGroup
-  let message: React.ReactElement
+  const message = <p>{text}</p>
 
-  if (payload.markdown) {
-    const html = renderUnsafeHTML(payload.message, payload.escapeHTML)
-    message = <div dangerouslySetInnerHTML={{ __html: html }} />
-  } else {
-    message = <p>{payload.message}</p>
-  }
-
-  if (payload.displayInKeyboard && Keyboard.isReady()) {
+  if (displayInKeyboard && Keyboard.isReady()) {
     return (
       <Prepend keyboard={renderSelect(true)} visible={shouldDisplay}>
         {message}

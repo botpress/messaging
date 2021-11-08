@@ -1,9 +1,12 @@
+import { MessageType } from 'content-typings'
 import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
-import { Audio, Video } from 'renderer/FileMessage'
 import {
   Carousel,
   File,
+  Card,
+  Audio,
+  Video,
   LoginPrompt,
   QuickReplies,
   Text,
@@ -12,7 +15,7 @@ import {
   TypingIndicator,
   Dropdown
 } from './renderer'
-import { Message, MessageConfig, MessageType, MessageTypeHandlerProps, Payload } from './typings'
+import { Message, MessageConfig, MessageTypeHandlerProps } from './typings'
 import { FallthroughIntl } from './utils'
 
 export const defaultMessageConfig: MessageConfig = {
@@ -76,8 +79,8 @@ export class Renderer {
   }
 
   public render(message: Message<MessageType>): ReactElement<Message<MessageType>> {
-    const Handler = this.get(message.type)
-    return <Handler {...message} />
+    const Handler = this.get(message.content.type)
+    return <Handler {...message.content} config={message.config} />
   }
 
   public registerFallbackHandler(handler: MessageTypeHandler<MessageType>) {
@@ -87,9 +90,11 @@ export class Renderer {
 
 export const defaultTypesRenderers = {
   text: Text,
-  quick_reply: QuickReplies,
+  'single-choice': QuickReplies,
   login_prompt: LoginPrompt,
   carousel: Carousel,
+  card: Card,
+  location: () => null,
   file: File,
   video: Video,
   audio: Audio,
@@ -107,11 +112,11 @@ const defaultRenderer = new Renderer()
 defaultRenderer.register(defaultTypesRenderers)
 
 // TODO: This is for backwards compatibility. Remove in the future
-defaultRenderer.set('custom', ({ payload, config }) => {
-  if (payload.module === 'extensions' && payload.component === 'Dropdown') {
-    return <Dropdown payload={payload as any} config={config} />
+defaultRenderer.set('custom', ({ module, component, config, payload }) => {
+  if (module === 'extensions' && component === 'Dropdown') {
+    return <Dropdown {...payload} config={config} />
   }
-  return <Custom payload={payload} config={config} />
+  return <Custom module={module} component={component} config={config} />
 })
 
 export default defaultRenderer

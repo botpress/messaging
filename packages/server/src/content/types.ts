@@ -1,156 +1,104 @@
-export const messageTypes = [
-  'text',
-  'audio',
-  'file',
-  'video',
-  'image',
-  'dropdown',
-  'visit',
-  'voice',
-  'typing',
-  'card',
-  'carousel',
-  'location',
-  'single-choice',
-  'login_prompt',
-  'session_reset',
-  'custom',
-  'unsupported' // This is a special type that is used as fallback for unsupported message types at runtime
-] as const
-
-type MessageTypeTuple = typeof messageTypes
-
-export type MessageType = MessageTypeTuple[number]
-
-export interface BaseContent<T extends MessageType> {
-  type: T
+export interface Content {
+  type: string
 }
 
-export interface TextContent extends BaseContent<'text'> {
+export interface TextContent extends Content {
+  type: 'text'
   text: string
   markdown?: boolean
 }
 
-export interface ImageContent extends BaseContent<'image'> {
+export interface ImageContent extends Content {
+  type: 'image'
   image: string
   title?: string
 }
 
-export interface AudioContent extends BaseContent<'audio'> {
+export interface AudioContent extends Content {
+  type: 'audio'
   audio: string
   title?: string
 }
 
-export interface VoiceContent extends BaseContent<'voice'> {
+export interface VoiceContent extends Content {
+  type: 'voice'
   audio: string
 }
 
-export interface VideoContent extends BaseContent<'video'> {
+export interface VideoContent extends Content {
+  type: 'video'
   video: string
   title?: string
 }
 
-export interface FileContent extends BaseContent<'file'> {
+export interface FileContent extends Content {
   type: 'file'
   file: string
   title?: string
 }
 
-export interface CarouselContent extends BaseContent<'carousel'> {
+export interface CarouselContent extends Content {
+  type: 'carousel'
   items: CardContent[]
 }
 
-export interface CardContent extends BaseContent<'card'> {
+export interface CardContent extends Content {
+  type: 'card'
   title: string
   subtitle?: string
   image?: string
-  actions: ActionButton<ActionType>[]
+  actions: ActionButton[]
 }
 
-export interface LocationContent extends BaseContent<'location'> {
+export interface LocationContent extends Content {
+  type: 'location'
   latitude: number
   longitude: number
   address?: string
   title?: string
 }
 
-// export enum ButtonAction {
-//   SaySomething = 'Say something',
-//   OpenUrl = 'Open URL',
-//   Postback = 'Postback'
-// }
+export type ContentType =
+  | TextContent
+  | ImageContent
+  | AudioContent
+  | VideoContent
+  | CarouselContent
+  | CardContent
+  | LocationContent
+  | FileContent
+  | VoiceContent
 
-export type ActionType = 'Say something' | 'Open URL' | 'Postback'
+export enum ButtonAction {
+  SaySomething = 'Say something',
+  OpenUrl = 'Open URL',
+  Postback = 'Postback'
+}
 
-export type ActionButton<A extends ActionType> = {
-  action: A
+export interface ActionButton {
+  action: ButtonAction
   title: string
-} & (A extends 'Say something'
-  ? { text: string }
-  : A extends 'Open URL'
-  ? { url: string }
-  : A extends 'Postback'
-  ? { payload: string }
-  : {})
+}
 
-const myBtn: ActionButton<'Say something'> = { action: 'Say something', title: 'yo', text: 'yo' }
+export interface ActionSaySomething extends ActionButton {
+  text: string
+}
 
-export interface ChoiceContent extends BaseContent<'single-choice'> {
+export interface ActionOpenURL extends ActionButton {
+  url: string
+}
+
+export interface ActionPostback extends ActionButton {
+  payload: string
+}
+
+export interface ChoiceContent extends Content {
+  type: 'single-choice'
   text: string
   choices: ChoiceOption[]
-}
-
-// export const btnTypeGuard = (btn: ActionButton<ButtonAction>) => {
-//   switch (btn.action) {
-//     case ButtonAction.SaySomething:
-//       return btn as ActionButton<ButtonAction.SaySomething>
-//     case ButtonAction.OpenUrl:
-//       return btn as ActionButton<ButtonAction.OpenUrl>
-//     case ButtonAction.Postback:
-//       return btn as ActionButton<ButtonAction.Postback>
-//   }
-// }
-
-export const btnIs = <A extends ActionType>(x: ActionButton<ActionType>, type: A): x is ActionButton<A> => {
-  return x.action === type
-}
-
-export const isSaySomething = (btn: ActionButton<ActionType>): btn is ActionButton<'Say something'> => {
-  return btn.action === 'Say something'
 }
 
 export interface ChoiceOption {
   title: string
   value: string
 }
-
-export interface CustomComponentContent extends BaseContent<'custom'> {
-  module: string
-  component: string
-  wrapped?: any
-  payload?: any
-}
-
-export type Content<T extends MessageType> = T extends 'text'
-  ? TextContent
-  : T extends 'image'
-  ? ImageContent
-  : T extends 'audio'
-  ? AudioContent
-  : T extends 'voice'
-  ? VoiceContent
-  : T extends 'video'
-  ? VideoContent
-  : T extends 'file'
-  ? FileContent
-  : T extends 'carousel'
-  ? CarouselContent
-  : T extends 'card'
-  ? CardContent
-  : T extends 'location'
-  ? LocationContent
-  : T extends 'single-choice'
-  ? ChoiceContent
-  : T extends 'custom'
-  ? CustomComponentContent
-  : never

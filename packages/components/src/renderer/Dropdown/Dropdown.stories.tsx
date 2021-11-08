@@ -30,21 +30,16 @@ const Template: ComponentStory<typeof Dropdown> = (args) => {
 export const Primary = Template.bind({})
 
 Primary.args = {
-  payload: {
-    message: 'Choose an option from the __dropdown__',
-    escapeHTML: true,
-    markdown: true,
-    buttonText: 'button text',
-    allowCreation: true,
-    placeholderText: 'placeholder text',
-    allowMultiple: false,
-    width: 400,
-    displayInKeyboard: false,
-    options: [
-      { label: 'Option 1', value: 'option-1' },
-      { label: 'Option 2', value: 'option-2' }
-    ]
-  },
+  text: 'Choose an option from the __dropdown__',
+  buttonText: 'button text',
+  allowCreation: true,
+  placeholderText: 'placeholder text',
+  allowMultiple: false,
+  displayInKeyboard: false,
+  choices: [
+    { title: 'Option 1', value: 'option-1' },
+    { title: 'Option 2', value: 'option-2' }
+  ],
   config: {
     ...defaultMessageConfig,
     onSendData: async (data) => {
