@@ -14,7 +14,11 @@ new BoardLinker(
 )
 */
 
+const MY_CLIENT_ID = 'a9c2ea19-8854-4ab9-aeaf-aa043e1b435c'
+
 const webchatConfig: Config = {
+  url: 'http://localhost:3100',
+  clientId: MY_CLIENT_ID,
   botId: undefined,
   externalAuthToken: undefined,
   userId: undefined,

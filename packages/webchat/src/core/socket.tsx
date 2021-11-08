@@ -14,11 +14,7 @@ export default class BpSocket {
 
   constructor(config: Config) {
     this.chatId = config.chatId
-
-    // TODO: change this hardcoded stuff
-    const options = { url: 'http://localhost:3100', clientId: 'a9c2ea19-8854-4ab9-aeaf-aa043e1b435c' }
-
-    this.socket = new MessagingSocket(options)
+    this.socket = new MessagingSocket({ url: config.url, clientId: config.clientId })
   }
 
   public setup() {

@@ -26,7 +26,7 @@ export class ExposedWebChat extends React.Component<Props, State> {
     super(props)
 
     this.state = {
-      store: new RootStore({ fullscreen: props.fullscreen! })
+      store: new RootStore({ fullscreen: props.fullscreen! }, props.config)
     }
   }
 
