@@ -172,9 +172,9 @@ export interface Config {
   /** Allows to set a different user id for different windows (eg: studio, specific bot, etc) */
   userIdScope?: string
   enableReset: boolean
-  stylesheet: string
+  stylesheet?: string
   isEmulator?: boolean
-  extraStylesheet: string
+  extraStylesheet?: string
   showConversationsButton: boolean
   showUserName: boolean
   showUserAvatar: boolean
@@ -215,7 +215,7 @@ export interface Config {
   /** Experimental: expose the store to the parent frame for more control on the webchat's behavior */
   exposeStore: boolean
   /** Reference ensures that a specific value and its signature are valid */
-  reference: string
+  reference?: string
   /** If true, Websocket is created when the Webchat is opened. Bot cannot be proactive. */
   lazySocket?: boolean
   /** If true, chat will no longer play the notification sound for new messages. */

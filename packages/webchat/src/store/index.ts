@@ -1,4 +1,3 @@
-import { MessagingSocket } from '@botpress/messaging-socket'
 import isBefore from 'date-fns/is_before'
 import isValid from 'date-fns/is_valid'
 import merge from 'lodash/merge'
@@ -425,16 +424,6 @@ class RootStore {
   @action.bound
   updateConfig(config: Config, bp?: StudioConnector) {
     this.config = config
-
-    // TODO: The socket might require a reconnect if we change the url.
-    // But why would we allow changing the url anyways after initial setup?
-    /*
-    if (!this.api) {
-      this.bp = bp!
-      this.api = new WebchatApi('', axios.create())
-    }
-    */
-
     this._applyConfig()
   }
 
@@ -446,8 +435,7 @@ class RootStore {
 
     document.title = this.config.botName || 'Botpress Webchat'
 
-    // TODO: what to do with this?
-    // this.api.updateAxiosConfig({ botId: this.config.botId, externalAuthToken: this.config.externalAuthToken })
+    // TODO: can't work at the moment
     // this.api.updateUserId(this.config.userId!)
     if (!this.isInitialized) {
       window.USE_SESSION_STORAGE = this.config.useSessionStorage

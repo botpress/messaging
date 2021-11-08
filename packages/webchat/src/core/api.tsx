@@ -169,6 +169,7 @@ export default class WebchatApi {
   }
 
   async setReference(reference: string, conversationId: uuid): Promise<void> {
+    // TODO: this can't work. We don't have a reference route
     try {
       return this.axios.post(
         '/conversations/reference',

@@ -7,6 +7,7 @@ import { IntlProvider } from 'react-intl'
 import Chat from './main'
 import { RootStore } from './store'
 import { defaultLocale, translations } from './translations'
+import { Config } from './typings'
 configure({ enforceActions: 'observed' })
 
 export const Embedded = (props: any) => new Wrapper(props, false)
@@ -17,7 +18,9 @@ interface State {
   store: RootStore
 }
 
-interface Props {}
+interface Props {
+  config: Config
+}
 
 export class ExposedWebChat extends React.Component<Props, State> {
   constructor(props: any, fullscreen: any) {
@@ -27,8 +30,6 @@ export class ExposedWebChat extends React.Component<Props, State> {
       fullscreen,
       store: new RootStore({ fullscreen })
     }
-
-    this.state.store.updateConfig({} as any)
   }
 
   render() {
@@ -57,6 +58,7 @@ const Wrapper = observer(ExposedWebChat)
 export { Embedded as embedded } from '.'
 export { Fullscreen as fullscreen } from '.'
 
+export * from './typings'
 export {
   Carousel,
   QuickReplies,
