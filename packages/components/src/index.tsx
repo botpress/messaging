@@ -7,6 +7,7 @@ import {
   Card,
   Audio,
   Video,
+  Image,
   LoginPrompt,
   QuickReplies,
   Text,
