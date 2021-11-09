@@ -1,5 +1,5 @@
 {
-  "name": "@botpress/webchat-skin",
+  "name": "@botpress/chat-skin",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,6 +14,6 @@
   ],
   "devDependencies": {},
   "dependencies": {
-    "@botpress/webchat": "0.0.1"
+    "@botpress/chat": "0.0.1"
   }
 }

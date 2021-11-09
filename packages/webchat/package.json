@@ -1,5 +1,5 @@
 {
-  "name": "@botpress/chat",
+  "name": "@botpress/webchat",
   "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -7,14 +7,14 @@
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch",
-    "prepublishOnly": "yarn --silent && tsc --build"
+    "watch": "yarn --silent && tsc --build --watch"
   },
   "files": [
     "dist"
   ],
   "devDependencies": {},
   "dependencies": {
-    "@botpress/messaging-socket": "0.0.1"
+    "@botpress/messaging-socket": "0.0.1",
+    "mobx-react": "^5.4.4"
   }
 }
