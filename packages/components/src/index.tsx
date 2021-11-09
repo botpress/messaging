@@ -34,7 +34,7 @@ export const defaultMessageConfig: MessageConfig = {
   noMessageBubble: false,
   intl: new FallthroughIntl(),
   showTimestamp: false,
-  bp: window.botpress,
+  bp: typeof window !== 'undefined' ? window?.botpress : undefined,
   messageId: `${(Math.random() * 1000000).toFixed(0)}`,
   sentOn: new Date(Date.now())
 }

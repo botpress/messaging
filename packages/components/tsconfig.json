@@ -2,7 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "esModuleInterop": true,
-    "outDir": "build",
+    "outDir": "dist",
     "module": "esnext",
     "lib": ["dom", "es2017"],
     "sourceMap": true,
@@ -16,11 +16,12 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "noImplicitAny": false,
+    "declaration": true,
     "baseUrl": "./src",
     "paths": {
       "@botpress/messaging-server/content-types": ["../../server/src/content/types.ts"]
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules", "build", "dist", "example", "rollup.config.ts", "webpack.config.js"]
+  "exclude": ["node_modules", "dist", "example", "rollup.config.ts", "webpack.config.js"]
 }
