@@ -18,7 +18,6 @@ export const Dropdown = ({
   const options = useMemo(() => choices.map((choice) => ({ label: choice.title, value: choice.value })), [choices])
 
   const sendChoice = async () => {
-    console.log('sendChoice')
     if (!selectedOption) {
       return
     }
@@ -34,8 +33,7 @@ export const Dropdown = ({
   }
 
   useEffect(() => {
-    console.log('selected: ', selectedOption)
-    if (buttonText) {
+    if (buttonText && displayInKeyboard) {
       return
     }
     try {
