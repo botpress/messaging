@@ -9,16 +9,14 @@
     "html-truncate": "^1.2.2",
     "mime": "^2.5.2",
     "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-intl": "^2.8.0",
     "react-linkify": "^0.2.2",
     "react-select": "^5.1.0",
     "react-slick": "^0.24.0",
     "react-text-format": "^2.0.28",
     "snarkdown": "^2.0.0"
-  },
-  "peerDependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
   },
   "scripts": {
     "build": "rollup -c",
