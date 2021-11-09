@@ -20,8 +20,8 @@
   },
   "peerDependencies": {},
   "scripts": {
-    "test": "jest",
     "build": "rollup -c",
+    "watch": "rollup --watch -c",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },

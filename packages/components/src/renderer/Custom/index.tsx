@@ -65,3 +65,5 @@ export const Custom: React.FC<MessageTypeHandlerProps<'custom'>> = (props) => (
     <CustomComponentRenderer {...props} />
   </ErrorBoundary>
 )
+
+export { ErrorBoundary }

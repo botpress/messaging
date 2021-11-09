@@ -22,10 +22,10 @@ export class FallthroughIntl implements InjectedIntl {
     return new Date(value).toLocaleDateString(this.locale, options)
   }
   formatTime(value: ReactIntl.DateSource, options?: ReactIntl.IntlComponent.DateTimeFormatProps): string {
-    throw new Error('Method not implemented.')
+    return new Date(value).toLocaleTimeString(this.locale, options)
   }
   formatRelative(value: ReactIntl.DateSource, options?: ReactIntl.FormattedRelative.PropsBase & { now?: any }): string {
-    throw new Error('Method not implemented.')
+    return new Date(value).toLocaleDateString(this.locale)
   }
   formatNumber(value: number, options?: ReactIntl.FormattedNumber.PropsBase): string {
     throw new Error('Method not implemented.')
@@ -48,10 +48,10 @@ export class FallthroughIntl implements InjectedIntl {
     throw new Error('Method not implemented.')
   }
   now(): number {
-    throw new Error('Method not implemented.')
+    return new Date().getTime()
   }
   onError(error: string): void {
-    throw new Error('Method not implemented.')
+    throw new Error(error)
   }
 }
 

@@ -56,7 +56,7 @@ export interface FileContent extends BaseContent<'file'> {
 }
 
 export interface CarouselContent extends BaseContent<'carousel'> {
-  items: CardContent[]
+  items: Omit<CardContent, 'type'>[]
 }
 
 export interface CardContent extends BaseContent<'card'> {

@@ -9,7 +9,6 @@ describe('Carousel & Card renderer', () => {
       type: 'carousel',
       items: [
         {
-          type: 'card',
           title: 'Card 1',
           subtitle: 'Subtitle 1',
           image: 'https://via.placeholder.com/150/150',
@@ -66,7 +65,6 @@ describe('Carousel & Card renderer', () => {
         type: 'carousel',
         items: [
           {
-            type: 'card',
             title: 'Card 1',
             subtitle: 'Subtitle 1',
             image: 'https://via.placeholder.com/150/150',

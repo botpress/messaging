@@ -15,7 +15,6 @@ export const Primary = Template.bind({})
 Primary.args = {
   items: [
     {
-      type: 'card',
       title: 'Card 1',
       subtitle: 'Subtitle 1',
       image: 'https://via.placeholder.com/150/150',
