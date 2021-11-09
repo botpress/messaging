@@ -14,7 +14,7 @@ new BoardLinker(
 )
 */
 
-const MY_CLIENT_ID = 'a9c2ea19-8854-4ab9-aeaf-aa043e1b435c'
+const MY_CLIENT_ID = '9221c6a0-a743-4465-be88-5aaae0d285eb'
 
 const webchatConfig: Config = {
   url: 'http://localhost:3100',
@@ -30,8 +30,8 @@ const webchatConfig: Config = {
   extraStylesheet: undefined,
   showConversationsButton: true,
   showUserName: true,
-  showUserAvatar: true,
-  showTimestamp: true,
+  showUserAvatar: false,
+  showTimestamp: false,
   enableTranscriptDownload: true,
   enableConversationDeletion: true,
   enableArrowNavigation: true,
