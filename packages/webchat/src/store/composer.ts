@@ -27,16 +27,16 @@ class ComposerStore {
   @observable
   private _sentHistoryIndex: number = 0
 
-  constructor(rootStore) {
+  constructor(rootStore: RootStore) {
     this.rootStore = rootStore
 
     if (window.BP_STORAGE) {
-      this._sentHistory = window.BP_STORAGE.get<string[]>(SENT_HISTORY_KEY) || []
+      this._sentHistory = window.BP_STORAGE.get(SENT_HISTORY_KEY) || []
     }
   }
 
   @computed
-  get composerPlaceholder(): string {
+  get composerPlaceholder(): string | undefined {
     return this.rootStore.config?.composerPlaceholder
   }
 

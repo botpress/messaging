@@ -2,8 +2,9 @@ import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 
-import confirmDialog from '../../../../../../packages/ui-shared-lite/ConfirmDialog'
-import MoreOptions from '../../../../../../packages/ui-shared-lite/MoreOptions'
+// TODO: put this back
+// import confirmDialog from '../../../../../../packages/ui-shared-lite/ConfirmDialog'
+// import MoreOptions from '../../../../../../packages/ui-shared-lite/MoreOptions'
 import Close from '../icons/Close'
 import Delete from '../icons/Delete'
 import Download from '../icons/Download'
@@ -23,7 +24,7 @@ class Header extends React.Component<HeaderProps> {
   }
 
   componentDidMount() {
-    observe(this.props.focusedArea, focus => {
+    observe(this.props.focusedArea!, (focus) => {
       focus.newValue === 'header' && this.changeButtonFocus(1)
     })
   }
@@ -32,16 +33,16 @@ class Header extends React.Component<HeaderProps> {
     this.setCurrentFocusIdx(undefined)
   }
 
-  setCurrentFocusIdx = currentFocusIdx => {
+  setCurrentFocusIdx = (currentFocusIdx: number | undefined) => {
     this.setState({ currentFocusIdx })
   }
 
-  changeButtonFocus = step => {
-    let idx: number = this.state.currentFocusIdx !== null ? this.state.currentFocusIdx + step : 0
+  changeButtonFocus = (step: number) => {
+    let idx: number = this.state.currentFocusIdx !== null ? this.state.currentFocusIdx! + step : 0
 
     if (idx < 0) {
       this.onBlur()
-      this.props.focusPrevious()
+      this.props.focusPrevious!()
     }
 
     for (idx; idx < Object.keys(this.btnEls).length; idx++) {
@@ -54,13 +55,13 @@ class Header extends React.Component<HeaderProps> {
 
     if (idx === Object.keys(this.btnEls).length) {
       this.onBlur()
-      this.props.focusNext()
+      this.props.focusNext!()
     }
   }
 
   renderTitle = () => {
     const title = this.props.isConversationsDisplayed
-      ? this.props.intl.formatMessage({ id: 'header.conversations' })
+      ? this.props.intl!.formatMessage({ id: 'header.conversations' })
       : this.props.botName
 
     return (
@@ -77,23 +78,26 @@ class Header extends React.Component<HeaderProps> {
   }
 
   handleDeleteConversation = async () => {
+    // TODO: put this back
+    /*
     if (
       await confirmDialog(
-        this.props.intl.formatMessage({
+        this.props.intl!.formatMessage({
           id: 'header.deleteConversation'
         }),
         {
-          acceptLabel: this.props.intl.formatMessage({
+          acceptLabel: this.props.intl!.formatMessage({
             id: 'header.deleteConversationYes'
           }),
-          declineLabel: this.props.intl.formatMessage({
+          declineLabel: this.props.intl!.formatMessage({
             id: 'header.deleteConversationNo'
           })
         }
       )
     ) {
-      await this.props.deleteConversation()
+      await this.props.deleteConversation!()
     }
+    */
   }
 
   renderDeleteConversationButton() {
@@ -102,7 +106,7 @@ class Header extends React.Component<HeaderProps> {
         type="button"
         tabIndex={-1}
         id="btn-delete"
-        ref={el => (this.btnEls[0] = el)}
+        ref={(el) => (this.btnEls[0] = el!)}
         className={'bpw-header-icon bpw-header-icon-delete'}
         onClick={this.handleDeleteConversation}
         onKeyDown={this.handleKeyDown.bind(this, this.handleDeleteConversation)}
@@ -119,7 +123,7 @@ class Header extends React.Component<HeaderProps> {
         type="button"
         tabIndex={-1}
         id="btn-reset"
-        ref={el => (this.btnEls[1] = el)}
+        ref={(el) => (this.btnEls[1] = el!)}
         className={'bpw-header-icon bpw-header-icon-reset'}
         onClick={this.props.resetSession}
         onKeyDown={this.handleKeyDown.bind(this, this.props.resetSession)}
@@ -136,7 +140,7 @@ class Header extends React.Component<HeaderProps> {
         type="button"
         tabIndex={-1}
         id="btn-download"
-        ref={el => (this.btnEls[2] = el)}
+        ref={(el) => (this.btnEls[2] = el!)}
         className={'bpw-header-icon bpw-header-icon-download'}
         onClick={this.props.downloadConversation}
         onKeyDown={this.handleKeyDown.bind(this, this.props.downloadConversation)}
@@ -153,7 +157,7 @@ class Header extends React.Component<HeaderProps> {
         type="button"
         tabIndex={-1}
         id="btn-conversations"
-        ref={el => (this.btnEls[3] = el)}
+        ref={(el) => (this.btnEls[3] = el!)}
         className={'bpw-header-icon bpw-header-icon-convo'}
         onClick={this.props.toggleConversations}
         onKeyDown={this.handleKeyDown.bind(this, this.props.toggleConversations)}
@@ -170,7 +174,7 @@ class Header extends React.Component<HeaderProps> {
         type="button"
         tabIndex={-1}
         id="btn-botinfo"
-        ref={el => (this.btnEls[4] = el)}
+        ref={(el) => (this.btnEls[4] = el!)}
         className={'bpw-header-icon bpw-header-icon-botinfo'}
         onClick={this.props.toggleBotInfo}
         onKeyDown={this.handleKeyDown.bind(this, this.props.toggleBotInfo)}
@@ -186,11 +190,11 @@ class Header extends React.Component<HeaderProps> {
       <button
         type="button"
         id="btn-close"
-        aria-label={this.props.intl.formatMessage({
+        aria-label={this.props.intl!.formatMessage({
           id: 'header.hideChatWindow',
           defaultMessage: 'Hide the chat window'
         })}
-        ref={el => (this.btnEls[5] = el)}
+        ref={(el) => (this.btnEls[5] = el!)}
         className={'bpw-header-icon bpw-header-icon-close'}
         onClick={this.props.hideChat}
         onKeyDown={this.handleKeyDown.bind(this, this.props.hideChat)}
@@ -202,7 +206,7 @@ class Header extends React.Component<HeaderProps> {
   }
 
   renderCustomButtons() {
-    return this.props.customButtons.map(btn => {
+    return this.props.customButtons!.map((btn) => {
       const Icon: any = btn.icon
       return (
         <button
@@ -211,7 +215,7 @@ class Header extends React.Component<HeaderProps> {
           id={`btn-${btn.id}`}
           tabIndex={-1}
           className={'bpw-header-icon'}
-          onClick={btn.onClick.bind(this, btn.id, this)}
+          onClick={btn.onClick.bind(this, btn.id, this as any)}
           title={btn.label || ''}
         >
           {typeof Icon === 'function' ? <Icon /> : Icon}
@@ -220,15 +224,15 @@ class Header extends React.Component<HeaderProps> {
     })
   }
 
-  handleKeyDown = (action, e) => {
+  handleKeyDown = (action: any, e: any) => {
     if (!this.props.enableArrowNavigation) {
       return
     }
 
     if (e.key === 'ArrowUp') {
-      this.props.focusPrevious()
+      this.props.focusPrevious!()
     } else if (e.key === 'ArrowDown') {
-      this.props.focusNext()
+      this.props.focusNext!()
     } else if (e.key === 'ArrowLeft') {
       this.changeButtonFocus(-1)
     } else if (e.key === 'ArrowRight') {
@@ -239,7 +243,7 @@ class Header extends React.Component<HeaderProps> {
     }
   }
 
-  setShowingOption = val => {
+  setShowingOption = (val: any) => {
     this.setState({ showingOption: val })
   }
 
@@ -280,7 +284,7 @@ class Header extends React.Component<HeaderProps> {
           <span className="bpw-emulator-header-tab">Emulator</span>
           <div>
             <span className="bpw-emulator-buttons">{this.props.showResetButton && this.renderResetButton()}</span>
-            <MoreOptions show={this.state.showingOption} onToggle={this.setShowingOption} items={optionsItems} />
+            {/* <MoreOptions show={this.state.showingOption} onToggle={this.setShowingOption} items={optionsItems} /> */}
           </div>
         </div>
       )
@@ -290,11 +294,11 @@ class Header extends React.Component<HeaderProps> {
       <div className={'bpw-header-container'}>
         <div className={'bpw-header-title-flexbox'}>
           <div className={'bpw-header-title-container'}>
-            <Avatar name={this.props.botName} avatarUrl={this.props.botAvatarUrl} height={40} width={40} />
+            <Avatar name={this.props.botName!} avatarUrl={this.props.botAvatarUrl!} height={40} width={40} />
             {this.renderTitle()}
           </div>
         </div>
-        {!!this.props.customButtons.length && this.renderCustomButtons()}
+        {!!this.props.customButtons!.length && this.renderCustomButtons()}
         {this.props.showDeleteConversationButton && this.renderDeleteConversationButton()}
         {this.props.showResetButton && this.renderResetButton()}
         {this.props.showDownloadButton && this.renderDownloadButton()}

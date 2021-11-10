@@ -12,11 +12,11 @@ import { FileInput } from './FileInput'
  * @param {function} onFileUpload This is called when a file is uploaded
  */
 export class Button extends Component<Renderer.Button> {
-  constructor(props) {
+  constructor(props: Renderer.Button) {
     super(props)
   }
 
-  handleButtonClick = e => {
+  handleButtonClick = (e: any) => {
     if (this.props.preventDoubleClick) {
       e.target.disabled = true
     }
@@ -33,7 +33,7 @@ export class Button extends Component<Renderer.Button> {
     this.props.onFileUpload?.(this.props.label, this.props.payload, event.target.files[0])
   }
 
-  renderFileUpload(accept) {
+  renderFileUpload(accept: string) {
     return (
       <button className={'bpw-button'}>
         <span>{this.props.label}</span>

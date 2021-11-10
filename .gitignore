@@ -6,3 +6,4 @@ bin/
 .cache
 coverage/
 storybook-static/
+build/

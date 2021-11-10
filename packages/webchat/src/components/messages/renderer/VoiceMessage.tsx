@@ -10,15 +10,15 @@ export const VoiceMessage: FC<Props> = (props: Props) => {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
-    audioRef.current.addEventListener('ended', props.onAudioEnded)
+    audioRef.current!.addEventListener('ended', props.onAudioEnded)
 
-    return () => audioRef.current.removeEventListener('ended', props.onAudioEnded)
+    return () => audioRef.current!.removeEventListener('ended', props.onAudioEnded)
   }, [])
 
   useEffect(() => {
     // Simulate an autoplay by playing every voice messages of a single message group one after the other
     if (props.file.autoPlay && props.shouldPlay) {
-      void audioRef.current.play()
+      void audioRef.current!.play()
     }
   }, [props.file.autoPlay, props.shouldPlay])
 
@@ -33,7 +33,7 @@ export const VoiceMessage: FC<Props> = (props: Props) => {
 
   return (
     <audio controls ref={audioRef}>
-      <source src={audio} type={mime} />
+      <source src={audio} type={mime!} />
     </audio>
   )
 }

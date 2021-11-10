@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Select from 'react-select'
-import Creatable from 'react-select/lib/Creatable'
+import Creatable from 'react-select/creatable'
 import { Renderer } from '../../../typings'
 import { renderUnsafeHTML } from '../../../utils'
 import * as Keyboard from '../../Keyboard'
@@ -11,7 +11,7 @@ export const Dropdown = (props: Renderer.Dropdown) => {
 
   useEffect(() => {
     if (props.options) {
-      setOptions(props.options.map(x => ({ value: x.value || x.label, label: x.label })))
+      setOptions(props.options.map((x) => ({ value: x.value || x.label, label: x.label })))
     }
   }, [])
 
@@ -29,14 +29,14 @@ export const Dropdown = (props: Renderer.Dropdown) => {
     let { label, value } = selectedOption
 
     if (selectedOption.length) {
-      label = selectedOption.map(x => x.label).join(',')
-      value = selectedOption.map(x => x.value || x.label).join(',')
+      label = selectedOption.map((x: any) => x.label).join(',')
+      value = selectedOption.map((x: any) => x.value || x.label).join(',')
     }
 
     props.onSendData && props.onSendData({ type: 'quick_reply', text: label, payload: value || label })
   }
 
-  const renderSelect = inKeyboard => {
+  const renderSelect = (inKeyboard: any) => {
     return (
       <div className={inKeyboard && 'bpw-keyboard-quick_reply-dropdown'}>
         <div style={{ width: props.width || '100%', display: 'inline-block' }}>

@@ -7,7 +7,7 @@ export class FileInput extends React.Component<Renderer.FileInput> {
     value: ''
   }
 
-  handleFilChanged = e => {
+  handleFilChanged = (e: any) => {
     this.setState({ value: e.target.value.split(/(\\|\/)/g).pop() })
     this.props.onFileChanged && this.props.onFileChanged(e)
   }

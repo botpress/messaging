@@ -3,14 +3,14 @@ import { inject, observer } from 'mobx-react'
 import React from 'react'
 import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
 
-import ToolTip from '../../../../../../packages/ui-shared-lite/ToolTip'
+// import ToolTip from '../../../../../../packages/ui-shared-lite/ToolTip'
 import { RootStore, StoreDef } from '../store'
 
 import VoiceRecorder from './VoiceRecorder'
 
 class Composer extends React.Component<ComposerProps, { isRecording: boolean }> {
   private textInput: React.RefObject<HTMLTextAreaElement>
-  constructor(props) {
+  constructor(props: ComposerProps) {
     super(props)
     this.textInput = React.createRef()
     this.state = { isRecording: false }
@@ -18,46 +18,46 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
 
   componentDidMount() {
     setTimeout(() => {
-      this.textInput.current.focus()
+      this.textInput.current!.focus()
     }, 50)
 
-    observe(this.props.focusedArea, focus => {
-      focus.newValue === 'input' && this.textInput.current.focus()
+    observe(this.props.focusedArea!, (focus) => {
+      focus.newValue === 'input' && this.textInput.current!.focus()
     })
   }
 
-  handleKeyPress = async e => {
+  handleKeyPress = async (e: any) => {
     if (this.props.enableResetSessionShortcut && e.ctrlKey && e.key === 'Enter') {
       e.preventDefault()
-      await this.props.resetSession()
-      await this.props.sendMessage()
+      await this.props.resetSession!()
+      await this.props.sendMessage!()
       return
     }
     if (e.key === 'Enter') {
       e.preventDefault()
-      await this.props.sendMessage()
+      await this.props.sendMessage!()
     }
   }
 
-  handleKeyDown = e => {
+  handleKeyDown = (e: any) => {
     if (this.props.enableArrowNavigation) {
       const shouldFocusPrevious = e.target.selectionStart === 0 && (e.key === 'ArrowUp' || e.key === 'ArrowLeft')
       if (shouldFocusPrevious) {
-        this.props.focusPrevious()
+        this.props.focusPrevious!()
       }
 
       const shouldFocusNext =
-        e.target.selectionStart === this.textInput.current.value.length &&
+        e.target.selectionStart === this.textInput.current!.value.length &&
         (e.key === 'ArrowDown' || e.key === 'ArrowRight')
       if (shouldFocusNext) {
-        this.props.focusNext()
+        this.props.focusNext!()
       }
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-      this.props.recallHistory(e.key)
+      this.props.recallHistory!(e.key)
     }
   }
 
-  handleMessageChanged = e => this.props.updateMessage(e.target.value)
+  handleMessageChanged = (e: any) => this.props.updateMessage!(e.target.value)
 
   isLastMessageFromBot = (): boolean => {
     return this.props.currentConversation?.messages?.slice(-1)?.pop()?.authorId === undefined
@@ -70,7 +70,7 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
   onVoiceEnd = async (voice: Buffer, ext: string) => {
     this.setState({ isRecording: false })
 
-    await this.props.sendVoiceMessage(voice, ext)
+    await this.props.sendVoiceMessage!(voice, ext)
   }
 
   onVoiceNotAvailable = () => {
@@ -99,7 +99,7 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
           <textarea
             ref={this.textInput}
             id="input-message"
-            onFocus={this.props.setFocus.bind(this, 'input')}
+            onFocus={this.props.setFocus!.bind(this, 'input')}
             placeholder={placeholder}
             onChange={this.handleMessageChanged}
             value={this.props.message}
@@ -122,7 +122,8 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
                 onNotAvailable={this.onVoiceNotAvailable}
               />
             )}
-            <ToolTip
+            {/* TODO: unmcomment this
+             <ToolTip
               childId="btn-send"
               content={
                 this.props.isEmulator
@@ -138,8 +139,8 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
             >
               <button
                 className={'bpw-send-button'}
-                disabled={!this.props.message.length || this.props.composerLocked || this.state.isRecording}
-                onClick={this.props.sendMessage.bind(this, undefined)}
+                disabled={!this.props.message!.length || this.props.composerLocked || this.state.isRecording}
+                onClick={this.props.sendMessage!.bind(this, undefined)}
                 aria-label={this.props.intl.formatMessage({
                   id: 'composer.send',
                   defaultMessage: 'Send'
@@ -148,7 +149,7 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
               >
                 <FormattedMessage id={'composer.send'} />
               </button>
-            </ToolTip>
+            </ToolTip> */}
           </div>
         </div>
       </div>

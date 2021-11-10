@@ -1,8 +1,8 @@
-import { EventFeedback as MessageFeedback } from 'lite/typings'
 import React, { FC, useEffect, useState } from 'react'
 
 import ThumbsDown from '../../icons/ThumbsDown'
 import ThumbsUp from '../../icons/ThumbsUp'
+import { EventFeedback as MessageFeedback } from '../../typings'
 
 interface Props {
   onFeedback: (feedback: number, eventId: string) => void
@@ -15,12 +15,12 @@ export const InlineFeedback: FC<Props> = ({ messageFeedbacks, messageId, onFeedb
   const [feedbackSent, setFeedbackSent] = useState(false)
 
   useEffect(() => {
-    if (messageFeedbacks && messageFeedbacks.find(x => x.messageId === messageId && x.feedback != null)) {
+    if (messageFeedbacks && messageFeedbacks.find((x) => x.messageId === messageId && x.feedback != null)) {
       setFeedbackSent(true)
     }
   }, [messageFeedbacks])
 
-  const handleSendFeedback = feedback => {
+  const handleSendFeedback = (feedback: any) => {
     onFeedback(feedback, messageId)
     setFeedbackSent(true)
   }

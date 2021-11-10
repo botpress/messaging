@@ -1,27 +1,26 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { EventFeedback } from 'lite/typings'
 import get from 'lodash/get'
 import uuidgen from 'uuid'
-import { uuid } from '../typings'
+import { EventFeedback, uuid } from '../typings'
 
 export default class WebchatApi {
   private axios: AxiosInstance
-  private axiosConfig: AxiosRequestConfig
+  private axiosConfig!: AxiosRequestConfig
   private userId: string
-  private botId: string
+  private botId?: string
 
   constructor(userId: string, axiosInstance: AxiosInstance) {
     this.userId = userId
     this.axios = axiosInstance
     this.axios.interceptors.request.use(
-      config => {
-        if (!config.url.includes('/botInfo')) {
-          const prefix = config.url.indexOf('?') > 0 ? '&' : '?'
+      (config) => {
+        if (!config.url!.includes('/botInfo')) {
+          const prefix = config.url!.indexOf('?') > 0 ? '&' : '?'
           config.url = `${config.url}${prefix}__ts=${new Date().getTime()}`
         }
         return config
       },
-      error => {
+      (error) => {
         return Promise.reject(error)
       }
     )
@@ -39,18 +38,18 @@ export default class WebchatApi {
     this.userId = userId
   }
 
-  updateAxiosConfig({ botId = undefined, externalAuthToken = undefined } = {}) {
-    this.botId = botId
-    this.axiosConfig = botId
+  updateAxiosConfig(config?: { botId?: string; externalAuthToken?: string }) {
+    this.botId = config?.botId
+    this.axiosConfig = config?.botId
       ? { baseURL: `${window.location.origin}${window.BOT_API_PATH}/mod/channel-web` }
       : { baseURL: `${window.BOT_API_PATH}/mod/channel-web` }
 
-    if (externalAuthToken) {
+    if (config?.externalAuthToken) {
       this.axiosConfig = {
         ...this.axiosConfig,
         headers: {
-          ExternalAuth: `Bearer ${externalAuthToken}`,
-          'X-BP-ExternalAuth': `Bearer ${externalAuthToken}`
+          ExternalAuth: `Bearer ${config?.externalAuthToken}`,
+          'X-BP-ExternalAuth': `Bearer ${config?.externalAuthToken}`
         }
       }
     }
@@ -112,7 +111,7 @@ export default class WebchatApi {
     }
   }
 
-  async createConversation(): Promise<uuid> {
+  async createConversation(): Promise<uuid | undefined> {
     try {
       const { data } = await this.axios.post('/conversations/new', this.baseUserPayload, this.axiosConfig)
       return data.convoId
@@ -170,7 +169,7 @@ export default class WebchatApi {
     }
   }
 
-  async getMessageIdsFeedbackInfo(messageIds: uuid[]): Promise<EventFeedback[]> {
+  async getMessageIdsFeedbackInfo(messageIds: uuid[]): Promise<EventFeedback[] | undefined> {
     try {
       const { data } = await this.axios.post('/feedbackInfo', { messageIds, target: this.userId }, this.axiosConfig)
       return data
@@ -225,7 +224,7 @@ export default class WebchatApi {
     return messages
   }
 
-  handleApiError = async error => {
+  handleApiError = async (error: any) => {
     // @deprecated 11.9 (replace with proper error management)
     const data = get(error, 'response.data', {})
     if (data && typeof data === 'string' && data.includes('BP_CONV_NOT_FOUND')) {

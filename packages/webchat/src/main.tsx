@@ -16,17 +16,17 @@ import { RootStore, StoreDef } from './store'
 import { Config, Message, Overrides, uuid } from './typings'
 import { checkLocationOrigin, initializeAnalytics, isIE, trackMessage, trackWebchatState } from './utils'
 
-const _values = (obj: Overrides) => Object.keys(obj).map(x => obj[x])
+const _values = (obj: Overrides) => Object.keys(obj).map((x) => obj[x])
 
 class Web extends React.Component<MainProps> {
-  private config: Config
-  private socket: BpSocket
-  private parentClass: string
+  private config!: Config
+  private socket!: BpSocket
+  private parentClass!: string
   private hasBeenInitialized: boolean = false
-  private audio: HTMLAudioElement
-  private lastMessageId: uuid
+  private audio!: HTMLAudioElement
+  private lastMessageId!: uuid
 
-  constructor(props) {
+  constructor(props: MainProps) {
     super(props)
 
     checkLocationOrigin()
@@ -35,18 +35,18 @@ class Web extends React.Component<MainProps> {
 
   async componentDidMount() {
     this.audio = new Audio(`${window.ROOT_PATH}/assets/modules/channel-web/notification.mp3`)
-    this.props.store.setIntlProvider(this.props.intl)
+    this.props.store.setIntlProvider(this.props.intl!)
     window.store = this.props.store
 
     window.addEventListener('message', this.handleIframeApi)
-    window.addEventListener('keydown', e => {
-      if (!this.props.config.closeOnEscape) {
+    window.addEventListener('keydown', (e) => {
+      if (!this.props.config!.closeOnEscape) {
         return
       }
       if (e.key === 'Escape') {
-        this.props.hideChat()
-        if (this.props.config.isEmulator) {
-          window.parent.document.getElementById('mainLayout').focus()
+        this.props.hideChat!()
+        if (this.props.config!.isEmulator) {
+          window.parent.document!.getElementById('mainLayout')!.focus()
         }
       }
     })
@@ -54,7 +54,7 @@ class Web extends React.Component<MainProps> {
     await this.load()
     await this.initializeIfChatDisplayed()
 
-    this.props.setLoadingCompleted()
+    this.props.setLoadingCompleted!()
   }
 
   componentWillUnmount() {
@@ -81,7 +81,7 @@ class Web extends React.Component<MainProps> {
       }
 
       await this.socket.waitForUserId()
-      await this.props.initializeChat()
+      await this.props.initializeChat!()
     }
   }
 
@@ -97,9 +97,9 @@ class Web extends React.Component<MainProps> {
 
     this.config.containerWidth && this.postMessageToParent('setWidth', this.config.containerWidth)
 
-    this.config.reference && this.props.setReference()
+    this.config.reference && this.props.setReference!()
 
-    await this.props.fetchBotInfo()
+    await this.props.fetchBotInfo!()
 
     if (!this.isLazySocket()) {
       await this.initializeSocket()
@@ -121,23 +121,23 @@ class Web extends React.Component<MainProps> {
       }
     }
     const { options, ref } = queryString.parse(location.search)
-    const { config } = JSON.parse(decodeIfRequired(options || '{}'))
+    const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
 
     const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, config)
     userConfig.reference = config.ref || ref
 
-    this.props.updateConfig(userConfig, this.props.bp)
+    this.props.updateConfig!(userConfig, this.props.bp)
 
     return userConfig
   }
 
   async initializeSocket() {
-    this.socket = new BpSocket(this.props.bp, this.config)
+    this.socket = new BpSocket(this.props.bp!, this.config)
     this.socket.onClear = this.handleClearMessages
     this.socket.onMessage = this.handleNewMessage
     this.socket.onTyping = this.handleTyping
     this.socket.onData = this.handleDataMessage
-    this.socket.onUserIdChanged = this.props.setUserId
+    this.socket.onUserIdChanged = this.props.setUserId!
 
     this.config.userId && this.socket.changeUserId(this.config.userId)
 
@@ -148,15 +148,15 @@ class Web extends React.Component<MainProps> {
   loadOverrides(overrides: Overrides) {
     try {
       for (const override of _values(overrides)) {
-        override.map(({ module }) => this.props.bp.loadModuleView(module, true))
+        override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error while loading overrides', err.message)
     }
   }
 
   setupObserver() {
-    observe(this.props.config, 'userId', async data => {
+    observe(this.props.config!, 'userId', async (data: any) => {
       if (!data.oldValue || data.oldValue === data.newValue) {
         return
       }
@@ -164,16 +164,16 @@ class Web extends React.Component<MainProps> {
       this.socket.changeUserId(data.newValue)
       this.socket.setup()
       await this.socket.waitForUserId()
-      await this.props.initializeChat()
+      await this.props.initializeChat!()
     })
 
-    observe(this.props.config, 'overrides', data => {
+    observe(this.props.config!, 'overrides', (data: any) => {
       if (data.newValue && window.parent) {
         this.loadOverrides(data.newValue)
       }
     })
 
-    observe(this.props.dimensions, 'container', data => {
+    observe(this.props.dimensions!, 'container', (data: any) => {
       if (data.newValue && window.parent) {
         this.postMessageToParent('setWidth', data.newValue)
       }
@@ -184,43 +184,43 @@ class Web extends React.Component<MainProps> {
     return !this.props.config?.conversationId || this.props.config.conversationId === event.conversationId
   }
 
-  handleIframeApi = async ({ data: { action, payload } }) => {
+  handleIframeApi = async ({ data: { action, payload } }: { data: { action: any; payload: any } }) => {
     if (action === 'configure') {
-      this.props.updateConfig(Object.assign({}, constants.DEFAULT_CONFIG, payload))
+      this.props.updateConfig!(Object.assign({}, constants.DEFAULT_CONFIG, payload))
     } else if (action === 'mergeConfig') {
-      this.props.mergeConfig(payload)
+      this.props.mergeConfig!(payload)
     } else if (action === 'sendPayload') {
-      await this.props.sendData(payload)
+      await this.props.sendData!(payload)
     } else if (action === 'change-user-id') {
       this.props.store.setUserId(payload)
     } else if (action === 'event') {
       const { type, text } = payload
 
       if (type === 'show') {
-        this.props.showChat()
+        this.props.showChat!()
         trackWebchatState('show')
       } else if (type === 'hide') {
-        this.props.hideChat()
+        this.props.hideChat!()
         trackWebchatState('hide')
       } else if (type === 'toggle') {
-        this.props.displayWidgetView ? this.props.showChat() : this.props.hideChat()
+        this.props.displayWidgetView ? this.props.showChat!() : this.props.hideChat!()
         trackWebchatState('toggle')
       } else if (type === 'message') {
         trackMessage('sent')
-        await this.props.sendMessage(text)
+        await this.props.sendMessage!(text)
       } else if (type === 'loadConversation') {
         await this.props.store.fetchConversation(payload.conversationId)
       } else if (type === 'toggleBotInfo') {
-        this.props.toggleBotInfo()
+        this.props.toggleBotInfo!()
       } else {
-        await this.props.sendData({ type, payload })
+        await this.props.sendData!({ type, payload })
       }
     }
   }
 
   handleClearMessages = (event: Message) => {
     if (this.isCurrentConversation(event)) {
-      this.props.clearMessages()
+      this.props.clearMessages!()
     }
   }
 
@@ -236,12 +236,12 @@ class Web extends React.Component<MainProps> {
     }
 
     trackMessage('received')
-    await this.props.addEventToConversation(event)
+    await this.props.addEventToConversation!(event)
 
     // there's no focus on the actual conversation
     if ((document.hasFocus && !document.hasFocus()) || this.props.activeView !== 'side') {
       await this.playSound()
-      this.props.incrementUnread()
+      this.props.incrementUnread!()
     }
 
     this.handleResetUnreadCount()
@@ -258,7 +258,7 @@ class Web extends React.Component<MainProps> {
       return
     }
 
-    await this.props.updateTyping(event)
+    await this.props.updateTyping!(event)
   }
 
   handleDataMessage = (event: Message) => {
@@ -271,14 +271,14 @@ class Web extends React.Component<MainProps> {
       return
     }
 
-    this.props.updateBotUILanguage(language)
+    this.props.updateBotUILanguage!(language)
   }
 
   playSound = debounce(async () => {
     // Preference for config object
     const disableNotificationSound =
       this.config.disableNotificationSound === undefined
-        ? this.props.config.disableNotificationSound
+        ? this.props.config!.disableNotificationSound
         : this.config.disableNotificationSound
 
     if (disableNotificationSound || this.audio.readyState < 2) {
@@ -297,7 +297,7 @@ class Web extends React.Component<MainProps> {
 
   handleResetUnreadCount = () => {
     if (document.hasFocus?.() && this.props.activeView === 'side') {
-      this.props.resetUnread()
+      this.props.resetUnread!()
     }
   }
 
@@ -311,8 +311,8 @@ class Web extends React.Component<MainProps> {
         className={classnames('bpw-widget-btn', 'bpw-floating-button', {
           [`bpw-anim-${this.props.widgetTransition}` || 'none']: true
         })}
-        aria-label={this.props.intl.formatMessage({ id: 'widget.toggle' })}
-        onClick={this.props.showChat.bind(this)}
+        aria-label={this.props.intl!.formatMessage({ id: 'widget.toggle' })}
+        onClick={this.props.showChat!.bind(this)}
       >
         <ChatIcon />
         {this.props.hasUnreadMessages && <span className={'bpw-floating-button-unread'}>{this.props.unreadCount}</span>}
@@ -324,7 +324,7 @@ class Web extends React.Component<MainProps> {
     const emulatorClass = this.props.isEmulator ? ' emulator' : ''
     const parentClass = classnames(`bp-widget-web bp-widget-${this.props.activeView}${emulatorClass}`, {
       'bp-widget-hidden': !this.props.showWidgetButton && this.props.displayWidgetView,
-      [this.props.config.className]: !!this.props.config.className
+      [this.props.config!.className!]: !!this.props.config!.className
     })
 
     if (this.parentClass !== parentClass) {
@@ -332,7 +332,7 @@ class Web extends React.Component<MainProps> {
       this.parentClass = parentClass
     }
 
-    const { isEmulator, stylesheet, extraStylesheet } = this.props.config
+    const { isEmulator, stylesheet, extraStylesheet } = this.props.config!
     return (
       <React.Fragment>
         {!!stylesheet?.length && <Stylesheet href={stylesheet} />}
@@ -352,7 +352,7 @@ class Web extends React.Component<MainProps> {
       <div onFocus={this.handleResetUnreadCount}>
         {this.applyAndRenderStyle()}
         <h1 id="tchat-label" className="sr-only" tabIndex={-1}>
-          {this.props.intl.formatMessage({
+          {this.props.intl!.formatMessage({
             id: 'widget.title',
             defaultMessage: 'Chat window'
           })}
@@ -396,6 +396,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   displayWidgetView: store.view.displayWidgetView,
   setLoadingCompleted: store.view.setLoadingCompleted,
   sendFeedback: store.sendFeedback
+  // @ts-ignore
 }))(injectIntl(observer(Web)))
 
 type MainProps = { store: RootStore } & Pick<

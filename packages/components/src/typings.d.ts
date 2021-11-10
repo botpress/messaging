@@ -37,6 +37,7 @@ export interface MessageConfig {
   onSendData: (data: any) => Promise<void>
   onFileUpload: FileUploadHandler
   onMessageClicked: (messageId?: uuid) => void
+  // @ts-ignore
   onAudioEnded?: React.EventHandler<HTMLMediaElementEventMap['ended']>
 }
 

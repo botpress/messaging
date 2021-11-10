@@ -1,4 +1,4 @@
-import { BPStorage } from '../../../../../packages/ui-shared-lite/utils/storage'
+// import { BPStorage } from '../../../../../packages/ui-shared-lite/utils/storage'
 import { RootStore } from './store'
 
 declare global {
@@ -17,7 +17,8 @@ declare global {
     SEND_USAGE_STATS: boolean
     SHOW_POWERED_BY: boolean
     USE_SESSION_STORAGE: boolean
-    BP_STORAGE: BPStorage
+    // TODO: this should be of type BPStorage
+    BP_STORAGE: any
     botpress: {
       [moduleName: string]: any
     }
@@ -225,9 +226,9 @@ export interface Config {
   className?: string
 }
 
-type OverridableComponents = 'below_conversation' | 'before_container' | 'composer'
+export type OverridableComponents = 'below_conversation' | 'before_container' | 'composer'
 
-interface Overrides {
+export interface Overrides {
   [componentToOverride: string]: [
     {
       module: string
@@ -236,7 +237,7 @@ interface Overrides {
   ]
 }
 
-interface BotDetails {
+export interface BotDetails {
   website?: string
   phoneNumber?: string
   termsConditions?: string
@@ -299,7 +300,7 @@ export interface HTMLInputEvent extends Event {
   target: HTMLInputElement & EventTarget
 }
 
-interface ChatDimensions {
+export interface ChatDimensions {
   /**
    * The container is the frame around the webchat.
    * Setting the container bigger than the layout makes it possible to add components
@@ -309,7 +310,7 @@ interface ChatDimensions {
   layout: string | number
 }
 
-interface CustomButton {
+export interface CustomButton {
   /** An ID to identify your button. It is required to remove it */
   id: string
   /** This text will be displayed when the mouse is over the button */
@@ -320,7 +321,7 @@ interface CustomButton {
   onClick: (buttonId: string, headerComponent: JSX.Element, event: React.MouseEvent) => void
 }
 
-interface CustomAction {
+export interface CustomAction {
   /** An ID to identify your action. It is required to remove it */
   id: string
   /** This text will be displayed in the context menu */
@@ -330,7 +331,7 @@ interface CustomAction {
 }
 
 /** When set, this will wrap every messages displayed in the webchat */
-interface MessageWrapper {
+export interface MessageWrapper {
   /** The name of the module hosting the component */
   module: string
   /** Name of the component exposed by the module */

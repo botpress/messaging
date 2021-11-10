@@ -12,9 +12,18 @@
   "files": [
     "dist"
   ],
-  "devDependencies": {},
   "dependencies": {
+    "@blueprintjs/core": "^3.23.1",
     "@botpress/messaging-socket": "0.0.1",
-    "mobx-react": "^5.4.4"
+    "@juggle/resize-observer": "^3.0.2",
+    "date-fns": "^1.30.1",
+    "mobx": "4.9.4",
+    "mobx-react": "^5.4.4",
+    "query-string": "^7.0.1",
+    "react-dom": "^16.8.6",
+    "react-ga": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/dom-mediacapture-record": "^1.0.7"
   }
 }

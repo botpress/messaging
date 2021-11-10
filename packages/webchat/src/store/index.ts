@@ -32,35 +32,35 @@ initializeLocale()
 const chosenLocale = getUserLocale()
 
 class RootStore {
-  public bp: StudioConnector
+  public bp!: StudioConnector
   public composer: ComposerStore
   public view: ViewStore
 
   private _typingInterval: ReturnType<typeof setInterval> | undefined
-  private api: WebchatApi
+  private api!: WebchatApi
 
   @observable
   public conversations: RecentConversation[] = []
 
   @observable
-  public currentConversation: CurrentConversation
+  public currentConversation!: CurrentConversation
 
   @observable
-  public botInfo: BotInfo
+  public botInfo!: BotInfo
 
   @observable
-  public config: Config
+  public config!: Config
 
   @observable
-  public preferredLanguage: string
+  public preferredLanguage!: string
 
   @observable
-  public isInitialized: boolean
+  public isInitialized!: boolean
 
   @observable
-  public messageFeedbacks: EventFeedback[]
+  public messageFeedbacks!: EventFeedback[]
 
-  public intl: InjectedIntl
+  public intl!: InjectedIntl
 
   public isBotTyping = observable.box(false)
 
@@ -73,9 +73,9 @@ class RootStore {
 
   public delayedMessages: QueuedMessage[] = []
 
-  constructor({ fullscreen }) {
+  constructor(options: { fullscreen: boolean }) {
     this.composer = new ComposerStore(this)
-    this.view = new ViewStore(this, fullscreen)
+    this.view = new ViewStore(this, options.fullscreen)
   }
 
   @action.bound
@@ -104,11 +104,13 @@ class RootStore {
   }
 
   @computed
-  get botAvatarUrl(): string {
+  get botAvatarUrl(): string | undefined {
     return (
       this.botInfo?.details?.avatarUrl ||
       this.config?.avatarUrl ||
-      (this.config.isEmulator && `${window.ROOT_PATH}/assets/modules/channel-web/images/emulator-default.svg`)
+      (this.config.isEmulator
+        ? `${window.ROOT_PATH}/assets/modules/channel-web/images/emulator-default.svg`
+        : undefined)
     )
   }
 
@@ -128,8 +130,8 @@ class RootStore {
   }
 
   @computed
-  get currentConversationId(): uuid | undefined {
-    return this.currentConversation?.id
+  get currentConversationId(): uuid {
+    return this.currentConversation!.id
   }
 
   @action.bound
@@ -265,13 +267,13 @@ class RootStore {
 
   /** Fetch the specified conversation ID, or try to fetch a valid one from the list */
   @action.bound
-  async fetchConversation(convoId?: uuid): Promise<uuid> {
+  async fetchConversation(convoId?: uuid): Promise<uuid | undefined> {
     const conversationId = convoId || this._getCurrentConvoId()
     if (!conversationId) {
       return this.createConversation()
     }
 
-    const conversation: CurrentConversation = await this.api.fetchConversation(convoId || this._getCurrentConvoId())
+    const conversation: CurrentConversation = await this.api.fetchConversation(convoId || this._getCurrentConvoId()!)
     if (conversation?.messages) {
       conversation.messages = conversation.messages.sort(
         (a, b) => new Date(a.sentOn).getTime() - new Date(b.sentOn).getTime()
@@ -322,7 +324,7 @@ class RootStore {
     const newId = await this.api.createConversation()
     await this.fetchConversations()
     await this.fetchConversation(newId)
-    return newId
+    return newId!
   }
 
   @action.bound
@@ -332,7 +334,7 @@ class RootStore {
 
   @action.bound
   resetConversation() {
-    this.currentConversation = undefined
+    this.currentConversation = undefined!
   }
 
   @action.bound
@@ -358,7 +360,7 @@ class RootStore {
 
     const feedbackInfo = await this.api.getMessageIdsFeedbackInfo(feedbackMessageIds)
     runInAction('-> setFeedbackInfo', () => {
-      this.messageFeedbacks = feedbackInfo
+      this.messageFeedbacks = feedbackInfo!
     })
   }
 
@@ -418,8 +420,8 @@ class RootStore {
     this.config = config
 
     if (!this.api) {
-      this.bp = bp
-      this.api = new WebchatApi('', bp.axios)
+      this.bp = bp!
+      this.api = new WebchatApi('', bp!.axios)
     }
 
     this._applyConfig()
@@ -434,7 +436,7 @@ class RootStore {
     document.title = this.config.botName || 'Botpress Webchat'
 
     this.api.updateAxiosConfig({ botId: this.config.botId, externalAuthToken: this.config.externalAuthToken })
-    this.api.updateUserId(this.config.userId)
+    this.api.updateUserId(this.config.userId!)
 
     if (!this.isInitialized) {
       window.USE_SESSION_STORAGE = this.config.useSessionStorage
@@ -498,7 +500,7 @@ class RootStore {
     this.isBotTyping.set(false)
     this.currentConversation.typingUntil = undefined
 
-    clearInterval(this._typingInterval)
+    clearInterval(this._typingInterval!)
     this._typingInterval = undefined
   }
 

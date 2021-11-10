@@ -1,5 +1,6 @@
 import truncate from 'html-truncate'
 import React, { useState } from 'react'
+// @ts-ignore
 import Linkify from 'react-linkify'
 
 import { Renderer } from '../../../typings'
@@ -15,14 +16,14 @@ import { renderUnsafeHTML } from '../../../utils'
 export const Text = (props: Renderer.Text) => {
   const [showMore, setShowMore] = useState(false)
   const { maxLength, markdown, escapeHTML, intl, text } = props
-  let hasShowMore
+  let hasShowMore: any
 
   if (intl && maxLength && text.length > maxLength) {
     hasShowMore = true
   }
 
-  const truncateIfRequired = message => {
-    return hasShowMore && !showMore ? truncate(message, maxLength) : message
+  const truncateIfRequired = (message: any) => {
+    return hasShowMore && !showMore ? truncate(message, maxLength!) : message
   }
 
   let message
@@ -38,7 +39,7 @@ export const Text = (props: Renderer.Text) => {
       <div>{message}</div>
 
       {hasShowMore && (
-        <button type="button" onClick={e => setShowMore(!showMore)} className="bpw-message-read-more">
+        <button type="button" onClick={(e) => setShowMore(!showMore)} className="bpw-message-read-more">
           {showMore &&
             intl.formatMessage({
               id: 'messages.showLess',

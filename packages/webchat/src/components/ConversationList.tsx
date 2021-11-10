@@ -34,10 +34,10 @@ type ConversationListItemProps = {
   Pick<StoreDef, 'conversations' | 'fetchConversation' | 'createConversation'>
 
 class ConversationList extends React.Component<ConversationListProps> {
-  private main: HTMLElement
-  private btn: HTMLElement
+  private main!: HTMLElement
+  private btn!: HTMLElement
 
-  state = {
+  state: { focusIdx?: number } = {
     focusIdx: undefined
   }
 
@@ -45,28 +45,28 @@ class ConversationList extends React.Component<ConversationListProps> {
     this.main.focus()
   }
 
-  componentDidUpdate(_, prevState) {
-    if (this.state.focusIdx === this.props.conversations.length) {
+  componentDidUpdate(_: any, prevState: { focusIdx: number }) {
+    if (this.state.focusIdx === this.props.conversations!.length) {
       this.btn.focus()
-    } else if (prevState.focusIdx === this.props.conversations.length) {
+    } else if (prevState.focusIdx === this.props.conversations!.length) {
       this.main.focus()
     }
   }
 
-  changeFocus = step => {
+  changeFocus = (step: any) => {
     let focusIdx = this.state.focusIdx || 0
     focusIdx += step
 
-    if (focusIdx > this.props.conversations.length) {
+    if (focusIdx > this.props.conversations!.length) {
       focusIdx = 0
     } else if (focusIdx < 0) {
-      focusIdx = this.props.conversations.length
+      focusIdx = this.props.conversations!.length
     }
 
     this.setState({ focusIdx })
   }
 
-  handleKeyDown = e => {
+  handleKeyDown = (e: any) => {
     if (!this.props.enableArrowNavigation) {
       return
     }
@@ -75,29 +75,29 @@ class ConversationList extends React.Component<ConversationListProps> {
       this.changeFocus(1)
     } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
       this.changeFocus(-1)
-    } else if (e.key === 'Enter' && this.state.focusIdx && this.state.focusIdx < this.props.conversations.length) {
-      const convoId = this.props.conversations[this.state.focusIdx].id
-      this.props.fetchConversation.bind(this, convoId)
+    } else if (e.key === 'Enter' && this.state.focusIdx && this.state.focusIdx < this.props.conversations!.length) {
+      const convoId = this.props.conversations![this.state.focusIdx].id
+      this.props.fetchConversation!.bind(this, convoId)
     }
   }
 
   render() {
     const { conversations, createConversation, fetchConversation } = this.props
     return (
-      <div tabIndex={0} ref={el => (this.main = el)} className={'bpw-convo-list'} onKeyDown={this.handleKeyDown}>
-        {conversations.map((convo, idx) => (
+      <div tabIndex={0} ref={(el) => (this.main = el!)} className={'bpw-convo-list'} onKeyDown={this.handleKeyDown}>
+        {conversations!.map((convo, idx) => (
           <ConversationListItem
             key={convo.id}
             hasFocus={this.state.focusIdx === idx}
             conversation={convo}
-            onClick={fetchConversation.bind(this, convo.id)}
+            onClick={fetchConversation!.bind(this, convo.id)}
           />
         ))}
         <button
-          ref={el => (this.btn = el)}
+          ref={(el) => (this.btn = el!)}
           id="btn-convo-add"
           className={'bpw-convo-add-btn'}
-          onClick={createConversation.bind(this, undefined)}
+          onClick={createConversation!.bind(this, undefined)}
         >
           <Add width={15} height={15} />
         </button>

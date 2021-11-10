@@ -23,7 +23,7 @@ export const FileMessage = (props: Renderer.FileMessage) => {
     extension = path.extname(url)
   }
 
-  const mime = mimeTypes.getType(extension)
+  const mime = mimeTypes.getType(extension)!
 
   if (text) {
     return <Text text={text} markdown escapeHTML={props.escapeTextHTML} />
