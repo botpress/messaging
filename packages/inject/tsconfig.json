@@ -15,7 +15,7 @@
 
     // Specific settings for npm package
     "target": "es6",
-    "declaration": false,
+    "declaration": true,
     "sourceMap": false,
 
     // We use react
