@@ -440,6 +440,7 @@ class RootStore {
 
     // TODO: can't work at the moment
     // this.api.updateUserId(this.config.userId!)
+
     if (!this.isInitialized) {
       window.USE_SESSION_STORAGE = this.config.useSessionStorage
     } else if (window.USE_SESSION_STORAGE !== this.config.useSessionStorage) {
