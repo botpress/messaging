@@ -3,7 +3,7 @@ import sortBy from 'lodash/sortBy'
 import { inject } from 'mobx-react'
 import React from 'react'
 
-// TODO: what to do with this?
+// TODO: use the components package
 // import { renderPayload } from '../../../../../../../packages/ui-shared-lite/Payloads'
 import { RootStore, StoreDef } from '../../store'
 import { Message as MessageDetails } from '../../typings'
@@ -94,7 +94,7 @@ class MessageGroup extends React.Component<Props> {
               const payload = this.convertPayloadFromOldFormat(message)
 
               /*
-              // TODO: what to do with this?
+              // TODO: use the components package
               if (payload?.wrapped) {
                 payload = { ...payload, wrapped: renderPayload(payload.wrapped) }
               } else {
