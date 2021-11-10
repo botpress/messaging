@@ -1,0 +1,20 @@
+{
+  "name": "@botpress/webchat-inject",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.tsx",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn --silent && parcel build src/index.html src/inject.js",
+    "watch": "yarn --silent && parcel watch src/index.html src/inject.js",
+    "dev": "yarn --silent && parcel src/index.html src/inject.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@botpress/webchat": "0.0.1"
+  },
+  "devDependencies": {}
+}
