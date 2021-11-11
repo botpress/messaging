@@ -115,6 +115,12 @@ export class RedisSubservice implements DistributedSubservice {
     this.callbacks[scopedChannel] = callback
   }
 
+  async unsubscribe(channel: string) {
+    const scopedChannel = this.makeScopedChannel(channel)
+    await this.sub.unsubscribe(scopedChannel)
+    delete this.callbacks[scopedChannel]
+  }
+
   async send(channel: string, message: any) {
     const scopedChannel = this.makeScopedChannel(channel)
 

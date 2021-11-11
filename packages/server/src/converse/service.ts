@@ -55,7 +55,7 @@ export class ConverseService extends Service {
         this.resolveCollect(collector)
       }
 
-      // TODO: unsubscribe from the channel
+      await this.distributed.unsubscribe(`converse/${messageId}`)
     } else if (cmd === ConverseCmds.Message) {
       const { message: rawMessage, incomingId } = data
       const message = { ...rawMessage, sentOn: new Date(rawMessage.sentOn) }
