@@ -1,5 +1,6 @@
 import { InjectedIntl } from 'react-intl'
 import snarkdown from 'snarkdown'
+import { MessageConfig } from 'typings'
 
 export const renderUnsafeHTML = (message: string = '', escaped: boolean): string => {
   if (escaped) {
@@ -53,6 +54,28 @@ export class FallthroughIntl implements InjectedIntl {
   onError(error: string): void {
     throw new Error(error)
   }
+}
+
+export const defaultMessageConfig: MessageConfig = {
+  escapeHTML: true,
+  isInEmulator: false,
+  onSendData: async () => {
+    console.warn('onSendData was called but no handler was configured, set message.config.onSendData')
+    return
+  },
+  onFileUpload: async (label, payload, file) => {
+    console.warn('onFileUpload was called but no handler was configured, set message.config.onFileUpload')
+    return
+  },
+  isLastGroup: true,
+  isLastOfGroup: true,
+  isBotMessage: true,
+  noMessageBubble: false,
+  intl: new FallthroughIntl(),
+  showTimestamp: false,
+  bp: typeof window !== 'undefined' ? window?.botpress : undefined,
+  messageId: 'default',
+  sentOn: new Date(Date.now())
 }
 
 export function pick<T>(obj: T, keys: Partial<keyof T>[]): Partial<T> {

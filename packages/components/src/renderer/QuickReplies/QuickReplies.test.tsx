@@ -1,7 +1,5 @@
-import { fireEvent, prettyDOM, render, waitFor } from '@testing-library/react'
-import { defaultMessageConfig } from 'index'
+import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import Keyboard from 'renderer/Keyboard'
 import { Button } from './Button'
 
 describe('Quick Reply Button element', () => {

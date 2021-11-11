@@ -1,10 +1,11 @@
 import { render, screen } from '@testing-library/react'
-import { defaultMessageConfig, renderMessage } from '../..'
+import renderer from 'renderer'
+import { defaultMessageConfig } from 'utils'
 
 describe('Text renderer', () => {
   test('it renders a simple text message', () => {
     const text = 'Hello World!'
-    const messageComponent = renderMessage({
+    const messageComponent = renderer.render({
       content: {
         type: 'text',
         text,
@@ -19,7 +20,7 @@ describe('Text renderer', () => {
 
   test('it renders clickable links in a non-markdown text message', () => {
     const text = 'Please go check out botpress.com'
-    const messageComponent = renderMessage({
+    const messageComponent = renderer.render({
       content: {
         type: 'text',
         text,
@@ -38,7 +39,7 @@ describe('Text renderer', () => {
   test('it renders a markdown message', () => {
     const text = '**Hello** *World*! go check out [botpress](https://botpress.com)'
 
-    const component = renderMessage({
+    const component = renderer.render({
       content: {
         type: 'text',
         text,

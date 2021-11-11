@@ -1,10 +1,11 @@
 import { render } from '@testing-library/react'
-import { defaultMessageConfig, renderMessage } from '../..'
+import renderer from 'renderer'
+import { defaultMessageConfig } from 'utils'
 
 describe('File renderer', () => {
   test('it renders a file of unsupported mime type as a download link', () => {
     const file = 'http://example.org/file.txt'
-    const component = renderMessage({
+    const component = renderer.render({
       content: { type: 'file', file },
       config: defaultMessageConfig
     })
@@ -19,7 +20,7 @@ describe('File renderer', () => {
 
   test('it renders a video file as video player with controls', () => {
     const video = 'http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4'
-    const component = renderMessage({
+    const component = renderer.render({
       content: { type: 'video', video },
       config: defaultMessageConfig
     })
@@ -39,7 +40,7 @@ describe('File renderer', () => {
 
   test('it renders an image file', () => {
     const url = 'https://upload.wikimedia.org/wikipedia/commons/9/90/Touched_by_His_Noodly_Appendage_HD.jpg'
-    const component = renderMessage({
+    const component = renderer.render({
       content: {
         type: 'image',
         image: url
@@ -58,7 +59,7 @@ describe('File renderer', () => {
 
   test('it renders an audio player', () => {
     const url = 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav'
-    const component = renderMessage({
+    const component = renderer.render({
       content: { type: 'audio', title: 'Hello Audio', audio: url },
       config: defaultMessageConfig
     })

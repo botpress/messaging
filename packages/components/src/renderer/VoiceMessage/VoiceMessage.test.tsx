@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
+import renderer from 'renderer'
 import { Message } from 'typings'
-import { defaultMessageConfig, renderMessage } from '../..'
+import { defaultMessageConfig } from 'utils'
 
 describe('VoiceMessage', () => {
   test('It renders a simple html audio element with controls', () => {
@@ -13,7 +14,7 @@ describe('VoiceMessage', () => {
       config: { ...defaultMessageConfig, shouldPlay: true }
     }
 
-    const messageEl = renderMessage(message)
+    const messageEl = renderer.render(message)
     expect(messageEl).toBeTruthy()
 
     const { container } = render(messageEl)

@@ -1,9 +1,10 @@
 import { fireEvent, render } from '@testing-library/react'
-import { defaultMessageConfig, renderMessage } from '../..'
+import renderer from 'renderer'
+import { defaultMessageConfig } from 'utils'
 
 describe('LoginPrompt', () => {
   test('renders correctly when last message', () => {
-    const component = renderMessage({
+    const component = renderer.render({
       content: {
         type: 'login_prompt'
       },
@@ -31,7 +32,7 @@ describe('LoginPrompt', () => {
 
     const onSendData = jest.fn()
 
-    const component = renderMessage({
+    const component = renderer.render({
       content: {
         type: 'login_prompt'
       },

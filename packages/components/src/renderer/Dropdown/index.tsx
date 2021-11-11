@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import Select, { MultiValue } from 'react-select'
+import Select from 'react-select'
 import Creatable from 'react-select/creatable'
 import { MessageTypeHandlerProps } from 'typings'
 import Keyboard, { Prepend } from '../Keyboard'

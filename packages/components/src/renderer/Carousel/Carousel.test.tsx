@@ -1,7 +1,8 @@
 import { fireEvent, render } from '@testing-library/react'
 import { ActionButton } from 'content-typings'
+import renderer from 'renderer'
 import { Message } from 'typings'
-import { defaultMessageConfig, renderMessage } from '../..'
+import { defaultMessageConfig } from 'utils'
 
 describe('Carousel & Card renderer', () => {
   const messageData: Message<'carousel'> = {
@@ -27,7 +28,7 @@ describe('Carousel & Card renderer', () => {
 
   test('it renders a single card with image, title, subtitle and button', () => {
     const card = messageData.content.items[0]
-    const component = renderMessage(messageData)
+    const component = renderer.render(messageData)
 
     expect(component).toBeTruthy()
 
@@ -44,7 +45,10 @@ describe('Carousel & Card renderer', () => {
 
   test('it calls onSendData with postback payload on postback button click', () => {
     const mockOnSendData = jest.fn()
-    const component = renderMessage({ ...messageData, config: { ...defaultMessageConfig, onSendData: mockOnSendData } })
+    const component = renderer.render({
+      ...messageData,
+      config: { ...defaultMessageConfig, onSendData: mockOnSendData }
+    })
 
     const { container } = render(component)
 
@@ -80,7 +84,7 @@ describe('Carousel & Card renderer', () => {
       },
       config: defaultMessageConfig
     }
-    const component = renderMessage(urlBtnMessageData)
+    const component = renderer.render(urlBtnMessageData)
 
     const { container } = render(component)
 
