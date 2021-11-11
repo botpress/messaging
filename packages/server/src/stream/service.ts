@@ -133,8 +133,6 @@ export class StreamService extends Service {
       await this.distributed.publish(`user/${userId}`, { userId, source: source?.socket?.id, data })
     }
 
-    // TODO: Send socket messages to sockets connected for a clientId
-
     if (source?.client?.id !== clientId) {
       if (yn(process.env.SPINNED)) {
         void this.posts.send(process.env.SPINNED_URL!, data)
