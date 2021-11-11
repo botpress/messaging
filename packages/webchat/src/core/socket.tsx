@@ -14,7 +14,7 @@ export default class BpSocket {
 
   constructor(config: Config) {
     this.chatId = config.chatId
-    this.socket = new MessagingSocket({ url: config.url, clientId: config.clientId })
+    this.socket = new MessagingSocket({ url: config.messagingUrl, clientId: config.clientId })
   }
 
   public setup() {
