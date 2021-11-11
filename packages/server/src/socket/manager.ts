@@ -115,7 +115,7 @@ export class SocketManager {
   private async handleSocketDisconnect(socket: Socket.Socket) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
-      this.sockets.delete(socket)
+      await this.sockets.delete(socket)
     } catch (e) {
       this.logger.error(e, 'An error occured during a socket disconnect')
     }

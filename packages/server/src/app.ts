@@ -111,6 +111,7 @@ export class App {
     )
     this.sockets = new SocketService(this.caching, this.users)
     this.stream = new StreamService(
+      this.distributed,
       this.post,
       this.sockets,
       this.channels,

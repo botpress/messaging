@@ -6,25 +6,29 @@ import { ActionSource } from '../base/source'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
-import { ConversationEvents } from '../conversations/events'
+import { ConversationCreatedEvent, ConversationEvents } from '../conversations/events'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
-import { HealthEvents } from '../health/events'
+import { DistributedService } from '../distributed/service'
+import { HealthCreatedEvent, HealthEvents } from '../health/events'
 import { HealthService } from '../health/service'
 import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
-import { MessageEvents } from '../messages/events'
+import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { PostService } from '../post/service'
+import { SocketEvents, SocketUserEvent } from '../socket/events'
 import { SocketService } from '../socket/service'
-import { UserEvents } from '../users/events'
+import { UserCreatedEvent, UserEvents } from '../users/events'
 import { UserService } from '../users/service'
 import { WebhookService } from '../webhooks/service'
 
 export class StreamService extends Service {
   private logger = new Logger('Stream')
+  private handleCmdCallback!: (message: any) => Promise<void>
 
   constructor(
+    private distributed: DistributedService,
     private posts: PostService,
     private sockets: SocketService,
     private channels: ChannelService,
@@ -42,63 +46,76 @@ export class StreamService extends Service {
   }
 
   async setup() {
-    this.health.events.on(HealthEvents.Registered, async ({ event }) => {
-      const conduit = await this.conduits.get(event.conduitId)
-      const client = await this.clients.getByProviderId(conduit!.providerId)
-      if (!client) {
-        return
-      }
+    this.handleCmdCallback = this.handleCmd.bind(this)
 
-      const channel = this.channels.getById(conduit!.channelId)
-      await this.stream(
-        'health.new',
-        { channel: channel.name, event: { ...this.health.makeReadable(event) } },
-        client.id
-      )
-    })
-
-    this.users.events.on(UserEvents.Created, async ({ user }) => {
-      await this.stream('user.new', {}, user.clientId, user.id)
-    })
-
-    this.conversations.events.on(ConversationEvents.Created, async ({ conversation }) => {
-      await this.stream(
-        'conversation.new',
-        { conversationId: conversation.id },
-        conversation.clientId,
-        conversation.userId
-      )
-    })
-
-    this.messages.events.on(MessageEvents.Created, async ({ message, source }) => {
-      const conversation = await this.conversations.get(message.conversationId)
-
-      await this.stream(
-        'message.new',
-        {
-          channel: await this.getChannel(conversation!.id),
-          conversationId: conversation!.id,
-          collect: this.converse.isCollectingForMessage(message.id),
-          message
-        },
-        conversation!.clientId,
-        conversation!.userId,
-        source
-      )
-    })
+    this.health.events.on(HealthEvents.Registered, this.handleHealthRegisted.bind(this))
+    this.users.events.on(UserEvents.Created, this.handleUserCreated.bind(this))
+    this.conversations.events.on(ConversationEvents.Created, this.handleConversationCreated.bind(this))
+    this.messages.events.on(MessageEvents.Created, this.handleMessageCreate.bind(this))
+    this.sockets.events.on(SocketEvents.UserConnected, this.handleUserConnected.bind(this))
+    this.sockets.events.on(SocketEvents.UserDisconnected, this.handleUserDisconnected.bind(this))
   }
 
-  private async getChannel(conversationId: uuid) {
-    const convmaps = await this.mapping.convmap.listByConversationId(conversationId)
-    if (convmaps.length === 1) {
-      const tunnel = await this.mapping.tunnels.get(convmaps[0].tunnelId)
-      return this.channels.getById(tunnel!.channelId).name
-    } else {
-      return 'messaging'
+  private async handleHealthRegisted({ event }: HealthCreatedEvent) {
+    const conduit = await this.conduits.get(event.conduitId)
+    const client = await this.clients.getByProviderId(conduit!.providerId)
+    if (!client) {
+      return
+    }
+
+    const channel = this.channels.getById(conduit!.channelId)
+    await this.stream('health.new', { channel: channel.name, event: { ...this.health.makeReadable(event) } }, client.id)
+  }
+
+  private async handleUserCreated({ user }: UserCreatedEvent) {
+    await this.stream('user.new', {}, user.clientId, user.id)
+  }
+
+  private async handleConversationCreated({ conversation }: ConversationCreatedEvent) {
+    await this.stream(
+      'conversation.new',
+      { conversationId: conversation.id },
+      conversation.clientId,
+      conversation.userId
+    )
+  }
+
+  private async handleMessageCreate({ message, source }: MessageCreatedEvent) {
+    const conversation = await this.conversations.get(message.conversationId)
+
+    await this.stream(
+      'message.new',
+      {
+        channel: await this.getChannel(conversation!.id),
+        conversationId: conversation!.id,
+        collect: this.converse.isCollectingForMessage(message.id),
+        message
+      },
+      conversation!.clientId,
+      conversation!.userId,
+      source
+    )
+  }
+
+  private async handleUserConnected({ userId }: SocketUserEvent) {
+    await this.distributed.listen(`user/${userId}`, this.handleCmdCallback)
+  }
+
+  private async handleUserDisconnected({ userId }: SocketUserEvent) {
+    await this.distributed.unsubscribe(`user/${userId}`)
+  }
+
+  private async handleCmd({ userId, source, data }: any) {
+    const sockets = this.sockets.listByUser(userId)
+
+    for (const socket of sockets) {
+      if (source !== socket.id) {
+        socket.send(data)
+      }
     }
   }
 
-  async stream(type: string, payload: any, clientId: uuid, userId?: uuid, source?: ActionSource) {
+  private async stream(type: string, payload: any, clientId: uuid, userId?: uuid, source?: ActionSource) {
     const data = {
       type,
       data: {
@@ -113,12 +130,7 @@ export class StreamService extends Service {
     }
 
     if (userId) {
-      const sockets = this.sockets.listByUser(userId)
-      for (const socket of sockets) {
-        if (source?.socket?.id !== socket.id) {
-          socket.send(data)
-        }
-      }
+      await this.distributed.publish(`user/${userId}`, { userId, source: source?.socket?.id, data })
     }
 
     // TODO: Send socket messages to sockets connected for a clientId
@@ -133,6 +145,16 @@ export class StreamService extends Service {
           void this.posts.send(webhook.url, data, { 'x-webhook-token': webhook.token })
         }
       }
+    }
+  }
+
+  private async getChannel(conversationId: uuid) {
+    const convmaps = await this.mapping.convmap.listByConversationId(conversationId)
+    if (convmaps.length === 1) {
+      const tunnel = await this.mapping.tunnels.get(convmaps[0].tunnelId)
+      return this.channels.getById(tunnel!.channelId).name
+    } else {
+      return 'messaging'
     }
   }
 }
