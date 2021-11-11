@@ -83,7 +83,7 @@ function mergeConfig(payload, chatId) {
 function init(config, targetSelector) {
   targetSelector = targetSelector || 'body'
   const chatId = config.chatId || DEFAULT_CHAT_ID
-  const host = config.host || window.ROOT_PATH || ''
+  const host = config.hostUrl || window.ROOT_PATH || ''
 
   const cssHref = host + '/inject.css'
   _injectDOMElement('link', 'head', { rel: 'stylesheet', href: cssHref })
