@@ -20,6 +20,7 @@ const _values = (obj: Overrides) => Object.keys(obj).map((x) => obj[x])
 const DEFAULT_TYPING_DELAY = 500
 
 class Web extends React.Component<MainProps> {
+  private config!: Config
   private socket!: BpSocket
   private parentClass!: string
   private hasBeenInitialized: boolean = false
@@ -64,7 +65,7 @@ class Web extends React.Component<MainProps> {
   }
 
   componentDidUpdate() {
-    if (this.props.config!) {
+    if (this.config) {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.initializeIfChatDisplayed()
     }
@@ -89,20 +90,22 @@ class Web extends React.Component<MainProps> {
   }
 
   async load() {
-    if (this.props.config!.exposeStore) {
-      const storePath = this.props.config!.chatId ? `${this.props.config!.chatId}.webchat_store` : 'webchat_store'
+    this.config = this.extractConfig()
+
+    if (this.config.exposeStore) {
+      const storePath = this.config.chatId ? `${this.config.chatId}.webchat_store` : 'webchat_store'
       set(window.parent, storePath, this.props.store)
     }
 
-    if (this.props.config!.overrides) {
-      this.loadOverrides(this.props.config!.overrides)
+    if (this.config.overrides) {
+      this.loadOverrides(this.config.overrides)
     }
 
-    if (this.props.config!.containerWidth) {
-      this.postMessageToParent('setWidth', this.props.config!.containerWidth)
+    if (this.config.containerWidth) {
+      this.postMessageToParent('setWidth', this.config.containerWidth)
     }
 
-    if (this.props.config!.reference) {
+    if (this.config.reference) {
       await this.props.setReference!()
     }
 
@@ -117,7 +120,7 @@ class Web extends React.Component<MainProps> {
   }
 
   postMessageToParent(type: string, value: any) {
-    window.parent?.postMessage({ type, value, chatId: this.props.config!?.chatId }, '*')
+    window.parent?.postMessage({ type, value, chatId: this.config?.chatId }, '*')
   }
 
   extractConfig(): Config {
@@ -131,7 +134,8 @@ class Web extends React.Component<MainProps> {
     const { options, ref } = queryString.parse(location.search)
     const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
 
-    const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, config)
+    console.log(this.props.config)
+    const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, this.props.config, config)
     userConfig.reference = config?.ref || ref
 
     this.props.updateConfig!(userConfig)
@@ -140,7 +144,8 @@ class Web extends React.Component<MainProps> {
   }
 
   async initializeSocket() {
-    this.socket = new BpSocket(this.props.config!)
+    console.log('config!!', this.config)
+    this.socket = new BpSocket(this.config)
     this.socket.onClear = this.handleClearMessages
     this.socket.onMessage = this.handleNewMessage
     this.socket.onTyping = this.handleTyping
@@ -148,7 +153,7 @@ class Web extends React.Component<MainProps> {
     this.socket.onUserIdChanged = this.props.setUserId!
 
     // TODO: Can't do that
-    // this.props.config!.userId && this.socket.changeUserId(this.props.config!.userId)
+    // this.config.userId && this.socket.changeUserId(this.config.userId)
 
     this.socket.setup()
     await this.socket.waitForUserId()
@@ -294,9 +299,9 @@ class Web extends React.Component<MainProps> {
   playSound = debounce(async () => {
     // Preference for config object
     const disableNotificationSound =
-      this.props.config!.disableNotificationSound === undefined
+      this.config.disableNotificationSound === undefined
         ? this.props.config!.disableNotificationSound
-        : this.props.config!.disableNotificationSound
+        : this.config.disableNotificationSound
 
     if (disableNotificationSound || this.audio.readyState < 2) {
       return
@@ -306,8 +311,8 @@ class Web extends React.Component<MainProps> {
   }, constants.MIN_TIME_BETWEEN_SOUNDS)
 
   isLazySocket() {
-    if (this.props.config!.lazySocket !== undefined) {
-      return this.props.config!.lazySocket
+    if (this.config.lazySocket !== undefined) {
+      return this.config.lazySocket
     }
     return this.props.botInfo?.lazySocket
   }

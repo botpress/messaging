@@ -72,10 +72,13 @@ class RootStore {
 
   public delayedMessages: QueuedMessage[] = []
 
-  constructor(options: { fullscreen: boolean }, config: Config) {
+  constructor(options: { fullscreen: boolean }, config?: Config) {
     this.composer = new ComposerStore(this)
     this.view = new ViewStore(this, options.fullscreen)
-    this.updateConfig(config)
+
+    if (config) {
+      this.updateConfig(config)
+    }
   }
 
   @action.bound
