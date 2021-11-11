@@ -25,9 +25,9 @@
       "./node_modules/sqlite3/lib/binding/**/*"
     ],
     "targets": [
-      "node12-win32-x64",
-      "node12-linux-x64",
-      "node12-macos-x64"
+      "node16-win32-x64",
+      "node16-linux-x64",
+      "node16-macos-x64"
     ],
     "outputPath": "./bin"
   },
@@ -59,7 +59,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": "12.18.1"
+    "node": "16.13.0"
   },
   "resolutions": {
     "**/@types/react": "^16.8.6"
