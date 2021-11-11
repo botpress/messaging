@@ -27,7 +27,7 @@ function _injectDOMElement(tagName, selector, options) {
 function _generateIFrameHTML(host, config) {
   const options = encodeURIComponent(JSON.stringify({ config: config }))
   const title = config.botConvoDescription || config.botName || config.botId
-  iframeSrc = host + 'index.html?options=' + options
+  const iframeSrc = host + '/index.html?options=' + options
   const iframeId = _getIframeId(config.chatId)
   return (
     '<iframe id="' +
@@ -85,7 +85,7 @@ function init(config, targetSelector) {
   const chatId = config.chatId || DEFAULT_CHAT_ID
   const host = config.host || window.ROOT_PATH || ''
 
-  const cssHref = host + 'inject.css'
+  const cssHref = host + '/inject.css'
   _injectDOMElement('link', 'head', { rel: 'stylesheet', href: cssHref })
 
   const iframeHTML = _generateIFrameHTML(host, config)
