@@ -7,9 +7,7 @@ import testEvents from './test-events.json'
 describe('ReactComponentRenderer', () => {
   it('can render all test events with no errors', () => {
     testEvents.forEach((event) => {
-      const { container } = render(
-        <ReactMessageRenderer message={{ content: event as any, config: defaultMessageConfig }} />
-      )
+      const { container } = render(<ReactMessageRenderer content={event as any} config={defaultMessageConfig} />)
       expect(container.firstChild).toBeTruthy()
     })
   })

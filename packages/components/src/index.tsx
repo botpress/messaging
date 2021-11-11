@@ -1,16 +1,16 @@
-import { MessageType } from 'content-typings'
+import { Content, MessageType } from 'content-typings'
 import React, { FC } from 'react'
 import defaultRenderer, { Renderer } from 'renderer'
-
-import { Message } from './typings'
+import { MessageConfig } from './typings'
 
 interface ReactMessageRendererProps {
-  message: Message<MessageType>
+  content: Content<MessageType>
+  config: MessageConfig
   renderer?: Renderer
 }
 
-const ReactMessageRenderer: FC<ReactMessageRendererProps> = ({ message, renderer = defaultRenderer }) => {
-  return <>{renderer.render(message)}</>
+const ReactMessageRenderer: FC<ReactMessageRendererProps> = ({ content, config, renderer = defaultRenderer }) => {
+  return <>{renderer.render({ content, config })}</>
 }
 
 export default ReactMessageRenderer
