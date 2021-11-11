@@ -1,8 +1,8 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 import { QuickReplies } from '..'
-import { defaultMessageConfig } from '../../index'
 import { LiteStore } from '../../typings'
+import { defaultMessageConfig } from '../../utils'
 import Keyboard from '../Keyboard'
 import { Button } from './Button'
 
