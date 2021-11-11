@@ -72,10 +72,13 @@ class RootStore {
 
   public delayedMessages: QueuedMessage[] = []
 
-  constructor(options: { fullscreen: boolean }, config: Config) {
+  constructor(options: { fullscreen: boolean }, config?: Config) {
     this.composer = new ComposerStore(this)
     this.view = new ViewStore(this, options.fullscreen)
-    this.updateConfig(config)
+
+    if (config) {
+      this.updateConfig(config)
+    }
   }
 
   @action.bound
@@ -440,6 +443,7 @@ class RootStore {
 
     // TODO: can't work at the moment
     // this.api.updateUserId(this.config.userId!)
+
     if (!this.isInitialized) {
       window.USE_SESSION_STORAGE = this.config.useSessionStorage
     } else if (window.USE_SESSION_STORAGE !== this.config.useSessionStorage) {
