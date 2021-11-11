@@ -3,6 +3,7 @@ import ms from 'ms'
 import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
+import { DistributedService } from '../distributed/service'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { Collector } from './types'
@@ -13,8 +14,13 @@ export class ConverseService extends Service {
   private collectors!: ServerCache<uuid, Collector[]>
   private incomingIdCache!: ServerCache<uuid, uuid>
   private collectingForMessageCache!: ServerCache<uuid, boolean>
+  private handleDistributedMessageCallback!: (message: any) => Promise<void>
 
-  constructor(private caching: CachingService, private messages: MessageService) {
+  constructor(
+    private caching: CachingService,
+    private distributed: DistributedService,
+    private messages: MessageService
+  ) {
     super()
   }
 
@@ -24,6 +30,7 @@ export class ConverseService extends Service {
     this.collectors = await this.caching.newServerCache('cache_converse_collectors', {})
     this.incomingIdCache = await this.caching.newServerCache('cache_converse_incoming_id')
     this.collectingForMessageCache = await this.caching.newServerCache('cache_converse_collecting_for_message')
+    this.handleDistributedMessageCallback = this.handleDistributedMessage.bind(this)
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
@@ -33,11 +40,31 @@ export class ConverseService extends Service {
     }
 
     const incomingId = this.incomingIdCache.get(message.id)
-    const collectors = this.collectors.get(message.conversationId) || []
+    await this.distributed.send(`converse/${incomingId}`, { cmd: ConverseCmds.Message, data: { message, incomingId } })
+  }
 
-    for (const collector of collectors) {
-      if (!incomingId || incomingId === collector.incomingId) {
-        collector.messages.push(message)
+  private async handleDistributedMessage({ cmd, data }: { cmd: ConverseCmds; data: any }) {
+    if (cmd === ConverseCmds.Stop) {
+      const { conversationId, messageId } = data
+      const collectors = this.collectors.get(conversationId) || []
+      const childCollectors = collectors.filter((x) => x.incomingId === messageId)
+
+      for (const collector of childCollectors) {
+        clearTimeout(collector.timeout!)
+        this.removeCollector(collector)
+        this.resolveCollect(collector)
+      }
+
+      // TODO: unsubscribe from the channel
+    } else if (cmd === ConverseCmds.Message) {
+      const { message: rawMessage, incomingId } = data
+      const message = { ...rawMessage, sentOn: new Date(rawMessage.sentOn) }
+      const collectors = this.collectors.get(message.conversationId) || []
+
+      for (const collector of collectors) {
+        if (!incomingId || incomingId === collector.incomingId) {
+          collector.messages.push(message)
+        }
       }
     }
   }
@@ -51,6 +78,8 @@ export class ConverseService extends Service {
   }
 
   async collect(messageId: uuid, conversationId: uuid, timeout: number): Promise<Message[]> {
+    await this.distributed.listen(`converse/${messageId}`, this.handleDistributedMessageCallback)
+
     const collector = this.addCollector(messageId, conversationId)
     if (timeout !== 0) {
       this.resetCollectorTimeout(collector, timeout || DEFAULT_COLLECT_TIMEOUT)
@@ -64,14 +93,10 @@ export class ConverseService extends Service {
   }
 
   async stopCollecting(messageId: uuid, conversationId: uuid) {
-    const collectors = this.collectors.get(conversationId) || []
-    const childCollectors = collectors.filter((x) => x.incomingId === messageId)
-
-    for (const collector of childCollectors) {
-      clearTimeout(collector.timeout!)
-      this.removeCollector(collector)
-      this.resolveCollect(collector)
-    }
+    await this.distributed.send(`converse/${messageId}`, {
+      cmd: ConverseCmds.Stop,
+      data: { conversationId, messageId }
+    })
   }
 
   private addCollector(messageId: uuid, conversationId: uuid): Collector {
@@ -124,4 +149,9 @@ export class ConverseService extends Service {
       this.resolveCollect(collector)
     }, time)
   }
+}
+
+export enum ConverseCmds {
+  Message,
+  Stop
 }
