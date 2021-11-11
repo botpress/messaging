@@ -15,7 +15,7 @@ new BoardLinker(
 */
 
 const config: Partial<Config> = {
-  url: 'http://localhost:3100',
+  messagingUrl: 'http://localhost:3100',
   clientId: '8b6b25ae-e47d-455e-8057-356dae07fff2'
 }
 

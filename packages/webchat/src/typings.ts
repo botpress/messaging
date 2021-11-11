@@ -166,7 +166,7 @@ export interface StudioConnector {
 
 export interface Config {
   /** Url of the messaging server */
-  url: string
+  messagingUrl: string
   /** Id of your messaging client */
   clientId: string
   botId?: string
