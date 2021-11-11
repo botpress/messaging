@@ -1,17 +1,18 @@
-import { Router } from 'express'
-import { Auth } from '../base/auth/auth'
+import { Response } from 'express'
+import { ApiManager } from '../base/api-manager'
+import { ClientApiRequest } from '../base/auth/client'
+import { ReqSchema } from '../base/schema'
 import { HealthService } from './service'
 
 export class HealthApi {
-  constructor(private router: Router, private auth: Auth, private health: HealthService) {}
+  constructor(private health: HealthService) {}
 
-  async setup() {
-    this.router.get(
-      '/health',
-      this.auth.client.auth(async (req, res) => {
-        const health = await this.health.getHealthForClient(req.client.id)
-        res.send(health)
-      })
-    )
+  setup(router: ApiManager) {
+    router.get('/health', ReqSchema(), this.get.bind(this))
+  }
+
+  async get(req: ClientApiRequest, res: Response) {
+    const health = await this.health.getHealthForClient(req.client.id)
+    res.send(health)
   }
 }

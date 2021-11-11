@@ -10,7 +10,7 @@ export class ClientAuthHandler extends AuthHandler {
   }
 
   public auth(fn: Middleware<ClientApiRequest>) {
-    return this.asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
+    return this.asyncMiddleware(async (req: Request, res: Response) => {
       const clientId = req.headers['x-bp-messaging-client-id'] as string
       const clientToken = req.headers['x-bp-messaging-client-token'] as string
 
@@ -25,7 +25,7 @@ export class ClientAuthHandler extends AuthHandler {
 
       const clientApiReq = req as ClientApiRequest
       clientApiReq.client = client
-      return fn(clientApiReq, res, next)
+      return fn(clientApiReq, res)
     })
   }
 }

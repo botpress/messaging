@@ -10,8 +10,8 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "@botpress/webchat": "0.0.1",
-    "@botpress/webchat-skin": "0.0.1",
+    "@botpress/chat": "0.0.1",
+    "@botpress/chat-skin": "0.0.1",
     "@botpress/messaging-client": "",
     "axios": "^0.21.1"
   }

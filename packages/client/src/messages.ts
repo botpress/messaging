@@ -1,13 +1,13 @@
-import { Message } from '@botpress/messaging-base'
+import { Message, uuid } from '@botpress/messaging-base'
 import { BaseClient } from './base'
 import { handleNotFound } from './errors'
 
 export class MessageClient extends BaseClient {
   async create(
-    conversationId: string,
-    authorId: string | undefined,
+    conversationId: uuid,
+    authorId: uuid | undefined,
     payload: any,
-    flags?: { incomingId: string }
+    flags?: { incomingId: uuid }
   ): Promise<Message> {
     return this.deserialize(
       (await this.http.post<Message>('/messages', { conversationId, authorId, payload, incomingId: flags?.incomingId }))
@@ -15,25 +15,32 @@ export class MessageClient extends BaseClient {
     )
   }
 
-  async get(id: string): Promise<Message | undefined> {
+  async get(id: uuid): Promise<Message | undefined> {
     return handleNotFound(async () => {
-      this.deserialize((await this.http.get<Message>(`/messages/${id}`)).data)
+      return this.deserialize((await this.http.get<Message>(`/messages/${id}`)).data)
     }, undefined)
   }
 
-  async list(conversationId: string, limit: number): Promise<Message[]> {
+  async list(conversationId: uuid, limit?: number): Promise<Message[]> {
+    return (await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, { params: { limit } })).data.map(
+      (x) => this.deserialize(x)
+    )
+  }
+
+  async delete(id: uuid): Promise<boolean> {
     return handleNotFound(async () => {
-      return (await this.http.get<Message[]>('/messages', { params: { conversationId, limit } })).data.map((x) =>
-        this.deserialize(x)
-      )
-    }, [])
+      await this.http.delete<boolean>(`/messages/${id}`)
+      return true
+    }, false)
   }
 
-  async delete(filters: { id?: string; conversationId?: string }): Promise<number> {
-    return (await this.http.delete<{ count: number }>('/messages', { params: filters })).data.count
+  async deleteByConversation(conversationId: uuid): Promise<number> {
+    return handleNotFound(async () => {
+      return (await this.http.delete<{ count: number }>(`/messages/conversation/${conversationId}`)).data.count
+    }, 0)
   }
 
-  async endTurn(id: string) {
+  async endTurn(id: uuid) {
     await this.http.post(`/messages/turn/${id}`)
   }
 
