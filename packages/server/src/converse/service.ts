@@ -40,7 +40,10 @@ export class ConverseService extends Service {
     }
 
     const incomingId = this.incomingIdCache.get(message.id)
-    await this.distributed.send(`converse/${incomingId}`, { cmd: ConverseCmds.Message, data: { message, incomingId } })
+    await this.distributed.publish(`converse/${incomingId}`, {
+      cmd: ConverseCmds.Message,
+      data: { message, incomingId }
+    })
   }
 
   private async handleDistributedMessage({ cmd, data }: { cmd: ConverseCmds; data: any }) {
@@ -93,7 +96,7 @@ export class ConverseService extends Service {
   }
 
   async stopCollecting(messageId: uuid, conversationId: uuid) {
-    await this.distributed.send(`converse/${messageId}`, {
+    await this.distributed.publish(`converse/${messageId}`, {
       cmd: ConverseCmds.Stop,
       data: { conversationId, messageId }
     })
