@@ -35,7 +35,7 @@ export class DistributedService extends Service {
   }
 
   async publish(channel: string, message: any) {
-    this.subservice.publish(channel, message)
+    return this.subservice.publish(channel, message)
   }
 
   async send(channel: string, message: any) {
