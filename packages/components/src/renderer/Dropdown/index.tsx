@@ -2,20 +2,23 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
 import Creatable from 'react-select/creatable'
 import { MessageTypeHandlerProps } from 'typings'
+import { renderUnsafeHTML } from '../../utils'
 import Keyboard, { Prepend } from '../Keyboard'
 
 export const Dropdown = ({
-  choices,
-  text,
+  options,
+  message,
   placeholderText,
   allowMultiple,
   allowCreation,
   displayInKeyboard,
   buttonText,
+  markdown,
+  width,
   config
 }: MessageTypeHandlerProps<'dropdown'>) => {
   const [selectedOption, setSelectedOption] = useState<any>()
-  const options = useMemo(() => choices.map((choice) => ({ label: choice.title, value: choice.value })), [choices])
+  const choices = useMemo(() => options.map((o) => ({ label: o.label, value: o.value })), [options])
 
   const sendChoice = async () => {
     if (!selectedOption) {
@@ -48,12 +51,12 @@ export const Dropdown = ({
   const renderSelect = (inKeyboard: boolean) => {
     return (
       <div className={inKeyboard ? 'bpw-keyboard-quick_reply-dropdown' : ''}>
-        <div style={{ width: '100%', display: 'inline-block' }}>
+        <div style={{ width: width || '100%', display: 'inline-block' }}>
           {allowCreation ? (
             <Creatable
               value={selectedOption}
               onChange={setSelectedOption}
-              options={options}
+              options={choices}
               placeholder={placeholderText}
               isMulti={allowMultiple}
               menuPlacement={'top'}
@@ -62,7 +65,7 @@ export const Dropdown = ({
             <Select
               value={selectedOption}
               onChange={setSelectedOption}
-              options={options}
+              options={choices}
               placeholder={placeholderText}
               isMulti={allowMultiple}
               menuPlacement={'top'}
@@ -80,19 +83,25 @@ export const Dropdown = ({
   }
 
   const shouldDisplay = config.isLastGroup && config.isLastOfGroup
-  const message = <p>{text}</p>
+  let text: JSX.Element
+  if (markdown) {
+    const html = renderUnsafeHTML(message, config.escapeHTML)
+    text = <div dangerouslySetInnerHTML={{ __html: html }} />
+  } else {
+    text = <p>{message}</p>
+  }
 
   if (displayInKeyboard && Keyboard.isReady()) {
     return (
       <Prepend keyboard={renderSelect(true)} visible={shouldDisplay}>
-        {message}
+        {text}
       </Prepend>
     )
   }
 
   return (
     <div>
-      {message}
+      {text}
       {shouldDisplay && renderSelect(false)}
     </div>
   )

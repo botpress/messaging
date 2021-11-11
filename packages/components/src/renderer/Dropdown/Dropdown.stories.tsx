@@ -30,15 +30,16 @@ const Template: ComponentStory<typeof Dropdown> = (args) => {
 export const Primary = Template.bind({})
 
 Primary.args = {
-  text: 'Choose an option from the __dropdown__',
+  message: 'Choose an option from the __dropdown__',
   buttonText: 'button text',
   allowCreation: true,
   placeholderText: 'placeholder text',
   allowMultiple: false,
+  markdown: true,
   displayInKeyboard: false,
-  choices: [
-    { title: 'Option 1', value: 'option-1' },
-    { title: 'Option 2', value: 'option-2' }
+  options: [
+    { label: 'Option 1', value: 'option-1' },
+    { label: 'Option 2', value: 'option-2' }
   ],
   config: {
     ...defaultMessageConfig,

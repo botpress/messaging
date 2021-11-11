@@ -8,7 +8,7 @@ import { Button } from './Button'
 /**
  * Displays an array of button, and handle when they are clicked
  */
-export class QuickReplies extends Component<MessageTypeHandlerProps<'single-choice'>> {
+export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply'>> {
   componentDidMount() {
     this.props.config.isLastGroup &&
       this.props.config.isLastOfGroup &&

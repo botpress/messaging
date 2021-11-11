@@ -13,7 +13,7 @@ import { VoiceMessage } from './VoiceMessage'
 
 export const defaultTypesRenderers = {
   text: Text,
-  'single-choice': QuickReplies,
+  quick_reply: QuickReplies,
   login_prompt: LoginPrompt,
   carousel: Carousel,
   card: Card,

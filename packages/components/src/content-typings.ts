@@ -11,7 +11,7 @@ export const messageTypes = [
   'card',
   'carousel',
   'location',
-  'single-choice',
+  'quick_reply',
   'login_prompt',
   'session_reset',
   'custom',
@@ -24,6 +24,13 @@ export type MessageType = MessageTypeTuple[number]
 
 export interface BaseContent<T extends MessageType> {
   type: T
+  typing?: boolean
+}
+
+export interface VisitContent extends BaseContent<'visit'> {
+  text: string
+  timezone: number
+  language: string
 }
 
 export interface TextContent extends BaseContent<'text'> {
@@ -92,7 +99,7 @@ export type ActionButton<A extends ActionType> = {
     }
   : {})
 
-export interface ChoiceContent extends BaseContent<'single-choice'> {
+export interface ChoiceContent extends BaseContent<'quick_reply'> {
   text: string
   disableFreeText?: boolean
   choices: ChoiceOption[]
@@ -104,13 +111,15 @@ export interface ChoiceOption {
 }
 
 export interface DropdownContent extends BaseContent<'dropdown'> {
-  text: string
-  choices: ChoiceOption[]
+  message: string
+  options: { label: string; value: string }[]
   allowCreation?: boolean
   placeholderText?: string
   allowMultiple?: boolean
   buttonText?: string
+  width?: number
   displayInKeyboard?: boolean
+  markdown?: boolean
 }
 
 export interface CustomComponentContent extends BaseContent<'custom'> {
@@ -124,6 +133,8 @@ export interface LoginPromptContent extends BaseContent<'login_prompt'> {}
 
 export type Content<T extends MessageType> = T extends 'text'
   ? TextContent
+  : T extends 'visit'
+  ? VisitContent
   : T extends 'image'
   ? ImageContent
   : T extends 'audio'
@@ -142,7 +153,7 @@ export type Content<T extends MessageType> = T extends 'text'
   ? LocationContent
   : T extends 'dropdown'
   ? DropdownContent
-  : T extends 'single-choice'
+  : T extends 'quick_reply'
   ? ChoiceContent
   : T extends 'login_prompt'
   ? LoginPromptContent
