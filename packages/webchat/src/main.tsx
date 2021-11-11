@@ -134,7 +134,6 @@ class Web extends React.Component<MainProps> {
     const { options, ref } = queryString.parse(location.search)
     const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
 
-    console.log(this.props.config)
     const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, this.props.config, config)
     userConfig.reference = config?.ref || ref
 
@@ -144,7 +143,6 @@ class Web extends React.Component<MainProps> {
   }
 
   async initializeSocket() {
-    console.log('config!!', this.config)
     this.socket = new BpSocket(this.config)
     this.socket.onClear = this.handleClearMessages
     this.socket.onMessage = this.handleNewMessage
