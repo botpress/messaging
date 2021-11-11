@@ -14,7 +14,7 @@ export class ConverseService extends Service {
   private collectors!: ServerCache<uuid, Collector[]>
   private incomingIdCache!: ServerCache<uuid, uuid>
   private collectingForMessageCache!: ServerCache<uuid, boolean>
-  private handleDistributedMessageCallback!: (message: any) => Promise<void>
+  private handleCmdCallback!: (message: any) => Promise<void>
 
   constructor(
     private caching: CachingService,
@@ -30,7 +30,7 @@ export class ConverseService extends Service {
     this.collectors = await this.caching.newServerCache('cache_converse_collectors', {})
     this.incomingIdCache = await this.caching.newServerCache('cache_converse_incoming_id')
     this.collectingForMessageCache = await this.caching.newServerCache('cache_converse_collecting_for_message')
-    this.handleDistributedMessageCallback = this.handleDistributedMessage.bind(this)
+    this.handleCmdCallback = this.handleCmd.bind(this)
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
@@ -46,28 +46,36 @@ export class ConverseService extends Service {
     })
   }
 
-  private async handleDistributedMessage({ cmd, data }: { cmd: ConverseCmds; data: any }) {
+  private async handleCmd({ cmd, data }: { cmd: ConverseCmds; data: any }) {
     if (cmd === ConverseCmds.Stop) {
-      const { conversationId, messageId } = data
-      const collectors = this.collectors.get(conversationId) || []
-      const childCollectors = collectors.filter((x) => x.incomingId === messageId)
-
-      for (const collector of childCollectors) {
-        clearTimeout(collector.timeout!)
-        this.removeCollector(collector)
-        this.resolveCollect(collector)
-      }
-
-      await this.distributed.unsubscribe(`converse/${messageId}`)
+      await this.handleStopCmd(data)
     } else if (cmd === ConverseCmds.Message) {
-      const { message: rawMessage, incomingId } = data
-      const message = { ...rawMessage, sentOn: new Date(rawMessage.sentOn) }
-      const collectors = this.collectors.get(message.conversationId) || []
+      await this.handleMessageCmd(data)
+    }
+  }
 
-      for (const collector of collectors) {
-        if (!incomingId || incomingId === collector.incomingId) {
-          collector.messages.push(message)
-        }
+  private async handleStopCmd(data: any) {
+    const { conversationId, messageId } = data
+    const collectors = this.collectors.get(conversationId) || []
+    const childCollectors = collectors.filter((x) => x.incomingId === messageId)
+
+    for (const collector of childCollectors) {
+      clearTimeout(collector.timeout!)
+      this.removeCollector(collector)
+      this.resolveCollect(collector)
+    }
+
+    await this.distributed.unsubscribe(`converse/${messageId}`)
+  }
+
+  private async handleMessageCmd(data: any) {
+    const { message: rawMessage, incomingId } = data
+    const message = { ...rawMessage, sentOn: new Date(rawMessage.sentOn) }
+    const collectors = this.collectors.get(message.conversationId) || []
+
+    for (const collector of collectors) {
+      if (!incomingId || incomingId === collector.incomingId) {
+        collector.messages.push(message)
       }
     }
   }
@@ -81,7 +89,7 @@ export class ConverseService extends Service {
   }
 
   async collect(messageId: uuid, conversationId: uuid, timeout: number): Promise<Message[]> {
-    await this.distributed.listen(`converse/${messageId}`, this.handleDistributedMessageCallback)
+    await this.distributed.listen(`converse/${messageId}`, this.handleCmdCallback)
 
     const collector = this.addCollector(messageId, conversationId)
     if (timeout !== 0) {
