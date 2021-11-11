@@ -17,7 +17,7 @@ interface State {
 }
 
 interface Props {
-  config: Config
+  config?: Config
   fullscreen?: boolean
 }
 
