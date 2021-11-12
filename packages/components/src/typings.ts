@@ -39,9 +39,7 @@ export interface MessageConfig {
 }
 
 export interface StudioConnector {
-  /** Event emitter */
   events: any
-  /** An axios instance */
   axios: AxiosInstance
   getModuleInjector: any
   loadModuleView: any
