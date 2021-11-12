@@ -34,6 +34,8 @@ export default {
     enableResetSessionShortcut: false,
     enableVoiceComposer: false,
     enableConversationDeletion: false,
-    closeOnEscape: true
+    closeOnEscape: true,
+    recentConversationLifetime: '5h',
+    startNewConvoOnTimeout: false
   }
 }

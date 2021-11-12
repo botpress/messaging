@@ -25,6 +25,7 @@ export const checkLocationOrigin = () => {
   }
 }
 
+// TODO: does analytics stil work?
 export const initializeAnalytics = () => {
   if (window.SEND_USAGE_STATS) {
     try {

@@ -3,7 +3,7 @@ import path from 'path'
 import React, { FC, useRef, useEffect } from 'react'
 import { MessageTypeHandlerProps } from 'typings'
 
-export const VoiceMessage: FC<MessageTypeHandlerProps<'voice'>> = ({ payload, config }) => {
+export const VoiceMessage: FC<MessageTypeHandlerProps<'voice'>> = ({ audio, config }) => {
   const audioRef = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
@@ -16,23 +16,23 @@ export const VoiceMessage: FC<MessageTypeHandlerProps<'voice'>> = ({ payload, co
 
   useEffect(() => {
     // Simulate an autoplay by playing every voice messages of a single message group one after the other
-    if (payload.autoPlay && config.shouldPlay) {
+    if (config.shouldPlay) {
       audioRef.current?.play().catch((err: Error) => {
         console.error(`An error occured while playing the voice message: ${err.message}`)
       })
     }
-  }, [payload.autoPlay, config.shouldPlay])
+  }, [config.shouldPlay])
 
-  if (!payload.audio) {
+  if (!audio) {
     return null
   }
 
-  const extension = path.extname(payload.audio)
+  const extension = path.extname(audio)
   const mime = mimeTypes.getType(extension)
 
   return (
     <audio controls ref={audioRef}>
-      <source src={payload.audio} type={mime || 'audio/mpeg'} />
+      <source src={audio} type={mime || 'audio/mpeg'} />
     </audio>
   )
 }

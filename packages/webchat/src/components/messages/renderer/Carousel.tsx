@@ -1,9 +1,5 @@
 import React from 'react'
 import Slider from 'react-slick'
-
-// Added those manually to remove the font dependencies which keeps showing 404 not found
-import '../../../../../../assets/slick/slick-theme.css'
-import '../../../../../../assets/slick/slick.css'
 import { Renderer } from '../../../typings'
 
 export class Carousel extends React.Component<ICarouselProps, ICarouselState> {

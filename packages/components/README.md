@@ -5,41 +5,17 @@
 ```typescript
 import React from 'react'
 import ReactDOM from 'react-dom'
-import renderer, { defaultMessageConfig, Message } from '@botpress/messaging-components'
+import ReactMessageRenderer, { defaultMessageConfig } from '@botpress/messaging-components'
 
-const messageData: Message<'carousel'> = {
-  type: 'carousel',
-  payload: {
-    carousel: {
-      elements: [
-        {
-          title: 'Card 1',
-          subtitle: 'Subtitle 1',
-          picture: 'https://via.placeholder.com/150/150',
-          buttons: [
-            {
-              title: 'Button 1',
-              type: 'postback',
-              payload: { data: 'button_clicked' }
-            }
-          ]
-        }
-      ]
-    }
-  },
-  config: defaultMessageConfig
+const messageContent = {
+  type: 'text',
+  text: 'Hello World!'
 }
 
-const Message = renderer.render(messageData)
-ReactDOM.render(<Message />, document.getElementById('root'))
-
-// To override a message type renderer with your own
-
-const MyCarousel: MessageTypeHandler<'carousel'> = ({ payload, config }) => {
-  return <div>My Carousel is showing {payload.carousel.elements.length} items</div>
-}
-
-renderer.set('carousel', MyCarousel)
+ReactDOM.render(
+  <ReactMessageRenderer content={messageContent} config={defaultMessageConfig} />,
+  document.getElementById('root')
+)
 ```
 
 ## Development

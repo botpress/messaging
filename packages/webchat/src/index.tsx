@@ -1,4 +1,3 @@
-import '@blueprintjs/core/lib/css/blueprint.css'
 import { configure } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import React from 'react'
@@ -7,30 +6,31 @@ import { IntlProvider } from 'react-intl'
 import Chat from './main'
 import { RootStore } from './store'
 import { defaultLocale, translations } from './translations'
+import { Config } from './typings'
 configure({ enforceActions: 'observed' })
 
-export const Embedded = (props: any) => new Wrapper(props, false)
-export const Fullscreen = (props: any) => new Wrapper(props, true)
+export const Embedded = (props: any) => new Wrapper({ ...props, fullscreen: false })
+export const Fullscreen = (props: any) => new Wrapper({ ...props, fullscreen: true })
 
 interface State {
-  fullscreen: any
-  store: any
+  store: RootStore
 }
 
-interface Props {}
+interface Props {
+  config?: Config
+  fullscreen?: boolean
+}
 
-class ExposedWebChat extends React.Component<Props, State> {
-  constructor(props: any, fullscreen: any) {
+export class ExposedWebChat extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
-      fullscreen,
-      store: new RootStore({ fullscreen })
+      store: new RootStore({ fullscreen: props.fullscreen! }, props.config)
     }
   }
 
   render() {
-    const { fullscreen } = this.state
     const store = this.state.store
     const { botUILanguage: locale } = store
 
@@ -46,6 +46,7 @@ class ExposedWebChat extends React.Component<Props, State> {
   }
 }
 
+// TODO: what does this observer do?
 const Wrapper = observer(ExposedWebChat)
 
 /**
@@ -55,6 +56,7 @@ const Wrapper = observer(ExposedWebChat)
 export { Embedded as embedded } from '.'
 export { Fullscreen as fullscreen } from '.'
 
+export * from './typings'
 export {
   Carousel,
   QuickReplies,

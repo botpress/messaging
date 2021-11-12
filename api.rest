@@ -1,9 +1,9 @@
-@baseUrl = http://localhost:3101
+@baseUrl = http://localhost:3100
 // @baseUrl =  https://messaging.botpress.dev/
-@clientId = b3a01deb-9d25-4733-8fcd-acb75d075351
-@clientToken = aeCWhcOfzW+TjnrJnayAWrHtim7mf7NoVV29edGQ69qVPyS9GgRGTXH80zo1p8JUOtp7ZYpwmAmNuIJ8IZZzUGV4
-@userId = c47da03f-a020-408b-a7b4-ce70c3b6c03d
-@convoId = e0b0f343-8c98-4383-9b7c-062ef19bfe41
+@clientId = YOUR_CLIENT_ID
+@clientToken = YOUR_TOKEN
+@userId = YOUR_USER_ID
+@convoId = YOUR_CONVO_ID
 
 ### Auth messaging cloud
 # @name auth
@@ -66,17 +66,12 @@ Content-Type: application/json
 
 {
   "conversationId": "{{convoId}}",
+  "authorId": null,
   "payload": {
     "type": "text",
     "text": "Hello this is a text message!"
   }
 }
-
-### Delete message
-DELETE {{baseUrl}}/api/messages/3e78b6be-d2a7-4a3e-98d9-763e9c81ee8c
-Authorization: Bearer {{authToken}}
-x-bp-messaging-client-id: {{clientId}}
-x-bp-messaging-client-token: {{clientToken}}
 
 ### Converse
 POST {{baseUrl}}/api/messages/collect

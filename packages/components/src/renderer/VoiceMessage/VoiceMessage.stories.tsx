@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { defaultMessageConfig } from '../../index'
+import { defaultMessageConfig } from '../../utils'
 
 import { VoiceMessage } from '.'
 
@@ -14,9 +14,6 @@ const Template: ComponentStory<typeof VoiceMessage> = (args) => <VoiceMessage {.
 export const Primary = Template.bind({})
 
 Primary.args = {
-  payload: {
-    audio: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav',
-    autoPlay: true
-  },
+  audio: 'https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav',
   config: { ...defaultMessageConfig, shouldPlay: true }
 }

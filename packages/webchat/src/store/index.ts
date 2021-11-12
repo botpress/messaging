@@ -2,11 +2,11 @@ import isBefore from 'date-fns/is_before'
 import isValid from 'date-fns/is_valid'
 import merge from 'lodash/merge'
 import { action, computed, observable, runInAction } from 'mobx'
-import ms from 'ms'
 import { InjectedIntl } from 'react-intl'
 
 import WebchatApi from '../core/api'
 import constants from '../core/constants'
+import BpSocket from '../core/socket'
 import { getUserLocale, initializeLocale } from '../translations'
 import {
   BotInfo,
@@ -32,7 +32,6 @@ initializeLocale()
 const chosenLocale = getUserLocale()
 
 class RootStore {
-  public bp!: StudioConnector
   public composer: ComposerStore
   public view: ViewStore
 
@@ -73,14 +72,23 @@ class RootStore {
 
   public delayedMessages: QueuedMessage[] = []
 
-  constructor(options: { fullscreen: boolean }) {
+  constructor(options: { fullscreen: boolean }, config?: Config) {
     this.composer = new ComposerStore(this)
     this.view = new ViewStore(this, options.fullscreen)
+
+    if (config) {
+      this.updateConfig(config)
+    }
   }
 
   @action.bound
   setIntlProvider(provider: InjectedIntl) {
     this.intl = provider
+  }
+
+  @action.bound
+  setSocket(socket: BpSocket) {
+    this.api = new WebchatApi(socket)
   }
 
   @computed
@@ -131,7 +139,7 @@ class RootStore {
 
   @computed
   get currentConversationId(): uuid {
-    return this.currentConversation!.id
+    return this.currentConversation?.id
   }
 
   @action.bound
@@ -240,7 +248,8 @@ class RootStore {
 
   @action.bound
   async fetchPreferences(): Promise<void> {
-    const preferences = await this.api.fetchPreferences()
+    // TODO: where to fetch this from? Can this just be set in the frontend?
+    const preferences = { language: 'en' } // await this.api.fetchPreferences()
     if (!preferences.language) {
       return
     }
@@ -252,16 +261,14 @@ class RootStore {
   /** Fetches the list of conversation, and update the corresponding config values */
   @action.bound
   async fetchConversations(): Promise<void> {
-    const { conversations, recentConversationLifetime, startNewConvoOnTimeout } = await this.api.fetchConversations()
+    const conversations = await this.api.fetchConversations()
 
     runInAction('-> setConversations', () => {
-      if (!conversations.length) {
+      if (!conversations?.length) {
         this.view.showBotInfo()
       }
 
-      this.config.recentConversationLifetime = recentConversationLifetime
-      this.config.startNewConvoOnTimeout = startNewConvoOnTimeout
-      this.conversations = conversations
+      this.conversations = conversations!
     })
   }
 
@@ -273,7 +280,9 @@ class RootStore {
       return this.createConversation()
     }
 
-    const conversation: CurrentConversation = await this.api.fetchConversation(convoId || this._getCurrentConvoId()!)
+    const conversation: CurrentConversation = (await this.api.fetchConversation(
+      convoId || this._getCurrentConvoId()!
+    )!) as CurrentConversation
     if (conversation?.messages) {
       conversation.messages = conversation.messages.sort(
         (a, b) => new Date(a.sentOn).getTime() - new Date(b.sentOn).getTime()
@@ -329,7 +338,7 @@ class RootStore {
 
   @action.bound
   async setReference(): Promise<void> {
-    return this.api.setReference(this.config.reference, this.currentConversationId)
+    return this.api.setReference(this.config.reference!, this.currentConversationId)
   }
 
   @action.bound
@@ -389,9 +398,12 @@ class RootStore {
       return
     }
 
+    // TODO: this can't work. We can't create events directly
+    /*
     if (!constants.MESSAGE_TYPES.includes(data.type)) {
       return this.api.sendEvent(data, this.currentConversationId)
     }
+    */
 
     await this.api.sendMessage(data, this.currentConversationId)
   }
@@ -418,12 +430,6 @@ class RootStore {
   @action.bound
   updateConfig(config: Config, bp?: StudioConnector) {
     this.config = config
-
-    if (!this.api) {
-      this.bp = bp!
-      this.api = new WebchatApi('', bp!.axios)
-    }
-
     this._applyConfig()
   }
 
@@ -435,8 +441,8 @@ class RootStore {
 
     document.title = this.config.botName || 'Botpress Webchat'
 
-    this.api.updateAxiosConfig({ botId: this.config.botId, externalAuthToken: this.config.externalAuthToken })
-    this.api.updateUserId(this.config.userId!)
+    // TODO: can't work at the moment
+    // this.api.updateUserId(this.config.userId!)
 
     if (!this.isInitialized) {
       window.USE_SESSION_STORAGE = this.config.useSessionStorage
@@ -456,7 +462,7 @@ class RootStore {
   setUserId(userId: string): void {
     this.config.userId = userId
     this.resetConversation()
-    this.api.updateUserId(userId)
+    // this.api.updateUserId(userId)
     this.publishConfigChanged()
   }
 
@@ -537,12 +543,15 @@ class RootStore {
       return
     }
 
+    // TODO: these settings need to be set in the frontend
+    /*
     const lifeTimeMargin = Date.now() - ms(this.config.recentConversationLifetime)
     const isConversationExpired =
       new Date(this.conversations[0].lastMessage?.sentOn || this.conversations[0].createdOn).getTime() < lifeTimeMargin
     if (isConversationExpired && this.config.startNewConvoOnTimeout) {
       return
     }
+    */
 
     return this.conversations[0].id
   }
