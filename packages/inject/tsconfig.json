@@ -1,0 +1,26 @@
+{
+  // Manage references here
+  "references": [
+    {
+      "path": "../webchat"
+    }
+  ],
+
+  // Defaults (don't change this)
+  "extends": "../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // Specific settings for npm package
+    "target": "es6",
+    "declaration": true,
+    "sourceMap": false,
+
+    // We use react
+    "jsx": "react"
+  },
+  "include": ["src", "src/**/*.json"],
+  "exclude": ["dist", "node_modules"]
+}
