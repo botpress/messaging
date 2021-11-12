@@ -3,8 +3,11 @@ import path from 'path'
 import React, { useMemo } from 'react'
 import { MessageTypeHandlerProps } from '../../typings'
 
-export const Audio: React.FC<MessageTypeHandlerProps<'audio'>> = ({ audio, title }) => {
+export const Audio: React.FC<MessageTypeHandlerProps<'audio'>> = ({ audio, title, config }) => {
   const mime = useMimeType(audio)
+  if (!mime) {
+    return <File file={audio} title={title} config={config} />
+  }
   return (
     <div>
       <span>{title}</span>
@@ -26,8 +29,11 @@ export const File: React.FC<MessageTypeHandlerProps<'file'>> = ({ file, title })
   )
 }
 
-export const Video: React.FC<MessageTypeHandlerProps<'video'>> = ({ video, title }) => {
+export const Video: React.FC<MessageTypeHandlerProps<'video'>> = ({ video, title, config }) => {
   const mime = useMimeType(video)
+  if (!mime) {
+    return <File file={video} title={title} config={config} />
+  }
   return (
     <div>
       <span>{title}</span>
@@ -47,6 +53,13 @@ export const Image: React.FC<MessageTypeHandlerProps<'image'>> = ({ image, title
   )
 }
 
-const useMimeType = (url: string): string | undefined => {
-  return useMemo(() => mimeTypes.getType(path.extname(url)) || undefined, [url])
+const useMimeType = (url: string): string | null => {
+  return useMemo(() => {
+    try {
+      const validUrl = new URL(url)
+      return mimeTypes.getType(validUrl.pathname)
+    } catch (error) {
+      return null
+    }
+  }, [url])
 }
