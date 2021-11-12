@@ -17,7 +17,8 @@ export const defaultTypesRenderers = {
   login_prompt: LoginPrompt,
   carousel: Carousel,
   card: Card,
-  location: () => null,
+  // Currently unsupported
+  // location: () => null,
   file: File,
   video: Video,
   audio: Audio,
