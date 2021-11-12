@@ -54,12 +54,14 @@ export const Image: React.FC<MessageTypeHandlerProps<'image'>> = ({ image, title
 }
 
 const useMimeType = (url: string): string | null => {
+  let extension: string | null = null
   return useMemo(() => {
     try {
       const validUrl = new URL(url)
-      return mimeTypes.getType(validUrl.pathname)
+      extension = validUrl.pathname
     } catch (error) {
-      return null
+      extension = path.extname(url)
     }
+    return extension && mimeTypes.getType(extension)
   }, [url])
 }
