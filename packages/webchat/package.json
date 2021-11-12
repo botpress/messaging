@@ -22,8 +22,5 @@
     "query-string": "^7.0.1",
     "react-dom": "^16.8.6",
     "react-ga": "^2.7.0"
-  },
-  "devDependencies": {
-    "@types/dom-mediacapture-record": "^1.0.7"
   }
 }

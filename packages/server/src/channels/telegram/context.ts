@@ -13,5 +13,5 @@ export interface TelegramMessage {
   photo?: InputFile
   markdown?: boolean
   action?: ChatAction
-  extra?: ExtraReplyMessage
+  extra?: any
 }
