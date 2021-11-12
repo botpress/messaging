@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { defaultMessageConfig } from '../../index'
+import { defaultMessageConfig } from '../../utils'
 import { Carousel } from '.'
 
 export default {
@@ -13,23 +13,24 @@ const Template: ComponentStory<typeof Carousel> = (args) => <Carousel {...args} 
 export const Primary = Template.bind({})
 
 Primary.args = {
-  payload: {
-    carousel: {
-      elements: [
+  items: [
+    {
+      title: 'Card 1',
+      subtitle: 'Subtitle 1',
+      image: 'https://via.placeholder.com/150/150',
+      actions: [
         {
-          title: 'Card 1',
-          subtitle: 'Subtitle 1',
-          picture: 'https://via.placeholder.com/150/150',
-          buttons: [
-            {
-              title: 'Button 1',
-              type: 'postback',
-              payload: { data: 'button_clicked' }
-            }
-          ]
+          title: 'Button 1',
+          action: 'Postback',
+          payload: 'button_clicked'
         }
       ]
     }
-  },
-  config: defaultMessageConfig
+  ],
+  config: {
+    ...defaultMessageConfig,
+    onSendData: async (data) => {
+      alert('onSendData called with: ' + JSON.stringify(data))
+    }
+  }
 }

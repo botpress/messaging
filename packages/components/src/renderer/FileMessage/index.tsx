@@ -1,53 +1,67 @@
 import mimeTypes from 'mime/lite'
-import React from 'react'
 import path from 'path'
+import React, { useMemo } from 'react'
 import { MessageTypeHandlerProps } from '../../typings'
 
-export const File = ({ payload }: MessageTypeHandlerProps<'file' | 'video' | 'audio'>) => {
-  if (!payload) {
-    return null
+export const Audio: React.FC<MessageTypeHandlerProps<'audio'>> = ({ audio, title, config }) => {
+  const mime = useMimeType(audio)
+  if (!mime) {
+    return <File file={audio} title={title} config={config} />
   }
-
-  const { url, title } = payload
-
-  let extension = ''
-  try {
-    const validUrl = new URL(url)
-
-    extension = validUrl.pathname
-  } catch (error) {
-    // Try using path.extname since url might be relative.
-    extension = path.extname(url)
-  }
-
-  const mime = mimeTypes.getType(extension)
-
-  if (mime?.includes('image/')) {
-    return (
-      <a href={url} target={'_blank'}>
-        <img src={url} title={title} />
-      </a>
-    )
-  } else if (mime?.includes('audio/')) {
-    return (
+  return (
+    <div>
+      <span>{title}</span>
       <audio controls>
-        <source src={url} type={mime} />
+        <source src={audio} type={mime} />
       </audio>
-    )
-  } else if (mime?.includes('video/')) {
-    return (
-      <video controls>
-        <source src={url} type={mime} />
-      </video>
-    )
-  }
+    </div>
+  )
+}
 
+export const File: React.FC<MessageTypeHandlerProps<'file'>> = ({ file, title }) => {
   return (
     <div>
       <span>File: </span>
-      <a href={url} target={'_blank'}>
-        {title || url}
+      <a href={file} target={'_blank'} rel="noopener noreferrer">
+        {title || file}
       </a>
     </div>
   )
+}
+
+export const Video: React.FC<MessageTypeHandlerProps<'video'>> = ({ video, title, config }) => {
+  const mime = useMimeType(video)
+  if (!mime) {
+    return <File file={video} title={title} config={config} />
+  }
+  return (
+    <div>
+      <span>{title}</span>
+      <video controls>
+        <source src={video} type={mime} />
+      </video>
+    </div>
+  )
+}
+
+export const Image: React.FC<MessageTypeHandlerProps<'image'>> = ({ image, title }) => {
+  return (
+    <div>
+      <span>{title}</span>
+      <img src={image} alt={title} />
+    </div>
+  )
+}
+
+const useMimeType = (url: string): string | null => {
+  let extension: string | null = null
+  return useMemo(() => {
+    try {
+      const validUrl = new URL(url)
+      extension = validUrl.pathname
+    } catch (error) {
+      extension = path.extname(url)
+    }
+    return extension && mimeTypes.getType(extension)
+  }, [url])
 }
