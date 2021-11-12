@@ -52,10 +52,4 @@ describe('Renderer', () => {
     render(component)
     expect(screen.getByText(`Unsupported message type: ${nonExistantType}`)).toBeInTheDocument()
   })
-
-  test.each(messageTypes)('type "%s" has an assigned default renderer', (type) => {
-    if (type !== 'unsupported') {
-      expect(defaultTypesRenderers[type]).toBeTruthy()
-    }
-  })
 })
