@@ -1,7 +1,6 @@
 import { ConversationEvents, UserEvents, Webchat } from '@botpress/chat'
 import { text, element, WebchatRenderer } from '@botpress/chat-skin'
 import { MessagingClient } from '@botpress/messaging-client'
-import { SocketComEvents } from '@botpress/messaging-socket'
 import { BoardWatcher } from './watcher'
 
 export class BoardLinker {

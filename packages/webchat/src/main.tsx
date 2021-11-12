@@ -17,6 +17,7 @@ import { Config, Message, Overrides, uuid } from './typings'
 import { checkLocationOrigin, initializeAnalytics, isIE, trackMessage, trackWebchatState } from './utils'
 
 const _values = (obj: Overrides) => Object.keys(obj).map((x) => obj[x])
+const DEFAULT_TYPING_DELAY = 500
 
 class Web extends React.Component<MainProps> {
   private config!: Config
@@ -34,6 +35,7 @@ class Web extends React.Component<MainProps> {
   }
 
   async componentDidMount() {
+    // TODO: serve this from cdn
     this.audio = new Audio(`${window.ROOT_PATH}/assets/modules/channel-web/notification.mp3`)
     this.props.store.setIntlProvider(this.props.intl!)
     window.store = this.props.store
@@ -45,6 +47,7 @@ class Web extends React.Component<MainProps> {
       }
       if (e.key === 'Escape') {
         this.props.hideChat!()
+        // TODO: what to do with emulator mode?
         if (this.props.config!.isEmulator) {
           window.parent.document!.getElementById('mainLayout')!.focus()
         }
@@ -81,6 +84,7 @@ class Web extends React.Component<MainProps> {
       }
 
       await this.socket.waitForUserId()
+      this.props.store.setSocket(this.socket)
       await this.props.initializeChat!()
     }
   }
@@ -93,13 +97,20 @@ class Web extends React.Component<MainProps> {
       set(window.parent, storePath, this.props.store)
     }
 
-    this.config.overrides && this.loadOverrides(this.config.overrides)
+    if (this.config.overrides) {
+      this.loadOverrides(this.config.overrides)
+    }
 
-    this.config.containerWidth && this.postMessageToParent('setWidth', this.config.containerWidth)
+    if (this.config.containerWidth) {
+      this.postMessageToParent('setWidth', this.config.containerWidth)
+    }
 
-    this.config.reference && this.props.setReference!()
+    if (this.config.reference) {
+      await this.props.setReference!()
+    }
 
-    await this.props.fetchBotInfo!()
+    // TODO: replace this by frontend configuration
+    // await this.props.fetchBotInfo!()
 
     if (!this.isLazySocket()) {
       await this.initializeSocket()
@@ -109,7 +120,7 @@ class Web extends React.Component<MainProps> {
   }
 
   postMessageToParent(type: string, value: any) {
-    window.parent?.postMessage({ type, value, chatId: this.config.chatId }, '*')
+    window.parent?.postMessage({ type, value, chatId: this.config?.chatId }, '*')
   }
 
   extractConfig(): Config {
@@ -123,32 +134,35 @@ class Web extends React.Component<MainProps> {
     const { options, ref } = queryString.parse(location.search)
     const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
 
-    const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, config)
-    userConfig.reference = config.ref || ref
+    const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, this.props.config, config)
+    userConfig.reference = config?.ref || ref
 
-    this.props.updateConfig!(userConfig, this.props.bp)
+    this.props.updateConfig!(userConfig)
 
     return userConfig
   }
 
   async initializeSocket() {
-    this.socket = new BpSocket(this.props.bp!, this.config)
+    this.socket = new BpSocket(this.config)
     this.socket.onClear = this.handleClearMessages
     this.socket.onMessage = this.handleNewMessage
     this.socket.onTyping = this.handleTyping
     this.socket.onData = this.handleDataMessage
     this.socket.onUserIdChanged = this.props.setUserId!
 
-    this.config.userId && this.socket.changeUserId(this.config.userId)
+    // TODO: Can't do that
+    // this.config.userId && this.socket.changeUserId(this.config.userId)
 
     this.socket.setup()
     await this.socket.waitForUserId()
+    this.props.store.setSocket(this.socket)
   }
 
   loadOverrides(overrides: Overrides) {
     try {
       for (const override of _values(overrides)) {
-        override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
+        // TODO: load module view this can't work
+        // override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
       }
     } catch (err: any) {
       console.error('Error while loading overrides', err.message)
@@ -161,7 +175,8 @@ class Web extends React.Component<MainProps> {
         return
       }
 
-      this.socket.changeUserId(data.newValue)
+      // TODO: Can't work right now
+      // this.socket.changeUserId(data.newValue)
       this.socket.setup()
       await this.socket.waitForUserId()
       await this.props.initializeChat!()
@@ -225,6 +240,11 @@ class Web extends React.Component<MainProps> {
   }
 
   handleNewMessage = async (event: Message) => {
+    if (event.authorId === undefined) {
+      const value = (event.payload.type === 'typing' ? event.payload.value : undefined) || DEFAULT_TYPING_DELAY
+      await this.handleTyping({ ...event, timeInMs: value })
+    }
+
     if (event.payload?.type === 'visit') {
       // don't do anything, it's the system message
       return
@@ -401,7 +421,6 @@ export default inject(({ store }: { store: RootStore }) => ({
 
 type MainProps = { store: RootStore } & Pick<
   StoreDef,
-  | 'bp'
   | 'config'
   | 'initializeChat'
   | 'botInfo'

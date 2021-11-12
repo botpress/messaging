@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <h1>Example website</h1>
+    <p>This website integrates the botpress webchat!</p>
+  </body>
+
+  <script src="http://localhost:8080/inject.js"></script>
+  <script>
+    window.botpressWebChat.init({
+      hostUrl: 'http://localhost:8080',
+      messagingUrl: 'http://localhost:3100',
+      clientId: '8b6b25ae-e47d-455e-8057-356dae07fff2'
+    })
+  </script>
+</html>

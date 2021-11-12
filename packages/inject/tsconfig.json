@@ -2,15 +2,6 @@
   // Manage references here
   "references": [
     {
-      "path": "../chat"
-    },
-    {
-      "path": "../skin"
-    },
-    {
-      "path": "../client"
-    },
-    {
       "path": "../webchat"
     }
   ],
@@ -22,10 +13,14 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // Specific settings for frontend
+    // Specific settings for npm package
     "target": "es6",
-    "lib": ["dom"],
+    "declaration": true,
+    "sourceMap": false,
+
+    // We use react
     "jsx": "react"
   },
+  "include": ["src", "src/**/*.json"],
   "exclude": ["dist", "node_modules"]
 }

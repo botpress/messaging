@@ -508,6 +508,7 @@ body {
 }
 
 /* Comment this element to hide the icon indicating an external website */
+/* TODO: doesn't work right now due to the external_icon image that doesn't exist
 .bpw-card-external-icon {
   background: url(/assets/modules/channel-web/images/external_icon.png) no-repeat;
   width: 16px;
@@ -515,6 +516,7 @@ body {
   display: inline-block;
   background-size: 100% 100%;
 }
+*/
 
 .bpw-card-picture {
   background-position: 50% 50%;

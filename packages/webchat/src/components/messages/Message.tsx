@@ -92,6 +92,8 @@ class Message extends Component<MessageProps> {
   }
 
   render_custom() {
+    // This doesn't work at the moment. We can't get the InjectedModuleView
+    /*
     const { module = undefined, component = undefined, wrapped = undefined } = this.props.payload || {}
     if (!module || !component) {
       return this.render_unsupported()
@@ -129,6 +131,7 @@ class Message extends Component<MessageProps> {
     }
 
     return <InjectedModuleView moduleName={module} componentName={component} lite extraProps={props} />
+    */
   }
 
   render_session_reset() {
