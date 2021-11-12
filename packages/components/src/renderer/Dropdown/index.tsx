@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
 import Creatable from 'react-select/creatable'
-import { DropdownOption, MessageTypeHandlerProps } from 'typings'
+import { MessageTypeHandlerProps } from 'typings'
 import { renderUnsafeHTML } from '../../utils'
 import Keyboard, { Prepend } from '../Keyboard'
 
-export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'>) => {
-  const [options, setOptions] = useState<DropdownOption[]>([])
+export const Dropdown = ({
+  options,
+  message,
+  placeholderText,
+  allowMultiple,
+  allowCreation,
+  displayInKeyboard,
+  buttonText,
+  markdown,
+  width,
+  config
+}: MessageTypeHandlerProps<'dropdown'>) => {
   const [selectedOption, setSelectedOption] = useState<any>()
-
-  useEffect(() => {
-    if (payload.options.length) {
-      setOptions(payload.options.map((x) => ({ value: x.value || x.label, label: x.label })))
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!payload.buttonText) {
-      sendChoice().catch(console.error)
-    }
-  }, [selectedOption])
+  const choices = useMemo(() => options.map((o) => ({ label: o.label, value: o.value })), [options])
 
   const sendChoice = async () => {
     if (!selectedOption) {
@@ -36,34 +35,41 @@ export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'
     await config.onSendData({ type: 'quick_reply', text: label, payload: value || label })
   }
 
+  useEffect(() => {
+    if (buttonText && displayInKeyboard) {
+      return
+    }
+    sendChoice().catch(console.error)
+  }, [selectedOption])
+
   const renderSelect = (inKeyboard: boolean) => {
     return (
       <div className={inKeyboard ? 'bpw-keyboard-quick_reply-dropdown' : ''}>
-        <div style={{ width: payload.width || '100%', display: 'inline-block' }}>
-          {payload.allowCreation ? (
+        <div style={{ width: width || '100%', display: 'inline-block' }}>
+          {allowCreation ? (
             <Creatable
               value={selectedOption}
               onChange={setSelectedOption}
-              options={options}
-              placeholder={payload.placeholderText}
-              isMulti={payload.allowMultiple}
+              options={choices}
+              placeholder={placeholderText}
+              isMulti={allowMultiple}
               menuPlacement={'top'}
             />
           ) : (
             <Select
               value={selectedOption}
               onChange={setSelectedOption}
-              options={options}
-              placeholder={payload.placeholderText}
-              isMulti={payload.allowMultiple}
+              options={choices}
+              placeholder={placeholderText}
+              isMulti={allowMultiple}
               menuPlacement={'top'}
             />
           )}
         </div>
 
-        {payload.buttonText && (
+        {displayInKeyboard && (
           <button className="bpw-button" onClick={sendChoice}>
-            {payload.buttonText}
+            {buttonText}
           </button>
         )}
       </div>
@@ -71,26 +77,25 @@ export const Dropdown = ({ payload, config }: MessageTypeHandlerProps<'dropdown'
   }
 
   const shouldDisplay = config.isLastGroup && config.isLastOfGroup
-  let message: React.ReactElement
-
-  if (payload.markdown) {
-    const html = renderUnsafeHTML(payload.message, payload.escapeHTML)
-    message = <div dangerouslySetInnerHTML={{ __html: html }} />
+  let text: JSX.Element
+  if (markdown) {
+    const html = renderUnsafeHTML(message, config.escapeHTML)
+    text = <div dangerouslySetInnerHTML={{ __html: html }} />
   } else {
-    message = <p>{payload.message}</p>
+    text = <p>{message}</p>
   }
 
-  if (payload.displayInKeyboard && Keyboard.isReady()) {
+  if (displayInKeyboard && Keyboard.isReady()) {
     return (
       <Prepend keyboard={renderSelect(true)} visible={shouldDisplay}>
-        {message}
+        {text}
       </Prepend>
     )
   }
 
   return (
     <div>
-      {message}
+      {text}
       {shouldDisplay && renderSelect(false)}
     </div>
   )

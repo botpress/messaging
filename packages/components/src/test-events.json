@@ -1,0 +1,331 @@
+[
+  {
+    "id": "117864b8-7ad5-4d9d-8332-1ea2ffccba91",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-19T20:21:44.488Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "8bf59247-9886-45b1-b882-9b7ef894f1e6",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-19T20:21:45.933Z",
+    "payload": "{\"type\":\"text\",\"text\":\"hello\"}"
+  },
+  {
+    "id": "054c0bc2-2f2f-4530-b095-0e1d6ce17b49",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:21:46.122Z",
+    "payload": "{\"type\":\"text\",\"text\":\"Pardon, je n'ai pas compris. Veuillez me poser un autre question.\",\"typing\":true}"
+  },
+  {
+    "id": "c7cbd2d7-f802-4e78-8559-757f3d673e28",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-19T20:31:29.609Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "e363a893-56ba-402b-bcd5-47e943d73dd4",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:31:29.738Z",
+    "payload": "{\"type\":\"text\",\"text\":\"Pardon, je n'ai pas compris. Veuillez me poser un autre question.\",\"typing\":true}"
+  },
+  {
+    "id": "1bb6f463-e738-4aa5-8844-6e06d50ff552",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-19T20:31:34.131Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "e6c000b6-7cab-45cc-b691-f15b8170e5ee",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:31:34.199Z",
+    "payload": "{\"type\":\"audio\",\"audio\":\"https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav\",\"title\":\"title\",\"typing\":true}"
+  },
+  {
+    "id": "e70d4f47-a0f4-4469-b6a5-c74cf9c476a4",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-19T20:32:20.195Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "af88ae6e-2b0a-46db-ba23-a901f183c8f8",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:32:20.303Z",
+    "payload": "{\"type\":\"file\",\"file\":\"http://example.org/info.txt\",\"title\":\"info.txt\",\"typing\":true}"
+  },
+  {
+    "id": "f81b167c-21f7-4337-b6f5-809273f9e501",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-19T20:32:25.467Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "c8ed326e-cc70-4e02-a800-cace611677ae",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:32:25.544Z",
+    "payload": "{\"type\":\"card\",\"title\":\"card\",\"subtitle\":\"card sub\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Touched_by_His_Noodly_Appendage_HD.jpg/1920px-Touched_by_His_Noodly_Appendage_HD.jpg\",\"actions\":[{\"action\":\"Say something\",\"title\":\"say something\",\"text\":\"thing to say\"},{\"action\":\"Open URL\",\"title\":\"open url\",\"url\":\"http://example.org\"},{\"action\":\"Postback\",\"title\":\"postback\",\"payload\":\"t\"}]}"
+  },
+  {
+    "id": "7666d733-763b-4a42-ad82-f77a67a2aee3",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-19T20:33:13.221Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "e7b19b7a-498a-415f-a7d6-d0a29f99c245",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:33:13.287Z",
+    "payload": "{\"type\":\"carousel\",\"items\":[{\"title\":\"Carouselcard1\",\"subtitle\":\"subtitle\", \"image\": \"https://via.placeholder.com/150/150\",\"actions\":[{\"action\":\"Say something\",\"title\":\"say something\",\"text\":\"thing to say\"},{\"action\":\"Open URL\",\"title\":\"open url\",\"url\":\"http://example.org/txt\"},{\"action\":\"Postback\",\"title\":\"postback\",\"payload\":\"[object Object]\"}]},{\"title\":\"carouselcard2\",\"subtitle\":\"subtitle\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Touched_by_His_Noodly_Appendage_HD.jpg/1920px-Touched_by_His_Noodly_Appendage_HD.jpg\",\"actions\":[{\"action\":\"Say something\",\"title\":\"soemthing\",\"text\":\"txt\"}]}],\"typing\":true}"
+  },
+  {
+    "id": "a4e25639-f8bc-4d8e-84fa-1aa9d61d17d3",
+    "conversationId": "b394f7f5-57ca-47ac-8f76-b8cdc9cb1c49",
+    "authorId": "1ff02445-f0fb-44d9-b824-73d49f921cf6",
+    "sentOn": "2021-10-19T20:38:01.880Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "3380a297-e1df-4cbe-9f5c-68abfb28c251",
+    "conversationId": "b394f7f5-57ca-47ac-8f76-b8cdc9cb1c49",
+    "authorId": "1ff02445-f0fb-44d9-b824-73d49f921cf6",
+    "sentOn": "2021-10-19T20:38:18.775Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "1ff36ccc-b894-4e3d-ae0e-3144ff019096",
+    "conversationId": "b394f7f5-57ca-47ac-8f76-b8cdc9cb1c49",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:38:18.892Z",
+    "payload": "{\"type\":\"text\",\"text\":\"Pardon, je n'ai pas compris. Veuillez me poser un autre question.\",\"typing\":true}"
+  },
+  {
+    "id": "f4c6039e-a906-4cea-9e6f-88a327c082bb",
+    "conversationId": "b394f7f5-57ca-47ac-8f76-b8cdc9cb1c49",
+    "authorId": "1ff02445-f0fb-44d9-b824-73d49f921cf6",
+    "sentOn": "2021-10-19T20:39:03.835Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "889e3e80-e78a-4513-a907-7d761d366533",
+    "conversationId": "b394f7f5-57ca-47ac-8f76-b8cdc9cb1c49",
+    "authorId": null,
+    "sentOn": "2021-10-19T20:39:03.914Z",
+    "payload": "{\"type\":\"audio\",\"audio\":\"https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav\",\"title\":\"title\",\"typing\":true}"
+  },
+  {
+    "id": "25600267-490a-4b8f-ad9a-80c8e59dae8d",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-20T18:12:55.648Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "0c0667ff-8924-48ed-b03e-b7ebe04d1e34",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-20T18:14:46.227Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "e9710935-3d00-4c85-adda-222116eaeff3",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-20T18:16:05.679Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "9dbe427a-86d4-4ebc-90b5-e279da504a2f",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-20T18:16:53.549Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "adb05ea4-aa98-4c17-ae4e-0fa9c0e98ffc",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-20T18:18:45.772Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "f508516d-aed9-4eaa-b9a0-9560c39de8c4",
+    "conversationId": "15b1073d-8cf4-4a40-bbf6-f310510be3b8",
+    "authorId": "d5a6a3ec-4dbb-49a2-a8ef-75aa5e988809",
+    "sentOn": "2021-10-20T18:24:02.283Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-4,\"language\":\"en\"}"
+  },
+  {
+    "id": "b2e7f80d-ac04-445f-a0a8-324732a32c2e",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:57:43.124Z",
+    "payload": "{\"type\":\"visit\",\"text\":\"User visit\",\"timezone\":-5,\"language\":\"en\"}"
+  },
+  {
+    "id": "7c895626-95db-43fc-9113-5792d56e457c",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:57:45.599Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "cdf1c025-0802-4fcf-bdcf-b541d91ba9cc",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:57:47.352Z",
+    "payload": "{\"type\":\"text\",\"text\":\"Pardon, je n'ai pas compris. Veuillez me poser un autre question.\",\"typing\":true}"
+  },
+  {
+    "id": "0cbe9e56-7f83-44ce-a594-cd4fc853b218",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:57:52.284Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "94437bcf-bd38-4ea4-a704-2ad4faf120bc",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:57:52.406Z",
+    "payload": "{\"type\":\"audio\",\"audio\":\"https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav\",\"title\":\"title\",\"typing\":true}"
+  },
+  {
+    "id": "db77ee18-1660-4ea1-9db5-5e254835e156",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:57:55.383Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "9b3cb494-cf7c-4020-a981-73e918003bec",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:57:55.461Z",
+    "payload": "{\"type\":\"file\",\"file\":\"http://example.org/info.txt\",\"title\":\"info.txt\",\"typing\":true}"
+  },
+  {
+    "id": "3e05ddba-40b3-416d-859b-368b2e1896fb",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:57:56.716Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "362cff0e-e603-4e9e-ade9-f4ea24d4a849",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:57:56.813Z",
+    "payload": "{\"type\":\"card\",\"title\":\"card\",\"subtitle\":\"card sub\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Touched_by_His_Noodly_Appendage_HD.jpg/1920px-Touched_by_His_Noodly_Appendage_HD.jpg\",\"actions\":[{\"action\":\"Say something\",\"title\":\"say something\",\"text\":\"thing to say\"},{\"action\":\"Open URL\",\"title\":\"open url\",\"url\":\"http://example.org\"},{\"action\":\"Postback\",\"title\":\"postback\",\"payload\":\"t\"}]}"
+  },
+  {
+    "id": "43338f16-1d80-434a-ae13-3e3dc9a72102",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:57:59.077Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "56942286-b87a-4181-948d-5d97ee031a0a",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:57:59.199Z",
+    "payload": "{\"type\":\"carousel\",\"items\":[{\"title\":\"Carouselcard1\",\"subtitle\":\"subtitle\",\"actions\":[{\"action\":\"Say something\",\"title\":\"say something\",\"text\":\"thing to say\"},{\"action\":\"Open URL\",\"title\":\"open url\",\"url\":\"http://example.org/txt\"},{\"action\":\"Postback\",\"title\":\"postback\",\"payload\":\"[object Object]\"}]},{\"title\":\"carouselcard2\",\"subtitle\":\"subtitle\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Touched_by_His_Noodly_Appendage_HD.jpg/1920px-Touched_by_His_Noodly_Appendage_HD.jpg\",\"actions\":[{\"action\":\"Say something\",\"title\":\"soemthing\",\"text\":\"txt\"}]}],\"typing\":true}"
+  },
+  {
+    "id": "1cbec6ff-f14d-4c13-9474-cffd406db769",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:58:01.506Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "789f9b1d-0ee3-4bd9-82f2-a314a8a5aebb",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:58:01.578Z",
+    "payload": "{\"type\":\"dropdown\",\"message\":\"dropdown message\",\"buttonText\":\"button label\",\"placeholderText\":\"placeholder text\",\"options\":[{\"label\":\"label 1 opt\",\"value\":\"value1opt\"}],\"width\":300,\"displayInKeyboard\":true,\"allowCreation\":true,\"allowMultiple\":true,\"markdown\":true,\"typing\":true}"
+  },
+  {
+    "id": "04d250e6-754c-47c8-ae97-206f385be9bf",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:58:07.095Z",
+    "payload": "{\"type\":\"image\",\"image\":\"/api/v1/bots/test/media/yxlvo60d1e5f8bai0gjy-Screen%20Shot%202021-07-01%20at%203.19.49%20PM.png\",\"title\":\"title of picture\",\"typing\":true}"
+  },
+  {
+    "id": "7d2781c7-1495-42ab-834f-d7c90b3b1d10",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:58:09.141Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "25cf636e-8074-4f9f-92f2-c47b0e3a222a",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:58:09.215Z",
+    "payload": "{\"type\":\"location\",\"latitude\":0.01,\"longitude\":0.01,\"address\":\"address here\",\"title\":\"location name\",\"typing\":true}"
+  },
+  {
+    "id": "b15bd257-f43f-4267-9ceb-f00d1bcd77ff",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:58:12.420Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "f0a71923-0037-4ecb-9707-2913668640a2",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:58:12.581Z",
+    "payload": "{\"type\":\"video\",\"video\":\"http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4\",\"title\":\"video title\",\"typing\":true}"
+  },
+  {
+    "id": "82e212dd-b7e1-4b53-9270-0eb8e8baa5bc",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:58:15.041Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "2e456ee1-75d0-4c68-9472-68f19fd87dba",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:58:15.149Z",
+    "payload": "{\"type\":\"text\",\"text\":\"Pardon, je n'ai pas compris. Veuillez me poser un autre question.\",\"typing\":true}"
+  },
+  {
+    "id": "b82036ef-574e-451a-8e04-7d72fd5930b8",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:58:17.597Z",
+    "payload": "{\"type\":\"text\",\"text\":\"t\"}"
+  },
+  {
+    "id": "c66d50d7-eb84-4853-a875-093aa998ae6e",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": null,
+    "sentOn": "2021-11-11T15:58:17.663Z",
+    "payload": "{\"type\":\"audio\",\"audio\":\"https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav\",\"title\":\"title\",\"typing\":true}"
+  },
+  {
+    "id": "6e5f3d9e-7a00-4d99-908e-4dbf79167c5d",
+    "conversationId": "e3f536ab-aa53-4683-8669-87d4c47eaecc",
+    "authorId": "6da3ebcb-3260-4499-a771-3c62613bdcbb",
+    "sentOn": "2021-11-11T15:58:07.023Z",
+    "payload": "{\"type\":\"quick_reply\",\"text\":\"label 1 opt\",\"payload\":\"value1opt\"}"
+  }
+]

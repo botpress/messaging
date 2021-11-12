@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
-import { defaultMessageConfig } from '../../index'
+import { defaultMessageConfig } from '../../utils'
 
 import Keyboard from '../Keyboard'
 import { Dropdown } from '.'
@@ -30,21 +30,17 @@ const Template: ComponentStory<typeof Dropdown> = (args) => {
 export const Primary = Template.bind({})
 
 Primary.args = {
-  payload: {
-    message: 'Choose an option from the __dropdown__',
-    escapeHTML: true,
-    markdown: true,
-    buttonText: 'button text',
-    allowCreation: true,
-    placeholderText: 'placeholder text',
-    allowMultiple: false,
-    width: 400,
-    displayInKeyboard: false,
-    options: [
-      { label: 'Option 1', value: 'option-1' },
-      { label: 'Option 2', value: 'option-2' }
-    ]
-  },
+  message: 'Choose an option from the __dropdown__',
+  buttonText: 'button text',
+  allowCreation: true,
+  placeholderText: 'placeholder text',
+  allowMultiple: false,
+  markdown: true,
+  displayInKeyboard: false,
+  options: [
+    { label: 'Option 1', value: 'option-1' },
+    { label: 'Option 2', value: 'option-2' }
+  ],
   config: {
     ...defaultMessageConfig,
     onSendData: async (data) => {

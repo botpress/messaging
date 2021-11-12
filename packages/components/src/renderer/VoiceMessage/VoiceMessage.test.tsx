@@ -1,16 +1,20 @@
 import { render } from '@testing-library/react'
+import renderer from 'renderer'
 import { Message } from 'typings'
-import { defaultMessageConfig, renderMessage } from '../..'
+import { defaultMessageConfig } from 'utils'
 
 describe('VoiceMessage', () => {
   test('It renders a simple html audio element with controls', () => {
+    const playStub = jest.spyOn(window.HTMLMediaElement.prototype, 'play').mockImplementation(async () => {})
     const message: Message<'voice'> = {
-      type: 'voice',
-      payload: { audio: 'http://example.org/sample.mp3', autoPlay: false },
+      content: {
+        type: 'voice',
+        audio: 'http://example.org/sample.mp3'
+      },
       config: { ...defaultMessageConfig, shouldPlay: true }
     }
 
-    const messageEl = renderMessage(message)
+    const messageEl = renderer.render(message)
     expect(messageEl).toBeTruthy()
 
     const { container } = render(messageEl)
@@ -18,8 +22,9 @@ describe('VoiceMessage', () => {
     const audioEl = container.getElementsByTagName('audio')[0]
     const sourceEl = container.getElementsByTagName('source')[0]
 
-    expect(sourceEl).toHaveAttribute('src', message.payload.audio)
+    expect(sourceEl).toHaveAttribute('src', message.content.audio)
     expect(audioEl).toHaveAttribute('controls')
     expect(sourceEl).toHaveAttribute('type', 'audio/mpeg')
+    expect(playStub).toHaveBeenCalled()
   })
 })
