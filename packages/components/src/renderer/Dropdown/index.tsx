@@ -39,13 +39,7 @@ export const Dropdown = ({
     if (buttonText && displayInKeyboard) {
       return
     }
-    try {
-      void (async () => {
-        await sendChoice()
-      })()
-    } catch (err) {
-      console.error(err)
-    }
+    sendChoice().catch(console.error)
   }, [selectedOption])
 
   const renderSelect = (inKeyboard: boolean) => {
