@@ -22,7 +22,7 @@ export const File: React.FC<MessageTypeHandlerProps<'file'>> = ({ file, title })
   return (
     <div>
       <span>File: </span>
-      <a href={file} target={'_blank'}>
+      <a href={file} target={'_blank'} rel="noopener noreferrer">
         {title || file}
       </a>
     </div>

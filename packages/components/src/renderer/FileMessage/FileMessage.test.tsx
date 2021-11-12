@@ -6,7 +6,7 @@ describe('File renderer', () => {
   test('it renders a file of unsupported mime type as a download link', () => {
     const file = 'http://example.org/file.txt'
     const component = renderer.render({
-      content: { type: 'file', file },
+      content: { type: 'file', file, title: 'file.txt' },
       config: defaultMessageConfig
     })
 
@@ -16,6 +16,9 @@ describe('File renderer', () => {
     const linkElement = container.querySelector('a')
     expect(linkElement).toBeTruthy()
     expect(linkElement?.href).toBe(file)
+    expect(linkElement?.textContent).toBe('file.txt')
+    expect(linkElement?.target).toBe('_blank')
+    expect(linkElement?.rel).toBe('noopener noreferrer')
   })
 
   test('it renders a video file as video player with controls', () => {
