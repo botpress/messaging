@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "module": "dist/index.esm.js",
+  "source": "src/index.tsx",
   "license": "AGPL-3.0",
   "dependencies": {
     "html-truncate": "^1.2.2",
@@ -19,8 +19,8 @@
     "snarkdown": "^2.0.0"
   },
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup --watch -c",
+    "build": "yarn --silent && tsc --build",
+    "watch": "yarn --silent && tsc --build --watch",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
@@ -47,9 +47,6 @@
     "@types/react-intl": "^2.3.18",
     "@types/react-slick": "^0.23.5",
     "jest-css-modules-transform": "^4.3.0",
-    "react-test-renderer": "^16.8.6",
-    "rollup": "^2.56.3",
-    "rollup-plugin-import-css": "^3.0.2",
-    "rollup-plugin-typescript2": "^0.30.0"
+    "react-test-renderer": "^16.8.6"
   }
 }

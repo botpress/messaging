@@ -1,6 +1,5 @@
 import { AxiosInstance } from 'axios'
 import { Content, MessageType } from 'content-typings'
-import React from 'react'
 import { InjectedIntl } from 'react-intl'
 
 declare global {
