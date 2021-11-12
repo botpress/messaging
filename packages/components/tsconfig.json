@@ -17,10 +17,7 @@
     "isolatedModules": true,
     "noImplicitAny": false,
     "declaration": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@botpress/messaging-server/content-types": ["../../server/src/content/types.ts"]
-    }
+    "baseUrl": "./src"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "example", "rollup.config.ts", "webpack.config.js"]
