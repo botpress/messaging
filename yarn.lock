@@ -1670,23 +1670,6 @@
     classnames "^2.2"
     tslib "~1.13.0"
 
-"@botpress/messaging-components@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@botpress/messaging-components/-/messaging-components-0.0.1.tgz#97d5839c5dfc95506f6c4c86b12b59e1d9e20afd"
-  integrity sha512-qRG+TOyskYe2CPM5JBq07FVNEUPdiJubAvFz0eIzbbUSW96szMbKa0R6Kl6fEGavE3OzheqobxIsBunhN/27pA==
-  dependencies:
-    html-truncate "^1.2.2"
-    mime "^2.5.2"
-    prop-types "^15.7.2"
-    react "^16.8.6"
-    react-dom "^16.8.6"
-    react-intl "^2.8.0"
-    react-linkify "^0.2.2"
-    react-select "^5.1.0"
-    react-slick "^0.24.0"
-    react-text-format "^2.0.28"
-    snarkdown "^2.0.0"
-
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
