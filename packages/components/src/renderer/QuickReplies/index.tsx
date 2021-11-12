@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { MessageTypeHandlerProps, QuickReply } from '../../typings'
+import { MessageTypeHandlerProps } from 'typings'
+import { ChoiceOption } from '../../content-typings'
 import { Prepend } from '../Keyboard'
 
 import { Button } from './Button'
@@ -11,7 +12,7 @@ export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply
   componentDidMount() {
     this.props.config.isLastGroup &&
       this.props.config.isLastOfGroup &&
-      this.props.config.store?.composer?.setLocked(!!this.props.payload.disableFreeText)
+      this.props.config.store?.composer?.setLocked(!!this.props.disableFreeText)
   }
 
   componentWillUnmount() {
@@ -27,7 +28,7 @@ export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply
     this.props.config.store?.composer?.setLocked(false)
   }
 
-  renderKeyboard(replies: QuickReply[]) {
+  renderKeyboard(replies: ChoiceOption[]) {
     return replies.map((reply, idx) => {
       if (Array.isArray(reply)) {
         return <div>{this.renderKeyboard(reply)}</div>
@@ -36,7 +37,7 @@ export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply
           <Button
             key={idx}
             label={reply.title}
-            payload={reply.payload}
+            payload={reply.value}
             onButtonClick={this.handleButtonClicked}
             onFileUpload={this.props.config.onFileUpload}
           />
@@ -46,7 +47,7 @@ export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply
   }
 
   render() {
-    const buttons = this.props.payload.quick_replies
+    const buttons = this.props.choices
     const keyboard = <div className={'bpw-keyboard-quick_reply'}>{buttons && this.renderKeyboard(buttons)}</div>
     return (
       <Prepend keyboard={keyboard} visible={this.props.config.isLastGroup && this.props.config.isLastOfGroup}>

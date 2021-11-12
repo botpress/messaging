@@ -1,10 +1,11 @@
+import { ActionButton, ActionType } from 'content-typings'
 import React, { createRef } from 'react'
 import Slider, { Settings } from 'react-slick'
 
 // Added those manually to remove the font dependencies which keeps showing 404 not found
 import './css/slick-theme.css'
 import './css/slick.css'
-import { CardButton, CardPayload, MessageConfig, MessageTypeHandlerProps } from '../../typings'
+import { MessageTypeHandlerProps } from '../../typings'
 
 export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'>, ICarouselState> {
   private ref = createRef<HTMLDivElement>()
@@ -18,9 +19,6 @@ export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'
   }
 
   renderCarousel() {
-    const carousel = this.props.payload.carousel
-    const elements = carousel.elements || []
-
     // Breakpoints must be adjusted since the carousel is based on the page width, and not its parent component
     const adjustBreakpoint = (size: number): number => size - this.state.adjustedWidth
 
@@ -34,15 +32,15 @@ export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'
       slidesToScroll: 1,
       autoplay: false,
       centerMode: false,
-      arrows: elements.length > 1
+      arrows: this.props.items.length > 1
     }
 
-    const settings = Object.assign({}, defaultSettings, carousel.settings)
+    const settings = defaultSettings
 
     return (
       <Slider {...settings}>
-        {elements.map((el, idx) => (
-          <Card {...el} key={idx} onSendData={this.props.config.onSendData} />
+        {this.props.items.map((el, idx) => (
+          <Card {...el} key={idx} config={this.props.config} />
         ))}
       </Slider>
     )
@@ -50,43 +48,43 @@ export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'
 
   render() {
     return (
-      <div ref={this.ref} style={{ width: '100%', ...this.props.payload.style }}>
+      <div ref={this.ref} style={{ width: '100%' }}>
         {this.state.adjustedWidth && this.renderCarousel()}
       </div>
     )
   }
 }
 
-type CardProps = CardPayload & Pick<MessageConfig, 'onSendData'>
-
-export const Card = ({ picture, title, subtitle, buttons, onSendData = async () => {} }: CardProps) => {
+export const Card: React.FC<MessageTypeHandlerProps<'card'>> = ({ image, title, subtitle, actions, config }) => {
   return (
     <div className={'bpw-card-container'}>
-      {picture && <div className={'bpw-card-picture'} style={{ backgroundImage: `url("${picture}")` }} />}
+      {image && <div className={'bpw-card-picture'} style={{ backgroundImage: `url("${image}")` }} />}
       <div>
         <div className={'bpw-card-header'}>
           <div className={'bpw-card-title'}>{title}</div>
           {subtitle && <div className={'bpw-card-subtitle'}>{subtitle}</div>}
         </div>
         <div className={'bpw-card-buttons'}>
-          {buttons.map((btn: CardButton) => {
-            if (btn.type === 'open_url') {
+          {actions.map((btn: ActionButton<ActionType>) => {
+            if (btn.action === 'Open URL') {
+              const { url } = btn as ActionButton<'Open URL'>
               return (
                 <a
-                  href={btn.url}
+                  href={url}
                   key={`1-${btn.title}`}
-                  target={/^javascript:/.test(btn.url || '') ? '_self' : '_blank'}
+                  target={/^javascript:/.test(url || '') ? '_self' : '_blank'}
                   className={'bpw-card-action'}
                 >
                   {btn.title || btn}
-                  {/^javascript:/.test(btn.url || '') ? null : <i className={'bpw-card-external-icon'} />}
+                  {/^javascript:/.test(url || '') ? null : <i className={'bpw-card-external-icon'} />}
                 </a>
               )
-            } else if (btn.type === 'say_something') {
+            } else if (btn.action === 'Say something') {
+              const { text } = btn as ActionButton<'Say something'>
               return (
                 <a
                   onClick={async () => {
-                    await onSendData({ type: 'say_something', text: btn.text })
+                    await config.onSendData({ type: 'say_something', text })
                   }}
                   key={`2-${btn.title}`}
                   className={'bpw-card-action'}
@@ -94,11 +92,12 @@ export const Card = ({ picture, title, subtitle, buttons, onSendData = async () 
                   {btn.title || btn}
                 </a>
               )
-            } else if (btn.type === 'postback') {
+            } else if (btn.action === 'Postback') {
+              const { payload } = btn as ActionButton<'Postback'>
               return (
                 <a
                   onClick={async () => {
-                    await onSendData({ type: 'postback', payload: btn.payload })
+                    await config.onSendData({ type: 'postback', payload })
                   }}
                   key={`2-${btn.title}`}
                   className={'bpw-card-action'}
