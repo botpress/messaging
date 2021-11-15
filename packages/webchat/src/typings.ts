@@ -19,9 +19,6 @@ declare global {
     USE_SESSION_STORAGE: boolean
     // TODO: this should be of type BPStorage
     BP_STORAGE: any
-    botpress: {
-      [moduleName: string]: any
-    }
   }
 }
 
