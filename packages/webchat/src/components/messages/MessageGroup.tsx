@@ -1,11 +1,15 @@
-import ReactMessageRenderer from '@botpress/messaging-components'
 import classnames from 'classnames'
 import sortBy from 'lodash/sortBy'
 import { inject } from 'mobx-react'
 import React from 'react'
 
+// TODO: use the components package
+// import { renderPayload } from '../../../../../../../packages/ui-shared-lite/Payloads'
 import { RootStore, StoreDef } from '../../store'
 import { Message as MessageDetails } from '../../typings'
+
+import { InlineFeedback } from './InlineFeedback'
+import Message from './Message'
 
 class MessageGroup extends React.Component<Props> {
   state = {
@@ -15,6 +19,39 @@ class MessageGroup extends React.Component<Props> {
 
   static getDerivedStateFromError(_error: Error) {
     return { hasError: true }
+  }
+
+  /**
+   * @deprecated 12.0
+   * Here, we convert old format to the new format Botpress uses internally.
+   * - payload: all the data (raw, whatever) that is necessary to display the element
+   * - type: extracted from payload for easy sorting
+   */
+  convertPayloadFromOldFormat = (data: any) => {
+    let payload = data.payload || data.message_data || data.message_raw || { text: data.message_text }
+    if (!payload.type) {
+      payload.type = data.message_type || data.message_data?.type || 'text'
+    }
+
+    // Keeping compatibility with old schema for the quick reply
+    if (data.message_type === 'quick_reply' && !payload.text) {
+      payload.text = data.message_text
+    }
+
+    if (data.message_type === 'file' && !payload.url) {
+      payload.url = data.message_data?.url || data.message_raw?.url
+    }
+
+    if (this.props.messageWrapper && payload.type !== 'session_reset') {
+      payload = {
+        type: 'custom',
+        module: this.props.messageWrapper.module,
+        component: this.props.messageWrapper.component,
+        wrapped: payload
+      }
+    }
+
+    return payload
   }
 
   onAudioEnded = () => {
@@ -54,39 +91,47 @@ class MessageGroup extends React.Component<Props> {
             </span>
             {sortBy(messages, ['sent_on', 'eventId']).map((message, i, messages) => {
               const isLastMsg = i === messages.length - 1
-              let payload = message.payload
-              if (payload.type === 'single-choice') {
-                payload = {
-                  ...payload,
-                  type: 'quick_reply'
-                }
-              }
+              const payload = this.convertPayloadFromOldFormat(message)
 
-              // TODO: do we still have inline feedback?
+              /*
+              // TODO: use the components package
+              if (payload?.wrapped) {
+                payload = { ...payload, wrapped: renderPayload(payload.wrapped) }
+              } else {
+                payload = renderPayload(payload)
+              }
+              */
+
               const showInlineFeedback =
                 isBot && isLastMsg && (payload.wrapped ? payload.wrapped.collectFeedback : payload.collectFeedback)
 
               return (
-                <ReactMessageRenderer
+                <Message
                   key={message.id}
-                  content={payload}
-                  config={{
-                    messageId: message.id,
-                    noMessageBubble: !!payload.noBubble,
-                    isLastOfGroup: i >= this.props.messages.length - 1,
-                    isLastGroup: this.props.isLastGroup,
-                    isBotMessage: !message.authorId,
-                    sentOn: message.sentOn,
-                    onSendData: this.props.onSendData,
-                    onFileUpload: this.props.onFileUpload,
-                    store: this.props.store,
-                    onAudioEnded: this.onAudioEnded,
-                    shouldPlay: this.state.audioPlayingIndex === i,
-                    intl: this.props.store!.intl,
-                    escapeHTML: true,
-                    isInEmulator: false,
-                    showTimestamp: this.props.store!.config.showTimestamp
-                  }}
+                  isHighlighted={this.props.highlightedMessages && this.props.highlightedMessages.includes(message.id)}
+                  inlineFeedback={
+                    showInlineFeedback && (
+                      <InlineFeedback
+                        intl={this.props.store!.intl}
+                        messageId={message.id}
+                        onFeedback={this.props.onFeedback}
+                        messageFeedbacks={this.props.store!.messageFeedbacks}
+                      />
+                    )
+                  }
+                  messageId={message.id}
+                  noBubble={!!payload.noBubble}
+                  fromLabel={fromLabel}
+                  isLastOfGroup={i >= this.props.messages.length - 1}
+                  isLastGroup={this.props.isLastGroup}
+                  isBotMessage={!message.authorId}
+                  payload={payload}
+                  sentOn={message.sentOn}
+                  onSendData={this.props.onSendData}
+                  onFileUpload={this.props.onFileUpload}
+                  store={this.props.store}
+                  onAudioEnded={this.onAudioEnded}
+                  shouldPlay={this.state.audioPlayingIndex === i}
                 />
               )
             })}

@@ -16,7 +16,7 @@ new BoardLinker(
 
 const config: Partial<Config> = {
   messagingUrl: 'http://localhost:3100',
-  clientId: '546507be-44e2-4675-8e18-ce7f17e8513d'
+  clientId: '8b6b25ae-e47d-455e-8057-356dae07fff2'
 }
 
 ReactDOM.render(<ExposedWebChat config={config as Config} fullscreen={true} />, document.getElementById('oldwebchat'))
