@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
-import renderer from 'renderer'
-import { Message } from 'typings'
-import { defaultMessageConfig } from 'utils'
+import renderer from '../../renderer'
+import { Message } from '../../typings'
+import { defaultMessageConfig } from '../../utils'
 
 describe('VoiceMessage', () => {
   test('It renders a simple html audio element with controls', () => {

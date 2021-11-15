@@ -1,6 +1,6 @@
-import { MessageType } from 'content-typings'
 import React, { ReactElement } from 'react'
-import { MessageTypeHandlerProps, Message } from 'typings'
+import { MessageType } from '../content-typings'
+import { Message, MessageTypeHandlerProps } from '../typings'
 import { Carousel, Card } from './Carousel'
 import { Custom } from './Custom'
 import { Dropdown } from './Dropdown'
