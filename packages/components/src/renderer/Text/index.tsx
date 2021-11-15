@@ -1,4 +1,5 @@
 import React from 'react'
+// @ts-ignore
 import ReactTextFormat from 'react-text-format'
 import { MessageTypeHandlerProps } from '../../typings'
 import { renderUnsafeHTML } from '../../utils'

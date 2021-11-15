@@ -13,7 +13,6 @@ const Template: ComponentStory<typeof LoginPrompt> = (args) => <LoginPrompt {...
 export const Primary = Template.bind({})
 
 Primary.args = {
-  content: {},
   config: {
     ...defaultMessageConfig,
     onSendData: async (data) => {
