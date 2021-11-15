@@ -39,8 +39,7 @@ export class Renderer {
   private handlers: Partial<Record<MessageType, MessageTypeHandler<MessageType>>> = {}
 
   constructor() {
-    // TODO: is this "type" property actually there? It's not in the typings.
-    this.set('unsupported', ({ type }: any) => <div>Unsupported message type: {type}</div>)
+    this.set('unsupported', ({ type }) => <div>Unsupported message type: {type}</div>)
   }
 
   public set<T extends MessageType>(type: T, handler: MessageTypeHandler<T>) {
@@ -49,11 +48,7 @@ export class Renderer {
 
   public register(handlers: Partial<{ [key in MessageType]: MessageTypeHandler<key> }>) {
     for (const type in handlers) {
-      this.set(
-        type as MessageType,
-        // TODO: fix typings here. This produces an implicit any
-        (handlers as any)[type]
-      )
+      this.set(type as MessageType, handlers[type as MessageType] as MessageTypeHandler<MessageType>)
     }
   }
 
@@ -84,15 +79,12 @@ const defaultRenderer = new Renderer()
 defaultRenderer.register(defaultTypesRenderers)
 
 // TODO: This is for backwards compatibility. Remove in the future
-defaultRenderer.set(
-  'custom',
-  ({ module, component, config, payload }: { module: any; component: any; config: any; payload?: any }) => {
-    if (module === 'extensions' && component === 'Dropdown') {
-      return <Dropdown {...payload} config={config} />
-    }
-    return <Custom module={module} component={component} config={config} />
+defaultRenderer.set('custom', ({ module, component, config, payload }) => {
+  if (module === 'extensions' && component === 'Dropdown') {
+    return <Dropdown {...payload} config={config} />
   }
-)
+  return <Custom module={module} component={component} config={config} />
+})
 
 export {
   defaultRenderer as default,
