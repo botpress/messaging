@@ -39,8 +39,7 @@ export class Renderer {
   private handlers: Partial<Record<MessageType, MessageTypeHandler<MessageType>>> = {}
 
   constructor() {
-    // TODO: is this "type" property actually there? It's not in the typings.
-    this.set('unsupported', ({ type }: any) => <div>Unsupported message type: {type}</div>)
+    this.set('unsupported', ({ type }) => <div>Unsupported message type: {type}</div>)
   }
 
   public set<T extends MessageType>(type: T, handler: MessageTypeHandler<T>) {
@@ -84,15 +83,12 @@ const defaultRenderer = new Renderer()
 defaultRenderer.register(defaultTypesRenderers)
 
 // TODO: This is for backwards compatibility. Remove in the future
-defaultRenderer.set(
-  'custom',
-  ({ module, component, config, payload }: { module: any; component: any; config: any; payload?: any }) => {
-    if (module === 'extensions' && component === 'Dropdown') {
-      return <Dropdown {...payload} config={config} />
-    }
-    return <Custom module={module} component={component} config={config} />
+defaultRenderer.set('custom', ({ module, component, config, payload }) => {
+  if (module === 'extensions' && component === 'Dropdown') {
+    return <Dropdown {...payload} config={config} />
   }
-)
+  return <Custom module={module} component={component} config={config} />
+})
 
 export {
   defaultRenderer as default,

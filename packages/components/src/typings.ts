@@ -51,4 +51,5 @@ export interface Message<T extends MessageType> {
 
 export type MessageTypeHandlerProps<T extends MessageType> = Omit<Content<T>, 'type'> & {
   config: MessageConfig
+  type?: T
 }
