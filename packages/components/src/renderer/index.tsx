@@ -48,11 +48,7 @@ export class Renderer {
 
   public register(handlers: Partial<{ [key in MessageType]: MessageTypeHandler<key> }>) {
     for (const type in handlers) {
-      this.set(
-        type as MessageType,
-        // TODO: fix typings here. This produces an implicit any
-        (handlers as any)[type]
-      )
+      this.set(type as MessageType, handlers[type as MessageType] as MessageTypeHandler<MessageType>)
     }
   }
 
