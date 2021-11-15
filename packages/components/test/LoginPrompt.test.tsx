@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
-import renderer from '../../renderer'
-import { defaultMessageConfig } from '../../utils'
+import renderer from '../src/renderer'
+import { defaultMessageConfig } from '../src/utils'
 
 describe('LoginPrompt', () => {
   test('renders correctly when last message', () => {

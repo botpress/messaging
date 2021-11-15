@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
-import { Button } from './Button'
+import { Button } from '../src/renderer/QuickReplies/Button'
 
 describe('Quick Reply Button element', () => {
   test('it renders a simple button correctly', () => {

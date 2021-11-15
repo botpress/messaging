@@ -1,8 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { defaultMessageConfig } from '../../utils'
-
-import { File } from '.'
+import { File } from '../src/renderer/FileMessage'
+import { defaultMessageConfig } from '../src/utils'
 
 export default {
   title: 'Files/File',

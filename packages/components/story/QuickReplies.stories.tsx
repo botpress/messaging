@@ -1,10 +1,10 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
-import { QuickReplies } from '..'
-import { LiteStore } from '../../typings'
-import { defaultMessageConfig } from '../../utils'
-import Keyboard from '../Keyboard'
-import { Button } from './Button'
+import Keyboard from '../src/renderer/Keyboard'
+import { QuickReplies } from '../src/renderer/QuickReplies'
+import { Button } from '../src/renderer/QuickReplies/Button'
+import { LiteStore } from '../src/typings'
+import { defaultMessageConfig } from '../src/utils'
 
 export default {
   title: 'QuickReplies',

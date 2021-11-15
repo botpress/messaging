@@ -1,8 +1,8 @@
 import { fireEvent, render } from '@testing-library/react'
-import { ActionButton } from '../../content-typings'
-import renderer from '../../renderer'
-import { Message } from '../../typings'
-import { defaultMessageConfig } from '../../utils'
+import { ActionButton } from '../src/content-typings'
+import renderer from '../src/renderer'
+import { Message } from '../src/typings'
+import { defaultMessageConfig } from '../src/utils'
 
 describe('Carousel & Card renderer', () => {
   const messageData: Message<'carousel'> = {

@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { defaultMessageConfig } from '../../utils'
-import { Carousel } from '.'
+import { Carousel } from '../src/renderer/Carousel'
+import { defaultMessageConfig } from '../src/utils'
 
 export default {
   title: 'Carousel',

@@ -36,7 +36,7 @@ const config: Config.InitialOptions = {
     },
     {
       rootDir: 'packages/components',
-      testMatch: ['<rootDir>/src/**/(*.)test.tsx'],
+      testMatch: ['<rootDir>/test/**/(*.)test.tsx'],
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],
       transform: {
