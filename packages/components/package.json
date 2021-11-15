@@ -21,8 +21,8 @@
   "scripts": {
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "start-storybook -p 6006 -c story/config",
+    "build-storybook": "build-storybook -c story/config"
   },
   "files": [
     "dist"
