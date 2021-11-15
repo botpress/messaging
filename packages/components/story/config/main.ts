@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   stories: ['../**/*.stories.mdx', '../**/*.stories.@(js|jsx|ts|tsx)'],
   features: {
     postcss: false
