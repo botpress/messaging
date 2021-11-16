@@ -1,7 +1,7 @@
 import mimeTypes from 'mime/lite'
 import path from 'path'
 import React, { useMemo } from 'react'
-import { MessageTypeHandlerProps } from '../../typings'
+import { MessageTypeHandlerProps } from '../typings'
 
 export const Audio: React.FC<MessageTypeHandlerProps<'audio'>> = ({ audio, title, config }) => {
   const mime = useMimeType(audio)

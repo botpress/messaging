@@ -1,7 +1,6 @@
 import React, { Component, MouseEvent } from 'react'
-import { FileUploadHandler } from '../../typings'
-
-import { FileInput } from './FileInput'
+import { FileUploadHandler } from '../typings'
+import { FileInput } from './file-input'
 
 export interface ButtonProps {
   label: string

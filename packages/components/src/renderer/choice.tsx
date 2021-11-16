@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { ChoiceOption } from '../../content-typings'
-import { MessageTypeHandlerProps } from '../../typings'
-import { Prepend } from '../Keyboard'
-
-import { Button } from './Button'
+import { Button } from '../base/button'
+import { ChoiceOption } from '../content-typings'
+import { MessageTypeHandlerProps } from '../typings'
+import { Prepend } from './keyboard'
 
 /**
  * Displays an array of button, and handle when they are clicked

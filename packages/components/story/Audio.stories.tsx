@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { Audio } from '../src/renderer/FileMessage'
+import { Audio } from '../src/renderer/file'
 import { defaultMessageConfig } from '../src/utils'
 
 export default {

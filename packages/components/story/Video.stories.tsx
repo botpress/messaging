@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { Video } from '../src/renderer/FileMessage'
+import { Video } from '../src/renderer/file'
 import { defaultMessageConfig } from '../src/utils'
 
 export default {
