@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react'
-import { MessageTypeHandlerProps } from '../../typings'
-import { pick } from '../../utils'
-import Keyboard from '../Keyboard'
-import ErrorBoundary from './ErrorBoundary'
+import { MessageTypeHandlerProps } from '../typings'
+import { pick } from '../utils'
+import ErrorBoundary from './Custom/ErrorBoundary'
+import Keyboard from './Keyboard'
 
 const checkError = (moduleInjector: Function, component: string, payload: string): Error | null => {
   const errorPrepend = 'Custom component error: '

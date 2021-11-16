@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { Text } from '../src/renderer/Text'
+import { Text } from '../src/renderer/text'
 import { defaultMessageConfig } from '../src/utils'
 
 export default {

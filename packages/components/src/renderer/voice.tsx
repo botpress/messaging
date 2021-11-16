@@ -1,7 +1,7 @@
 import mimeTypes from 'mime/lite'
 import path from 'path'
 import React, { FC, useRef, useEffect } from 'react'
-import { MessageTypeHandlerProps } from '../../typings'
+import { MessageTypeHandlerProps } from '../typings'
 
 export const VoiceMessage: FC<MessageTypeHandlerProps<'voice'>> = ({ audio, config }) => {
   const audioRef = useRef<HTMLAudioElement>(null)

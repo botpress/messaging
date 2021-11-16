@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { LoginPrompt } from '../src/renderer/LoginPrompt'
+import { LoginPrompt } from '../src/renderer/login'
 import { defaultMessageConfig } from '../src/utils'
 
 export default {

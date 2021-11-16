@@ -1,15 +1,15 @@
 import React, { ReactElement } from 'react'
 import { MessageType } from '../content-typings'
 import { Message, MessageTypeHandlerProps } from '../typings'
-import { Carousel, Card } from './Carousel'
-import { Custom } from './Custom'
-import { Dropdown } from './Dropdown'
+import { Carousel, Card } from './carousel'
+import { Custom } from './custom'
+import { Dropdown } from './dropdown'
 import { Video, Audio, Image, File } from './FileMessage'
-import { LoginPrompt } from './LoginPrompt'
+import { LoginPrompt } from './login'
 import { QuickReplies } from './QuickReplies'
-import { Text } from './Text'
+import { Text } from './text'
 import { TypingIndicator } from './TypingIndicator'
-import { VoiceMessage } from './VoiceMessage'
+import { VoiceMessage } from './voice'
 
 export const defaultTypesRenderers = {
   text: Text,

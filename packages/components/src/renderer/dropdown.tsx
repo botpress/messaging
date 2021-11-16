@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
 import Creatable from 'react-select/creatable'
-import { MessageTypeHandlerProps } from '../../typings'
-import { renderUnsafeHTML } from '../../utils'
-import Keyboard, { Prepend } from '../Keyboard'
+import { MessageTypeHandlerProps } from '../typings'
+import { renderUnsafeHTML } from '../utils'
+import Keyboard, { Prepend } from './Keyboard'
 
 export const Dropdown = ({
   options,

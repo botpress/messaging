@@ -1,8 +1,8 @@
 import React from 'react'
 // @ts-ignore
 import ReactTextFormat from 'react-text-format'
-import { MessageTypeHandlerProps } from '../../typings'
-import { renderUnsafeHTML } from '../../utils'
+import { MessageTypeHandlerProps } from '../typings'
+import { renderUnsafeHTML } from '../utils'
 
 export const Text: React.FC<MessageTypeHandlerProps<'text'>> = ({ text, markdown, config }) => {
   const { escapeHTML } = config
