@@ -60,7 +60,7 @@ export class Append extends React.Component<Partial<KeyboardElementsProps>> {
   }
 }
 
-export default class Keyboard extends React.Component<Partial<KeyboardElementsProps>> {
+export class Keyboard extends React.Component<Partial<KeyboardElementsProps>> {
   static prependRef: React.RefObject<HTMLDivElement> = React.createRef()
   static appendRef: React.RefObject<HTMLDivElement> = React.createRef()
   static isReady = () => Keyboard.appendRef.current !== null
