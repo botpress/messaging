@@ -1,0 +1,14 @@
+{
+  "name": "@botpress/messaging-engine",
+  "version": "0.0.1",
+  "main": "index.ts",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn --silent && tsc --build",
+    "watch": "yarn --silent && tsc --build --watch"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
