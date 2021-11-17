@@ -1,6 +1,6 @@
 import { Message, uuid } from '@botpress/messaging-base'
+import { Service } from '@botpress/messaging-engine'
 import ms from 'ms'
-import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'

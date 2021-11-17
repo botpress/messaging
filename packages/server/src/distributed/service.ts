@@ -1,5 +1,5 @@
+import { Service } from '@botpress/messaging-engine'
 import yn from 'yn'
-import { Service } from '../base/service'
 import { DistributedSubservice } from './base/subservice'
 import { LocalSubservice } from './local/subservice'
 import { RedisSubservice } from './redis/subservice'

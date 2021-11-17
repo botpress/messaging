@@ -1,7 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
+import { Service } from '@botpress/messaging-engine'
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { Service } from '../base/service'
 import { ServerCache } from '../caching/cache'
 import { ServerCache2D } from '../caching/cache2D'
 import { CachingService } from '../caching/service'

@@ -1,6 +1,6 @@
+import { Service } from '@botpress/messaging-engine'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
-import { Service } from '../base/service'
 
 export class CryptoService extends Service {
   private key!: Buffer

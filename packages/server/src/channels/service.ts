@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { Service } from '../base/service'
+import { Service } from '@botpress/messaging-engine'
 import { DatabaseService } from '../database/service'
 import { Channel } from './base/channel'
 import { ConduitInstance } from './base/conduit'

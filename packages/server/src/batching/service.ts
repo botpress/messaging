@@ -1,6 +1,6 @@
+import { Service } from '@botpress/messaging-engine'
 import ms from 'ms'
 import yn from 'yn'
-import { Service } from '../base/service'
 import { Logger } from '../logger/types'
 import { Batcher, DelayedBatcher, ImmediateBatcher } from './batcher'
 

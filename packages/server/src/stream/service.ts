@@ -1,7 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
+import { Service } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import yn from 'yn'
-import { Service } from '../base/service'
 import { ActionSource } from '../base/source'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'

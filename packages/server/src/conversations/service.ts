@@ -1,6 +1,6 @@
 import { Conversation, ConversationWithLastMessage, uuid } from '@botpress/messaging-base'
+import { Service } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
-import { Service } from '../base/service'
 import { Batcher } from '../batching/batcher'
 import { BatchingService } from '../batching/service'
 import { ServerCache } from '../caching/cache'
