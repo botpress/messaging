@@ -1,8 +1,7 @@
-import { Service } from '@botpress/messaging-engine'
+import { Service, Table } from '@botpress/messaging-engine'
 import fs from 'fs'
 import knex, { Knex } from 'knex'
 import path from 'path'
-import { Table } from '../base/table'
 import { Logger } from '../logger/types'
 
 export class DatabaseService extends Service {
