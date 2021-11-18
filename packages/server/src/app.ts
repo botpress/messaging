@@ -1,13 +1,4 @@
-import {
-  BatchingService,
-  CachingService,
-  CryptoService,
-  DatabaseService,
-  DistributedService,
-  LoggerService,
-  MetaService,
-  MigrationService
-} from '@botpress/messaging-engine'
+import { Engine } from '@botpress/messaging-engine'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
@@ -29,15 +20,7 @@ import { UserTokenService } from './user-tokens/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
-export class App {
-  logger: LoggerService
-  database: DatabaseService
-  meta: MetaService
-  migration: MigrationService
-  crypto: CryptoService
-  distributed: DistributedService
-  caching: CachingService
-  batching: BatchingService
+export class App extends Engine {
   post: PostService
   channels: ChannelService
   providers: ProviderService
@@ -59,14 +42,7 @@ export class App {
   stream: StreamService
 
   constructor() {
-    this.logger = new LoggerService()
-    this.database = new DatabaseService()
-    this.meta = new MetaService(this.database)
-    this.migration = new MigrationService(this.database, this.meta)
-    this.crypto = new CryptoService()
-    this.distributed = new DistributedService()
-    this.caching = new CachingService(this.distributed)
-    this.batching = new BatchingService()
+    super()
     this.post = new PostService()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
@@ -130,16 +106,10 @@ export class App {
   }
 
   async setup() {
-    await this.logger.setup()
-    await this.database.setup()
     this.meta.setupPkg(require('../package.json'))
-    await this.meta.setup()
     this.migration.setupMigrations(Migrations)
-    await this.migration.setup()
-    await this.crypto.setup()
-    await this.distributed.setup()
-    await this.caching.setup()
-    await this.batching.setup()
+    await super.setup()
+
     await this.post.setup()
     await this.channels.setup()
     await this.providers.setup()
