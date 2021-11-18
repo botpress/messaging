@@ -1,11 +1,10 @@
-import { DatabaseService, Logger, LoggerLevel, Service } from '@botpress/messaging-engine'
+import { DatabaseService, Logger, LoggerLevel, MetaService, Service } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import { Knex } from 'knex'
 import _ from 'lodash'
 import semver from 'semver'
 import yn from 'yn'
 import { ShutDownSignal } from '../base/errors'
-import { MetaService } from '../meta/service'
 import { Migration } from './migration'
 import migs from './migs'
 

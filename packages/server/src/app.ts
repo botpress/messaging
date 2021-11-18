@@ -4,7 +4,8 @@ import {
   CryptoService,
   DatabaseService,
   DistributedService,
-  LoggerService
+  LoggerService,
+  MetaService
 } from '@botpress/messaging-engine'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
@@ -16,7 +17,6 @@ import { InstanceService } from './instances/service'
 import { KvsService } from './kvs/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
-import { MetaService } from './meta/service'
 import { MigrationService } from './migration/service'
 import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
