@@ -1,9 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
-import { CryptoService, DatabaseService, Service } from '@botpress/messaging-engine'
+import { CachingService, CryptoService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
-import { ServerCache } from '../caching/cache'
-import { CachingService } from '../caching/service'
 import { WebhookTable } from './table'
 import { Webhook } from './types'
 

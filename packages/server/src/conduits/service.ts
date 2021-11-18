@@ -1,10 +1,14 @@
 import { uuid } from '@botpress/messaging-base'
-import { CryptoService, DatabaseService, Service } from '@botpress/messaging-engine'
+import {
+  CachingService,
+  CryptoService,
+  DatabaseService,
+  ServerCache,
+  ServerCache2D,
+  Service
+} from '@botpress/messaging-engine'
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { ServerCache } from '../caching/cache'
-import { ServerCache2D } from '../caching/cache2D'
-import { CachingService } from '../caching/service'
 import { ChannelService } from '../channels/service'
 import { ProviderDeletingEvent, ProviderEvents } from '../providers/events'
 import { ProviderService } from '../providers/service'

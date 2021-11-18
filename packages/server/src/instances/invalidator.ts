@@ -1,6 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
+import { ServerCache } from '@botpress/messaging-engine'
 import yn from 'yn'
-import { ServerCache } from '../caching/cache'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientEvents, ClientUpdatedEvent } from '../clients/events'

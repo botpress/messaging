@@ -1,6 +1,11 @@
-import { CryptoService, DatabaseService, DistributedService, LoggerService } from '@botpress/messaging-engine'
+import {
+  CachingService,
+  CryptoService,
+  DatabaseService,
+  DistributedService,
+  LoggerService
+} from '@botpress/messaging-engine'
 import { BatchingService } from './batching/service'
-import { CachingService } from './caching/service'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'

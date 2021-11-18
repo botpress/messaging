@@ -1,5 +1,5 @@
-import { DistributedService } from '@botpress/messaging-engine'
 import LRU from 'lru-cache'
+import { DistributedService } from '../distributed/service'
 
 export class ServerCache<K, V> {
   private lru: LRU<K, V>

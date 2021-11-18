@@ -1,6 +1,7 @@
-import { DistributedService, Service } from '@botpress/messaging-engine'
 import LRU from 'lru-cache'
 import ms from 'ms'
+import { Service } from '../base/service'
+import { DistributedService } from '../distributed/service'
 import { ServerCache } from './cache'
 import { ServerCache2D } from './cache2D'
 
