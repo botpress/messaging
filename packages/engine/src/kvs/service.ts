@@ -1,6 +1,9 @@
 import { uuid } from '@botpress/messaging-base'
-import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
+import { Service } from '../base/service'
+import { ServerCache } from '../caching/cache'
+import { CachingService } from '../caching/service'
+import { DatabaseService } from '../database/service'
 import { KvsTable } from './table'
 
 export class KvsService extends Service {

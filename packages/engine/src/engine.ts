@@ -3,6 +3,7 @@ import { CachingService } from './caching/service'
 import { CryptoService } from './crypto/service'
 import { DatabaseService } from './database/service'
 import { DistributedService } from './distributed/service'
+import { KvsService } from './kvs/service'
 import { LoggerService } from './logger/service'
 import { MetaService } from './meta/service'
 import { MigrationService } from './migration/service'
@@ -16,6 +17,7 @@ export class Engine {
   distributed: DistributedService
   caching: CachingService
   batching: BatchingService
+  kvs: KvsService
 
   constructor() {
     this.logger = new LoggerService()
@@ -26,6 +28,7 @@ export class Engine {
     this.distributed = new DistributedService()
     this.caching = new CachingService(this.distributed)
     this.batching = new BatchingService()
+    this.kvs = new KvsService(this.database, this.caching)
   }
 
   async setup() {
@@ -37,5 +40,6 @@ export class Engine {
     await this.distributed.setup()
     await this.caching.setup()
     await this.batching.setup()
+    await this.kvs.setup()
   }
 }

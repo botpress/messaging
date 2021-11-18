@@ -6,7 +6,6 @@ import { ConversationService } from './conversations/service'
 import { ConverseService } from './converse/service'
 import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
-import { KvsService } from './kvs/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { Migrations } from './migrations'
@@ -26,7 +25,6 @@ export class App extends Engine {
   providers: ProviderService
   clients: ClientService
   webhooks: WebhookService
-  kvs: KvsService
   conduits: ConduitService
   users: UserService
   userTokens: UserTokenService
@@ -48,7 +46,6 @@ export class App extends Engine {
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
-    this.kvs = new KvsService(this.database, this.caching)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
     this.userTokens = new UserTokenService(this.database, this.crypto, this.caching, this.batching, this.users)
@@ -115,7 +112,6 @@ export class App extends Engine {
     await this.providers.setup()
     await this.clients.setup()
     await this.webhooks.setup()
-    await this.kvs.setup()
     await this.conduits.setup()
     await this.users.setup()
     await this.userTokens.setup()
