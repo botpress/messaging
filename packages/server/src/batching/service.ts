@@ -1,7 +1,6 @@
-import { Service } from '@botpress/messaging-engine'
+import { Logger, Service } from '@botpress/messaging-engine'
 import ms from 'ms'
 import yn from 'yn'
-import { Logger } from '../logger/types'
 import { Batcher, DelayedBatcher, ImmediateBatcher } from './batcher'
 
 const MAX_BATCH_SIZE = 400

@@ -1,4 +1,4 @@
-import { Service } from '@botpress/messaging-engine'
+import { Service } from '../base/service'
 import { Logger } from './types'
 
 export class LoggerService extends Service {

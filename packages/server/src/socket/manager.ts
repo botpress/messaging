@@ -1,10 +1,10 @@
 import { uuid } from '@botpress/messaging-base'
+import { Logger } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import { Server } from 'http'
 import Joi from 'joi'
 import Socket from 'socket.io'
 import yn from 'yn'
-import { Logger } from '../logger/types'
 import { SocketService } from './service'
 
 export class SocketManager {

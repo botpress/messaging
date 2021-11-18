@@ -1,11 +1,10 @@
 import { uuid } from '@botpress/messaging-base'
-import { Service } from '@botpress/messaging-engine'
+import { DistributedService, Service } from '@botpress/messaging-engine'
 import { ServerCache } from '../caching/cache'
 import { CachingService } from '../caching/service'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
 import { DatabaseService } from '../database/service'
-import { DistributedService } from '../distributed/service'
 import { StatusTable } from './table'
 
 export class StatusService extends Service {
