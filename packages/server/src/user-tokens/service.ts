@@ -1,10 +1,16 @@
 import { uuid } from '@botpress/messaging-base'
-import { CachingService, CryptoService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
+import {
+  Batcher,
+  BatchingService,
+  CachingService,
+  CryptoService,
+  DatabaseService,
+  ServerCache,
+  Service
+} from '@botpress/messaging-engine'
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
-import { Batcher } from '../batching/batcher'
-import { BatchingService } from '../batching/service'
 import { UserService } from '../users/service'
 import { UserTokenTable } from './table'
 import { UserToken } from './types'

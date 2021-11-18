@@ -1,9 +1,14 @@
 import { Message, uuid } from '@botpress/messaging-base'
-import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
+import {
+  Batcher,
+  BatchingService,
+  CachingService,
+  DatabaseService,
+  ServerCache,
+  Service
+} from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { ActionSource } from '../base/source'
-import { Batcher } from '../batching/batcher'
-import { BatchingService } from '../batching/service'
 import { ConversationService } from '../conversations/service'
 import { MessageEmitter, MessageEvents, MessageWatcher } from './events'
 import { MessageTable } from './table'

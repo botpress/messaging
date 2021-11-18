@@ -1,5 +1,7 @@
 export * from './base/service'
 export * from './base/table'
+export * from './batching/batcher'
+export * from './batching/service'
 export * from './caching/cache'
 export * from './caching/cache2D'
 export * from './caching/service'
