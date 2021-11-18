@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { PostService } from '../src/post/service'
 
-jest.mock('../src/logger/types')
+jest.mock('@botpress/messaging-engine')
 jest.mock('axios')
 
 describe('PostService', () => {
