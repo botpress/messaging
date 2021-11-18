@@ -1,6 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { Service } from '@botpress/messaging-engine'
-import { DatabaseService } from '../database/service'
+import { Service, DatabaseService } from '@botpress/messaging-engine'
 import { Channel } from './base/channel'
 import { ConduitInstance } from './base/conduit'
 import { DiscordChannel } from './discord/channel'
