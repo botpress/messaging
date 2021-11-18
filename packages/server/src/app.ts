@@ -5,7 +5,8 @@ import {
   DatabaseService,
   DistributedService,
   LoggerService,
-  MetaService
+  MetaService,
+  MigrationService
 } from '@botpress/messaging-engine'
 import { ChannelService } from './channels/service'
 import { ClientService } from './clients/service'
@@ -17,7 +18,7 @@ import { InstanceService } from './instances/service'
 import { KvsService } from './kvs/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
-import { MigrationService } from './migration/service'
+import { Migrations } from './migrations'
 import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
@@ -133,6 +134,7 @@ export class App {
     await this.database.setup()
     this.meta.setupPkg(require('../package.json'))
     await this.meta.setup()
+    this.migration.setupMigrations(Migrations)
     await this.migration.setup()
     await this.crypto.setup()
     await this.distributed.setup()

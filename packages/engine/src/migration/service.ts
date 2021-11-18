@@ -1,14 +1,17 @@
-import { DatabaseService, Logger, LoggerLevel, MetaService, Service } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import { Knex } from 'knex'
 import _ from 'lodash'
 import semver from 'semver'
 import yn from 'yn'
 import { ShutDownSignal } from '../base/errors'
+import { Service } from '../base/service'
+import { DatabaseService } from '../database/service'
+import { Logger, LoggerLevel } from '../logger/types'
+import { MetaService } from '../meta/service'
 import { Migration } from './migration'
-import migs from './migs'
 
 export class MigrationService extends Service {
+  private migs!: { new (): Migration }[]
   private logger = new Logger('Migration')
   private loggerDry!: Logger
   private srcVersion!: string
@@ -19,6 +22,10 @@ export class MigrationService extends Service {
 
   constructor(private db: DatabaseService, private meta: MetaService) {
     super()
+  }
+
+  setupMigrations(migs: { new (): Migration }[]) {
+    this.migs = migs
   }
 
   async setup() {
@@ -113,7 +120,7 @@ export class MigrationService extends Service {
   }
 
   private listAllMigrations() {
-    const all = migs.map((x) => new x())
+    const all = this.migs.map((x) => new x())
     const alphabetical = all.sort((a, b) => {
       return a.meta.name.localeCompare(b.meta.name, 'en')
     })
