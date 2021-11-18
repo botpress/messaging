@@ -131,6 +131,7 @@ export class App {
   async setup() {
     await this.logger.setup()
     await this.database.setup()
+    this.meta.setupPkg(require('../package.json'))
     await this.meta.setup()
     await this.migration.setup()
     await this.crypto.setup()
