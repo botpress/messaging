@@ -19,15 +19,15 @@ export class PingPong {
       }
     })
 
-    await this.distributed.send('ping', { name: this.nodeId })
+    await this.distributed.publish('ping', { name: this.nodeId })
   }
 
   async ping() {
-    return this.distributed.send('ping', { name: this.nodeId })
+    return this.distributed.publish('ping', { name: this.nodeId })
   }
 
   async pong(to: number) {
-    return this.distributed.send('pong', { to, name: this.nodeId })
+    return this.distributed.publish('pong', { to, name: this.nodeId })
   }
 
   acknowledge(foreignNodeId: number) {

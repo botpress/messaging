@@ -29,7 +29,7 @@ export class ServerCache<K, V> {
 
   async sendInvalidation(key: K) {
     try {
-      await this.distributed.send(this.id, { key })
+      await this.distributed.publish(this.id, { key })
     } catch (e) {}
   }
 

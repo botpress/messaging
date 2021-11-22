@@ -25,7 +25,7 @@ export class Dispatcher<T extends { [key: number]: any }> {
 
   async publish<K extends keyof T>(event: K, scope: string, arg: T[K]) {
     await this.emit(event, scope, arg)
-    await this.distributed.send(this.getChannel(scope), {
+    await this.distributed.publish(this.getChannel(scope), {
       cmd: event,
       data: arg
     })

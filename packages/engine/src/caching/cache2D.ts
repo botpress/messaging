@@ -29,7 +29,7 @@ export class ServerCache2D<V> {
 
   async sendInvalidation(keyX: string, keyY: string) {
     try {
-      await this.distributed.send(this.id, { key: this.getKey(keyX, keyY) })
+      await this.distributed.publish(this.id, { key: this.getKey(keyX, keyY) })
     } catch (e) {}
   }
 

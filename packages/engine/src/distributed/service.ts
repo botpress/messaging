@@ -34,8 +34,8 @@ export class DistributedService extends Service {
     return this.subservice.unsubscribe(channel)
   }
 
-  async send(channel: string, message: any) {
-    return this.subservice.send(channel, message)
+  async publish(channel: string, message: any) {
+    return this.subservice.publish(channel, message)
   }
 
   async using(ressource: string, callback: () => Promise<void>) {

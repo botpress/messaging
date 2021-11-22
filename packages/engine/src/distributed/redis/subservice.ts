@@ -133,7 +133,7 @@ export class RedisSubservice implements DistributedSubservice {
     delete this.callbacks[scopedChannel]
   }
 
-  async send(channel: string, message: any) {
+  async publish(channel: string, message: any) {
     const scopedChannel = this.makeScopedChannel(channel)
     await this.pub.publish(scopedChannel, JSON.stringify({ nodeId: RedisSubservice.nodeId, ...message }))
   }
