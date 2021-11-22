@@ -1,6 +1,6 @@
+import { Logger } from '@botpress/messaging-engine'
 import axios from 'axios'
 import _ from 'lodash'
-import { Logger } from '../../logger/types'
 import { MessengerConfig } from './config'
 import { MessengerAction } from './context'
 

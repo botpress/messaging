@@ -1,8 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
+import { CachingService, ServerCache, Service } from '@botpress/messaging-engine'
 import { Socket } from 'socket.io'
-import { Service } from '../base/service'
-import { ServerCache } from '../caching/cache'
-import { CachingService } from '../caching/service'
 import { UserService } from '../users/service'
 
 export class SocketService extends Service {

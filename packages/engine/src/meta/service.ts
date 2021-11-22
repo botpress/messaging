@@ -3,15 +3,18 @@ import { DatabaseService } from '../database/service'
 import { MetaTable } from './table'
 import { ServerMetadata, ServerMetadataSchema, ServerMetaEntry } from './types'
 
-const pkg = require('../../package.json')
-
 export class MetaService extends Service {
+  private pkg: any
   private table: MetaTable
   private current!: ServerMetaEntry
 
   constructor(private db: DatabaseService) {
     super()
     this.table = new MetaTable()
+  }
+
+  setupPkg(pkg: any) {
+    this.pkg = pkg
   }
 
   async setup() {
@@ -22,14 +25,14 @@ export class MetaService extends Service {
       this.current = stored
     } else {
       const meta: ServerMetadata = {
-        version: pkg.version
+        version: this.pkg.version
       }
       await this.update(meta)
     }
   }
 
   app() {
-    return { version: pkg.version }
+    return { version: this.pkg.version }
   }
 
   get() {
