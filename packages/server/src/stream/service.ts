@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { DistributedService, Logger, Service } from '@botpress/messaging-engine'
+import { DispatchService, Logger, Service } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import yn from 'yn'
 import { ActionSource } from '../base/source'
@@ -20,13 +20,14 @@ import { SocketService } from '../socket/service'
 import { UserCreatedEvent, UserEvents } from '../users/events'
 import { UserService } from '../users/service'
 import { WebhookService } from '../webhooks/service'
+import { StreamDispatcher, StreamDispatches } from './dispatch'
 
 export class StreamService extends Service {
   private logger = new Logger('Stream')
-  private handleCmdCallback!: (message: any) => Promise<void>
+  private dispatcher!: StreamDispatcher
 
   constructor(
-    private distributed: DistributedService,
+    private dispatches: DispatchService,
     private posts: PostService,
     private sockets: SocketService,
     private channels: ChannelService,
@@ -44,14 +45,15 @@ export class StreamService extends Service {
   }
 
   async setup() {
-    this.handleCmdCallback = this.handleCmd.bind(this)
-
     this.health.events.on(HealthEvents.Registered, this.handleHealthRegisted.bind(this))
     this.users.events.on(UserEvents.Created, this.handleUserCreated.bind(this))
     this.conversations.events.on(ConversationEvents.Created, this.handleConversationCreated.bind(this))
     this.messages.events.on(MessageEvents.Created, this.handleMessageCreate.bind(this))
     this.sockets.events.on(SocketEvents.UserConnected, this.handleUserConnected.bind(this))
     this.sockets.events.on(SocketEvents.UserDisconnected, this.handleUserDisconnected.bind(this))
+
+    this.dispatcher = await this.dispatches.create('dispatch_socket', StreamDispatcher)
+    this.dispatcher.on(StreamDispatches.Message, this.handleDispatchMessage.bind(this))
   }
 
   private async handleHealthRegisted({ event }: HealthCreatedEvent) {
@@ -96,14 +98,14 @@ export class StreamService extends Service {
   }
 
   private async handleUserConnected({ userId }: SocketUserEvent) {
-    await this.distributed.listen(`user/${userId}`, this.handleCmdCallback)
+    await this.dispatcher.subscribe(userId)
   }
 
   private async handleUserDisconnected({ userId }: SocketUserEvent) {
-    await this.distributed.unsubscribe(`user/${userId}`)
+    await this.dispatcher.unsubscribe(userId)
   }
 
-  private async handleCmd({ userId, source, data }: any) {
+  private async handleDispatchMessage({ userId, source, data }: any) {
     const sockets = this.sockets.listByUser(userId)
 
     for (const socket of sockets) {
@@ -128,7 +130,7 @@ export class StreamService extends Service {
     }
 
     if (userId) {
-      await this.distributed.publish(`user/${userId}`, { userId, source: source?.socket?.id, data })
+      await this.dispatcher.publish(StreamDispatches.Message, userId, { userId, source: source?.socket?.id, data })
     }
 
     if (source?.client?.id !== clientId) {

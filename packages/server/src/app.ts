@@ -87,7 +87,7 @@ export class App extends Engine {
     )
     this.sockets = new SocketService(this.caching, this.users)
     this.stream = new StreamService(
-      this.distributed,
+      this.dispatches,
       this.post,
       this.sockets,
       this.channels,
