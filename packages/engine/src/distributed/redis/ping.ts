@@ -10,7 +10,7 @@ export class PingPong {
   async setup() {
     await this.distributed.subscribe('ping', async (ping: PingEvent) => {
       this.acknowledge(ping.name)
-      void this.pong(ping.name)
+      await this.pong(ping.name)
     })
 
     await this.distributed.subscribe('pong', async (pong: PongEvent) => {
