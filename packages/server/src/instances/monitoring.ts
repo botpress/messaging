@@ -9,6 +9,8 @@ import { InstanceService } from './service'
 const MAX_ALLOWED_FAILURES = 5
 
 export class InstanceMonitoring {
+  private timeout?: NodeJS.Timeout
+
   constructor(
     private logger: Logger,
     private distributed: DistributedService,
@@ -22,6 +24,12 @@ export class InstanceMonitoring {
     void this.tickMonitoring()
   }
 
+  async destroy() {
+    if (this.timeout) {
+      clearTimeout(this.timeout)
+    }
+  }
+
   private async tickMonitoring() {
     try {
       await this.distributed.using('lock_instance_monitoring', async () => {
@@ -31,7 +39,7 @@ export class InstanceMonitoring {
     } catch (e) {
       this.logger.error(e, 'Error occurred while monitoring', (e as Error).message)
     } finally {
-      setTimeout(this.tickMonitoring.bind(this), ms('15s'))
+      this.timeout = setTimeout(this.tickMonitoring.bind(this), ms('15s'))
     }
   }
 
