@@ -22,7 +22,10 @@ const config: Config.InitialOptions = {
       transform: {
         ...tsjPreset.transform
       },
-      clearMocks: true
+      clearMocks: true,
+      moduleNameMapper: {
+        '@botpress/messaging-(.*)$': '<rootDir>/../$1/src'
+      }
     },
     {
       rootDir: 'packages/socket',
