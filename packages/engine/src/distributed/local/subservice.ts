@@ -13,7 +13,7 @@ export class LocalSubservice implements DistributedSubservice {
 
   async destroy() {}
 
-  async listen(channel: string, callback: (message: any, channel: string) => Promise<void>) {}
+  async subscribe(channel: string, callback: (message: any, channel: string) => Promise<void>) {}
 
   async unsubscribe(channel: string) {}
 

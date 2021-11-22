@@ -8,12 +8,12 @@ export class PingPong {
   constructor(private nodeId: number, private distributed: RedisSubservice, private logger: Logger) {}
 
   async setup() {
-    await this.distributed.listen('ping', async (ping: PingEvent) => {
+    await this.distributed.subscribe('ping', async (ping: PingEvent) => {
       this.acknowledge(ping.name)
       void this.pong(ping.name)
     })
 
-    await this.distributed.listen('pong', async (pong: PongEvent) => {
+    await this.distributed.subscribe('pong', async (pong: PongEvent) => {
       if (pong.to === this.nodeId) {
         this.acknowledge(pong.name)
       }

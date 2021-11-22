@@ -6,7 +6,7 @@ export class ServerCache<K, V> {
 
   constructor(private id: string, private distributed: DistributedService, options: LRU.Options<K, V>) {
     this.lru = new LRU(options)
-    void this.distributed.listen(this.id, this.process.bind(this))
+    void this.distributed.subscribe(this.id, this.process.bind(this))
   }
 
   async process(event: ServerCacheEvent<K, V>) {

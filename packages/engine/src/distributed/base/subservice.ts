@@ -3,7 +3,7 @@ import { Lock } from '../types'
 export interface DistributedSubservice {
   setup(): Promise<void>
   destroy(): Promise<void>
-  listen(channel: string, callback: (message: any, channel: string) => Promise<void>): Promise<void>
+  subscribe(channel: string, callback: (message: any, channel: string) => Promise<void>): Promise<void>
   unsubscribe(channel: string): Promise<void>
   publish(channel: string, message: any): Promise<void>
   send(channel: string, message: any): Promise<void>

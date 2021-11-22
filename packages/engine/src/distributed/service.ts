@@ -26,8 +26,8 @@ export class DistributedService extends Service {
     await this.subservice.destroy()
   }
 
-  async listen(channel: string, callback: (message: any, channel: string) => Promise<void>) {
-    return this.subservice.listen(channel, callback)
+  async subscribe(channel: string, callback: (message: any, channel: string) => Promise<void>) {
+    return this.subservice.subscribe(channel, callback)
   }
 
   async unsubscribe(channel: string) {

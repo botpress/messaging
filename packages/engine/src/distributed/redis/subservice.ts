@@ -108,7 +108,7 @@ export class RedisSubservice implements DistributedSubservice {
     }
   }
 
-  async listen(channel: string, callback: (message: any, channel: string) => Promise<void>) {
+  async subscribe(channel: string, callback: (message: any, channel: string) => Promise<void>) {
     const scopedChannel = this.makeScopedChannel(channel)
 
     await this.sub.subscribe(scopedChannel)

@@ -16,7 +16,7 @@ export class Dispatcher<T extends { [key: number]: any }> {
   }
 
   async subscribe(scope: string) {
-    await this.distributed.listen(this.getChannel(scope), this.handleDispatchCallback)
+    await this.distributed.subscribe(this.getChannel(scope), this.handleDispatchCallback)
   }
 
   async unsubscribe(scope: string) {
