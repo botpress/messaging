@@ -126,7 +126,7 @@ export class StreamService extends Service {
     }
 
     if (yn(process.env.LOGGING_ENABLED)) {
-      this.logger.debug(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan(type)}`, data)
+      this.logger.debug(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan(type)}`, payload)
     }
 
     if (userId) {
@@ -135,12 +135,12 @@ export class StreamService extends Service {
 
     if (source?.client?.id !== clientId) {
       if (yn(process.env.SPINNED)) {
-        void this.posts.send(process.env.SPINNED_URL!, data)
+        void this.posts.send(process.env.SPINNED_URL!, payload)
       } else {
         const webhooks = await this.webhooks.list(clientId)
 
         for (const webhook of webhooks) {
-          void this.posts.send(webhook.url, data, { 'x-webhook-token': webhook.token })
+          void this.posts.send(webhook.url, payload, { 'x-webhook-token': webhook.token })
         }
       }
     }
