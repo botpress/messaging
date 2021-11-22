@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios'
-import { Content, MessageType } from 'content-typings'
-import React from 'react'
 import { InjectedIntl } from 'react-intl'
+import { Content, MessageType } from './content-typings'
 
 declare global {
   export interface Window {
@@ -52,4 +51,5 @@ export interface Message<T extends MessageType> {
 
 export type MessageTypeHandlerProps<T extends MessageType> = Omit<Content<T>, 'type'> & {
   config: MessageConfig
+  type?: T
 }

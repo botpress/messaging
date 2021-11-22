@@ -3,6 +3,9 @@
   "references": [
     {
       "path": "../base"
+    },
+    {
+      "path": "../engine"
     }
   ],
 

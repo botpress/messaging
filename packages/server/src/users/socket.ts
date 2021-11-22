@@ -55,7 +55,7 @@ export class UserSocket {
       token = `${userToken.id}.${tokenRaw}`
     }
 
-    this.socketService.registerForUser(socket.socket, user!.id)
+    await this.socketService.registerForUser(socket.socket, user!.id)
     socket.reply({ userId: user!.id, userToken: token })
   }
 

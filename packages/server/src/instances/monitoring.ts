@@ -1,9 +1,8 @@
+import { DistributedService, Logger } from '@botpress/messaging-engine'
 import ms from 'ms'
 import yn from 'yn'
 import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
-import { DistributedService } from '../distributed/service'
-import { Logger } from '../logger/types'
 import { StatusService } from '../status/service'
 import { InstanceService } from './service'
 

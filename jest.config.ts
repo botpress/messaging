@@ -15,6 +15,16 @@ const config: Config.InitialOptions = {
 
   projects: [
     {
+      rootDir: 'packages/engine',
+      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
+      displayName: { name: 'Engine', color: 'green' },
+      testEnvironment: 'node',
+      transform: {
+        ...tsjPreset.transform
+      },
+      clearMocks: true
+    },
+    {
       rootDir: 'packages/server',
       testMatch: ['<rootDir>/test/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
@@ -39,7 +49,7 @@ const config: Config.InitialOptions = {
     },
     {
       rootDir: 'packages/components',
-      testMatch: ['<rootDir>/src/**/(*.)test.tsx'],
+      testMatch: ['<rootDir>/test/**/(*.)test.tsx'],
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],
       transform: {

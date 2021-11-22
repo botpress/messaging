@@ -1,15 +1,15 @@
-import { MessageType } from 'content-typings'
 import React, { ReactElement } from 'react'
-import { MessageTypeHandlerProps, Message } from 'typings'
-import { Carousel, Card } from './Carousel'
-import { Custom } from './Custom'
-import { Dropdown } from './Dropdown'
-import { Video, Audio, Image, File } from './FileMessage'
-import { LoginPrompt } from './LoginPrompt'
-import { QuickReplies } from './QuickReplies'
-import { Text } from './Text'
-import { TypingIndicator } from './TypingIndicator'
-import { VoiceMessage } from './VoiceMessage'
+import { MessageType } from '../content-typings'
+import { Message, MessageTypeHandlerProps } from '../typings'
+import { Carousel, Card } from './carousel'
+import { QuickReplies } from './choice'
+import { Custom } from './custom'
+import { Dropdown } from './dropdown'
+import { Video, Audio, Image, File } from './file'
+import { LoginPrompt } from './login'
+import { Text } from './text'
+import { TypingIndicator } from './typing'
+import { VoiceMessage } from './voice'
 
 export const defaultTypesRenderers = {
   text: Text,
@@ -48,7 +48,7 @@ export class Renderer {
 
   public register(handlers: Partial<{ [key in MessageType]: MessageTypeHandler<key> }>) {
     for (const type in handlers) {
-      this.set(type as MessageType, handlers[type])
+      this.set(type as MessageType, handlers[type as MessageType] as MessageTypeHandler<MessageType>)
     }
   }
 

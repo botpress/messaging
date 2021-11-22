@@ -1,11 +1,15 @@
 import { uuid } from '@botpress/messaging-base'
+import { CachingService, ServerCache, Service } from '@botpress/messaging-engine'
 import { Socket } from 'socket.io'
-import { Service } from '../base/service'
-import { ServerCache } from '../caching/cache'
-import { CachingService } from '../caching/service'
 import { UserService } from '../users/service'
+import { SocketEmitter, SocketEvents, SocketWatcher } from './events'
 
 export class SocketService extends Service {
+  get events(): SocketWatcher {
+    return this.emitter
+  }
+
+  private emitter: SocketEmitter
   private sockets: { [socketId: string]: SocketState | undefined } = {}
   private cache!: ServerCache<string, SocketState>
 
@@ -14,6 +18,7 @@ export class SocketService extends Service {
 
   constructor(private cachingService: CachingService, private userService: UserService) {
     super()
+    this.emitter = new SocketEmitter()
   }
 
   async setup() {
@@ -25,13 +30,18 @@ export class SocketService extends Service {
     this.sockets[socket.id] = {}
   }
 
-  public delete(socket: Socket) {
+  public async delete(socket: Socket) {
     const state = this.sockets[socket.id]!
 
     if (state.userId) {
       const current = this.socketsByUserId[state.userId]
       this.socketsByUserId[state.userId] = (current || []).filter((x) => x.id !== socket.id)
       this.cacheByUserId.del(state.userId)
+
+      // this was the last socket connection the user had on this server
+      if (current?.length === 1) {
+        await this.emitter.emit(SocketEvents.UserDisconnected, { userId: state.userId })
+      }
     }
 
     this.sockets[socket.id] = undefined
@@ -57,8 +67,9 @@ export class SocketService extends Service {
     }
   }
 
-  public registerForUser(socket: Socket, userId: uuid) {
+  public async registerForUser(socket: Socket, userId: uuid) {
     const current = this.socketsByUserId[userId]
+
     if (!current || !current.find((x) => x.id === socket.id)) {
       const state = {
         socket,
@@ -70,6 +81,11 @@ export class SocketService extends Service {
       const list = [...(current || []), socket]
       this.socketsByUserId[userId] = list
       this.cacheByUserId.set(userId, list)
+
+      // this is the first socket connection this user has on this server
+      if (list.length === 1) {
+        await this.emitter.emit(SocketEvents.UserConnected, { userId: state.userId })
+      }
     }
   }
 

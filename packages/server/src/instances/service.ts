@@ -1,18 +1,20 @@
 import { Message, uuid } from '@botpress/messaging-base'
+import {
+  CachingService,
+  DistributedService,
+  Logger,
+  LoggerService,
+  ServerCache,
+  Service
+} from '@botpress/messaging-engine'
 import ms from 'ms'
 import yn from 'yn'
 import { App } from '../app'
-import { Service } from '../base/service'
-import { ServerCache } from '../caching/cache'
-import { CachingService } from '../caching/service'
 import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
-import { DistributedService } from '../distributed/service'
-import { LoggerService } from '../logger/service'
-import { Logger } from '../logger/types'
 import { MappingService } from '../mapping/service'
 import { Endpoint } from '../mapping/types'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'

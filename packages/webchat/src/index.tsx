@@ -57,6 +57,9 @@ export { Embedded as embedded } from '.'
 export { Fullscreen as fullscreen } from '.'
 
 export * from './typings'
+
+// TODO: export this
+/*
 export {
   Carousel,
   QuickReplies,
@@ -66,3 +69,4 @@ export {
   FileInput,
   Button
 } from './components/messages/renderer'
+*/

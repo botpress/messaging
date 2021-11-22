@@ -159,4 +159,6 @@ export type Content<T extends MessageType> = T extends 'text'
   ? LoginPromptContent
   : T extends 'custom'
   ? CustomComponentContent
+  : T extends 'unsupported'
+  ? BaseContent<'unsupported'>
   : never

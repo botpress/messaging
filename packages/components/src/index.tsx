@@ -1,5 +1,5 @@
-import { Content, MessageType } from 'content-typings'
 import React, { FC } from 'react'
+import { Content, MessageType } from './content-typings'
 import defaultRenderer, { Renderer } from './renderer'
 import { MessageConfig } from './typings'
 

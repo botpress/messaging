@@ -3,8 +3,6 @@ import sortBy from 'lodash/sortBy'
 import { inject } from 'mobx-react'
 import React from 'react'
 
-// TODO: use the components package
-// import { renderPayload } from '../../../../../../../packages/ui-shared-lite/Payloads'
 import { RootStore, StoreDef } from '../../store'
 import { Message as MessageDetails } from '../../typings'
 
@@ -91,16 +89,12 @@ class MessageGroup extends React.Component<Props> {
             </span>
             {sortBy(messages, ['sent_on', 'eventId']).map((message, i, messages) => {
               const isLastMsg = i === messages.length - 1
-              const payload = this.convertPayloadFromOldFormat(message)
+              let payload = this.convertPayloadFromOldFormat(message)
 
-              /*
-              // TODO: use the components package
-              if (payload?.wrapped) {
-                payload = { ...payload, wrapped: renderPayload(payload.wrapped) }
-              } else {
-                payload = renderPayload(payload)
+              // TODO: remove this. quick_reply should be single-choice
+              if (payload.type === 'single-choice') {
+                payload = { ...payload, type: 'quick_reply' }
               }
-              */
 
               const showInlineFeedback =
                 isBot && isLastMsg && (payload.wrapped ? payload.wrapped.collectFeedback : payload.collectFeedback)
