@@ -1,0 +1,11 @@
+{
+  "extends": "../../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "..",
+
+    // We use react
+    "jsx": "react",
+    "resolveJsonModule": true
+  },
+  "include": ["../test/**/*", "../test/**/*.json", "../src/**/*"]
+}
