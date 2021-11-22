@@ -3,7 +3,7 @@ import { Conversation, Message, MessagingSocket } from '../src'
 // TODO: improve this test to be more automated. Right now it requires starting
 // a messaging server on port 3100 and pasting an existing client id in the CLIENT_ID variable.
 
-const CLIENT_ID = '475dc210-0beb-4696-815f-2441b745fa4c'
+const CLIENT_ID = '9e31cac9-eaee-41dc-80e0-f4a8f46fb7a1'
 
 describe('Socket Client', () => {
   const state: {
@@ -106,7 +106,7 @@ describe('Socket Client', () => {
     const conversations = await state.socket?.listConversations()
     conversations?.map((x) => delete (<any>x).lastMessage)
 
-    expect(conversations).toEqual([state.conversation, state.conversation2])
+    expect(conversations).toEqual([state.conversation2, state.conversation])
   })
 
   test('Disconnect', async () => {
