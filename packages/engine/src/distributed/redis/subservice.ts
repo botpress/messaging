@@ -35,13 +35,25 @@ export class RedisSubservice implements DistributedSubservice {
         const parsed = JSON.parse(message)
         if (parsed.nodeId !== RedisSubservice.nodeId) {
           delete parsed.nodeId
-          void callback(parsed, channel)
+          void this.callCallback(callback, parsed, channel)
         }
       }
     })
 
     this.pings = new PingPong(RedisSubservice.nodeId, this, this.logger)
     await this.pings.setup()
+  }
+
+  private async callCallback(
+    callback: (message: any, channel: string) => Promise<void>,
+    message: any,
+    channel: string
+  ) {
+    try {
+      await callback(message, channel)
+    } catch (e) {
+      this.logger.error(e, 'Error occured in callback', channel)
+    }
   }
 
   private setupClient(): Redis {
