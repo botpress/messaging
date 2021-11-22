@@ -5,6 +5,12 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "composite": true,
-    "strict": true
+    "strict": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@botpress/messaging-base": ["packages/base/src/index.ts"],
+      "@botpress/messaging-engine": ["packages/engine/src/index.ts"]
+    }
   }
 }

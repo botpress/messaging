@@ -36,13 +36,7 @@ const config: Config.InitialOptions = {
         ...tsjPreset.transform
       },
       clearMocks: true,
-      moduleNameMapper: pathsToModuleNameMapper(
-        {
-          '@botpress/messaging-base': ['packages/base/src/index.ts'],
-          '@botpress/messaging-engine': ['packages/engine/src/index.ts']
-        },
-        { prefix: __dirname }
-      )
+      moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: __dirname })
     },
     {
       rootDir: 'packages/socket',
