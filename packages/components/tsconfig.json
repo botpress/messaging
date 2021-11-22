@@ -1,24 +1,26 @@
 {
+  // Manage references here
+  "references": [],
+
+  // Defaults (don't change this)
+  "extends": "../../tsconfig.packages.json",
   "compilerOptions": {
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
+    "rootDir": "src",
     "outDir": "dist",
-    "module": "esnext",
-    "lib": ["dom", "es2017"],
-    "sourceMap": true,
-    "jsx": "react",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "target": "es5",
-    "skipLibCheck": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "noImplicitAny": false,
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // Specific settings for npm package
+    "target": "es6",
     "declaration": true,
+    "sourceMap": false,
+
+    // We use react
+    "jsx": "react",
+    "resolveJsonModule": true,
+
+    // TODO: remove this
     "baseUrl": "./src"
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist", "example", "rollup.config.ts", "webpack.config.js"]
+  "include": ["src", "src/**/*.json"],
+  "exclude": ["dist", "node_modules"]
 }
