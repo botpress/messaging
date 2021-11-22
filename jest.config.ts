@@ -1,5 +1,8 @@
 import type { Config } from '@jest/types'
 import { defaults as tsjPreset } from 'ts-jest/presets'
+import { pathsToModuleNameMapper } from 'ts-jest/utils'
+
+const { compilerOptions } = require('./tsconfig.packages')
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -33,9 +36,13 @@ const config: Config.InitialOptions = {
         ...tsjPreset.transform
       },
       clearMocks: true,
-      moduleNameMapper: {
-        '@botpress/messaging-(.*)$': '<rootDir>/../$1/src'
-      }
+      moduleNameMapper: pathsToModuleNameMapper(
+        {
+          '@botpress/messaging-base': ['packages/base/src/index.ts'],
+          '@botpress/messaging-engine': ['packages/engine/src/index.ts']
+        },
+        { prefix: __dirname }
+      )
     },
     {
       rootDir: 'packages/socket',
