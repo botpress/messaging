@@ -6,7 +6,7 @@ export enum StreamDispatches {
 
 export interface StreamMessageDispatch {
   source?: string
-  data: {
+  payload: {
     type: string
     data: any
   }

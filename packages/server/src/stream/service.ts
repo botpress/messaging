@@ -105,23 +105,23 @@ export class StreamService extends Service {
     await this.dispatcher.unsubscribe(userId)
   }
 
-  private async handleDispatchMessage(userId: uuid, { source, data }: StreamMessageDispatch) {
+  private async handleDispatchMessage(userId: uuid, { source, payload }: StreamMessageDispatch) {
     const sockets = this.sockets.listByUser(userId)
 
     for (const socket of sockets) {
       if (source !== socket.id) {
-        socket.send(data)
+        socket.send(payload)
       }
     }
   }
 
-  private async stream(type: string, payload: any, clientId: uuid, userId?: uuid, source?: ActionSource) {
-    const data = {
+  private async stream(type: string, data: any, clientId: uuid, userId?: uuid, source?: ActionSource) {
+    const payload = {
       type,
       data: {
         clientId,
         ...(userId ? { userId } : {}),
-        ...payload
+        ...data
       }
     }
 
@@ -130,7 +130,7 @@ export class StreamService extends Service {
     }
 
     if (userId) {
-      await this.dispatcher.publish(StreamDispatches.Message, userId, { source: source?.socket?.id, data })
+      await this.dispatcher.publish(StreamDispatches.Message, userId, { source: source?.socket?.id, payload })
     }
 
     if (source?.client?.id !== clientId) {
