@@ -1,4 +1,4 @@
-import { Logger } from '../../logger/types'
+import { Logger } from '@botpress/messaging-engine'
 import { Endpoint } from '../../mapping/types'
 
 export type ChannelContext<TClient> = {

@@ -1,5 +1,5 @@
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
-import { Table } from '../../base/table'
 
 export class UsermapTable extends Table {
   get id() {

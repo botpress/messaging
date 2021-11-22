@@ -9,7 +9,7 @@ try {
       branch: currentBranch.replace('\n', '')
     }
 
-    fs.writeFileSync(path.resolve(__dirname, '../metadata.json'), JSON.stringify(metadata, undefined, 2), 'utf-8')
+    fs.writeFileSync(path.resolve(__dirname, './metadata.json'), JSON.stringify(metadata, undefined, 2), 'utf-8')
   })
 } catch (e) {
   console.error("Couldn't get active branch", e)

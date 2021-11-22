@@ -1,5 +1,5 @@
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
-import { Table } from '../base/table'
 
 export class ProviderTable extends Table {
   get id() {
