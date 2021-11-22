@@ -24,7 +24,13 @@ export class ServerCache<K, V> {
   }
 
   invalidate(key: K) {
-    void this.distributed.send(this.id, { key })
+    void this.sendInvalidation(key)
+  }
+
+  async sendInvalidation(key: K) {
+    try {
+      await this.distributed.send(this.id, { key })
+    } catch (e) {}
   }
 
   set(key: K, value: V, maxAge?: number, invalidate?: boolean): boolean {

@@ -24,7 +24,13 @@ export class ServerCache2D<V> {
   }
 
   invalidate(keyX: string, keyY: string) {
-    void this.distributed.send(this.id, { key: this.getKey(keyX, keyY) })
+    void this.sendInvalidation(keyX, keyY)
+  }
+
+  async sendInvalidation(keyX: string, keyY: string) {
+    try {
+      await this.distributed.send(this.id, { key: this.getKey(keyX, keyY) })
+    } catch (e) {}
   }
 
   set(keyX: string, keyY: string, value: V, maxAge?: number, invalidate?: boolean): boolean {
