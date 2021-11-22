@@ -13,7 +13,5 @@ jobs:
       - uses: ./@actions/build/docker
         with:
           repository: messaging
-          aws-ecr-policy: '${{ secrets.AWS_ECR_POLICY }}'
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          role-to-assume: ${{ secrets.AWS_ROLE }}
