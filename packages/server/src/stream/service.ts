@@ -105,7 +105,7 @@ export class StreamService extends Service {
     await this.dispatcher.unsubscribe(userId)
   }
 
-  private async handleDispatchMessage({ userId, source, data }: StreamMessageDispatch) {
+  private async handleDispatchMessage(userId: uuid, { source, data }: StreamMessageDispatch) {
     const sockets = this.sockets.listByUser(userId)
 
     for (const socket of sockets) {
@@ -130,7 +130,7 @@ export class StreamService extends Service {
     }
 
     if (userId) {
-      await this.dispatcher.publish(StreamDispatches.Message, userId, { userId, source: source?.socket?.id, data })
+      await this.dispatcher.publish(StreamDispatches.Message, userId, { source: source?.socket?.id, data })
     }
 
     if (source?.client?.id !== clientId) {

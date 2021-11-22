@@ -38,12 +38,12 @@ export class ConverseService extends Service {
 
     const incomingId = this.incomingIdCache.get(message.id)
     if (incomingId) {
-      await this.dispatcher.publish(ConverseDispatches.Message, incomingId, { message, incomingId })
+      await this.dispatcher.publish(ConverseDispatches.Message, incomingId, { message })
     }
   }
 
-  private async handleDispatchMessage({ message: rawMessage, incomingId }: ConverseMessageDispatch) {
-    const message = { ...rawMessage, sentOn: new Date(rawMessage.sentOn) }
+  private async handleDispatchMessage(incomingId: uuid, data: ConverseMessageDispatch) {
+    const message = { ...data.message, sentOn: new Date(data.message.sentOn) }
     const collectors = this.collectors.get(message.conversationId) || []
 
     for (const collector of collectors) {
@@ -53,9 +53,9 @@ export class ConverseService extends Service {
     }
   }
 
-  private async handleDispatchStop({ conversationId, messageId }: ConverseStopDispatch) {
+  private async handleDispatchStop(incomingId: uuid, { conversationId }: ConverseStopDispatch) {
     const collectors = this.collectors.get(conversationId) || []
-    const childCollectors = collectors.filter((x) => x.incomingId === messageId)
+    const childCollectors = collectors.filter((x) => x.incomingId === incomingId)
 
     for (const collector of childCollectors) {
       clearTimeout(collector.timeout!)
@@ -63,7 +63,7 @@ export class ConverseService extends Service {
       this.resolveCollect(collector)
     }
 
-    await this.dispatcher.unsubscribe(messageId)
+    await this.dispatcher.unsubscribe(incomingId)
   }
 
   setIncomingId(messageId: uuid, incomingId: uuid) {
@@ -90,7 +90,7 @@ export class ConverseService extends Service {
   }
 
   async stopCollecting(messageId: uuid, conversationId: uuid) {
-    await this.dispatcher.publish(ConverseDispatches.Stop, messageId, { conversationId, messageId })
+    await this.dispatcher.publish(ConverseDispatches.Stop, messageId, { conversationId })
   }
 
   private addCollector(messageId: uuid, conversationId: uuid): Collector {
@@ -143,9 +143,4 @@ export class ConverseService extends Service {
       this.resolveCollect(collector)
     }, time)
   }
-}
-
-export enum ConverseCmds {
-  Message,
-  Stop
 }

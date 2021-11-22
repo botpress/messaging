@@ -17,7 +17,7 @@ export class RedisSubservice implements DistributedSubservice {
   private sub!: Redis
   private redlock!: Redlock
   private locks: { [ressource: string]: RedisLock } = {}
-  private callbacks: { [channel: string]: (message: any) => Promise<void> } = {}
+  private callbacks: { [channel: string]: (message: any, channel: string) => Promise<void> } = {}
   private pings!: PingPong
   private scope!: string
 
@@ -35,7 +35,7 @@ export class RedisSubservice implements DistributedSubservice {
         const parsed = JSON.parse(message)
         if (parsed.nodeId !== RedisSubservice.nodeId) {
           delete parsed.nodeId
-          void callback(parsed)
+          void callback(parsed, channel)
         }
       }
     })
@@ -108,7 +108,7 @@ export class RedisSubservice implements DistributedSubservice {
     }
   }
 
-  async listen(channel: string, callback: (message: any) => Promise<void>) {
+  async listen(channel: string, callback: (message: any, channel: string) => Promise<void>) {
     const scopedChannel = this.makeScopedChannel(channel)
 
     await this.sub.subscribe(scopedChannel)

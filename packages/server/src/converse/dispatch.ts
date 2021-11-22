@@ -7,13 +7,11 @@ export enum ConverseDispatches {
 }
 
 export interface ConverseMessageDispatch {
-  incomingId: uuid
   message: Message
 }
 
 export interface ConverseStopDispatch {
   conversationId: uuid
-  messageId: uuid
 }
 
 export class ConverseDispatcher extends Dispatcher<{
