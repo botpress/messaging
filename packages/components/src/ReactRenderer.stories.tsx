@@ -76,7 +76,9 @@ export const MessageList = () => {
               }}
             />
           )
-          if (!Message) return null
+          if (!Message) {
+            return null
+          }
           return (
             <div
               style={{
