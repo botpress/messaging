@@ -1,3 +1,4 @@
+import { DispatchService } from '.'
 import { BatchingService } from './batching/service'
 import { CachingService } from './caching/service'
 import { CryptoService } from './crypto/service'
@@ -15,6 +16,7 @@ export class Engine {
   migration: MigrationService
   crypto: CryptoService
   distributed: DistributedService
+  dispatches: DispatchService
   caching: CachingService
   batching: BatchingService
   kvs: KvsService
@@ -26,6 +28,7 @@ export class Engine {
     this.migration = new MigrationService(this.database, this.meta)
     this.crypto = new CryptoService()
     this.distributed = new DistributedService()
+    this.dispatches = new DispatchService(this.distributed)
     this.caching = new CachingService(this.distributed)
     this.batching = new BatchingService()
     this.kvs = new KvsService(this.database, this.caching)
@@ -38,6 +41,7 @@ export class Engine {
     await this.migration.setup()
     await this.crypto.setup()
     await this.distributed.setup()
+    await this.dispatches.setup()
     await this.caching.setup()
     await this.batching.setup()
     await this.kvs.setup()

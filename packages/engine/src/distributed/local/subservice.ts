@@ -13,9 +13,11 @@ export class LocalSubservice implements DistributedSubservice {
 
   async destroy() {}
 
-  async listen(channel: string, callback: (message: any) => Promise<void>) {}
+  async subscribe(channel: string, callback: (message: any, channel: string) => Promise<void>) {}
 
-  async send(channel: string, message: any) {}
+  async unsubscribe(channel: string) {}
+
+  async publish(channel: string, message: any) {}
 
   async lock(ressource: string): Promise<Lock> {
     let attemptCount = 0

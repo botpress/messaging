@@ -17,7 +17,7 @@ export class RedisSubservice implements DistributedSubservice {
   private sub!: Redis
   private redlock!: Redlock
   private locks: { [ressource: string]: RedisLock } = {}
-  private callbacks: { [channel: string]: (message: any) => Promise<void> } = {}
+  private callbacks: { [channel: string]: (message: any, channel: string) => Promise<void> } = {}
   private pings!: PingPong
   private scope!: string
 
@@ -35,13 +35,25 @@ export class RedisSubservice implements DistributedSubservice {
         const parsed = JSON.parse(message)
         if (parsed.nodeId !== RedisSubservice.nodeId) {
           delete parsed.nodeId
-          void callback(parsed)
+          void this.callCallback(callback, parsed, channel)
         }
       }
     })
 
     this.pings = new PingPong(RedisSubservice.nodeId, this, this.logger)
     await this.pings.setup()
+  }
+
+  private async callCallback(
+    callback: (message: any, channel: string) => Promise<void>,
+    message: any,
+    channel: string
+  ) {
+    try {
+      await callback(message, channel)
+    } catch (e) {
+      this.logger.error(e, 'Error occured in callback', channel)
+    }
   }
 
   private setupClient(): Redis {
@@ -108,16 +120,21 @@ export class RedisSubservice implements DistributedSubservice {
     }
   }
 
-  async listen(channel: string, callback: (message: any) => Promise<void>) {
+  async subscribe(channel: string, callback: (message: any, channel: string) => Promise<void>) {
     const scopedChannel = this.makeScopedChannel(channel)
 
     await this.sub.subscribe(scopedChannel)
     this.callbacks[scopedChannel] = callback
   }
 
-  async send(channel: string, message: any) {
+  async unsubscribe(channel: string) {
     const scopedChannel = this.makeScopedChannel(channel)
+    await this.sub.unsubscribe(scopedChannel)
+    delete this.callbacks[scopedChannel]
+  }
 
+  async publish(channel: string, message: any) {
+    const scopedChannel = this.makeScopedChannel(channel)
     await this.pub.publish(scopedChannel, JSON.stringify({ nodeId: RedisSubservice.nodeId, ...message }))
   }
 

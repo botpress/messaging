@@ -6,7 +6,7 @@ export class ServerCache<K, V> {
 
   constructor(private id: string, private distributed: DistributedService, options: LRU.Options<K, V>) {
     this.lru = new LRU(options)
-    void this.distributed.listen(this.id, this.process.bind(this))
+    void this.distributed.subscribe(this.id, this.process.bind(this))
   }
 
   async process(event: ServerCacheEvent<K, V>) {
@@ -24,7 +24,13 @@ export class ServerCache<K, V> {
   }
 
   invalidate(key: K) {
-    void this.distributed.send(this.id, { key })
+    void this.sendInvalidation(key)
+  }
+
+  async sendInvalidation(key: K) {
+    try {
+      await this.distributed.publish(this.id, { key })
+    } catch (e) {}
   }
 
   set(key: K, value: V, maxAge?: number, invalidate?: boolean): boolean {

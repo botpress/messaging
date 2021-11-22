@@ -8,26 +8,26 @@ export class PingPong {
   constructor(private nodeId: number, private distributed: RedisSubservice, private logger: Logger) {}
 
   async setup() {
-    await this.distributed.listen('ping', async (ping: PingEvent) => {
+    await this.distributed.subscribe('ping', async (ping: PingEvent) => {
       this.acknowledge(ping.name)
-      void this.pong(ping.name)
+      await this.pong(ping.name)
     })
 
-    await this.distributed.listen('pong', async (pong: PongEvent) => {
+    await this.distributed.subscribe('pong', async (pong: PongEvent) => {
       if (pong.to === this.nodeId) {
         this.acknowledge(pong.name)
       }
     })
 
-    await this.distributed.send('ping', { name: this.nodeId })
+    await this.distributed.publish('ping', { name: this.nodeId })
   }
 
   async ping() {
-    return this.distributed.send('ping', { name: this.nodeId })
+    return this.distributed.publish('ping', { name: this.nodeId })
   }
 
   async pong(to: number) {
-    return this.distributed.send('pong', { to, name: this.nodeId })
+    return this.distributed.publish('pong', { to, name: this.nodeId })
   }
 
   acknowledge(foreignNodeId: number) {
