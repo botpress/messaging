@@ -20,7 +20,7 @@ import { SocketService } from '../socket/service'
 import { UserCreatedEvent, UserEvents } from '../users/events'
 import { UserService } from '../users/service'
 import { WebhookService } from '../webhooks/service'
-import { StreamDispatcher, StreamDispatches } from './dispatch'
+import { StreamDispatcher, StreamDispatches, StreamMessageDispatch } from './dispatch'
 
 export class StreamService extends Service {
   private logger = new Logger('Stream')
@@ -105,7 +105,7 @@ export class StreamService extends Service {
     await this.dispatcher.unsubscribe(userId)
   }
 
-  private async handleDispatchMessage({ userId, source, data }: any) {
+  private async handleDispatchMessage({ userId, source, data }: StreamMessageDispatch) {
     const sockets = this.sockets.listByUser(userId)
 
     for (const socket of sockets) {

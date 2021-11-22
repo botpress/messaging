@@ -1,3 +1,4 @@
+import { Message, uuid } from '@botpress/messaging-base'
 import { Dispatcher } from '@botpress/messaging-engine'
 
 export enum ConverseDispatches {
@@ -5,7 +6,17 @@ export enum ConverseDispatches {
   Stop
 }
 
+export interface ConverseMessageDispatch {
+  incomingId: uuid
+  message: Message
+}
+
+export interface ConverseStopDispatch {
+  conversationId: uuid
+  messageId: uuid
+}
+
 export class ConverseDispatcher extends Dispatcher<{
-  [ConverseDispatches.Message]: any
-  [ConverseDispatches.Stop]: any
+  [ConverseDispatches.Message]: ConverseMessageDispatch
+  [ConverseDispatches.Stop]: ConverseStopDispatch
 }> {}

@@ -3,7 +3,7 @@ import { CachingService, DispatchService, ServerCache, Service } from '@botpress
 import ms from 'ms'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
-import { ConverseDispatcher, ConverseDispatches } from './dispatch'
+import { ConverseDispatcher, ConverseDispatches, ConverseMessageDispatch, ConverseStopDispatch } from './dispatch'
 import { Collector } from './types'
 
 const DEFAULT_COLLECT_TIMEOUT = ms('10s')
@@ -42,8 +42,7 @@ export class ConverseService extends Service {
     }
   }
 
-  private async handleDispatchMessage(data: any) {
-    const { message: rawMessage, incomingId } = data
+  private async handleDispatchMessage({ message: rawMessage, incomingId }: ConverseMessageDispatch) {
     const message = { ...rawMessage, sentOn: new Date(rawMessage.sentOn) }
     const collectors = this.collectors.get(message.conversationId) || []
 
@@ -54,8 +53,7 @@ export class ConverseService extends Service {
     }
   }
 
-  private async handleDispatchStop(data: any) {
-    const { conversationId, messageId } = data
+  private async handleDispatchStop({ conversationId, messageId }: ConverseStopDispatch) {
     const collectors = this.collectors.get(conversationId) || []
     const childCollectors = collectors.filter((x) => x.incomingId === messageId)
 
