@@ -1,8 +1,9 @@
 import { Message, uuid } from '@botpress/messaging-base'
-import { CachingService, DistributedService, ServerCache, Service } from '@botpress/messaging-engine'
+import { CachingService, DispatchService, ServerCache, Service } from '@botpress/messaging-engine'
 import ms from 'ms'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
+import { ConverseDispatcher, ConverseDispatches } from './dispatch'
 import { Collector } from './types'
 
 const DEFAULT_COLLECT_TIMEOUT = ms('10s')
@@ -11,13 +12,9 @@ export class ConverseService extends Service {
   private collectors!: ServerCache<uuid, Collector[]>
   private incomingIdCache!: ServerCache<uuid, uuid>
   private collectingForMessageCache!: ServerCache<uuid, boolean>
-  private handleCmdCallback!: (message: any) => Promise<void>
+  private dispatcher!: ConverseDispatcher
 
-  constructor(
-    private caching: CachingService,
-    private distributed: DistributedService,
-    private messages: MessageService
-  ) {
+  constructor(private caching: CachingService, private dispatches: DispatchService, private messages: MessageService) {
     super()
   }
 
@@ -27,7 +24,10 @@ export class ConverseService extends Service {
     this.collectors = await this.caching.newServerCache('cache_converse_collectors', {})
     this.incomingIdCache = await this.caching.newServerCache('cache_converse_incoming_id')
     this.collectingForMessageCache = await this.caching.newServerCache('cache_converse_collecting_for_message')
-    this.handleCmdCallback = this.handleCmd.bind(this)
+
+    this.dispatcher = await this.dispatches.create('dispatch_converse', ConverseDispatcher)
+    this.dispatcher.on(ConverseDispatches.Message, this.handleDispatchMessage.bind(this))
+    this.dispatcher.on(ConverseDispatches.Stop, this.handleDispatchStop.bind(this))
   }
 
   private async handleMessageCreated({ message }: MessageCreatedEvent) {
@@ -37,35 +37,12 @@ export class ConverseService extends Service {
     }
 
     const incomingId = this.incomingIdCache.get(message.id)
-    await this.distributed.publish(`converse/${incomingId}`, {
-      cmd: ConverseCmds.Message,
-      data: { message, incomingId }
-    })
-  }
-
-  private async handleCmd({ cmd, data }: { cmd: ConverseCmds; data: any }) {
-    if (cmd === ConverseCmds.Stop) {
-      await this.handleStopCmd(data)
-    } else if (cmd === ConverseCmds.Message) {
-      await this.handleMessageCmd(data)
+    if (incomingId) {
+      await this.dispatcher.publish(ConverseDispatches.Message, incomingId, { message, incomingId })
     }
   }
 
-  private async handleStopCmd(data: any) {
-    const { conversationId, messageId } = data
-    const collectors = this.collectors.get(conversationId) || []
-    const childCollectors = collectors.filter((x) => x.incomingId === messageId)
-
-    for (const collector of childCollectors) {
-      clearTimeout(collector.timeout!)
-      this.removeCollector(collector)
-      this.resolveCollect(collector)
-    }
-
-    await this.distributed.unsubscribe(`converse/${messageId}`)
-  }
-
-  private async handleMessageCmd(data: any) {
+  private async handleDispatchMessage(data: any) {
     const { message: rawMessage, incomingId } = data
     const message = { ...rawMessage, sentOn: new Date(rawMessage.sentOn) }
     const collectors = this.collectors.get(message.conversationId) || []
@@ -77,6 +54,20 @@ export class ConverseService extends Service {
     }
   }
 
+  private async handleDispatchStop(data: any) {
+    const { conversationId, messageId } = data
+    const collectors = this.collectors.get(conversationId) || []
+    const childCollectors = collectors.filter((x) => x.incomingId === messageId)
+
+    for (const collector of childCollectors) {
+      clearTimeout(collector.timeout!)
+      this.removeCollector(collector)
+      this.resolveCollect(collector)
+    }
+
+    await this.dispatcher.unsubscribe(messageId)
+  }
+
   setIncomingId(messageId: uuid, incomingId: uuid) {
     this.incomingIdCache.set(messageId, incomingId)
   }
@@ -86,7 +77,7 @@ export class ConverseService extends Service {
   }
 
   async collect(messageId: uuid, conversationId: uuid, timeout: number): Promise<Message[]> {
-    await this.distributed.listen(`converse/${messageId}`, this.handleCmdCallback)
+    await this.dispatcher.subscribe(messageId)
 
     const collector = this.addCollector(messageId, conversationId)
     if (timeout !== 0) {
@@ -101,10 +92,7 @@ export class ConverseService extends Service {
   }
 
   async stopCollecting(messageId: uuid, conversationId: uuid) {
-    await this.distributed.publish(`converse/${messageId}`, {
-      cmd: ConverseCmds.Stop,
-      data: { conversationId, messageId }
-    })
+    await this.dispatcher.publish(ConverseDispatches.Stop, messageId, { conversationId, messageId })
   }
 
   private addCollector(messageId: uuid, conversationId: uuid): Collector {

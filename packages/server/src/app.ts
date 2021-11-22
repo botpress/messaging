@@ -51,7 +51,7 @@ export class App extends Engine {
     this.userTokens = new UserTokenService(this.database, this.crypto, this.caching, this.batching, this.users)
     this.conversations = new ConversationService(this.database, this.caching, this.batching, this.users)
     this.messages = new MessageService(this.database, this.caching, this.batching, this.conversations)
-    this.converse = new ConverseService(this.caching, this.distributed, this.messages)
+    this.converse = new ConverseService(this.caching, this.dispatches, this.messages)
     this.mapping = new MappingService(this.database, this.caching, this.batching, this.users, this.conversations)
     this.status = new StatusService(this.database, this.distributed, this.caching, this.conduits)
     this.instances = new InstanceService(
