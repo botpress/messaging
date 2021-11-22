@@ -16,7 +16,7 @@
     "start": "yarn workspace @botpress/messaging-server start",
     "dev": "yarn workspace @botpress/messaging-server dev",
     "board": "yarn workspace @botpress/messaging-board dev",
-    "test": "jest --selectProjects Engine Server Components"
+    "test": "yarn --silent && jest --selectProjects Engine Server Components"
   },
   "bin": "./packages/server/dist/index.js",
   "pkg": {
