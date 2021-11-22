@@ -102,6 +102,8 @@ export class InstanceService extends Service {
   async destroy() {
     this.destroyed = true
 
+    await this.monitoring.destroy()
+
     if (!this.cache) {
       return
     }
