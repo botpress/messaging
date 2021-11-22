@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { MessageTypeHandlerProps } from 'typings'
 import { ChoiceOption } from '../../content-typings'
+import { MessageTypeHandlerProps } from '../../typings'
 import { Prepend } from '../Keyboard'
 
 import { Button } from './Button'

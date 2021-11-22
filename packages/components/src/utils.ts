@@ -1,6 +1,6 @@
 import { InjectedIntl } from 'react-intl'
 import snarkdown from 'snarkdown'
-import { MessageConfig } from 'typings'
+import { MessageConfig } from './typings'
 
 export const renderUnsafeHTML = (message: string = '', escaped: boolean): string => {
   if (escaped) {

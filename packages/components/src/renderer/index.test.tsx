@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react'
-import { messageTypes } from 'content-typings'
 import React from 'react'
-import { Message } from 'typings'
-import { defaultMessageConfig } from 'utils'
+import { Message } from '../typings'
+import { defaultMessageConfig } from '../utils'
 import defaultRenderer, { Renderer, defaultTypesRenderers } from '.'
 
 describe('Renderer', () => {

@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios'
-import { Content, MessageType } from 'content-typings'
 import { InjectedIntl } from 'react-intl'
+import { Content, MessageType } from './content-typings'
 
 declare global {
   export interface Window {

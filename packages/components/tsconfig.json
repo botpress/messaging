@@ -16,10 +16,7 @@
 
     // We use react
     "jsx": "react",
-    "resolveJsonModule": true,
-
-    // TODO: remove this
-    "baseUrl": "./src"
+    "resolveJsonModule": true
   },
   "include": ["src", "src/**/*.json"],
   "exclude": ["dist", "node_modules"]

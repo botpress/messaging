@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react'
-import ReactMessageRenderer from 'index'
 import React from 'react'
-import { defaultMessageConfig } from 'utils'
+import ReactMessageRenderer from './index'
 import testEvents from './test-events.json'
+import { defaultMessageConfig } from './utils'
 
 describe('ReactComponentRenderer', () => {
   it('can render all test events with no errors', () => {

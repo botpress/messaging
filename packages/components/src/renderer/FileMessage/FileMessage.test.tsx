@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
-import renderer from 'renderer'
-import { defaultMessageConfig } from 'utils'
+import renderer from '../../renderer'
+import { defaultMessageConfig } from '../../utils'
 
 describe('File renderer', () => {
   test('it renders a file of unsupported mime type as a download link', () => {
