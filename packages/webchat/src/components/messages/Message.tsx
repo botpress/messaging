@@ -62,7 +62,7 @@ class Message extends Component<MessageProps> {
           shouldPlay: this.props.shouldPlay,
           intl: this.props.store!.intl,
           escapeHTML: true,
-          isInEmulator: false,
+          isInEmulator: this.props.store!.config.isEmulator!,
           showTimestamp: this.props.store!.config.showTimestamp
         }}
       />
