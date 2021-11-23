@@ -19,6 +19,7 @@ export class ConvmapService extends Service {
   private table: ConvmapTable
   private cacheByThreadId!: ServerCache2D<Convmap>
   private cacheByConversationId!: ServerCache<uuid, Convmap[]>
+  private locks!: ServerCache2D<Promise<Convmap>>
 
   constructor(
     private db: DatabaseService,
@@ -35,6 +36,7 @@ export class ConvmapService extends Service {
   async setup() {
     this.cacheByThreadId = await this.caching.newServerCache2D('cache_convmap_by_thread_id')
     this.cacheByConversationId = await this.caching.newServerCache('cache_convmap_by_conversation_id')
+    this.locks = await this.caching.newServerCache2D('cache_convmap_locks')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_convmap',
@@ -98,15 +100,28 @@ export class ConvmapService extends Service {
   }
 
   // TODO: remove clientId from param list
-  async map(tunnelId: uuid, threadId: uuid, clientId: uuid, userId: uuid): Promise<uuid> {
+  async map(tunnelId: uuid, threadId: uuid, clientId: uuid, userId: uuid): Promise<Convmap> {
     const convmap = await this.getByThreadId(tunnelId, threadId)
-    let conversationId = convmap?.conversationId
-    if (!conversationId) {
-      conversationId = (await this.conversations.create(clientId, userId)).id
-      await this.create(tunnelId, conversationId, threadId)
+
+    if (!convmap) {
+      let promise = this.locks.get(tunnelId, threadId)
+
+      if (!promise) {
+        promise = new Promise(async (resolve) => {
+          const conversation = await this.conversations.create(clientId, userId)
+          const convmap = await this.create(tunnelId, conversation.id, threadId)
+
+          resolve(convmap)
+          this.locks.del(tunnelId, threadId)
+        })
+
+        this.locks.set(tunnelId, threadId, promise)
+      }
+
+      return promise
     }
 
-    return conversationId
+    return convmap
   }
 
   private query() {

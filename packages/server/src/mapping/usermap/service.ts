@@ -15,6 +15,7 @@ import { Usermap } from './types'
 export class UsermapService extends Service {
   private table: UsermapTable
   private cacheBySenderId!: ServerCache2D<Usermap>
+  private locks!: ServerCache2D<Promise<Usermap>>
   private batcher!: Batcher<Usermap>
 
   constructor(
@@ -31,6 +32,7 @@ export class UsermapService extends Service {
 
   async setup() {
     this.cacheBySenderId = await this.caching.newServerCache2D('cache_usermap_by_sender_id')
+    this.locks = await this.caching.newServerCache2D('cache_usermap_locks')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_usermap',
@@ -77,15 +79,27 @@ export class UsermapService extends Service {
   }
 
   // TODO: remove clientId from param list
-  async map(tunnelId: uuid, senderId: uuid, clientId: uuid): Promise<uuid> {
+  async map(tunnelId: uuid, senderId: uuid, clientId: uuid): Promise<Usermap> {
     const usermap = await this.getBySenderId(tunnelId, senderId)
-    let userId = usermap?.userId
-    if (!userId) {
-      userId = (await this.users.create(clientId)).id
-      await this.create(tunnelId, userId, senderId)
+    if (!usermap) {
+      let promise = this.locks.get(tunnelId, senderId)
+
+      if (!promise) {
+        promise = new Promise(async (resolve) => {
+          const user = await this.users.create(clientId)
+          const usermap = await this.create(tunnelId, user.id, senderId)
+
+          resolve(usermap)
+          this.locks.del(tunnelId, senderId)
+        })
+
+        this.locks.set(tunnelId, senderId, promise)
+      }
+
+      return promise
     }
 
-    return userId
+    return usermap
   }
 
   private query() {
