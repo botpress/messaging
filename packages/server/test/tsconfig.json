@@ -1,9 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "paths": {
-      "@botpress/messaging-base": ["../../base/src/index.ts"],
-      "@botpress/messaging-engine": ["../../engine/src/index.ts"]
-    }
-  }
-}

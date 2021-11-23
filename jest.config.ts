@@ -2,6 +2,8 @@ import type { Config } from '@jest/types'
 import { defaults as tsjPreset } from 'ts-jest/presets'
 import { pathsToModuleNameMapper } from 'ts-jest/utils'
 
+const ServerConfig = require('./packages/server/tsconfig.test.json')
+
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
   // TODO: Re-enable coverage threshold once we have enough tests
@@ -26,21 +28,20 @@ const config: Config.InitialOptions = {
       clearMocks: true
     },
     {
-      rootDir: 'packages/server/test',
-      testMatch: ['<rootDir>/**/(*.)test.ts'],
+      rootDir: 'packages/server',
+      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
         ...tsjPreset.transform
       },
+      globals: {
+        'ts-jest': {
+          tsconfig: '<rootDir>/tsconfig.test.json'
+        }
+      },
       clearMocks: true,
-      moduleNameMapper: pathsToModuleNameMapper(
-        {
-          '@botpress/messaging-base': ['./packages/base/src/index.ts'],
-          '@botpress/messaging-engine': ['./packages/engine/src/index.ts']
-        },
-        { prefix: __dirname }
-      )
+      moduleNameMapper: pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/' })
     },
     {
       rootDir: 'packages/socket',
