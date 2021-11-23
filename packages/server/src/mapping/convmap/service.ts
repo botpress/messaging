@@ -97,6 +97,18 @@ export class ConvmapService extends Service {
     return convmaps
   }
 
+  // TODO: remove clientId from param list
+  async map(tunnelId: uuid, threadId: uuid, clientId: uuid, userId: uuid): Promise<uuid> {
+    const convmap = await this.getByThreadId(tunnelId, threadId)
+    let conversationId = convmap?.conversationId
+    if (!conversationId) {
+      conversationId = (await this.conversations.create(clientId, userId)).id
+      await this.create(tunnelId, conversationId, threadId)
+    }
+
+    return conversationId
+  }
+
   private query() {
     return this.db.knex(this.table.id)
   }

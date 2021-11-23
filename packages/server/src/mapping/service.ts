@@ -53,20 +53,8 @@ export class MappingService extends Service {
     const identity = await this.identities.map(tunnel.id, endpoint.identity || '*')
     const sender = await this.senders.map(identity.id, endpoint.sender || '*')
     const thread = await this.threads.map(sender.id, endpoint.thread || '*')
-
-    const usermap = await this.usermap.getBySenderId(tunnel.id, sender.id)
-    let userId = usermap?.userId
-    if (!userId) {
-      userId = (await this.users.create(clientId)).id
-      await this.usermap.create(tunnel.id, userId, sender.id)
-    }
-
-    const convmap = await this.convmap.getByThreadId(tunnel.id, thread.id)
-    let conversationId = convmap?.conversationId
-    if (!conversationId) {
-      conversationId = (await this.conversations.create(clientId, userId)).id
-      await this.convmap.create(tunnel.id, conversationId, thread.id)
-    }
+    const userId = await this.usermap.map(tunnel.id, sender.id, clientId)
+    const conversationId = await this.convmap.map(tunnel.id, thread.id, clientId, userId)
 
     return {
       tunnelId: tunnel.id,

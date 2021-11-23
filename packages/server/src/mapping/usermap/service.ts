@@ -76,6 +76,18 @@ export class UsermapService extends Service {
     }
   }
 
+  // TODO: remove clientId from param list
+  async map(tunnelId: uuid, senderId: uuid, clientId: uuid): Promise<uuid> {
+    const usermap = await this.getBySenderId(tunnelId, senderId)
+    let userId = usermap?.userId
+    if (!userId) {
+      userId = (await this.users.create(clientId)).id
+      await this.create(tunnelId, userId, senderId)
+    }
+
+    return userId
+  }
+
   private query() {
     return this.db.knex(this.table.id)
   }
