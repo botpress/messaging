@@ -3,9 +3,14 @@ dist/
 bin/
 *.log
 
+.parcel-cache
+.cache
 .git
 .github
 .vscode
+coverage
+storybook-static
+build
 doc
 res
 scripts

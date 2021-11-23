@@ -13,7 +13,7 @@ WORKDIR /messaging
 COPY --from=build /messaging/packages/server/dist packages/server/src
 COPY --from=build /messaging/packages/server/package.json packages/server/package.json
 
-COPY --from=build /messaging/packages/engine/dist packages/engine/src
+COPY --from=build /messaging/packages/engine/dist packages/engine/dist
 COPY --from=build /messaging/packages/engine/package.json packages/engine/package.json
  
 COPY --from=build /messaging/packages/base/dist packages/base/dist
