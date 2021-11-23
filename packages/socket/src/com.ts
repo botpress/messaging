@@ -22,11 +22,17 @@ export class SocketCom {
         autoConnect: false
       })
 
+      const timeout = setTimeout(() => {
+        reject('connection timed out')
+      }, 5000)
+
       this.socket.on('login', async (message) => {
+        clearTimeout(timeout)
         resolve(message)
       })
 
       this.socket.on('connect_error', (err) => {
+        clearTimeout(timeout)
         reject(err.message)
       })
 
