@@ -33,8 +33,15 @@ export class MappingService extends Service {
     this.identities = new IdentityService(this.db, this.caching)
     this.senders = new SenderService(this.db, this.caching, this.batching)
     this.threads = new ThreadService(this.db, this.caching, this.batching, this.senders)
-    this.usermap = new UsermapService(this.db, this.caching, this.batching, this.users, this.senders)
-    this.convmap = new ConvmapService(this.db, this.caching, this.batching, this.conversations, this.threads)
+    this.usermap = new UsermapService(this.db, this.caching, this.batching, this.users, this.tunnels, this.senders)
+    this.convmap = new ConvmapService(
+      this.db,
+      this.caching,
+      this.batching,
+      this.conversations,
+      this.tunnels,
+      this.threads
+    )
     this.sandboxmap = new SandboxmapService(this.db, this.caching)
   }
 
@@ -53,8 +60,8 @@ export class MappingService extends Service {
     const identity = await this.identities.map(tunnel.id, endpoint.identity || '*')
     const sender = await this.senders.map(identity.id, endpoint.sender || '*')
     const thread = await this.threads.map(sender.id, endpoint.thread || '*')
-    const usermap = await this.usermap.map(tunnel.id, sender.id, clientId)
-    const convmap = await this.convmap.map(tunnel.id, thread.id, clientId, usermap.userId)
+    const usermap = await this.usermap.map(tunnel.id, sender.id)
+    const convmap = await this.convmap.map(tunnel.id, thread.id, usermap.userId)
 
     return {
       tunnelId: tunnel.id,

@@ -10,6 +10,7 @@ import {
 } from '@botpress/messaging-engine'
 import { ConversationService } from '../../conversations/service'
 import { ThreadService } from '../threads/service'
+import { TunnelService } from '../tunnels/service'
 import { ConvmapTable } from './table'
 import { Convmap } from './types'
 
@@ -26,6 +27,7 @@ export class ConvmapService extends Service {
     private caching: CachingService,
     private batching: BatchingService,
     private conversations: ConversationService,
+    private tunnels: TunnelService,
     private threads: ThreadService
   ) {
     super()
@@ -99,8 +101,7 @@ export class ConvmapService extends Service {
     return convmaps
   }
 
-  // TODO: remove clientId from param list
-  async map(tunnelId: uuid, threadId: uuid, clientId: uuid, userId: uuid): Promise<Convmap> {
+  async map(tunnelId: uuid, threadId: uuid, userId: uuid): Promise<Convmap> {
     const convmap = await this.getByThreadId(tunnelId, threadId)
 
     if (!convmap) {
@@ -108,7 +109,8 @@ export class ConvmapService extends Service {
 
       if (!promise) {
         promise = new Promise(async (resolve) => {
-          const conversation = await this.conversations.create(clientId, userId)
+          const tunnel = await this.tunnels.get(tunnelId)
+          const conversation = await this.conversations.create(tunnel!.clientId, userId)
           const convmap = await this.create(tunnelId, conversation.id, threadId)
 
           resolve(convmap)

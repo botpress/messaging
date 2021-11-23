@@ -9,6 +9,7 @@ import {
 } from '@botpress/messaging-engine'
 import { UserService } from '../../users/service'
 import { SenderService } from '../senders/service'
+import { TunnelService } from '../tunnels/service'
 import { UsermapTable } from './table'
 import { Usermap } from './types'
 
@@ -23,6 +24,7 @@ export class UsermapService extends Service {
     private caching: CachingService,
     private batching: BatchingService,
     private users: UserService,
+    private tunnels: TunnelService,
     private senders: SenderService
   ) {
     super()
@@ -78,15 +80,15 @@ export class UsermapService extends Service {
     }
   }
 
-  // TODO: remove clientId from param list
-  async map(tunnelId: uuid, senderId: uuid, clientId: uuid): Promise<Usermap> {
+  async map(tunnelId: uuid, senderId: uuid): Promise<Usermap> {
     const usermap = await this.getBySenderId(tunnelId, senderId)
     if (!usermap) {
       let promise = this.locks.get(tunnelId, senderId)
 
       if (!promise) {
         promise = new Promise(async (resolve) => {
-          const user = await this.users.create(clientId)
+          const tunnel = await this.tunnels.get(tunnelId)
+          const user = await this.users.create(tunnel!.clientId)
           const usermap = await this.create(tunnelId, user.id, senderId)
 
           resolve(usermap)
