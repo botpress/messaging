@@ -1,6 +1,8 @@
 import { uuid } from '@botpress/messaging-base'
+import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
 import { MappingService } from '../src/mapping/service'
+import { Endpoint } from '../src/mapping/types'
 import { Provider } from '../src/providers/types'
 import { setupApp, app } from './util/app'
 
@@ -17,7 +19,7 @@ describe('Mapping', () => {
   let mapping: MappingService
   let clientId: uuid
   let channelId: uuid
-  const state: { provider?: Provider } = {}
+  const state: { provider?: Provider; endpoint?: Endpoint; mapping?: Mapping } = {}
 
   beforeAll(async () => {
     await setupApp()
@@ -35,11 +37,13 @@ describe('Mapping', () => {
   })
 
   test('Mapping an endpoint', async () => {
-    const map = await mapping.getMapping(clientId, channelId, {
-      identity: 'botname',
-      sender: 'bob',
-      thread: '1234'
-    })
+    state.endpoint = {
+      identity: crypto.randomBytes(20).toString('hex'),
+      sender: crypto.randomBytes(20).toString('hex'),
+      thread: crypto.randomBytes(20).toString('hex')
+    }
+
+    const map = await mapping.getMapping(clientId, channelId, state.endpoint)
 
     expect(map).toBeDefined()
     expect(validateUuid(map.tunnelId)).toBeTruthy()
@@ -48,5 +52,13 @@ describe('Mapping', () => {
     expect(validateUuid(map.threadId)).toBeTruthy()
     expect(validateUuid(map.userId)).toBeTruthy()
     expect(validateUuid(map.conversationId)).toBeTruthy()
+
+    state.mapping = map
+  })
+
+  test('Mapping the same endpoint again returns the same mapping', async () => {
+    const map = await mapping.getMapping(clientId, channelId, state.endpoint!)
+
+    expect(map).toEqual(state.mapping)
   })
 })
