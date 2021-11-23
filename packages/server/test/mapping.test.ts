@@ -61,4 +61,30 @@ describe('Mapping', () => {
 
     expect(map).toEqual(state.mapping)
   })
+
+  test('Get endpoint from threadId', async () => {
+    const endpoint = await mapping.getEndpoint(state.mapping!.threadId!)
+    expect(endpoint).toEqual(state.endpoint)
+  })
+
+  test('Mapping repeateldy does not produce race conditions', async () => {
+    const endpoint = {
+      identity: crypto.randomBytes(20).toString('hex'),
+      sender: crypto.randomBytes(20).toString('hex'),
+      thread: crypto.randomBytes(20).toString('hex')
+    }
+
+    const promises: Promise<Mapping>[] = []
+
+    for (let i = 0; i < 100; i++) {
+      promises.push(mapping.getMapping(clientId, channelId, endpoint))
+    }
+
+    const mappings = await Promise.all(promises)
+
+    // they should have all mapped to the same thing
+    for (const mapping of mappings) {
+      expect(mapping).toEqual(mappings[0])
+    }
+  })
 })
