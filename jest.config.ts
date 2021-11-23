@@ -26,8 +26,8 @@ const config: Config.InitialOptions = {
       clearMocks: true
     },
     {
-      rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
+      rootDir: 'packages/server/test',
+      testMatch: ['<rootDir>/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
