@@ -19,6 +19,7 @@ export class ThreadService extends Service {
   private table: ThreadTable
   private cacheById!: ServerCache<uuid, Thread>
   private cacheByName!: ServerCache2D<Thread>
+  private locks!: ServerCache2D<Promise<Thread>>
 
   constructor(
     private db: DatabaseService,
@@ -33,6 +34,7 @@ export class ThreadService extends Service {
   async setup() {
     this.cacheById = await this.caching.newServerCache('cache_thread_by_id')
     this.cacheByName = await this.caching.newServerCache2D('cache_thread_by_name')
+    this.locks = await this.caching.newServerCache2D('cache_thread_locks')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_thread',
@@ -79,17 +81,28 @@ export class ThreadService extends Service {
       this.cacheByName.set(senderId, name, thread)
       return thread
     } else {
-      const thread = {
-        id: uuidv4(),
-        senderId,
-        name
+      let promise = this.locks.get(senderId, name)
+
+      if (!promise) {
+        promise = new Promise(async (resolve) => {
+          const thread = {
+            id: uuidv4(),
+            senderId,
+            name
+          }
+
+          await this.batcher.push(thread)
+          this.cacheByName.set(senderId, name, thread)
+          this.cacheById.set(thread.id, thread)
+
+          resolve(thread)
+          this.locks.del(senderId, name)
+        })
+
+        this.locks.set(senderId, name, promise)
       }
 
-      await this.batcher.push(thread)
-      this.cacheByName.set(senderId, name, thread)
-      this.cacheById.set(thread.id, thread)
-
-      return thread
+      return promise
     }
   }
 

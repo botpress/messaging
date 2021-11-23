@@ -8,6 +8,7 @@ export class IdentityService extends Service {
   private table: IdentityTable
   private cacheById!: ServerCache<uuid, Identity>
   private cacheByName!: ServerCache2D<Identity>
+  private locks!: ServerCache2D<Promise<Identity>>
 
   constructor(private db: DatabaseService, private caching: CachingService) {
     super()
@@ -17,6 +18,7 @@ export class IdentityService extends Service {
   async setup() {
     this.cacheById = await this.caching.newServerCache('cache_identity_by_id')
     this.cacheByName = await this.caching.newServerCache2D('cache_identity_by_name')
+    this.locks = await this.caching.newServerCache2D('cache_identity_locks')
 
     await this.db.registerTable(this.table)
   }
@@ -51,17 +53,28 @@ export class IdentityService extends Service {
       this.cacheByName.set(tunnelId, name, identity)
       return identity
     } else {
-      const identity = {
-        id: uuidv4(),
-        tunnelId,
-        name
+      let promise = this.locks.get(tunnelId, name)
+
+      if (!promise) {
+        promise = new Promise(async (resolve) => {
+          const identity = {
+            id: uuidv4(),
+            tunnelId,
+            name
+          }
+
+          await this.query().insert(identity)
+          this.cacheByName.set(tunnelId, name, identity)
+          this.cacheById.set(identity.id, identity)
+
+          resolve(identity)
+          this.locks.del(tunnelId, name)
+        })
+
+        this.locks.set(tunnelId, name, promise)
       }
 
-      await this.query().insert(identity)
-      this.cacheByName.set(tunnelId, name, identity)
-      this.cacheById.set(identity.id, identity)
-
-      return identity
+      return promise
     }
   }
 

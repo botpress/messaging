@@ -7,7 +7,8 @@ import { Tunnel } from './types'
 export class TunnelService extends Service {
   private table: TunnelTable
   private cacheById!: ServerCache<uuid, Tunnel>
-  private cacheByClienAndChannel!: ServerCache2D<Tunnel>
+  private cacheByClientAndChannel!: ServerCache2D<Tunnel>
+  private locks!: ServerCache2D<Promise<Tunnel>>
 
   constructor(private db: DatabaseService, private caching: CachingService) {
     super()
@@ -16,7 +17,8 @@ export class TunnelService extends Service {
 
   async setup() {
     this.cacheById = await this.caching.newServerCache('cache_tunnel_by_id')
-    this.cacheByClienAndChannel = await this.caching.newServerCache2D('cache_tunnel_by_client_and_channel')
+    this.cacheByClientAndChannel = await this.caching.newServerCache2D('cache_tunnel_by_client_and_channel')
+    this.locks = await this.caching.newServerCache2D('cache_tunnel_locks')
 
     await this.db.registerTable(this.table)
   }
@@ -39,7 +41,7 @@ export class TunnelService extends Service {
   }
 
   async map(clientId: uuid, channelId: uuid): Promise<Tunnel> {
-    const cached = this.cacheByClienAndChannel.get(clientId, channelId)
+    const cached = this.cacheByClientAndChannel.get(clientId, channelId)
     if (cached) {
       return cached
     }
@@ -48,20 +50,31 @@ export class TunnelService extends Service {
 
     if (rows?.length) {
       const tunnel = rows[0] as Tunnel
-      this.cacheByClienAndChannel.set(clientId, channelId, tunnel)
+      this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
       return tunnel
     } else {
-      const tunnel = {
-        id: uuidv4(),
-        clientId,
-        channelId
+      let promise = this.locks.get(clientId, channelId)
+
+      if (!promise) {
+        promise = new Promise(async (resolve) => {
+          const tunnel = {
+            id: uuidv4(),
+            clientId,
+            channelId
+          }
+
+          await this.query().insert(tunnel)
+          this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
+          this.cacheById.set(tunnel.id, tunnel)
+
+          resolve(tunnel)
+          this.locks.del(clientId, channelId)
+        })
+
+        this.locks.set(clientId, channelId, promise)
       }
 
-      await this.query().insert(tunnel)
-      this.cacheByClienAndChannel.set(clientId, channelId, tunnel)
-      this.cacheById.set(tunnel.id, tunnel)
-
-      return tunnel
+      return promise
     }
   }
 
