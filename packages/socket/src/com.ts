@@ -14,7 +14,7 @@ export class SocketCom {
   }
 
   connect() {
-    this.socket = io(this.url.replace('http://', 'ws://').replace('https://', 'ws://'), {
+    this.socket = io(this.url, {
       transports: ['websocket']
     })
 
