@@ -22,7 +22,7 @@ export class WebchatUser extends WebchatSystem {
     const event = { choice: saved }
     await this.emitter.emit(UserEvents.Choose, event)
 
-    const user = await this.socket.login(event.choice)
+    const user = await this.socket.connect(event.choice)
     this.storage.set(STORAGE_ID, user)
 
     await this.set(user)

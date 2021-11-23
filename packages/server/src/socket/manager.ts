@@ -4,7 +4,12 @@ import clc from 'cli-color'
 import { Server } from 'http'
 import Joi from 'joi'
 import Socket from 'socket.io'
+import { validate as validateUuid } from 'uuid'
 import yn from 'yn'
+import { ClientService } from '../clients/service'
+import { UserTokenService } from '../user-tokens/service'
+import { UserService } from '../users/service'
+import { Schema } from './schema'
 import { SocketService } from './service'
 
 export class SocketManager {
@@ -12,11 +17,17 @@ export class SocketManager {
   private ws: Socket.Server | undefined
   private handlers: { [type: string]: SocketHandler } = {}
 
-  constructor(private sockets: SocketService) {}
+  constructor(
+    private clients: ClientService,
+    private users: UserService,
+    private userTokens: UserTokenService,
+    private sockets: SocketService
+  ) {}
 
   async setup(server: Server) {
     if (yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
       this.ws = new Socket.Server(server, { serveClient: false, cors: { origin: '*' } })
+      this.ws.use(this.handleSocketAuthentication.bind(this))
       this.ws.on('connection', this.handleSocketConnection.bind(this))
     }
   }
@@ -41,24 +52,16 @@ export class SocketManager {
     })
   }
 
-  public handle(
-    type: string,
-    schema: Joi.ObjectSchema<any>,
-    callback: (socket: SocketRequest) => Promise<void>,
-    checkUserId?: boolean
-  ) {
+  public handle(type: string, schema: Joi.ObjectSchema<any>, callback: (socket: SocketRequest) => Promise<void>) {
     this.handlers[type] = async (socket: Socket.Socket, message: SocketMessage) => {
-      // TODO: remove this
-      if (checkUserId !== false) {
-        const userId = this.sockets.getUserId(socket)
-        if (!userId) {
-          return this.reply(socket, message, {
-            error: true,
-            message: 'socket does not have user rights'
-          })
-        }
-        message.userId = userId
+      const userId = this.sockets.getUserId(socket)
+      if (!userId) {
+        return this.reply(socket, message, {
+          error: true,
+          message: 'socket does not have user rights'
+        })
       }
+      message.userId = userId
 
       const { error } = schema.validate(message.data)
       if (error) {
@@ -76,12 +79,62 @@ export class SocketManager {
     })
   }
 
+  private async handleSocketAuthentication(socket: Socket.Socket, next: (err?: Error) => void) {
+    try {
+      const { error } = Schema.Socket.Auth.validate(socket.handshake.auth)
+      if (error) {
+        return next(new Error(error.message))
+      }
+
+      const { clientId, creds } = socket.handshake.auth as {
+        clientId: uuid
+        creds?: { userId: uuid; userToken: string }
+      }
+
+      const client = await this.clients.getById(clientId)
+      if (!client) {
+        return next(new Error('Client not found'))
+      }
+
+      if (creds) {
+        const user = await this.users.get(creds.userId)
+        if (user?.clientId === clientId) {
+          const [userTokenId, userTokenToken] = creds.userToken.split('.')
+          if (
+            validateUuid(userTokenId) &&
+            userTokenToken?.length &&
+            (await this.userTokens.verifyToken(userTokenId, userTokenToken))
+          ) {
+            socket.data.creds = creds
+            return next()
+          }
+        }
+      }
+
+      const user = await this.users.create(clientId)
+      const tokenRaw = await this.userTokens.generateToken()
+      const userToken = await this.userTokens.create(user.id, tokenRaw, undefined)
+      socket.data.creds = { userId: user.id, userToken: `${userToken.id}.${tokenRaw}` }
+
+      next()
+    } catch (e) {
+      this.logger.error(e, 'An error occurred when authenticating a socket connection')
+
+      next(new Error('an error occurred authenticating socket'))
+    }
+  }
+
   private async handleSocketConnection(socket: Socket.Socket) {
     try {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
 
+      const { creds } = socket.data
+      delete socket.data
+
       await this.setupSocket(socket)
-      this.sockets.create(socket)
+      await this.sockets.create(socket, creds.userId)
+
+      socket.emit('login', creds)
     } catch (e) {
       this.logger.error(e, 'An error occurred during a socket connection')
     }

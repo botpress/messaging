@@ -26,8 +26,26 @@ export class SocketService extends Service {
     this.cacheByUserId = await this.cachingService.newServerCache('cache_sockets_by_user_id')
   }
 
-  public create(socket: Socket) {
-    this.sockets[socket.id] = {}
+  public async create(socket: Socket, userId: uuid) {
+    const current = this.socketsByUserId[userId]
+
+    if (!current || !current.find((x) => x.id === socket.id)) {
+      const state = {
+        socket,
+        userId
+      }
+      this.sockets[socket.id] = state
+      this.cache.set(socket.id, state)
+
+      const list = [...(current || []), socket]
+      this.socketsByUserId[userId] = list
+      this.cacheByUserId.set(userId, list)
+
+      // this is the first socket connection this user has on this server
+      if (list.length === 1) {
+        await this.emitter.emit(SocketEvents.UserConnected, { userId: state.userId })
+      }
+    }
   }
 
   public async delete(socket: Socket) {
@@ -67,28 +85,6 @@ export class SocketService extends Service {
     }
   }
 
-  public async registerForUser(socket: Socket, userId: uuid) {
-    const current = this.socketsByUserId[userId]
-
-    if (!current || !current.find((x) => x.id === socket.id)) {
-      const state = {
-        socket,
-        userId
-      }
-      this.sockets[socket.id] = state
-      this.cache.set(socket.id, state)
-
-      const list = [...(current || []), socket]
-      this.socketsByUserId[userId] = list
-      this.cacheByUserId.set(userId, list)
-
-      // this is the first socket connection this user has on this server
-      if (list.length === 1) {
-        await this.emitter.emit(SocketEvents.UserConnected, { userId: state.userId })
-      }
-    }
-  }
-
   public listByUser(userId: string) {
     const cached = this.cacheByUserId.get(userId)
     if (cached) {
@@ -102,5 +98,6 @@ export class SocketService extends Service {
 }
 
 export interface SocketState {
-  userId?: uuid
+  socket: Socket
+  userId: uuid
 }

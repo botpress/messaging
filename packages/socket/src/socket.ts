@@ -3,9 +3,8 @@ import { SocketCom, SocketComEvents } from './com'
 import { SocketEmitter } from './emitter'
 
 export class MessagingSocket extends SocketEmitter<{
-  connect: undefined
+  connect: UserCredentials
   disconnect: undefined
-  login: UserCredentials
   user: uuid | undefined
   conversation: uuid | undefined
   message: Message
@@ -38,42 +37,26 @@ export class MessagingSocket extends SocketEmitter<{
         await this.emit('message', e.data.message)
       }
     })
-
-    this.com.events.on(SocketComEvents.Connect, async (e) => {
-      await this.emit('connect', undefined)
-    })
   }
 
-  async connect(options?: { autoLogin: boolean; creds?: UserCredentials }) {
-    this.com.connect()
+  async connect(creds?: UserCredentials): Promise<UserCredentials> {
+    const result = await this.com.connect({ clientId: this.clientId, creds })
 
-    if (options?.autoLogin !== false) {
-      await this.login(options?.creds)
-      await this.createConversation()
+    if (result.userId === creds?.userId && !result.userToken) {
+      result.userToken = creds!.userToken
     }
+
+    this._creds = result
+
+    await this.emit('connect', this._creds)
+    await this.emit('user', this._creds.userId)
+
+    return result
   }
 
   async disconnect() {
     this.com.disconnect()
     await this.emit('disconnect', undefined)
-  }
-
-  async login(creds?: UserCredentials): Promise<UserCredentials> {
-    const result = await this.request<UserCredentials>('users.auth', {
-      clientId: this.clientId,
-      ...(creds || {})
-    })
-
-    if (result.userId === creds?.userId && !result.userToken) {
-      result.userToken = creds.userToken
-    }
-
-    this._creds = result
-
-    await this.emit('login', this._creds)
-    await this.emit('user', this._creds.userId)
-
-    return result
   }
 
   async getUser(): Promise<User | undefined> {

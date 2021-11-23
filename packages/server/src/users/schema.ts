@@ -10,13 +10,7 @@ const Api = {
 }
 
 const Socket = {
-  Get: Joi.object({}).required(),
-
-  Auth: Joi.object({
-    clientId: Joi.string().guid().required(),
-    userId: Joi.string().guid().optional(),
-    userToken: Joi.string().optional()
-  })
+  Get: Joi.object({}).required()
 }
 
 export const Schema = { Api, Socket }
