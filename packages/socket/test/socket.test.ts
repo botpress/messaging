@@ -57,33 +57,17 @@ describe('Socket Client', () => {
         reject('connection attempt timed out')
       }, 2500)
 
-      socket.on('connect', () => {
-        clearTimeout(timeout)
-        resolve()
-      })
-    })
-
-    await socket.connect({ autoLogin: false })
-    await promise
-
-    state.socket = socket
-  })
-
-  test('Login', async () => {
-    const promise = new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject('login attempt timed out')
-      }, 2500)
-
-      state.socket!.on('login', (creds) => {
+      socket.on('connect', (creds) => {
         state.userId = creds.userId
         clearTimeout(timeout)
         resolve()
       })
     })
 
-    await state.socket!.login()
+    await socket.connect()
     await promise
+
+    state.socket = socket
   })
 
   test('CreateConversation', async () => {

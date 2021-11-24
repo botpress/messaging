@@ -3,7 +3,7 @@ import { defaults as tsjPreset } from 'ts-jest/presets'
 import { pathsToModuleNameMapper } from 'ts-jest/utils'
 
 const ClientConfig = require('./packages/client/tsconfig.test.json')
-const SocketConfig = require('./packages/socket/tsconfig.test.json')
+const SocketConfig = require('./packages/socket/test/tsconfig.json')
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -36,11 +36,11 @@ const config: Config.InitialOptions = {
       },
       globals: {
         'ts-jest': {
-          tsconfig: '<rootDir>/tsconfig.test.json'
+          tsconfig: '<rootDir>/test/tsconfig.json'
         }
       },
       clearMocks: true,
-      moduleNameMapper: pathsToModuleNameMapper(SocketConfig.compilerOptions.paths, { prefix: '<rootDir>/' })
+      moduleNameMapper: pathsToModuleNameMapper(SocketConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     }
   ]
 }
