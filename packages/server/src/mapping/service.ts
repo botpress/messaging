@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { BatchingService, CachingService, DatabaseService, Service } from '@botpress/messaging-engine'
+import { BarrierService, BatchingService, CachingService, DatabaseService, Service } from '@botpress/messaging-engine'
 import { ConversationService } from '../conversations/service'
 import { UserService } from '../users/service'
 import { ConvmapService } from './convmap/service'
@@ -24,6 +24,7 @@ export class MappingService extends Service {
     private db: DatabaseService,
     private caching: CachingService,
     private batching: BatchingService,
+    private barriers: BarrierService,
     private users: UserService,
     private conversations: ConversationService
   ) {
@@ -38,6 +39,7 @@ export class MappingService extends Service {
       this.db,
       this.caching,
       this.batching,
+      this.barriers,
       this.conversations,
       this.tunnels,
       this.threads

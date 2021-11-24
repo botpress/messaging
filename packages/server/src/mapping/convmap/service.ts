@@ -1,5 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import {
+  Barrier2D,
+  BarrierService,
   Batcher,
   BatchingService,
   CachingService,
@@ -20,12 +22,13 @@ export class ConvmapService extends Service {
   private table: ConvmapTable
   private cacheByThreadId!: ServerCache2D<Convmap>
   private cacheByConversationId!: ServerCache<uuid, Convmap[]>
-  private locks!: ServerCache2D<Promise<Convmap>>
+  private barrier!: Barrier2D<Convmap>
 
   constructor(
     private db: DatabaseService,
     private caching: CachingService,
     private batching: BatchingService,
+    private barriers: BarrierService,
     private conversations: ConversationService,
     private tunnels: TunnelService,
     private threads: ThreadService
@@ -38,7 +41,7 @@ export class ConvmapService extends Service {
   async setup() {
     this.cacheByThreadId = await this.caching.newServerCache2D('cache_convmap_by_thread_id')
     this.cacheByConversationId = await this.caching.newServerCache('cache_convmap_by_conversation_id')
-    this.locks = await this.caching.newServerCache2D('cache_convmap_locks')
+    this.barrier = await this.barriers.newBarrier2D('barrier_convmap')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_convmap',
@@ -103,27 +106,15 @@ export class ConvmapService extends Service {
 
   async map(tunnelId: uuid, threadId: uuid, userId: uuid): Promise<Convmap> {
     const convmap = await this.getByThreadId(tunnelId, threadId)
-
-    if (!convmap) {
-      let promise = this.locks.get(tunnelId, threadId)
-
-      if (!promise) {
-        promise = new Promise(async (resolve) => {
-          const tunnel = await this.tunnels.get(tunnelId)
-          const conversation = await this.conversations.create(tunnel!.clientId, userId)
-          const convmap = await this.create(tunnelId, conversation.id, threadId)
-
-          resolve(convmap)
-          this.locks.del(tunnelId, threadId)
-        })
-
-        this.locks.set(tunnelId, threadId, promise)
-      }
-
-      return promise
+    if (convmap) {
+      return convmap
     }
 
-    return convmap
+    return this.barrier.once(tunnelId, threadId, async () => {
+      const tunnel = await this.tunnels.get(tunnelId)
+      const conversation = await this.conversations.create(tunnel!.clientId, userId)
+      return this.create(tunnelId, conversation.id, threadId)
+    })
   }
 
   private query() {
