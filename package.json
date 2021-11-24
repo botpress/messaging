@@ -16,9 +16,10 @@
     "start": "yarn workspace @botpress/messaging-server start",
     "dev": "yarn workspace @botpress/messaging-server dev",
     "board": "yarn workspace @botpress/messaging-board dev",
-    "test": "yarn test:unit && yarn test:e2e",
+    "test": "yarn test:unit && yarn test:integration && yarn test:e2e",
     "test:unit": "yarn --silent && jest --selectProjects Engine Server Components",
-    "test:e2e": "yarn --silent && jest -c jest.e2e.config.ts --selectProjects Client Socket"
+    "test:integration": "yarn --silent && jest -c jest.integration.config.ts --selectProjects Client Socket",
+    "test:e2e": "yarn --silent && jest -c jest.e2e.config.ts --passWithNoTests"
   },
   "bin": "./packages/server/dist/index.js",
   "pkg": {
