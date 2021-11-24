@@ -1,11 +1,43 @@
+import http from 'http'
 import { Conversation, Message, MessagingSocket } from '../src'
 
-// TODO: improve this test to be more automated. Right now it requires starting
-// a messaging server on port 3100 and pasting an existing client id in the CLIENT_ID variable.
-
-const CLIENT_ID = '9e31cac9-eaee-41dc-80e0-f4a8f46fb7a1'
+let CLIENT_ID = ''
 
 describe('Socket Client', () => {
+  beforeAll(async () => {
+    const options = {
+      protocol: 'http:',
+      hostname: 'localhost',
+      port: 3100,
+      path: '/api/sync',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    CLIENT_ID = await new Promise((resolve, reject) => {
+      const req = http.request(options, (resp) => {
+        let data = ''
+
+        resp.on('data', (chunk) => {
+          data += chunk
+        })
+
+        resp.on('end', () => {
+          resolve(JSON.parse(data).id)
+        })
+      })
+
+      req.on('error', (err) => {
+        reject(err)
+      })
+
+      //req.write(data)
+      req.end()
+    })
+  })
+
   const state: {
     socket?: MessagingSocket
     userId?: string
