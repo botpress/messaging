@@ -134,10 +134,14 @@ describe('Socket Client', () => {
   })
 
   test('ListConversations', async () => {
-    const conversations = await state.socket?.listConversations()
-    conversations?.map((x) => delete (<any>x).lastMessage)
+    let conversations = await state.socket?.listConversations()
 
-    expect(conversations).toEqual([state.conversation2, state.conversation])
+    const compare = (a: Conversation, b: Conversation) => a.id.localeCompare(b.id)
+
+    conversations?.map((x) => delete (<any>x).lastMessage)
+    conversations = conversations?.sort(compare)
+
+    expect(conversations).toEqual([state.conversation2!, state.conversation!].sort(compare))
   })
 
   test('Disconnect', async () => {
