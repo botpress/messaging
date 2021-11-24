@@ -1,5 +1,9 @@
 import type { Config } from '@jest/types'
 import { defaults as tsjPreset } from 'ts-jest/presets'
+import { pathsToModuleNameMapper } from 'ts-jest/utils'
+
+const ClientConfig = require('./packages/client/tsconfig.test.json')
+const SocketConfig = require('./packages/socket/tsconfig.test.json')
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -14,7 +18,13 @@ const config: Config.InitialOptions = {
       transform: {
         ...tsjPreset.transform
       },
-      clearMocks: true
+      globals: {
+        'ts-jest': {
+          tsconfig: '<rootDir>/tsconfig.test.json'
+        }
+      },
+      clearMocks: true,
+      moduleNameMapper: pathsToModuleNameMapper(ClientConfig.compilerOptions.paths, { prefix: '<rootDir>/' })
     },
     {
       rootDir: 'packages/socket',
@@ -24,7 +34,13 @@ const config: Config.InitialOptions = {
       transform: {
         ...tsjPreset.transform
       },
-      clearMocks: true
+      globals: {
+        'ts-jest': {
+          tsconfig: '<rootDir>/tsconfig.test.json'
+        }
+      },
+      clearMocks: true,
+      moduleNameMapper: pathsToModuleNameMapper(SocketConfig.compilerOptions.paths, { prefix: '<rootDir>/' })
     }
   ]
 }
