@@ -12,8 +12,8 @@ export class Socket {
   private messages: MessageSocket
 
   constructor({ clients, users, userTokens, conversations, messages, sockets }: App) {
-    this.manager = new SocketManager(sockets)
-    this.users = new UserSocket(this.manager, clients, users, userTokens, sockets)
+    this.manager = new SocketManager(clients, users, userTokens, sockets)
+    this.users = new UserSocket(this.manager, users)
     this.conversations = new ConversationSocket(this.manager, users, conversations)
     this.messages = new MessageSocket(this.manager, conversations, messages)
   }
