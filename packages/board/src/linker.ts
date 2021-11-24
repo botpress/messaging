@@ -128,7 +128,7 @@ export class BoardLinker {
         if (!e.choice) {
           e.choice = <any>{}
         }
-        e.choice!.userId = this.inputUserToken.value
+        e.choice!.userId = this.inputUserId.value
       })
     }
     if (this.inputUserToken.value.length) {

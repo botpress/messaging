@@ -51,8 +51,7 @@ export default class BpSocket {
 
     this.waitingForUser = new Promise<void>(async (resolve, reject) => {
       const creds = this.getStorage<UserCredentials>('creds')
-      await this.socket.connect({ autoLogin: false })
-      await this.socket.login(creds)
+      await this.socket.connect(creds)
 
       if (this.socket.userId) {
         const userId = this.socket.userId!
