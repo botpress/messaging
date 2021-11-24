@@ -15,7 +15,7 @@ const config: Config.InitialOptions = {
       statements: 60
     }
   }*/
-  globalSetup: './jest.setup.ts',
+  globalSetup: './test/jest.setup.ts',
 
   projects: [
     {

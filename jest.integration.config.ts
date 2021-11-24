@@ -7,8 +7,8 @@ const SocketConfig = require('./packages/socket/tsconfig.test.json')
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  globalSetup: './jest.e2e.setup.ts',
-  globalTeardown: './jest.e2e.teardown.ts',
+  globalSetup: './test/jest.e2e.setup.ts',
+  globalTeardown: './test/jest.e2e.teardown.ts',
   projects: [
     {
       rootDir: 'packages/client',
