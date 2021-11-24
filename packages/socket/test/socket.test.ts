@@ -33,7 +33,6 @@ describe('Socket Client', () => {
         reject(err)
       })
 
-      //req.write(data)
       req.end()
     })
   })

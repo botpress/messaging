@@ -12,8 +12,6 @@ import { Socket } from './socket'
 // Set NODE_ENV to production when starting messaging using the binary version
 process.env.NODE_ENV = process.pkg ? 'production' : process.env.NODE_ENV
 
-console.log(process.env)
-
 const launch = async () => {
   await setupEnv()
 
