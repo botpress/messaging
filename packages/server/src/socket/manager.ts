@@ -106,6 +106,8 @@ export class SocketManager {
             (await this.userTokens.verifyToken(userTokenId, userTokenToken))
           ) {
             socket.data.creds = creds
+            // we don't need to send it back if it was already sent to us
+            delete socket.data.creds.userToken
             return next()
           }
         }
