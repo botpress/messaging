@@ -5,9 +5,10 @@ import { setup as setupDevServer } from 'jest-dev-server'
 import jestSetup from './jest.setup'
 
 const setup = async () => {
-  process.env.ENABLE_EXPERIMENTAL_SOCKETS = 'true'
-
   await jestSetup()
+
+  // TODO: Maybe put this somewhere else?
+  process.env.ENABLE_EXPERIMENTAL_SOCKETS = 'true'
 
   await setupDevServer({
     command: 'yarn dev',

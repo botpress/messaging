@@ -1,8 +1,8 @@
 import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
-import { ProviderService } from '../src/providers/service'
-import { Provider } from '../src/providers/types'
-import { setupApp, app } from './util/app'
+import { ProviderService } from '../../src/providers/service'
+import { Provider } from '../../src/providers/types'
+import { app, setupApp } from './utils'
 
 describe('Providers', () => {
   let providers: ProviderService

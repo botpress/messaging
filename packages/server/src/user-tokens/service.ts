@@ -70,6 +70,7 @@ export class UserTokenService extends Service {
       expiry
     }
 
+    console.log(this.batcher)
     await this.batcher.push(userToken)
     this.cacheById.set(userToken.id, userToken)
 

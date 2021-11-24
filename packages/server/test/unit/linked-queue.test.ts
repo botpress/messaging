@@ -1,4 +1,4 @@
-import { LinkedQueue } from '../src/instances/queue'
+import { LinkedQueue } from '../../src/instances/queue'
 
 const QUEUE_COUNT = 20
 const QUEUE_VALUE_OFFSET = 100

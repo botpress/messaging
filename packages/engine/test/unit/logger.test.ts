@@ -1,6 +1,6 @@
 import clc from 'cli-color'
 import _ from 'lodash'
-import { Logger } from '../src/logger/types'
+import { Logger } from '../../src/logger/types'
 
 describe('Logger', () => {
   const defaultEnv = process.env

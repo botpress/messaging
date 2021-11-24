@@ -1,4 +1,4 @@
-import { pick } from '../src/utils'
+import { pick } from '../../src/utils'
 
 describe('pick', () => {
   test('all existant keys', () => {
