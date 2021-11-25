@@ -1,5 +1,13 @@
 import { uuid } from '@botpress/messaging-base'
-import { CachingService, DatabaseService, ServerCache, ServerCache2D, Service } from '@botpress/messaging-engine'
+import {
+  Barrier2D,
+  BarrierService,
+  CachingService,
+  DatabaseService,
+  ServerCache,
+  ServerCache2D,
+  Service
+} from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { IdentityTable } from './table'
 import { Identity } from './types'
@@ -8,9 +16,9 @@ export class IdentityService extends Service {
   private table: IdentityTable
   private cacheById!: ServerCache<uuid, Identity>
   private cacheByName!: ServerCache2D<Identity>
-  private locks!: ServerCache2D<Promise<Identity>>
+  private barrier!: Barrier2D<Identity>
 
-  constructor(private db: DatabaseService, private caching: CachingService) {
+  constructor(private db: DatabaseService, private caching: CachingService, private barriers: BarrierService) {
     super()
     this.table = new IdentityTable()
   }
@@ -18,7 +26,7 @@ export class IdentityService extends Service {
   async setup() {
     this.cacheById = await this.caching.newServerCache('cache_identity_by_id')
     this.cacheByName = await this.caching.newServerCache2D('cache_identity_by_name')
-    this.locks = await this.caching.newServerCache2D('cache_identity_locks')
+    this.barrier = await this.barriers.newBarrier2D('barrier_identity')
 
     await this.db.registerTable(this.table)
   }
@@ -41,6 +49,17 @@ export class IdentityService extends Service {
   }
 
   async map(tunnelId: uuid, name: string): Promise<Identity> {
+    const identity = await this.getByName(tunnelId, name)
+    if (identity) {
+      return identity
+    }
+
+    return this.barrier.once(tunnelId, name, async () => {
+      return this.create(tunnelId, name)
+    })
+  }
+
+  private async getByName(tunnelId: uuid, name: string): Promise<Identity | undefined> {
     const cached = this.cacheByName.get(tunnelId, name)
     if (cached) {
       return cached
@@ -53,29 +72,22 @@ export class IdentityService extends Service {
       this.cacheByName.set(tunnelId, name, identity)
       return identity
     } else {
-      let promise = this.locks.get(tunnelId, name)
-
-      if (!promise) {
-        promise = new Promise(async (resolve) => {
-          const identity = {
-            id: uuidv4(),
-            tunnelId,
-            name
-          }
-
-          await this.query().insert(identity)
-          this.cacheByName.set(tunnelId, name, identity)
-          this.cacheById.set(identity.id, identity)
-
-          resolve(identity)
-          this.locks.del(tunnelId, name)
-        })
-
-        this.locks.set(tunnelId, name, promise)
-      }
-
-      return promise
+      return undefined
     }
+  }
+
+  private async create(tunnelId: uuid, name: string): Promise<Identity> {
+    const identity = {
+      id: uuidv4(),
+      tunnelId,
+      name
+    }
+
+    await this.query().insert(identity)
+    this.cacheByName.set(tunnelId, name, identity)
+    this.cacheById.set(identity.id, identity)
+
+    return identity
   }
 
   private query() {
