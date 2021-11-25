@@ -1,5 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import {
+  Barrier2D,
+  BarrierService,
   Batcher,
   BatchingService,
   CachingService,
@@ -19,11 +21,13 @@ export class ThreadService extends Service {
   private table: ThreadTable
   private cacheById!: ServerCache<uuid, Thread>
   private cacheByName!: ServerCache2D<Thread>
+  private barrier!: Barrier2D<Thread>
 
   constructor(
     private db: DatabaseService,
     private caching: CachingService,
     private batching: BatchingService,
+    private barriers: BarrierService,
     private senders: SenderService
   ) {
     super()
@@ -33,6 +37,7 @@ export class ThreadService extends Service {
   async setup() {
     this.cacheById = await this.caching.newServerCache('cache_thread_by_id')
     this.cacheByName = await this.caching.newServerCache2D('cache_thread_by_name')
+    this.barrier = await this.barriers.newBarrier2D('barrier_thread')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_thread',
@@ -66,6 +71,17 @@ export class ThreadService extends Service {
   }
 
   async map(senderId: uuid, name: string): Promise<Thread> {
+    const thread = await this.getByName(senderId, name)
+    if (thread) {
+      return thread
+    }
+
+    return this.barrier.once(senderId, name, async () => {
+      return this.create(senderId, name)
+    })
+  }
+
+  private async getByName(senderId: uuid, name: string): Promise<Thread | undefined> {
     const cached = this.cacheByName.get(senderId, name)
     if (cached) {
       return cached
@@ -79,18 +95,22 @@ export class ThreadService extends Service {
       this.cacheByName.set(senderId, name, thread)
       return thread
     } else {
-      const thread = {
-        id: uuidv4(),
-        senderId,
-        name
-      }
-
-      await this.batcher.push(thread)
-      this.cacheByName.set(senderId, name, thread)
-      this.cacheById.set(thread.id, thread)
-
-      return thread
+      return undefined
     }
+  }
+
+  private async create(senderId: uuid, name: string): Promise<Thread> {
+    const thread = {
+      id: uuidv4(),
+      senderId,
+      name
+    }
+
+    await this.batcher.push(thread)
+    this.cacheByName.set(senderId, name, thread)
+    this.cacheById.set(thread.id, thread)
+
+    return thread
   }
 
   private query() {

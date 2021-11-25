@@ -1,4 +1,5 @@
 import { DispatchService } from '.'
+import { BarrierService } from './barrier/service'
 import { BatchingService } from './batching/service'
 import { CachingService } from './caching/service'
 import { CryptoService } from './crypto/service'
@@ -19,6 +20,7 @@ export class Engine {
   dispatches: DispatchService
   caching: CachingService
   batching: BatchingService
+  barriers: BarrierService
   kvs: KvsService
 
   constructor() {
@@ -31,6 +33,7 @@ export class Engine {
     this.dispatches = new DispatchService(this.distributed)
     this.caching = new CachingService(this.distributed)
     this.batching = new BatchingService()
+    this.barriers = new BarrierService(this.caching)
     this.kvs = new KvsService(this.database, this.caching)
   }
 
@@ -44,6 +47,7 @@ export class Engine {
     await this.dispatches.setup()
     await this.caching.setup()
     await this.batching.setup()
+    await this.barriers.setup()
     await this.kvs.setup()
   }
 }
