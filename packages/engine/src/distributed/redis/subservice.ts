@@ -77,14 +77,12 @@ export class RedisSubservice implements DistributedSubservice {
     }
 
     const retryStrategy = (times: number) => {
-      if (times > 10) {
-        throw new Error('Unable to connect to the Redis cluster after multiple attempts')
-      }
       return Math.min(times * 200, 5000)
     }
 
     const redisOptions: RedisOptions = {
-      retryStrategy
+      retryStrategy,
+      sentinelRetryStrategy: retryStrategy
     }
 
     if (_.isArray(connection)) {
