@@ -32,7 +32,7 @@ export class MappingService extends Service {
 
     this.tunnels = new TunnelService(this.db, this.caching, this.barriers)
     this.identities = new IdentityService(this.db, this.caching, this.barriers)
-    this.senders = new SenderService(this.db, this.caching, this.batching)
+    this.senders = new SenderService(this.db, this.caching, this.batching, this.barriers)
     this.threads = new ThreadService(this.db, this.caching, this.batching, this.senders)
     this.usermap = new UsermapService(
       this.db,
