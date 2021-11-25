@@ -1,5 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import {
+  Barrier2D,
+  BarrierService,
   Batcher,
   BatchingService,
   CachingService,
@@ -10,6 +12,7 @@ import {
 } from '@botpress/messaging-engine'
 import { ConversationService } from '../../conversations/service'
 import { ThreadService } from '../threads/service'
+import { TunnelService } from '../tunnels/service'
 import { ConvmapTable } from './table'
 import { Convmap } from './types'
 
@@ -19,12 +22,15 @@ export class ConvmapService extends Service {
   private table: ConvmapTable
   private cacheByThreadId!: ServerCache2D<Convmap>
   private cacheByConversationId!: ServerCache<uuid, Convmap[]>
+  private barrier!: Barrier2D<Convmap>
 
   constructor(
     private db: DatabaseService,
     private caching: CachingService,
     private batching: BatchingService,
+    private barriers: BarrierService,
     private conversations: ConversationService,
+    private tunnels: TunnelService,
     private threads: ThreadService
   ) {
     super()
@@ -35,6 +41,7 @@ export class ConvmapService extends Service {
   async setup() {
     this.cacheByThreadId = await this.caching.newServerCache2D('cache_convmap_by_thread_id')
     this.cacheByConversationId = await this.caching.newServerCache('cache_convmap_by_conversation_id')
+    this.barrier = await this.barriers.newBarrier2D('barrier_convmap')
 
     this.batcher = await this.batching.newBatcher(
       'batcher_convmap',
@@ -95,6 +102,19 @@ export class ConvmapService extends Service {
     const convmaps = (rows || []) as Convmap[]
     this.cacheByConversationId.set(conversationId, convmaps)
     return convmaps
+  }
+
+  async map(tunnelId: uuid, threadId: uuid, userId: uuid): Promise<Convmap> {
+    const convmap = await this.getByThreadId(tunnelId, threadId)
+    if (convmap) {
+      return convmap
+    }
+
+    return this.barrier.once(tunnelId, threadId, async () => {
+      const tunnel = await this.tunnels.get(tunnelId)
+      const conversation = await this.conversations.create(tunnel!.clientId, userId)
+      return this.create(tunnelId, conversation.id, threadId)
+    })
   }
 
   private query() {

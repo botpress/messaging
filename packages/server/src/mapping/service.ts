@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { BatchingService, CachingService, DatabaseService, Service } from '@botpress/messaging-engine'
+import { BarrierService, BatchingService, CachingService, DatabaseService, Service } from '@botpress/messaging-engine'
 import { ConversationService } from '../conversations/service'
 import { UserService } from '../users/service'
 import { ConvmapService } from './convmap/service'
@@ -24,17 +24,34 @@ export class MappingService extends Service {
     private db: DatabaseService,
     private caching: CachingService,
     private batching: BatchingService,
+    private barriers: BarrierService,
     private users: UserService,
     private conversations: ConversationService
   ) {
     super()
 
-    this.tunnels = new TunnelService(this.db, this.caching)
-    this.identities = new IdentityService(this.db, this.caching)
-    this.senders = new SenderService(this.db, this.caching, this.batching)
-    this.threads = new ThreadService(this.db, this.caching, this.batching, this.senders)
-    this.usermap = new UsermapService(this.db, this.caching, this.batching, this.users, this.senders)
-    this.convmap = new ConvmapService(this.db, this.caching, this.batching, this.conversations, this.threads)
+    this.tunnels = new TunnelService(this.db, this.caching, this.barriers)
+    this.identities = new IdentityService(this.db, this.caching, this.barriers)
+    this.senders = new SenderService(this.db, this.caching, this.batching, this.barriers)
+    this.threads = new ThreadService(this.db, this.caching, this.batching, this.barriers, this.senders)
+    this.usermap = new UsermapService(
+      this.db,
+      this.caching,
+      this.batching,
+      this.barriers,
+      this.users,
+      this.tunnels,
+      this.senders
+    )
+    this.convmap = new ConvmapService(
+      this.db,
+      this.caching,
+      this.batching,
+      this.barriers,
+      this.conversations,
+      this.tunnels,
+      this.threads
+    )
     this.sandboxmap = new SandboxmapService(this.db, this.caching)
   }
 
@@ -53,28 +70,16 @@ export class MappingService extends Service {
     const identity = await this.identities.map(tunnel.id, endpoint.identity || '*')
     const sender = await this.senders.map(identity.id, endpoint.sender || '*')
     const thread = await this.threads.map(sender.id, endpoint.thread || '*')
-
-    const usermap = await this.usermap.getBySenderId(tunnel.id, sender.id)
-    let userId = usermap?.userId
-    if (!userId) {
-      userId = (await this.users.create(clientId)).id
-      await this.usermap.create(tunnel.id, userId, sender.id)
-    }
-
-    const convmap = await this.convmap.getByThreadId(tunnel.id, thread.id)
-    let conversationId = convmap?.conversationId
-    if (!conversationId) {
-      conversationId = (await this.conversations.create(clientId, userId)).id
-      await this.convmap.create(tunnel.id, conversationId, thread.id)
-    }
+    const usermap = await this.usermap.map(tunnel.id, sender.id)
+    const convmap = await this.convmap.map(tunnel.id, thread.id, usermap.userId)
 
     return {
       tunnelId: tunnel.id,
       identityId: identity.id,
       senderId: sender.id,
       threadId: thread.id,
-      userId,
-      conversationId
+      userId: usermap.userId,
+      conversationId: convmap.conversationId
     }
   }
 

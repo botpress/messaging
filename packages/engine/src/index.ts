@@ -1,3 +1,5 @@
+export * from './barrier/barrier'
+export * from './barrier/service'
 export * from './base/errors'
 export * from './base/service'
 export * from './base/table'
