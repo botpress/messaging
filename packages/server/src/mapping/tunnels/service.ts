@@ -1,5 +1,13 @@
 import { uuid } from '@botpress/messaging-base'
-import { CachingService, DatabaseService, ServerCache, ServerCache2D, Service } from '@botpress/messaging-engine'
+import {
+  Barrier2D,
+  BarrierService,
+  CachingService,
+  DatabaseService,
+  ServerCache,
+  ServerCache2D,
+  Service
+} from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { TunnelTable } from './table'
 import { Tunnel } from './types'
@@ -8,9 +16,9 @@ export class TunnelService extends Service {
   private table: TunnelTable
   private cacheById!: ServerCache<uuid, Tunnel>
   private cacheByClientAndChannel!: ServerCache2D<Tunnel>
-  private locks!: ServerCache2D<Promise<Tunnel>>
+  private barrier!: Barrier2D<Tunnel>
 
-  constructor(private db: DatabaseService, private caching: CachingService) {
+  constructor(private db: DatabaseService, private caching: CachingService, private barriers: BarrierService) {
     super()
     this.table = new TunnelTable()
   }
@@ -18,7 +26,7 @@ export class TunnelService extends Service {
   async setup() {
     this.cacheById = await this.caching.newServerCache('cache_tunnel_by_id')
     this.cacheByClientAndChannel = await this.caching.newServerCache2D('cache_tunnel_by_client_and_channel')
-    this.locks = await this.caching.newServerCache2D('cache_tunnel_locks')
+    this.barrier = await this.barriers.newBarrier2D('barrier_tunnel')
 
     await this.db.registerTable(this.table)
   }
@@ -41,6 +49,31 @@ export class TunnelService extends Service {
   }
 
   async map(clientId: uuid, channelId: uuid): Promise<Tunnel> {
+    const tunnel = await this.getByClientAndChannelId(clientId, channelId)
+    if (tunnel) {
+      return tunnel
+    }
+
+    return this.barrier.once(clientId, channelId, async () => {
+      return this.create(clientId, channelId)
+    })
+  }
+
+  private async create(clientId: uuid, channelId: uuid): Promise<Tunnel> {
+    const tunnel = {
+      id: uuidv4(),
+      clientId,
+      channelId
+    }
+
+    await this.query().insert(tunnel)
+    this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
+    this.cacheById.set(tunnel.id, tunnel)
+
+    return tunnel
+  }
+
+  private async getByClientAndChannelId(clientId: uuid, channelId: uuid): Promise<Tunnel | undefined> {
     const cached = this.cacheByClientAndChannel.get(clientId, channelId)
     if (cached) {
       return cached
@@ -53,28 +86,7 @@ export class TunnelService extends Service {
       this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
       return tunnel
     } else {
-      let promise = this.locks.get(clientId, channelId)
-
-      if (!promise) {
-        promise = new Promise(async (resolve) => {
-          const tunnel = {
-            id: uuidv4(),
-            clientId,
-            channelId
-          }
-
-          await this.query().insert(tunnel)
-          this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
-          this.cacheById.set(tunnel.id, tunnel)
-
-          resolve(tunnel)
-          this.locks.del(clientId, channelId)
-        })
-
-        this.locks.set(clientId, channelId, promise)
-      }
-
-      return promise
+      return undefined
     }
   }
 
