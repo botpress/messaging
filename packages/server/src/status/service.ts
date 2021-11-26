@@ -3,10 +3,11 @@ import { CachingService, DatabaseService, DistributedService, ServerCache, Servi
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
 import { StatusTable } from './table'
+import { ConduitStatus } from './types'
 
 export class StatusService extends Service {
   private table: StatusTable
-  private cache!: ServerCache<uuid, number>
+  private cache!: ServerCache<uuid, ConduitStatus>
 
   constructor(
     private db: DatabaseService,
@@ -20,12 +21,30 @@ export class StatusService extends Service {
   }
 
   async setup() {
-    this.cache = await this.caching.newServerCache('cache_number_of_errors_by_conduit')
+    this.cache = await this.caching.newServerCache('cache_status')
 
     await this.db.registerTable(this.table)
   }
 
-  public async getNumberOfErrors(conduitId: uuid): Promise<number | undefined> {
+  private async onConduitDeleted(conduitId: string) {
+    this.cache.del(conduitId, true)
+  }
+
+  public async create(conduitId: uuid): Promise<ConduitStatus> {
+    const status: ConduitStatus = {
+      conduitId,
+      numberOfErrors: 0,
+      initializedOn: undefined,
+      lastError: undefined
+    }
+
+    await this.query().insert(this.serialize(status))
+    this.cache.set(conduitId, status)
+
+    return status
+  }
+
+  public async get(conduitId: uuid): Promise<ConduitStatus | undefined> {
     const cached = this.cache.get(conduitId)
     if (cached) {
       return cached
@@ -33,50 +52,48 @@ export class StatusService extends Service {
 
     const rows = await this.query().where({ conduitId })
     if (rows?.length) {
-      const numberOfErrors = rows[0].numberOfErrors
-
-      this.cache.set(conduitId, numberOfErrors)
-
-      return numberOfErrors
+      const status = this.deserialize(rows[0])
+      this.cache.set(conduitId, status)
+      return status
     }
 
     return undefined
   }
 
+  public async updateInitializedOn(conduitId: uuid, date: Date | undefined) {
+    await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
+      await this.query()
+        .update({ initializedOn: date || null })
+        .where({ conduitId })
+      this.cache.del(conduitId, true)
+    })
+  }
+
   async addError(conduitId: uuid, error: Error) {
     await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
-      const numberOfErrors = await this.getNumberOfErrors(conduitId)
+      const status = (await this.get(conduitId)) || (await this.create(conduitId))
       const formattedError = this.formatError(error)
 
-      if (numberOfErrors === undefined) {
-        await this.query().insert({ conduitId, numberOfErrors: 1, lastError: formattedError })
-
-        this.cache.set(conduitId, 1, undefined, true)
-      } else {
-        await this.query()
-          .update({ numberOfErrors: numberOfErrors + 1, lastError: formattedError })
-          .where({ conduitId })
-
-        this.cache.set(conduitId, numberOfErrors + 1, undefined, true)
-      }
+      await this.query()
+        .update({ numberOfErrors: status.numberOfErrors + 1, lastError: formattedError })
+        .where({ conduitId })
+      this.cache.del(conduitId, true)
     })
   }
 
   async clearErrors(conduitId: uuid) {
     await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
-      const numberOfErrors = await this.getNumberOfErrors(conduitId)
-
-      if (numberOfErrors && numberOfErrors > 0) {
-        await this.query()
-          .update({ initializedOn: this.db.setDate(new Date()), numberOfErrors: 0, lastError: null })
-          .where({ conduitId })
-
-        this.cache.del(conduitId, true)
+      const status = await this.get(conduitId)
+      if (!status) {
+        return
       }
+
+      await this.query().update({ numberOfErrors: 0, lastError: null }).where({ conduitId })
+      this.cache.del(conduitId, true)
     })
   }
 
-  async listOutdated(tolerance: number, maxAllowedFailures: number, limit: number): Promise<uuid[]> {
+  async listOutdatedConduitIds(tolerance: number, maxAllowedFailures: number, limit: number): Promise<uuid[]> {
     return this.query()
       .select('conduitId')
       .where('numberOfErrors', '<=', maxAllowedFailures)
@@ -84,14 +101,6 @@ export class StatusService extends Service {
         q.where('initializedOn', '<=', this.db.setDate(new Date(Date.now() - tolerance))!).orWhereNull('initializedOn')
       )
       .limit(limit)
-  }
-
-  private query() {
-    return this.db.knex(this.table.id)
-  }
-
-  private async onConduitDeleted(conduitId: string) {
-    this.cache.del(conduitId, true)
   }
 
   private formatError(error: Error) {
@@ -102,5 +111,23 @@ export class StatusService extends Service {
     }
 
     return formattedError
+  }
+
+  private serialize(status: Partial<ConduitStatus>) {
+    return {
+      ...status,
+      initializedOn: this.db.setDate(status.initializedOn)
+    }
+  }
+
+  private deserialize(status: any): ConduitStatus {
+    return {
+      ...status,
+      initializedOn: this.db.getDate(status.initializedOn)
+    }
+  }
+
+  private query() {
+    return this.db.knex(this.table.id)
   }
 }
