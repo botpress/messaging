@@ -25,6 +25,11 @@ Primary.args = {
           payload: 'button_clicked'
         }
       ]
+    },
+    {
+      title: 'Card 2',
+      subtitle: 'Subtitle 2',
+      image: 'https://via.placeholder.com/150/150'
     }
   ],
   config: {

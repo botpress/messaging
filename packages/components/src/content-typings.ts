@@ -70,7 +70,7 @@ export interface CardContent extends BaseContent<'card'> {
   title: string
   subtitle?: string
   image?: string
-  actions: ActionButton<ActionType>[]
+  actions?: ActionButton<ActionType>[]
 }
 
 export interface LocationContent extends BaseContent<'location'> {
