@@ -55,6 +55,7 @@ export class InstanceInvalidator {
 
   private async onConduitUpdated(conduitId: uuid) {
     this.cache.del(conduitId, true)
+    await this.status.updateInitializedOn(conduitId, undefined)
     await this.status.clearErrors(conduitId)
 
     const conduit = (await this.conduits.get(conduitId))!
