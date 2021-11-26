@@ -17,4 +17,40 @@ jobs:
           yarn --frozen-lockfile
       - name: Run tests
         run: |
-          yarn test --coverage --verbose
+          yarn test:unit --coverage --verbose
+
+  functional:
+    name: Functional
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.18.1'
+          cache: 'yarn'
+      - name: Fetch Node Packages
+        run: |
+          yarn --frozen-lockfile
+      - name: Run tests
+        run: |
+          yarn test:func --coverage --verbose
+
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12.18.1'
+          cache: 'yarn'
+      - name: Fetch Node Packages
+        run: |
+          yarn --frozen-lockfile
+      - name: Run tests
+        run: |
+          yarn test:e2e --coverage --verbose

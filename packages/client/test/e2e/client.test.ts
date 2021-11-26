@@ -1,4 +1,4 @@
-import { Conversation, Message, MessagingClient, User, uuid } from '../src'
+import { Conversation, Message, MessagingClient, User, uuid } from '../../src'
 
 const FAKE_UUID = '6a15e73d-5edc-4b90-9d2b-bf8fd0a133c1'
 

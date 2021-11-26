@@ -4,10 +4,10 @@ import _ from 'lodash'
 import * as path from 'path'
 import { mocked } from 'ts-jest/utils'
 
-import { Table } from '../src/base/table'
-import { DatabaseService } from '../src/database/service'
+import { Table } from '../../src/base/table'
+import { DatabaseService } from '../../src/database/service'
 
-jest.mock('../src/logger/types')
+jest.mock('../../src/logger/types')
 jest.mock('fs')
 jest.mock('knex', () => {
   const mKnexSchema = { hasTable: jest.fn(), createTable: jest.fn() }

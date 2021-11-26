@@ -1,11 +1,42 @@
-import { Conversation, Message, MessagingSocket } from '../src'
+import http from 'http'
+import { Conversation, Message, MessagingSocket } from '../../src'
 
-// TODO: improve this test to be more automated. Right now it requires starting
-// a messaging server on port 3100 and pasting an existing client id in the CLIENT_ID variable.
-
-const CLIENT_ID = '9e31cac9-eaee-41dc-80e0-f4a8f46fb7a1'
+let CLIENT_ID = ''
 
 describe('Socket Client', () => {
+  beforeAll(async () => {
+    const options = {
+      protocol: 'http:',
+      hostname: 'localhost',
+      port: 3100,
+      path: '/api/sync',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+
+    CLIENT_ID = await new Promise((resolve, reject) => {
+      const req = http.request(options, (resp) => {
+        let data = ''
+
+        resp.on('data', (chunk) => {
+          data += chunk
+        })
+
+        resp.on('end', () => {
+          resolve(JSON.parse(data).id)
+        })
+      })
+
+      req.on('error', (err) => {
+        reject(err)
+      })
+
+      req.end()
+    })
+  })
+
   const state: {
     socket?: MessagingSocket
     userId?: string
@@ -26,33 +57,17 @@ describe('Socket Client', () => {
         reject('connection attempt timed out')
       }, 2500)
 
-      socket.on('connect', () => {
-        clearTimeout(timeout)
-        resolve()
-      })
-    })
-
-    await socket.connect({ autoLogin: false })
-    await promise
-
-    state.socket = socket
-  })
-
-  test('Login', async () => {
-    const promise = new Promise<void>((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject('login attempt timed out')
-      }, 2500)
-
-      state.socket!.on('login', (creds) => {
+      socket.on('connect', (creds) => {
         state.userId = creds.userId
         clearTimeout(timeout)
         resolve()
       })
     })
 
-    await state.socket!.login()
+    await socket.connect()
     await promise
+
+    state.socket = socket
   })
 
   test('CreateConversation', async () => {
@@ -103,10 +118,14 @@ describe('Socket Client', () => {
   })
 
   test('ListConversations', async () => {
-    const conversations = await state.socket?.listConversations()
-    conversations?.map((x) => delete (<any>x).lastMessage)
+    let conversations = await state.socket?.listConversations()
 
-    expect(conversations).toEqual([state.conversation2, state.conversation])
+    const compare = (a: Conversation, b: Conversation) => a.id.localeCompare(b.id)
+
+    conversations?.map((x) => delete (<any>x).lastMessage)
+    conversations = conversations?.sort(compare)
+
+    expect(conversations).toEqual([state.conversation2!, state.conversation!].sort(compare))
   })
 
   test('Disconnect', async () => {

@@ -3,6 +3,7 @@ export interface EngineEnv {
 
   // logger
   LOGGING_ENABLED?: string
+  SUPPRESS_LOGGING?: string
   SINGLE_LINE_LOGGING?: string
   DISABLE_LOGGING_TIMESTAMP?: string
 

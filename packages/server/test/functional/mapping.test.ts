@@ -1,10 +1,10 @@
 import { uuid } from '@botpress/messaging-base'
 import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
-import { MappingService } from '../src/mapping/service'
-import { Endpoint } from '../src/mapping/types'
-import { Provider } from '../src/providers/types'
-import { setupApp, app } from './util/app'
+import { MappingService } from '../../src/mapping/service'
+import { Endpoint } from '../../src/mapping/types'
+import { Provider } from '../../src/providers/types'
+import { app, setupApp } from './utils'
 
 export interface Mapping {
   tunnelId: uuid

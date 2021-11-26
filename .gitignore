@@ -7,3 +7,4 @@ bin/
 coverage/
 storybook-static/
 build/
+.test-data

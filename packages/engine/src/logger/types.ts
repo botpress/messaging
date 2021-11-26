@@ -111,8 +111,10 @@ export class Logger {
       definedParams = this.singleLine(definedParams)
     }
 
-    // eslint-disable-next-line no-console
-    console.log(...definedParams)
+    if (!yn(process.env.SUPPRESS_LOGGING)) {
+      // eslint-disable-next-line no-console
+      console.log(...definedParams)
+    }
   }
 
   private singleLine(params: Param[]) {
