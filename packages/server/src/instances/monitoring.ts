@@ -40,7 +40,7 @@ export class InstanceMonitoring {
     } catch (e) {
       this.logger.error(e, 'Error occurred while monitoring', (e as Error).message)
     } finally {
-      this.timeout = setTimeout(this.tickMonitoring.bind(this), ms('3s'))
+      this.timeout = setTimeout(this.tickMonitoring.bind(this), ms('15s'))
     }
   }
 
