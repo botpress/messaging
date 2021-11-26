@@ -1,8 +1,13 @@
+import fs from 'fs'
 import { teardown as teardownDevServer } from 'jest-dev-server'
-const jestTeardown = require('./jest.unit.teardown').default
+import path from 'path'
 
 const teardown = async () => {
-  await jestTeardown()
+  const dir = path.join(__dirname, '.test-data')
+  if (fs.existsSync(dir)) {
+    fs.rmdirSync(dir, { recursive: true })
+  }
+
   await teardownDevServer()
 }
 

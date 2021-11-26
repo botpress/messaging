@@ -1,12 +1,10 @@
 import type { Config } from '@jest/types'
 import { defaults as tsjPreset } from 'ts-jest/presets'
 import { pathsToModuleNameMapper } from 'ts-jest/utils'
-
-const ServerConfig = require('./packages/server/test/tsconfig.json')
+import ServerConfig from './packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  globalSetup: './test/jest.functional.setup.ts',
   globalTeardown: './test/jest.functional.teardown.ts',
   projects: [
     {
