@@ -1,5 +1,5 @@
 import http from 'http'
-import { Conversation, Message, MessagingSocket } from '../src'
+import { Conversation, Message, MessagingSocket } from '../../src'
 
 let CLIENT_ID = ''
 

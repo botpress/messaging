@@ -2,7 +2,7 @@ import type { Config } from '@jest/types'
 import { defaults as tsjPreset } from 'ts-jest/presets'
 import { pathsToModuleNameMapper } from 'ts-jest/utils'
 
-const ServerConfig = require('./packages/server/tsconfig.test.json')
+const ServerConfig = require('./packages/server/test/tsconfig.json')
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -16,11 +16,11 @@ const config: Config.InitialOptions = {
     }
   }*/
   globalSetup: './test/jest.setup.ts',
-
+  globalTeardown: './test/jest.teardown.ts',
   projects: [
     {
       rootDir: 'packages/engine',
-      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/unit/**/(*.)test.ts'],
       displayName: { name: 'Engine', color: 'green' },
       testEnvironment: 'node',
       transform: {
@@ -30,7 +30,7 @@ const config: Config.InitialOptions = {
     },
     {
       rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/unit/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
@@ -38,33 +38,22 @@ const config: Config.InitialOptions = {
       },
       globals: {
         'ts-jest': {
-          tsconfig: '<rootDir>/tsconfig.test.json'
+          tsconfig: '<rootDir>/test/tsconfig.json'
         }
       },
       clearMocks: true,
-      moduleNameMapper: pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/' })
-    },
-    {
-      rootDir: 'packages/socket',
-      testMatch: ['<rootDir>/test/**/(*.)test.ts'],
-      displayName: { name: 'Socket', color: 'yellow' },
-      testEnvironment: 'node',
-      transform: {
-        ...tsjPreset.transform
-      },
-      clearMocks: true
+      moduleNameMapper: pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     },
     {
       rootDir: 'packages/components',
-      testMatch: ['<rootDir>/test/**/(*.)test.tsx'],
+      testMatch: ['<rootDir>/test/unit/**/(*.)test.tsx'],
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],
       transform: {
         ...tsjPreset.transform,
         '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform'
       },
-      testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/dist'],
-      setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+      setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
       moduleDirectories: ['node_modules', 'src'],
       testEnvironment: 'jsdom'
     }

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
-import defaultRenderer, { Renderer, defaultTypesRenderers } from '../src/renderer'
-import { Message } from '../src/typings'
-import { defaultMessageConfig } from '../src/utils'
+import defaultRenderer, { Renderer, defaultTypesRenderers } from '../../src/renderer'
+import { Message } from '../../src/typings'
+import { defaultMessageConfig } from '../../src/utils'
 
 describe('Renderer', () => {
   test('it can override a type handler and render it', () => {
