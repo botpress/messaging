@@ -4,7 +4,7 @@ require('ts-node/register')
 import { setup as setupDevServer } from 'jest-dev-server'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import jestSetup from './jest.setup'
+import jestSetup from './jest.unit.setup'
 
 const setup = async () => {
   await jestSetup()

@@ -1,4 +1,4 @@
-const jestTeardown = require('./jest.teardown').default
+const jestTeardown = require('./jest.unit.teardown').default
 
 const teardown = async () => {
   await jestTeardown()
