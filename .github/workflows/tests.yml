@@ -35,7 +35,7 @@ jobs:
           yarn --frozen-lockfile
       - name: Run tests
         run: |
-          yarn test:functional --coverage --verbose
+          yarn test:func --coverage --verbose
 
   e2e:
     name: E2E
