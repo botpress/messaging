@@ -40,7 +40,37 @@ describe('Carousel & Card renderer', () => {
     expect(container.querySelector('.bpw-card-subtitle')).toHaveTextContent(card.subtitle!)
 
     const btnEl = container.querySelector('.bpw-card-action')
-    expect(btnEl).toHaveTextContent(card.actions[0].title)
+    expect(btnEl).toHaveTextContent(card.actions![0].title)
+  })
+
+  test('it renders a card with image, title, subtitle and no button', () => {
+    const noBtnMessageData: Message<'carousel'> = {
+      content: {
+        type: 'carousel',
+        items: [
+          {
+            title: 'Card 1',
+            subtitle: 'Subtitle 1',
+            image: 'https://via.placeholder.com/150/150'
+          }
+        ]
+      },
+      config: defaultMessageConfig
+    }
+
+    const card = noBtnMessageData.content.items[0]
+    const component = renderer.render(noBtnMessageData)
+
+    expect(component).toBeTruthy()
+
+    const { container } = render(component)
+
+    expect(container.querySelector('.slick-slider')).toBeInTheDocument()
+    expect(container.querySelector('.bpw-card-picture')).toHaveStyle(`background-image: url(${card.image})`)
+    expect(container.querySelector('.bpw-card-title')).toHaveTextContent(card.title)
+    expect(container.querySelector('.bpw-card-subtitle')).toHaveTextContent(card.subtitle!)
+
+    expect(container.querySelector('.bpw-card-action')).not.toBeInTheDocument()
   })
 
   test('it calls onSendData with postback payload on postback button click', () => {
@@ -58,7 +88,7 @@ describe('Carousel & Card renderer', () => {
 
     const card = messageData.content.items[0]
     expect(mockOnSendData).toHaveBeenCalledWith({
-      payload: (card.actions[0] as ActionButton<'Postback'>).payload,
+      payload: (card.actions![0] as ActionButton<'Postback'>).payload,
       type: 'postback'
     })
   })
@@ -92,7 +122,7 @@ describe('Carousel & Card renderer', () => {
 
     expect(btnEl).toHaveAttribute(
       'href',
-      (urlBtnMessageData.content.items[0].actions[0] as ActionButton<'Open URL'>).url
+      (urlBtnMessageData.content.items[0].actions![0] as ActionButton<'Open URL'>).url
     )
     expect(btnEl).toHaveAttribute('target', '_blank')
   })
