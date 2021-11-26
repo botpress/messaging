@@ -67,11 +67,23 @@ export class StatusService extends Service {
       const numberOfErrors = await this.getNumberOfErrors(conduitId)
 
       if (numberOfErrors && numberOfErrors > 0) {
-        await this.query().update({ numberOfErrors: 0, lastError: null }).where({ conduitId })
+        await this.query()
+          .update({ initializedOn: this.db.setDate(new Date()), numberOfErrors: 0, lastError: null })
+          .where({ conduitId })
 
         this.cache.del(conduitId, true)
       }
     })
+  }
+
+  async listOutdated(tolerance: number, maxAllowedFailures: number, limit: number): Promise<uuid[]> {
+    return this.query()
+      .select('conduitId')
+      .where('numberOfErrors', '<=', maxAllowedFailures)
+      .andWhere((q) =>
+        q.where('initializedOn', '<=', this.db.setDate(new Date(Date.now() - tolerance))!).orWhereNull('initializedOn')
+      )
+      .limit(limit)
   }
 
   private query() {

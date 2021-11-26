@@ -55,8 +55,7 @@ export class ConduitService extends Service {
       id: uuidv4(),
       providerId,
       channelId,
-      config: validConfig,
-      initialized: undefined
+      config: validConfig
     }
 
     await this.query().insert(this.serialize(conduit))
@@ -85,19 +84,10 @@ export class ConduitService extends Service {
 
     await this.query()
       .where({ id })
-      .update({ initialized: null, config: this.cryptoService.encrypt(JSON.stringify(validConfig || {})) })
+      .update({ config: this.cryptoService.encrypt(JSON.stringify(validConfig || {})) })
 
+    // TODO: catch this event to but initialized at null
     await this.emitter.emit(ConduitEvents.Updated, id)
-  }
-
-  async updateInitialized(id: uuid) {
-    const conduit = (await this.get(id))!
-    this.cacheById.del(id, true)
-    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
-
-    await this.query()
-      .where({ id })
-      .update({ initialized: this.db.setDate(new Date()) })
   }
 
   async get(id: uuid): Promise<Conduit | undefined> {
@@ -139,21 +129,6 @@ export class ConduitService extends Service {
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
   }
 
-  async listOutdated(tolerance: number, limit: number): Promise<Conduit[]> {
-    const rows = await this.query()
-      .select(['msg_conduits.id', 'providerId', 'channelId', 'initialized'])
-      .where({ initiable: true })
-      .andWhere((k) => {
-        return k
-          .where('initialized', '<=', this.db.setDate(new Date(Date.now() - tolerance))!)
-          .orWhereNull('initialized')
-      })
-      .innerJoin('msg_channels', 'msg_channels.id', 'msg_conduits.channelId')
-      .limit(limit)
-
-    return rows as Conduit[]
-  }
-
   async listByChannel(channelId: uuid): Promise<Conduit[]> {
     const rows = await this.query().where({ channelId })
     return rows.map((x) => _.omit(x, 'config')) as Conduit[]
@@ -170,7 +145,6 @@ export class ConduitService extends Service {
   private serialize(conduit: Partial<Conduit>) {
     return {
       ...conduit,
-      initialized: this.db.setDate(conduit.initialized),
       config: this.cryptoService.encrypt(JSON.stringify(conduit.config || {}))
     }
   }
@@ -178,7 +152,6 @@ export class ConduitService extends Service {
   private deserialize(conduit: any): Conduit {
     return {
       ...conduit,
-      initialized: this.db.getDate(conduit.initialized),
       config: JSON.parse(this.cryptoService.decrypt(conduit.config))
     }
   }

@@ -136,7 +136,6 @@ export class InstanceService extends Service {
       return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
     }
 
-    await this.conduitService.updateInitialized(conduitId)
     await this.statusService.clearErrors(conduitId)
     return this.emitter.emit(InstanceEvents.Initialized, conduitId)
   }
