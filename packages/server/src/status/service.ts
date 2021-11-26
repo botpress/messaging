@@ -17,20 +17,21 @@ export class StatusService extends Service {
   ) {
     super()
     this.table = new StatusTable()
-    this.conduits.events.on(ConduitEvents.Deleting, this.onConduitDeleted.bind(this))
   }
 
   async setup() {
     this.cache = await this.caching.newServerCache('cache_status')
 
     await this.db.registerTable(this.table)
+
+    this.conduits.events.on(ConduitEvents.Deleting, this.onConduitDeleted.bind(this))
   }
 
   private async onConduitDeleted(conduitId: string) {
     this.cache.del(conduitId, true)
   }
 
-  public async create(conduitId: uuid): Promise<ConduitStatus> {
+  async create(conduitId: uuid): Promise<ConduitStatus> {
     const status: ConduitStatus = {
       conduitId,
       numberOfErrors: 0,
@@ -44,7 +45,7 @@ export class StatusService extends Service {
     return status
   }
 
-  public async get(conduitId: uuid): Promise<ConduitStatus | undefined> {
+  async get(conduitId: uuid): Promise<ConduitStatus | undefined> {
     const cached = this.cache.get(conduitId)
     if (cached) {
       return cached
@@ -60,7 +61,7 @@ export class StatusService extends Service {
     return undefined
   }
 
-  public async updateInitializedOn(conduitId: uuid, date: Date | undefined) {
+  async updateInitializedOn(conduitId: uuid, date: Date | undefined) {
     await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
       await this.query()
         .update({ initializedOn: date || null })
@@ -128,7 +129,8 @@ export class StatusService extends Service {
   private deserialize(status: any): ConduitStatus {
     return {
       ...status,
-      initializedOn: this.db.getDate(status.initializedOn)
+      initializedOn: status.initializedOn ? this.db.getDate(status.initializedOn) : undefined,
+      lastError: status.lastError || undefined
     }
   }
 
