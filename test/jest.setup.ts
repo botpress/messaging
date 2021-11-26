@@ -4,7 +4,7 @@ require('ts-node/register')
 import fs from 'fs'
 import path from 'path'
 
-const dir = path.join(__dirname, '..', '.test-data')
+const dir = path.join(__dirname, '.test-data')
 
 const setup = async () => {
   if (fs.existsSync(dir)) {
