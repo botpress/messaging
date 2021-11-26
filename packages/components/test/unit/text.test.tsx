@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import renderer from '../src/renderer'
-import { defaultMessageConfig } from '../src/utils'
+import renderer from '../../src/renderer'
+import { defaultMessageConfig } from '../../src/utils'
 
 describe('Text renderer', () => {
   test('it renders a simple text message', () => {

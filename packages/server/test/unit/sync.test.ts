@@ -1,8 +1,8 @@
 import { DatabaseService } from '@botpress/messaging-engine'
 import cloneDeep from 'lodash/cloneDeep'
 
-import { ChannelService } from '../src/channels/service'
-import { makeSyncRequestSchema } from '../src/sync/schema'
+import { ChannelService } from '../../src/channels/service'
+import { makeSyncRequestSchema } from '../../src/sync/schema'
 
 jest.mock('@botpress/messaging-engine')
 
