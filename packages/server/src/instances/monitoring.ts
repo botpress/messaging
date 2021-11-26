@@ -49,9 +49,9 @@ export class InstanceMonitoring {
       return
     }
 
-    const outdateds = await this.status.listOutdatedConduitIds(ms('10h'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
+    const outdateds = await this.status.listOutdated(ms('10h'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
     for (const outdated of outdateds) {
-      await this.instances.initialize(outdated)
+      await this.instances.initialize(outdated.conduitId)
     }
   }
 

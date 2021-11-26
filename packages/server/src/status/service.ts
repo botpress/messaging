@@ -93,10 +93,11 @@ export class StatusService extends Service {
     })
   }
 
-  async listOutdatedConduitIds(tolerance: number, maxAllowedFailures: number, limit: number): Promise<uuid[]> {
+  async listOutdated(tolerance: number, maxAllowedFailures: number, limit: number): Promise<ConduitStatus[]> {
     return (
-      await this.query()
-        .select('conduitId')
+      this.query()
+        // we exclude lastError because it migth make the query slow
+        .select('conduitId', 'numberOfErrors', 'initializedOn')
         .where('numberOfErrors', '<=', maxAllowedFailures)
         .andWhere((q) =>
           q
@@ -104,7 +105,7 @@ export class StatusService extends Service {
             .orWhereNull('initializedOn')
         )
         .limit(limit)
-    ).map((x) => x.conduitId)
+    )
   }
 
   private formatError(error: Error) {
