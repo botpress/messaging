@@ -94,13 +94,17 @@ export class StatusService extends Service {
   }
 
   async listOutdatedConduitIds(tolerance: number, maxAllowedFailures: number, limit: number): Promise<uuid[]> {
-    return this.query()
-      .select('conduitId')
-      .where('numberOfErrors', '<=', maxAllowedFailures)
-      .andWhere((q) =>
-        q.where('initializedOn', '<=', this.db.setDate(new Date(Date.now() - tolerance))!).orWhereNull('initializedOn')
-      )
-      .limit(limit)
+    return (
+      await this.query()
+        .select('conduitId')
+        .where('numberOfErrors', '<=', maxAllowedFailures)
+        .andWhere((q) =>
+          q
+            .where('initializedOn', '<=', this.db.setDate(new Date(Date.now() - tolerance))!)
+            .orWhereNull('initializedOn')
+        )
+        .limit(limit)
+    ).map((x) => x.conduitId)
   }
 
   private formatError(error: Error) {
