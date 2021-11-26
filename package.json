@@ -16,7 +16,7 @@
     "start": "yarn workspace @botpress/messaging-server start",
     "dev": "yarn workspace @botpress/messaging-server dev",
     "board": "yarn workspace @botpress/messaging-board dev",
-    "test": "yarn test:unit && yarn test:functional && yarn test:e2e",
+    "test": "yarn test:unit && yarn test:func && yarn test:e2e",
     "test:unit": "jest -c jest.unit.config.ts",
     "test:func": "jest -c jest.functional.config.ts",
     "test:e2e": "jest -c jest.e2e.config.ts"
