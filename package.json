@@ -17,9 +17,9 @@
     "dev": "yarn workspace @botpress/messaging-server dev",
     "board": "yarn workspace @botpress/messaging-board dev",
     "test": "yarn test:unit && yarn test:functional && yarn test:e2e",
-    "test:unit": "yarn --silent && jest",
-    "test:functional": "yarn --silent && jest -c jest.functional.config.ts",
-    "test:e2e": "yarn --silent && jest -c jest.e2e.config.ts"
+    "test:unit": "jest -c jest.unit.config.ts",
+    "test:func": "jest -c jest.functional.config.ts",
+    "test:e2e": "jest -c jest.e2e.config.ts"
   },
   "bin": "./packages/server/dist/index.js",
   "pkg": {

@@ -15,8 +15,8 @@ const config: Config.InitialOptions = {
       statements: 60
     }
   }*/
-  globalSetup: './test/jest.setup.ts',
-  globalTeardown: './test/jest.teardown.ts',
+  globalSetup: './test/jest.unit.setup.ts',
+  globalTeardown: './test/jest.unit.teardown.ts',
   projects: [
     {
       rootDir: 'packages/engine',
