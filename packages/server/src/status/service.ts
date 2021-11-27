@@ -63,8 +63,12 @@ export class StatusService extends Service {
 
   async updateInitializedOn(conduitId: uuid, date: Date | undefined) {
     await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
+      if (!(await this.get(conduitId))) {
+        await this.create(conduitId)
+      }
+
       await this.query()
-        .update({ initializedOn: date || null })
+        .update({ initializedOn: date ? this.db.setDate(date) : null })
         .where({ conduitId })
       this.cache.del(conduitId, true)
     })
@@ -96,14 +100,18 @@ export class StatusService extends Service {
 
   async listOutdated(tolerance: number, maxAllowedFailures: number, limit: number): Promise<ConduitStatus[]> {
     return (
-      this.query()
-        // we exclude lastError because it migth make the query slow
-        .select('conduitId', 'numberOfErrors', 'initializedOn')
-        .where('numberOfErrors', '<', maxAllowedFailures)
-        .andWhere((q) =>
-          q.where('initializedOn', '<', this.db.setDate(new Date(Date.now() - tolerance))!).orWhereNull('initializedOn')
-        )
-        .limit(limit)
+      (
+        await this.query()
+          // we exclude lastError because it migth make the query slow
+          .select('conduitId', 'numberOfErrors', 'initializedOn')
+          .where('numberOfErrors', '<', maxAllowedFailures)
+          .andWhere((q) =>
+            q
+              .where('initializedOn', '<', this.db.setDate(new Date(Date.now() - tolerance))!)
+              .orWhereNull('initializedOn')
+          )
+          .limit(limit)
+      ).map((x) => this.deserialize(x))
     )
   }
 
