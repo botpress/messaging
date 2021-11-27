@@ -99,11 +99,9 @@ export class StatusService extends Service {
       this.query()
         // we exclude lastError because it migth make the query slow
         .select('conduitId', 'numberOfErrors', 'initializedOn')
-        .where('numberOfErrors', '<=', maxAllowedFailures)
+        .where('numberOfErrors', '<', maxAllowedFailures)
         .andWhere((q) =>
-          q
-            .where('initializedOn', '<=', this.db.setDate(new Date(Date.now() - tolerance))!)
-            .orWhereNull('initializedOn')
+          q.where('initializedOn', '<', this.db.setDate(new Date(Date.now() - tolerance))!).orWhereNull('initializedOn')
         )
         .limit(limit)
     )
