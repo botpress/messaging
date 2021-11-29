@@ -1,5 +1,5 @@
 export class ShutDownSignal extends Error {
-  constructor() {
+  constructor(public readonly code?: number) {
     super()
   }
 }
