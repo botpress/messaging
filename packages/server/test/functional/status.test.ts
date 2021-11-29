@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import _ from 'lodash'
 import ms from 'ms'
 import { validate as validateUuid } from 'uuid'
 import { Conduit } from '../../src/conduits/types'
@@ -92,5 +93,128 @@ describe('Status', () => {
     const outdateds = await status.listOutdated(ms('1h'), 10, 10)
 
     expect(outdateds).toEqual([state.status, state.status2])
+  })
+
+  test('Add error', async () => {
+    await status.addError(state.conduit.id, new Error('err1'))
+
+    const st = await status.get(state.conduit.id)
+    expect(st!.numberOfErrors).toBe(1)
+    expect(st!.lastError?.startsWith('Error: err1')).toBeTruthy()
+
+    state.status = st
+  })
+
+  test('Add another error', async () => {
+    await status.addError(state.conduit.id, new Error('err2'))
+
+    const st = await status.get(state.conduit.id)
+    expect(st!.numberOfErrors).toBe(2)
+    expect(st!.lastError?.startsWith('Error: err2')).toBeTruthy()
+
+    state.status = st
+  })
+
+  test('Add multiple errors', async () => {
+    await status.addError(state.conduit.id, new Error('err3'))
+    await status.addError(state.conduit.id, new Error('err4'))
+    await status.addError(state.conduit.id, new Error('err5'))
+
+    const st = await status.get(state.conduit.id)
+    expect(st!.numberOfErrors).toBe(5)
+    expect(st!.lastError?.startsWith('Error: err5')).toBeTruthy()
+
+    state.status = st
+  })
+
+  test('List outdated should not contain errored conduit', async () => {
+    // conduit currently has 5 registered errors so it should no be listed
+    const maxAllowedErrors = 5
+    const outdateds = await status.listOutdated(ms('1h'), maxAllowedErrors, 10)
+
+    expect(outdateds).toEqual([state.status2])
+  })
+
+  test('List outdated should contain both conduits if max allowed errors is higher', async () => {
+    const maxAllowedErrors = 6
+    const outdateds = await status.listOutdated(ms('1h'), maxAllowedErrors, 10)
+
+    expect(outdateds).toEqual([state.status2, _.omit(state.status, 'lastError')])
+  })
+
+  test('Clear errors', async () => {
+    await status.clearErrors(state.conduit.id)
+
+    const st = await status.get(state.conduit.id)
+    expect(st!.numberOfErrors).toBe(0)
+    expect(st!.lastError).toBeUndefined()
+
+    state.status = st
+  })
+
+  test('List outdated should contain both conduits since errors have been cleaned', async () => {
+    const maxAllowedErrors = 5
+    const outdateds = await status.listOutdated(ms('1h'), maxAllowedErrors, 10)
+
+    expect(outdateds).toEqual([state.status, state.status2])
+  })
+
+  test('Update intializedOn', async () => {
+    const date = new Date()
+    await status.updateInitializedOn(state.conduit.id, date)
+
+    const st = await status.get(state.conduit.id)
+    expect(st!.initializedOn).toEqual(date)
+
+    state.status = st
+  })
+
+  test('List outdated should not contain initialized conduit', async () => {
+    const outdateds = await status.listOutdated(ms('1h'), 5, 10)
+
+    expect(outdateds).toEqual([state.status2])
+  })
+
+  test('List outdated should contain initialized conduit if the tolerance is very low', async () => {
+    const outdateds = await status.listOutdated(ms('1ms'), 5, 10)
+
+    expect(outdateds).toEqual([state.status2, state.status])
+  })
+
+  test('Update intializedOn for second conduit', async () => {
+    const date = new Date()
+    await status.updateInitializedOn(state.conduit2.id, date)
+
+    const st = await status.get(state.conduit2.id)
+    expect(st!.initializedOn).toEqual(date)
+
+    state.status2 = st
+  })
+
+  test('List outdated should not contain both initialized conduits', async () => {
+    const outdateds = await status.listOutdated(ms('1h'), 5, 10)
+
+    expect(outdateds).toEqual([])
+  })
+
+  test('List outdated should contain both initialized conduits if the tolerance is very low', async () => {
+    const outdateds = await status.listOutdated(ms('1ms'), 5, 10)
+
+    expect(outdateds).toEqual([state.status, state.status2])
+  })
+
+  test('Set intializedOn to null', async () => {
+    await status.updateInitializedOn(state.conduit.id, undefined)
+
+    const st = await status.get(state.conduit.id)
+    expect(st!.initializedOn).toBeUndefined()
+
+    state.status = st
+  })
+
+  test('List outdated should include the uninitialized conduit again', async () => {
+    const outdateds = await status.listOutdated(ms('1h'), 5, 10)
+
+    expect(outdateds).toEqual([state.status])
   })
 })
