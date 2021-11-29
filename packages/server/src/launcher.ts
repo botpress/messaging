@@ -88,7 +88,7 @@ export class Launcher {
       if (!(e instanceof ShutDownSignal)) {
         this.logger.error(e, 'Error occurred starting server')
       }
-      await this.shutDown()
+      await this.shutDown(1)
     }
   }
 
