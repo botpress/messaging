@@ -1,3 +1,26 @@
+## [0.1.18](https://github.com/botpress/messaging/compare/v0.1.17...v0.1.18) (2021-11-29)
+
+
+### Bug Fixes
+
+* **build:** unnecessary params for Docker build ([#248](https://github.com/botpress/messaging/issues/248)) ([9b2bcfc](https://github.com/botpress/messaging/commit/9b2bcfc9407b1544413495540d5ef298108bf4a4))
+* **components:** fix carousel component ([#260](https://github.com/botpress/messaging/issues/260)) ([91e7627](https://github.com/botpress/messaging/commit/91e762758734b964f88fba2ac95daa07da7b63eb))
+* **docker:** fix path to engine package files ([#253](https://github.com/botpress/messaging/issues/253)) ([3a0c6cb](https://github.com/botpress/messaging/commit/3a0c6cba4ba7185bd22cefa7acf68535132a7cde))
+* **mapping:** fix insert race conditions ([#255](https://github.com/botpress/messaging/issues/255)) ([7e070eb](https://github.com/botpress/messaging/commit/7e070eb5fb4bcb40c30ffbdc699df8958b7abc61))
+* **monitoring:** fix timeout not being cleared ([#252](https://github.com/botpress/messaging/issues/252)) ([fa5bb3d](https://github.com/botpress/messaging/commit/fa5bb3dafacf6691a88fa867b45380c531460d84))
+* **redis:** fix master failure crashing the server ([#258](https://github.com/botpress/messaging/issues/258)) ([f745ae4](https://github.com/botpress/messaging/commit/f745ae43e311dfee8f7ede1c8b61c951a2603cc0))
+* **server:** fix response to other node ([#240](https://github.com/botpress/messaging/issues/240)) ([a54b554](https://github.com/botpress/messaging/commit/a54b5548a0a683f1970b7e328b579725b22a44f3)), closes [#241](https://github.com/botpress/messaging/issues/241)
+* **test:** fix rewiring with jest ([#250](https://github.com/botpress/messaging/issues/250)) ([32c2679](https://github.com/botpress/messaging/commit/32c267957357ff44cf693bd012c53cb1efc79eff))
+* **webhook:** fix webhooks ([#251](https://github.com/botpress/messaging/issues/251)) ([8b4b60f](https://github.com/botpress/messaging/commit/8b4b60fb0dd53959b3a1c7b53fdc8821f0d4080b))
+
+
+### Features
+
+* **socket:** authenticate in handshake ([#254](https://github.com/botpress/messaging/issues/254)) ([03e1bd4](https://github.com/botpress/messaging/commit/03e1bd43960e8c80daf2905027ca4bb73352e570))
+* **webchat:** port webchat injection ([#239](https://github.com/botpress/messaging/issues/239)) ([1edb476](https://github.com/botpress/messaging/commit/1edb476dabf1b44ef2c85c21d97d9af6f803c1f0))
+
+
+
 ## [0.1.17](https://github.com/botpress/messaging/compare/v0.1.16...v0.1.17) (2021-11-05)
 
 
