@@ -20,6 +20,7 @@ export class RedisSubservice implements DistributedSubservice {
   private callbacks: { [channel: string]: (message: any, channel: string) => Promise<void> } = {}
   private pings!: PingPong
   private scope!: string
+  private destroyed: boolean = false
 
   async setup() {
     this.logger.info(`Id is ${clc.bold(RedisSubservice.nodeId)}`)
@@ -77,14 +78,15 @@ export class RedisSubservice implements DistributedSubservice {
     }
 
     const retryStrategy = (times: number) => {
-      if (times > 10) {
+      if (this.destroyed) {
         throw new Error('Unable to connect to the Redis cluster after multiple attempts')
       }
       return Math.min(times * 200, 5000)
     }
 
     const redisOptions: RedisOptions = {
-      retryStrategy
+      retryStrategy,
+      sentinelRetryStrategy: retryStrategy
     }
 
     if (_.isArray(connection)) {
@@ -100,6 +102,8 @@ export class RedisSubservice implements DistributedSubservice {
   }
 
   async destroy() {
+    this.destroyed = true
+
     const now = new Date()
 
     for (const lock of Object.values(this.locks || {})) {
