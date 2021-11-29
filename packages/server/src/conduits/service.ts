@@ -86,7 +86,6 @@ export class ConduitService extends Service {
       .where({ id })
       .update({ config: this.cryptoService.encrypt(JSON.stringify(validConfig || {})) })
 
-    // TODO: catch this event to but initialized at null
     await this.emitter.emit(ConduitEvents.Updated, id)
   }
 
