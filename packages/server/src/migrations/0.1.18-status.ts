@@ -4,7 +4,7 @@ export class StatusMigration extends Migration {
   meta = {
     name: StatusMigration.name,
     description: 'Moves status information from conduit table to the status table',
-    version: '0.1.18'
+    version: '0.1.19'
   }
 
   async valid() {
