@@ -1,3 +1,12 @@
+## [0.1.19](https://github.com/botpress/messaging/compare/v0.1.18...v0.1.19) (2021-11-30)
+
+
+### Bug Fixes
+
+* **monitoring:** fix listing outdated errored conduits ([#261](https://github.com/botpress/messaging/issues/261)) ([c046dac](https://github.com/botpress/messaging/commit/c046dac8806618109f4afa9c55b6b7f194a98d48))
+
+
+
 ## [0.1.18](https://github.com/botpress/messaging/compare/v0.1.17...v0.1.18) (2021-11-29)
 
 
