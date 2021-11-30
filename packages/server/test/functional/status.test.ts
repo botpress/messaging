@@ -100,21 +100,23 @@ describe('Status', () => {
   })
 
   test('Add error', async () => {
-    await status.addError(state.conduit.id, new Error('err1'))
+    const errMessage = 'err1'
+    await status.addError(state.conduit.id, new Error(errMessage))
 
     const st = await status.get(state.conduit.id)
     expect(st!.numberOfErrors).toBe(1)
-    expect(st!.lastError?.startsWith('Error: err1')).toBeTruthy()
+    expect(st!.lastError?.includes(errMessage)).toBeTruthy()
 
     state.status = st
   })
 
   test('Add another error', async () => {
-    await status.addError(state.conduit.id, new Error('err2'))
+    const errMessage = 'err2'
+    await status.addError(state.conduit.id, new Error(errMessage))
 
     const st = await status.get(state.conduit.id)
     expect(st!.numberOfErrors).toBe(2)
-    expect(st!.lastError?.startsWith('Error: err2')).toBeTruthy()
+    expect(st!.lastError?.includes(errMessage)).toBeTruthy()
 
     state.status = st
   })
@@ -122,11 +124,12 @@ describe('Status', () => {
   test('Add multiple errors', async () => {
     await status.addError(state.conduit.id, new Error('err3'))
     await status.addError(state.conduit.id, new Error('err4'))
-    await status.addError(state.conduit.id, new Error('err5'))
+    const errMessage = 'err5'
+    await status.addError(state.conduit.id, new Error(errMessage))
 
     const st = await status.get(state.conduit.id)
     expect(st!.numberOfErrors).toBe(MAX_ERRORS)
-    expect(st!.lastError?.startsWith('Error: err5')).toBeTruthy()
+    expect(st!.lastError?.includes(errMessage)).toBeTruthy()
 
     state.status = st
   })
