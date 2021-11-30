@@ -218,4 +218,12 @@ describe('Status', () => {
 
     expect(outdateds).toEqual([state.status])
   })
+
+  test('List outdated should respect the provided limit', async () => {
+    const outdateds1 = await status.listOutdated(0, MAX_ERRORS, LIMIT)
+    expect(outdateds1.length).toEqual(2)
+
+    const outdateds2 = await status.listOutdated(0, MAX_ERRORS, 1)
+    expect(outdateds2.length).toEqual(1)
+  })
 })
