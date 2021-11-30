@@ -8,6 +8,10 @@ import { StatusService } from '../../src/status/service'
 import { ConduitStatus } from '../../src/status/types'
 import { app, setupApp } from './utils'
 
+const TOLERANCE = ms('1h')
+const LIMIT = 10
+const MAX_ERRORS = 5
+
 describe('Status', () => {
   let status: StatusService
   let state: {
@@ -66,7 +70,7 @@ describe('Status', () => {
   })
 
   test('List outdated should contain status', async () => {
-    const outdateds = await status.listOutdated(ms('1h'), 10, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status])
   })
@@ -90,7 +94,7 @@ describe('Status', () => {
   })
 
   test('List outdated should contain both status', async () => {
-    const outdateds = await status.listOutdated(ms('1h'), 10, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status, state.status2])
   })
@@ -121,7 +125,7 @@ describe('Status', () => {
     await status.addError(state.conduit.id, new Error('err5'))
 
     const st = await status.get(state.conduit.id)
-    expect(st!.numberOfErrors).toBe(5)
+    expect(st!.numberOfErrors).toBe(MAX_ERRORS)
     expect(st!.lastError?.startsWith('Error: err5')).toBeTruthy()
 
     state.status = st
@@ -129,15 +133,13 @@ describe('Status', () => {
 
   test('List outdated should not contain errored conduit', async () => {
     // conduit currently has 5 registered errors so it should no be listed
-    const maxAllowedErrors = 5
-    const outdateds = await status.listOutdated(ms('1h'), maxAllowedErrors, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status2])
   })
 
   test('List outdated should contain both conduits if max allowed errors is higher', async () => {
-    const maxAllowedErrors = 6
-    const outdateds = await status.listOutdated(ms('1h'), maxAllowedErrors, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS + 1, LIMIT)
 
     expect(outdateds).toEqual([state.status2, _.omit(state.status, 'lastError')])
   })
@@ -153,8 +155,7 @@ describe('Status', () => {
   })
 
   test('List outdated should contain both conduits since errors have been cleaned', async () => {
-    const maxAllowedErrors = 5
-    const outdateds = await status.listOutdated(ms('1h'), maxAllowedErrors, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status, state.status2])
   })
@@ -170,13 +171,13 @@ describe('Status', () => {
   })
 
   test('List outdated should not contain initialized conduit', async () => {
-    const outdateds = await status.listOutdated(ms('1h'), 5, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status2])
   })
 
   test('List outdated should contain initialized conduit if the tolerance is very low', async () => {
-    const outdateds = await status.listOutdated(ms('1ms'), 5, 10)
+    const outdateds = await status.listOutdated(0, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status2, state.status])
   })
@@ -192,13 +193,13 @@ describe('Status', () => {
   })
 
   test('List outdated should not contain both initialized conduits', async () => {
-    const outdateds = await status.listOutdated(ms('1h'), 5, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
-    expect(outdateds).toEqual([])
+    expect(outdateds.length).toEqual(0)
   })
 
   test('List outdated should contain both initialized conduits if the tolerance is very low', async () => {
-    const outdateds = await status.listOutdated(ms('1ms'), 5, 10)
+    const outdateds = await status.listOutdated(0, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status, state.status2])
   })
@@ -213,7 +214,7 @@ describe('Status', () => {
   })
 
   test('List outdated should include the uninitialized conduit again', async () => {
-    const outdateds = await status.listOutdated(ms('1h'), 5, 10)
+    const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
     expect(outdateds).toEqual([state.status])
   })
