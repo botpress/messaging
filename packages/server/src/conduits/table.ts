@@ -10,10 +10,8 @@ export class ConduitTable extends Table {
     table.uuid('id').primary()
     table.uuid('providerId').references('id').inTable('msg_providers').notNullable()
     table.uuid('channelId').references('id').inTable('msg_channels').notNullable()
-    table.timestamp('initialized').nullable()
     table.text('config').notNullable()
     table.unique(['providerId', 'channelId'])
-    table.index(['initialized'])
     table.index(['channelId'])
   }
 }

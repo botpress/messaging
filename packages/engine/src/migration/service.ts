@@ -31,7 +31,7 @@ export class MigrationService extends Service {
   async setup() {
     this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
     this.dstVersion = process.env.MIGRATE_TARGET || this.meta.app().version
-    this.autoMigrate = !!yn(process.env.AUTO_MIGRATE)
+    this.autoMigrate = !!yn(process.env.AUTO_MIGRATE) || !!process.env.MIGRATE_CMD?.length
     this.isDown = process.env.MIGRATE_CMD === 'down'
     this.isDry = !!yn(process.env.MIGRATE_DRYRUN)
     this.loggerDry = this.logger.prefix(this.isDry ? '[DRY] ' : '')
@@ -60,7 +60,7 @@ export class MigrationService extends Service {
 
     if (!this.autoMigrate) {
       this.logger.error(undefined, 'Migrations required. Please restart the messaging server with --auto-migrate')
-      throw new ShutDownSignal()
+      throw new ShutDownSignal(1)
     }
 
     await this.runMigrations(migrations)
@@ -87,7 +87,7 @@ export class MigrationService extends Service {
     } catch (e) {
       await trx.rollback()
       this.loggerDry.error(e, 'Migrations failed')
-      throw new ShutDownSignal()
+      throw new ShutDownSignal(1)
     }
   }
 

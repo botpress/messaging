@@ -8,7 +8,9 @@ export class StatusTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('conduitId').primary().references('id').inTable('msg_conduits').onDelete('cascade')
-    table.integer('numberOfErrors').defaultTo(0)
-    table.text('lastError')
+    table.integer('numberOfErrors').notNullable()
+    table.timestamp('initializedOn').nullable()
+    table.text('lastError').nullable()
+    table.index(['numberOfErrors', 'initializedOn'])
   }
 }

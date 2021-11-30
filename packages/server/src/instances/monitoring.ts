@@ -7,6 +7,7 @@ import { StatusService } from '../status/service'
 import { InstanceService } from './service'
 
 const MAX_ALLOWED_FAILURES = 5
+const MAX_INITIALIZE_BATCH = 100
 
 export class InstanceMonitoring {
   private timeout?: NodeJS.Timeout
@@ -44,30 +45,30 @@ export class InstanceMonitoring {
   }
 
   private async initializeOutdatedConduits() {
-    const outdateds = await this.conduits.listOutdated(ms('10h'), 1000)
+    if (yn(process.env.SPINNED)) {
+      return
+    }
 
+    const outdateds = await this.status.listOutdated(ms('10h'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
     for (const outdated of outdateds) {
-      const failures = (await this.status.getNumberOfErrors(outdated.id)) || 0
-      if (!yn(process.env.SPINNED) && failures >= MAX_ALLOWED_FAILURES) {
-        continue
-      }
-
-      await this.instances.initialize(outdated.id)
+      await this.instances.initialize(outdated.conduitId)
     }
   }
 
   private async loadNonLazyConduits() {
-    const lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
+    if (!yn(process.env.SPINNED)) {
+      return
+    }
 
     for (const channel of this.channels.list()) {
-      if (channel.lazy && lazyLoadingEnabled) {
+      if (channel.lazy && !yn(process.env.NO_LAZY_LOADING)) {
         continue
       }
 
       const conduits = await this.conduits.listByChannel(channel.id)
       for (const conduit of conduits) {
-        const failures = (await this.status.getNumberOfErrors(conduit.id)) || 0
-        if (!yn(process.env.SPINNED) && failures >= MAX_ALLOWED_FAILURES) {
+        const failures = (await this.status.get(conduit.id))?.numberOfErrors || 0
+        if (failures >= MAX_ALLOWED_FAILURES) {
           continue
         }
 
