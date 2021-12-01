@@ -2,12 +2,11 @@ import isBefore from 'date-fns/is_before'
 import isValid from 'date-fns/is_valid'
 import merge from 'lodash/merge'
 import { action, computed, observable, runInAction } from 'mobx'
-import { InjectedIntl } from 'react-intl'
+import { IntlShape } from 'react-intl'
 
 import WebchatApi from '../core/api'
-import constants from '../core/constants'
 import BpSocket from '../core/socket'
-import { getUserLocale, initializeLocale } from '../translations'
+import { getUserLocale } from '../translations'
 import {
   BotInfo,
   Config,
@@ -28,7 +27,6 @@ import ViewStore from './view'
 /** Includes the partial definitions of all classes */
 export type StoreDef = Partial<RootStore> & Partial<ViewStore> & Partial<ComposerStore> & Partial<Config>
 
-initializeLocale()
 const chosenLocale = getUserLocale()
 
 class RootStore {
@@ -59,7 +57,7 @@ class RootStore {
   @observable
   public messageFeedbacks!: EventFeedback[]
 
-  public intl!: InjectedIntl
+  public intl!: IntlShape
 
   public isBotTyping = observable.box(false)
 
@@ -82,7 +80,7 @@ class RootStore {
   }
 
   @action.bound
-  setIntlProvider(provider: InjectedIntl) {
+  setIntlProvider(provider: IntlShape) {
     this.intl = provider
   }
 
