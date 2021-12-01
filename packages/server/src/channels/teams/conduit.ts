@@ -72,6 +72,8 @@ export class TeamsConduit extends ConduitInstance<TeamsConfig, TeamsContext> {
         await turnContext.sendActivity(message)
       })
     }
+
+    await this.receive(turnContext, true)
   }
 
   protected async getContext(base: ChannelContext<any>): Promise<TeamsContext> {
