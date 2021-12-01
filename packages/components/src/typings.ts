@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import { InjectedIntl } from 'react-intl'
+import { IntlShape } from 'react-intl'
 import { Content, MessageType } from './content-typings'
 
 declare global {
@@ -23,7 +23,7 @@ export interface MessageConfig {
   sentOn: Date
   escapeHTML: boolean
   isInEmulator: boolean
-  intl: InjectedIntl
+  intl: IntlShape
   showTimestamp: boolean
   noMessageBubble: boolean
   isLastGroup: boolean

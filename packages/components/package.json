@@ -5,22 +5,9 @@
   "types": "dist/index.d.ts",
   "source": "src/index.tsx",
   "license": "AGPL-3.0",
-  "dependencies": {
-    "html-truncate": "^1.2.2",
-    "mime": "^2.5.2",
-    "prop-types": "^15.7.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-intl": "^2.8.0",
-    "react-linkify": "^0.2.2",
-    "react-select": "^5.1.0",
-    "react-slick": "^0.24.0",
-    "react-text-format": "^2.0.28",
-    "snarkdown": "^2.0.0"
-  },
   "scripts": {
     "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch",
+    "watch": "yarn --silent && tsc --watch",
     "storybook": "start-storybook -p 6006 -c story/config",
     "build-storybook": "build-storybook -c story/config",
     "prepublishOnly": "yarn build"
@@ -28,6 +15,16 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "html-truncate": "^1.2.2",
+    "mime": "^2.5.2",
+    "react-intl": "^3.12.1",
+    "react-linkify": "^0.2.2",
+    "react-select": "^5.1.0",
+    "react-slick": "^0.24.0",
+    "react-text-format": "^2.0.28",
+    "snarkdown": "^2.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.15.8",
     "@storybook/addon-essentials": "^6.3.12",
@@ -41,13 +38,29 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.0",
     "@testing-library/user-event": "^13.2.1",
+    "@types/dom-mediacapture-record": "^1.0.11",
     "@types/html-truncate": "^1.2.1",
     "@types/mime": "^2.0.3",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
-    "@types/react-intl": "^2.3.18",
     "@types/react-slick": "^0.23.5",
     "jest-css-modules-transform": "^4.3.0",
+    "prop-types": "^15.7.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2"
+  },
+  "peerDependencies": {
+    "html-truncate": "^1.2.2",
+    "mime": "^2.5.2",
+    "prop-types": "^15.7.2",
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "react-intl": ">=3.0.0",
+    "react-linkify": "^0.2.2",
+    "react-select": "^5.1.0",
+    "react-slick": "^0.24.0",
+    "react-text-format": "^2.0.28",
+    "snarkdown": "^2.0.0"
   }
 }
