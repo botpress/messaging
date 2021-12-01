@@ -7,7 +7,7 @@
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --watch",
+    "watch": "yarn --silent && tsc --build --watch",
     "storybook": "start-storybook -p 6006 -c story/config",
     "build-storybook": "build-storybook -c story/config",
     "prepublishOnly": "yarn build"
