@@ -2,9 +2,9 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React from 'react'
 import ReactMessageRenderer from '../src'
 import { Content, MessageType } from '../src/content-typings'
-import Keyboard from '../src/renderer/keyboard'
+import { Keyboard } from '../src/renderer/keyboard'
 import { defaultMessageConfig } from '../src/utils'
-import testevents from '../test/test-events.json'
+import testevents from '../test/unit/test-events.json'
 
 export default {
   title: 'ReactMessageRenderer',

@@ -2,7 +2,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../src/base/button'
 import { QuickReplies } from '../src/renderer/choice'
-import Keyboard from '../src/renderer/keyboard'
+import { Keyboard } from '../src/renderer/keyboard'
 import { LiteStore } from '../src/typings'
 import { defaultMessageConfig } from '../src/utils'
 

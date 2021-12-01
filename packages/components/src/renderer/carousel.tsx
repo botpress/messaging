@@ -1,11 +1,12 @@
 import React, { createRef } from 'react'
 import Slider, { Settings } from 'react-slick'
 
+import { ActionButton, ActionType } from '../content-typings'
+import { MessageTypeHandlerProps } from '../typings'
+
 // Added those manually to remove the font dependencies which keeps showing 404 not found
 import '../../css/slick-theme.css'
 import '../../css/slick.css'
-import { ActionButton, ActionType } from '../content-typings'
-import { MessageTypeHandlerProps } from '../typings'
 
 export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'>, ICarouselState> {
   private ref = createRef<HTMLDivElement>()
@@ -25,7 +26,7 @@ export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'
     const defaultSettings: Settings = {
       dots: false,
       infinite: false,
-      responsive: [...Array(10)].map((_, i) => ({
+      responsive: [...Array(this.props.items.length)].map((_, i) => ({
         breakpoint: adjustBreakpoint(550 + i * 524),
         settings: { slidesToShow: i + 1 }
       })),
