@@ -6,6 +6,8 @@
   "source": "src/index.tsx",
   "license": "AGPL-3.0",
   "scripts": {
+    "prebuild": "rimraf dist/",
+    "postbuild": "ncp ./css ./dist/css",
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch",
     "storybook": "start-storybook -p 6006 -c story/config",
@@ -45,10 +47,12 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-slick": "^0.23.5",
     "jest-css-modules-transform": "^4.3.0",
+    "ncp": "^2.0.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-test-renderer": "^17.0.2"
+    "react-test-renderer": "^17.0.2",
+    "rimraf": "^3.0.2"
   },
   "peerDependencies": {
     "html-truncate": "^1.2.2",

@@ -1,12 +1,7 @@
+/// <reference lib="dom" />
 import { AxiosInstance } from 'axios'
 import { IntlShape } from 'react-intl'
 import { Content, MessageType } from './content-typings'
-
-declare global {
-  export interface Window {
-    botpress?: StudioConnector
-  }
-}
 
 export type uuid = string
 export type FileUploadHandler = (label: string, payload: any, file: File) => Promise<void>
