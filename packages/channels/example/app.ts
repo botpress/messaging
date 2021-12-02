@@ -2,11 +2,8 @@ import clc from 'cli-color'
 import { Router } from 'express'
 import { Channel } from '../src/base/channel'
 import { SmoochChannel } from '../src/smooch/channel'
-import { SmoochConfig } from '../src/smooch/config'
 import { TelegramChannel } from '../src/telegram/channel'
-import { TelegramConfig } from '../src/telegram/config'
 import { TwilioChannel } from '../src/twilio/channel'
-import { TwilioConfig } from '../src/twilio/config'
 
 export class App {
   constructor(private router: Router, private config: any) {}
