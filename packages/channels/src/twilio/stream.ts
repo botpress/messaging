@@ -1,9 +1,8 @@
 import { Endpoint } from '../base/endpoint'
+import { ChannelStream } from '../base/stream'
 import { TwilioService } from './service'
 
-export class TwilioStream {
-  constructor(private readonly service: TwilioService) {}
-
+export class TwilioStream extends ChannelStream<TwilioService> {
   async setup() {
     this.service.on('send', this.handleSend.bind(this))
   }

@@ -1,6 +1,7 @@
 import Joi from 'joi'
+import { ChannelConfig } from '../base/config'
 
-export interface TwilioConfig {
+export interface TwilioConfig extends ChannelConfig {
   accountSID: string
   authToken: string
 }

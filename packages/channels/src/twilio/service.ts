@@ -1,45 +1,16 @@
 import { Twilio } from 'twilio'
-import { Emitter } from '../base/emitter'
-import { Endpoint } from '../base/endpoint'
+import { ChannelService, ChannelState } from '../base/service'
 import { TwilioConfig } from './config'
 
-export class TwilioService extends Emitter<{
-  start: { scope: string }
-  send: { scope: string; endpoint: Endpoint; content: any }
-  receive: { scope: string; endpoint: Endpoint; content: any }
-  stop: { scope: string }
-}> {
-  private states: { [scope: string]: TwilioState } = {}
+export interface TwilioState extends ChannelState<TwilioConfig> {
+  twilio: Twilio
+}
 
-  async setup() {}
-
-  async start(scope: string, config: TwilioConfig) {
-    this.states[scope] = {
+export class TwilioService extends ChannelService<TwilioConfig, TwilioState> {
+  async create(scope: string, config: TwilioConfig) {
+    return {
       config,
       twilio: new Twilio(config.accountSID, config.authToken)
     }
-
-    await this.emit('start', { scope })
   }
-
-  async send(scope: string, endpoint: Endpoint, content: any) {
-    await this.emit('send', { scope, endpoint, content })
-  }
-
-  async receive(scope: string, endpoint: Endpoint, content: any) {
-    await this.emit('receive', { scope, endpoint, content })
-  }
-
-  async stop(scope: string) {
-    await this.emit('stop', { scope })
-  }
-
-  public get(scope: string) {
-    return this.states[scope]
-  }
-}
-
-export interface TwilioState {
-  config: TwilioConfig
-  twilio: Twilio
 }

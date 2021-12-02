@@ -1,11 +1,9 @@
 import express, { Response } from 'express'
 import { validateRequest } from 'twilio'
-import { ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { TwilioService } from './service'
 
-export class TwilioApi {
-  constructor(private readonly service: TwilioService) {}
-
+export class TwilioApi extends ChannelApi<TwilioService> {
   async setup(router: ChannelApiManager) {
     router.use('/twilio', express.urlencoded({ extended: true }))
     router.post('/twilio', this.handleRequest.bind(this))
