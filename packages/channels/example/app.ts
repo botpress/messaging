@@ -2,6 +2,7 @@ import clc from 'cli-color'
 import { Router } from 'express'
 import { Channel } from '../src/base/channel'
 import { SmoochChannel } from '../src/smooch/channel'
+import { TeamsChannel } from '../src/teams/channel'
 import { TelegramChannel } from '../src/telegram/channel'
 import { TwilioChannel } from '../src/twilio/channel'
 
@@ -12,6 +13,7 @@ export class App {
     await this.setupChannel('telegram', new TelegramChannel())
     await this.setupChannel('twilio', new TwilioChannel())
     await this.setupChannel('smooch', new SmoochChannel())
+    await this.setupChannel('teams', new TeamsChannel())
   }
 
   async setupChannel(name: string, channel: Channel<any, any, any, any>) {
