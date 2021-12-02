@@ -1,5 +1,7 @@
 import clc from 'cli-color'
 import { Router } from 'express'
+import { SmoochChannel } from '../src/smooch/channel'
+import { SmoochConfig } from '../src/smooch/config'
 import { TelegramChannel } from '../src/telegram/channel'
 import { TelegramConfig } from '../src/telegram/config'
 import { TwilioChannel } from '../src/twilio/channel'
@@ -11,6 +13,7 @@ export class App {
   async setup() {
     await this.setupTelegram()
     await this.setupTwilio()
+    await this.setupSmooch()
   }
 
   private async setupTelegram() {
@@ -38,6 +41,21 @@ export class App {
     })
 
     for (const [key, val] of Object.entries<TwilioConfig>(this.config.twilio)) {
+      await twilio.start(key, val)
+      this.log('conf', key, val)
+    }
+  }
+
+  private async setupSmooch() {
+    const twilio = new SmoochChannel()
+    await twilio.setup(this.router)
+
+    twilio.on('message', async ({ scope, endpoint, content }) => {
+      this.log('message', scope, { endpoint, content })
+      await twilio.send(scope, endpoint, { text: 'yoyo' })
+    })
+
+    for (const [key, val] of Object.entries<SmoochConfig>(this.config.smooch)) {
       await twilio.start(key, val)
       this.log('conf', key, val)
     }
