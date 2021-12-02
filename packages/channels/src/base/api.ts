@@ -1,23 +1,27 @@
-import { Request, Router, Response } from 'express'
+import { Request, Router, Response, RequestHandler } from 'express'
 
 export type Middleware<T> = (req: T, res: Response) => Promise<any>
 
 export class ChannelApiManager {
-  constructor(private router: Router) {}
+  constructor(public router: Router) {}
 
   post(path: string, fn: Middleware<ChannelApiRequest>) {
-    this.use('post', path, fn)
+    this.wrap('post', path, fn)
   }
 
   get(path: string, fn: Middleware<ChannelApiRequest>) {
-    this.use('get', path, fn)
+    this.wrap('get', path, fn)
   }
 
   delete(path: string, fn: Middleware<ChannelApiRequest>) {
-    this.use('delete', path, fn)
+    this.wrap('delete', path, fn)
   }
 
-  use(type: 'post' | 'get' | 'delete', path: string, fn: Middleware<ChannelApiRequest>) {
+  use(path: string, fn: RequestHandler) {
+    this.router.use(`/:scope${path}`, fn)
+  }
+
+  protected wrap(type: 'post' | 'get' | 'delete' | 'use', path: string, fn: Middleware<ChannelApiRequest>) {
     this.router[type](
       `/:scope${path}`,
       this.asyncMiddleware(async (req, res) => {

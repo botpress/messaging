@@ -7,7 +7,8 @@ export class TelegramApi {
   constructor(private readonly service: TelegramService) {}
 
   async setup(router: ChannelApiManager) {
-    router.post('/:token', this.handleRequest.bind(this))
+    // TODO: make it optional to include the name of the channel
+    router.post('/telegram/:token', this.handleRequest.bind(this))
 
     this.service.on('start', this.handleStart.bind(this))
   }
