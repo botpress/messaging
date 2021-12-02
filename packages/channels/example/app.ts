@@ -25,9 +25,11 @@ export class App {
       await telegram.send(scope, endpoint, { text: 'yoyo' })
     })
 
-    for (const [key, val] of Object.entries<TelegramConfig>(this.config.telegram)) {
-      await telegram.start(key, val)
-      this.log('conf', key, val)
+    for (const [key, val] of Object.entries<any>(this.config)) {
+      if (val.telegram) {
+        await telegram.start(key, val.telegram)
+        this.log('conf', key, val.telegram)
+      }
     }
   }
 
@@ -40,9 +42,11 @@ export class App {
       await twilio.send(scope, endpoint, { text: 'yoyo' })
     })
 
-    for (const [key, val] of Object.entries<TwilioConfig>(this.config.twilio)) {
-      await twilio.start(key, val)
-      this.log('conf', key, val)
+    for (const [key, val] of Object.entries<any>(this.config)) {
+      if (val.twilio) {
+        await twilio.start(key, val.twilio)
+        this.log('conf', key, val.twilio)
+      }
     }
   }
 
@@ -55,9 +59,11 @@ export class App {
       await twilio.send(scope, endpoint, { text: 'yoyo' })
     })
 
-    for (const [key, val] of Object.entries<SmoochConfig>(this.config.smooch)) {
-      await twilio.start(key, val)
-      this.log('conf', key, val)
+    for (const [key, val] of Object.entries<any>(this.config)) {
+      if (val.smooch) {
+        await twilio.start(key, val.smooch)
+        this.log('conf', key, val.smooch)
+      }
     }
   }
 

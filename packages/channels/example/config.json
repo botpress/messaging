@@ -1,5 +1,17 @@
 {
-  "gggg": {
-    "botToken": "YOUR_BOT_TOKEN"
+  "YOUR_CLIENT_ID": {
+    "telegram": {
+      "botToken": "YOUR_BOT_TOKEN"
+    },
+    "twilio": {
+      "accountSID": "YOUR_ACCOUNT_SID",
+      "authToken": "YOUR_AUTH_TOKEN",
+      "webhookUrl": "YOUR_WEBHOOK_URL"
+    },
+    "smooch": {
+      "keyId": "YOUR_KEYID",
+      "secret": "YOUR_SECRET",
+      "webhookSecret": "YOUR_WEBHOOK_SECRET"
+    }
   }
 }
