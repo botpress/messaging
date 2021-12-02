@@ -1,9 +1,8 @@
 import { Endpoint } from '../base/endpoint'
+import { ChannelStream } from '../base/stream'
 import { SmoochService } from './service'
 
-export class SmoochStream {
-  constructor(private readonly service: SmoochService) {}
-
+export class SmoochStream extends ChannelStream<SmoochService> {
   async setup() {
     this.service.on('send', this.handleSend.bind(this))
   }

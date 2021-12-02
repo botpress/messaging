@@ -1,13 +1,11 @@
 import express, { Response } from 'express'
-import { ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { SmoochService } from './service'
 
 export const SAY_PREFIX = 'say::'
 export const POSTBACK_PREFIX = 'postback::'
 
-export class SmoochApi {
-  constructor(private readonly service: SmoochService) {}
-
+export class SmoochApi extends ChannelApi<SmoochService> {
   async setup(router: ChannelApiManager) {
     router.use('/smooch', express.json())
     router.post('/smooch', this.handleRequest.bind(this))

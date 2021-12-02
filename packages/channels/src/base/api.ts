@@ -1,4 +1,11 @@
 import { Request, Router, Response, RequestHandler } from 'express'
+import { ChannelService } from './service'
+
+export class ChannelApi<TService extends ChannelService<any, any>> {
+  constructor(protected readonly service: TService) {}
+
+  async setup(router: ChannelApiManager) {}
+}
 
 export type Middleware<T> = (req: T, res: Response) => Promise<any>
 

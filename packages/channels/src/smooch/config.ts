@@ -1,6 +1,7 @@
 import Joi from 'joi'
+import { ChannelConfig } from '../base/config'
 
-export interface SmoochConfig {
+export interface SmoochConfig extends ChannelConfig {
   keyId: string
   secret: string
   forwardRawPayloads?: string[]
