@@ -1,9 +1,8 @@
 import { Endpoint } from '../base/endpoint'
+import { ChannelStream } from '../base/stream'
 import { TelegramService } from './service'
 
-export class TelegramStream {
-  constructor(private readonly service: TelegramService) {}
-
+export class TelegramStream extends ChannelStream<TelegramService> {
   async setup() {
     this.service.on('send', this.handleSend.bind(this))
   }

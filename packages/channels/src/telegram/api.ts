@@ -1,11 +1,9 @@
 import { Response } from 'express'
 import { TelegrafContext } from 'telegraf/typings/context'
-import { ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { TelegramService } from './service'
 
-export class TelegramApi {
-  constructor(private readonly service: TelegramService) {}
-
+export class TelegramApi extends ChannelApi<TelegramService> {
   async setup(router: ChannelApiManager) {
     // TODO: make it optional to include the name of the channel
     router.post('/telegram/:token', this.handleRequest.bind(this))
