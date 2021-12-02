@@ -20,19 +20,19 @@ export class App {
     await channel.setup(this.router)
 
     channel.on('message', async ({ scope, endpoint, content }) => {
-      this.log('message', scope, { endpoint, content })
+      this.log('message', name, scope, { endpoint, content })
       await channel.send(scope, endpoint, { text: 'yoyo' })
     })
 
     for (const [key, val] of Object.entries<any>(this.config)) {
       if (val[name]) {
         await channel.start(key, val[name])
-        this.log('conf', key, val[name])
+        this.log('conf', name, key, val[name])
       }
     }
   }
 
-  private log(type: string, context: string, obj: any) {
-    console.info(clc.blue(type), context, obj)
+  private log(type: string, channel: string, context: string, obj: any) {
+    console.info(clc.blue(type), clc.bold(channel), context, obj)
   }
 }
