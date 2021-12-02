@@ -1,5 +1,6 @@
 import express from 'express'
 import { TelegramChannel } from '../src/telegram/channel'
+import config from './config.json'
 
 const app = express()
 
@@ -16,7 +17,10 @@ const setup = async () => {
     await telegram.send(e.scope, e.endpoint, { text: 'yoyo' })
   })
 
-  await telegram.start('gggg', { botToken: 'YOUR_CONFIG' })
+  for (const [key, val] of Object.entries(config)) {
+    await telegram.start(key, val)
+    console.info('Configured', key, val)
+  }
 
   app.listen(3100)
   console.info('Channels example listening at : http://localhost:3100')
