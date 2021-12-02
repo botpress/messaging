@@ -37,7 +37,7 @@ export const Video: React.FC<MessageTypeHandlerProps<'video'>> = ({ video, title
   return (
     <div>
       <span>{title}</span>
-      <video controls>
+      <video controls width={'100%'}>
         <source src={video} type={mime} />
       </video>
     </div>
