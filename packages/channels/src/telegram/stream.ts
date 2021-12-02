@@ -1,4 +1,5 @@
-import { Endpoint, TelegramService } from './service'
+import { Endpoint } from '../base/endpoint'
+import { TelegramService } from './service'
 
 export class TelegramStream {
   constructor(private readonly service: TelegramService) {}
