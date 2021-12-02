@@ -5,8 +5,8 @@ import { ActionButton, ActionType } from '../content-typings'
 import { MessageTypeHandlerProps } from '../typings'
 
 // Added those manually to remove the font dependencies which keeps showing 404 not found
-import '../../css/slick-theme.css'
-import '../../css/slick.css'
+import '../css/slick-theme.css'
+import '../css/slick.css'
 
 export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'>, ICarouselState> {
   private ref = createRef<HTMLDivElement>()

@@ -1,13 +1,13 @@
 {
   "name": "@botpress/messaging-components",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.tsx",
   "license": "AGPL-3.0",
   "scripts": {
     "prebuild": "rimraf dist/",
-    "postbuild": "ncp ./css ./dist/css",
+    "postbuild": "ncp ./src/css ./dist/css",
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch",
     "storybook": "start-storybook -p 6006 -c story/config",
