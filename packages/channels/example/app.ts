@@ -1,5 +1,6 @@
 import clc from 'cli-color'
 import { Router } from 'express'
+import { Channel } from '../src/base/channel'
 import { SmoochChannel } from '../src/smooch/channel'
 import { SmoochConfig } from '../src/smooch/config'
 import { TelegramChannel } from '../src/telegram/channel'
@@ -11,58 +12,23 @@ export class App {
   constructor(private router: Router, private config: any) {}
 
   async setup() {
-    await this.setupTelegram()
-    await this.setupTwilio()
-    await this.setupSmooch()
+    await this.setupChannel('telegram', new TelegramChannel())
+    await this.setupChannel('twilio', new TwilioChannel())
+    await this.setupChannel('smooch', new SmoochChannel())
   }
 
-  private async setupTelegram() {
-    const telegram = new TelegramChannel()
-    await telegram.setup(this.router)
+  async setupChannel(name: string, channel: Channel<any, any, any, any>) {
+    await channel.setup(this.router)
 
-    telegram.on('message', async ({ scope, endpoint, content }) => {
+    channel.on('message', async ({ scope, endpoint, content }) => {
       this.log('message', scope, { endpoint, content })
-      await telegram.send(scope, endpoint, { text: 'yoyo' })
+      await channel.send(scope, endpoint, { text: 'yoyo' })
     })
 
     for (const [key, val] of Object.entries<any>(this.config)) {
-      if (val.telegram) {
-        await telegram.start(key, val.telegram)
-        this.log('conf', key, val.telegram)
-      }
-    }
-  }
-
-  private async setupTwilio() {
-    const twilio = new TwilioChannel()
-    await twilio.setup(this.router)
-
-    twilio.on('message', async ({ scope, endpoint, content }) => {
-      this.log('message', scope, { endpoint, content })
-      await twilio.send(scope, endpoint, { text: 'yoyo' })
-    })
-
-    for (const [key, val] of Object.entries<any>(this.config)) {
-      if (val.twilio) {
-        await twilio.start(key, val.twilio)
-        this.log('conf', key, val.twilio)
-      }
-    }
-  }
-
-  private async setupSmooch() {
-    const twilio = new SmoochChannel()
-    await twilio.setup(this.router)
-
-    twilio.on('message', async ({ scope, endpoint, content }) => {
-      this.log('message', scope, { endpoint, content })
-      await twilio.send(scope, endpoint, { text: 'yoyo' })
-    })
-
-    for (const [key, val] of Object.entries<any>(this.config)) {
-      if (val.smooch) {
-        await twilio.start(key, val.smooch)
-        this.log('conf', key, val.smooch)
+      if (val[name]) {
+        await channel.start(key, val[name])
+        this.log('conf', key, val[name])
       }
     }
   }
