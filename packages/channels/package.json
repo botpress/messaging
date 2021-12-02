@@ -1,0 +1,15 @@
+{
+  "name": "@botpress/messaging-channels",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn --silent && tsc --build",
+    "watch": "yarn --silent && tsc --build --watch",
+    "example": "yarn --silent && ts-node-dev --debounce 500 --transpile-only example/index.ts"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

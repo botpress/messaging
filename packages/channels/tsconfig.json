@@ -1,0 +1,14 @@
+{
+  // Manage references here
+  "references": [],
+
+  // Defaults (don't change this)
+  "extends": "../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
+  },
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
+}
