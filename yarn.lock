@@ -1874,6 +1874,14 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@formatjs/ecma402-abstract@1.11.0":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/@formatjs/ecma402-abstract/-/ecma402-abstract-1.11.0.tgz#7e91e6cc7cfebdc07171e00a3288719705e0108c"
+  integrity sha512-TOp5La9wmSh9G5bqFGN/ApmOXtJDzBGkYW+OTRd3ukY7J32RVGZPpN4O9BD651JUy66nj3g9CIENTNCgm4IRXQ==
+  dependencies:
+    "@formatjs/intl-localematcher" "0.2.21"
+    tslib "^2.1.0"
+
 "@formatjs/intl-displaynames@^1.2.0":
   version "1.2.10"
   resolved "https://registry.yarnpkg.com/@formatjs/intl-displaynames/-/intl-displaynames-1.2.10.tgz#bb9625cca90b099978cd967c6a98aaf4e23fc878"
@@ -1887,6 +1895,22 @@
   integrity sha512-WNMQlEg0e50VZrGIkgD5n7+DAMGt3boKi1GJALfhFMymslJb5i+5WzWxyj/3a929Z6MAFsmzRIJjKuv+BxKAOQ==
   dependencies:
     "@formatjs/intl-utils" "^2.3.0"
+
+"@formatjs/intl-localematcher@0.2.21":
+  version "0.2.21"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-localematcher/-/intl-localematcher-0.2.21.tgz#39ef33d701fe8084f3d693cd3ff7cbe03cdd3a49"
+  integrity sha512-JTJeLiNwexN4Gy0cMxoUPvJbKhXdnSuo5jPrDafEZpnDWlJ5VDYta8zUVVozO/pwzEmFVHEUpgiEDj+39L4oMg==
+  dependencies:
+    tslib "^2.1.0"
+
+"@formatjs/intl-pluralrules@^4.1.6":
+  version "4.1.6"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-pluralrules/-/intl-pluralrules-4.1.6.tgz#f452000de001f6540cfea01bd0f8c9eb7de9fa9a"
+  integrity sha512-pVo1x8nAC72SF2CBCLSa/3ec6e/6+UcgEJyJN67lsLmXePSwWeGv1Bn7FpNcvQJ7LxbmxAk/ErfuTa3ZM6UKFw==
+  dependencies:
+    "@formatjs/ecma402-abstract" "1.11.0"
+    "@formatjs/intl-localematcher" "0.2.21"
+    tslib "^2.1.0"
 
 "@formatjs/intl-relativetimeformat@^4.5.9":
   version "4.5.16"
@@ -1906,6 +1930,13 @@
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@formatjs/intl-utils/-/intl-utils-2.3.0.tgz#2dc8c57044de0340eb53a7ba602e59abf80dc799"
   integrity sha512-KWk80UPIzPmUg+P0rKh6TqspRw0G6eux1PuJr+zz47ftMaZ9QDwbGzHZbtzWkl5hgayM/qrKRutllRC7D/vVXQ==
+
+"@formatjs/intl-utils@^3.8.4":
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/@formatjs/intl-utils/-/intl-utils-3.8.4.tgz#291baac91001db428fc3275c515a3e40fbe95945"
+  integrity sha512-j5C6NyfKevIxsfLK8KwO1C0vvP7k1+h4A9cFpc+cr6mEwCc1sPkr17dzh0Ke6k9U5pQccAQoXdcNBl3IYa4+ZQ==
+  dependencies:
+    emojis-list "^3.0.0"
 
 "@gar/promisify@^1.0.1":
   version "1.1.2"
@@ -3521,7 +3552,7 @@
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
   integrity sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
 
-"@types/dom-mediacapture-record@^1.0.11", "@types/dom-mediacapture-record@^1.0.7":
+"@types/dom-mediacapture-record@^1.0.11":
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/@types/dom-mediacapture-record/-/dom-mediacapture-record-1.0.11.tgz#f61b17e6131d76629d4039b02634c7e786b82c3a"
   integrity sha512-ODVOH95x08arZhbQOjH3no7Iye64akdO+55nM+IGtTzpu2ACKr9CQTrI//CCVieIjlI/eL+rK1hQjMycxIgylQ==
@@ -16864,7 +16895,7 @@ tsconfig@^7.0.0:
     strip-bom "^3.0.0"
     strip-json-comments "^2.0.0"
 
-tslib@2.3.1, tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.3.0:
+tslib@2.3.1, tslib@^2.0.0, tslib@^2.0.1, tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
   integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==

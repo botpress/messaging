@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { WrappedComponentProps, injectIntl } from 'react-intl'
 
 import { RootStore, StoreDef } from '../store'
 
@@ -80,7 +80,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   rtl: store.rtl
 }))(injectIntl(observer(Container)))
 
-type ContainerProps = { store?: RootStore } & InjectedIntlProps &
+type ContainerProps = { store?: RootStore } & WrappedComponentProps &
   Pick<
     StoreDef,
     | 'config'

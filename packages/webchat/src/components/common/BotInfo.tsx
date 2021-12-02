@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import * as React from 'react'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { FormattedMessage, WrappedComponentProps, injectIntl } from 'react-intl'
 
 import EmailIcon from '../../icons/Email'
 import PhoneIcon from '../../icons/Phone'
@@ -148,7 +148,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   rtl: store.rtl
 }))(injectIntl(observer(BotInfoPage)))
 
-type BotInfoProps = InjectedIntlProps &
+type BotInfoProps = WrappedComponentProps &
   Pick<
     StoreDef,
     | 'botInfo'

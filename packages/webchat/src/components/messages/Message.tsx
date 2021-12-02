@@ -2,7 +2,7 @@ import ReactMessageRenderer from '@botpress/messaging-components'
 import classnames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { WrappedComponentProps, injectIntl } from 'react-intl'
 
 import { RootStore, StoreDef } from '../../store'
 import { Renderer } from '../../typings'
@@ -117,4 +117,4 @@ export default inject(({ store }: { store: RootStore }) => ({
   intl: store.intl
 }))(injectIntl(observer(Message)))
 
-type MessageProps = Renderer.Message & InjectedIntlProps & Pick<StoreDef, 'intl'>
+type MessageProps = Renderer.Message & WrappedComponentProps & Pick<StoreDef, 'intl'>
