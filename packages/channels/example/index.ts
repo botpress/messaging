@@ -1,6 +1,9 @@
+import clc from 'cli-color'
 import express from 'express'
 import { TelegramChannel } from '../src/telegram/channel'
 import config from './config.json'
+
+console.info('====================\n' + `  ${clc.magentaBright('channels example')}\n` + '====================\n')
 
 const app = express()
 
@@ -19,11 +22,12 @@ const setup = async () => {
 
   for (const [key, val] of Object.entries(config)) {
     await telegram.start(key, val)
-    console.info('Configured', key, val)
+    console.info(clc.blue('conf'), clc.greenBright(key), val)
   }
 
-  app.listen(3100)
-  console.info('Channels example listening at : http://localhost:3100')
+  const port = 3100
+  app.listen(port)
+  console.info(`\n${clc.blue('listening')} http://localhost:${clc.cyan(port)}`)
 }
 
 void setup()
