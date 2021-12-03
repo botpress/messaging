@@ -1,7 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { ServerCache } from '@botpress/messaging-engine'
 import yn from 'yn'
-import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientEvents, ClientUpdatedEvent } from '../clients/events'
 import { ClientService } from '../clients/service'
@@ -13,7 +11,6 @@ import { StatusService } from '../status/service'
 import { InstanceService } from './service'
 
 export class InstanceInvalidator {
-  private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private lazyLoadingEnabled!: boolean
 
   constructor(
@@ -25,8 +22,7 @@ export class InstanceInvalidator {
     private instances: InstanceService
   ) {}
 
-  async setup(cache: ServerCache<uuid, ConduitInstance<any, any>>) {
-    this.cache = cache
+  async setup() {
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
 
     this.conduits.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
@@ -40,33 +36,33 @@ export class InstanceInvalidator {
     const conduit = (await this.conduits.get(conduitId))!
     const channel = this.channels.getById(conduit.channelId)
 
-    if (channel.initiable) {
+    if (channel.meta.initiable) {
       await this.instances.initialize(conduitId)
     }
 
-    if (!channel.lazy || !this.lazyLoadingEnabled) {
-      await this.instances.get(conduit.id)
+    if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
+      await this.instances.start(conduit.id)
     }
   }
 
   private async onConduitDeleting(conduitId: uuid) {
-    this.cache.del(conduitId, true)
+    await this.instances.stop(conduitId)
   }
 
   private async onConduitUpdated(conduitId: uuid) {
-    this.cache.del(conduitId, true)
+    await this.instances.stop(conduitId)
     await this.status.updateInitializedOn(conduitId, undefined)
     await this.status.clearErrors(conduitId)
 
     const conduit = (await this.conduits.get(conduitId))!
     const channel = this.channels.getById(conduit.channelId)
 
-    if (channel.initiable) {
+    if (channel.meta.initiable) {
       await this.instances.initialize(conduitId)
     }
 
-    if (!channel.lazy || !this.lazyLoadingEnabled) {
-      await this.instances.get(conduit.id)
+    if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
+      await this.instances.start(conduit.id)
     }
   }
 
@@ -84,7 +80,7 @@ export class InstanceInvalidator {
 
     const conduits = await this.conduits.listByProvider(oldClient.providerId)
     for (const conduit of conduits) {
-      this.cache.del(conduit.id, true)
+      await this.instances.stop(conduit.id)
     }
   }
 
@@ -92,7 +88,7 @@ export class InstanceInvalidator {
     const conduits = await this.conduits.listByProvider(providerId)
 
     for (const conduit of conduits) {
-      this.cache.del(conduit.id, true)
+      await this.instances.stop(conduit.id)
     }
   }
 }

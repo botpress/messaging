@@ -72,8 +72,7 @@ export class App extends Engine {
       this.messages,
       this.clients,
       this.mapping,
-      this.status,
-      this
+      this.status
     )
     this.syncs = new SyncService(
       this.logger,

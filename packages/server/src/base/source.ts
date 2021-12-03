@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { Endpoint } from '../mapping/types'
+import { Endpoint } from '@botpress/messaging-channels'
 
 /**
  * Indicates whether an action is performed due to a request made by

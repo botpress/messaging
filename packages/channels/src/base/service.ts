@@ -16,12 +16,25 @@ export abstract class ChannelService<
   stop: { scope: string }
 }> {
   protected states: { [scope: string]: TState } = {}
+  protected startCallback?: (scope: string) => Promise<TConfig>
 
   async setup() {}
 
   async start(scope: string, config: TConfig) {
     this.states[scope] = await this.create(scope, config)
     await this.emit('start', { scope })
+  }
+
+  async require(scope: string) {
+    if (this.get(scope)) {
+      return
+    }
+
+    await this.start(scope, await this.startCallback!(scope))
+  }
+
+  autoStart(callback: (scope: string) => Promise<TConfig>) {
+    this.startCallback = callback
   }
 
   abstract create(scope: string, config: TConfig): Promise<TState>

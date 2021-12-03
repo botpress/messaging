@@ -64,7 +64,11 @@ export class StreamService extends Service {
     }
 
     const channel = this.channels.getById(conduit!.channelId)
-    await this.stream('health.new', { channel: channel.name, event: { ...this.health.makeReadable(event) } }, client.id)
+    await this.stream(
+      'health.new',
+      { channel: channel.meta.name, event: { ...this.health.makeReadable(event) } },
+      client.id
+    )
   }
 
   private async handleUserCreated({ user }: UserCreatedEvent) {
@@ -150,7 +154,7 @@ export class StreamService extends Service {
     const convmaps = await this.mapping.convmap.listByConversationId(conversationId)
     if (convmaps.length === 1) {
       const tunnel = await this.mapping.tunnels.get(convmaps[0].tunnelId)
-      return this.channels.getById(tunnel!.channelId).name
+      return this.channels.getById(tunnel!.channelId).meta.name
     } else {
       return 'messaging'
     }
