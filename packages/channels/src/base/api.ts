@@ -2,15 +2,21 @@ import { Request, Router, Response, RequestHandler } from 'express'
 import { ChannelService } from './service'
 
 export class ChannelApi<TService extends ChannelService<any, any>> {
+  protected urlCallback?: (scope: string) => Promise<string>
+
   constructor(protected readonly service: TService) {}
 
   async setup(router: ChannelApiManager) {}
+
+  makeUrl(callback: (scope: string) => Promise<string>) {
+    this.urlCallback = callback
+  }
 }
 
 export type Middleware<T> = (req: T, res: Response) => Promise<any>
 
 export class ChannelApiManager {
-  constructor(public router: Router) {}
+  constructor(private service: ChannelService<any, any>, private router: Router) {}
 
   post(path: string, fn: Middleware<ChannelApiRequest>) {
     this.wrap('post', path, fn)
@@ -34,6 +40,7 @@ export class ChannelApiManager {
       this.asyncMiddleware(async (req, res) => {
         const nreq = req as ChannelApiRequest
         nreq.scope = req.params.scope
+        await this.service.require(nreq.scope)
         await fn(nreq, res)
       })
     )

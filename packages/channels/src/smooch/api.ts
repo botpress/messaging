@@ -9,12 +9,24 @@ export class SmoochApi extends ChannelApi<SmoochService> {
   async setup(router: ChannelApiManager) {
     router.use('/smooch', express.json())
     router.post('/smooch', this.handleRequest.bind(this))
+
+    this.service.on('start', this.handleStart.bind(this))
+  }
+
+  protected async handleStart({ scope }: { scope: string }) {
+    const state = this.service.get(scope)
+
+    const { webhooks } = await state.smooch.webhooks.list()
+    const target = await this.urlCallback!(scope)
+    const webhook = webhooks.find((x: any) => x.target === target)
+
+    state.webhookSecret = webhook?.secret
   }
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {
-    const { config } = this.service.get(req.scope)
+    const { webhookSecret } = this.service.get(req.scope)
 
-    if (req.headers['x-api-key'] === (config as any).webhookSecret) {
+    if (webhookSecret?.length && req.headers['x-api-key'] === webhookSecret) {
       const body = req.body
 
       // postbacks is used when a button is clicked
