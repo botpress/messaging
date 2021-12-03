@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { Channel, TelegramChannel, TwilioChannel } from '@botpress/messaging-channels'
+import { Channel, TeamsChannel, TelegramChannel, TwilioChannel } from '@botpress/messaging-channels'
 import { Service, DatabaseService } from '@botpress/messaging-engine'
 import { ChannelTable } from './table'
 
@@ -15,7 +15,7 @@ export class ChannelService extends Service {
 
     this.table = new ChannelTable()
 
-    this.channels = [new TelegramChannel(), new TwilioChannel()]
+    this.channels = [new TeamsChannel(), new TelegramChannel(), new TwilioChannel()]
 
     this.channelsByName = {}
     this.channelsById = {}
