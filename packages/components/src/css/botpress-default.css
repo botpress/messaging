@@ -467,7 +467,6 @@ body {
   box-sizing: border-box;
   color: rgba(0, 0, 0, 1);
   line-height: 1.28em;
-  margin-right: 3px;
   min-height: 150px;
   max-height: 410px;
   border: 1px solid rgba(0, 0, 0, 0.1);
