@@ -115,7 +115,7 @@ export class StreamService extends Service {
     }
   }
 
-  private async stream(type: string, data: any, clientId: uuid, userId?: uuid, source?: ActionSource) {
+  async stream(type: string, data: any, clientId: uuid, userId?: uuid, source?: ActionSource) {
     const payload = {
       type,
       data: {

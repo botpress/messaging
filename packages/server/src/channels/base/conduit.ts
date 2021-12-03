@@ -78,8 +78,9 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     }
   }
 
-  async receive<T>(payload: T) {
+  async receive<T>(payload: T, started?: boolean) {
     const conduit = (await this.app.conduits.get(this.conduitId))!
+    const channel = this.app.channels.getById(conduit!.channelId)
     const provider = (await this.app.providers.getById(conduit.providerId))!
     const endpoint = await this.extractEndpoint(payload)
 
@@ -96,9 +97,22 @@ export abstract class ConduitInstance<TConfig, TContext extends ChannelContext<a
     }
 
     const { userId, conversationId } = await this.app.mapping.getMapping(clientId, conduit.channelId, endpoint)
-    return this.app.messages.create(conversationId, userId, endpoint.content, {
-      conduit: { id: this.conduitId, endpoint: _.omit(endpoint, 'content') }
-    })
+
+    if (started) {
+      await this.app.stream.stream(
+        'conversation.started',
+        { conversationId, channel: channel.name },
+        clientId,
+        userId,
+        {
+          conduit: { id: this.conduitId, endpoint }
+        }
+      )
+    } else {
+      return this.app.messages.create(conversationId, userId, endpoint.content, {
+        conduit: { id: this.conduitId, endpoint: _.omit(endpoint, 'content') }
+      })
+    }
   }
 
   async initialize() {}
