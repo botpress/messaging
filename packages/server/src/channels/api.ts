@@ -10,6 +10,10 @@ export class ChannelApi {
     for (const channel of this.app.channels.list()) {
       await channel.setup(whRouter)
 
+      channel.api.makeUrl(async (scope: string) => {
+        return `${process.env.EXTERNAL_URL}/webhooks/${scope}/${channel.meta.name}`
+      })
+
       channel.on('message', async ({ scope, endpoint, content }) => {
         const provider = await this.app.providers.getByName(scope)
         const conduit = await this.app.conduits.getByProviderAndChannel(provider!.id, channel.meta.id)

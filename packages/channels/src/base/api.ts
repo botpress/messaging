@@ -2,9 +2,15 @@ import { Request, Router, Response, RequestHandler } from 'express'
 import { ChannelService } from './service'
 
 export class ChannelApi<TService extends ChannelService<any, any>> {
+  protected urlCallback?: (scope: string) => Promise<string>
+
   constructor(protected readonly service: TService) {}
 
   async setup(router: ChannelApiManager) {}
+
+  makeUrl(callback: (scope: string) => Promise<string>) {
+    this.urlCallback = callback
+  }
 }
 
 export type Middleware<T> = (req: T, res: Response) => Promise<any>

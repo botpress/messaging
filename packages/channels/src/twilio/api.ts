@@ -12,9 +12,9 @@ export class TwilioApi extends ChannelApi<TwilioService> {
   private async handleRequest(req: ChannelApiRequest, res: Response) {
     const signature = req.headers['x-twilio-signature'] as string
     const { config } = this.service.get(req.scope)
+    const webhookUrl = await this.urlCallback!(req.scope)
 
-    // TODO: what to do with webhook url?
-    if (validateRequest(config.authToken, signature, (config as any).webhookUrl, req.body)) {
+    if (validateRequest(config.authToken, signature, webhookUrl, req.body)) {
       const botPhoneNumber = req.body.To
       const userPhoneNumber = req.body.From
       const content = { type: 'text', text: req.body.Body }
