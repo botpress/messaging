@@ -5,6 +5,7 @@ import { SmoochConfig } from './config'
 
 export interface SmoochState extends ChannelState<SmoochConfig> {
   smooch: Smooch
+  webhookSecret?: string
 }
 
 export class SmoochService extends ChannelService<SmoochConfig, SmoochState> {

@@ -24,7 +24,11 @@ export class App {
       await channel.send(scope, endpoint, { text: 'yoyo' })
     })
 
-    for (const [key, val] of Object.entries<any>(this.config)) {
+    channel.api.makeUrl(async (scope: string) => {
+      return `${this.config.externalUrl}/webhooks/${scope}/${channel.meta.name}`
+    })
+
+    for (const [key, val] of Object.entries<any>(this.config.scopes)) {
       if (val[name]) {
         await channel.start(key, val[name])
         this.log('conf', name, key, val[name])

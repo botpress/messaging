@@ -18,7 +18,9 @@ const setup = async () => {
   const port = 3100
   exp.use('/webhooks', router)
   exp.listen(port)
-  console.info(`${clc.blue('listening')} http://localhost:${clc.cyan(port)}`)
+
+  console.info(`${clc.cyan('url')} ${config.externalUrl}`)
+  console.info(`${clc.cyan('port')} ${port}`)
 }
 
 void setup()
