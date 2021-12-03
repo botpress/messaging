@@ -45,6 +45,8 @@ export class MigrationService extends Service {
   }
 
   private async migrate() {
+    this.validateSrcAndDst()
+
     const migrations = this.listMigrationsToRun()
     if (!migrations.length && !this.isDry && !process.env.MIGRATE_CMD?.length) {
       return
@@ -64,6 +66,24 @@ export class MigrationService extends Service {
     }
 
     await this.runMigrations(migrations)
+  }
+
+  private validateSrcAndDst() {
+    if (this.isDown && semver.gt(this.dstVersion, this.srcVersion)) {
+      this.logger.error(
+        undefined,
+        `Invalid migration parameters: down migration cannot target a version (${this.dstVersion}) higher than the current server version (${this.srcVersion})`
+      )
+      throw new ShutDownSignal(1)
+    }
+
+    if (!this.isDown && semver.lt(this.dstVersion, this.srcVersion)) {
+      this.logger.error(
+        undefined,
+        `Invalid migration parameters: up migration cannot target a version (${this.dstVersion}) lower than the current server version (${this.srcVersion})`
+      )
+      throw new ShutDownSignal(1)
+    }
   }
 
   private async runMigrations(migrations: Migration[]) {
