@@ -84,6 +84,16 @@ export class MigrationService extends Service {
       )
       throw new ShutDownSignal(1)
     }
+
+    if (semver.gt(this.dstVersion, this.meta.app().version)) {
+      this.logger.error(
+        undefined,
+        `Invalid migration parameters: up migration cannot target a version (${
+          this.dstVersion
+        }) higher than the application version (${this.meta.app().version})`
+      )
+      throw new ShutDownSignal(1)
+    }
   }
 
   private async runMigrations(migrations: Migration[]) {
