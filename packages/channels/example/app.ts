@@ -7,6 +7,7 @@ import { SmoochChannel } from '../src/smooch/channel'
 import { TeamsChannel } from '../src/teams/channel'
 import { TelegramChannel } from '../src/telegram/channel'
 import { TwilioChannel } from '../src/twilio/channel'
+import { VonageChannel } from '../src/vonage/channel'
 
 export class App {
   constructor(private router: Router, private config: any) {}
@@ -18,6 +19,7 @@ export class App {
     await this.setupChannel('teams', new TeamsChannel())
     await this.setupChannel('slack', new SlackChannel())
     await this.setupChannel('messenger', new MessengerChannel())
+    await this.setupChannel('vonage', new VonageChannel())
   }
 
   async setupChannel(name: string, channel: Channel<any, any, any, any>) {
