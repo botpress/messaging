@@ -1,13 +1,13 @@
-import { addLocaleData } from 'react-intl'
-import localeAr from 'react-intl/locale-data/ar'
-import localeDe from 'react-intl/locale-data/de'
-import localeEn from 'react-intl/locale-data/en'
-import localeEs from 'react-intl/locale-data/es'
-import localeFr from 'react-intl/locale-data/fr'
-import localeIt from 'react-intl/locale-data/it'
-import localePt from 'react-intl/locale-data/pt'
-import localeRu from 'react-intl/locale-data/ru'
-import localeUk from 'react-intl/locale-data/uk'
+require('@formatjs/intl-pluralrules/polyfill')
+require('@formatjs/intl-pluralrules/locale-data/ar')
+require('@formatjs/intl-pluralrules/locale-data/de')
+require('@formatjs/intl-pluralrules/locale-data/en')
+require('@formatjs/intl-pluralrules/locale-data/es')
+require('@formatjs/intl-pluralrules/locale-data/fr')
+require('@formatjs/intl-pluralrules/locale-data/it')
+require('@formatjs/intl-pluralrules/locale-data/pt')
+require('@formatjs/intl-pluralrules/locale-data/ru')
+require('@formatjs/intl-pluralrules/locale-data/uk')
 
 import ar from './ar.json'
 import de from './de.json'
@@ -54,18 +54,4 @@ const getUserLocale = (manualLocale: Locale = 'browser') => {
   return translations[browserLocale] ? browserLocale : DEFAULT_LOCALE
 }
 
-const initializeLocale = () => {
-  addLocaleData([
-    ...localeEn,
-    ...localeFr,
-    ...localePt,
-    ...localeEs,
-    ...localeAr,
-    ...localeRu,
-    ...localeUk,
-    ...localeDe,
-    ...localeIt
-  ])
-}
-
-export { initializeLocale, translations, DEFAULT_LOCALE as defaultLocale, getUserLocale }
+export { translations, DEFAULT_LOCALE as defaultLocale, getUserLocale }

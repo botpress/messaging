@@ -15,4 +15,5 @@ const ReactMessageRenderer: FC<ReactMessageRendererProps> = ({ content, config, 
 }
 
 export default ReactMessageRenderer
-export { defaultMessageConfig, Content, MessageType, MessageConfig, Renderer }
+
+export { defaultRenderer, defaultMessageConfig, Content, MessageType, MessageConfig, Renderer }
