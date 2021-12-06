@@ -34,6 +34,10 @@ export class ChannelApiManager {
     this.router.use(`/:scope${path}`, fn)
   }
 
+  postRaw(path: string, fn: RequestHandler) {
+    this.router.post(`/:scope${path}`, fn)
+  }
+
   protected wrap(type: 'post' | 'get' | 'delete' | 'use', path: string, fn: Middleware<ChannelApiRequest>) {
     this.router[type](
       `/:scope${path}`,
