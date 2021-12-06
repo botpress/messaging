@@ -1,4 +1,6 @@
-# Botpress Message React Renderer
+# Botpress Messaging Components
+
+A set of React Components to display Messaging content-types
 
 ## Usage
 

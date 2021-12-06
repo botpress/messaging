@@ -99,3 +99,18 @@
 .slick-arrow.slick-hidden {
   display: none;
 }
+
+/* CUSTOM CSS TO IMPROVE CAROUSEL DISPLAY */
+.slick-arrow {
+  background-color: #fff;
+  border: 1px solid #dddfe2;
+  width: 32px;
+  height: 32px;
+  border-radius: 3px;
+  box-shadow: none;
+  color: #444;
+  z-index: 1;
+}
+.slick-arrow:before {
+  color: #444;
+}
