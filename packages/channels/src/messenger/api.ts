@@ -7,7 +7,7 @@ import { MessengerService } from './service'
 export class MessengerApi extends ChannelApi<MessengerService> {
   async setup(router: ChannelApiManager) {
     router.use('/messenger', express.json({ verify: this.prepareAuth.bind(this) }))
-    router.postRaw('/messenger', this.auth.bind(this))
+    router.post('/messenger', this.auth.bind(this))
 
     router.get('/messenger', this.handleWebhookVerification.bind(this))
     router.post('/messenger', this.handleMessageRequest.bind(this))
