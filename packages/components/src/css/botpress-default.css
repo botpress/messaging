@@ -434,7 +434,7 @@ body {
   border-bottom-left-radius: 0px;
 }
 
-.bpw-keyboard-quick_reply {
+.bpw-keyboard-single-choice {
   background-color: #fbfbfb;
   padding: 15px 20px;
   text-align: left;
@@ -619,7 +619,7 @@ body {
   right: 0;
 }
 
-.bpw-keyboard-quick_reply-dropdown {
+.bpw-keyboard-single-choice-dropdown {
   margin: 0.2rem 0.5rem;
 }
 
@@ -1085,6 +1085,6 @@ body {
   direction: rtl;
 }
 
-.bpw-rtl .bpw-keyboard-quick_reply-dropdown {
+.bpw-rtl .bpw-keyboard-single-choice-dropdown {
   direction: rtl;
 }
