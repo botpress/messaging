@@ -1,7 +1,7 @@
 import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import { FormattedMessage, InjectedIntlProps, injectIntl } from 'react-intl'
+import { WrappedComponentProps, injectIntl } from 'react-intl'
 
 // import ToolTip from '../../../../../../packages/ui-shared-lite/ToolTip'
 import { RootStore, StoreDef } from '../store'
@@ -186,7 +186,7 @@ type ComposerProps = {
   composerPlaceholder: string
   composerLocked: boolean
   composerHidden: boolean
-} & InjectedIntlProps &
+} & WrappedComponentProps &
   Pick<
     StoreDef,
     | 'botName'

@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce'
 import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { WrappedComponentProps, injectIntl } from 'react-intl'
 
 import constants from '../../core/constants'
 import { RootStore, StoreDef } from '../../store'
@@ -251,7 +251,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   preferredLanguage: store.preferredLanguage
 }))(injectIntl(observer(MessageList)))
 
-type MessageListProps = InjectedIntlProps &
+type MessageListProps = WrappedComponentProps &
   Pick<
     StoreDef,
     | 'intl'

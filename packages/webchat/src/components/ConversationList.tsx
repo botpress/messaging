@@ -1,6 +1,7 @@
+import { selectUnit } from '@formatjs/intl-utils'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import { InjectedIntlProps, injectIntl } from 'react-intl'
+import { WrappedComponentProps, injectIntl } from 'react-intl'
 
 import Add from '../icons/Add'
 import { RootStore, StoreDef } from '../store'
@@ -8,7 +9,10 @@ import { RecentConversation } from '../typings'
 
 const ConversationListItem = injectIntl(({ conversation, onClick, hasFocus, intl }: ConversationListItemProps) => {
   const title = intl.formatMessage({ id: 'conversationList.title' }, { id: conversation.id })
-  const date = intl.formatRelative(conversation.lastMessage?.sentOn || conversation.createdOn)
+
+  const { value, unit } = selectUnit(conversation.lastMessage?.sentOn || conversation.createdOn)
+  const date = intl.formatRelativeTime(value, unit)
+
   const message = conversation.lastMessage?.payload?.text || '...'
 
   return (
@@ -30,7 +34,7 @@ type ConversationListItemProps = {
   conversation: RecentConversation
   hasFocus: boolean
   onClick: (event: React.MouseEvent) => void
-} & InjectedIntlProps &
+} & WrappedComponentProps &
   Pick<StoreDef, 'conversations' | 'fetchConversation' | 'createConversation'>
 
 class ConversationList extends React.Component<ConversationListProps> {
@@ -113,5 +117,5 @@ export default inject(({ store }: { store: RootStore }) => ({
   enableArrowNavigation: store.config.enableArrowNavigation
 }))(injectIntl(observer(ConversationList)))
 
-type ConversationListProps = InjectedIntlProps &
+type ConversationListProps = WrappedComponentProps &
   Pick<StoreDef, 'conversations' | 'fetchConversation' | 'createConversation' | 'enableArrowNavigation'>

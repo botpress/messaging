@@ -1,7 +1,7 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 import { Dropdown } from '../src/renderer/dropdown'
-import Keyboard from '../src/renderer/keyboard'
+import { Keyboard } from '../src/renderer/keyboard'
 import { defaultMessageConfig } from '../src/utils'
 
 export default {
