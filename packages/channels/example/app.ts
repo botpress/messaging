@@ -28,9 +28,18 @@ export class App {
 
     channel.on('message', async ({ scope, endpoint, content }) => {
       this.log('message', name, scope, { endpoint, content })
-      for (const payload of payloads) {
-        await channel.send(scope, endpoint, payload)
+
+      const respond = async () => {
+        try {
+          for (const payload of payloads) {
+            await channel.send(scope, endpoint, payload)
+          }
+        } catch (e) {
+          console.error('Error occurred sending message', e)
+        }
       }
+
+      void respond()
     })
 
     channel.api.makeUrl(async (scope: string) => {
