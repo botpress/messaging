@@ -3,11 +3,12 @@ import { Button } from '../base/button'
 import { ChoiceOption } from '../content-typings'
 import { MessageTypeHandlerProps } from '../typings'
 import { Prepend } from './keyboard'
+import { Text } from './text'
 
 /**
  * Displays an array of button, and handle when they are clicked
  */
-export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply'>> {
+export class SingleChoice extends Component<MessageTypeHandlerProps<'single-choice'>> {
   componentDidMount() {
     this.props.config.isLastGroup &&
       this.props.config.isLastOfGroup &&
@@ -46,12 +47,20 @@ export class QuickReplies extends Component<MessageTypeHandlerProps<'quick_reply
   }
 
   render() {
+    const shouldDisplay = this.props.config.isLastGroup && this.props.config.isLastOfGroup
     const buttons = this.props.choices
-    const keyboard = <div className={'bpw-keyboard-quick_reply'}>{buttons && this.renderKeyboard(buttons)}</div>
+    const keyboard = <div className={'bpw-keyboard-single-choice'}>{buttons && this.renderKeyboard(buttons)}</div>
     return (
-      <Prepend keyboard={keyboard} visible={this.props.config.isLastGroup && this.props.config.isLastOfGroup}>
-        {this.props.children}
-      </Prepend>
+      <div>
+        {this.props.text}
+        <Prepend keyboard={keyboard} visible={shouldDisplay}>
+          {this.props.children}
+        </Prepend>
+      </div>
     )
   }
+}
+
+export const QuickReply: React.FC<MessageTypeHandlerProps<'quick_reply'>> = ({ text, config }) => {
+  return <Text text={text} config={config} />
 }
