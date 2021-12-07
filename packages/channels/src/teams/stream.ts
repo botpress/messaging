@@ -1,15 +1,25 @@
-import { TurnContext } from 'botbuilder'
-import { ChannelSendEvent } from '../base/service'
-import { ChannelStream } from '../base/stream'
+import { ChannelContext } from '../base/context'
+import { CardToCarouselRenderer } from '../base/renderers/card'
+import { ChannelStreamRenderers } from '../base/stream'
+import { TeamsContext } from './context'
+import { TeamsRenderers } from './renderers'
+import { TeamsSenders } from './senders'
 import { TeamsService } from './service'
 
-export class TeamsStream extends ChannelStream<TeamsService> {
-  protected async handleSend({ scope, endpoint, content }: ChannelSendEvent) {
-    const { adapter } = this.service.get(scope)
-    const convoRef = await this.service.getRef(endpoint.thread)
+export class TeamsStream extends ChannelStreamRenderers<TeamsService, TeamsContext> {
+  get renderers() {
+    return [new CardToCarouselRenderer(), ...TeamsRenderers]
+  }
 
-    await adapter.continueConversation(convoRef, async (turnContext: TurnContext) => {
-      await turnContext.sendActivity({ text: content.text })
-    })
+  get senders() {
+    return TeamsSenders
+  }
+
+  protected async getContext(base: ChannelContext<any>): Promise<TeamsContext> {
+    return {
+      ...base,
+      messages: [],
+      convoRef: await this.service.getRef(base.thread)
+    }
   }
 }
