@@ -1,7 +1,11 @@
-import { ChannelService } from './service'
+import { ChannelSendEvent, ChannelService } from './service'
 
-export class ChannelStream<TService extends ChannelService<any, any>> {
+export abstract class ChannelStream<TService extends ChannelService<any, any>> {
   constructor(protected readonly service: TService) {}
 
-  async setup() {}
+  async setup() {
+    this.service.on('send', this.handleSend.bind(this))
+  }
+
+  protected abstract handleSend({ scope, endpoint, content }: ChannelSendEvent): Promise<void>
 }

@@ -1,14 +1,10 @@
 import { TurnContext } from 'botbuilder'
-import { Endpoint } from '../base/endpoint'
+import { ChannelSendEvent } from '../base/service'
 import { ChannelStream } from '../base/stream'
 import { TeamsService } from './service'
 
 export class TeamsStream extends ChannelStream<TeamsService> {
-  async setup() {
-    this.service.on('send', this.handleSend.bind(this))
-  }
-
-  private async handleSend({ scope, endpoint, content }: { scope: string; endpoint: Endpoint; content: any }) {
+  protected async handleSend({ scope, endpoint, content }: ChannelSendEvent) {
     const { adapter } = this.service.get(scope)
     const convoRef = await this.service.getRef(endpoint.thread)
 
