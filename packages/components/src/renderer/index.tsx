@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { MessageType } from '../content-typings'
 import { Message, MessageTypeHandlerProps } from '../typings'
 import { Carousel, Card } from './carousel'
-import { QuickReplies } from './choice'
+import { QuickReply, SingleChoice } from './choice'
 import { Custom } from './custom'
 import { Dropdown } from './dropdown'
 import { Video, Audio, Image, File } from './file'
@@ -13,7 +13,8 @@ import { VoiceMessage } from './voice'
 
 export const defaultTypesRenderers = {
   text: Text,
-  quick_reply: QuickReplies,
+  'single-choice': SingleChoice,
+  quick_reply: QuickReply,
   login_prompt: LoginPrompt,
   carousel: Carousel,
   card: Card,
@@ -95,7 +96,8 @@ export {
   Video,
   Audio,
   Text,
-  QuickReplies,
+  SingleChoice,
+  QuickReply,
   LoginPrompt,
   Dropdown,
   VoiceMessage,

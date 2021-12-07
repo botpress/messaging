@@ -11,6 +11,7 @@ export const messageTypes = [
   'card',
   'carousel',
   'location',
+  'single-choice',
   'quick_reply',
   'login_prompt',
   'session_reset',
@@ -99,10 +100,15 @@ export type ActionButton<A extends ActionType> = {
     }
   : {})
 
-export interface ChoiceContent extends BaseContent<'quick_reply'> {
+export interface ChoiceContent extends BaseContent<'single-choice'> {
   text: string
   disableFreeText?: boolean
   choices: ChoiceOption[]
+}
+
+export interface QuickReplyContent extends BaseContent<'quick_reply'> {
+  text: string
+  payload: string
 }
 
 export interface ChoiceOption {
@@ -153,8 +159,10 @@ export type Content<T extends MessageType> = T extends 'text'
   ? LocationContent
   : T extends 'dropdown'
   ? DropdownContent
-  : T extends 'quick_reply'
+  : T extends 'single-choice'
   ? ChoiceContent
+  : T extends 'quick_reply'
+  ? QuickReplyContent
   : T extends 'login_prompt'
   ? LoginPromptContent
   : T extends 'custom'

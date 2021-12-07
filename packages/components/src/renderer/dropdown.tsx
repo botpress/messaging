@@ -44,7 +44,7 @@ export const Dropdown = ({
 
   const renderSelect = (inKeyboard: boolean) => {
     return (
-      <div className={inKeyboard ? 'bpw-keyboard-quick_reply-dropdown' : ''}>
+      <div className={inKeyboard ? 'bpw-keyboard-single-choice-dropdown' : ''}>
         <div style={{ width: width || '100%', display: 'inline-block' }}>
           {allowCreation ? (
             <Creatable

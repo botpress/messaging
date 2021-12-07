@@ -1,4 +1,4 @@
-import { Request, Router, Response, RequestHandler } from 'express'
+import { Request, Router, Response, RequestHandler, NextFunction } from 'express'
 import { ChannelService } from './service'
 
 export class ChannelApi<TService extends ChannelService<any, any>> {
@@ -13,7 +13,7 @@ export class ChannelApi<TService extends ChannelService<any, any>> {
   }
 }
 
-export type Middleware<T> = (req: T, res: Response) => Promise<any>
+export type Middleware<T> = (req: T, res: Response, next: NextFunction) => Promise<any>
 
 export class ChannelApiManager {
   constructor(private service: ChannelService<any, any>, private router: Router) {}
@@ -34,25 +34,21 @@ export class ChannelApiManager {
     this.router.use(`/:scope${path}`, fn)
   }
 
-  postRaw(path: string, fn: RequestHandler) {
-    this.router.post(`/:scope${path}`, fn)
-  }
-
   protected wrap(type: 'post' | 'get' | 'delete' | 'use', path: string, fn: Middleware<ChannelApiRequest>) {
     this.router[type](
       `/:scope${path}`,
-      this.asyncMiddleware(async (req, res) => {
+      this.asyncMiddleware(async (req, res, next) => {
         const nreq = req as ChannelApiRequest
         nreq.scope = req.params.scope
         await this.service.require(nreq.scope)
-        await fn(nreq, res)
+        await fn(nreq, res, next)
       })
     )
   }
 
   protected asyncMiddleware(fn: Middleware<Request>) {
-    return (req: Request, res: Response) => {
-      fn(req, res).catch((e) => {
+    return (req: Request, res: Response, next: NextFunction) => {
+      fn(req, res, next).catch((e) => {
         console.error(`Error occurred calling route ${req.originalUrl}`, e)
         return res.sendStatus(200)
       })

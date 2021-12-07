@@ -18,14 +18,14 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     const state = this.service.get(req.scope)
 
     if (req.params.token === state.config.botToken) {
-      state.callback(req, res)
+      state.callback!(req, res)
     } else {
       res.sendStatus(401)
     }
   }
 
   private async handleStart({ scope }: { scope: string }) {
-    const { telegraf } = this.service.get(scope)
+    const { config, telegraf } = this.service.get(scope)
 
     telegraf.start(async (ctx) => {
       try {
@@ -55,6 +55,16 @@ export class TelegramApi extends ChannelApi<TelegramService> {
         console.error('Error occurred processing callback query', e)
       }
     })
+
+    // todo: need a way to check if we can use long polling
+    if (process.env.TODO) {
+      //!this.useWebhook()) {
+      await telegraf.telegram.deleteWebhook()
+      telegraf.startPolling()
+    } else {
+      const callback = telegraf.webhookCallback(`/${config.botToken}`)
+      this.service.get(scope).callback = callback
+    }
   }
 
   private async receive(scope: string, ctx: TelegrafContext) {
