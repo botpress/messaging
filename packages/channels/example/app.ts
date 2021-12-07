@@ -8,6 +8,7 @@ import { TeamsChannel } from '../src/teams/channel'
 import { TelegramChannel } from '../src/telegram/channel'
 import { TwilioChannel } from '../src/twilio/channel'
 import { VonageChannel } from '../src/vonage/channel'
+import payloads from './payloads.json'
 
 export class App {
   constructor(private router: Router, private config: any) {}
@@ -27,7 +28,18 @@ export class App {
 
     channel.on('message', async ({ scope, endpoint, content }) => {
       this.log('message', name, scope, { endpoint, content })
-      await channel.send(scope, endpoint, { text: 'yoyo' })
+
+      const respond = async () => {
+        try {
+          for (const payload of payloads) {
+            await channel.send(scope, endpoint, payload)
+          }
+        } catch (e) {
+          console.error('Error occurred sending message', e)
+        }
+      }
+
+      void respond()
     })
 
     channel.api.makeUrl(async (scope: string) => {

@@ -1,7 +1,8 @@
 import { Endpoint } from './endpoint'
+import { ChannelState } from './service'
 
-export type ChannelContext<TClient> = {
-  client: TClient
+export type ChannelContext<TState extends ChannelState<any>> = {
+  state: TState
   handlers: number
   payload: any
 } & Endpoint

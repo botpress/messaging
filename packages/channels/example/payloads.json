@@ -1,0 +1,91 @@
+[
+  { "type": "text", "text": "yoyo", "typing": true },
+  {
+    "type": "image",
+    "title": "ducky duck duck",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Mallard2.jpg",
+    "typing": true
+  },
+  {
+    "type": "card",
+    "title": "A banana card",
+    "subtitle": "This is a banana",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Banana-Single.jpg",
+    "actions": [
+      {
+        "action": "Open URL",
+        "title": "Learn more",
+        "url": "https://en.wikipedia.org/wiki/Banana"
+      },
+      {
+        "action": "Say something",
+        "title": "Say Banana!",
+        "text": "Banana!!!"
+      },
+      {
+        "action": "Postback",
+        "title": "Post banana",
+        "payload": "BANANA"
+      }
+    ]
+  },
+  {
+    "type": "carousel",
+    "items": [
+      {
+        "title": "Dinosaurs",
+        "subtitle": "A bunch of dinosaurs",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/2/28/Macronaria_scrubbed_enh.jpg",
+        "actions": [
+          {
+            "action": "Open URL",
+            "title": "Learn more",
+            "url": "https://en.wikipedia.org/wiki/Dinosaur"
+          },
+          {
+            "action": "Postback",
+            "title": "Cool",
+            "payload": "COOL"
+          }
+        ]
+      },
+      {
+        "title": "T-Rex",
+        "subtitle": "A big dinosaur",
+        "image": "https://d.newsweek.com/en/full/986534/gettyimages-967254666.jpg",
+        "actions": [
+          {
+            "action": "Say something",
+            "title": "Roar",
+            "text": "Woof woof"
+          }
+        ]
+      },
+      {
+        "title": "T-Bone",
+        "subtitle": "A big steak",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/9/91/T-bone-raw-MCB.jpg",
+        "actions": [
+          {
+            "action": "Open URL",
+            "title": "Learn more",
+            "url": "https://en.wikipedia.org/wiki/T-bone_steak"
+          },
+          {
+            "action": "Say something",
+            "title": "Miam",
+            "text": "Miam Miam"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "single-choice",
+    "text": "Make a choice :",
+    "choices": [
+      { "title": "Yay", "value": "YES" },
+      { "title": "Nay", "value": "NO" }
+    ]
+  }
+]
