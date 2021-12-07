@@ -1,13 +1,9 @@
-import { Endpoint } from '../base/endpoint'
+import { ChannelSendEvent } from '../base/service'
 import { ChannelStream } from '../base/stream'
 import { VonageService } from './service'
 
 export class VonageStream extends ChannelStream<VonageService> {
-  async setup() {
-    this.service.on('send', this.handleSend.bind(this))
-  }
-
-  private async handleSend({ scope, endpoint, content }: { scope: string; endpoint: Endpoint; content: any }) {
+  protected async handleSend({ scope, endpoint, content }: ChannelSendEvent) {
     const { vonage, config } = this.service.get(scope)
 
     const message = {
