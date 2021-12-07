@@ -27,9 +27,9 @@ describe('Status', () => {
 
     const provider = await app.providers.create(crypto.randomBytes(20).toString('hex'), false)
     const channel = app.channels.getByName('twilio')
-    const conduit = await app.conduits.create(provider.id, channel.id, { accountSID: 'abc', authToken: 'sds' })
+    const conduit = await app.conduits.create(provider.id, channel.meta.id, { accountSID: 'abc', authToken: 'sds' })
     const channel2 = app.channels.getByName('slack')
-    const conduit2 = await app.conduits.create(provider.id, channel2.id, { botToken: 'abc', signingSecret: 'sds' })
+    const conduit2 = await app.conduits.create(provider.id, channel2.meta.id, { botToken: 'abc', signingSecret: 'sds' })
 
     status = app.status
     state = {
