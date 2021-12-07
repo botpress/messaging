@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ChannelContext } from './context'
+import { ChannelContext, IndexChoiceOption } from './context'
 import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 import { ChannelSendEvent, ChannelService } from './service'
@@ -53,4 +53,9 @@ export abstract class ChannelStreamRenderers<
   }
 
   protected abstract getContext(base: ChannelContext<any>): Promise<TContext>
+
+  protected prepareIndexResponse(identity: string, sender: string, options: IndexChoiceOption[]) {
+    // TODO: do something here
+    // this.cacheIndexResponses.set(this.getIndexCacheKey(identity, sender), options)
+  }
 }
