@@ -10,10 +10,10 @@ export abstract class ChannelService<
   TConfig extends ChannelConfig,
   TState extends ChannelState<TConfig>
 > extends Emitter<{
-  start: { scope: string }
-  send: { scope: string; endpoint: Endpoint; content: any }
-  receive: { scope: string; endpoint: Endpoint; content: any }
-  stop: { scope: string }
+  start: ChannelStartEvent
+  send: ChannelSendEvent
+  receive: ChannelReceiveEvent
+  stop: ChannelStopEvent
 }> {
   protected states: { [scope: string]: TState } = {}
   protected startCallback?: (scope: string) => Promise<TConfig>
@@ -54,4 +54,24 @@ export abstract class ChannelService<
   public get(scope: string) {
     return this.states[scope]
   }
+}
+
+export interface ChannelStartEvent {
+  scope: string
+}
+
+export interface ChannelStopEvent {
+  scope: string
+}
+
+export interface ChannelSendEvent {
+  scope: string
+  endpoint: Endpoint
+  content: any
+}
+
+export interface ChannelReceiveEvent {
+  scope: string
+  endpoint: Endpoint
+  content: any
 }

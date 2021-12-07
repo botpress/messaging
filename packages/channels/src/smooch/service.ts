@@ -1,10 +1,9 @@
-// @ts-ignore
-import Smooch from 'smooch-core'
 import { ChannelService, ChannelState } from '../base/service'
 import { SmoochConfig } from './config'
+const Smooch = require('smooch-core')
 
 export interface SmoochState extends ChannelState<SmoochConfig> {
-  smooch: Smooch
+  smooch: any
   webhookSecret?: string
 }
 

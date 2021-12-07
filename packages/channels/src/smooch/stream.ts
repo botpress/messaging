@@ -1,13 +1,9 @@
-import { Endpoint } from '../base/endpoint'
+import { ChannelSendEvent } from '../base/service'
 import { ChannelStream } from '../base/stream'
 import { SmoochService } from './service'
 
 export class SmoochStream extends ChannelStream<SmoochService> {
-  async setup() {
-    this.service.on('send', this.handleSend.bind(this))
-  }
-
-  private async handleSend({ scope, endpoint, content }: { scope: string; endpoint: Endpoint; content: any }) {
+  protected async handleSend({ scope, endpoint, content }: ChannelSendEvent) {
     const { smooch } = this.service.get(scope)
 
     await smooch.appUsers.sendMessage({
