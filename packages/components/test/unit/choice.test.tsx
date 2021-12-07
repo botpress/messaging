@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react'
 import React from 'react'
 import { Button } from '../../src/base/button'
 
-describe('Quick Reply Button element', () => {
+describe('Single Choice Button element', () => {
   test('it renders a simple button correctly', () => {
     const label = 'Hello'
     const onFileUpload = jest.fn()

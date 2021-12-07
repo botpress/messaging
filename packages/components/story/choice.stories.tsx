@@ -1,15 +1,15 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react'
 import React, { useEffect, useState } from 'react'
 import { Button } from '../src/base/button'
-import { QuickReplies } from '../src/renderer/choice'
+import { QuickReply, SingleChoice } from '../src/renderer/choice'
 import { Keyboard } from '../src/renderer/keyboard'
 import { LiteStore } from '../src/typings'
 import { defaultMessageConfig } from '../src/utils'
 
 export default {
-  title: 'QuickReplies',
-  component: QuickReplies
-} as ComponentMeta<typeof QuickReplies>
+  title: 'Choice',
+  component: SingleChoice
+} as ComponentMeta<typeof SingleChoice>
 
 class ComposerStateManager {
   public locked = false
@@ -23,7 +23,7 @@ class BasicLiteStore implements LiteStore {
   public composer = new ComposerStateManager()
 }
 
-const Template: ComponentStory<typeof QuickReplies> = (args) => {
+const Template: ComponentStory<typeof SingleChoice> = (args) => {
   const [shown, setShown] = useState<boolean>(false)
   useEffect(() => {
     setTimeout(() => {
@@ -32,7 +32,7 @@ const Template: ComponentStory<typeof QuickReplies> = (args) => {
   }, [setShown])
   return (
     <>
-      {shown && <QuickReplies {...args} />}
+      {shown && <SingleChoice {...args} />}
       <Keyboard>
         <textarea placeholder="placeholder composer" disabled={args.config.store?.composer.locked} />
       </Keyboard>
@@ -99,5 +99,17 @@ QuickReplyButton.args = {
   },
   onUploadError: (error) => {
     alert(`onUploadError called with: ${error}`)
+  }
+}
+
+const QuickReplyTemplate: ComponentStory<typeof QuickReply> = (args) => <QuickReply {...args} />
+
+export const QuickReplyText = QuickReplyTemplate.bind({})
+
+QuickReplyText.args = {
+  text: 'Selected option 1',
+  payload: 'option1',
+  config: {
+    ...defaultMessageConfig
   }
 }
