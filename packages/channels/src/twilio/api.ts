@@ -1,5 +1,6 @@
 import express, { Response } from 'express'
 import { validateRequest } from 'twilio'
+import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { TwilioService } from './service'
 
@@ -14,16 +15,22 @@ export class TwilioApi extends ChannelApi<TwilioService> {
     const { config } = this.service.get(req.scope)
     const webhookUrl = await this.urlCallback!(req.scope)
 
-    if (validateRequest(config.authToken, signature, webhookUrl, req.body)) {
-      const botPhoneNumber = req.body.To
-      const userPhoneNumber = req.body.From
-      const content = { type: 'text', text: req.body.Body }
-
-      await this.service.receive(req.scope, { identity: botPhoneNumber, sender: userPhoneNumber, thread: '*' }, content)
-
+    if (yn(process.env.TWILIO_TESTING)) {
+      await this.receive(req.scope, req.body)
+      res.sendStatus(200)
+    } else if (validateRequest(config.authToken, signature, webhookUrl, req.body)) {
+      await this.receive(req.scope, req.body)
       res.sendStatus(204)
     } else {
       res.sendStatus(401)
     }
+  }
+
+  private async receive(scope: string, body: any) {
+    const botPhoneNumber = body.To
+    const userPhoneNumber = body.From
+    const content = { type: 'text', text: body.Body }
+
+    await this.service.receive(scope, { identity: botPhoneNumber, sender: userPhoneNumber, thread: '*' }, content)
   }
 }
