@@ -15,9 +15,9 @@ import { ChannelTable } from './table'
 export class ChannelService extends Service {
   private table: ChannelTable
 
-  private channels: Channel<any, any, any, any>[]
-  private channelsByName: { [name: string]: Channel<any, any, any, any> }
-  private channelsById: { [id: string]: Channel<any, any, any, any> }
+  private channels: Channel[]
+  private channelsByName: { [name: string]: Channel }
+  private channelsById: { [id: string]: Channel }
 
   constructor(private db: DatabaseService) {
     super()
@@ -74,7 +74,7 @@ export class ChannelService extends Service {
     }
   }
 
-  private async createInDb(channel: Channel<any, any, any, any>) {
+  private async createInDb(channel: Channel) {
     await this.query().insert({
       id: channel.meta.id,
       name: channel.meta.name,

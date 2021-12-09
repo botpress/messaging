@@ -1,34 +1,40 @@
 import { Router } from 'express'
 import { ChannelApi, ChannelApiManager } from './api'
 import { ChannelConfig } from './config'
-import { Emitter } from './emitter'
 import { Endpoint } from './endpoint'
 import { ChannelMeta } from './meta'
 import { ChannelService } from './service'
 import { ChannelStream } from './stream'
 
-export abstract class Channel<
+export interface Channel {
+  get meta(): ChannelMeta
+  get scopes(): string[]
+  setup(router: Router): Promise<void>
+  start(scope: string, config: any): Promise<void>
+  initialize(scope: string): Promise<void>
+  send(scope: string, endpoint: any, content: any): Promise<void>
+  stop(scope: string): Promise<void>
+  has(scope: string): boolean
+  on(event: 'message', callback: (e: MessageEvent) => Promise<void>): void
+  autoStart(callback: (scope: string) => Promise<any>): void
+  makeUrl(callback: (scope: string) => Promise<string>): void
+}
+
+export abstract class ChannelTemplate<
   TConfig extends ChannelConfig,
   TService extends ChannelService<TConfig, any>,
   TApi extends ChannelApi<TService>,
   TStream extends ChannelStream<TService>
-> extends Emitter<{
-  message: MessageEvent
-}> {
+> implements Channel {
   abstract get meta(): ChannelMeta
 
   get scopes() {
     return this.service.scopes
   }
 
-  constructor(public readonly service: TService, public readonly api: TApi, public readonly stream: TStream) {
-    super()
-    this.service.on('receive', async (e) => {
-      await this.emit('message', e)
-    })
-  }
+  constructor(public readonly service: TService, public readonly api: TApi, public readonly stream: TStream) {}
 
-  public async setup(router: Router) {
+  async setup(router: Router) {
     await this.service.setup()
     await this.api.setup(new ChannelApiManager(this.service, router))
     await this.stream.setup()
@@ -42,10 +48,6 @@ export abstract class Channel<
     return this.service.initialize(scope)
   }
 
-  autoStart(callback: (scope: string) => Promise<TConfig>) {
-    this.service.autoStart(callback)
-  }
-
   async send(scope: string, endpoint: any, content: any) {
     return this.service.send(scope, endpoint, content)
   }
@@ -54,8 +56,20 @@ export abstract class Channel<
     return this.service.stop(scope)
   }
 
-  public has(scope: string) {
+  has(scope: string) {
     return this.service.get(scope) !== undefined
+  }
+
+  on(event: 'message', callback: (e: MessageEvent) => Promise<void>): void {
+    this.service.on('receive', callback)
+  }
+
+  autoStart(callback: (scope: string) => Promise<TConfig>) {
+    this.service.autoStart(callback)
+  }
+
+  makeUrl(callback: (scope: string) => Promise<string>): void {
+    return this.api.makeUrl(callback)
   }
 }
 

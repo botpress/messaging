@@ -62,7 +62,7 @@ export abstract class ChannelService<
     delete this.states[scope]
   }
 
-  abstract destroy(scope: string, state: TState): Promise<void>
+  async destroy(scope: string, state: TState): Promise<void> {}
 
   public get(scope: string) {
     return this.states[scope]

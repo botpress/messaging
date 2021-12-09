@@ -6,7 +6,7 @@ const SyncWebhookSchema = Joi.object({
   token: Joi.string()
 })
 
-export const makeSyncRequestSchema = (channels: Channel<any, any, any, any>[]) => {
+export const makeSyncRequestSchema = (channels: Channel[]) => {
   const channelsSchema: any = {}
 
   for (const channel of channels) {
