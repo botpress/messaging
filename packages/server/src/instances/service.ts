@@ -1,26 +1,24 @@
 import { Message, uuid } from '@botpress/messaging-base'
+import { Endpoint } from '@botpress/messaging-channels'
 import {
   CachingService,
+  DispatchService,
   DistributedService,
   Logger,
   LoggerService,
   ServerCache,
   Service
 } from '@botpress/messaging-engine'
-import ms from 'ms'
-import yn from 'yn'
-import { App } from '../app'
-import { ConduitInstance } from '../channels/base/conduit'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
 import { MappingService } from '../mapping/service'
-import { Endpoint } from '../mapping/types'
 import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
 import { StatusService } from '../status/service'
+import { InstanceDispatcher, InstanceDispatches } from './dispatch'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
@@ -33,18 +31,17 @@ export class InstanceService extends Service {
   }
 
   public readonly sandbox: InstanceSandbox
-  private destroyed: boolean
   private emitter: InstanceEmitter
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
-  private cache!: ServerCache<uuid, ConduitInstance<any, any>>
   private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
-  private lazyLoadingEnabled!: boolean
+  private dispatcher!: InstanceDispatcher
 
   constructor(
     private loggerService: LoggerService,
     private distributedService: DistributedService,
+    private dispatchService: DispatchService,
     private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
@@ -53,11 +50,9 @@ export class InstanceService extends Service {
     private messageService: MessageService,
     private clientService: ClientService,
     private mappingService: MappingService,
-    private statusService: StatusService,
-    private app: App
+    private statusService: StatusService
   ) {
     super()
-    this.destroyed = false
     this.emitter = new InstanceEmitter()
     this.invalidator = new InstanceInvalidator(
       this.channelService,
@@ -80,38 +75,31 @@ export class InstanceService extends Service {
   }
 
   async setup() {
-    this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
-
-    this.cache = await this.cachingService.newServerCache('cache_instance_by_conduit_id', {
-      dispose: async (k, v) => {
-        if (!this.destroyed) {
-          await this.handleCacheDispose(k, v)
-        }
-      },
-      max: 50000,
-      maxAge: ms('30min')
-    })
-
     this.messageQueueCache = await this.cachingService.newServerCache('cache_thread_queues_cache')
-
-    await this.invalidator.setup(this.cache)
-
+    await this.invalidator.setup()
     this.messageService.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
+
+    this.dispatcher = await this.dispatchService.create('dispatch_converse', InstanceDispatcher)
+    this.dispatcher.on(InstanceDispatches.Stop, this.handleDispatchStop.bind(this))
+
+    for (const channel of this.channelService.list()) {
+      channel.autoStart(async (providerName) => {
+        const provider = await this.providerService.getByName(providerName)
+        const conduit = await this.conduitService.getByProviderAndChannel(provider!.id, channel.meta.id)
+        return conduit!.config
+      })
+    }
   }
 
   async destroy() {
-    this.destroyed = true
-
     await this.monitoring.destroy()
 
-    if (!this.cache) {
-      return
-    }
+    for (const channel of this.channelService.list()) {
+      for (const scope of channel.scopes) {
+        const provider = await this.providerService.getByName(scope)
+        const conduit = await this.conduitService.getByProviderAndChannel(provider!.id, channel.meta.id)
 
-    for (const conduitId of this.cache.keys()) {
-      const instance = this.cache.get(conduitId)
-      if (instance) {
-        await this.handleCacheDispose(conduitId, instance)
+        await this.stop(conduit!.id)
       }
     }
   }
@@ -121,18 +109,19 @@ export class InstanceService extends Service {
   }
 
   async initialize(conduitId: uuid) {
-    const instance = await this.get(conduitId)
+    await this.start(conduitId)
+
+    const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
+    const channel = this.channelService.getById(conduit.channelId)
 
     try {
       await this.distributedService.using(`lock_dyn_instance_init::${conduitId}`, async () => {
-        await instance.initialize()
+        await channel.initialize(provider.name)
       })
     } catch (e) {
-      this.cache.del(conduitId)
-
       await this.statusService.addError(conduitId, e as Error)
-      instance.logger.error(e, 'Error trying to initialize conduit')
-
+      this.logger.error(e, 'Error trying to initialize conduit', provider.name)
       return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
     }
 
@@ -141,41 +130,56 @@ export class InstanceService extends Service {
     return this.emitter.emit(InstanceEvents.Initialized, conduitId)
   }
 
-  async get(conduitId: uuid): Promise<ConduitInstance<any, any>> {
-    const cached = this.cache.get(conduitId)
-    if (cached) {
-      return cached
-    }
-
+  async start(conduitId: uuid) {
     const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
     const channel = this.channelService.getById(conduit.channelId)
-    const instance = channel.createConduit()
+
+    if (channel.has(provider.name)) {
+      return
+    }
 
     try {
       await this.distributedService.using(`lock_dyn_instance_setup::${conduitId}`, async () => {
-        await instance.setup(conduitId, conduit.config, this.app)
+        await channel.start(provider.name, conduit.config)
+        await this.dispatcher.subscribe(conduitId)
       })
-      this.cache.set(conduitId, instance, channel.lazy && this.lazyLoadingEnabled ? undefined : Infinity)
-
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
     } catch (e) {
-      this.cache.del(conduitId)
-
       await this.statusService.addError(conduitId, e as Error)
-      instance.logger.error(e, 'Error trying to setup conduit')
-
+      this.logger.error(e, 'Error trying to setup conduit', provider.name)
       await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
     }
-
-    return instance
   }
 
-  private async handleCacheDispose(conduitId: uuid, instance: ConduitInstance<any, any>) {
+  async stop(conduitId: uuid) {
+    this.dispatcher.publish(InstanceDispatches.Stop, conduitId, {})
+  }
+
+  async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {
+    const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
+    const channel = this.channelService.getById(conduit.channelId)
+
+    await channel.send(provider.name, endpoint, content)
+  }
+
+  private async handleDispatchStop(conduitId: uuid) {
+    const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
+    const channel = this.channelService.getById(conduit.channelId)
+
+    if (!channel.has(provider.name)) {
+      return
+    }
+
     try {
-      await instance.destroy()
+      await channel.stop(provider.name)
       await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
     } catch (e) {
       this.logger.error(e, 'Error trying to destroy conduit')
+    } finally {
+      await this.dispatcher.unsubscribe(conduitId)
     }
   }
 
@@ -200,11 +204,10 @@ export class InstanceService extends Service {
           return
         }
 
-        const instance = await this.get(conduit.id)
         const queue = this.getMessageQueue(threadId)
 
         const isEmpty = queue.empty()
-        queue.enqueue({ instance, message, endpoint })
+        queue.enqueue({ conduitId: conduit.id, message, endpoint })
 
         if (isEmpty) {
           void this.runMessageQueue(queue)
@@ -231,7 +234,7 @@ export class InstanceService extends Service {
         const item = queue.peek()
 
         try {
-          await item.instance.sendToEndpoint(item.endpoint, item.message.payload)
+          await this.sendToEndpoint(item.conduitId, item.endpoint, item.message.payload)
         } catch (e) {
           this.logger.error(e, 'Failed to send message to instance')
         }
@@ -249,7 +252,7 @@ export class InstanceService extends Service {
 }
 
 interface QueuedMessage {
-  instance: ConduitInstance<any, any>
+  conduitId: uuid
   message: Message
   endpoint: Endpoint
 }

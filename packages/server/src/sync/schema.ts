@@ -1,16 +1,16 @@
+import { Channel } from '@botpress/messaging-channels'
 import Joi from 'joi'
-import { Channel } from '../channels/base/channel'
 
 const SyncWebhookSchema = Joi.object({
   url: Joi.string().uri().required(),
   token: Joi.string()
 })
 
-export const makeSyncRequestSchema = (channels: Channel<any>[]) => {
+export const makeSyncRequestSchema = (channels: Channel[]) => {
   const channelsSchema: any = {}
 
   for (const channel of channels) {
-    channelsSchema[channel.name] = channel.schema.optional()
+    channelsSchema[channel.meta.name] = channel.meta.schema.optional()
   }
 
   return Joi.object({
