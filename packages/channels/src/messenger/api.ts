@@ -1,19 +1,43 @@
 import crypto from 'crypto'
 import express, { Response, Request, NextFunction } from 'express'
 import { IncomingMessage } from 'http'
+import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
-import { ChannelInitializeEvent } from '../base/service'
+import { ChannelInitializeEvent, ChannelStartEvent } from '../base/service'
 import { MessengerService } from './service'
 
 export class MessengerApi extends ChannelApi<MessengerService> {
+  // For legacy
+  private pageIdToScope: { [pageId: string]: string } = {}
+
   async setup(router: ChannelApiManager) {
     router.use('/messenger', express.json({ verify: this.prepareAuth.bind(this) }))
-    router.post('/messenger', this.auth.bind(this))
-
+    // Legacy stuff
+    if (yn(process.env.SPINNED)) {
+      router.use('/messenger', this.mapScope.bind(this))
+    }
     router.get('/messenger', this.handleWebhookVerification.bind(this))
+
+    router.post('/messenger', this.auth.bind(this))
     router.post('/messenger', this.handleMessageRequest.bind(this))
 
+    this.service.on('start', this.handleStart.bind(this))
     this.service.on('initialize', this.handleInitialize.bind(this))
+  }
+
+  protected async handleStart({ scope }: ChannelStartEvent) {
+    // Legacy stuff
+    if (yn(process.env.SPINNED)) {
+      const { client } = this.service.get(scope)
+
+      try {
+        const pageId = await client.getPageId()
+        this.pageIdToScope[pageId] = scope
+      } catch {
+        // when in live mode this call can fail. we can work around it for new users since they are supposed to use the botId in the url
+        // we don't show an error because this is correct usage
+      }
+    }
   }
 
   protected async handleInitialize({ scope }: ChannelInitializeEvent) {
@@ -83,6 +107,17 @@ export class MessengerApi extends ChannelApi<MessengerService> {
       { identity: payload.recipient.id, sender: payload.sender.id, thread: '*' },
       content
     )
+  }
+
+  private async mapScope(req: Request, res: Response, next: NextFunction) {
+    // When spinned from botpress, it's possible to put anything in the url where the botId should be.
+    // To keep compatibility we need to use the pageId instead to identify a provider
+    if (req.body?.entry?.length) {
+      const pageId = req.body.entry[0].id
+      req.params.scope = this.pageIdToScope[pageId] || req.params.scope
+    }
+
+    next()
   }
 
   private async auth(req: Request, res: Response, next: NextFunction) {
