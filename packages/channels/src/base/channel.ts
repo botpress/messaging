@@ -25,7 +25,8 @@ export abstract class ChannelTemplate<
   TService extends ChannelService<TConfig, any>,
   TApi extends ChannelApi<TService>,
   TStream extends ChannelStream<TService>
-> implements Channel {
+> implements Channel
+{
   abstract get meta(): ChannelMeta
 
   get scopes() {
