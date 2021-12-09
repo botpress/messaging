@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
-export class TelegramConfig {
-  botToken!: string
+export interface TelegramConfig {
+  botToken: string
 }
 
 export const TelegramConfigSchema = Joi.object({
