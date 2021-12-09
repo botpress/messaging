@@ -49,7 +49,11 @@ export abstract class ChannelService<
 
   async stop(scope: string) {
     await this.emit('stop', { scope })
+    await this.destroy(scope, this.get(scope))
+    delete this.states[scope]
   }
+
+  abstract destroy(scope: string, state: TState): Promise<void>
 
   public get(scope: string) {
     return this.states[scope]

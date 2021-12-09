@@ -17,4 +17,8 @@ export class TelegramService extends ChannelService<TelegramConfig, TelegramStat
       telegraf
     }
   }
+
+  async destroy(scope: string, state: TelegramState) {
+    await state.telegraf.stop()
+  }
 }
