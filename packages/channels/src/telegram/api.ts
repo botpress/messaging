@@ -1,6 +1,8 @@
 import { Response } from 'express'
 import { TelegrafContext } from 'telegraf/typings/context'
+import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { ChannelInitializeEvent } from '../base/service'
 import { TelegramService } from './service'
 
 export class TelegramApi extends ChannelApi<TelegramService> {
@@ -9,6 +11,7 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     router.post('/telegram/:token', this.handleRequest.bind(this))
 
     this.service.on('start', this.handleStart.bind(this))
+    this.service.on('initialize', this.handleInitialize.bind(this))
   }
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {
@@ -21,6 +24,14 @@ export class TelegramApi extends ChannelApi<TelegramService> {
       state.callback!(req, res)
     } else {
       res.sendStatus(401)
+    }
+  }
+
+  protected async handleInitialize({ scope }: ChannelInitializeEvent) {
+    if (this.useWebhook()) {
+      const { telegraf, config } = this.service.get(scope)
+      const webhook = `${await this.urlCallback!(scope)}/${config.botToken}`
+      await telegraf.telegram.setWebhook(webhook)
     }
   }
 
@@ -56,15 +67,18 @@ export class TelegramApi extends ChannelApi<TelegramService> {
       }
     })
 
-    // todo: need a way to check if we can use long polling
-    if (process.env.TODO) {
-      //!this.useWebhook()) {
+    if (!this.useWebhook()) {
       await telegraf.telegram.deleteWebhook()
       telegraf.startPolling()
     } else {
       const callback = telegraf.webhookCallback(`/${config.botToken}`)
       this.service.get(scope).callback = callback
     }
+  }
+
+  private useWebhook() {
+    // TODO: remove this dependency on server env vars
+    return !yn(process.env.SPINNED) || yn(process.env.CLUSTER_ENABLED)
   }
 
   private async receive(scope: string, ctx: TelegrafContext) {

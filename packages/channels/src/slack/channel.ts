@@ -1,10 +1,10 @@
-import { Channel } from '../base/channel'
+import { ChannelTemplate } from '../base/channel'
 import { SlackApi } from './api'
 import { SlackConfig, SlackConfigSchema } from './config'
 import { SlackService } from './service'
 import { SlackStream } from './stream'
 
-export class SlackChannel extends Channel<SlackConfig, SlackService, SlackApi, SlackStream> {
+export class SlackChannel extends ChannelTemplate<SlackConfig, SlackService, SlackApi, SlackStream> {
   get meta() {
     return {
       id: 'd6111009-712d-485e-a62d-1540f966f4f3',
