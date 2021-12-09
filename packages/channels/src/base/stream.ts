@@ -4,22 +4,15 @@ import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 import { ChannelSendEvent, ChannelService } from './service'
 
-export abstract class ChannelStream<TService extends ChannelService<any, any>> {
+export abstract class ChannelStream<TService extends ChannelService<any, any>, TContext extends ChannelContext<any>> {
+  abstract get renderers(): ChannelRenderer<ChannelContext<any>>[]
+  abstract get senders(): ChannelSender<ChannelContext<any>>[]
+
   constructor(protected readonly service: TService) {}
 
   async setup() {
     this.service.on('send', this.handleSend.bind(this))
   }
-
-  protected abstract handleSend({ scope, endpoint, content }: ChannelSendEvent): Promise<void>
-}
-
-export abstract class ChannelStreamRenderers<
-  TService extends ChannelService<any, any>,
-  TContext extends ChannelContext<any>
-> extends ChannelStream<TService> {
-  abstract get renderers(): ChannelRenderer<ChannelContext<any>>[]
-  abstract get senders(): ChannelSender<ChannelContext<any>>[]
 
   protected async handleSend({ scope, endpoint, content }: ChannelSendEvent) {
     const context = await this.getContext({

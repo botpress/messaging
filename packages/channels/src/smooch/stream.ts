@@ -1,7 +1,7 @@
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
-import { ChannelStreamRenderers } from '../base/stream'
+import { ChannelStream } from '../base/stream'
 import { SmoochContext } from './context'
 import { SmoochRenderers } from './renderers'
 import { SmoochSenders } from './senders'
@@ -10,7 +10,7 @@ import { SmoochService } from './service'
 export const SAY_PREFIX = 'say::'
 export const POSTBACK_PREFIX = 'postback::'
 
-export class SmoochStream extends ChannelStreamRenderers<SmoochService, SmoochContext> {
+export class SmoochStream extends ChannelStream<SmoochService, SmoochContext> {
   get renderers() {
     return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...SmoochRenderers]
   }
