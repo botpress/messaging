@@ -8,6 +8,12 @@ export class TwilioApi extends ChannelApi<TwilioService> {
   async setup(router: ChannelApiManager) {
     router.use('/twilio', express.urlencoded({ extended: true }))
     router.post('/twilio', this.handleRequest.bind(this))
+
+    this.service.on('start', this.handleStart.bind(this))
+  }
+
+  private async handleStart({ scope }: { scope: string }) {
+    await this.printWebhook(scope, 'twilio')
   }
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {

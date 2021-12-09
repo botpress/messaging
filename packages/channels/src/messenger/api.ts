@@ -38,6 +38,8 @@ export class MessengerApi extends ChannelApi<MessengerService> {
         // we don't show an error because this is correct usage
       }
     }
+
+    await this.printWebhook(scope, 'messenger')
   }
 
   protected async handleInitialize({ scope }: ChannelInitializeEvent) {
