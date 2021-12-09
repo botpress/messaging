@@ -153,7 +153,7 @@ export class InstanceService extends Service {
   }
 
   async stop(conduitId: uuid) {
-    this.dispatcher.publish(InstanceDispatches.Stop, conduitId, {})
+    await this.dispatcher.publish(InstanceDispatches.Stop, conduitId, {})
   }
 
   async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {
