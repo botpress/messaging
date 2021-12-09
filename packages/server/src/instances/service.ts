@@ -93,22 +93,21 @@ export class InstanceService extends Service {
   }
 
   async initialize(conduitId: uuid) {
-    /*
-    const instance = await this.get(conduitId)
+    await this.start(conduitId)
+
+    const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
+    const channel = this.channelService.getById(conduit.channelId)
 
     try {
       await this.distributedService.using(`lock_dyn_instance_init::${conduitId}`, async () => {
-        await instance.initialize()
+        await channel.initialize(provider.name)
       })
     } catch (e) {
-      this.cache.del(conduitId)
-
       await this.statusService.addError(conduitId, e as Error)
-      instance.logger.error(e, 'Error trying to initialize conduit')
-
+      this.logger.error(e, 'Error trying to initialize conduit', provider.name)
       return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
     }
-    */
 
     await this.statusService.updateInitializedOn(conduitId, new Date())
     await this.statusService.clearErrors(conduitId)
@@ -131,7 +130,7 @@ export class InstanceService extends Service {
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
     } catch (e) {
       await this.statusService.addError(conduitId, e as Error)
-      // instance.logger.error(e, 'Error trying to setup conduit')
+      this.logger.error(e, 'Error trying to setup conduit', provider.name)
       await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
     }
   }
