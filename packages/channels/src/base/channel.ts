@@ -1,3 +1,5 @@
+// This rule is completely bugged for this file
+/* eslint-disable brace-style */
 import { Router } from 'express'
 import { ChannelApi, ChannelApiManager } from './api'
 import { ChannelConfig } from './config'
