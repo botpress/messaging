@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import express, { Response } from 'express'
 import jwt from 'jsonwebtoken'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { ContentType } from '../content/types'
 import { VonageConfig } from './config'
 import { VonageService } from './service'
 
@@ -34,7 +35,58 @@ export class VonageApi extends ChannelApi<VonageService> {
 
     const messageContent = payload.message.content
 
-    await this.service.receive(scope, { identity, sender, thread: '*' }, { type: 'text', text: messageContent.text })
+    let content: ContentType = { type: 'text', text: undefined! }
+    // TODO: Improve Vonage SDK typings
+    switch (messageContent.type as any) {
+      case 'text':
+        const index = Number(messageContent.text)
+        // TODO: handleIndexResponse
+        content = { type: 'text', text: messageContent.text }
+        break
+      case 'audio':
+        // We have to take for granted that all messages of type audio are voice messages
+        // since Vonage does not differentiate the two.
+        content = {
+          type: 'voice',
+          audio: messageContent.audio!.url
+        }
+        break
+      case 'button':
+        content = { type: 'text', text: (<any>messageContent).button.text }
+        break
+      case 'image':
+        content = {
+          type: 'image',
+          image: messageContent.image!.url,
+          title: messageContent.image!.caption
+        }
+        break
+      case 'video':
+        content = {
+          type: 'video',
+          video: messageContent.video!.url,
+          title: (<any>messageContent).video!.caption
+        }
+        break
+      case 'file':
+        content = {
+          type: 'file',
+          title: messageContent.file!.caption,
+          file: messageContent.file!.url
+        }
+        break
+      case 'location':
+        content = {
+          type: 'location',
+          latitude: (<any>messageContent).location!.lat,
+          longitude: (<any>messageContent).location!.long
+        }
+        break
+      default:
+        break
+    }
+
+    await this.service.receive(scope, { identity, sender, thread: '*' }, content)
   }
 
   private validate(req: ChannelApiRequest, config: VonageConfig): boolean {
