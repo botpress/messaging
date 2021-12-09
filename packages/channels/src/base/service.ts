@@ -19,6 +19,10 @@ export abstract class ChannelService<
   protected states: { [scope: string]: TState } = {}
   protected startCallback?: (scope: string) => Promise<TConfig>
 
+  get scopes() {
+    return Object.keys(this.states)
+  }
+
   async setup() {}
 
   async start(scope: string, config: TConfig) {

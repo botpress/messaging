@@ -86,6 +86,15 @@ export class InstanceService extends Service {
 
   async destroy() {
     await this.monitoring.destroy()
+
+    for (const channel of this.channelService.list()) {
+      for (const scope of channel.scopes) {
+        const provider = await this.providerService.getByName(scope)
+        const conduit = await this.conduitService.getByProviderAndChannel(provider!.id, channel.meta.id)
+
+        await this.stop(conduit!.id)
+      }
+    }
   }
 
   async monitor() {
@@ -140,8 +149,15 @@ export class InstanceService extends Service {
     const provider = (await this.providerService.getById(conduit.providerId))!
     const channel = this.channelService.getById(conduit.channelId)
 
-    if (channel.has(provider.name)) {
+    if (!channel.has(provider.name)) {
+      return
+    }
+
+    try {
       await channel.stop(provider.name)
+      await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
+    } catch (e) {
+      this.logger.error(e, 'Error trying to destroy conduit')
     }
   }
 

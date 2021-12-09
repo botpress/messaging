@@ -17,6 +17,10 @@ export abstract class Channel<
 }> {
   abstract get meta(): ChannelMeta
 
+  get scopes() {
+    return this.service.scopes
+  }
+
   constructor(public readonly service: TService, public readonly api: TApi, public readonly stream: TStream) {
     super()
     this.service.on('receive', async (e) => {
