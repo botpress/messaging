@@ -75,7 +75,7 @@ export class HealthService extends Service {
     for (const conduit of conduits) {
       const channel = this.channelService.getById(conduit.channelId)
       const events = await this.listEventsByConduit(conduit.id)
-      report.channels[channel.name] = { events: events.map((x) => this.makeReadable(x)) }
+      report.channels[channel.meta.name] = { events: events.map((x) => this.makeReadable(x)) }
     }
 
     this.cache.set(clientId, report)

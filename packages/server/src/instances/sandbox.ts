@@ -1,7 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
+import { Endpoint } from '@botpress/messaging-channels'
 import { Logger } from '@botpress/messaging-engine'
 import { validate as uuidValidate } from 'uuid'
-import { EndpointContent } from '../channels/base/conduit'
 import { ClientService } from '../clients/service'
 import { MappingService } from '../mapping/service'
 import { InstanceService } from './service'
@@ -13,18 +13,18 @@ export class InstanceSandbox {
 
   constructor(private clients: ClientService, private mapping: MappingService, private instances: InstanceService) {}
 
-  async getClientId(conduitId: uuid, endpoint: EndpointContent): Promise<uuid | undefined> {
+  async getClientId(conduitId: uuid, endpoint: Endpoint, content: any): Promise<uuid | undefined> {
     const sandboxmap = await this.mapping.sandboxmap.get(conduitId, endpoint)
 
     if (sandboxmap) {
       return sandboxmap.clientId
     } else {
-      return this.tryJoin(conduitId, endpoint)
+      return this.tryJoin(conduitId, endpoint, content)
     }
   }
 
-  async tryJoin(conduitId: uuid, endpoint: EndpointContent): Promise<uuid | undefined> {
-    const text: string | undefined = endpoint.content?.text
+  async tryJoin(conduitId: uuid, endpoint: Endpoint, content: any): Promise<uuid | undefined> {
+    const text: string | undefined = content?.text
 
     if (text?.trim().startsWith(JOIN_KEYWORD)) {
       const passphrase = text.replace(JOIN_KEYWORD, '').trim()
@@ -35,17 +35,15 @@ export class InstanceSandbox {
     }
   }
 
-  async printAskJoinSandbox(conduitId: uuid, endpoint: EndpointContent) {
-    const instance = await this.instances.get(conduitId)
-
-    await instance.sendToEndpoint(endpoint, {
+  async printAskJoinSandbox(conduitId: uuid, endpoint: Endpoint) {
+    await this.instances.sendToEndpoint(conduitId, endpoint, {
       type: 'text',
       text: 'Please join the sandbox by sending : !join your_passphrase'
     })
     this.logger.info('This endpoint is unknown to the sandbox')
   }
 
-  async tryJoinWithPassphrase(conduitId: uuid, endpoint: EndpointContent, passphrase: string) {
+  async tryJoinWithPassphrase(conduitId: uuid, endpoint: Endpoint, passphrase: string) {
     this.logger.info('Attempting to join sandbox with passphrase', passphrase)
 
     const client = uuidValidate(passphrase) ? await this.clients.getById(passphrase) : undefined
@@ -61,10 +59,8 @@ export class InstanceSandbox {
     }
   }
 
-  async printWrongPassphrase(conduitId: uuid, endpoint: EndpointContent) {
-    const instance = await this.instances.get(conduitId)
-
-    await instance.sendToEndpoint(endpoint, {
+  async printWrongPassphrase(conduitId: uuid, endpoint: Endpoint) {
+    await this.instances.sendToEndpoint(conduitId, endpoint, {
       type: 'text',
       text: 'Wrong passphrase'
     })

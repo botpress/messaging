@@ -103,7 +103,7 @@ export class SyncService extends Service {
       }
       const configWithoutEnabled = _.omit(config, ['enabled'])
 
-      const channelId = this.channels.getByName(channel).id
+      const channelId = this.channels.getByName(channel).meta.id
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (oldConduitIndex < 0) {

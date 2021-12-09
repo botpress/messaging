@@ -1,4 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
+import { Endpoint } from '@botpress/messaging-channels'
 import { BarrierService, BatchingService, CachingService, DatabaseService, Service } from '@botpress/messaging-engine'
 import { ConversationService } from '../conversations/service'
 import { UserService } from '../users/service'
@@ -8,7 +9,7 @@ import { SandboxmapService } from './sandboxmap/service'
 import { SenderService } from './senders/service'
 import { ThreadService } from './threads/service'
 import { TunnelService } from './tunnels/service'
-import { Endpoint, Mapping } from './types'
+import { Mapping } from './types'
 import { UsermapService } from './usermap/service'
 
 export class MappingService extends Service {
@@ -89,9 +90,9 @@ export class MappingService extends Service {
     const identity = await this.identities.get(sender!.identityId)
 
     return {
-      identity: identity?.name,
-      sender: sender?.name,
-      thread: thread?.name
+      identity: identity?.name || '*',
+      sender: sender?.name || '*',
+      thread: thread?.name || '*'
     }
   }
 }

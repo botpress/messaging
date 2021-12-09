@@ -61,18 +61,18 @@ export class InstanceMonitoring {
     }
 
     for (const channel of this.channels.list()) {
-      if (channel.lazy && !yn(process.env.NO_LAZY_LOADING)) {
+      if (channel.meta.lazy && !yn(process.env.NO_LAZY_LOADING)) {
         continue
       }
 
-      const conduits = await this.conduits.listByChannel(channel.id)
+      const conduits = await this.conduits.listByChannel(channel.meta.id)
       for (const conduit of conduits) {
         const failures = (await this.status.get(conduit.id))?.numberOfErrors || 0
         if (failures >= MAX_ALLOWED_FAILURES) {
           continue
         }
 
-        await this.instances.get(conduit.id)
+        await this.instances.start(conduit.id)
       }
     }
   }
