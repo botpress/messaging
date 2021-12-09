@@ -1,10 +1,10 @@
-import { Channel } from '../base/channel'
+import { ChannelTemplate } from '../base/channel'
 import { TwilioApi } from './api'
 import { TwilioConfig, TwilioConfigSchema } from './config'
 import { TwilioService } from './service'
 import { TwilioStream } from './stream'
 
-export class TwilioChannel extends Channel<TwilioConfig, TwilioService, TwilioApi, TwilioStream> {
+export class TwilioChannel extends ChannelTemplate<TwilioConfig, TwilioService, TwilioApi, TwilioStream> {
   get meta() {
     return {
       id: '330ca935-6441-4159-8969-d0a0d3f188a1',

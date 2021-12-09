@@ -19,6 +19,10 @@ export abstract class ChannelService<
   protected states: { [scope: string]: TState } = {}
   protected startCallback?: (scope: string) => Promise<TConfig>
 
+  get scopes() {
+    return Object.keys(this.states)
+  }
+
   async setup() {}
 
   async start(scope: string, config: TConfig) {
@@ -58,7 +62,7 @@ export abstract class ChannelService<
     delete this.states[scope]
   }
 
-  abstract destroy(scope: string, state: TState): Promise<void>
+  async destroy(scope: string, state: TState): Promise<void> {}
 
   public get(scope: string) {
     return this.states[scope]

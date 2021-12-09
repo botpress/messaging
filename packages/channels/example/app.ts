@@ -23,7 +23,7 @@ export class App {
     await this.setupChannel('vonage', new VonageChannel())
   }
 
-  async setupChannel(name: string, channel: Channel<any, any, any, any>) {
+  async setupChannel(name: string, channel: Channel) {
     await channel.setup(this.router)
 
     channel.on('message', async ({ scope, endpoint, content }) => {
@@ -42,7 +42,7 @@ export class App {
       void respond()
     })
 
-    channel.api.makeUrl(async (scope: string) => {
+    channel.makeUrl(async (scope: string) => {
       return `${this.config.externalUrl}/webhooks/${scope}/${channel.meta.name}`
     })
 
