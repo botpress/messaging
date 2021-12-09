@@ -4,6 +4,7 @@ import { Router } from 'express'
 import { ChannelApi, ChannelApiManager } from './api'
 import { ChannelConfig } from './config'
 import { Endpoint } from './endpoint'
+import { Logger } from './logger'
 import { ChannelMeta } from './meta'
 import { ChannelService } from './service'
 import { ChannelStream } from './stream'
@@ -11,6 +12,8 @@ import { ChannelStream } from './stream'
 export interface Channel {
   get meta(): ChannelMeta
   get scopes(): string[]
+  get logger(): Logger | undefined
+  set logger(logger: Logger | undefined)
   setup(router: Router): Promise<void>
   start(scope: string, config: any): Promise<void>
   initialize(scope: string): Promise<void>
@@ -33,6 +36,14 @@ export abstract class ChannelTemplate<
 
   get scopes() {
     return this.service.scopes
+  }
+
+  get logger(): Logger | undefined {
+    return this.service.logger
+  }
+
+  set logger(logger: Logger | undefined) {
+    this.service.logger = logger
   }
 
   constructor(public readonly service: TService, public readonly api: TApi, public readonly stream: TStream) {}

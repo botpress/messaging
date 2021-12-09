@@ -10,7 +10,7 @@ export class MessengerService extends ChannelService<MessengerConfig, MessengerS
   async create(scope: string, config: MessengerConfig) {
     return {
       config,
-      client: new MessengerClient(config)
+      client: new MessengerClient(config, this.logger)
     }
   }
 }

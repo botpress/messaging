@@ -6,7 +6,7 @@ import { MessengerConfig, MessengerAction } from './config'
 export class MessengerClient {
   private readonly http = axios.create({ baseURL: 'https://graph.facebook.com/v3.2/me' })
 
-  constructor(private config: MessengerConfig, private logger: Logger) {}
+  constructor(private config: MessengerConfig, private logger?: Logger) {}
 
   async getPageId() {
     try {
@@ -29,7 +29,7 @@ export class MessengerClient {
         }
       })
     } catch (e) {
-      this.logger.error(e, 'Error occurred trying to setup "getStarted" message')
+      this.logger?.error(e, 'Error occurred trying to setup "getStarted" message')
     }
   }
 
@@ -49,7 +49,7 @@ export class MessengerClient {
         ]
       })
     } catch (e) {
-      this.logger.error(e, 'Error occurred trying to setup greeting')
+      this.logger?.error(e, 'Error occurred trying to setup greeting')
     }
   }
 
@@ -62,7 +62,7 @@ export class MessengerClient {
     try {
       await this.sendProfile({ persistent_menu: this.config.persistentMenu })
     } catch (e) {
-      this.logger.error(e, 'Error occurred trying to setup persistent menu')
+      this.logger?.error(e, 'Error occurred trying to setup persistent menu')
     }
   }
 
