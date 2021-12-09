@@ -16,6 +16,7 @@ export abstract class ChannelStream<TService extends ChannelService<any, any>, T
 
   protected async handleSend({ scope, endpoint, content }: ChannelSendEvent) {
     const context = await this.getContext({
+      scope,
       state: this.service.get(scope),
       handlers: 0,
       payload: _.cloneDeep(content),
@@ -46,9 +47,4 @@ export abstract class ChannelStream<TService extends ChannelService<any, any>, T
   }
 
   protected abstract getContext(base: ChannelContext<any>): Promise<TContext>
-
-  protected prepareIndexResponse(identity: string, sender: string, options: IndexChoiceOption[]) {
-    // TODO: do something here
-    // this.cacheIndexResponses.set(this.getIndexCacheKey(identity, sender), options)
-  }
 }

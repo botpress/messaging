@@ -4,5 +4,5 @@ import { TwilioState } from './service'
 
 export type TwilioContext = ChannelContext<TwilioState> & {
   messages: Partial<MessageInstance>[]
-  prepareIndexResponse(identity: string, sender: string, options: IndexChoiceOption[]): void
+  prepareIndexResponse(scope: string, identity: string, sender: string, options: IndexChoiceOption[]): void
 }

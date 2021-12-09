@@ -2,6 +2,7 @@ import { Endpoint } from './endpoint'
 import { ChannelState } from './service'
 
 export type ChannelContext<TState extends ChannelState<any>> = {
+  scope: string
   state: TState
   handlers: number
   payload: any

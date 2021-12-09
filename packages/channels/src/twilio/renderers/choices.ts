@@ -16,6 +16,7 @@ export class TwilioChoicesRenderer extends ChoicesRenderer {
       .join('\n')}`
 
     context.prepareIndexResponse(
+      context.scope,
       context.identity!,
       context.sender!,
       payload.choices.map((x: ChoiceOption) => ({ ...x, type: IndexChoiceType.QuickReply }))

@@ -4,5 +4,5 @@ import { VonageState } from './service'
 
 export type VonageContext = ChannelContext<VonageState> & {
   messages: ChannelMessage[]
-  prepareIndexResponse: (identity: string, thread: string, options: IndexChoiceOption[]) => void
+  prepareIndexResponse: (scope: string, identity: string, thread: string, options: IndexChoiceOption[]) => void
 }

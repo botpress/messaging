@@ -21,7 +21,7 @@ export class TwilioStream extends ChannelStream<TwilioService, TwilioContext> {
     return {
       ...base,
       messages: [],
-      prepareIndexResponse: this.prepareIndexResponse.bind(this)
+      prepareIndexResponse: this.service.prepareIndexResponse.bind(this.service)
     }
   }
 }

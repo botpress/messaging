@@ -12,6 +12,7 @@ export class VonageChoicesRenderer extends ChoicesRenderer {
       .join('\n')}`
 
     context.prepareIndexResponse(
+      context.scope,
       context.identity!,
       context.sender!,
       payload.choices.map((x) => ({ type: IndexChoiceType.QuickReply, ...x }))

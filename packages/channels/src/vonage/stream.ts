@@ -21,7 +21,7 @@ export class VonageStream extends ChannelStream<VonageService, VonageContext> {
     return {
       ...base,
       messages: [],
-      prepareIndexResponse: this.prepareIndexResponse.bind(this)
+      prepareIndexResponse: this.service.prepareIndexResponse.bind(this.service)
     }
   }
 }

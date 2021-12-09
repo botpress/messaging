@@ -29,7 +29,12 @@ export class TwilioApi extends ChannelApi<TwilioService> {
   private async receive(scope: string, body: any) {
     const botPhoneNumber = body.To
     const userPhoneNumber = body.From
-    const content = { type: 'text', text: body.Body }
+
+    const index = Number(body.Body)
+    const content = this.service.handleIndexResponse(scope, index, botPhoneNumber, userPhoneNumber) || {
+      type: 'text',
+      text: body.Body
+    }
 
     await this.service.receive(scope, { identity: botPhoneNumber, sender: userPhoneNumber, thread: '*' }, content)
   }

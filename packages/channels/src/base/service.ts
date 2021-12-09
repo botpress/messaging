@@ -1,6 +1,9 @@
+import LRU from 'lru-cache'
+import ms from 'ms'
 import { Emitter } from '../base/emitter'
 import { Endpoint } from '../base/endpoint'
 import { ChannelConfig } from './config'
+import { IndexChoiceOption, IndexChoiceType } from './context'
 
 export interface ChannelState<T> {
   config: T
@@ -16,6 +19,7 @@ export abstract class ChannelService<
   receive: ChannelReceiveEvent
   stop: ChannelStopEvent
 }> {
+  protected cacheIndexResponses: LRU<string, IndexChoiceOption[]> = new LRU({ max: 50000, maxAge: ms('5min') })
   protected states: { [scope: string]: TState } = {}
   protected startCallback?: (scope: string) => Promise<TConfig>
 
@@ -66,6 +70,39 @@ export abstract class ChannelService<
 
   public get(scope: string) {
     return this.states[scope]
+  }
+
+  public prepareIndexResponse(scope: string, identity: string, sender: string, options: IndexChoiceOption[]) {
+    this.cacheIndexResponses.set(this.getIndexCacheKey(scope, identity, sender), options)
+  }
+
+  public handleIndexResponse(scope: string, index: number, identity: string, sender: string): any | undefined {
+    if (index) {
+      const key = this.getIndexCacheKey(scope, identity, sender)
+      const options = this.cacheIndexResponses.get(key)
+
+      this.cacheIndexResponses.del(key)
+
+      const option = options?.[index - 1]
+
+      if (option) {
+        if (option.type === IndexChoiceType.PostBack) {
+          return { type: option.type, payload: option.value }
+        } else if (option.type === IndexChoiceType.SaySomething) {
+          return { type: option.type, text: option.value }
+        } else if (option.type === IndexChoiceType.QuickReply) {
+          return { type: option.type, text: option.title, payload: option.value }
+        } else if (option.type === IndexChoiceType.OpenUrl) {
+          return {}
+        }
+      }
+
+      return undefined
+    }
+  }
+
+  protected getIndexCacheKey(scope: string, identity: string, sender: string) {
+    return `${scope}_${identity}_${sender}`
   }
 }
 
