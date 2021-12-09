@@ -2,6 +2,7 @@ import crypto from 'crypto'
 import express, { Response, Request, NextFunction } from 'express'
 import { IncomingMessage } from 'http'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { ChannelInitializeEvent } from '../base/service'
 import { MessengerService } from './service'
 
 export class MessengerApi extends ChannelApi<MessengerService> {
@@ -11,6 +12,15 @@ export class MessengerApi extends ChannelApi<MessengerService> {
 
     router.get('/messenger', this.handleWebhookVerification.bind(this))
     router.post('/messenger', this.handleMessageRequest.bind(this))
+
+    this.service.on('initialize', this.handleInitialize.bind(this))
+  }
+
+  protected async handleInitialize({ scope }: ChannelInitializeEvent) {
+    const { client } = this.service.get(scope)
+    await client.setupGreeting()
+    await client.setupGetStarted()
+    await client.setupPersistentMenu()
   }
 
   private async handleWebhookVerification(req: ChannelApiRequest, res: Response) {
