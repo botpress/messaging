@@ -11,6 +11,7 @@ export abstract class ChannelService<
   TState extends ChannelState<TConfig>
 > extends Emitter<{
   start: ChannelStartEvent
+  initialize: ChannelInitializeEvent
   send: ChannelSendEvent
   receive: ChannelReceiveEvent
   stop: ChannelStopEvent
@@ -23,6 +24,10 @@ export abstract class ChannelService<
   async start(scope: string, config: TConfig) {
     this.states[scope] = await this.create(scope, config)
     await this.emit('start', { scope })
+  }
+
+  async initialize(scope: string) {
+    await this.emit('initialize', { scope })
   }
 
   async require(scope: string) {
@@ -49,7 +54,11 @@ export abstract class ChannelService<
 
   async stop(scope: string) {
     await this.emit('stop', { scope })
+    await this.destroy(scope, this.get(scope))
+    delete this.states[scope]
   }
+
+  abstract destroy(scope: string, state: TState): Promise<void>
 
   public get(scope: string) {
     return this.states[scope]
@@ -57,6 +66,10 @@ export abstract class ChannelService<
 }
 
 export interface ChannelStartEvent {
+  scope: string
+}
+
+export interface ChannelInitializeEvent {
   scope: string
 }
 

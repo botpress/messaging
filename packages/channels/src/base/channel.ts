@@ -34,6 +34,10 @@ export abstract class Channel<
     return this.service.start(scope, config)
   }
 
+  async initialize(scope: string) {
+    return this.service.initialize(scope)
+  }
+
   autoStart(callback: (scope: string) => Promise<TConfig>) {
     this.service.autoStart(callback)
   }
