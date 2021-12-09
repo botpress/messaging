@@ -5,10 +5,10 @@ export class ChannelApi {
   constructor(private router: Router, private app: App) {}
 
   async setup() {
-    const whRouter = Router()
+    const webhookRouter = Router()
 
     for (const channel of this.app.channels.list()) {
-      await channel.setup(whRouter)
+      await channel.setup(webhookRouter)
 
       channel.api.makeUrl(async (scope: string) => {
         return `${process.env.EXTERNAL_URL}/webhooks/${scope}/${channel.meta.name}`
@@ -38,6 +38,6 @@ export class ChannelApi {
       })
     }
 
-    this.router.use('/webhooks', whRouter)
+    this.router.use('/webhooks', webhookRouter)
   }
 }
