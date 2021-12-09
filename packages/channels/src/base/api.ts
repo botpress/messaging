@@ -50,7 +50,7 @@ export class ChannelApiManager {
     return (req: Request, res: Response, next: NextFunction) => {
       fn(req, res, next).catch((e) => {
         console.error(`Error occurred calling route ${req.originalUrl}`, e)
-        return res.sendStatus(200)
+        return res.sendStatus(500)
       })
     }
   }
