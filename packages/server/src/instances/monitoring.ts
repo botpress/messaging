@@ -40,7 +40,7 @@ export class InstanceMonitoring {
     } catch (e) {
       this.logger.error(e, 'Error occurred while monitoring', (e as Error).message)
     } finally {
-      this.timeout = setTimeout(this.tickMonitoring.bind(this), ms('3s'))
+      this.timeout = setTimeout(this.tickMonitoring.bind(this), ms('15s'))
     }
   }
 
@@ -49,7 +49,7 @@ export class InstanceMonitoring {
       return
     }
 
-    const outdateds = await this.status.listOutdated(ms('10s'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
+    const outdateds = await this.status.listOutdated(ms('10h'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
     for (const outdated of outdateds) {
       await this.instances.initialize(outdated.conduitId)
     }
