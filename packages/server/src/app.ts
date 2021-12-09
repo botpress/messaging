@@ -64,6 +64,7 @@ export class App extends Engine {
     this.instances = new InstanceService(
       this.logger,
       this.distributed,
+      this.dispatches,
       this.caching,
       this.channels,
       this.providers,

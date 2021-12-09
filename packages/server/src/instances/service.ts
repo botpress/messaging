@@ -2,6 +2,7 @@ import { Message, uuid } from '@botpress/messaging-base'
 import { Endpoint } from '@botpress/messaging-channels'
 import {
   CachingService,
+  DispatchService,
   DistributedService,
   Logger,
   LoggerService,
@@ -17,6 +18,7 @@ import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
 import { StatusService } from '../status/service'
+import { InstanceDispatcher, InstanceDispatches } from './dispatch'
 import { InstanceEmitter, InstanceEvents, InstanceWatcher } from './events'
 import { InstanceInvalidator } from './invalidator'
 import { InstanceMonitoring } from './monitoring'
@@ -34,10 +36,12 @@ export class InstanceService extends Service {
   private monitoring: InstanceMonitoring
   private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
+  private dispatcher!: InstanceDispatcher
 
   constructor(
     private loggerService: LoggerService,
     private distributedService: DistributedService,
+    private dispatchService: DispatchService,
     private cachingService: CachingService,
     private channelService: ChannelService,
     private providerService: ProviderService,
@@ -74,6 +78,9 @@ export class InstanceService extends Service {
     this.messageQueueCache = await this.cachingService.newServerCache('cache_thread_queues_cache')
     await this.invalidator.setup()
     this.messageService.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
+
+    this.dispatcher = await this.dispatchService.create('dispatch_converse', InstanceDispatcher)
+    this.dispatcher.on(InstanceDispatches.Stop, this.handleDispatchStop.bind(this))
 
     for (const channel of this.channelService.list()) {
       channel.autoStart(async (providerName) => {
@@ -135,6 +142,7 @@ export class InstanceService extends Service {
     try {
       await this.distributedService.using(`lock_dyn_instance_setup::${conduitId}`, async () => {
         await channel.start(provider.name, conduit.config)
+        await this.dispatcher.subscribe(conduitId)
       })
       await this.emitter.emit(InstanceEvents.Setup, conduitId)
     } catch (e) {
@@ -145,6 +153,18 @@ export class InstanceService extends Service {
   }
 
   async stop(conduitId: uuid) {
+    this.dispatcher.publish(InstanceDispatches.Stop, conduitId, {})
+  }
+
+  async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {
+    const conduit = (await this.conduitService.get(conduitId))!
+    const provider = (await this.providerService.getById(conduit.providerId))!
+    const channel = this.channelService.getById(conduit.channelId)
+
+    await channel.send(provider.name, endpoint, content)
+  }
+
+  private async handleDispatchStop(conduitId: uuid) {
     const conduit = (await this.conduitService.get(conduitId))!
     const provider = (await this.providerService.getById(conduit.providerId))!
     const channel = this.channelService.getById(conduit.channelId)
@@ -158,15 +178,9 @@ export class InstanceService extends Service {
       await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
     } catch (e) {
       this.logger.error(e, 'Error trying to destroy conduit')
+    } finally {
+      await this.dispatcher.unsubscribe(conduitId)
     }
-  }
-
-  async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
-    const channel = this.channelService.getById(conduit.channelId)
-
-    await channel.send(provider.name, endpoint, content)
   }
 
   private async handleMessageCreated({ message, source }: MessageCreatedEvent) {
