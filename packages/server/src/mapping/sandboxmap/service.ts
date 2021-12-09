@@ -23,9 +23,9 @@ export class SandboxmapService extends Service {
   async create(conduitId: uuid, endpoint: Endpoint, clientId: uuid): Promise<Sandboxmap> {
     const sandboxmap = {
       conduitId,
-      identity: endpoint.identity || '*',
-      sender: endpoint.sender || '*',
-      thread: endpoint.thread || '*',
+      identity: endpoint.identity,
+      sender: endpoint.sender,
+      thread: endpoint.thread,
       clientId
     }
 
@@ -44,9 +44,9 @@ export class SandboxmapService extends Service {
 
     const rows = await this.query().where({
       conduitId,
-      identity: endpoint.identity || '*',
-      sender: endpoint.sender || '*',
-      thread: endpoint.thread || '*'
+      identity: endpoint.identity,
+      sender: endpoint.sender,
+      thread: endpoint.thread
     })
 
     if (rows?.length) {
@@ -59,7 +59,7 @@ export class SandboxmapService extends Service {
   }
 
   private getCacheKey(conduitId: uuid, endpoint: Endpoint) {
-    return `${conduitId}~${endpoint.identity || '*'}~${endpoint.sender || '*'}~${endpoint.thread || '*'}`
+    return `${conduitId}~${endpoint.identity}~${endpoint.sender}~${endpoint.thread}`
   }
 
   private query() {

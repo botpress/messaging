@@ -247,7 +247,7 @@ export class InstanceService extends Service {
   }
 
   private endpointEqual(a: Endpoint, b: Endpoint) {
-    return (a.identity || '*') !== b.identity || (a.sender || '*') !== b.sender || (a.thread || '*') !== b.thread
+    return a.identity !== b.identity || a.sender !== b.sender || a.thread !== b.thread
   }
 }
 
