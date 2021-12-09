@@ -23,7 +23,7 @@ export class TeamsApi extends ChannelApi<TeamsService> {
         const activity = turnContext.activity
         const convoRef = TurnContext.getConversationReference(activity)
 
-        await this.service.setRef(convoRef.conversation!.id, convoRef)
+        await this.service.setRef(req.scope, convoRef.conversation!.id, convoRef)
         await this.service.receive(
           req.scope,
           { identity: '*', sender: activity.from.id, thread: convoRef.conversation!.id },

@@ -22,11 +22,19 @@ export class TeamsService extends ChannelService<TeamsConfig, TeamsState> {
     }
   }
 
-  async setRef(key: string, ref: Partial<ConversationReference>) {
-    this.refs[key] = ref
+  async setRef(scope: string, key: string, ref: Partial<ConversationReference>) {
+    if (this.kvs) {
+      await this.kvs.set(`${scope}_${key}`, ref)
+    } else {
+      this.refs[key] = ref
+    }
   }
 
-  async getRef(key: string): Promise<Partial<ConversationReference>> {
-    return this.refs[key]
+  async getRef(scope: string, key: string): Promise<Partial<ConversationReference>> {
+    if (this.kvs) {
+      return this.kvs.get(`${scope}_${key}`)
+    } else {
+      return this.refs[key]
+    }
   }
 }

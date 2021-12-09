@@ -4,6 +4,7 @@ import { Router } from 'express'
 import { ChannelApi, ChannelApiManager } from './api'
 import { ChannelConfig } from './config'
 import { Endpoint } from './endpoint'
+import { Kvs } from './kvs'
 import { Logger } from './logger'
 import { ChannelMeta } from './meta'
 import { ChannelService } from './service'
@@ -14,6 +15,8 @@ export interface Channel {
   get scopes(): string[]
   get logger(): Logger | undefined
   set logger(logger: Logger | undefined)
+  get kvs(): Kvs | undefined
+  set kvs(kvs: Kvs | undefined)
   setup(router: Router): Promise<void>
   start(scope: string, config: any): Promise<void>
   initialize(scope: string): Promise<void>
@@ -44,6 +47,14 @@ export abstract class ChannelTemplate<
 
   set logger(logger: Logger | undefined) {
     this.service.logger = logger
+  }
+
+  get kvs(): Kvs | undefined {
+    return this.service.kvs
+  }
+
+  set kvs(kvs: Kvs | undefined) {
+    this.service.kvs = kvs
   }
 
   constructor(public readonly service: TService, public readonly api: TApi, public readonly stream: TStream) {}

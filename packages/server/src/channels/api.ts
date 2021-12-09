@@ -11,6 +11,7 @@ export class ChannelApi {
       await channel.setup(webhookRouter)
 
       channel.logger = this.app.logger.root.sub(channel.meta.name)
+      channel.kvs = this.app.kvs
 
       channel.makeUrl(async (scope: string) => {
         return `${process.env.EXTERNAL_URL}/webhooks/${scope}/${channel.meta.name}`

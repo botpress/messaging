@@ -19,7 +19,7 @@ export class TeamsStream extends ChannelStream<TeamsService, TeamsContext> {
     return {
       ...base,
       messages: [],
-      convoRef: await this.service.getRef(base.thread)
+      convoRef: await this.service.getRef(base.scope, base.thread)
     }
   }
 }
