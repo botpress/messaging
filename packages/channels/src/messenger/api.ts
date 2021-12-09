@@ -55,7 +55,7 @@ export class MessengerApi extends ChannelApi<MessengerService> {
     const challenge = req.query['hub.challenge']
 
     if (mode && token && mode === 'subscribe' && token === config.verifyToken) {
-      console.debug('Webhook Verified')
+      this.service.logger?.debug('Webhook Verified')
       res.send(challenge)
     } else {
       res.sendStatus(403)

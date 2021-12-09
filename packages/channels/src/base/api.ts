@@ -1,4 +1,5 @@
 import { Request, Router, Response, RequestHandler, NextFunction } from 'express'
+import { Logger } from './logger'
 import { ChannelService } from './service'
 
 export class ChannelApi<TService extends ChannelService<any, any>> {
@@ -16,7 +17,7 @@ export class ChannelApi<TService extends ChannelService<any, any>> {
 export type Middleware<T> = (req: T, res: Response, next: NextFunction) => Promise<void>
 
 export class ChannelApiManager {
-  constructor(private service: ChannelService<any, any>, private router: Router) {}
+  constructor(private service: ChannelService<any, any>, private router: Router, private logger?: Logger) {}
 
   post(path: string, fn: Middleware<ChannelApiRequest>) {
     this.wrap('post', path, fn)
@@ -49,7 +50,7 @@ export class ChannelApiManager {
   protected asyncMiddleware(fn: Middleware<Request>) {
     return (req: Request, res: Response, next: NextFunction) => {
       fn(req, res, next).catch((e) => {
-        console.error(`Error occurred calling route ${req.originalUrl}`, e)
+        this.logger?.error(`Error occurred calling route ${req.originalUrl}`, e)
         return res.sendStatus(500)
       })
     }

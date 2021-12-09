@@ -23,7 +23,7 @@ export class TeamsApi extends ChannelApi<TeamsService> {
           { type: 'text', text: activity.value?.text || activity.text }
         )
       } catch (e) {
-        console.error('Error occurred processing teams activity', e)
+        this.service.logger?.error(e, 'Error occurred processing teams activity')
       }
     })
   }

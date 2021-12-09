@@ -36,7 +36,7 @@ export class SmoochApi extends ChannelApi<SmoochService> {
       const legacyWh = webhooks.find((x: any) => x.target?.includes('/mod/channel-smooch'))
       if (legacyWh) {
         await state.smooch.webhooks.delete(legacyWh._id)
-        console.info('Deleted legacy webhook', legacyWh.target)
+        this.service.logger?.info('Deleted legacy webhook', legacyWh.target)
       }
     }
 

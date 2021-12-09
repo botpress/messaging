@@ -1,4 +1,5 @@
 import { Endpoint } from './endpoint'
+import { Logger } from './logger'
 import { ChannelState } from './service'
 
 export type ChannelContext<TState extends ChannelState<any>> = {
@@ -6,6 +7,7 @@ export type ChannelContext<TState extends ChannelState<any>> = {
   state: TState
   handlers: number
   payload: any
+  logger?: Logger
 } & Endpoint
 
 export interface IndexChoiceOption {

@@ -35,7 +35,7 @@ export class SlackApi extends ChannelApi<SlackService> {
     events.on('message', async (e) => {
       await this.handleMessageEvent(scope, e)
     })
-    events.on('error', (e) => console.error('An error occurred', e))
+    events.on('error', (e) => this.service.logger?.error(e, 'An error occurred'))
     this.service.get(scope).handleEventRequest = events.requestListener()
   }
 
@@ -64,7 +64,7 @@ export class SlackApi extends ChannelApi<SlackService> {
         })
       }
     } catch (e) {
-      console.error('Error occurred while processing a "button" interactive action', e)
+      this.service.logger?.error(e, 'Error occurred while processing a "button" interactive action')
     }
   }
 
@@ -80,7 +80,7 @@ export class SlackApi extends ChannelApi<SlackService> {
         content: { type: 'quick_reply', text: label, payload: action?.value }
       })
     } catch (e) {
-      console.error('Error occurred while processing a "option_selected" interactive action', e)
+      this.service.logger?.error(e, 'Error occurred while processing a "option_selected" interactive action')
     }
   }
 
@@ -98,7 +98,7 @@ export class SlackApi extends ChannelApi<SlackService> {
         }
       })
     } catch (e) {
-      console.error('Error occurred while processing a slack message', e)
+      this.service.logger?.error(e, 'Error occurred while processing a slack message')
     }
   }
 

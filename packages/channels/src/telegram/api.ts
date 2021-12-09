@@ -42,28 +42,28 @@ export class TelegramApi extends ChannelApi<TelegramService> {
       try {
         await this.receive(scope, ctx)
       } catch (e) {
-        console.error('Error occured on start', e)
+        this.service.logger?.error(e, 'Error occured on start')
       }
     })
     telegraf.help(async (ctx) => {
       try {
         await this.receive(scope, ctx)
       } catch (e) {
-        console.error('Error occured on help', e)
+        this.service.logger?.error(e, 'Error occured on help')
       }
     })
     telegraf.on('message', async (ctx) => {
       try {
         await this.receive(scope, ctx)
       } catch (e) {
-        console.error('Error occurred processing message', e)
+        this.service.logger?.error(e, 'Error occurred processing message')
       }
     })
     telegraf.on('callback_query', async (ctx) => {
       try {
         await this.receive(scope, ctx)
       } catch (e) {
-        console.error('Error occurred processing callback query', e)
+        this.service.logger?.error(e, 'Error occurred processing callback query')
       }
     })
 

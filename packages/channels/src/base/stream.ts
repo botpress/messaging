@@ -20,6 +20,7 @@ export abstract class ChannelStream<TService extends ChannelService<any, any>, T
       state: this.service.get(scope),
       handlers: 0,
       payload: _.cloneDeep(content),
+      logger: this.service.logger,
       ...endpoint
     })
 
@@ -28,7 +29,7 @@ export abstract class ChannelStream<TService extends ChannelService<any, any>, T
         try {
           renderer.render(context)
         } catch (e) {
-          console.error('Error occurred when rendering a message', e)
+          this.service.logger?.error(e, 'Error occurred when rendering a message')
         } finally {
           context.handlers++
         }
@@ -40,7 +41,7 @@ export abstract class ChannelStream<TService extends ChannelService<any, any>, T
         try {
           await sender.send(context)
         } catch (e) {
-          console.error('Error occurred when sending a message', e)
+          this.service.logger?.error(e, 'Error occurred when sending a message')
         }
       }
     }

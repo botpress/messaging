@@ -4,6 +4,7 @@ import { Emitter } from '../base/emitter'
 import { Endpoint } from '../base/endpoint'
 import { ChannelConfig } from './config'
 import { IndexChoiceOption, IndexChoiceType } from './context'
+import { Logger } from './logger'
 
 export interface ChannelState<T> {
   config: T
@@ -19,6 +20,7 @@ export abstract class ChannelService<
   receive: ChannelReceiveEvent
   stop: ChannelStopEvent
 }> {
+  public logger?: Logger
   protected cacheIndexResponses: LRU<string, IndexChoiceOption[]> = new LRU({ max: 50000, maxAge: ms('5min') })
   protected states: { [scope: string]: TState } = {}
   protected startCallback?: (scope: string) => Promise<TConfig>

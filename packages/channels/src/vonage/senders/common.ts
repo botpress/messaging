@@ -23,12 +23,12 @@ export class VonageCommonSender extends CommonSender {
                   }
                 }
 
-                console.error(`${errBody.title}: ${errBody.detail} ${reasons}${errBody.type || ''}`)
+                context.logger?.error(`${errBody.title}: ${errBody.detail} ${reasons}${errBody.type || ''}`)
                 // eslint-disable-next-line eqeqeq
               } else if ((<any>err).statusCode == '429') {
-                console.error('HTTPError (429): Too Many Requests')
+                context.logger?.error('HTTPError (429): Too Many Requests')
               } else {
-                console.error('UnknownError', err)
+                context.logger?.error(err, 'UnknownError')
               }
             } else {
               resolve(data)
