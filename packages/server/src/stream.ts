@@ -6,18 +6,21 @@ import { MessageStream } from './messages/stream'
 import { UserStream } from './users/stream'
 
 export class Stream {
+  private streamer: Streamer
+
   private health: HealthStream
   private users: UserStream
   private conversations: ConversationStream
   private messages: MessageStream
 
   constructor(app: App) {
-    const streamer = new Streamer(app.dispatches, app.post, app.sockets, app.webhooks)
-    this.health = new HealthStream(streamer, app.channels, app.clients, app.conduits, app.health)
-    this.users = new UserStream(streamer, app.users)
-    this.conversations = new ConversationStream(streamer, app.conversations)
+    this.streamer = new Streamer(app.dispatches, app.sockets, app.webhooks)
+
+    this.health = new HealthStream(this.streamer, app.channels, app.clients, app.conduits, app.health)
+    this.users = new UserStream(this.streamer, app.users)
+    this.conversations = new ConversationStream(this.streamer, app.conversations)
     this.messages = new MessageStream(
-      streamer,
+      this.streamer,
       app.channels,
       app.conversations,
       app.messages,
@@ -31,5 +34,9 @@ export class Stream {
     await this.users.setup()
     await this.conversations.setup()
     await this.messages.setup()
+  }
+
+  async destroy() {
+    await this.streamer.destroy()
   }
 }

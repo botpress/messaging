@@ -1,23 +1,22 @@
 import { uuid } from '@botpress/messaging-base'
 import { Dispatcher, DispatchService, Logger } from '@botpress/messaging-engine'
+import axios, { AxiosRequestConfig } from 'axios'
 import clc from 'cli-color'
+import { backOff } from 'exponential-backoff'
 import yn from 'yn'
 import { ActionSource } from '../base/source'
-import { PostService } from '../post/service'
 import { SocketEvents, SocketUserEvent } from '../socket/events'
 import { SocketService } from '../socket/service'
 import { WebhookService } from '../webhooks/service'
 
+const MAX_ATTEMPTS = 10
+
 export class Streamer {
   private logger = new Logger('Stream')
   private dispatcher!: StreamDispatcher
+  private destroyed: boolean = false
 
-  constructor(
-    private dispatches: DispatchService,
-    private posts: PostService,
-    private sockets: SocketService,
-    private webhooks: WebhookService
-  ) {}
+  constructor(private dispatches: DispatchService, private sockets: SocketService, private webhooks: WebhookService) {}
 
   async setup() {
     this.sockets.events.on(SocketEvents.UserConnected, this.handleUserConnected.bind(this))
@@ -25,6 +24,12 @@ export class Streamer {
 
     this.dispatcher = await this.dispatches.create('dispatch_socket', StreamDispatcher)
     this.dispatcher.on(StreamerDispatches.Message, this.handleDispatchMessage.bind(this))
+  }
+
+  async destroy() {
+    // TODO: we could close off all http connections here
+
+    this.destroyed = true
   }
 
   private async handleUserConnected({ userId }: SocketUserEvent) {
@@ -65,14 +70,42 @@ export class Streamer {
 
     if (source?.client?.id !== clientId) {
       if (yn(process.env.SPINNED)) {
-        void this.posts.send(process.env.SPINNED_URL!, payload)
+        void this.send(process.env.SPINNED_URL!, payload)
       } else {
         const webhooks = await this.webhooks.list(clientId)
 
         for (const webhook of webhooks) {
-          void this.posts.send(webhook.url, payload, { 'x-webhook-token': webhook.token })
+          void this.send(webhook.url, payload, { 'x-webhook-token': webhook.token })
         }
       }
+    }
+  }
+
+  public async send(url: string, data?: any, headers?: { [name: string]: string }) {
+    const config: AxiosRequestConfig = { headers: {} }
+
+    if (headers) {
+      config.headers = headers
+    }
+
+    if (process.env.INTERNAL_PASSWORD) {
+      config.headers.password = process.env.INTERNAL_PASSWORD
+    }
+
+    try {
+      await backOff(async () => axios.post(url, data, config), {
+        jitter: 'none',
+        numOfAttempts: MAX_ATTEMPTS,
+        retry: (_e: any, _attemptNumber: number) => {
+          return !this.destroyed
+        }
+      })
+    } catch (e) {
+      this.logger.warn(
+        `Unabled to reach webhook after ${MAX_ATTEMPTS} attempts ${clc.blackBright(url)} ${clc.blackBright(
+          `Error: ${(e as Error).message}`
+        )}`
+      )
     }
   }
 }

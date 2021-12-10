@@ -9,7 +9,6 @@ import { InstanceService } from './instances/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { Migrations } from './migrations'
-import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
 import { StatusService } from './status/service'
@@ -19,7 +18,6 @@ import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
 export class App extends Engine {
-  post: PostService
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
@@ -39,7 +37,6 @@ export class App extends Engine {
 
   constructor() {
     super()
-    this.post = new PostService()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
@@ -98,7 +95,6 @@ export class App extends Engine {
     this.migration.setupMigrations(Migrations)
     await super.setup()
 
-    await this.post.setup()
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
@@ -122,7 +118,6 @@ export class App extends Engine {
   }
 
   async destroy() {
-    await this.post?.destroy()
     await this.batching?.destroy()
     await this.instances?.destroy()
     await this.distributed?.destroy()

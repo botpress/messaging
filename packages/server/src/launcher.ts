@@ -108,6 +108,7 @@ export class Launcher {
 
       this.logger.info('Server gracefully closing down...')
 
+      await this.stream.destroy()
       await this.socket.manager.destroy()
       await this.httpTerminator?.terminate()
       await this.app.destroy()
