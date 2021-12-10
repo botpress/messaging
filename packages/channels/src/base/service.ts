@@ -18,6 +18,7 @@ export abstract class ChannelService<
   start: ChannelStartEvent
   initialize: ChannelInitializeEvent
   send: ChannelSendEvent
+  proactive: ChannelProactiveEvent
   receive: ChannelReceiveEvent
   stop: ChannelStopEvent
 }> {
@@ -59,6 +60,10 @@ export abstract class ChannelService<
 
   async send(scope: string, endpoint: Endpoint, content: any) {
     await this.emit('send', { scope, endpoint, content })
+  }
+
+  async proactive(scope: string, endpoint: Endpoint) {
+    await this.emit('proactive', { scope, endpoint })
   }
 
   async receive(scope: string, endpoint: Endpoint, content: any) {
@@ -127,6 +132,11 @@ export interface ChannelSendEvent {
   scope: string
   endpoint: Endpoint
   content: any
+}
+
+export interface ChannelProactiveEvent {
+  scope: string
+  endpoint: Endpoint
 }
 
 export interface ChannelReceiveEvent {
