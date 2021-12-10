@@ -93,21 +93,7 @@ export class App extends Engine {
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
-    this.stream = new StreamService(
-      this.dispatches,
-      this.post,
-      this.sockets,
-      this.channels,
-      this.clients,
-      this.webhooks,
-      this.conduits,
-      this.health,
-      this.users,
-      this.conversations,
-      this.messages,
-      this.converse,
-      this.mapping
-    )
+    this.stream = new StreamService(this.dispatches, this.post, this.sockets, this.webhooks)
   }
 
   async setup() {

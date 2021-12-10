@@ -10,6 +10,7 @@ import yn from 'yn'
 import { Api } from './api'
 import { App } from './app'
 import { Socket } from './socket'
+import { Stream } from './stream'
 
 const pkg = require('../package.json')
 
@@ -19,7 +20,13 @@ export class Launcher {
   private httpTerminator: HttpTerminator | undefined
   private readonly shutdownTimeout: number = ms('5s')
 
-  constructor(private express: Express, private app: App, private api: Api, private socket: Socket) {
+  constructor(
+    private express: Express,
+    private app: App,
+    private api: Api,
+    private stream: Stream,
+    private socket: Socket
+  ) {
     this.logger = new Logger('Launcher')
 
     process.on('uncaughtException', async (e) => {
@@ -56,6 +63,7 @@ export class Launcher {
       this.printChannels()
 
       await this.api.setup()
+      await this.stream.setup()
       await this.socket.setup()
 
       let port = process.env.PORT
