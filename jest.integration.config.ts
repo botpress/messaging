@@ -5,11 +5,11 @@ import ServerConfig from './packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  globalTeardown: './test/jest.functional.teardown.ts',
+  globalTeardown: './test/jest.integration.teardown.ts',
   projects: [
     {
       rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/functional/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/integration/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
