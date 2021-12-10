@@ -220,6 +220,26 @@ describe('DatabaseService', () => {
         expect(db.setDate(undefined)).toEqual(undefined)
       })
     })
+
+    describe('getBool', () => {
+      test('Should return the boolean as is', async () => {
+        const db = new DatabaseService()
+        await db.setup()
+
+        expect(db.getBool(true)).toEqual(true)
+        expect(db.getBool(false)).toEqual(false)
+      })
+    })
+
+    describe('setBool', () => {
+      test('Should return the boolean as is', async () => {
+        const db = new DatabaseService()
+        await db.setup()
+
+        expect(db.setBool(true)).toEqual(true)
+        expect(db.setBool(false)).toEqual(false)
+      })
+    })
   })
 
   describe('SQLite', () => {
@@ -432,6 +452,26 @@ describe('DatabaseService', () => {
         await db.setup()
 
         expect(db.setDate(undefined)).toEqual(undefined)
+      })
+    })
+
+    describe('getBool', () => {
+      test('Should convert the number into a boolean', async () => {
+        const db = new DatabaseService()
+        await db.setup()
+
+        expect(db.getBool(1)).toEqual(true)
+        expect(db.getBool(0)).toEqual(false)
+      })
+    })
+
+    describe('setBool', () => {
+      test('Should return a number from a boolean', async () => {
+        const db = new DatabaseService()
+        await db.setup()
+
+        expect(db.setBool(true)).toEqual(1)
+        expect(db.setBool(false)).toEqual(0)
       })
     })
   })

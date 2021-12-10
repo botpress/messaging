@@ -17,9 +17,9 @@
     "dev": "yarn workspace @botpress/messaging-server dev",
     "board": "yarn workspace @botpress/messaging-board dev",
     "channels": "yarn workspace @botpress/messaging-channels example",
-    "test": "yarn test:unit && yarn test:func && yarn test:e2e",
+    "test": "yarn test:unit && yarn test:int && yarn test:e2e",
     "test:unit": "jest -c jest.unit.config.ts",
-    "test:func": "jest -c jest.functional.config.ts",
+    "test:int": "jest -c jest.integration.config.ts",
     "test:e2e": "jest -c jest.e2e.config.ts"
   },
   "bin": "./packages/server/dist/index.js",
