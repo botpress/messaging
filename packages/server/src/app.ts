@@ -13,7 +13,6 @@ import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
 import { StatusService } from './status/service'
-import { StreamService } from './stream/service'
 import { SyncService } from './sync/service'
 import { UserTokenService } from './user-tokens/service'
 import { UserService } from './users/service'
@@ -37,7 +36,6 @@ export class App extends Engine {
   syncs: SyncService
   health: HealthService
   sockets: SocketService
-  stream: StreamService
 
   constructor() {
     super()
@@ -93,7 +91,6 @@ export class App extends Engine {
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
-    this.stream = new StreamService(this.dispatches, this.post, this.sockets, this.webhooks)
   }
 
   async setup() {
@@ -117,7 +114,6 @@ export class App extends Engine {
     await this.instances.setup()
     await this.health.setup()
     await this.sockets.setup()
-    await this.stream.setup()
   }
 
   async monitor() {

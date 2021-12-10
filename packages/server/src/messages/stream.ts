@@ -1,20 +1,20 @@
 import { uuid } from '@botpress/messaging-base'
+import { Streamer } from '../base/streamer'
 import { ChannelService } from '../channels/service'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
 import { MappingService } from '../mapping/service'
-import { StreamService } from '../stream/service'
 import { MessageCreatedEvent, MessageEvents } from './events'
 import { MessageService } from './service'
 
 export class MessageStream {
   constructor(
+    private streamer: Streamer,
     private channels: ChannelService,
     private conversations: ConversationService,
     private messages: MessageService,
     private converse: ConverseService,
-    private mapping: MappingService,
-    private stream: StreamService
+    private mapping: MappingService
   ) {}
 
   async setup() {
@@ -24,7 +24,7 @@ export class MessageStream {
   private async handleMessageCreate({ message, source }: MessageCreatedEvent) {
     const conversation = await this.conversations.get(message.conversationId)
 
-    await this.stream.stream(
+    await this.streamer.stream(
       'message.new',
       {
         channel: await this.getChannel(conversation!.id),

@@ -1,15 +1,15 @@
-import { StreamService } from '../stream/service'
+import { Streamer } from '../base/streamer'
 import { UserCreatedEvent, UserEvents } from './events'
 import { UserService } from './service'
 
 export class UserStream {
-  constructor(private users: UserService, private stream: StreamService) {}
+  constructor(private streamer: Streamer, private users: UserService) {}
 
   async setup() {
     this.users.events.on(UserEvents.Created, this.handleUserCreated.bind(this))
   }
 
   private async handleUserCreated({ user }: UserCreatedEvent) {
-    await this.stream.stream('user.new', {}, user.clientId, user.id)
+    await this.streamer.stream('user.new', {}, user.clientId, user.id)
   }
 }

@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { DispatchService, Logger, Service } from '@botpress/messaging-engine'
+import { Dispatcher, DispatchService, Logger } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import yn from 'yn'
 import { ActionSource } from '../base/source'
@@ -7,9 +7,8 @@ import { PostService } from '../post/service'
 import { SocketEvents, SocketUserEvent } from '../socket/events'
 import { SocketService } from '../socket/service'
 import { WebhookService } from '../webhooks/service'
-import { StreamDispatcher, StreamDispatches, StreamMessageDispatch } from './dispatch'
 
-export class StreamService extends Service {
+export class Streamer {
   private logger = new Logger('Stream')
   private dispatcher!: StreamDispatcher
 
@@ -18,16 +17,14 @@ export class StreamService extends Service {
     private posts: PostService,
     private sockets: SocketService,
     private webhooks: WebhookService
-  ) {
-    super()
-  }
+  ) {}
 
   async setup() {
     this.sockets.events.on(SocketEvents.UserConnected, this.handleUserConnected.bind(this))
     this.sockets.events.on(SocketEvents.UserDisconnected, this.handleUserDisconnected.bind(this))
 
     this.dispatcher = await this.dispatches.create('dispatch_socket', StreamDispatcher)
-    this.dispatcher.on(StreamDispatches.Message, this.handleDispatchMessage.bind(this))
+    this.dispatcher.on(StreamerDispatches.Message, this.handleDispatchMessage.bind(this))
   }
 
   private async handleUserConnected({ userId }: SocketUserEvent) {
@@ -38,7 +35,7 @@ export class StreamService extends Service {
     await this.dispatcher.unsubscribe(userId)
   }
 
-  private async handleDispatchMessage(userId: uuid, { source, payload }: StreamMessageDispatch) {
+  private async handleDispatchMessage(userId: uuid, { source, payload }: StreamerMessageDispatch) {
     const sockets = this.sockets.listByUser(userId)
 
     for (const socket of sockets) {
@@ -63,7 +60,7 @@ export class StreamService extends Service {
     }
 
     if (userId) {
-      await this.dispatcher.publish(StreamDispatches.Message, userId, { source: source?.socket?.id, payload })
+      await this.dispatcher.publish(StreamerDispatches.Message, userId, { source: source?.socket?.id, payload })
     }
 
     if (source?.client?.id !== clientId) {
@@ -79,3 +76,19 @@ export class StreamService extends Service {
     }
   }
 }
+
+export enum StreamerDispatches {
+  Message
+}
+
+export interface StreamerMessageDispatch {
+  source?: string
+  payload: {
+    type: string
+    data: any
+  }
+}
+
+export class StreamDispatcher extends Dispatcher<{
+  [StreamerDispatches.Message]: StreamerMessageDispatch
+}> {}

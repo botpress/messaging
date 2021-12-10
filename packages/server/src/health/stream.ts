@@ -1,17 +1,17 @@
+import { Streamer } from '../base/streamer'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
-import { StreamService } from '../stream/service'
 import { HealthCreatedEvent, HealthEvents } from './events'
 import { HealthService } from './service'
 
 export class HealthStream {
   constructor(
+    private streamer: Streamer,
     private channels: ChannelService,
     private clients: ClientService,
     private conduits: ConduitService,
-    private health: HealthService,
-    private stream: StreamService
+    private health: HealthService
   ) {}
 
   async setup() {
@@ -26,7 +26,7 @@ export class HealthStream {
     }
 
     const channel = this.channels.getById(conduit!.channelId)
-    await this.stream.stream(
+    await this.streamer.stream(
       'health.new',
       { channel: channel.meta.name, event: { ...this.health.makeReadable(event) } },
       client.id

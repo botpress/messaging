@@ -1,4 +1,5 @@
 import { App } from './app'
+import { Streamer } from './base/streamer'
 import { ConversationStream } from './conversations/stream'
 import { HealthStream } from './health/stream'
 import { MessageStream } from './messages/stream'
@@ -11,16 +12,17 @@ export class Stream {
   private messages: MessageStream
 
   constructor(app: App) {
-    this.health = new HealthStream(app.channels, app.clients, app.conduits, app.health, app.stream)
-    this.users = new UserStream(app.users, app.stream)
-    this.conversations = new ConversationStream(app.conversations, app.stream)
+    const streamer = new Streamer(app.dispatches, app.post, app.sockets, app.webhooks)
+    this.health = new HealthStream(streamer, app.channels, app.clients, app.conduits, app.health)
+    this.users = new UserStream(streamer, app.users)
+    this.conversations = new ConversationStream(streamer, app.conversations)
     this.messages = new MessageStream(
+      streamer,
       app.channels,
       app.conversations,
       app.messages,
       app.converse,
-      app.mapping,
-      app.stream
+      app.mapping
     )
   }
 
