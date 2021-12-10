@@ -15,7 +15,6 @@ export class Stream {
 
   constructor(app: App) {
     this.streamer = new Streamer(app.dispatches, app.sockets, app.webhooks)
-
     this.health = new HealthStream(this.streamer, app.channels, app.clients, app.conduits, app.health)
     this.users = new UserStream(this.streamer, app.users)
     this.conversations = new ConversationStream(this.streamer, app.conversations)
@@ -30,6 +29,7 @@ export class Stream {
   }
 
   async setup() {
+    await this.streamer.setup()
     await this.health.setup()
     await this.users.setup()
     await this.conversations.setup()
