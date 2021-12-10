@@ -112,14 +112,14 @@ export class DatabaseService extends Service {
     return date?.toISOString()
   }
 
-  getBool(bool: any): boolean {
-    if (this.isLite) {
+  getBool(bool: boolean | number): boolean {
+    if (this.isLite || typeof bool === 'number') {
       return !!bool
     }
     return bool
   }
 
-  setBool(bool: boolean): any {
+  setBool(bool: boolean): boolean | number {
     if (this.isLite) {
       return bool ? 1 : 0
     }
