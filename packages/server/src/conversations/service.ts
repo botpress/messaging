@@ -109,6 +109,7 @@ export class ConversationService extends Service {
 
     const query = this.queryRecents(clientId, userId).limit(1)
     const rows = await query
+    console.log('this.queryRecents(clientId, userId)', await this.queryRecents(clientId, userId))
 
     if (rows?.length) {
       const row = rows[0]
@@ -208,6 +209,7 @@ export class ConversationService extends Service {
       })
       .groupBy('msg_conversations.id', 'msg_messages.id')
       .orderBy('sentOn', 'desc')
+      .orderBy('createdOn', 'desc')
   }
 
   private serialize(conversation: Partial<Conversation>) {

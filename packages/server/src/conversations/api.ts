@@ -58,6 +58,11 @@ export class ConversationApi {
   async recent(req: ClientApiRequest, res: Response) {
     const userId = req.params.userId as uuid
 
+    const user = await this.users.get(userId)
+    if (!user || user.clientId !== req.client.id) {
+      return res.sendStatus(404)
+    }
+
     let conversation = await this.conversations.getMostRecent(req.client.id, userId)
     if (!conversation) {
       conversation = await this.conversations.create(req.client.id, userId)
