@@ -113,7 +113,6 @@ export class ConversationService extends Service {
 
     const query = this.queryRecents(clientId, userId).limit(1)
     const rows = await query
-    console.log('this.queryRecents(clientId, userId)', await this.queryRecents(clientId, userId))
 
     if (rows?.length) {
       const row = rows[0]
