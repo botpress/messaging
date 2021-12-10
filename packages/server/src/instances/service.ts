@@ -190,7 +190,7 @@ export class InstanceService extends Service {
 
     // small optimization. If the message comes from a channel, and we are only linked to one channel,
     // then we already know that we don't need to spread the message to other connected channels
-    if (convmaps.length === 1 && source?.conduit) {
+    if (convmaps.length === 1 && source?.endpoint) {
       return
     }
 
@@ -198,7 +198,7 @@ export class InstanceService extends Service {
       const endpoint = await this.mappingService.getEndpoint(threadId)
       const tunnel = await this.mappingService.tunnels.get(tunnelId)
 
-      if (!source?.conduit?.endpoint || !this.endpointEqual(source.conduit.endpoint, endpoint)) {
+      if (!source?.endpoint || !this.endpointEqual(source.endpoint, endpoint)) {
         const conduit = await this.conduitService.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
         if (!conduit) {
           return

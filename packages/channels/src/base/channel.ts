@@ -7,7 +7,7 @@ import { Endpoint } from './endpoint'
 import { Kvs } from './kvs'
 import { Logger } from './logger'
 import { ChannelMeta } from './meta'
-import { ChannelService } from './service'
+import { ChannelProactiveEvent, ChannelReceiveEvent, ChannelService } from './service'
 import { ChannelStream } from './stream'
 
 export interface Channel {
@@ -23,7 +23,10 @@ export interface Channel {
   send(scope: string, endpoint: any, content: any): Promise<void>
   stop(scope: string): Promise<void>
   has(scope: string): boolean
-  on(event: 'message', callback: (e: MessageEvent) => Promise<void>): void
+  on<K extends keyof ChannelEvents>(
+    event: K,
+    listener: ((arg: ChannelEvents[K]) => Promise<void>) | ((arg: ChannelEvents[K]) => void)
+  ): void
   autoStart(callback: (scope: string) => Promise<any>): void
   makeUrl(callback: (scope: string) => Promise<string>): void
 }
@@ -85,8 +88,15 @@ export abstract class ChannelTemplate<
     return this.service.get(scope) !== undefined
   }
 
-  on(event: 'message', callback: (e: MessageEvent) => Promise<void>): void {
-    this.service.on('receive', callback)
+  public on<K extends keyof ChannelEvents>(
+    event: K,
+    listener: ((arg: ChannelEvents[K]) => Promise<void>) | ((arg: ChannelEvents[K]) => void)
+  ) {
+    if (event === 'message') {
+      this.service.on('receive', listener as (arg: ChannelReceiveEvent) => void)
+    } else if (event === 'proactive') {
+      this.service.on('proactive', listener as (arg: ChannelProactiveEvent) => void)
+    }
   }
 
   autoStart(callback: (scope: string) => Promise<TConfig>) {
@@ -98,8 +108,18 @@ export abstract class ChannelTemplate<
   }
 }
 
+export interface ChannelEvents {
+  message: MessageEvent
+  proactive: ProactiveEvent
+}
+
 export interface MessageEvent {
   scope: string
   endpoint: Endpoint
   content: any
+}
+
+export interface ProactiveEvent {
+  scope: string
+  endpoint: Endpoint
 }

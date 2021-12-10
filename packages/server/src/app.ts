@@ -9,18 +9,15 @@ import { InstanceService } from './instances/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { Migrations } from './migrations'
-import { PostService } from './post/service'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
 import { StatusService } from './status/service'
-import { StreamService } from './stream/service'
 import { SyncService } from './sync/service'
 import { UserTokenService } from './user-tokens/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
 export class App extends Engine {
-  post: PostService
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
@@ -37,11 +34,9 @@ export class App extends Engine {
   syncs: SyncService
   health: HealthService
   sockets: SocketService
-  stream: StreamService
 
   constructor() {
     super()
-    this.post = new PostService()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
@@ -93,21 +88,6 @@ export class App extends Engine {
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
-    this.stream = new StreamService(
-      this.dispatches,
-      this.post,
-      this.sockets,
-      this.channels,
-      this.clients,
-      this.webhooks,
-      this.conduits,
-      this.health,
-      this.users,
-      this.conversations,
-      this.messages,
-      this.converse,
-      this.mapping
-    )
   }
 
   async setup() {
@@ -115,7 +95,6 @@ export class App extends Engine {
     this.migration.setupMigrations(Migrations)
     await super.setup()
 
-    await this.post.setup()
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
@@ -131,7 +110,6 @@ export class App extends Engine {
     await this.instances.setup()
     await this.health.setup()
     await this.sockets.setup()
-    await this.stream.setup()
   }
 
   async monitor() {
@@ -140,7 +118,6 @@ export class App extends Engine {
   }
 
   async destroy() {
-    await this.post?.destroy()
     await this.batching?.destroy()
     await this.instances?.destroy()
     await this.distributed?.destroy()

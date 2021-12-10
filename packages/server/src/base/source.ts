@@ -11,7 +11,7 @@ import { Endpoint } from '@botpress/messaging-channels'
  * streaming back an event to the service that made the request.
  */
 export interface ActionSource {
-  conduit?: { id: uuid; endpoint: Endpoint }
+  endpoint?: Endpoint
   client?: { id: uuid }
   socket?: { id: string }
 }

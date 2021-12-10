@@ -8,6 +8,7 @@ import { Api } from './api'
 import { App } from './app'
 import { Launcher } from './launcher'
 import { Socket } from './socket'
+import { Stream } from './stream'
 
 // Set NODE_ENV to production when starting messaging using the binary version
 process.env.NODE_ENV = process.pkg ? 'production' : process.env.NODE_ENV
@@ -19,9 +20,10 @@ const launch = async () => {
 
   const app = new App()
   const api = new Api(app, router)
+  const stream = new Stream(app)
   const socket = new Socket(app)
 
-  const launcher = new Launcher(router, app, api, socket)
+  const launcher = new Launcher(router, app, api, stream, socket)
   await launcher.launch()
 }
 
