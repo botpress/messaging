@@ -31,7 +31,7 @@ export class ConversationStream {
     const conversation = await this.conversations.get(conversationId)
     await this.streamer.stream(
       'conversation.started',
-      { conversationId, channel: await this.getChannel(conversationId) },
+      { conversationId, userId: conversation!.userId, channel: await this.getChannel(conversationId) },
       conversation!.clientId
     )
   }
