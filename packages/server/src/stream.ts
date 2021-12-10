@@ -17,7 +17,7 @@ export class Stream {
     this.streamer = new Streamer(app.dispatches, app.sockets, app.webhooks)
     this.health = new HealthStream(this.streamer, app.channels, app.clients, app.conduits, app.health)
     this.users = new UserStream(this.streamer, app.users)
-    this.conversations = new ConversationStream(this.streamer, app.conversations)
+    this.conversations = new ConversationStream(this.streamer, app.channels, app.conversations, app.mapping)
     this.messages = new MessageStream(
       this.streamer,
       app.channels,

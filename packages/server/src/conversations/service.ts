@@ -68,6 +68,10 @@ export class ConversationService extends Service {
     return conversation
   }
 
+  public async start(id: uuid): Promise<void> {
+    await this.emitter.emit(ConversationEvents.Started, { conversationId: id })
+  }
+
   public async delete(id: uuid): Promise<number> {
     await this.batcher.flush()
 
