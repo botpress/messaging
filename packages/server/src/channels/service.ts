@@ -1,23 +1,23 @@
 import { uuid } from '@botpress/messaging-base'
+import {
+  Channel,
+  MessengerChannel,
+  SlackChannel,
+  SmoochChannel,
+  TeamsChannel,
+  TelegramChannel,
+  TwilioChannel,
+  VonageChannel
+} from '@botpress/messaging-channels'
 import { Service, DatabaseService } from '@botpress/messaging-engine'
-import { Channel } from './base/channel'
-import { ConduitInstance } from './base/conduit'
-import { DiscordChannel } from './discord/channel'
-import { MessengerChannel } from './messenger/channel'
-import { SlackChannel } from './slack/channel'
-import { SmoochChannel } from './smooch/channel'
 import { ChannelTable } from './table'
-import { TeamsChannel } from './teams/channel'
-import { TelegramChannel } from './telegram/channel'
-import { TwilioChannel } from './twilio/channel'
-import { VonageChannel } from './vonage/channel'
 
 export class ChannelService extends Service {
   private table: ChannelTable
 
-  private channels: Channel<ConduitInstance<any, any>>[]
-  private channelsByName: { [name: string]: Channel<ConduitInstance<any, any>> }
-  private channelsById: { [id: string]: Channel<ConduitInstance<any, any>> }
+  private channels: Channel[]
+  private channelsByName: { [name: string]: Channel }
+  private channelsById: { [id: string]: Channel }
 
   constructor(private db: DatabaseService) {
     super()
@@ -30,7 +30,6 @@ export class ChannelService extends Service {
       new TeamsChannel(),
       new TelegramChannel(),
       new TwilioChannel(),
-      new DiscordChannel(),
       new SmoochChannel(),
       new VonageChannel()
     ]
@@ -39,8 +38,8 @@ export class ChannelService extends Service {
     this.channelsById = {}
 
     for (const channel of this.channels) {
-      this.channelsByName[channel.name] = channel
-      this.channelsById[channel.id] = channel
+      this.channelsByName[channel.meta.name] = channel
+      this.channelsById[channel.meta.id] = channel
     }
   }
 
@@ -48,7 +47,7 @@ export class ChannelService extends Service {
     await this.db.registerTable(this.table)
 
     for (const channel of this.channels) {
-      if (!(await this.getInDb(channel.name))) {
+      if (!(await this.getInDb(channel.meta.name))) {
         await this.createInDb(channel)
       }
     }
@@ -75,8 +74,13 @@ export class ChannelService extends Service {
     }
   }
 
-  private async createInDb(channel: Channel<ConduitInstance<any, any>>) {
-    await this.query().insert({ id: channel.id, name: channel.name, lazy: channel.lazy, initiable: channel.initiable })
+  private async createInDb(channel: Channel) {
+    await this.query().insert({
+      id: channel.meta.id,
+      name: channel.meta.name,
+      lazy: channel.meta.lazy,
+      initiable: channel.meta.initiable
+    })
   }
 
   private query() {

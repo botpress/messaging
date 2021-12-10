@@ -1,8 +1,8 @@
 import { uuid } from '@botpress/messaging-base'
+import { Endpoint } from '@botpress/messaging-channels'
 import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
 import { MappingService } from '../../src/mapping/service'
-import { Endpoint } from '../../src/mapping/types'
 import { Provider } from '../../src/providers/types'
 import { app, setupApp } from './utils'
 
@@ -34,8 +34,8 @@ describe('Mapping', () => {
     await setupApp()
     mapping = app.mapping
     clientId = (await app.clients.create(undefined!, await app.clients.generateToken())).id
-    channelId = app.channels.getByName('telegram').id
-    channelId2 = app.channels.getByName('twilio').id
+    channelId = app.channels.getByName('telegram').meta.id
+    channelId2 = app.channels.getByName('twilio').meta.id
   })
 
   afterAll(async () => {

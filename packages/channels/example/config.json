@@ -1,0 +1,22 @@
+{
+  "externalUrl": "",
+  "scopes": {
+    "CLIENT_ID": {
+      "telegram": {
+        "botToken": ""
+      },
+      "twilio": {
+        "accountSID": "",
+        "authToken": ""
+      },
+      "smooch": {
+        "keyId": "",
+        "secret": ""
+      },
+      "teams": {
+        "appId": "",
+        "appPassword": ""
+      }
+    }
+  }
+}
