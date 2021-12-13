@@ -212,6 +212,7 @@ export class ConversationService extends Service {
       })
       .groupBy('msg_conversations.id', 'msg_messages.id')
       .orderBy('sentOn', 'desc')
+      .orderBy('createdOn', 'desc')
   }
 
   private serialize(conversation: Partial<Conversation>) {

@@ -5,6 +5,9 @@ import { MessageClient } from './messages'
 import { SyncClient } from './sync'
 import { UserClient } from './users'
 
+export const CLIENT_ID_HEADER = 'x-bp-messaging-client-id'
+export const CLIENT_TOKEN_HEADER = 'x-bp-messaging-client-token'
+
 export class MessagingClient {
   http: AxiosInstance
   authHttp: AxiosInstance
@@ -36,8 +39,8 @@ export class MessagingClient {
 
   public authenticate(clientId: string, clientToken: string) {
     this.auth = { clientId, clientToken }
-    this.authHttp.defaults.headers.common['x-bp-messaging-client-id'] = clientId
-    this.authHttp.defaults.headers.common['x-bp-messaging-client-token'] = clientToken
+    this.authHttp.defaults.headers.common[CLIENT_ID_HEADER] = clientId
+    this.authHttp.defaults.headers.common[CLIENT_TOKEN_HEADER] = clientToken
   }
 
   private getAxiosConfig({ url, config }: MessagingOptions): AxiosRequestConfig {

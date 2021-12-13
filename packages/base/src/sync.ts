@@ -2,7 +2,7 @@ import { uuid } from './uuid'
 
 export interface SyncRequest {
   channels?: SyncChannels
-  webhooks?: SyncWebhook[]
+  webhooks?: Omit<SyncWebhook, 'token'>[]
   id?: uuid
   token?: string
   name?: string

@@ -44,7 +44,7 @@ export class MessageClient extends BaseClient {
     await this.http.post(`/messages/turn/${id}`)
   }
 
-  public deserialize(message: Message): Message {
+  private deserialize(message: Message): Message {
     return {
       ...message,
       sentOn: new Date(message.sentOn)
