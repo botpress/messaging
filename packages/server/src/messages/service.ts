@@ -68,7 +68,7 @@ export class MessageService extends Service {
 
     await this.batcher.push(message)
     const conversation = await this.conversationService.get(conversationId)
-    await this.conversationService.setMostRecent(conversation!.userId, conversation!.id)
+    await this.conversationService.setMostRecent(conversation.userId, conversation.id)
 
     await this.emitter.emit(MessageEvents.Created, { message, source })
 
@@ -82,7 +82,7 @@ export class MessageService extends Service {
     const conversation = await this.conversationService.get(message.conversationId)
 
     this.cache.del(id, true)
-    this.conversationService.invalidateMostRecent(conversation!.userId)
+    this.conversationService.invalidateMostRecent(conversation.userId)
 
     return this.query().where({ id }).del()
   }
@@ -141,7 +141,7 @@ export class MessageService extends Service {
       deletedIds.forEach((x) => this.cache.del(x, true))
 
       const conversation = await this.conversationService.get(conversationId)
-      this.conversationService.invalidateMostRecent(conversation!.userId)
+      this.conversationService.invalidateMostRecent(conversation.userId)
     }
 
     return deletedIds.length

@@ -22,7 +22,7 @@ export class ConversationSocket {
 
   async get(socket: SocketRequest) {
     const { id } = socket.data
-    const conversation = await this.conversations.get(id)
+    const conversation = await this.conversations.fetch(id)
 
     if (!conversation || conversation.userId !== socket.userId) {
       return socket.reply(undefined)
@@ -42,7 +42,7 @@ export class ConversationSocket {
 
   async delete(socket: SocketRequest) {
     const { id } = socket.data
-    const conversation = await this.conversations.get(id)
+    const conversation = await this.conversations.fetch(id)
 
     if (!conversation) {
       return socket.reply(false)

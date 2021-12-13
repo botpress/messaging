@@ -185,7 +185,7 @@ export class InstanceService extends Service {
 
   private async handleMessageCreated({ message, source }: MessageCreatedEvent) {
     const conversation = await this.conversationService.get(message.conversationId)
-    const client = await this.clientService.getById(conversation!.clientId)
+    const client = await this.clientService.getById(conversation.clientId)
     const convmaps = await this.mappingService.convmap.listByConversationId(message.conversationId)
 
     // small optimization. If the message comes from a channel, and we are only linked to one channel,

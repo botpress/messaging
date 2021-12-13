@@ -17,7 +17,7 @@ export class MessageSocket {
 
   async create(socket: SocketRequest) {
     const { conversationId, payload } = socket.data
-    const conversation = await this.conversations.get(conversationId)
+    const conversation = await this.conversations.fetch(conversationId)
 
     if (!conversation || conversation.userId !== socket.userId) {
       return socket.notFound('Conversation does not exist')
@@ -31,7 +31,7 @@ export class MessageSocket {
 
   async list(socket: SocketRequest) {
     const { conversationId, limit } = socket.data
-    const conversation = await this.conversations.get(conversationId)
+    const conversation = await this.conversations.fetch(conversationId)
 
     if (!conversation || conversation.userId !== socket.userId) {
       return socket.notFound('Conversation does not exist')

@@ -78,12 +78,12 @@ export class ConversationService extends Service {
     const conversation = await this.get(id)
 
     this.cache.del(id, true)
-    this.cacheMostRecent.del(conversation!.userId, true)
+    this.cacheMostRecent.del(conversation.userId, true)
 
     return this.query().where({ id }).del()
   }
 
-  public async get(id: uuid): Promise<Conversation | undefined> {
+  public async fetch(id: uuid): Promise<Conversation | undefined> {
     const cached = this.cache.get(id)
     if (cached) {
       return cached
@@ -103,7 +103,15 @@ export class ConversationService extends Service {
     return undefined
   }
 
-  public async getMostRecent(clientId: uuid, userId: uuid): Promise<Conversation | undefined> {
+  public async get(id: uuid): Promise<Conversation> {
+    const val = await this.fetch(id)
+    if (!val) {
+      throw new Error(`Conversation ${id} not found`)
+    }
+    return val
+  }
+
+  public async fetchMostRecent(clientId: uuid, userId: uuid): Promise<Conversation | undefined> {
     // TODO: need to figure out batching for this
 
     const cached = this.cacheMostRecent.get(userId)
@@ -179,7 +187,7 @@ export class ConversationService extends Service {
 
     if (currentMostRecent?.id !== conversationId) {
       const conversation = await this.get(conversationId)
-      this.cacheMostRecent.set(userId, conversation!)
+      this.cacheMostRecent.set(userId, conversation)
     }
   }
 

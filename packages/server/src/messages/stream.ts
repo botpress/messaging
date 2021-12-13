@@ -27,13 +27,13 @@ export class MessageStream {
     await this.streamer.stream(
       'message.new',
       {
-        channel: await this.getChannel(conversation!.id),
-        conversationId: conversation!.id,
+        channel: await this.getChannel(conversation.id),
+        conversationId: conversation.id,
         collect: this.converse.isCollectingForMessage(message.id),
         message
       },
-      conversation!.clientId,
-      conversation!.userId,
+      conversation.clientId,
+      conversation.userId,
       source
     )
   }

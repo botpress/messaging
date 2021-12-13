@@ -34,7 +34,7 @@ export class ConversationApi {
   async get(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const conversation = await this.conversations.get(id)
+    const conversation = await this.conversations.fetch(id)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -63,7 +63,7 @@ export class ConversationApi {
       return res.sendStatus(404)
     }
 
-    let conversation = await this.conversations.getMostRecent(req.client.id, userId)
+    let conversation = await this.conversations.fetchMostRecent(req.client.id, userId)
     if (!conversation) {
       conversation = await this.conversations.create(req.client.id, userId)
     }
