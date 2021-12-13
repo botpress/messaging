@@ -40,7 +40,7 @@ export class ProviderService extends Service {
     return provider
   }
 
-  async getByName(name: string): Promise<Provider | undefined> {
+  async fetchByName(name: string): Promise<Provider | undefined> {
     const cached = this.cacheByName.get(name)
     if (cached) {
       return cached
@@ -59,7 +59,15 @@ export class ProviderService extends Service {
     return undefined
   }
 
-  async getById(id: uuid): Promise<Provider | undefined> {
+  async getByName(name: string): Promise<Provider> {
+    const val = await this.fetchByName(name)
+    if (!val) {
+      throw new Error(`Provider with name ${name} not found`)
+    }
+    return val
+  }
+
+  async fetchById(id: uuid): Promise<Provider | undefined> {
     const cached = this.cacheById.get(id)
     if (cached) {
       return cached
@@ -78,8 +86,16 @@ export class ProviderService extends Service {
     return undefined
   }
 
+  async getById(id: string): Promise<Provider> {
+    const val = await this.fetchById(id)
+    if (!val) {
+      throw new Error(`Provider ${id} not found`)
+    }
+    return val
+  }
+
   async updateSandbox(id: uuid, sandbox: boolean) {
-    const oldProvider = (await this.getById(id))!
+    const oldProvider = await this.getById(id)
 
     this.cacheById.del(id, true)
     this.cacheByName.del(oldProvider.name, true)
@@ -91,7 +107,7 @@ export class ProviderService extends Service {
   }
 
   async updateName(id: uuid, name: string) {
-    const oldProvider = (await this.getById(id))!
+    const oldProvider = await this.getById(id)
 
     this.cacheById.del(id, true)
     this.cacheByName.del(oldProvider.name, true)
@@ -103,7 +119,7 @@ export class ProviderService extends Service {
   async delete(id: uuid) {
     await this.emitter.emit(ProviderEvents.Deleting, { providerId: id })
 
-    const provider = (await this.getById(id))!
+    const provider = await this.getById(id)
     this.cacheById.del(id, true)
     this.cacheByName.del(provider.name, true)
 

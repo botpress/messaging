@@ -73,7 +73,7 @@ export class InstanceInvalidator {
       return
     }
 
-    const oldProvider = await this.providers.getById(oldClient.providerId)
+    const oldProvider = await this.providers.fetchById(oldClient.providerId)
     if (!oldProvider || oldProvider?.sandbox) {
       return
     }

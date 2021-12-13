@@ -80,7 +80,7 @@ export class SyncService extends Service {
   }
 
   private async syncProvider(name: string, sandbox: boolean): Promise<Provider> {
-    let provider = await this.providers.getByName(name)
+    let provider = await this.providers.fetchByName(name)
 
     if (!provider) {
       provider = await this.providers.create(name, sandbox)
@@ -140,7 +140,7 @@ export class SyncService extends Service {
 
     // For when messaging is spinned. Assures that a certain botId always gets back the same clientId when calling messaging
     if (!client && forceProviderName && !forceClientId) {
-      const exisingProvider = await this.providers.getByName(forceProviderName)
+      const exisingProvider = await this.providers.fetchByName(forceProviderName)
       if (exisingProvider) {
         const existingClient = await this.clients.getByProviderId(exisingProvider.id)
         if (existingClient) {
@@ -158,7 +158,7 @@ export class SyncService extends Service {
       token = forceToken || (await this.clients.generateToken())
       client = await this.clients.create(provider.id, token, clientId)
     } else {
-      provider = await this.providers.getById(client.providerId)
+      provider = await this.providers.fetchById(client.providerId)
 
       if (!provider) {
         provider = await this.providers.create(client.id, false)
@@ -173,7 +173,7 @@ export class SyncService extends Service {
       // If this provider's name conflicts with an old provider, we delete the old provider
       // We only do this when setting a name ourselves to the provider (meaning we made a call to sync with sufficient authority)
       if (forceProviderName) {
-        const providerWithSameName = await this.providers.getByName(targetName)
+        const providerWithSameName = await this.providers.fetchByName(targetName)
         if (providerWithSameName && providerWithSameName.id !== provider.id) {
           await this.providers.delete(providerWithSameName.id)
         }
