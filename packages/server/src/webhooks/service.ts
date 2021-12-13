@@ -43,7 +43,7 @@ export class WebhookService extends Service {
     return webhook
   }
 
-  async get(id: uuid): Promise<Webhook | undefined> {
+  async fetch(id: uuid): Promise<Webhook | undefined> {
     const rows = await this.query().where({ id })
     if (rows?.length) {
       return this.deserialize(rows[0])
@@ -52,9 +52,17 @@ export class WebhookService extends Service {
     }
   }
 
+  async get(id: uuid): Promise<Webhook> {
+    const val = await this.fetch(id)
+    if (!val) {
+      throw new Error(`Webhook ${id} not found`)
+    }
+    return val
+  }
+
   async delete(id: uuid) {
     const webhook = await this.get(id)
-    this.cacheListByClient.del(webhook!.clientId, true)
+    this.cacheListByClient.del(webhook.clientId, true)
 
     return this.query().where({ id }).del()
   }
