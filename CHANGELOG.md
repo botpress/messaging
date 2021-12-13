@@ -1,3 +1,19 @@
+## [0.1.20](https://github.com/botpress/messaging/compare/v0.1.19...v0.1.20) (2021-12-13)
+
+
+### Bug Fixes
+
+* **channels:** read the conversation.started event ([#282](https://github.com/botpress/messaging/issues/282)) ([145d4f4](https://github.com/botpress/messaging/commit/145d4f47b158f726439b77c0686ac982f5aa6db3))
+* **migrations:** fix migrations with targets that are out of bounds ([#274](https://github.com/botpress/messaging/issues/274)) ([c0e7a50](https://github.com/botpress/messaging/commit/c0e7a5021871c8bf9f429094b427cf4def71940c))
+
+
+### Features
+
+* **channels:** add conversation.started event ([#266](https://github.com/botpress/messaging/issues/266)) ([67906da](https://github.com/botpress/messaging/commit/67906daa5011db395ecfd707d0a8c1bdd3e102bf))
+* **channels:** channels package ([#270](https://github.com/botpress/messaging/issues/270)) ([2dadfee](https://github.com/botpress/messaging/commit/2dadfeea8c5c84a736793822609838cd5c914c4f)), closes [#271](https://github.com/botpress/messaging/issues/271) [#272](https://github.com/botpress/messaging/issues/272)
+
+
+
 ## [0.1.19](https://github.com/botpress/messaging/compare/v0.1.18...v0.1.19) (2021-11-30)
 
 
