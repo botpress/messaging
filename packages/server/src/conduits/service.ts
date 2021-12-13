@@ -65,7 +65,7 @@ export class ConduitService extends Service {
   }
 
   async delete(id: uuid) {
-    const conduit = (await this.get(id))!
+    const conduit = await this.get(id)
     this.cacheById.del(id, true)
     this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
@@ -75,7 +75,7 @@ export class ConduitService extends Service {
   }
 
   async updateConfig(id: uuid, config: any) {
-    const conduit = (await this.get(id))!
+    const conduit = await this.get(id)
     const channel = this.channelService.getById(conduit.channelId)
     const validConfig = await channel.meta.schema.validateAsync(config)
 
@@ -89,7 +89,7 @@ export class ConduitService extends Service {
     await this.emitter.emit(ConduitEvents.Updated, id)
   }
 
-  async get(id: uuid): Promise<Conduit | undefined> {
+  async fetch(id: uuid): Promise<Conduit | undefined> {
     const cached = this.cacheById.get(id)
     if (cached) {
       return cached
@@ -104,6 +104,14 @@ export class ConduitService extends Service {
     }
 
     return undefined
+  }
+
+  async get(id: uuid): Promise<Conduit> {
+    const val = await this.fetch(id)
+    if (!val) {
+      throw new Error(`Conduit ${id} not found`)
+    }
+    return val
   }
 
   async getByProviderAndChannel(providerId: uuid, channelId: uuid) {

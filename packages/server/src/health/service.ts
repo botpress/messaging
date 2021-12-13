@@ -52,7 +52,7 @@ export class HealthService extends Service {
     }
 
     const conduit = await this.conduitService.get(conduitId)
-    const client = await this.clientService.getByProviderId(conduit!.providerId)
+    const client = await this.clientService.getByProviderId(conduit.providerId)
     if (client) {
       this.cache.del(client.id, true)
     }

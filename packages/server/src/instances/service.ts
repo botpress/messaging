@@ -111,7 +111,7 @@ export class InstanceService extends Service {
   async initialize(conduitId: uuid) {
     await this.start(conduitId)
 
-    const conduit = (await this.conduitService.get(conduitId))!
+    const conduit = await this.conduitService.get(conduitId)
     const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
@@ -131,7 +131,7 @@ export class InstanceService extends Service {
   }
 
   async start(conduitId: uuid) {
-    const conduit = (await this.conduitService.get(conduitId))!
+    const conduit = await this.conduitService.get(conduitId)
     const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
@@ -157,7 +157,7 @@ export class InstanceService extends Service {
   }
 
   async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {
-    const conduit = (await this.conduitService.get(conduitId))!
+    const conduit = await this.conduitService.get(conduitId)
     const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
@@ -165,7 +165,7 @@ export class InstanceService extends Service {
   }
 
   private async handleDispatchStop(conduitId: uuid) {
-    const conduit = (await this.conduitService.get(conduitId))!
+    const conduit = await this.conduitService.get(conduitId)
     const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
