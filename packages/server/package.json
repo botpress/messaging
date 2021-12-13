@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-server",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "main": "index.ts",
   "license": "AGPL-3.0",
   "scripts": {
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",
-    "@botpress/messaging-engine": "0.0.1",
     "@botpress/messaging-channels": "0.0.1",
+    "@botpress/messaging-engine": "0.0.1",
     "@sentry/node": "^6.11.0",
     "@slack/events-api": "^2.3.2",
     "@slack/interactive-messages": "^1.5.0",
