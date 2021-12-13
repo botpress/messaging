@@ -94,7 +94,7 @@ export class MessageApi {
   async get(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const message = await this.messages.get(id)
+    const message = await this.messages.fetch(id)
     if (!message) {
       return res.sendStatus(404)
     }
@@ -123,7 +123,7 @@ export class MessageApi {
   async delete(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const message = await this.messages.get(id)
+    const message = await this.messages.fetch(id)
     if (!message) {
       return res.sendStatus(404)
     }
@@ -152,7 +152,7 @@ export class MessageApi {
   async turn(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const message = await this.messages.get(id)
+    const message = await this.messages.fetch(id)
     if (!message) {
       return res.sendStatus(404)
     }

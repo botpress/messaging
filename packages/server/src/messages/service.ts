@@ -79,7 +79,7 @@ export class MessageService extends Service {
     await this.batcher.flush()
 
     const message = await this.get(id)
-    const conversation = await this.conversationService.get(message!.conversationId)
+    const conversation = await this.conversationService.get(message.conversationId)
 
     this.cache.del(id, true)
     this.conversationService.invalidateMostRecent(conversation!.userId)
@@ -87,7 +87,7 @@ export class MessageService extends Service {
     return this.query().where({ id }).del()
   }
 
-  public async get(id: uuid): Promise<Message | undefined> {
+  public async fetch(id: uuid): Promise<Message | undefined> {
     const cached = this.cache.get(id)
     if (cached) {
       return cached
@@ -105,6 +105,14 @@ export class MessageService extends Service {
     }
 
     return undefined
+  }
+
+  public async get(id: uuid): Promise<Message> {
+    const val = await this.fetch(id)
+    if (!val) {
+      throw new Error(`Message ${id} not found`)
+    }
+    return val
   }
 
   public async listByConversationId(conversationId: uuid, limit?: number, offset?: number): Promise<Message[]> {
