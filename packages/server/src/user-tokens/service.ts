@@ -76,7 +76,7 @@ export class UserTokenService extends Service {
     return userToken
   }
 
-  async getById(id: uuid): Promise<UserToken | undefined> {
+  async fetchById(id: uuid): Promise<UserToken | undefined> {
     const cached = this.cacheById.get(id)
     if (cached) {
       return cached
@@ -95,7 +95,7 @@ export class UserTokenService extends Service {
   }
 
   async verifyToken(id: string, token: string): Promise<UserToken | undefined> {
-    const userToken = await this.getById(id)
+    const userToken = await this.fetchById(id)
     if (!userToken) {
       return undefined
     }
