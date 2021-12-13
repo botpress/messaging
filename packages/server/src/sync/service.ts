@@ -65,7 +65,9 @@ export class SyncService extends Service {
       result = { id: client.id, token: client.token || req.token!, webhooks }
     }
 
-    if (req.id) {
+    if (req.name) {
+      await this.distributed.using(`lock_dyn_sync_provider::${req.name}`, lockedTask)
+    } else if (req.id) {
       await this.distributed.using(`lock_dyn_sync_client::${req.id}`, lockedTask)
     } else {
       await lockedTask()
