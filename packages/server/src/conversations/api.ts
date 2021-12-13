@@ -22,7 +22,7 @@ export class ConversationApi {
   async create(req: ClientApiRequest, res: Response) {
     const userId = req.body.userId as uuid
 
-    const user = await this.users.get(userId)
+    const user = await this.users.fetch(userId)
     if (!user || user!.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -46,7 +46,7 @@ export class ConversationApi {
     const userId = req.params.userId as uuid
     const limit = +(req.query.limit || DEFAULT_LIMIT)
 
-    const user = await this.users.get(userId)
+    const user = await this.users.fetch(userId)
     if (!user || user.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -58,7 +58,7 @@ export class ConversationApi {
   async recent(req: ClientApiRequest, res: Response) {
     const userId = req.params.userId as uuid
 
-    const user = await this.users.get(userId)
+    const user = await this.users.fetch(userId)
     if (!user || user.clientId !== req.client.id) {
       return res.sendStatus(404)
     }

@@ -97,7 +97,7 @@ export class SocketManager {
       }
 
       if (creds) {
-        const user = await this.users.get(creds.userId)
+        const user = await this.users.fetch(creds.userId)
         if (user?.clientId === clientId) {
           const [userTokenId, userTokenToken] = creds.userToken.split('.')
           if (

@@ -15,7 +15,7 @@ export class ConversationSocket {
 
   async create(socket: SocketRequest) {
     const user = await this.users.get(socket.userId)
-    const conversation = await this.conversations.create(user!.clientId, user!.id)
+    const conversation = await this.conversations.create(user.clientId, user.id)
 
     socket.reply(conversation)
   }
