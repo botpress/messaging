@@ -90,6 +90,10 @@ export class DatabaseService extends Service {
     }
   }
 
+  getIsLite() {
+    return this.isLite
+  }
+
   getJson(val: any): any {
     if (this.isLite) {
       return val ? JSON.parse(val) : undefined
