@@ -1,6 +1,6 @@
 import type { Config } from '@jest/types'
+import { pathsToModuleNameMapper } from 'ts-jest'
 import { defaults as tsjPreset } from 'ts-jest/presets'
-import { pathsToModuleNameMapper } from 'ts-jest/utils'
 import ClientConfig from './packages/client/test/tsconfig.json'
 import SocketConfig from './packages/socket/test/tsconfig.json'
 

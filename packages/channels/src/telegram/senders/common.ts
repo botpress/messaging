@@ -5,7 +5,7 @@ import { TelegramContext } from '../context'
 export class TelegramCommonSender extends CommonSender {
   async send(context: TelegramContext) {
     const telegram = context.state.telegraf.telegram
-    const chatId = context.thread!
+    const chatId = context.thread
 
     for (const message of context.messages) {
       if (message.action) {

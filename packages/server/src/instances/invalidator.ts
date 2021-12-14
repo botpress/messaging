@@ -33,7 +33,7 @@ export class InstanceInvalidator {
   }
 
   private async onConduitCreated(conduitId: uuid) {
-    const conduit = (await this.conduits.get(conduitId))!
+    const conduit = await this.conduits.get(conduitId)
     const channel = this.channels.getById(conduit.channelId)
 
     if (channel.meta.initiable) {
@@ -54,7 +54,7 @@ export class InstanceInvalidator {
     await this.status.updateInitializedOn(conduitId, undefined)
     await this.status.clearErrors(conduitId)
 
-    const conduit = (await this.conduits.get(conduitId))!
+    const conduit = await this.conduits.get(conduitId)
     const channel = this.channels.getById(conduit.channelId)
 
     if (channel.meta.initiable) {
@@ -67,13 +67,13 @@ export class InstanceInvalidator {
   }
 
   private async onClientUpdated({ clientId, oldClient }: ClientUpdatedEvent) {
-    const client = (await this.clients.getById(clientId))!
+    const client = await this.clients.getById(clientId)
 
     if (client.providerId === oldClient.providerId) {
       return
     }
 
-    const oldProvider = await this.providers.getById(oldClient.providerId)
+    const oldProvider = await this.providers.fetchById(oldClient.providerId)
     if (!oldProvider || oldProvider?.sandbox) {
       return
     }

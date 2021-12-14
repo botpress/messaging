@@ -48,7 +48,7 @@ describe('Status', () => {
   })
 
   test('Get status of new conduit should be undefined', async () => {
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
     expect(st).toBeUndefined()
   })
 
@@ -64,7 +64,7 @@ describe('Status', () => {
   })
 
   test('Get status', async () => {
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
 
     expect(st).toEqual(state.status)
   })
@@ -80,7 +80,7 @@ describe('Status', () => {
   })
 
   test('Create status for other conduit', async () => {
-    let st = await status.get(state.conduit2.id)
+    let st = await status.fetch(state.conduit2.id)
     expect(st).toBeUndefined()
 
     st = await status.create(state.conduit2.id)
@@ -103,7 +103,7 @@ describe('Status', () => {
     const errMessage = 'err1'
     await status.addError(state.conduit.id, new Error(errMessage))
 
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
     expect(st!.numberOfErrors).toBe(1)
     expect(st!.lastError?.includes(errMessage)).toBeTruthy()
 
@@ -114,7 +114,7 @@ describe('Status', () => {
     const errMessage = 'err2'
     await status.addError(state.conduit.id, new Error(errMessage))
 
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
     expect(st!.numberOfErrors).toBe(2)
     expect(st!.lastError?.includes(errMessage)).toBeTruthy()
 
@@ -127,7 +127,7 @@ describe('Status', () => {
     const errMessage = 'err5'
     await status.addError(state.conduit.id, new Error(errMessage))
 
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
     expect(st!.numberOfErrors).toBe(MAX_ERRORS)
     expect(st!.lastError?.includes(errMessage)).toBeTruthy()
 
@@ -150,7 +150,7 @@ describe('Status', () => {
   test('Clear errors', async () => {
     await status.clearErrors(state.conduit.id)
 
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
     expect(st!.numberOfErrors).toBe(0)
     expect(st!.lastError).toBeUndefined()
 
@@ -167,7 +167,7 @@ describe('Status', () => {
     const date = new Date()
     await status.updateInitializedOn(state.conduit.id, date)
 
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
     expect(st!.initializedOn).toEqual(date)
 
     state.status = st
@@ -189,7 +189,7 @@ describe('Status', () => {
     const date = new Date()
     await status.updateInitializedOn(state.conduit2.id, date)
 
-    const st = await status.get(state.conduit2.id)
+    const st = await status.fetch(state.conduit2.id)
     expect(st!.initializedOn).toEqual(date)
 
     state.status2 = st
@@ -210,7 +210,7 @@ describe('Status', () => {
   test('Set intializedOn to null', async () => {
     await status.updateInitializedOn(state.conduit.id, undefined)
 
-    const st = await status.get(state.conduit.id)
+    const st = await status.fetch(state.conduit.id)
     expect(st!.initializedOn).toBeUndefined()
 
     state.status = st

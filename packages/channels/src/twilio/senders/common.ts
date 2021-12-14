@@ -7,7 +7,7 @@ export class TwilioCommonSender extends CommonSender {
       await context.state.twilio.messages.create({
         ...message,
         from: context.identity,
-        to: context.sender!
+        to: context.sender
       })
     }
   }

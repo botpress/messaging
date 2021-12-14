@@ -31,7 +31,7 @@ export class WebchatConversation extends WebchatSystem {
 
     this.storage.set(STORAGE_ID, conversation.id)
 
-    await this.set(conversation!)
+    await this.set(conversation)
   }
 
   get() {

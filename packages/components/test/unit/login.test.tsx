@@ -42,6 +42,7 @@ describe('LoginPrompt', () => {
     expect(component).toBeTruthy()
 
     const { container } = render(component)
+    container.onsubmit = jest.fn().mockImplementation((e) => e.preventDefault())
 
     const usernameField = container.querySelector('#login_username')
     const passwordField = container.querySelector('#login_password')

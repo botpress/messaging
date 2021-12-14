@@ -59,18 +59,18 @@ describe('UserTokens', () => {
   })
 
   test('Get user token by id', async () => {
-    const userToken = await app.userTokens.getById(state.userToken!.id)
+    const userToken = await app.userTokens.fetchById(state.userToken!.id)
     expect(userToken).toEqual(state.userToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
   test('Get user token by id cached', async () => {
-    const userToken = await app.userTokens.getById(state.userToken!.id)
+    const userToken = await app.userTokens.fetchById(state.userToken!.id)
     expect(userToken).toEqual(state.userToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
 
     for (let i = 0; i < 10; i++) {
-      const userToken = await app.userTokens.getById(state.userToken!.id)
+      const userToken = await app.userTokens.fetchById(state.userToken!.id)
       expect(userToken).toEqual(state.userToken)
     }
 
@@ -115,7 +115,7 @@ describe('UserTokens', () => {
   })
 
   test('Get user token by id with outdated expiry', async () => {
-    const userToken = await app.userTokens.getById(state.userToken!.id)
+    const userToken = await app.userTokens.fetchById(state.userToken!.id)
     expect(userToken).toEqual(state.userToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
   })

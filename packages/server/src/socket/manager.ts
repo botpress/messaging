@@ -33,16 +33,15 @@ export class SocketManager {
   }
 
   async destroy() {
-    if (!this.ws) {
-      return
-    }
-
     await new Promise((resolve, reject) => {
+      if (!this.ws) {
+        return
+      }
       // This is kind of hack to make sure that socket.io does not
       // try to close the HTTP server before http-terminator
-      this.ws!['httpServer'] = undefined
+      this.ws['httpServer'] = undefined
 
-      this.ws!.close((err) => {
+      this.ws.close((err) => {
         if (err) {
           this.logger.error(err, 'An error occurred when closing the websocket server.')
         }
@@ -91,13 +90,13 @@ export class SocketManager {
         creds?: { userId: uuid; userToken: string }
       }
 
-      const client = await this.clients.getById(clientId)
+      const client = await this.clients.fetchById(clientId)
       if (!client) {
         return next(new Error('Client not found'))
       }
 
       if (creds) {
-        const user = await this.users.get(creds.userId)
+        const user = await this.users.fetch(creds.userId)
         if (user?.clientId === clientId) {
           const [userTokenId, userTokenToken] = creds.userToken.split('.')
           if (

@@ -45,7 +45,7 @@ export class StatusService extends Service {
     return status
   }
 
-  async get(conduitId: uuid): Promise<ConduitStatus | undefined> {
+  async fetch(conduitId: uuid): Promise<ConduitStatus | undefined> {
     const cached = this.cache.get(conduitId)
     if (cached) {
       return cached
@@ -63,7 +63,7 @@ export class StatusService extends Service {
 
   async updateInitializedOn(conduitId: uuid, date: Date | undefined) {
     await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
-      if (!(await this.get(conduitId))) {
+      if (!(await this.fetch(conduitId))) {
         await this.create(conduitId)
       }
 
@@ -76,7 +76,7 @@ export class StatusService extends Service {
 
   async addError(conduitId: uuid, error: Error) {
     await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
-      const status = (await this.get(conduitId)) || (await this.create(conduitId))
+      const status = (await this.fetch(conduitId)) || (await this.create(conduitId))
       const formattedError = this.formatError(error)
 
       await this.query()
@@ -88,7 +88,7 @@ export class StatusService extends Service {
 
   async clearErrors(conduitId: uuid) {
     await this.distributed.using(`lock_dyn_status::${conduitId}`, async () => {
-      const status = await this.get(conduitId)
+      const status = await this.fetch(conduitId)
       if (!status) {
         return
       }

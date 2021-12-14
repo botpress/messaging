@@ -40,8 +40,8 @@ export class TwilioCarouselRenderer extends CarouselRenderer {
     context.channel.messages.push(<any>{ body, mediaUrl: card.image })
     context.channel.prepareIndexResponse(
       context.channel.scope,
-      context.channel.identity!,
-      context.channel.sender!,
+      context.channel.identity,
+      context.channel.sender,
       context.options
     )
   }

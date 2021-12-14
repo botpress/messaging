@@ -1,8 +1,8 @@
 import fs from 'fs'
+import { mocked } from 'jest-mock'
 import { Knex } from 'knex'
 import _ from 'lodash'
 import * as path from 'path'
-import { mocked } from 'ts-jest/utils'
 
 import { Table } from '../../src/base/table'
 import { DatabaseService } from '../../src/database/service'

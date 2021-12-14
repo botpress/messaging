@@ -85,8 +85,8 @@ export class InstanceService extends Service {
     for (const channel of this.channelService.list()) {
       channel.autoStart(async (providerName) => {
         const provider = await this.providerService.getByName(providerName)
-        const conduit = await this.conduitService.getByProviderAndChannel(provider!.id, channel.meta.id)
-        return conduit!.config
+        const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
+        return conduit.config
       })
     }
   }
@@ -97,9 +97,9 @@ export class InstanceService extends Service {
     for (const channel of this.channelService.list()) {
       for (const scope of channel.scopes) {
         const provider = await this.providerService.getByName(scope)
-        const conduit = await this.conduitService.getByProviderAndChannel(provider!.id, channel.meta.id)
+        const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
 
-        await this.stop(conduit!.id)
+        await this.stop(conduit.id)
       }
     }
   }
@@ -111,8 +111,8 @@ export class InstanceService extends Service {
   async initialize(conduitId: uuid) {
     await this.start(conduitId)
 
-    const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
+    const conduit = await this.conduitService.get(conduitId)
+    const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
     try {
@@ -131,8 +131,8 @@ export class InstanceService extends Service {
   }
 
   async start(conduitId: uuid) {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
+    const conduit = await this.conduitService.get(conduitId)
+    const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
     if (channel.has(provider.name)) {
@@ -157,16 +157,16 @@ export class InstanceService extends Service {
   }
 
   async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
+    const conduit = await this.conduitService.get(conduitId)
+    const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
     await channel.send(provider.name, endpoint, content)
   }
 
   private async handleDispatchStop(conduitId: uuid) {
-    const conduit = (await this.conduitService.get(conduitId))!
-    const provider = (await this.providerService.getById(conduit.providerId))!
+    const conduit = await this.conduitService.get(conduitId)
+    const provider = await this.providerService.getById(conduit.providerId)
     const channel = this.channelService.getById(conduit.channelId)
 
     if (!channel.has(provider.name)) {
@@ -185,7 +185,7 @@ export class InstanceService extends Service {
 
   private async handleMessageCreated({ message, source }: MessageCreatedEvent) {
     const conversation = await this.conversationService.get(message.conversationId)
-    const client = await this.clientService.getById(conversation!.clientId)
+    const client = await this.clientService.getById(conversation.clientId)
     const convmaps = await this.mappingService.convmap.listByConversationId(message.conversationId)
 
     // small optimization. If the message comes from a channel, and we are only linked to one channel,
@@ -199,7 +199,7 @@ export class InstanceService extends Service {
       const tunnel = await this.mappingService.tunnels.get(tunnelId)
 
       if (!source?.endpoint || !this.endpointEqual(source.endpoint, endpoint)) {
-        const conduit = await this.conduitService.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
+        const conduit = await this.conduitService.fetchByProviderAndChannel(client.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }
