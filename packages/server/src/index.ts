@@ -17,6 +17,7 @@ const launch = async () => {
   await setupEnv()
 
   const router = express()
+  router.disable('x-powered-by')
 
   const app = new App()
   const api = new Api(app, router)

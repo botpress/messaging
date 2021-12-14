@@ -3,6 +3,7 @@ import { Request, Router, Response } from 'express'
 import Joi from 'joi'
 import _ from 'lodash'
 import yn from 'yn'
+import { methodNotAllowed } from '../base/api/utils'
 import { Auth } from '../base/auth/auth'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
@@ -19,13 +20,18 @@ export class SyncApi {
     this.force = !!yn(process.env.SPINNED)
     this.schema = makeSyncRequestSchema(this.channels.list())
 
-    router.post('/sync', auth.public.auth(this.sync.bind(this)))
+    router
+      .route('/sync')
+      .post(auth.public.auth(this.sync.bind(this)))
+      .all(methodNotAllowed('POST'))
   }
 
   async sync(req: Request, res: Response) {
-    const channelsWithoutEnabled: { [channelName: string]: any } = {}
-    for (const [channelName, channelConfig] of Object.entries<any>(req.body?.channels || {})) {
-      if (channelConfig.enabled === false) {
+    const channelsWithoutEnabled: { [channelName: string]: Object | undefined } = {}
+    for (const [channelName, channelConfig] of Object.entries<typeof channelsWithoutEnabled>(
+      req.body?.channels || {}
+    )) {
+      if (channelConfig?.enabled === false) {
         continue
       }
 
