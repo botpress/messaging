@@ -1,33 +1,38 @@
-import { SyncRequest, SyncResult } from '@botpress/messaging-base'
-import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios'
+import { SyncRequest, SyncResult, User } from '@botpress/messaging-base'
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, Method } from 'axios'
 import _ from 'lodash'
 import { v4 as uuid } from 'uuid'
 import froth from './mocha-froth'
 
 const HTTP_METHODS: Method[] = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'PURGE', 'OPTIONS', 'LINK', 'UNLINK', 'PATCH']
 
-const http = () => axios.create({ baseURL: 'http://localhost:3100' })
+const UUID_LENGTH = uuid().length
+const TOKEN_LENGTH = 88
+
+const http = (credentials?: { clientId: string; clientToken: string }) => {
+  const config: AxiosRequestConfig = { baseURL: 'http://localhost:3100' }
+
+  if (credentials) {
+    config.headers = {}
+    config.headers['x-bp-messaging-client-id'] = credentials.clientId
+    config.headers['x-bp-messaging-client-token'] = credentials.clientToken
+  }
+
+  return axios.create(config)
+}
 
 const getUnallowedMethods = (...allowed: Method[]) => {
   return HTTP_METHODS.filter((val) => !allowed.includes(val.toUpperCase() as Method))
 }
 
-let clientId = ''
-
-const sync = async (data?: SyncRequest, config?: AxiosRequestConfig) => {
-  const client = http()
-
-  const res = await client.post<SyncResult>('/api/sync', data, config)
-
-  expect(res.data).toEqual({ id: expect.anything(), token: expect.anything(), webhooks: expect.anything() })
-  expect(res.status).toEqual(200)
-
-  return res.data
+const clients = {
+  first: { clientId: '', clientToken: '', userId: '' },
+  second: { clientId: '', clientToken: '', userId: '' }
 }
 
 const shouldFail = async (func: Function, onError: (err: AxiosError) => void) => {
   try {
-    const res = await func()
+    await func()
 
     throw new Error('Function did not throw an error')
   } catch (err) {
@@ -40,8 +45,19 @@ const shouldFail = async (func: Function, onError: (err: AxiosError) => void) =>
 }
 
 describe('API', () => {
+  const sync = async (data?: SyncRequest, config?: AxiosRequestConfig) => {
+    const client = http()
+
+    const res = await client.post<SyncResult>('/api/sync', data, config)
+
+    expect(res.data).toEqual({ id: expect.anything(), token: expect.anything(), webhooks: expect.anything() })
+    expect(res.status).toEqual(200)
+
+    return res.data
+  }
+
   describe('Sync', () => {
-    test('Should not allow any other methods than POST', async () => {
+    test('Should not allow any other methods than POST and OPTIONS', async () => {
       const allowed: Method[] = ['POST', 'OPTIONS']
       const unallowed = getUnallowedMethods(...allowed)
       const client = http()
@@ -73,15 +89,26 @@ describe('API', () => {
     test('Should allow anyone to make a sync request', async () => {
       const res = await sync()
 
-      clientId = res.id
+      clients.first.clientId = res.id
+      clients.first.clientToken = res.token
+
+      {
+        const res = await sync()
+
+        clients.second.clientId = res.id
+        clients.second.clientToken = res.token
+
+        expect(res.id).not.toEqual(clients.first.clientId)
+        expect(res.token).not.toEqual(clients.first.clientToken)
+      }
     })
 
     test('Should return unauthorized if token is invalid', async () => {
-      const tokens = froth(10, 88, 88, { none: false })
+      const tokens = froth(10, TOKEN_LENGTH, TOKEN_LENGTH, { none: false })
 
       for (const token of tokens) {
         await shouldFail(
-          async () => sync({ id: clientId, token }),
+          async () => sync({ id: clients.first.clientId, token }),
           (err) => {
             expect(err.response?.data).not.toEqual({
               id: expect.anything(),
@@ -98,7 +125,7 @@ describe('API', () => {
       const token = undefined
 
       await shouldFail(
-        async () => sync({ id: clientId, token }),
+        async () => sync({ id: clients.first.clientId, token }),
         (err) => {
           expect(err.response?.data).not.toEqual({
             id: expect.anything(),
@@ -115,7 +142,7 @@ describe('API', () => {
 
       for (const token of tokens) {
         await shouldFail(
-          async () => sync({ id: clientId, token }),
+          async () => sync({ id: clients.first.clientId, token }),
           (err) => {
             expect(err.response?.data).not.toEqual({
               id: expect.anything(),
@@ -143,8 +170,7 @@ describe('API', () => {
     })
 
     test('Should not allow clientId other than valid UUID', async () => {
-      const uuidLength = uuid().length
-      const ids = froth(10, uuidLength, uuidLength, { none: false })
+      const ids = froth(10, UUID_LENGTH, UUID_LENGTH, { none: false })
 
       for (const id of ids) {
         await shouldFail(
@@ -200,5 +226,136 @@ describe('API', () => {
     })
   })
 
-  describe('', () => {})
+  describe('User', () => {
+    const user = async (clientId?: string, clientToken?: string, config?: AxiosRequestConfig) => {
+      const client = http(clientId && clientToken ? { clientId, clientToken } : undefined)
+
+      const res = await client.post<User>('/api/users', null, config)
+
+      expect(res.data).toEqual({ id: expect.anything(), clientId })
+      expect(res.status).toEqual(201)
+
+      return res.data
+    }
+
+    const getUser = async (clientId?: string, clientToken?: string, userId?: any, config?: AxiosRequestConfig) => {
+      const client = http(clientId && clientToken ? { clientId, clientToken } : undefined)
+
+      const res = await client.get<User>(`/api/users/${userId}`, config)
+
+      expect(res.data).toEqual({ id: userId, clientId })
+      expect(res.status).toEqual(200)
+
+      return res.data
+    }
+
+    describe('Create', () => {
+      test('Should be able to create a user with valid credentials', async () => {
+        const res = await user(clients.first.clientId, clients.first.clientToken)
+
+        expect(res.clientId).toEqual(clients.first.clientId)
+        expect(res.id).toBeDefined()
+
+        clients.first.userId = res.id
+
+        {
+          const res = await user(clients.second.clientId, clients.second.clientToken)
+
+          expect(res.clientId).toEqual(clients.second.clientId)
+          expect(res.id).toBeDefined()
+          expect(res.id).not.toEqual(clients.first.userId)
+
+          clients.second.userId = res.id
+        }
+      })
+
+      test('Should not be able to create a user without being authenticated', async () => {
+        await shouldFail(
+          async () => user(undefined, undefined),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to create a user with invalid credentials', async () => {
+        const clientId = uuid()
+        const clientToken = froth(1, TOKEN_LENGTH, TOKEN_LENGTH, {
+          none: false,
+          foreign: false,
+          symbols: false,
+          backslashing: false,
+          quotes: false,
+          whitespace: false
+        })[0]
+
+        await shouldFail(
+          async () => user(clientId, clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to create a user with valid clientId but invalid token', async () => {
+        const frothConfig = {
+          none: false,
+          foreign: false,
+          symbols: false,
+          backslashing: false,
+          quotes: false,
+          whitespace: false
+        }
+        const clientToken = froth(1, TOKEN_LENGTH, TOKEN_LENGTH, frothConfig)[0]
+
+        await shouldFail(
+          async () => user(clients.first.clientId, clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+    })
+
+    describe('Get', () => {
+      test('Should not be able to get a user without being authenticated', async () => {
+        await shouldFail(
+          async () => getUser(undefined, undefined, '123'),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to get a user that does not exists', async () => {
+        const userId = uuid()
+
+        await shouldFail(
+          async () => getUser(clients.first.clientId, clients.first.clientToken, userId),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+
+      test('Should not be able to get the user of another client', async () => {
+        await shouldFail(
+          async () => getUser(clients.first.clientId, clients.first.clientToken, clients.second.userId),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+    })
+  })
 })
