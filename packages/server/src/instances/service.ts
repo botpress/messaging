@@ -199,7 +199,7 @@ export class InstanceService extends Service {
       const tunnel = await this.mappingService.tunnels.get(tunnelId)
 
       if (!source?.endpoint || !this.endpointEqual(source.endpoint, endpoint)) {
-        const conduit = await this.conduitService.getByProviderAndChannel(client!.providerId, tunnel!.channelId)
+        const conduit = await this.conduitService.getByProviderAndChannel(client.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }

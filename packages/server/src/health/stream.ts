@@ -20,7 +20,7 @@ export class HealthStream {
 
   private async handleHealthRegisted({ event }: HealthCreatedEvent) {
     const conduit = await this.conduits.get(event.conduitId)
-    const client = await this.clients.getByProviderId(conduit.providerId)
+    const client = await this.clients.fetchByProviderId(conduit.providerId)
     if (!client) {
       return
     }

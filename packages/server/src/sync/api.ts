@@ -44,7 +44,7 @@ export class SyncApi {
     // A sync request will accept a incorrect client id (we assume the client was deleted a provide a new client id in response)
     // A sync request will also accept no client id (we assume the caller wants a new client id and we send it as a response)
     if (sync.id) {
-      const client = await this.clients.getById(sync.id)
+      const client = await this.clients.fetchById(sync.id)
       if (client && (!sync.token || !(await this.clients.getByIdAndToken(sync.id, sync.token)))) {
         return res.sendStatus(403)
       }

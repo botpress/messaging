@@ -67,7 +67,7 @@ export class InstanceInvalidator {
   }
 
   private async onClientUpdated({ clientId, oldClient }: ClientUpdatedEvent) {
-    const client = (await this.clients.getById(clientId))!
+    const client = await this.clients.getById(clientId)
 
     if (client.providerId === oldClient.providerId) {
       return

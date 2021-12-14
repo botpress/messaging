@@ -56,7 +56,7 @@ export class ClientService extends Service {
     return client
   }
 
-  async getById(id: uuid): Promise<Client | undefined> {
+  async fetchById(id: uuid): Promise<Client | undefined> {
     const cached = this.cacheById.get(id)
     if (cached) {
       return cached
@@ -72,8 +72,16 @@ export class ClientService extends Service {
     }
   }
 
+  async getById(id: uuid): Promise<Client> {
+    const val = await this.fetchById(id)
+    if (!val) {
+      throw Error(`Client ${id} not found`)
+    }
+    return val
+  }
+
   async getByIdAndToken(id: uuid, token: string): Promise<Client | undefined> {
-    const client = await this.getById(id)
+    const client = await this.fetchById(id)
     if (!client) {
       return undefined
     }
@@ -95,7 +103,7 @@ export class ClientService extends Service {
     }
   }
 
-  async getByProviderId(providerId: uuid): Promise<Client | undefined> {
+  async fetchByProviderId(providerId: uuid): Promise<Client | undefined> {
     const cached = this.cacheByProvider.get(providerId)
     if (cached) {
       return cached
@@ -111,8 +119,16 @@ export class ClientService extends Service {
     }
   }
 
+  async getByProviderId(providerId: uuid): Promise<Client> {
+    const val = await this.fetchByProviderId(providerId)
+    if (!val) {
+      throw Error(`Client with provider ${providerId} not found`)
+    }
+    return val
+  }
+
   async updateProvider(id: uuid, providerId: uuid | null) {
-    const oldClient = (await this.getById(id))!
+    const oldClient = await this.getById(id)
 
     this.cacheByProvider.del(oldClient.providerId, true)
     this.cacheById.del(id, true)
@@ -123,7 +139,7 @@ export class ClientService extends Service {
   }
 
   async updateToken(id: uuid, token: string) {
-    const oldClient = (await this.getById(id))!
+    const oldClient = await this.getById(id)
 
     this.cacheByProvider.del(oldClient.providerId, true)
     this.cacheById.del(id, true)
@@ -136,7 +152,7 @@ export class ClientService extends Service {
   }
 
   private async onProviderDeleting({ providerId }: ProviderDeletingEvent) {
-    const client = await this.getByProviderId(providerId)
+    const client = await this.fetchByProviderId(providerId)
 
     if (client) {
       await this.updateProvider(client.id, null)

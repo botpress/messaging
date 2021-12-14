@@ -135,14 +135,14 @@ export class SyncService extends Service {
     let provider: Provider | undefined = undefined
 
     if (clientId) {
-      client = await this.clients.getById(clientId)
+      client = await this.clients.fetchById(clientId)
     }
 
     // For when messaging is spinned. Assures that a certain botId always gets back the same clientId when calling messaging
     if (!client && forceProviderName && !forceClientId) {
       const exisingProvider = await this.providers.fetchByName(forceProviderName)
       if (exisingProvider) {
-        const existingClient = await this.clients.getByProviderId(exisingProvider.id)
+        const existingClient = await this.clients.fetchByProviderId(exisingProvider.id)
         if (existingClient) {
           token = forceToken || (await this.clients.generateToken())
           await this.clients.updateToken(existingClient.id, token)
@@ -164,7 +164,7 @@ export class SyncService extends Service {
         provider = await this.providers.create(client.id, false)
 
         await this.clients.updateProvider(client.id, provider.id)
-        client = (await this.clients.getById(client.id))!
+        client = await this.clients.getById(client.id)
       }
     }
 

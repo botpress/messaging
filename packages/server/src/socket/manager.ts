@@ -91,7 +91,7 @@ export class SocketManager {
         creds?: { userId: uuid; userToken: string }
       }
 
-      const client = await this.clients.getById(clientId)
+      const client = await this.clients.fetchById(clientId)
       if (!client) {
         return next(new Error('Client not found'))
       }
