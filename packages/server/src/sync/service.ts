@@ -129,7 +129,7 @@ export class SyncService extends Service {
     forceProviderName?: string,
     forceClientId?: uuid,
     forceToken?: string
-  ): Promise<Client & { token?: string }> {
+  ): Promise<Omit<Client, 'token'> & { token?: string }> {
     let client: Client | undefined = undefined
     let token: string | undefined = undefined
     let provider: Provider | undefined = undefined
