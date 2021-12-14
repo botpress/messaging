@@ -39,7 +39,7 @@ const shouldFail = async (func: Function, onError: (err: AxiosError) => void) =>
   }
 }
 
-describe('Security', () => {
+describe('API', () => {
   describe('Sync', () => {
     test('Should not allow any other methods than POST', async () => {
       const allowed: Method[] = ['POST', 'OPTIONS']
