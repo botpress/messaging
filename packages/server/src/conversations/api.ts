@@ -23,7 +23,7 @@ export class ConversationApi {
     const userId = req.body.userId as uuid
 
     const user = await this.users.fetch(userId)
-    if (!user || user!.clientId !== req.client.id) {
+    if (!user || user.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
 

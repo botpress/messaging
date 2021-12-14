@@ -40,7 +40,7 @@ export class MessageApi {
     }
 
     if (authorId) {
-      const author = await this.users.get(authorId)
+      const author = await this.users.fetch(authorId)
       if (!author || author.clientId !== req.client.id) {
         return res.sendStatus(404)
       }
@@ -74,7 +74,7 @@ export class MessageApi {
       timeout: string
     }
 
-    const author = await this.users.get(authorId)
+    const author = await this.users.fetch(authorId)
     if (!author || author.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
