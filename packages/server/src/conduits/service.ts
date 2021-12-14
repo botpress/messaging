@@ -114,7 +114,7 @@ export class ConduitService extends Service {
     return val
   }
 
-  async getByProviderAndChannel(providerId: uuid, channelId: uuid) {
+  async fetchByProviderAndChannel(providerId: uuid, channelId: uuid) {
     const cached = this.cacheByProviderAndChannel.get(providerId, channelId)
     if (cached) {
       return cached
@@ -129,6 +129,14 @@ export class ConduitService extends Service {
     }
 
     return undefined
+  }
+
+  async getByProviderAndChannel(providerId: uuid, channelId: uuid) {
+    const val = await this.fetchByProviderAndChannel(providerId, channelId)
+    if (!val) {
+      throw Error(`Conduit with provider ${providerId} and channel ${channelId} not found`)
+    }
+    return val
   }
 
   async listByProvider(providerId: uuid): Promise<Conduit[]> {

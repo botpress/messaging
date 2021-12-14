@@ -109,7 +109,7 @@ export class SyncService extends Service {
       if (oldConduitIndex < 0) {
         await this.conduits.create(providerId, channelId, configWithoutEnabled)
       } else {
-        const oldConduit = (await this.conduits.getByProviderAndChannel(providerId, channelId))!
+        const oldConduit = await this.conduits.getByProviderAndChannel(providerId, channelId)
 
         if (!_.isEqual(configWithoutEnabled, oldConduit.config)) {
           await this.conduits.updateConfig(oldConduit.id, configWithoutEnabled)

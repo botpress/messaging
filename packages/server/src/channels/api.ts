@@ -52,7 +52,7 @@ export class ChannelApi {
     const conduit = await this.app.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
 
     const clientId = provider.sandbox
-      ? await this.app.instances.sandbox.getClientId(conduit!.id, endpoint, content)
+      ? await this.app.instances.sandbox.getClientId(conduit.id, endpoint, content)
       : (await this.app.clients.getByProviderId(provider.id)).id
 
     if (!clientId) {

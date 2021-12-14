@@ -86,7 +86,7 @@ export class InstanceService extends Service {
       channel.autoStart(async (providerName) => {
         const provider = await this.providerService.getByName(providerName)
         const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
-        return conduit!.config
+        return conduit.config
       })
     }
   }
@@ -99,7 +99,7 @@ export class InstanceService extends Service {
         const provider = await this.providerService.getByName(scope)
         const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
 
-        await this.stop(conduit!.id)
+        await this.stop(conduit.id)
       }
     }
   }
@@ -199,7 +199,7 @@ export class InstanceService extends Service {
       const tunnel = await this.mappingService.tunnels.get(tunnelId)
 
       if (!source?.endpoint || !this.endpointEqual(source.endpoint, endpoint)) {
-        const conduit = await this.conduitService.getByProviderAndChannel(client.providerId, tunnel!.channelId)
+        const conduit = await this.conduitService.fetchByProviderAndChannel(client.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }
