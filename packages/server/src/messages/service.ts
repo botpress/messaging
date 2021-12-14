@@ -128,7 +128,7 @@ export class MessageService extends Service {
     }
 
     const rows = await query
-    return rows.map((x: any) => this.deserialize(x)!)
+    return rows.map((x: any) => this.deserialize(x))
   }
 
   public async deleteByConversationId(conversationId: uuid): Promise<number> {

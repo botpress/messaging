@@ -6,10 +6,10 @@ export class VonageCommonSender extends CommonSender {
     for (const message of context.messages) {
       await new Promise((resolve) => {
         context.state.vonage.channel.send(
-          { type: 'whatsapp', number: context.sender! },
+          { type: 'whatsapp', number: context.sender },
           {
             type: 'whatsapp',
-            number: context.identity!
+            number: context.identity
           },
           message,
           (err, data) => {

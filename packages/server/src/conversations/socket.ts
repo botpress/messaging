@@ -35,7 +35,7 @@ export class ConversationSocket {
     const { limit } = socket.data
 
     const user = await this.users.get(socket.userId)
-    const conversations = await this.conversations.listByUserId(user!.clientId, socket.userId, +limit)
+    const conversations = await this.conversations.listByUserId(user.clientId, socket.userId, +limit)
 
     socket.reply(conversations)
   }

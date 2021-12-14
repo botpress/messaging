@@ -49,9 +49,9 @@ export class SocketService extends Service {
   }
 
   public async delete(socket: Socket) {
-    const state = this.sockets[socket.id]!
+    const state = this.sockets[socket.id]
 
-    if (state.userId) {
+    if (state?.userId) {
       const current = this.socketsByUserId[state.userId]
       this.socketsByUserId[state.userId] = (current || []).filter((x) => x.id !== socket.id)
       this.cacheByUserId.del(state.userId)

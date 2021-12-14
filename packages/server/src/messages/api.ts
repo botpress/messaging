@@ -59,7 +59,7 @@ export class MessageApi {
     const source = authorId
       ? undefined
       : {
-          client: { id: req.client!.id }
+          client: { id: req.client.id }
         }
     const message = await this.messages.create(conversationId, authorId, payload, source, messageId)
 
@@ -158,7 +158,7 @@ export class MessageApi {
     }
 
     const conversation = await this.conversations.fetch(message.conversationId)
-    if (!conversation || conversation.clientId !== req.client!.id) {
+    if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
 

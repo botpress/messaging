@@ -36,7 +36,7 @@ export class WebhookService extends Service {
       token
     }
 
-    await this.query().insert(await this.serialize(webhook))
+    await this.query().insert(this.serialize(webhook))
 
     this.cacheListByClient.del(clientId, true)
 
@@ -81,10 +81,10 @@ export class WebhookService extends Service {
     return webhooks
   }
 
-  private serialize(webhook: Partial<Webhook>) {
+  private serialize(webhook: Webhook) {
     return {
       ...webhook,
-      token: this.cryptoService.encrypt(webhook.token!)
+      token: this.cryptoService.encrypt(webhook.token)
     }
   }
 

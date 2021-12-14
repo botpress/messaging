@@ -95,7 +95,7 @@ export class ClientService extends Service {
       }
     }
 
-    if (await this.cryptoService.compareHash(client.token!, token)) {
+    if (await this.cryptoService.compareHash(client.token, token)) {
       this.cacheTokens.set(id, token)
       return client
     } else {
