@@ -2,7 +2,7 @@ import { Emitter, uuid } from '@botpress/messaging-base'
 import { Client } from './types'
 
 export enum ClientEvents {
-  Updated = 4198497150859385
+  Updated
 }
 
 export interface ClientUpdatedEvent {

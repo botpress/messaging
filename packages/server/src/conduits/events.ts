@@ -1,10 +1,9 @@
 import { Emitter, uuid } from '@botpress/messaging-base'
 
-// Note: event type ids should be random numbers between -9007199254740991 and 9007199254740991
 export enum ConduitEvents {
-  Created = -8735528850944253,
-  Deleting = -2992045965298849,
-  Updated = -4333216986594445
+  Created,
+  Deleting,
+  Updated
 }
 
 export class ConduitEmitter extends Emitter<{
