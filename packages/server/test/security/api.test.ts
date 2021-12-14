@@ -1,4 +1,4 @@
-import { SyncRequest, SyncResult, User } from '@botpress/messaging-base'
+import { Conversation, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, Method } from 'axios'
 import _ from 'lodash'
 import { v4 as uuid } from 'uuid'
@@ -26,8 +26,8 @@ const getUnallowedMethods = (...allowed: Method[]) => {
 }
 
 const clients = {
-  first: { clientId: '', clientToken: '', userId: '' },
-  second: { clientId: '', clientToken: '', userId: '' }
+  first: { clientId: '', clientToken: '', userId: '', conversationId: '' },
+  second: { clientId: '', clientToken: '', userId: '', conversationId: '' }
 }
 
 const shouldFail = async (func: Function, onError: (err: AxiosError) => void) => {
@@ -119,6 +119,20 @@ describe('API', () => {
           }
         )
       }
+    })
+
+    test('Should not allow the token of another clients', async () => {
+      await shouldFail(
+        async () => sync({ id: clients.first.clientId, token: clients.first.clientToken }),
+        (err) => {
+          expect(err.response?.data).not.toEqual({
+            id: expect.anything(),
+            token: expect.anything(),
+            webhooks: expect.anything()
+          })
+          expect(err.response?.status).toEqual(403)
+        }
+      )
     })
 
     test('Should return unauthorized if token is empty', async () => {
@@ -353,6 +367,77 @@ describe('API', () => {
           (err) => {
             expect(err.response?.data).toEqual('Not Found')
             expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+    })
+  })
+
+  describe('Conversation', () => {
+    const conversation = async (
+      userId: string,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const client = http(clientId && clientToken ? { clientId, clientToken } : undefined)
+
+      const res = await client.post<Conversation>('/api/conversations', { userId }, config)
+
+      expect(res.data).toEqual({ id: expect.anything(), clientId, userId })
+      expect(res.status).toEqual(201)
+
+      return res.data
+    }
+
+    describe('Create', () => {
+      test('Should be able to create a conversation with valid credentials', async () => {
+        const res = await conversation(clients.first.userId, clients.first.clientId, clients.first.clientToken)
+
+        expect(res.clientId).toEqual(clients.first.clientId)
+        expect(res.id).toBeDefined()
+
+        clients.first.conversationId = res.id
+
+        {
+          const res = await conversation(clients.second.userId, clients.second.clientId, clients.second.clientToken)
+
+          expect(res.clientId).toEqual(clients.second.clientId)
+          expect(res.id).toBeDefined()
+          expect(res.id).not.toEqual(clients.first.conversationId)
+
+          clients.second.conversationId = res.id
+        }
+      })
+
+      test('Should not be able to create a conversation without being authenticated', async () => {
+        await shouldFail(
+          async () => conversation(clients.first.userId, undefined, undefined),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to create a conversation with invalid credentials', async () => {
+        const clientId = uuid()
+        const clientToken = froth(1, TOKEN_LENGTH, TOKEN_LENGTH, {
+          none: false,
+          foreign: false,
+          symbols: false,
+          backslashing: false,
+          quotes: false,
+          whitespace: false
+        })[0]
+
+        await shouldFail(
+          async () => conversation(clients.first.userId, clientId, clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
           }
         )
       })
