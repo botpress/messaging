@@ -31,12 +31,19 @@ export class LinkedQueue<T> {
   }
 
   public peek(): T {
-    return this.head!.value
+    if (!this.head) {
+      throw Error('Queue is empty')
+    }
+
+    return this.head.value
   }
 
   public dequeue(): T {
-    const link = this.head!
+    if (!this.head) {
+      throw Error('Queue is empty')
+    }
 
+    const link = this.head
     this.head = link.next
 
     if (this.tail === link) {

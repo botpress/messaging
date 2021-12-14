@@ -68,7 +68,7 @@ export class MessageService extends Service {
 
     await this.batcher.push(message)
     const conversation = await this.conversationService.get(conversationId)
-    await this.conversationService.setMostRecent(conversation!.userId, conversation!.id)
+    await this.conversationService.setMostRecent(conversation.userId, conversation.id)
 
     await this.emitter.emit(MessageEvents.Created, { message, source })
 
@@ -79,15 +79,15 @@ export class MessageService extends Service {
     await this.batcher.flush()
 
     const message = await this.get(id)
-    const conversation = await this.conversationService.get(message!.conversationId)
+    const conversation = await this.conversationService.get(message.conversationId)
 
     this.cache.del(id, true)
-    this.conversationService.invalidateMostRecent(conversation!.userId)
+    this.conversationService.invalidateMostRecent(conversation.userId)
 
     return this.query().where({ id }).del()
   }
 
-  public async get(id: uuid): Promise<Message | undefined> {
+  public async fetch(id: uuid): Promise<Message | undefined> {
     const cached = this.cache.get(id)
     if (cached) {
       return cached
@@ -107,6 +107,14 @@ export class MessageService extends Service {
     return undefined
   }
 
+  public async get(id: uuid): Promise<Message> {
+    const val = await this.fetch(id)
+    if (!val) {
+      throw new Error(`Message ${id} not found`)
+    }
+    return val
+  }
+
   public async listByConversationId(conversationId: uuid, limit?: number, offset?: number): Promise<Message[]> {
     await this.batcher.flush()
 
@@ -120,7 +128,7 @@ export class MessageService extends Service {
     }
 
     const rows = await query
-    return rows.map((x: any) => this.deserialize(x)!)
+    return rows.map((x: any) => this.deserialize(x))
   }
 
   public async deleteByConversationId(conversationId: uuid): Promise<number> {
@@ -133,7 +141,7 @@ export class MessageService extends Service {
       deletedIds.forEach((x) => this.cache.del(x, true))
 
       const conversation = await this.conversationService.get(conversationId)
-      this.conversationService.invalidateMostRecent(conversation!.userId)
+      this.conversationService.invalidateMostRecent(conversation.userId)
     }
 
     return deletedIds.length

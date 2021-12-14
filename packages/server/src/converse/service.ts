@@ -58,7 +58,9 @@ export class ConverseService extends Service {
     const childCollectors = collectors.filter((x) => x.incomingId === incomingId)
 
     for (const collector of childCollectors) {
-      clearTimeout(collector.timeout!)
+      if (collector.timeout) {
+        clearTimeout(collector.timeout)
+      }
       this.removeCollector(collector)
       this.resolveCollect(collector)
     }
@@ -122,7 +124,7 @@ export class ConverseService extends Service {
   private removeCollector(collector: Collector) {
     const { conversationId } = collector
 
-    const collectors = this.collectors.get(conversationId)!
+    const collectors = this.collectors.get(conversationId) || []
     const index = collectors.indexOf(collector)
     if (index >= 0) {
       collectors.splice(index, 1)

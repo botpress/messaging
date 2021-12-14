@@ -40,13 +40,13 @@ export class MessageApi {
     }
 
     if (authorId) {
-      const author = await this.users.get(authorId)
+      const author = await this.users.fetch(authorId)
       if (!author || author.clientId !== req.client.id) {
         return res.sendStatus(404)
       }
     }
 
-    const conversation = await this.conversations.get(conversationId)
+    const conversation = await this.conversations.fetch(conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -59,7 +59,7 @@ export class MessageApi {
     const source = authorId
       ? undefined
       : {
-          client: { id: req.client!.id }
+          client: { id: req.client.id }
         }
     const message = await this.messages.create(conversationId, authorId, payload, source, messageId)
 
@@ -74,12 +74,12 @@ export class MessageApi {
       timeout: string
     }
 
-    const author = await this.users.get(authorId)
+    const author = await this.users.fetch(authorId)
     if (!author || author.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
 
-    const conversation = await this.conversations.get(conversationId)
+    const conversation = await this.conversations.fetch(conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -94,12 +94,12 @@ export class MessageApi {
   async get(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const message = await this.messages.get(id)
+    const message = await this.messages.fetch(id)
     if (!message) {
       return res.sendStatus(404)
     }
 
-    const conversation = await this.conversations.get(message.conversationId)
+    const conversation = await this.conversations.fetch(message.conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -111,7 +111,7 @@ export class MessageApi {
     const conversationId = req.params.conversationId as uuid
     const limit = +(req.query.limit || 20)
 
-    const conversation = await this.conversations.get(conversationId)
+    const conversation = await this.conversations.fetch(conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -123,12 +123,12 @@ export class MessageApi {
   async delete(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const message = await this.messages.get(id)
+    const message = await this.messages.fetch(id)
     if (!message) {
       return res.sendStatus(404)
     }
 
-    const conversation = await this.conversations.get(message.conversationId)
+    const conversation = await this.conversations.fetch(message.conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -140,7 +140,7 @@ export class MessageApi {
   async deleteByConversation(req: ClientApiRequest, res: Response) {
     const { conversationId } = req.params
 
-    const conversation = await this.conversations.get(conversationId)
+    const conversation = await this.conversations.fetch(conversationId)
     if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
@@ -152,13 +152,13 @@ export class MessageApi {
   async turn(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const message = await this.messages.get(id)
+    const message = await this.messages.fetch(id)
     if (!message) {
       return res.sendStatus(404)
     }
 
-    const conversation = await this.conversations.get(message.conversationId)
-    if (!conversation || conversation.clientId !== req.client!.id) {
+    const conversation = await this.conversations.fetch(message.conversationId)
+    if (!conversation || conversation.clientId !== req.client.id) {
       return res.sendStatus(404)
     }
 

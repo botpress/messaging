@@ -15,14 +15,14 @@ export class ConversationSocket {
 
   async create(socket: SocketRequest) {
     const user = await this.users.get(socket.userId)
-    const conversation = await this.conversations.create(user!.clientId, user!.id)
+    const conversation = await this.conversations.create(user.clientId, user.id)
 
     socket.reply(conversation)
   }
 
   async get(socket: SocketRequest) {
     const { id } = socket.data
-    const conversation = await this.conversations.get(id)
+    const conversation = await this.conversations.fetch(id)
 
     if (!conversation || conversation.userId !== socket.userId) {
       return socket.reply(undefined)
@@ -35,14 +35,14 @@ export class ConversationSocket {
     const { limit } = socket.data
 
     const user = await this.users.get(socket.userId)
-    const conversations = await this.conversations.listByUserId(user!.clientId, socket.userId, +limit)
+    const conversations = await this.conversations.listByUserId(user.clientId, socket.userId, +limit)
 
     socket.reply(conversations)
   }
 
   async delete(socket: SocketRequest) {
     const { id } = socket.data
-    const conversation = await this.conversations.get(id)
+    const conversation = await this.conversations.fetch(id)
 
     if (!conversation) {
       return socket.reply(false)

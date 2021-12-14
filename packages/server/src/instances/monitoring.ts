@@ -67,7 +67,7 @@ export class InstanceMonitoring {
 
       const conduits = await this.conduits.listByChannel(channel.meta.id)
       for (const conduit of conduits) {
-        const failures = (await this.status.get(conduit.id))?.numberOfErrors || 0
+        const failures = (await this.status.fetch(conduit.id))?.numberOfErrors || 0
         if (failures >= MAX_ALLOWED_FAILURES) {
           continue
         }

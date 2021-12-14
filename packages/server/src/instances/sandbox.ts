@@ -46,7 +46,7 @@ export class InstanceSandbox {
   async tryJoinWithPassphrase(conduitId: uuid, endpoint: Endpoint, passphrase: string) {
     this.logger.info('Attempting to join sandbox with passphrase', passphrase)
 
-    const client = uuidValidate(passphrase) ? await this.clients.getById(passphrase) : undefined
+    const client = uuidValidate(passphrase) ? await this.clients.fetchById(passphrase) : undefined
 
     if (client) {
       this.logger.info('Joined sandbox!', client.id)

@@ -120,11 +120,11 @@ describe('Providers', () => {
     await providers.delete(state.provider!.id)
     const calls = querySpy.mock.calls.length
 
-    const notCachedById = await providers.getById(state.provider!.id)
+    const notCachedById = await providers.fetchById(state.provider!.id)
     expect(notCachedById).toBeUndefined()
     expect(querySpy).toHaveBeenCalledTimes(calls + 1)
 
-    const notCachedByName = await providers.getByName(state.provider!.name)
+    const notCachedByName = await providers.fetchByName(state.provider!.name)
     expect(notCachedByName).toBeUndefined()
     expect(querySpy).toHaveBeenCalledTimes(calls + 2)
   })

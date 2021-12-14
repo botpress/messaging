@@ -21,7 +21,7 @@ export class UserApi {
   async get(req: ClientApiRequest, res: Response) {
     const id = req.params.id as uuid
 
-    const user = await this.users.get(id)
+    const user = await this.users.fetch(id)
     if (!user || user.clientId !== req.client.id) {
       return res.sendStatus(404)
     }

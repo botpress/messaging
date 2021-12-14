@@ -57,7 +57,7 @@ export class UserService extends Service {
     return user
   }
 
-  public async get(id: uuid): Promise<User | undefined> {
+  public async fetch(id: uuid): Promise<User | undefined> {
     const cached = this.cache.get(id)
     if (cached) {
       return cached
@@ -73,6 +73,14 @@ export class UserService extends Service {
     }
 
     return undefined
+  }
+
+  public async get(id: uuid): Promise<User> {
+    const val = await this.fetch(id)
+    if (!val) {
+      throw new Error(`User ${id} not found`)
+    }
+    return val
   }
 
   private query() {

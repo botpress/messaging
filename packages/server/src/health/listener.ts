@@ -58,7 +58,7 @@ export class HealthListener {
 
   private async handleInstanceDestroyed(conduitId: uuid) {
     // It's possible that this gets called by the cleared cached after the conduit was deleted from the db
-    if (await this.conduitService.get(conduitId)) {
+    if (await this.conduitService.fetch(conduitId)) {
       try {
         await this.healthService.register(conduitId, HealthEventType.Sleep)
       } catch {
