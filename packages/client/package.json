@@ -13,6 +13,9 @@
   "files": [
     "dist"
   ],
+  "devDependencies": {
+    "@types/jest": "^27.0.3"
+  },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",
     "axios": "^0.21.1"

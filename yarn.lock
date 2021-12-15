@@ -1884,6 +1884,7 @@ __metadata:
   resolution: "@botpress/messaging-client@workspace:packages/client"
   dependencies:
     "@botpress/messaging-base": 0.0.1
+    "@types/jest": ^27.0.3
     axios: ^0.21.1
   languageName: unknown
   linkType: soft
@@ -2021,6 +2022,8 @@ __metadata:
   resolution: "@botpress/messaging-socket@workspace:packages/socket"
   dependencies:
     "@botpress/messaging-base": 0.0.1
+    "@types/jest": ^27.0.3
+    "@types/node": ^16.11.13
     socket.io-client: ^4.1.3
   languageName: unknown
   linkType: soft
