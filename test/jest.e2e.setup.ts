@@ -2,8 +2,8 @@
 require('ts-node/register')
 
 import path from 'path'
-import { v4 as uuidv4 } from 'uuid'
 import { setup as setupDevServer } from 'jest-dev-server'
+import { v4 as uuidv4 } from 'uuid'
 
 const setup = async () => {
   process.env.SKIP_LOAD_ENV = 'true'
