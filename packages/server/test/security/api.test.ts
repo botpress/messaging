@@ -1,5 +1,5 @@
 import { Conversation, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, Method } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios'
 import _ from 'lodash'
 import { v4 as uuid } from 'uuid'
 import froth from './mocha-froth'
@@ -123,7 +123,7 @@ describe('API', () => {
 
     test('Should not allow the token of another clients', async () => {
       await shouldFail(
-        async () => sync({ id: clients.first.clientId, token: clients.first.clientToken }),
+        async () => sync({ id: clients.first.clientId, token: clients.second.clientToken }),
         (err) => {
           expect(err.response?.data).not.toEqual({
             id: expect.anything(),
@@ -384,8 +384,59 @@ describe('API', () => {
 
       const res = await client.post<Conversation>('/api/conversations', { userId }, config)
 
-      expect(res.data).toEqual({ id: expect.anything(), clientId, userId })
+      expect(res.data).toEqual({ id: expect.anything(), clientId, userId, createdOn: expect.anything() })
       expect(res.status).toEqual(201)
+
+      return res.data
+    }
+
+    const getConversation = async (
+      conversationId: string,
+      userId?: string,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const client = http(clientId && clientToken ? { clientId, clientToken } : undefined)
+
+      const res = await client.get<Conversation>(`/api/conversations/${conversationId}`, config)
+
+      expect(res.data).toEqual({ id: expect.anything(), clientId, userId, createdOn: expect.anything() })
+      expect(res.status).toEqual(200)
+
+      return res.data
+    }
+
+    const listConversations = async (
+      userId?: string,
+      limit?: number,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const client = http(clientId && clientToken ? { clientId, clientToken } : undefined)
+
+      const query = limit ? `?limit=${limit}` : ''
+      const res = await client.get<Conversation[]>(`/api/conversations/user/${userId}${query}`, config)
+
+      expect(res.data[0]).toEqual({ id: expect.anything(), clientId, userId, createdOn: expect.anything() })
+      expect(res.status).toEqual(200)
+
+      return res.data
+    }
+
+    const recentConversation = async (
+      userId?: string,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const client = http(clientId && clientToken ? { clientId, clientToken } : undefined)
+
+      const res = await client.get<Conversation>(`/api/conversations/user/${userId}/recent`, config)
+
+      expect(res.data).toEqual({ id: expect.anything(), clientId, userId, createdOn: expect.anything() })
+      expect(res.status).toEqual(200)
 
       return res.data
     }
@@ -438,6 +489,158 @@ describe('API', () => {
             expect(err.response?.data).toEqual('Unauthorized')
 
             expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+    })
+
+    describe('Get', () => {
+      test('Should be able to get a conversation with valid credentials', async () => {
+        await getConversation(
+          clients.first.conversationId,
+          clients.first.userId,
+          clients.first.clientId,
+          clients.first.clientToken
+        )
+
+        await getConversation(
+          clients.second.conversationId,
+          clients.second.userId,
+          clients.second.clientId,
+          clients.second.clientToken
+        )
+      })
+
+      test('Should not be able to get a conversation without being authenticated', async () => {
+        await shouldFail(
+          async () => getConversation(clients.first.conversationId),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to get a conversation that does not exists', async () => {
+        await shouldFail(
+          async () => getConversation(uuid(), clients.first.userId, clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+
+      test('Should not be able to get the conversation of another client', async () => {
+        await shouldFail(
+          async () =>
+            getConversation(
+              clients.second.conversationId,
+              clients.first.userId,
+              clients.first.clientId,
+              clients.first.clientToken
+            ),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+    })
+
+    describe('List', () => {
+      test('Should be able to list conversations with valid credentials', async () => {
+        await listConversations(clients.first.userId, 1, clients.first.clientId, clients.first.clientToken)
+        await listConversations(clients.second.userId, 1, clients.second.clientId, clients.second.clientToken)
+      })
+
+      test('Should not be able to list conversations without being authenticated', async () => {
+        await shouldFail(
+          async () => listConversations(clients.first.userId),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to list conversations for a user that does not exists', async () => {
+        await shouldFail(
+          async () => listConversations(uuid(), 1, clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+
+      test('Should not be able to list the conversations of a user from another client', async () => {
+        await shouldFail(
+          async () => listConversations(clients.second.userId, 1, clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+
+      test('Should not allow to list conversations with an invalid limit', async () => {
+        await shouldFail(
+          async () =>
+            listConversations(
+              clients.first.userId,
+              Number.MAX_VALUE,
+              clients.first.clientId,
+              clients.first.clientToken
+            ),
+          (err) => {
+            expect(err.response?.status).toEqual(400)
+          }
+        )
+      })
+    })
+
+    describe('Recent', () => {
+      test('Should be able to fetch the most recent conversation with valid credentials', async () => {
+        await recentConversation(clients.first.userId, clients.first.clientId, clients.first.clientToken)
+        await recentConversation(clients.second.userId, clients.second.clientId, clients.second.clientToken)
+      })
+
+      test('Should not be able to fetch the most recent conversation without being authenticated', async () => {
+        await shouldFail(
+          async () => recentConversation(clients.first.userId),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to fetch the most recent conversation for a user that does not exists', async () => {
+        await shouldFail(
+          async () => recentConversation(uuid(), clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+
+      test('Should not be able to fetch the most recent conversation of a user from another client', async () => {
+        await shouldFail(
+          async () => recentConversation(clients.second.userId, clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+
+            expect(err.response?.status).toEqual(404)
           }
         )
       })
