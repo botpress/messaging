@@ -13,7 +13,6 @@
   "files": [
     "dist"
   ],
-  "devDependencies": {},
   "dependencies": {
     "@botpress/messaging-socket": "0.0.2"
   }

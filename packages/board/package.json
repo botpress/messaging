@@ -8,7 +8,6 @@
     "watch": "yarn --silent && parcel watch src/index.html",
     "dev": "yarn --silent && parcel src/index.html"
   },
-  "devDependencies": {},
   "dependencies": {
     "@botpress/chat": "0.0.1",
     "@botpress/chat-skin": "0.0.1",

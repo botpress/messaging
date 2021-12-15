@@ -8,7 +8,5 @@
   "scripts": {
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch"
-  },
-  "devDependencies": {},
-  "dependencies": {}
+  }
 }

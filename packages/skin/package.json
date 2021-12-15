@@ -12,7 +12,6 @@
   "files": [
     "dist"
   ],
-  "devDependencies": {},
   "dependencies": {
     "@botpress/chat": "0.0.1"
   }
