@@ -1912,6 +1912,7 @@ __metadata:
     "@types/react": ^17.0.34
     "@types/react-dom": ^17.0.11
     "@types/react-slick": ^0.23.5
+    "@types/testing-library__jest-dom": ^5.14.2
     html-truncate: ^1.2.2
     jest-css-modules-transform: ^4.3.0
     mime: ^2.5.2
@@ -5085,7 +5086,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/testing-library__jest-dom@npm:^5.9.1":
+"@types/testing-library__jest-dom@npm:^5.14.2, @types/testing-library__jest-dom@npm:^5.9.1":
   version: 5.14.2
   resolution: "@types/testing-library__jest-dom@npm:5.14.2"
   dependencies:
