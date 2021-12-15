@@ -2,8 +2,8 @@ import { Emitter, uuid } from '@botpress/messaging-base'
 import { Provider } from './types'
 
 export enum ProviderEvents {
-  Updated = -6307907498173656,
-  Deleting = 4113861503631719
+  Updated,
+  Deleting
 }
 
 export interface ProviderUpdatedEvent {

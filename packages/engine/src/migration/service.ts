@@ -99,6 +99,7 @@ export class MigrationService extends Service {
   private async runMigrations(migrations: Migration[]) {
     this.loggerDry.window([clc.bold(`Executing ${migrations.length} migration${migrations.length > 1 ? 's' : ''}`)])
 
+    await this.disableSqliteForeignKeys()
     const migrationsByVersion = _.groupBy(migrations, 'meta.version')
     const trx = await this.db.knex.transaction()
 
@@ -118,6 +119,8 @@ export class MigrationService extends Service {
       await trx.rollback()
       this.loggerDry.error(e, 'Migrations failed')
       throw new ShutDownSignal(1)
+    } finally {
+      await this.enableSqliteForeignKeys()
     }
   }
 
@@ -126,7 +129,7 @@ export class MigrationService extends Service {
 
     for (const migration of migrations) {
       this.loggerDry.info(`Running ${migration.meta.name}`)
-      await migration.init(trx, this.isDown)
+      await migration.init(trx, this.isDown, this.db.getIsLite())
 
       if (await migration.shouldRun()) {
         await migration.run()
@@ -190,6 +193,18 @@ export class MigrationService extends Service {
       for (const migration of migrations) {
         this.logger.warn(`- ${this.isDown ? '[rollback] ' : ''}${migration.meta.description}`)
       }
+    }
+  }
+
+  private async disableSqliteForeignKeys() {
+    if (this.db.getIsLite()) {
+      await this.db.knex.raw('PRAGMA foreign_keys = OFF;')
+    }
+  }
+
+  private async enableSqliteForeignKeys() {
+    if (this.db.getIsLite()) {
+      await this.db.knex.raw('PRAGMA foreign_keys = ON;')
     }
   }
 }
