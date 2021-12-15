@@ -1,7 +1,6 @@
 import ServerConfig from './packages/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import { defaults as tsjPreset } from 'ts-jest/presets'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -21,7 +20,7 @@ const config: Config.InitialOptions = {
       displayName: { name: 'Engine', color: 'green' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       clearMocks: true
     },
@@ -31,7 +30,7 @@ const config: Config.InitialOptions = {
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {
@@ -47,7 +46,7 @@ const config: Config.InitialOptions = {
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],
       transform: {
-        ...tsjPreset.transform,
+        '^.+\\.tsx?$': require.resolve('ts-jest'),
         '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform'
       },
       setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],

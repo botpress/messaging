@@ -13,7 +13,7 @@ const config: Config.InitialOptions = {
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {

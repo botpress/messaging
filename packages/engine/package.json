@@ -21,7 +21,8 @@
     "@types/node": "^16.11.13",
     "@types/redlock": "^4.0.2",
     "@types/semver": "^7.3.8",
-    "@types/uuid": "^8.3.1"
+    "@types/uuid": "^8.3.1",
+    "jest-mock": "^27.4.2"
   },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",

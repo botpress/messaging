@@ -15,7 +15,7 @@ const config: Config.InitialOptions = {
       displayName: { name: 'Client', color: 'blue' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {
@@ -31,7 +31,7 @@ const config: Config.InitialOptions = {
       displayName: { name: 'Socket', color: 'red' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {
