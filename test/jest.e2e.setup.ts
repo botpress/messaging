@@ -15,7 +15,7 @@ const setup = async () => {
     launchTimeout: 20000,
     protocol: 'http',
     host: '127.0.0.1',
-    port: 3123,
+    port: 3100,
     path: 'status',
     usedPortAction: 'error'
   })
