@@ -35,7 +35,7 @@ export class SocketManager {
   async destroy() {
     await new Promise((resolve, reject) => {
       if (!this.ws) {
-        return
+        return resolve(undefined)
       }
       // This is kind of hack to make sure that socket.io does not
       // try to close the HTTP server before http-terminator
