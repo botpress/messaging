@@ -1,8 +1,8 @@
 // Global setup is performed before a TypeScript environment is made available, so we need to create the environment manually
 require('ts-node/register')
 
-import { setup as setupDevServer } from 'jest-dev-server'
 import path from 'path'
+import { setup as setupDevServer } from 'jest-dev-server'
 import { v4 as uuidv4 } from 'uuid'
 
 const setup = async () => {
@@ -11,7 +11,6 @@ const setup = async () => {
   process.env.DATABASE_URL = path.join(__dirname, '.test-data', `${uuidv4()}.sqlite`)
 
   await setupDevServer({
-    debug: true,
     command: 'yarn dev',
     launchTimeout: 20000,
     protocol: 'http',

@@ -703,6 +703,30 @@ describe('API', () => {
       return res.data
     }
 
+    const deleteMessage = async (
+      messageId: string,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const res = await http(clientId, clientToken).get<void>(`/api/messages/${messageId}`, config)
+
+      expect(res.data).toBeUndefined()
+      expect(res.status).toEqual(204)
+    }
+
+    const deleteMessagesByConversation = async (
+      conversationId: string,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const res = await http(clientId, clientToken).get<void>(`/api/messages/conversation/${conversationId}`, config)
+
+      expect(res.data).toEqual({ count: 1 })
+      expect(res.status).toEqual(200)
+    }
+
     describe('Create', () => {
       test('Should be able to create a message with valid credentials', async () => {
         const res = await message(
@@ -904,6 +928,75 @@ describe('API', () => {
             ),
           (err) => {
             expect(err.response?.status).toEqual(400)
+          }
+        )
+      })
+    })
+
+    describe('Delete', () => {
+      test('Should not be able to delete a message without being authenticated', async () => {
+        await shouldFail(
+          async () => deleteMessage(clients.first.messageId),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to delete a message that does not exists', async () => {
+        await shouldFail(
+          async () => deleteMessage(uuid(), clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+
+      test('Should not be able to delete the message of a conversation from another client', async () => {
+        await shouldFail(
+          async () => deleteMessage(clients.second.conversationId, clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+    })
+
+    describe('DeleteByConversation', () => {
+      test('Should not be able to delete messages without being authenticated', async () => {
+        await shouldFail(
+          async () => deleteMessagesByConversation(clients.first.conversationId),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to delete a message from a conversation that does not exists', async () => {
+        await shouldFail(
+          async () => deleteMessagesByConversation(uuid(), clients.first.clientId, clients.first.clientToken),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+
+      test('Should not be able to delete the message of a conversation from another client', async () => {
+        await shouldFail(
+          async () =>
+            deleteMessagesByConversation(
+              clients.second.conversationId,
+              clients.first.clientId,
+              clients.first.clientToken
+            ),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+            expect(err.response?.status).toEqual(404)
           }
         )
       })
