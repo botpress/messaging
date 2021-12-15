@@ -2,15 +2,16 @@ FROM node:16.13.0-alpine AS build
 
 ADD . /messaging
 
-WORKDIR /messaging/packages/server
+WORKDIR /messaging
 
+RUN yarn --immutable
 RUN yarn build
 
 FROM node:16.13.0-alpine
 
 WORKDIR /messaging
 
-COPY --from=build /messaging/packages/server/dist packages/server/src
+COPY --from=build /messaging/packages/server/dist packages/server/dist
 COPY --from=build /messaging/packages/server/package.json packages/server/package.json
 
 COPY --from=build /messaging/packages/channels/dist packages/channels/dist
@@ -24,11 +25,12 @@ COPY --from=build /messaging/packages/base/package.json packages/base/package.js
 
 COPY --from=build /messaging/package.json package.json
 COPY --from=build /messaging/yarn.lock yarn.lock
-
-
-RUN yarn --silent --prod --immutable
+COPY --from=build /messaging/.yarn .yarn
+COPY --from=build /messaging/.yarnrc.yml .yarnrc.yml
+COPY --from=build /messaging/.pnp.cjs .pnp.cjs
+COPY --from=build /messaging/.pnp.loader.mjs .pnp.loader.mjs
 
 ENV NODE_ENV=production
 
-ENTRYPOINT [ "node", "./packages/server/src/index.js" ]
+ENTRYPOINT [ "yarn", "node", "./packages/server/dist/index.js" ]
 CMD []
