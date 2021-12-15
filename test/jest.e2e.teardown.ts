@@ -1,6 +1,6 @@
 import fs from 'fs'
-import { teardown as teardownDevServer } from 'jest-dev-server'
 import path from 'path'
+import { teardown as teardownDevServer } from 'jest-dev-server'
 
 const teardown = async () => {
   const dir = path.join(__dirname, '.test-data')

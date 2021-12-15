@@ -1,9 +1,9 @@
 // Global setup is performed before a TypeScript environment is made available, so we need to create the environment manually
 require('ts-node/register')
 
-import { setup as setupDevServer } from 'jest-dev-server'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
+import { setup as setupDevServer } from 'jest-dev-server'
 
 const setup = async () => {
   process.env.SKIP_LOAD_ENV = 'true'
