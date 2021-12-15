@@ -8,7 +8,7 @@ describe('Socket Client', () => {
     const options = {
       protocol: 'http:',
       hostname: 'localhost',
-      port: 3100,
+      port: 3123,
       path: '/api/sync',
       method: 'POST',
       headers: {
@@ -48,7 +48,7 @@ describe('Socket Client', () => {
 
   test('Connect', async () => {
     const socket = new MessagingSocket({
-      url: 'http://localhost:3100',
+      url: 'http://localhost:3123',
       clientId: CLIENT_ID
     })
 

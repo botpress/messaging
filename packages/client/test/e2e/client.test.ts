@@ -40,7 +40,7 @@ describe('Http Client', () => {
     message?: Message
     webhooks?: SyncWebhook[]
   } = {}
-  const client = new MessagingClient({ url: 'http://localhost:3100' })
+  const client = new MessagingClient({ url: 'http://localhost:3123' })
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
 
   describe('Syncs', () => {

@@ -2051,6 +2051,7 @@ __metadata:
     jest-dev-server: ^6.0.3
     jest-mock: ^27.4.2
     pkg: ^5.5.1
+    portfinder: ^1.0.28
     prettier: ^2.3.2
     pretty-format: ^27.4.2
     rimraf: ^3.0.2
