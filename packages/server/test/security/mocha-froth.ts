@@ -13,15 +13,14 @@ export interface Options {
 }
 
 /**
- * Returns an array of random strings for fuzzing
+ * Returns a random string for fuzzing
  */
 export default function (
-  num = 10,
   max = 20,
   min = max,
   opt: Options = {
     // Set to true to include tests with...
-    none: true, // Empty string
+    none: false, // Empty string
     whitespace: true, // Various whitespace chars
     quotes: true, // Combinations of quotes
     backslashing: true, // Combinations of backslashes
@@ -31,7 +30,6 @@ export default function (
   }
 ) {
   let chars: string[] = []
-  const tests: string[] = []
 
   // Whitespace characters
   if (opt.whitespace !== false) {
@@ -86,28 +84,20 @@ export default function (
   // Set minimum string length
   min = opt.none !== false ? 0 : min
 
-  // Add tests until we have enough tests
-  while (tests.length < num) {
-    // Pick a random number from min to max
-    const len = Math.floor(Math.random() * (max - min + 1)) + min
+  // Pick a random number from min to max
+  const len = Math.floor(Math.random() * (max - min + 1)) + min
 
-    // Create a string of that length
-    let s = ''
-    while (s.length < len) {
-      s += chars[Math.floor(Math.random() * chars.length)]
-    }
-
-    // Make sure we didn't go over the max length
-    // (some chars have multiple characters)
-    while (s.length > len) {
-      s = s.substring(1)
-    }
-
-    // Add that string to the tests if not already
-    if (!tests.includes(s)) {
-      tests.push(s)
-    }
+  // Create a string of that length
+  let s = ''
+  while (s.length < len) {
+    s += chars[Math.floor(Math.random() * chars.length)]
   }
 
-  return tests
+  // Make sure we didn't go over the max length
+  // (some chars have multiple characters)
+  while (s.length > len) {
+    s = s.substring(1)
+  }
+
+  return s
 }
