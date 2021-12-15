@@ -71,4 +71,4 @@ jobs:
           yarn --frozen-lockfile
       - name: Run tests
         run: |
-          yarn test:security --verbose
+          yarn test:sec --verbose
