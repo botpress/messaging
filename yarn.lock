@@ -1848,6 +1848,34 @@ __metadata:
 "@botpress/messaging-channels@0.0.1, @botpress/messaging-channels@workspace:packages/channels":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-channels@workspace:packages/channels"
+  dependencies:
+    "@slack/events-api": ^2.3.2
+    "@slack/interactive-messages": ^1.5.0
+    "@slack/rtm-api": ^5.0.3
+    "@slack/web-api": ^5.8.0
+    "@types/cli-color": ^2.0.1
+    "@types/express": ^4.17.13
+    "@types/jsonwebtoken": ^8.5.6
+    "@types/lodash": ^4.14.172
+    "@types/lru-cache": ^5.1.1
+    "@types/ms": ^0.7.31
+    "@types/node": ^16.11.13
+    "@types/uuid": ^8.3.1
+    "@vonage/server-sdk": 2.10.7-beta-2
+    axios: ^0.21.1
+    botbuilder: ^4.14.1
+    cli-color: ^2.0.0
+    express: ^4.17.1
+    joi: ^17.4.2
+    jsonwebtoken: ^8.5.1
+    lodash: ^4.17.21
+    lru-cache: ^6.0.0
+    ms: ^2.1.3
+    smooch-core: ^8.11.4
+    telegraf: ^3.27.1
+    twilio: ^3.67.0
+    uuid: ^8.3.2
+    yn: ^4.0.0
   languageName: unknown
   linkType: soft
 
@@ -1915,6 +1943,35 @@ __metadata:
 "@botpress/messaging-engine@0.0.1, @botpress/messaging-engine@workspace:packages/engine":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-engine@workspace:packages/engine"
+  dependencies:
+    "@botpress/messaging-base": 0.0.1
+    "@types/bcryptjs": ^2.4.2
+    "@types/cli-color": ^2.0.1
+    "@types/express": ^4.17.13
+    "@types/ioredis": ^4.26.7
+    "@types/lodash": ^4.14.172
+    "@types/lru-cache": ^5.1.1
+    "@types/ms": ^0.7.31
+    "@types/node": ^16.11.13
+    "@types/redlock": ^4.0.2
+    "@types/semver": ^7.3.8
+    "@types/uuid": ^8.3.1
+    bcryptjs: ^2.4.3
+    cli-color: ^2.0.0
+    express: ^4.17.1
+    ioredis: ^4.27.8
+    joi: ^17.4.2
+    knex: ^0.95.10
+    lodash: ^4.17.21
+    lru-cache: ^6.0.0
+    moment: ^2.29.1
+    ms: ^2.1.3
+    pg: ^8.7.1
+    redlock: ^4.2.0
+    semver: ^7.3.5
+    sqlite3: ^5.0.2
+    uuid: ^8.3.2
+    yn: ^4.0.0
   languageName: unknown
   linkType: soft
 
@@ -1926,50 +1983,29 @@ __metadata:
     "@botpress/messaging-channels": 0.0.1
     "@botpress/messaging-engine": 0.0.1
     "@sentry/node": ^6.11.0
-    "@slack/events-api": ^2.3.2
-    "@slack/interactive-messages": ^1.5.0
-    "@slack/rtm-api": ^5.0.3
-    "@slack/web-api": ^5.8.0
-    "@types/bcryptjs": ^2.4.2
     "@types/cli-color": ^2.0.1
+    "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
-    "@types/ioredis": ^4.26.7
     "@types/lodash": ^4.14.172
-    "@types/lru-cache": ^5.1.1
     "@types/ms": ^0.7.31
-    "@types/redlock": ^4.0.2
-    "@types/semver": ^7.3.8
     "@types/uuid": ^8.3.1
     "@types/yargs": ^17.0.2
-    "@vonage/server-sdk": 2.10.7-beta-2
     axios: ^0.21.1
-    bcryptjs: ^2.4.3
     bluebird: ^3.7.2
     bluebird-global: ^1.0.1
-    botbuilder: ^4.14.1
     cli-color: ^2.0.0
-    discord-buttons: ^2.4.1
-    discord.js: ^12.5.3
+    cors: ^2.8.5
     dotenv: ^10.0.0
     exponential-backoff: ^3.1.0
     express: ^4.17.1
     http-terminator: ^3.0.0
-    ioredis: ^4.27.8
     joi: ^17.4.2
     knex: ^0.95.10
     lodash: ^4.17.21
-    lru-cache: ^6.0.0
     moment: ^2.29.1
     ms: ^2.1.3
-    pg: ^8.7.1
     portfinder: ^1.0.28
-    redlock: ^4.2.0
-    semver: ^7.3.5
-    smooch-core: ^8.11.4
     socket.io: ^4.1.3
-    sqlite3: ^5.0.2
-    telegraf: ^3.27.1
-    twilio: ^3.67.0
     uuid: ^8.3.2
     yargs: ^17.1.1
     yn: ^4.0.0
@@ -1998,6 +2034,7 @@ __metadata:
     cross-env: ^7.0.3
     eslint: ^7.32.0
     eslint-config-prettier: ^8.3.0
+    eslint-import-resolver-node: ^0.3.6
     eslint-plugin-import: ^2.24.1
     eslint-plugin-jsdoc: 35.5.1
     fs-extra: ^10.0.0
@@ -2009,7 +2046,7 @@ __metadata:
     semver: ^7.3.5
     ts-jest: ^27.1.1
     ts-node-dev: ^1.1.8
-    typescript: ^4.3.5
+    typescript: ^4.5.4
     yargs: ^17.1.1
   bin:
     messaging: ./packages/server/dist/index.js
@@ -2053,24 +2090,6 @@ __metadata:
   bin:
     watch: cli.js
   checksum: 88f395ca0af2f3c0665b8ce7bb29e83647ec5d141e8735712aeeee4117081555436712966b6957aa1c461f6f826a4d23b0034e379c443a10e919f81c8748bf29
-  languageName: node
-  linkType: hard
-
-"@discordjs/collection@npm:^0.1.6":
-  version: 0.1.6
-  resolution: "@discordjs/collection@npm:0.1.6"
-  checksum: a0ddf757098fa01a4d9d5812daf3c2ea88c1297618d346705e603642c2f19656188fbfb3d503ee77f2ee69e7a1c1bfe25932aec032692ee3c338335524886e05
-  languageName: node
-  linkType: hard
-
-"@discordjs/form-data@npm:^3.0.1":
-  version: 3.0.1
-  resolution: "@discordjs/form-data@npm:3.0.1"
-  dependencies:
-    asynckit: ^0.4.0
-    combined-stream: ^1.0.8
-    mime-types: ^2.1.12
-  checksum: 2b431b1a14f8ac521e1c13567856cef7e61e05aafe2721e03d9e074bb7e5f45c89fc123b126964943edf301ec612d04515dcf068ea9773a2e30a99a844c00603
   languageName: node
   linkType: hard
 
@@ -4649,6 +4668,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jsonwebtoken@npm:^8.5.6":
+  version: 8.5.6
+  resolution: "@types/jsonwebtoken@npm:8.5.6"
+  dependencies:
+    "@types/node": "*"
+  checksum: c1c0e40cb1366d3b5f72c2c283abee8e5aedc5656d8857752ed4cb318eb8e117dad87f35431f73cdc03e7b02d169d19b3a1e58422ef94776c17cfd003ee05a33
+  languageName: node
+  linkType: hard
+
 "@types/lodash.isfunction@npm:^3.0.6":
   version: 3.0.6
   resolution: "@types/lodash.isfunction@npm:3.0.6"
@@ -5471,15 +5499,6 @@ __metadata:
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
   checksum: a4a97ec07d7ea112c517036882b2ac22f3109b7b19077dc656316d07d308438aac28e4d9746dc4d84bf6b1e75b4a7b0a5f3cb30592419f128ca9a8cee3bcfa17
-  languageName: node
-  linkType: hard
-
-"abort-controller@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "abort-controller@npm:3.0.0"
-  dependencies:
-    event-target-shim: ^5.0.0
-  checksum: 170bdba9b47b7e65906a28c8ce4f38a7a369d78e2271706f020849c1bfe0ee2067d4261df8bbb66eb84f79208fd5b710df759d64191db58cfba7ce8ef9c54b75
   languageName: node
   linkType: hard
 
@@ -6835,7 +6854,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.12.0, browserslist@npm:^4.17.5, browserslist@npm:^4.18.1":
+"browserslist@npm:^4.12.0, browserslist@npm:^4.17.5, browserslist@npm:^4.19.1":
   version: 4.19.1
   resolution: "browserslist@npm:4.19.1"
   dependencies:
@@ -7922,26 +7941,26 @@ __metadata:
   linkType: hard
 
 "core-js-compat@npm:^3.18.0, core-js-compat@npm:^3.19.1, core-js-compat@npm:^3.8.1":
-  version: 3.19.3
-  resolution: "core-js-compat@npm:3.19.3"
+  version: 3.20.0
+  resolution: "core-js-compat@npm:3.20.0"
   dependencies:
-    browserslist: ^4.18.1
+    browserslist: ^4.19.1
     semver: 7.0.0
-  checksum: 4f00f734d8745bcd111e41c79d6195939f6b29951c83cc83f4d50a7d352329367d164b0985b947f83313d7dd31d6ee7b1e20a1d3d8ae7566df744ad914fc4e16
+  checksum: d2887ab75f8d65b8b8f0ba218c191bd69a1a58db2583671e9656da5915920fe47a92f933d4552225a4c8979d81ea294758fe71b23580fa6c7e5c89da542cfe2d
   languageName: node
   linkType: hard
 
 "core-js-pure@npm:^3.8.1, core-js-pure@npm:^3.8.2":
-  version: 3.19.3
-  resolution: "core-js-pure@npm:3.19.3"
-  checksum: 1c9db965010751e9242f8c3697f55c63a8a1a152e6128aff85ea29dd040f78417e63a9d493293eba46351e7ef22e89d1fc077ead5b8121f8d88244952c73585a
+  version: 3.20.0
+  resolution: "core-js-pure@npm:3.20.0"
+  checksum: b5ae6601536104cad63bb91100477d9718442d348ac47dad22a60e22bd9c86ffe10ef5ea23ddaabb97a1492727e4f2bd4bb8848031271d5d1b2f31c860b4b362
   languageName: node
   linkType: hard
 
 "core-js@npm:^3.0.4, core-js@npm:^3.6.5, core-js@npm:^3.8.2":
-  version: 3.19.3
-  resolution: "core-js@npm:3.19.3"
-  checksum: eaa7afd87411393a7b1637fd0813957f689e91007219b6a951a1fe1aa08edccfddbbfbb1acb281a76dbe90b42fe7768377289258d81ba46e13c9919527aee95a
+  version: 3.20.0
+  resolution: "core-js@npm:3.20.0"
+  checksum: 4dca42f27553e1068b5329fbe133bca9256be819b64b4d0e244b8dc0db69181430d79aed3c33eeb7388f8ec019ea125e76fbd0c28523d112779f9bb5147a0939
   languageName: node
   linkType: hard
 
@@ -7959,7 +7978,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cors@npm:~2.8.5":
+"cors@npm:^2.8.5, cors@npm:~2.8.5":
   version: 2.8.5
   resolution: "cors@npm:2.8.5"
   dependencies:
@@ -8649,29 +8668,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"discord-buttons@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "discord-buttons@npm:2.4.1"
-  checksum: bffffde9d9f8ae66b0277abe7335d48e77fa8c716e647443ceac2f13d0c78151e7327531358a1c07384a018399a6f4790cb52809f089e015eb531dea1ff1f3cc
-  languageName: node
-  linkType: hard
-
-"discord.js@npm:^12.5.3":
-  version: 12.5.3
-  resolution: "discord.js@npm:12.5.3"
-  dependencies:
-    "@discordjs/collection": ^0.1.6
-    "@discordjs/form-data": ^3.0.1
-    abort-controller: ^3.0.0
-    node-fetch: ^2.6.1
-    prism-media: ^1.2.9
-    setimmediate: ^1.0.5
-    tweetnacl: ^1.0.3
-    ws: ^7.4.4
-  checksum: 66c95c2fe3e96533117c65410a4229d38cf972794e800b63108047841a4347d489b56e049f42d7bea90e11e7d33b0d2622ad6aa9a63b9595f0b022efc3519fac
-  languageName: node
-  linkType: hard
-
 "doctrine@npm:^2.1.0":
   version: 2.1.0
   resolution: "doctrine@npm:2.1.0"
@@ -8903,9 +8899,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.564, electron-to-chromium@npm:^1.4.17":
-  version: 1.4.18
-  resolution: "electron-to-chromium@npm:1.4.18"
-  checksum: 59d8da47d997b35fca63286cc486e84b0b84587e62c632dd22f9c2b98b5c2116fa8ff0ca3b64518f0957a7f3d6812b42459a7301f5e81607b600526e1bb55227
+  version: 1.4.19
+  resolution: "electron-to-chromium@npm:1.4.19"
+  checksum: a99d237839ecd65e93966f80039dd85d6a00a5a1dfa99b97546889773186b0e44ad8e81410e82faaaea13fb54375cc73ec343510317bc90941c2ffff051b3ab7
   languageName: node
   linkType: hard
 
@@ -9576,13 +9572,6 @@ __metadata:
     d: 1
     es5-ext: ~0.10.14
   checksum: 27c1399557d9cd7e0aa0b366c37c38a4c17293e3a10258e8b692a847dd5ba9fb90429c3a5a1eeff96f31f6fa03ccbd31d8ad15e00540b22b22f01557be706030
-  languageName: node
-  linkType: hard
-
-"event-target-shim@npm:^5.0.0":
-  version: 5.0.1
-  resolution: "event-target-shim@npm:5.0.1"
-  checksum: 1ffe3bb22a6d51bdeb6bf6f7cf97d2ff4a74b017ad12284cc9e6a279e727dc30a5de6bb613e5596ff4dc3e517841339ad09a7eec44266eccb1aa201a30448166
   languageName: node
   linkType: hard
 
@@ -16149,27 +16138,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prism-media@npm:^1.2.9":
-  version: 1.3.2
-  resolution: "prism-media@npm:1.3.2"
-  peerDependencies:
-    "@discordjs/opus": ^0.5.0
-    ffmpeg-static: ^4.2.7 || ^3.0.0 || ^2.4.0
-    node-opus: ^0.3.3
-    opusscript: ^0.0.8
-  peerDependenciesMeta:
-    "@discordjs/opus":
-      optional: true
-    ffmpeg-static:
-      optional: true
-    node-opus:
-      optional: true
-    opusscript:
-      optional: true
-  checksum: a4ff111086d98509ba4dc24340c0750a2558dddc0277fb7be718f872f16d407a8215fa3cecde7ea05578392446c03b64050e680621f8b2d053487224fbddfc39
-  languageName: node
-  linkType: hard
-
 "prismjs@npm:^1.21.0, prismjs@npm:~1.25.0":
   version: 1.25.0
   resolution: "prismjs@npm:1.25.0"
@@ -17951,7 +17919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"setimmediate@npm:^1.0.4, setimmediate@npm:^1.0.5":
+"setimmediate@npm:^1.0.4":
   version: 1.0.5
   resolution: "setimmediate@npm:1.0.5"
   checksum: c9a6f2c5b51a2dabdc0247db9c46460152ffc62ee139f3157440bd48e7c59425093f42719ac1d7931f054f153e2d26cf37dfeb8da17a794a58198a2705e527fd
@@ -19576,16 +19544,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tweetnacl@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "tweetnacl@npm:1.0.3"
-  checksum: e4a57cac188f0c53f24c7a33279e223618a2bfb5fea426231991652a13247bea06b081fd745d71291fcae0f4428d29beba1b984b1f1ce6f66b06a6d1ab90645c
-  languageName: node
-  linkType: hard
-
 "twilio@npm:^3.67.0":
-  version: 3.71.3
-  resolution: "twilio@npm:3.71.3"
+  version: 3.72.0
+  resolution: "twilio@npm:3.72.0"
   dependencies:
     axios: ^0.21.4
     dayjs: ^1.8.29
@@ -19598,7 +19559,7 @@ __metadata:
     scmp: ^2.1.0
     url-parse: ^1.5.3
     xmlbuilder: ^13.0.2
-  checksum: 8f1b17bc3c21776c22305771b5713299cc76fbbbe519fc622fca848c0a9d7e71ec4b785818dadbd77d2a87e6d2f891a75dfc3deee47fedd30ef5803337f2a463
+  checksum: 10b456ba32b7d3c4731edd18c7ef2dbb7ce9ad7778101e2786b5982fd38af7a7eebde7c3e7312a2567d6cac81c56cc782ebf360974796ade43ce3acece67999c
   languageName: node
   linkType: hard
 
@@ -19723,7 +19684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.3.5":
+"typescript@npm:^4.5.4":
   version: 4.5.4
   resolution: "typescript@npm:4.5.4"
   bin:
@@ -19733,7 +19694,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.3.5#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
   version: 4.5.4
   resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=493e53"
   bin:
@@ -20641,7 +20602,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.1.2, ws@npm:^7.4.4, ws@npm:^7.4.6":
+"ws@npm:^7.1.2, ws@npm:^7.4.6":
   version: 7.5.6
   resolution: "ws@npm:7.5.6"
   peerDependencies:

@@ -1,6 +1,7 @@
 import path from 'path'
 import { Extra, Markup } from 'telegraf'
 import { InlineKeyboardButton } from 'telegraf/typings/markup'
+import { ExtraReplyMessage } from 'telegraf/typings/telegram-types'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '../../content/types'
 import { TelegramContext } from '../context'
@@ -36,12 +37,14 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
           url: card.image,
           filename: path.basename(card.image)
         },
-        extra: new Extra({ caption: text }).markdown(true).markup(Markup.inlineKeyboard(context.buttons))
+        extra: new Extra({ caption: text })
+          .markdown(true)
+          .markup(Markup.inlineKeyboard(context.buttons)) as ExtraReplyMessage
       })
     } else {
       context.channel.messages.push({
         text,
-        extra: Extra.markdown(true).markup(Markup.inlineKeyboard(context.buttons))
+        extra: Extra.markdown(true).markup(Markup.inlineKeyboard(context.buttons)) as ExtraReplyMessage
       })
     }
   }
