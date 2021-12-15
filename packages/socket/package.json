@@ -8,7 +8,7 @@
   "scripts": {
     "build": "yarn --silent && tsc --build",
     "watch": "yarn --silent && tsc --build --watch",
-    "prepublishOnly": "yarn --silent --frozen-lockfile && tsc --build"
+    "prepublishOnly": "yarn --silent --immutable && tsc --build"
   },
   "files": [
     "dist"

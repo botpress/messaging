@@ -26,7 +26,7 @@ COPY --from=build /messaging/package.json package.json
 COPY --from=build /messaging/yarn.lock yarn.lock
 
 
-RUN yarn --silent --prod --frozen-lockfile
+RUN yarn --silent --prod --immutable
 
 ENV NODE_ENV=production
 
