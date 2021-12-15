@@ -14,4 +14,3 @@ try {
 } catch (e) {
   console.error("Couldn't get active branch", e)
 }
-g
