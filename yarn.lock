@@ -1971,7 +1971,6 @@ __metadata:
     redlock: ^4.2.0
     semver: ^7.3.5
     sqlite3: ^5.0.2
-    ts-jest: ^27.1.1
     uuid: ^8.3.2
     yn: ^4.0.0
   languageName: unknown
