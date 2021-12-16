@@ -4,9 +4,9 @@
   "main": "dist/index.html",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && parcel build src/index.html",
-    "watch": "yarn --silent && parcel watch src/index.html",
-    "dev": "yarn --silent && parcel src/index.html"
+    "build": "yarn --silent && yarn run -T parcel build src/index.html",
+    "watch": "yarn --silent && yarn run -T parcel watch src/index.html",
+    "dev": "yarn --silent && yarn run -T parcel src/index.html"
   },
   "dependencies": {
     "@botpress/chat": "0.0.1",

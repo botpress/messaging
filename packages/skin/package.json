@@ -6,8 +6,8 @@
   "source": "src/index.ts",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch"
+    "build": "yarn --silent && yarn run -T tsc --build",
+    "watch": "yarn --silent && yarn run -T tsc --build --watch"
   },
   "files": [
     "dist"
