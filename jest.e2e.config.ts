@@ -40,22 +40,6 @@ const config: Config.InitialOptions = {
       },
       clearMocks: true,
       moduleNameMapper: pathsToModuleNameMapper(SocketConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
-    },
-    {
-      rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/e2e/**/(*.)test.ts'],
-      displayName: { name: 'Server', color: 'white' },
-      testEnvironment: 'node',
-      transform: {
-        ...tsjPreset.transform
-      },
-      globals: {
-        'ts-jest': {
-          tsconfig: '<rootDir>/test/tsconfig.json'
-        }
-      },
-      clearMocks: true,
-      moduleNameMapper: pathsToModuleNameMapper(SocketConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     }
   ]
 }
