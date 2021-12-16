@@ -16,7 +16,7 @@ const config: Config.InitialOptions = {
   projects: [
     {
       rootDir: 'packages/engine',
-      testMatch: ['<rootDir>/test/unit/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
       displayName: { name: 'Engine', color: 'green' },
       testEnvironment: 'node',
       transform: {
@@ -26,7 +26,7 @@ const config: Config.InitialOptions = {
     },
     {
       rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/unit/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
@@ -42,7 +42,7 @@ const config: Config.InitialOptions = {
     },
     {
       rootDir: 'packages/components',
-      testMatch: ['<rootDir>/test/unit/**/(*.)test.tsx'],
+      testMatch: ['<rootDir>/test/unit/**/*.test.tsx'],
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],
       transform: {
