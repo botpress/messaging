@@ -16,6 +16,8 @@ export class SocketCom {
 
   async connect(auth: { clientId: uuid; creds?: UserCredentials }): Promise<UserCredentials> {
     return new Promise((resolve, reject) => {
+      this.disconnect()
+
       this.socket = io(this.url, {
         transports: ['websocket'],
         auth,
@@ -32,6 +34,7 @@ export class SocketCom {
       })
 
       this.socket.on('connect_error', (err) => {
+        this.socket?.close()
         clearTimeout(timeout)
         reject(err.message)
       })

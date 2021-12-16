@@ -102,10 +102,6 @@ describe('Socket Client', () => {
     ;(state.second.socket.clientId as string) = state.second.clientId
   })
 
-  beforeEach(() => {
-    jest.resetModules()
-  })
-
   describe('Connect', () => {
     afterEach(() => {
       // Remove listeners manually so we don't have many connect listeners
@@ -147,7 +143,7 @@ describe('Socket Client', () => {
       await promise
     })
 
-    test('Should be able to connect with own credentials', async () => {
+    test('Should be able to re-connect with own credentials', async () => {
       const promise = new Promise<void>((resolve) => {
         state.first.socket.on('connect', (creds) => {
           expect(creds.userId).toEqual(state.first.userId)
@@ -433,6 +429,14 @@ describe('Socket Client', () => {
       await state.first.socket.disconnect()
 
       expect(spy).toHaveBeenCalledTimes(1)
+
+      {
+        const spy = jest.spyOn(state.second.socket['com']['socket']!, 'disconnect')
+
+        await state.second.socket.disconnect()
+
+        expect(spy).toHaveBeenCalledTimes(1)
+      }
     })
 
     test('Should not try to disconnect the socket when already disconnected', async () => {
