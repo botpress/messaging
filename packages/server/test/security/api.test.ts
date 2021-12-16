@@ -162,6 +162,7 @@ describe('API', () => {
               token: expect.anything(),
               webhooks: expect.anything()
             })
+            expect(err.response?.data).toEqual('"token" length must be 88 characters long')
             expect(err.response?.status).toEqual(400)
           }
         )
@@ -177,6 +178,7 @@ describe('API', () => {
             token: expect.anything(),
             webhooks: expect.anything()
           })
+          expect(err.response?.data).toEqual('"id" must be a string')
           expect(err.response?.status).toEqual(400)
         }
       )
@@ -194,6 +196,7 @@ describe('API', () => {
               token: expect.anything(),
               webhooks: expect.anything()
             })
+            expect(err.response?.data).toEqual('"id" must be a valid GUID')
             expect(err.response?.status).toEqual(400)
           }
         )
@@ -216,6 +219,7 @@ describe('API', () => {
             token: expect.anything(),
             webhooks: expect.anything()
           })
+          expect(err.response?.data).toEqual('"channels.teams.appId" is required')
           expect(err.response?.status).toEqual(400)
         }
       )
@@ -563,11 +567,12 @@ describe('API', () => {
             listConversations(
               clients.first.conversationId,
               clients.first.userId,
-              Number.MAX_VALUE,
+              Number.MAX_SAFE_INTEGER + 1,
               clients.first.clientId,
               clients.first.clientToken
             ),
           (err) => {
+            expect(err.response?.data).toEqual('"query.limit" must be a safe number')
             expect(err.response?.status).toEqual(400)
           }
         )
@@ -732,7 +737,7 @@ describe('API', () => {
         const res = await message(
           clients.first.conversationId,
           clients.first.userId,
-          {},
+          { [froth(1000)]: froth(1000), [froth(1000)]: froth(1000) },
           undefined,
           clients.first.clientId,
           clients.first.clientToken
@@ -754,6 +759,40 @@ describe('API', () => {
 
           clients.second.messageId = res.id
         }
+      })
+
+      test('Should not be able to create a message with an invalid payload', async () => {
+        await shouldFail(
+          async () =>
+            message(
+              clients.first.conversationId,
+              clients.first.userId,
+              true,
+              undefined,
+              clients.first.clientId,
+              clients.first.clientToken
+            ),
+          (err) => {
+            expect(err.response?.data).toEqual('"body.payload" must be of type object')
+            expect(err.response?.status).toEqual(400)
+          }
+        )
+
+        await shouldFail(
+          async () =>
+            message(
+              clients.first.conversationId,
+              clients.first.userId,
+              '{true}',
+              undefined,
+              clients.first.clientId,
+              clients.first.clientToken
+            ),
+          (err) => {
+            expect(err.response?.data).toEqual('"body.payload" must be of type object')
+            expect(err.response?.status).toEqual(400)
+          }
+        )
       })
 
       test('Should not be able to create a message without being authenticated', async () => {
@@ -855,7 +894,7 @@ describe('API', () => {
           clients.first.messageId,
           clients.first.conversationId,
           clients.first.userId,
-          1,
+          Number.MAX_SAFE_INTEGER,
           clients.first.clientId,
           clients.first.clientToken
         )
@@ -863,7 +902,7 @@ describe('API', () => {
           clients.second.messageId,
           clients.second.conversationId,
           clients.second.userId,
-          1,
+          Number.MAX_SAFE_INTEGER,
           clients.second.clientId,
           clients.second.clientToken
         )
@@ -922,11 +961,12 @@ describe('API', () => {
               clients.first.messageId,
               clients.first.conversationId,
               clients.first.userId,
-              Number.MAX_VALUE,
+              Number.MAX_SAFE_INTEGER + 1,
               clients.first.clientId,
               clients.first.clientToken
             ),
           (err) => {
+            expect(err.response?.data).toEqual('"query.limit" must be a safe number')
             expect(err.response?.status).toEqual(400)
           }
         )

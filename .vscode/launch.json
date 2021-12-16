@@ -34,7 +34,18 @@
       "name": "Debug Unit Tests",
       "request": "launch",
       "runtimeExecutable": "yarn",
-      "args": ["test", "--runInBand"],
+      "args": ["test:unit", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
+    },
+    {
+      "type": "node",
+      "runtimeVersion": "16.13.0",
+      "name": "Debug Security Tests",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["test:sec", "--runInBand"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true
