@@ -1,4 +1,4 @@
-import { MessagingSocket, SocketComEvents } from '@botpress/messaging-socket'
+import { MessagingSocket } from '@botpress/messaging-socket'
 import { WebchatSystem } from '../base/system'
 import { WebchatConversation } from '../conversation/system'
 import { MessagesEmitter, MessagesEvents, MessagesWatcher } from './events'
