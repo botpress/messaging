@@ -1,18 +1,24 @@
 {
   "name": "@botpress/messaging-board",
   "version": "0.0.1",
-  "main": "dist/index.html",
+  "source": "src/index.html",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && yarn run -T parcel build src/index.html",
-    "watch": "yarn --silent && yarn run -T parcel watch src/index.html",
-    "dev": "yarn --silent && yarn run -T parcel src/index.html"
+    "build": "yarn --silent && yarn run -T parcel build",
+    "watch": "yarn --silent && yarn run -T parcel watch",
+    "dev": "yarn --silent && yarn run -T parcel"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11"
   },
   "dependencies": {
     "@botpress/chat": "0.0.1",
     "@botpress/chat-skin": "0.0.1",
     "@botpress/messaging-client": "",
     "@botpress/webchat": "0.0.1",
-    "axios": "^0.21.1"
+    "axios": "^0.21.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }
