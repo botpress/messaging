@@ -10,6 +10,10 @@ export class SocketEmitter<T extends { [key: number]: any }> {
     }
   }
 
+  public removeListeners<K extends keyof T>(event: K) {
+    this.listeners[event as number] = []
+  }
+
   protected async emit<K extends keyof T>(event: K, arg: T[K]): Promise<boolean> {
     const listeners = this.listeners[event as number]
     if (listeners?.length) {

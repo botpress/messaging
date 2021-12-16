@@ -34,7 +34,29 @@
       "name": "Debug Unit Tests",
       "request": "launch",
       "runtimeExecutable": "yarn",
-      "args": ["test", "--runInBand"],
+      "args": ["test:unit", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
+    },
+    {
+      "type": "node",
+      "runtimeVersion": "16.13.0",
+      "name": "Debug E2E Tests",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["test:e2e", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
+    },
+    {
+      "type": "node",
+      "runtimeVersion": "16.13.0",
+      "name": "Debug Integration Tests",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["test:int", "--runInBand"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true

@@ -6,7 +6,7 @@ export class SocketCom {
   public readonly events: SocketComWatcher
 
   private emitter: SocketComEmitter
-  private socket!: Socket
+  private socket: Socket | undefined
   private pending: { [request: string]: { resolve: (value: any) => void; reject: (reason?: any) => void } } = {}
 
   constructor(private url: string) {
@@ -54,10 +54,16 @@ export class SocketCom {
   }
 
   disconnect() {
-    this.socket.disconnect()
+    if (this.socket && !this.socket?.disconnected) {
+      this.socket.disconnect()
+    }
   }
 
   async request<T>(type: string, data: any): Promise<T> {
+    if (!this.socket?.connected) {
+      throw new Error('Client is disconnected')
+    }
+
     const request = this.random(32)
     const promise = new Promise<T>((resolve, reject) => {
       this.pending[request] = { resolve, reject }
