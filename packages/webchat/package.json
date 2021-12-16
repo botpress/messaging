@@ -19,12 +19,18 @@
     "@formatjs/intl-pluralrules": "^4.1.6",
     "@formatjs/intl-utils": "^3.8.4",
     "@juggle/resize-observer": "^3.0.2",
+    "axios": "^0.21.1",
+    "classnames": "^2.3.1",
     "date-fns": "^1.30.1",
+    "lodash": "^4.17.21",
+    "mime": "^3.0.0",
     "mobx": "4.9.4",
     "mobx-react": "^5.4.4",
     "query-string": "^7.0.1",
+    "react": "^17.0.2",
     "react-dom": "^16.8.6",
     "react-ga": "^2.7.0",
-    "react-intl": "^3.12.1"
+    "react-intl": "^3.12.1",
+    "snarkdown": "^2.0.0"
   }
 }
