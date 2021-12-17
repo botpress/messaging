@@ -6,7 +6,7 @@ const SyncWebhookSchema = Joi.object({
 })
 
 export const makeSyncRequestSchema = (channels: Channel[]) => {
-  const channelsSchema: any = {}
+  const channelsSchema: { [name: string]: Joi.ObjectSchema<any> } = {}
 
   for (const channel of channels) {
     channelsSchema[channel.meta.name] = channel.meta.schema.optional()
@@ -16,7 +16,7 @@ export const makeSyncRequestSchema = (channels: Channel[]) => {
     channels: Joi.object(channelsSchema).allow(null),
     webhooks: Joi.array().items(SyncWebhookSchema).allow(null),
     id: Joi.string().guid().allow(null),
-    token: Joi.string().allow(null),
-    name: Joi.string().allow(null)
+    token: Joi.string().length(88).allow(null),
+    name: Joi.string().max(50).allow(null)
   }).options({ stripUnknown: true })
 }

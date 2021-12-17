@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid'
 import {
   CLIENT_ID_HEADER,
   CLIENT_TOKEN_HEADER,
@@ -6,17 +7,18 @@ import {
   MessagingClient,
   SyncRequest,
   SyncWebhook,
-  User,
-  uuid
+  User
 } from '../../src'
 
-const FAKE_UUID = '6a15e73d-5edc-4b90-9d2b-bf8fd0a133c1'
+const FAKE_UUID = uuid()
+const FAKE_CLIENT_ID = uuid()
+const FAKE_CLIENT_TOKEN = 'djhejsfj3498frh9erf8j3948fj398fj3498fj349f8j349834jf934fj93284fj3498fj3498fj3498f3j4f983'
 
 describe('Http Client', () => {
   test('Should create a client with credential information and URL', async () => {
     const auth = {
-      clientId: FAKE_UUID,
-      clientToken: FAKE_UUID
+      clientId: FAKE_CLIENT_ID,
+      clientToken: FAKE_CLIENT_TOKEN
     }
     const url = 'http://messaging.best'
     const client = new MessagingClient({
@@ -33,7 +35,7 @@ describe('Http Client', () => {
   })
 
   const state: {
-    clientId?: uuid
+    clientId?: string
     clientToken?: string
     user?: User
     conversation?: Conversation
@@ -91,13 +93,13 @@ describe('Http Client', () => {
       })
 
       test('Should throw when the provided clientId is valid but not the clientToken', async () => {
-        const config: SyncRequest = { id: state.clientId, token: FAKE_UUID }
+        const config: SyncRequest = { id: state.clientId, token: FAKE_CLIENT_TOKEN }
 
         await expect(client.syncs.sync(config)).rejects.toThrow('Request failed with status code 403')
       })
 
       test('Should not throw an error when the both credentials are invalid', async () => {
-        const config: SyncRequest = { id: FAKE_UUID, token: FAKE_UUID }
+        const config: SyncRequest = { id: FAKE_CLIENT_ID, token: FAKE_CLIENT_TOKEN }
 
         await expect(client.syncs.sync(config)).resolves.not.toEqual({
           id: expect.anything(),
