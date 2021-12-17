@@ -63,7 +63,7 @@ export class MessagingSocket extends SocketEmitter<{
     return this.request('users.get', {})
   }
 
-  async switchConversation(id: uuid | undefined) {
+  async switchConversation(id?: uuid) {
     this._conversationId = id
 
     await this.emit('conversation', this._conversationId)
