@@ -45,8 +45,14 @@ export class Api {
     this.root.get('/version', this.version.bind(this))
     this.root.get('/status', this.status.bind(this))
     this.root.use('/api', this.router)
-    this.router.use(cors())
-    this.router.use(express.json())
+    this.router.use(
+      cors({
+        origin: '*',
+        methods: ['GET', 'POST', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length']
+      })
+    )
+    this.router.use(express.json({ limit: '100kb' }))
     this.router.use(express.urlencoded({ extended: true }))
 
     this.syncs.setup(this.router, this.auth)
