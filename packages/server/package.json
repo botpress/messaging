@@ -21,7 +21,8 @@
     "@types/redlock": "^4.0.2",
     "@types/semver": "^7.3.8",
     "@types/uuid": "^8.3.1",
-    "@types/yargs": "^17.0.2"
+    "@types/yargs": "^17.0.2",
+    "knex-schema-inspector": "^1.6.6"
   },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",
