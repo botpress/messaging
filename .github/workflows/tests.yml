@@ -72,3 +72,21 @@ jobs:
       - name: Run tests
         run: |
           yarn test:sec --verbose
+
+  migration:
+    name: Migration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.13.0'
+          cache: 'yarn'
+      - name: Fetch Node Packages
+        run: |
+          yarn --frozen-lockfile
+      - name: Run tests
+        run: |
+          yarn test:mig --verbose

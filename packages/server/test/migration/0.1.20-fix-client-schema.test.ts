@@ -1,4 +1,4 @@
-import { MigrationService, DatabaseService } from '@botpress/messaging-engine'
+import { MigrationService, DatabaseService, ShutDownSignal } from '@botpress/messaging-engine'
 import schemaInspector from 'knex-schema-inspector'
 import { v4 as uuid } from 'uuid'
 import { FixClientSchemaMigration } from '../../src/migrations/0.1.20-fix-client-schema'
@@ -45,7 +45,13 @@ describe('0.1.20 - Fix Client Schema', () => {
     process.env.MIGRATE_CMD = 'up'
 
     await before?.()
-    await migration.setup()
+    try {
+      await migration.setup()
+    } catch (e) {
+      if (!(e instanceof ShutDownSignal)) {
+        throw e
+      }
+    }
     await after?.()
   }
 

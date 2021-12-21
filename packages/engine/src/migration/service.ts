@@ -39,10 +39,9 @@ export class MigrationService extends Service {
     await this.migrate()
     await this.updateDbVersion()
 
-    // TODO: What?
-    //if (process.env.MIGRATE_CMD) {
-    //  throw new ShutDownSignal()
-    //}
+    if (process.env.MIGRATE_CMD) {
+      throw new ShutDownSignal()
+    }
   }
 
   private async migrate() {
