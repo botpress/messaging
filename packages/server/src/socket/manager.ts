@@ -130,7 +130,7 @@ export class SocketManager {
       this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
 
       const { creds } = socket.data
-      delete socket.data
+      delete (socket as any).data
 
       await this.setupSocket(socket)
       await this.sockets.create(socket, creds.userId)

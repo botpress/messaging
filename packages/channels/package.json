@@ -11,5 +11,17 @@
     "example": "yarn --silent && ts-node-dev --debounce 500 --transpile-only example/index.ts"
   },
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "@slack/events-api": "^2.3.2",
+    "@slack/interactive-messages": "^1.5.0",
+    "@slack/rtm-api": "^5.0.3",
+    "@slack/web-api": "^5.8.0",
+    "@vonage/server-sdk": "2.10.7-beta-2",
+    "botbuilder": "^4.14.1",
+    "discord-buttons": "^2.4.1",
+    "discord.js": "^12.5.3",
+    "smooch-core": "^8.11.4",
+    "telegraf": "^3.27.1",
+    "twilio": "^3.67.0"
+  }
 }
