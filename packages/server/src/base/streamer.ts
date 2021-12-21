@@ -82,14 +82,18 @@ export class Streamer {
   }
 
   public async send(url: string, data?: any, headers?: { [name: string]: string }) {
-    const config: AxiosRequestConfig<typeof data> = { headers: {} }
+    const config: AxiosRequestConfig<typeof data> = {}
 
     if (headers) {
       config.headers = headers
     }
 
     if (process.env.INTERNAL_PASSWORD) {
-      config.headers!.password = process.env.INTERNAL_PASSWORD
+      if (!config.headers) {
+        config.headers = {}
+      }
+
+      config.headers.password = process.env.INTERNAL_PASSWORD
     }
 
     try {
