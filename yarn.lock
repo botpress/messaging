@@ -2016,6 +2016,7 @@ __metadata:
     http-terminator: ^3.0.0
     joi: ^17.4.2
     knex: ^0.95.10
+    knex-schema-inspector: ^1.6.6
     lodash: ^4.17.21
     moment: ^2.29.1
     ms: ^2.1.3
@@ -15027,6 +15028,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"knex-schema-inspector@npm:^1.6.6":
+  version: 1.7.0
+  resolution: "knex-schema-inspector@npm:1.7.0"
+  dependencies:
+    lodash.flatten: ^4.4.0
+    lodash.isnil: ^4.0.0
+  checksum: 4253dea56e8667d68543c3c306c30f2a2c6f74370cf22e6ea513c4914422ce320de2a8b4de1ebef98a9b6009a5c14e6499a690e91d73ac99ca6c1cbd2e0ec7a2
+  languageName: node
+  linkType: hard
+
 "knex@npm:^0.95.10":
   version: 0.95.14
   resolution: "knex@npm:0.95.14"
@@ -15304,6 +15315,13 @@ __metadata:
   version: 4.4.0
   resolution: "lodash.ismatch@npm:4.4.0"
   checksum: a393917578842705c7fc1a30fb80613d1ac42d20b67eb26a2a6004d6d61ee90b419f9eb320508ddcd608e328d91eeaa2651411727eaa9a12534ed6ccb02fc705
+  languageName: node
+  linkType: hard
+
+"lodash.isnil@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "lodash.isnil@npm:4.0.0"
+  checksum: ebf8df69879badd6ad99c4f64c54c470248df5cf92b208ca730861b1d8ac058da7b632ac811d18b0929d93cbac8d8fc866e781ee816b0142c56952e85edc682f
   languageName: node
   linkType: hard
 
