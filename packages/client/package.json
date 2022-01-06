@@ -6,14 +6,18 @@
   "source": "src/index.ts",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && tsc --build",
-    "watch": "yarn --silent && tsc --build --watch",
-    "prepublishOnly": "yarn --silent && tsc --build"
+    "build": "yarn --silent && yarn run -T tsc --build",
+    "watch": "yarn --silent && yarn run -T tsc --build --watch",
+    "prepublishOnly": "yarn --silent && yarn run -T tsc --build"
   },
   "files": [
     "dist"
   ],
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "@types/uuid": "^8.3.1",
+    "uuid": "^8.3.2"
+  },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",
     "axios": "^0.21.1"

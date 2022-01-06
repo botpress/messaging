@@ -15,6 +15,5 @@
   ],
   "dependencies": {
     "@botpress/webchat": "0.0.1"
-  },
-  "devDependencies": {}
+  }
 }
