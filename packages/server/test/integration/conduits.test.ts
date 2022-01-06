@@ -44,6 +44,15 @@ describe('Conduits', () => {
     state.conduit = conduit
   })
 
+  test('Creating same conduit throws', async () => {
+    await expect(conduits.create(state.provider.id, state.channel.meta.id, state.channelConfig)).rejects.toThrow()
+  })
+
+  test('Creating conduit with invalid config throws', async () => {
+    const otherProvider = await app.providers.create('ADADAD', false)
+    await expect(conduits.create(otherProvider.id, state.channel.meta.id, { yo: 'yo' })).rejects.toThrow()
+  })
+
   test('Get conduit by id', async () => {
     const conduit = await conduits.get(state.conduit!.id)
     expect(conduit).toEqual(state.conduit)
@@ -95,6 +104,11 @@ describe('Conduits', () => {
     state.conduit = conduit
   })
 
+  test('Updating conduit config to invalid format throws error', async () => {
+    const newConfig = { yo: 'yo' }
+    await expect(conduits.updateConfig(state.conduit!.id, newConfig)).rejects.toThrow()
+  })
+
   test('List conduits by provider', async () => {
     const conduit1 = await conduits.create(state.provider.id, app.channels.getByName('twilio').meta.id, {
       accountSID: 'fdf',
@@ -129,5 +143,18 @@ describe('Conduits', () => {
     expect(list).toEqual(
       _.orderBy([_.omit(state.conduit, 'config'), _.omit(conduit1, 'config'), _.omit(conduit2, 'config')], 'id')
     )
+  })
+
+  test('Deleting conduit clears cache and persists in changes', async () => {
+    await conduits.delete(state.conduit!.id)
+    const calls = querySpy.mock.calls.length
+
+    const notCachedById = await conduits.fetch(state.conduit!.id)
+    expect(notCachedById).toBeUndefined()
+    expect(querySpy).toHaveBeenCalledTimes(calls + 1)
+
+    const notCachedByName = await conduits.fetchByProviderAndChannel(state.provider.id, state.channel.meta.id)
+    expect(notCachedByName).toBeUndefined()
+    expect(querySpy).toHaveBeenCalledTimes(calls + 2)
   })
 })
