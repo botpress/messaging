@@ -26,13 +26,14 @@ describe('0.1.20 - Fix Client Schema', () => {
 
   afterAll(async () => {
     await app.destroy()
-    await database.destroy()
   })
 
   beforeEach(async () => {
     app.caching.resetAll()
   })
 
+  // This function allows to create the issue that the migration fixes
+  // so that we can make sure it work properly
   const createError = async () => {
     return database.knex.schema.alterTable(TABLE, (table) => {
       table.uuid(COLUMN).notNullable().alter()
