@@ -1,5 +1,4 @@
 import mimeTypes from 'mime/lite'
-import path from 'path'
 import React, { FC, useRef, useEffect } from 'react'
 import { MessageTypeHandlerProps } from '../typings'
 
@@ -27,7 +26,7 @@ export const VoiceMessage: FC<MessageTypeHandlerProps<'voice'>> = ({ audio, conf
     return null
   }
 
-  const extension = path.extname(audio)
+  const extension = audio.substring(audio.lastIndexOf('.') + 1)
   const mime = mimeTypes.getType(extension)
 
   return (

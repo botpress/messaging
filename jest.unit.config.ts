@@ -1,7 +1,6 @@
+import ServerConfig from './packages/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import { defaults as tsjPreset } from 'ts-jest/presets'
-import ServerConfig from './packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -17,21 +16,21 @@ const config: Config.InitialOptions = {
   projects: [
     {
       rootDir: 'packages/engine',
-      testMatch: ['<rootDir>/test/unit/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
       displayName: { name: 'Engine', color: 'green' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       clearMocks: true
     },
     {
       rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/unit/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {
@@ -43,11 +42,11 @@ const config: Config.InitialOptions = {
     },
     {
       rootDir: 'packages/components',
-      testMatch: ['<rootDir>/test/unit/**/(*.)test.tsx'],
+      testMatch: ['<rootDir>/test/unit/**/*.test.tsx'],
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],
       transform: {
-        ...tsjPreset.transform,
+        '^.+\\.tsx?$': require.resolve('ts-jest'),
         '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform'
       },
       setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],

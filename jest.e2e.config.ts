@@ -1,8 +1,7 @@
-import type { Config } from '@jest/types'
-import { pathsToModuleNameMapper } from 'ts-jest'
-import { defaults as tsjPreset } from 'ts-jest/presets'
 import ClientConfig from './packages/client/test/tsconfig.json'
 import SocketConfig from './packages/socket/test/tsconfig.json'
+import type { Config } from '@jest/types'
+import { pathsToModuleNameMapper } from 'ts-jest'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -11,11 +10,11 @@ const config: Config.InitialOptions = {
   projects: [
     {
       rootDir: 'packages/client',
-      testMatch: ['<rootDir>/test/e2e/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/e2e/**/*.test.ts'],
       displayName: { name: 'Client', color: 'blue' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {
@@ -27,11 +26,11 @@ const config: Config.InitialOptions = {
     },
     {
       rootDir: 'packages/socket',
-      testMatch: ['<rootDir>/test/e2e/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/e2e/**/*.test.ts'],
       displayName: { name: 'Socket', color: 'red' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {
