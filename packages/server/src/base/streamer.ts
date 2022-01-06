@@ -82,7 +82,7 @@ export class Streamer {
   }
 
   public async send(url: string, data?: any, headers?: { [name: string]: string }) {
-    const config: AxiosRequestConfig = { dheaders: {} }
+    const config: AxiosRequestConfig = { headers: {} }
 
     if (headers) {
       config.headers = headers
