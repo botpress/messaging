@@ -15,7 +15,7 @@ describe('Conduits', () => {
   beforeAll(async () => {
     await setupApp()
     conduits = app.conduits
-    querySpy = jest.spyOn(conduits, 'query')
+    querySpy = jest.spyOn(conduits as any, 'query')
 
     state = {
       provider: await app.providers.create(crypto.randomBytes(20).toString('hex'), false),

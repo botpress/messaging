@@ -171,7 +171,7 @@ export class ConduitService extends Service {
     }
   }
 
-  query() {
+  private query() {
     return this.db.knex(this.table.id)
   }
 }

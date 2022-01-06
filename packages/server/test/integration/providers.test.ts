@@ -12,7 +12,7 @@ describe('Providers', () => {
   beforeAll(async () => {
     await setupApp()
     providers = app.providers
-    querySpy = jest.spyOn(providers, 'query')
+    querySpy = jest.spyOn(providers as any, 'query')
   })
 
   afterAll(async () => {

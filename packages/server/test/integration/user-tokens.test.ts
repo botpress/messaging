@@ -18,7 +18,7 @@ describe('UserTokens', () => {
 
     await setupApp()
     userTokens = app.userTokens
-    querySpy = jest.spyOn(userTokens, 'query')
+    querySpy = jest.spyOn(userTokens as any, 'query')
 
     const provider = await app.providers.create(crypto.randomBytes(20).toString('hex'), false)
     const client = await app.clients.create(provider.id, await app.clients.generateToken())
