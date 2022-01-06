@@ -2,16 +2,19 @@ import { Conversation, User } from '@botpress/messaging-base/src'
 import { validate as validateUuid } from 'uuid'
 import { Client } from '../../src/clients/types'
 import { ConversationService } from '../../src/conversations/service'
+import { UserService } from '../../src/users/service'
 import { app, randStr, setupApp } from './utils'
 
 describe('Conversations', () => {
   let conversations: ConversationService
+  let users: UserService
   let querySpy: jest.SpyInstance
   let state: { client: Client; user: User; conversation?: Conversation }
 
   beforeAll(async () => {
     await setupApp()
     conversations = app.conversations
+    users = app.users
     querySpy = jest.spyOn(conversations as any, 'query')
 
     const provider = await app.providers.create(randStr(), false)
@@ -42,5 +45,68 @@ describe('Conversations', () => {
     expect(conversation.createdOn instanceof Date).toBeTruthy()
 
     state.conversation = conversation
+  })
+
+  test('Get conversation by id', async () => {
+    const conversation = await conversations.get(state.conversation!.id)
+    expect(conversation).toEqual(state.conversation)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get conversation by id cached', async () => {
+    const conversation = await conversations.get(state.conversation!.id)
+    expect(conversation).toEqual(state.conversation)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const cached = await conversations.get(state.conversation!.id)
+      expect(cached).toEqual(state.conversation)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get most recent conversation', async () => {
+    const conversation = await conversations.fetchMostRecent(state.client.id, state.user!.id)
+    expect(conversation).toEqual(state.conversation)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get conversation by id cached', async () => {
+    const conversation = await conversations.fetchMostRecent(state.client.id, state.user!.id)
+    expect(conversation).toEqual(state.conversation)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const cached = await conversations.fetchMostRecent(state.client.id, state.user!.id)
+      expect(cached).toEqual(state.conversation)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('List conversations by user', async () => {
+    const user = await users.create(state.client.id)
+    const convo1 = await conversations.create(state.client.id, user.id)
+    const convo2 = await conversations.create(state.client.id, user.id)
+    const convo3 = await conversations.create(state.client.id, user.id)
+
+    const otherUser = await users.create(state.client.id)
+    const otherConvo = await conversations.create(state.client.id, otherUser.id)
+
+    expect(await conversations.listByUserId(state.client.id, user.id)).toEqual([convo3, convo2, convo1])
+  })
+
+  test('Deleting conversation clears cache and persists in changes', async () => {
+    await conversations.delete(state.conversation!.id)
+    const calls = querySpy.mock.calls.length
+
+    const notCachedById = await conversations.fetch(state.conversation!.id)
+    expect(notCachedById).toBeUndefined()
+    expect(querySpy).toHaveBeenCalledTimes(calls + 1)
+
+    const notCachedByRecent = await conversations.fetchMostRecent(state.client.id, state.user.id)
+    expect(notCachedByRecent).toBeUndefined()
+    expect(querySpy).toHaveBeenCalledTimes(calls + 2)
   })
 })

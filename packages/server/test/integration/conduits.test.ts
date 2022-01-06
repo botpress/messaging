@@ -152,8 +152,11 @@ describe('Conduits', () => {
     expect(notCachedById).toBeUndefined()
     expect(querySpy).toHaveBeenCalledTimes(calls + 1)
 
-    const notCachedByName = await conduits.fetchByProviderAndChannel(state.provider.id, state.channel.meta.id)
-    expect(notCachedByName).toBeUndefined()
+    const notCachedByProviderAndChannel = await conduits.fetchByProviderAndChannel(
+      state.provider.id,
+      state.channel.meta.id
+    )
+    expect(notCachedByProviderAndChannel).toBeUndefined()
     expect(querySpy).toHaveBeenCalledTimes(calls + 2)
   })
 })
