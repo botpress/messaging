@@ -3,12 +3,14 @@ import { Knex } from 'knex'
 export abstract class Migration {
   protected trx!: Knex.Transaction
   protected isDown!: boolean
+  protected isLite!: boolean
 
   abstract get meta(): MigrationMeta
 
-  async init(trx: Knex.Transaction, isDown: boolean) {
+  async init(trx: Knex.Transaction, isDown: boolean, isLite: boolean) {
     this.trx = trx
     this.isDown = isDown
+    this.isLite = isLite
   }
 
   async shouldRun() {

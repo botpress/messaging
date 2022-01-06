@@ -1,12 +1,11 @@
 import { Emitter, uuid } from '@botpress/messaging-base'
 
-// Note: event type ids should be random numbers between -9007199254740991 and 9007199254740991
 export enum InstanceEvents {
-  Setup = -152025756428307,
-  SetupFailed = 1227260138789451,
-  Initialized = 8719796083603497,
-  InitializationFailed = -7790961391717513,
-  Destroyed = 1601810829650873
+  Setup,
+  SetupFailed,
+  Initialized,
+  InitializationFailed,
+  Destroyed
 }
 
 export class InstanceEmitter extends Emitter<{
