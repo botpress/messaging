@@ -66,10 +66,10 @@ export class ConduitService extends Service {
 
   async delete(id: uuid) {
     const conduit = await this.get(id)
-    this.cacheById.del(id, true)
-    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
     await this.emitter.emit(ConduitEvents.Deleting, id)
+    this.cacheById.del(id, true)
+    this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)
 
     return this.query().where({ id }).del()
   }
