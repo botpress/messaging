@@ -1,11 +1,10 @@
 import { Channel } from '@botpress/messaging-channels'
-import crypto from 'crypto'
 import _ from 'lodash'
 import { validate as validateUuid } from 'uuid'
 import { ConduitService } from '../../src/conduits/service'
 import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
-import { app, setupApp } from './utils'
+import { app, randStr, setupApp } from './utils'
 
 describe('Conduits', () => {
   let conduits: ConduitService
@@ -18,9 +17,9 @@ describe('Conduits', () => {
     querySpy = jest.spyOn(conduits as any, 'query')
 
     state = {
-      provider: await app.providers.create(crypto.randomBytes(20).toString('hex'), false),
+      provider: await app.providers.create(randStr(), false),
       channel: app.channels.getByName('telegram'),
-      channelConfig: { botToken: 'blabla' }
+      channelConfig: { botToken: randStr() }
     }
   })
 
@@ -49,8 +48,8 @@ describe('Conduits', () => {
   })
 
   test('Creating conduit with invalid config throws', async () => {
-    const otherProvider = await app.providers.create('ADADAD', false)
-    await expect(conduits.create(otherProvider.id, state.channel.meta.id, { yo: 'yo' })).rejects.toThrow()
+    const otherProvider = await app.providers.create(randStr(), false)
+    await expect(conduits.create(otherProvider.id, state.channel.meta.id, { yo: randStr() })).rejects.toThrow()
   })
 
   test('Get conduit by id', async () => {
@@ -92,7 +91,7 @@ describe('Conduits', () => {
   })
 
   test('Updating conduit config clears cache and persist changes', async () => {
-    const newConfig = { botToken: 'MELLON' }
+    const newConfig = { botToken: randStr() }
     await conduits.updateConfig(state.conduit!.id, newConfig)
     const calls = querySpy.mock.calls.length
 
@@ -105,24 +104,24 @@ describe('Conduits', () => {
   })
 
   test('Updating conduit config to invalid format throws error', async () => {
-    const newConfig = { yo: 'yo' }
+    const newConfig = { yo: randStr() }
     await expect(conduits.updateConfig(state.conduit!.id, newConfig)).rejects.toThrow()
   })
 
   test('List conduits by provider', async () => {
     const conduit1 = await conduits.create(state.provider.id, app.channels.getByName('twilio').meta.id, {
-      accountSID: 'fdf',
-      authToken: 'sdsdsdsd'
+      accountSID: randStr(),
+      authToken: randStr()
     })
     const conduit2 = await conduits.create(state.provider.id, app.channels.getByName('teams').meta.id, {
-      appId: 'dsdsd',
-      appPassword: 'dfdfdf'
+      appId: randStr(),
+      appPassword: randStr()
     })
 
-    const otherProvider = await app.providers.create('yaayaya', false)
+    const otherProvider = await app.providers.create(randStr(), false)
     const conduit3 = await conduits.create(otherProvider.id, app.channels.getByName('slack').meta.id, {
-      botToken: 'sdsdsd',
-      signingSecret: 'sdsdsd',
+      botToken: randStr(),
+      signingSecret: randStr(),
       useRTM: false
     })
 
@@ -133,11 +132,11 @@ describe('Conduits', () => {
   })
 
   test('List conduits by channel', async () => {
-    const otherProvider1 = await app.providers.create('fdfdfd', false)
-    const otherProvider2 = await app.providers.create('adsfsgsfg', false)
+    const otherProvider1 = await app.providers.create(randStr(), false)
+    const otherProvider2 = await app.providers.create(randStr(), false)
 
-    const conduit1 = await conduits.create(otherProvider1.id, state.channel.meta.id, { botToken: 'eyoyo' })
-    const conduit2 = await conduits.create(otherProvider2.id, state.channel.meta.id, { botToken: 'sdsdsds' })
+    const conduit1 = await conduits.create(otherProvider1.id, state.channel.meta.id, { botToken: randStr() })
+    const conduit2 = await conduits.create(otherProvider2.id, state.channel.meta.id, { botToken: randStr() })
 
     const list = _.orderBy(await conduits.listByChannel(state.channel.meta.id), 'id')
     expect(list).toEqual(

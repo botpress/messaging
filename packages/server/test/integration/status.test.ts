@@ -1,4 +1,3 @@
-import crypto from 'crypto'
 import _ from 'lodash'
 import ms from 'ms'
 import { validate as validateUuid } from 'uuid'
@@ -6,7 +5,7 @@ import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
 import { StatusService } from '../../src/status/service'
 import { ConduitStatus } from '../../src/status/types'
-import { app, setupApp } from './utils'
+import { app, randStr, setupApp } from './utils'
 
 const TOLERANCE = ms('1h')
 const LIMIT = 10
@@ -25,7 +24,7 @@ describe('Status', () => {
   beforeAll(async () => {
     await setupApp()
 
-    const provider = await app.providers.create(crypto.randomBytes(20).toString('hex'), false)
+    const provider = await app.providers.create(randStr(), false)
     const channel = app.channels.getByName('twilio')
     const conduit = await app.conduits.create(provider.id, channel.meta.id, { accountSID: 'abc', authToken: 'sds' })
     const channel2 = app.channels.getByName('slack')
