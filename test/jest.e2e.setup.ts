@@ -17,7 +17,7 @@ const setup = async () => {
     host: '127.0.0.1',
     port: 3100,
     path: 'status',
-    usedPortAction: 'kill'
+    usedPortAction: 'error'
   })
 }
 

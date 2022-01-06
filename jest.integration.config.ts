@@ -1,7 +1,6 @@
+import ServerConfig from './packages/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import { defaults as tsjPreset } from 'ts-jest/presets'
-import ServerConfig from './packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -9,11 +8,11 @@ const config: Config.InitialOptions = {
   projects: [
     {
       rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/integration/**/(*.)test.ts'],
+      testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
-        ...tsjPreset.transform
+        '^.+\\.tsx?$': require.resolve('ts-jest')
       },
       globals: {
         'ts-jest': {

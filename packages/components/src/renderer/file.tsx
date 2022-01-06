@@ -1,5 +1,4 @@
 import mimeTypes from 'mime/lite'
-import path from 'path'
 import React, { useMemo } from 'react'
 import { MessageTypeHandlerProps } from '../typings'
 
@@ -60,7 +59,7 @@ const useMimeType = (url: string): string | null => {
       const validUrl = new URL(url)
       extension = validUrl.pathname
     } catch (error) {
-      extension = path.extname(url)
+      extension = url.substring(url.lastIndexOf('.') + 1)
     }
     return extension && mimeTypes.getType(extension)
   }, [url])

@@ -9,9 +9,10 @@ const checkError = (moduleInjector: Function, component: string, payload: string
   if (!moduleInjector) {
     return new Error(`${errorPrepend} could not get module injector`)
   }
-  if (!module) {
-    return new Error(`${errorPrepend} "module" is not defined in the payload`)
-  }
+  // TODO: what is this?
+  // if (!module) {
+  //   return new Error(`${errorPrepend} "module" is not defined in the payload`)
+  // }
   if (!component) {
     return new Error(`${errorPrepend} "component" is not defined in the payload`)
   }

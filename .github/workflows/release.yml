@@ -21,7 +21,7 @@ jobs:
 
       - name: Fetch Node Packages
         run: |
-          yarn --frozen-lockfile
+          yarn --immutable
 
       - name: Get Release Details
         id: release_details
