@@ -14,7 +14,8 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/jest": "^27.0.3"
+    "@types/jest": "^27.0.3",
+    "uuid": "^8.3.2"
   },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",

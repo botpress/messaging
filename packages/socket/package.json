@@ -15,7 +15,9 @@
   ],
   "devDependencies": {
     "@types/jest": "^27.0.3",
-    "@types/node": "^16.11.13"
+    "@types/node": "^16.11.13",
+    "lodash": "^4.17.21",
+    "uuid": "^8.3.2"
   },
   "dependencies": {
     "@botpress/messaging-base": "0.0.1",
