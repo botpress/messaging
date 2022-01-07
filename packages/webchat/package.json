@@ -1,7 +1,7 @@
 {
   "name": "@botpress/webchat",
   "version": "0.0.1",
-  "main": "dist/index.js",
+  "main": "src/index.tsx",
   "types": "dist/index.d.ts",
   "source": "src/index.tsx",
   "license": "AGPL-3.0",
@@ -12,6 +12,14 @@
   "files": [
     "dist"
   ],
+  "devDependencies": {
+    "@types/lodash": "^4.14.172",
+    "@types/mime": "^2.0.3",
+    "@types/node": "^16.11.13",
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11",
+    "@types/uuid": "^8.3.3"
+  },
   "dependencies": {
     "@blueprintjs/core": "^3.23.1",
     "@botpress/messaging-components": "*",
@@ -31,6 +39,7 @@
     "react-dom": "^16.8.6",
     "react-ga": "^2.7.0",
     "react-intl": "^3.12.1",
-    "snarkdown": "^2.0.0"
+    "snarkdown": "^2.0.0",
+    "uuid": "^8.3.2"
   }
 }
