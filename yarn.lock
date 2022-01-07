@@ -2092,6 +2092,9 @@ __metadata:
     typescript: ^4.5.4
     uuid: ^8.3.2
     yargs: ^17.1.1
+  dependenciesMeta:
+    "@blueprintjs/core@3.52.0":
+      unplugged: true
   bin:
     messaging: ./packages/server/dist/index.js
   languageName: unknown
@@ -2128,9 +2131,10 @@ __metadata:
     mime: ^3.0.0
     mobx: 4.9.4
     mobx-react: ^5.4.4
+    prop-types: ^15.7.2
     query-string: ^7.0.1
     react: ^17.0.2
-    react-dom: ^16.8.6
+    react-dom: ^17.0.2
     react-ga: ^2.7.0
     react-intl: ^3.12.1
     snarkdown: ^2.0.0
@@ -18964,20 +18968,6 @@ __metadata:
   bin:
     react-docgen: bin/react-docgen.js
   checksum: b0f16789437c75b02ba726c7c94ed902dfcdf66d11f271232c46d270d7eadc7eabbad95587cc70996bbbe5fea1e860afe0dc2659fa22d5773cef1e8deb7fa2ce
-  languageName: node
-  linkType: hard
-
-"react-dom@npm:^16.8.6":
-  version: 16.14.0
-  resolution: "react-dom@npm:16.14.0"
-  dependencies:
-    loose-envify: ^1.1.0
-    object-assign: ^4.1.1
-    prop-types: ^15.6.2
-    scheduler: ^0.19.1
-  peerDependencies:
-    react: ^16.14.0
-  checksum: 5a5c49da0f106b2655a69f96c622c347febcd10532db391c262b26aec225b235357d9da1834103457683482ab1b229af7a50f6927a6b70e53150275e31785544
   languageName: node
   linkType: hard
 

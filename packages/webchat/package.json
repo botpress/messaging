@@ -18,7 +18,8 @@
     "@types/node": "^16.11.13",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
-    "@types/uuid": "^8.3.3"
+    "@types/uuid": "^8.3.3",
+    "prop-types": "^15.7.2"
   },
   "dependencies": {
     "@blueprintjs/core": "^3.23.1",
@@ -36,7 +37,7 @@
     "mobx-react": "^5.4.4",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
-    "react-dom": "^16.8.6",
+    "react-dom": "^17.0.2",
     "react-ga": "^2.7.0",
     "react-intl": "^3.12.1",
     "snarkdown": "^2.0.0",
