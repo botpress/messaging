@@ -96,6 +96,7 @@
     "@botpress/messaging-base": "@botpress/messaging-base/src",
     "@botpress/messaging-client": "@botpress/messaging-client/src",
     "@botpress/messaging-socket": "@botpress/messaging-socket/src",
+    "@botpress/webchat": "@botpress/webchat/src",
     "@botpress/chat": "@botpress/chat/src",
     "@botpress/chat-skin": "@botpress/chat-skin/src"
   }
