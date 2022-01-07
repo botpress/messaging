@@ -91,5 +91,12 @@
   "engines": {
     "node": "16.13.0"
   },
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.1.1",
+  "alias": {
+    "@botpress/messaging-base": "@botpress/messaging-base/src",
+    "@botpress/messaging-client": "@botpress/messaging-client/src",
+    "@botpress/messaging-socket": "@botpress/messaging-socket/src",
+    "@botpress/chat": "@botpress/chat/src",
+    "@botpress/chat-skin": "@botpress/chat-skin/src"
+  }
 }
