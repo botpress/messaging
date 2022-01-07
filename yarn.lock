@@ -2050,6 +2050,7 @@ __metadata:
     "@jest/types": ^27.4.2
     "@parcel/config-default": ^2.1.1
     "@parcel/core": ^2.1.1
+    "@parcel/packager-ts": ^2.1.1
     "@parcel/resolver-default": ^2.1.1
     "@parcel/transformer-babel": ^2.1.1
     "@parcel/transformer-css": ^2.1.1
@@ -2059,6 +2060,7 @@ __metadata:
     "@parcel/transformer-posthtml": ^2.1.1
     "@parcel/transformer-react-refresh-wrap": ^2.1.1
     "@parcel/transformer-typescript-tsc": ^2.1.1
+    "@parcel/transformer-typescript-types": ^2.1.1
     "@types/jest": ^27.0.3
     "@types/jest-dev-server": ^5.0.0
     "@types/node": ^16.11.13
@@ -2129,8 +2131,9 @@ __metadata:
     date-fns: ^1.30.1
     lodash: ^4.17.21
     mime: ^3.0.0
-    mobx: 4.9.4
-    mobx-react: ^5.4.4
+    mobx: 5.15.7
+    mobx-react: ^6.2.1
+    mobx-react-lite: 2.0.0
     prop-types: ^15.7.2
     query-string: ^7.0.1
     react: ^17.0.2
@@ -3396,6 +3399,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@parcel/packager-ts@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@parcel/packager-ts@npm:2.1.1"
+  dependencies:
+    "@parcel/plugin": ^2.1.1
+  checksum: 7bec447b4ceae5c8f6d6ea59f3b4b50b30adae44d4ed63cf9eff20c8e650a2d097123aadec47d40efe6a5d4993701b48e02befcf12b8311722eeda5830eb782c
+  languageName: node
+  linkType: hard
+
 "@parcel/plugin@npm:^2.1.1":
   version: 2.1.1
   resolution: "@parcel/plugin@npm:2.1.1"
@@ -3676,6 +3688,21 @@ __metadata:
   peerDependencies:
     typescript: ">=3.0.0"
   checksum: 6d132f10d0d79254940a527825afdf14f3b9a14df8dda0de17b812c022cda38a27320f049396c22108f93ec1376c06aae5ce0a05f85b396efd7ebfc51be8d72c
+  languageName: node
+  linkType: hard
+
+"@parcel/transformer-typescript-types@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "@parcel/transformer-typescript-types@npm:2.1.1"
+  dependencies:
+    "@parcel/diagnostic": ^2.1.1
+    "@parcel/plugin": ^2.1.1
+    "@parcel/source-map": ^2.0.0
+    "@parcel/ts-utils": ^2.1.1
+    nullthrows: ^1.1.1
+  peerDependencies:
+    typescript: ">=3.0.0"
+  checksum: e6ff1170556b3a2ddfe940025ca375960201f06b01728019214ca36a0189d80402efa65a132ae7cd7bae5142eee3477be46270e62992953eaebe2888119fc261
   languageName: node
   linkType: hard
 
@@ -12690,7 +12717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.0.0, hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.1, hoist-non-react-statics@npm:^3.3.2":
+"hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.1, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -16181,23 +16208,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react@npm:^5.4.4":
-  version: 5.4.4
-  resolution: "mobx-react@npm:5.4.4"
-  dependencies:
-    hoist-non-react-statics: ^3.0.0
-    react-lifecycles-compat: ^3.0.2
+"mobx-react-lite@npm:2.0.0":
+  version: 2.0.0
+  resolution: "mobx-react-lite@npm:2.0.0"
   peerDependencies:
     mobx: ^4.0.0 || ^5.0.0
-    react: ^0.13.0 || ^0.14.0 || ^15.0.0 || ^16.0.0
-  checksum: 18295e0cecb1476a924c6cd707a315422a42c3fe95e53448601a8df4d5e0a6171e2dbab5bfa18ab4ee7244fa3bad02e2b73907ae689c67873632df7dd5720184
+    react: ^16.8.0
+  checksum: a1b7db842552bba82a8eb3f3b917bc4a163339d7c0cabab9c07e1a3185a692fa2ff8bec15f4a36266a8e093e6dfec3358ec8f4804c2af56f6e71a5f0da23d8b4
   languageName: node
   linkType: hard
 
-"mobx@npm:4.9.4":
-  version: 4.9.4
-  resolution: "mobx@npm:4.9.4"
-  checksum: a3d3a668cc90260343f1ca6abdce4e9080d59bd240faf7289bcdb95cbbb7f862764f9a429b64ec82945071275a30472b2740846382c1d0f6948d673e96c42333
+"mobx-react@npm:^6.2.1":
+  version: 6.3.1
+  resolution: "mobx-react@npm:6.3.1"
+  dependencies:
+    mobx-react-lite: 2.0.0
+  peerDependencies:
+    mobx: ^5.15.4 || ^4.15.4
+    react: ^16.8.0 || 16.9.0-alpha.0
+  checksum: bc8db413f73e4ad1fe75fdb95a415f04fce5ee34fe04df4cf86ce63f45f8d9cd1ed2557e7a0c932c5252b82269b96fb86ec19be23d01b39907663669a8ae1d4a
+  languageName: node
+  linkType: hard
+
+"mobx@npm:5.15.7":
+  version: 5.15.7
+  resolution: "mobx@npm:5.15.7"
+  checksum: 46aa00c330a256fdde1c030cf8bab0baebc7fdfb23709884400ac486c318ce650acc336fd8f1e629b5c8680d82051f2aed4737406c4ac6fe1b2d9f3d978c4339
   languageName: node
   linkType: hard
 
@@ -19100,7 +19136,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-lifecycles-compat@npm:^3.0.2, react-lifecycles-compat@npm:^3.0.4":
+"react-lifecycles-compat@npm:^3.0.4":
   version: 3.0.4
   resolution: "react-lifecycles-compat@npm:3.0.4"
   checksum: a904b0fc0a8eeb15a148c9feb7bc17cec7ef96e71188280061fc340043fd6d8ee3ff233381f0e8f95c1cf926210b2c4a31f38182c8f35ac55057e453d6df204f
