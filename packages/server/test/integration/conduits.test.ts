@@ -41,6 +41,7 @@ describe('Conduits', () => {
     expect(conduit.config).toEqual(state.channelConfig)
 
     state.conduit = conduit
+    await app.instances.lifetimes.stop(conduit.id)
   })
 
   test('Creating same conduit throws', async () => {
