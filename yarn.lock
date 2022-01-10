@@ -2107,6 +2107,11 @@ __metadata:
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
     "@botpress/webchat": 0.0.1
+    "@parcel/transformer-typescript-tsc": ^2.1.1
+    "@types/react": ^17.0.34
+    "@types/react-dom": ^17.0.11
+    react: ^17.0.2
+    react-dom: ^17.0.2
   languageName: unknown
   linkType: soft
 

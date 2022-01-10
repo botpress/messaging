@@ -1,9 +1,6 @@
 {
   "name": "@botpress/webchat-inject",
   "version": "0.0.2",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "source": "src/index.tsx",
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn --silent && yarn run -T parcel build src/index.html src/inject.js",
@@ -14,6 +11,13 @@
     "dist"
   ],
   "dependencies": {
-    "@botpress/webchat": "0.0.1"
+    "@botpress/webchat": "0.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@parcel/transformer-typescript-tsc": "^2.1.1",
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11"
   }
 }
