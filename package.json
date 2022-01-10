@@ -10,7 +10,7 @@
     "clean": "rimraf packages/*/dist bin",
     "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules && rimraf node_modules",
     "package": "yarn clean && yarn build && node ./scripts/package",
-    "release": "node ./scripts/release",
+    "release": "yarn node ./scripts/release",
     "build": "yarn workspace @botpress/messaging-server build",
     "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
@@ -39,6 +39,19 @@
   },
   "devDependencies": {
     "@jest/types": "^27.4.2",
+    "@parcel/config-default": "^2.1.1",
+    "@parcel/core": "^2.1.1",
+    "@parcel/packager-ts": "^2.1.1",
+    "@parcel/resolver-default": "^2.1.1",
+    "@parcel/transformer-babel": "^2.1.1",
+    "@parcel/transformer-css": "^2.1.1",
+    "@parcel/transformer-html": "^2.1.1",
+    "@parcel/transformer-js": "^2.1.1",
+    "@parcel/transformer-postcss": "^2.1.1",
+    "@parcel/transformer-posthtml": "^2.1.1",
+    "@parcel/transformer-react-refresh-wrap": "^2.1.1",
+    "@parcel/transformer-typescript-tsc": "^2.1.1",
+    "@parcel/transformer-typescript-types": "^2.1.1",
     "@types/jest": "^27.0.3",
     "@types/jest-dev-server": "^5.0.0",
     "@types/node": "^16.11.13",
@@ -46,7 +59,7 @@
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
     "bluebird-global": "^1.0.1",
-    "chalk": "^5.0.0",
+    "chalk": "^4.1.2",
     "conventional-changelog": "^3.1.24",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
@@ -58,7 +71,7 @@
     "jest": "^27.4.5",
     "jest-dev-server": "^6.0.3",
     "jest-mock": "^27.4.2",
-    "parcel": "^2.0.1",
+    "parcel": "^2.1.1",
     "pkg": "^5.5.1",
     "portfinder": "^1.0.28",
     "prettier": "^2.3.2",
@@ -80,5 +93,19 @@
   "engines": {
     "node": "16.13.0"
   },
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.1.1",
+  "alias": {
+    "@botpress/messaging-base": "@botpress/messaging-base/src",
+    "@botpress/messaging-client": "@botpress/messaging-client/src",
+    "@botpress/messaging-socket": "@botpress/messaging-socket/src",
+    "@botpress/messaging-components": "@botpress/messaging-components/src",
+    "@botpress/webchat": "@botpress/webchat/src",
+    "@botpress/chat": "@botpress/chat/src",
+    "@botpress/chat-skin": "@botpress/chat-skin/src"
+  },
+  "dependenciesMeta": {
+    "@blueprintjs/core@3.52.0": {
+      "unplugged": true
+    }
+  }
 }

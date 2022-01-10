@@ -25,10 +25,11 @@ COPY --from=build /messaging/packages/base/package.json packages/base/package.js
 
 COPY --from=build /messaging/package.json package.json
 COPY --from=build /messaging/yarn.lock yarn.lock
-COPY --from=build /messaging/.yarn .yarn
+COPY --from=build /messaging/.yarn/plugins .yarn/plugins
+COPY --from=build /messaging/.yarn/releases .yarn/releases
 COPY --from=build /messaging/.yarnrc.yml .yarnrc.yml
-COPY --from=build /messaging/.pnp.cjs .pnp.cjs
-COPY --from=build /messaging/.pnp.loader.mjs .pnp.loader.mjs
+
+RUN yarn workspaces focus --all --production
 
 ENV NODE_ENV=production
 

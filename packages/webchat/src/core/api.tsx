@@ -1,7 +1,7 @@
 import { Message } from '@botpress/messaging-socket'
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
 import get from 'lodash/get'
-import uuidgen from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 import { RecentConversation } from '..'
 import { EventFeedback, uuid } from '../typings'
 import BpSocket from './socket'
@@ -161,7 +161,7 @@ export default class WebchatApi {
     try {
       const audio = {
         buffer: voice.toString('base64'),
-        title: `${uuidgen.v4()}.${ext}`
+        title: `${uuidv4()}.${ext}`
       }
       return this.axios.post('/messages/voice', { ...this.baseUserPayload, conversationId, audio }, this.axiosConfig)
     } catch (err) {
