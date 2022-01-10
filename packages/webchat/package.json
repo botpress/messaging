@@ -12,6 +12,16 @@
   "files": [
     "dist"
   ],
+  "devDependencies": {
+    "@parcel/config-default": "^2.1.1",
+    "@types/lodash": "^4.14.172",
+    "@types/mime": "^2.0.3",
+    "@types/node": "^16.11.13",
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11",
+    "@types/uuid": "^8.3.3",
+    "prop-types": "^15.7.2"
+  },
   "dependencies": {
     "@blueprintjs/core": "^3.23.1",
     "@botpress/messaging-components": "*",
@@ -24,13 +34,15 @@
     "date-fns": "^1.30.1",
     "lodash": "^4.17.21",
     "mime": "^3.0.0",
-    "mobx": "4.9.4",
-    "mobx-react": "^5.4.4",
+    "mobx": "5.15.7",
+    "mobx-react": "^6.2.1",
+    "mobx-react-lite": "2.0.0",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
-    "react-dom": "^16.8.6",
+    "react-dom": "^17.0.2",
     "react-ga": "^2.7.0",
     "react-intl": "^3.12.1",
-    "snarkdown": "^2.0.0"
+    "snarkdown": "^2.0.0",
+    "uuid": "^8.3.2"
   }
 }

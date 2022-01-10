@@ -7,17 +7,7 @@ let app: App
 const setupApp = async () => {
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.SUPPRESS_LOGGING = 'true'
-  process.env.DATABASE_URL = path.join(
-    __dirname,
-    '..',
-    '..',
-    '..',
-    '..',
-    '..',
-    'test',
-    '.test-data',
-    `${uuidv4()}.sqlite`
-  )
+  process.env.DATABASE_URL = path.join(__dirname, '../../../../../test/.test-data', `${uuidv4()}.sqlite`)
 
   app = new App()
   await app.setup()
