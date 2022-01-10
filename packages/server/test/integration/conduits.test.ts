@@ -93,12 +93,9 @@ describe('Conduits', () => {
   test('Updating conduit config clears cache and persist changes', async () => {
     const newConfig = { botToken: randStr() }
     await conduits.updateConfig(state.conduit!.id, newConfig)
-    const calls = querySpy.mock.calls.length
 
     const conduit = await conduits.get(state.conduit!.id)
     expect(conduit).toEqual({ ...state.conduit, config: newConfig })
-    // TODO: doesn't work because this is reacted to in an event. Should events be disabled in tests?
-    // expect(querySpy).toHaveBeenCalledTimes(calls + 1)
 
     state.conduit = conduit
   })
