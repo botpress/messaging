@@ -25,7 +25,7 @@ COPY --from=build /messaging/packages/base/package.json packages/base/package.js
 
 COPY --from=build /messaging/package.json package.json
 COPY --from=build /messaging/yarn.lock yarn.lock
-COPY --from=build /messaging/.yarn/plugins/@yarnpkg/plugin-workspace-tools.cjs .yarn/plugins/@yarnpkg/plugin-workspace-tools.cjs
+COPY --from=build /messaging/.yarn/plugins .yarn/plugins
 COPY --from=build /messaging/.yarn/releases .yarn/releases
 COPY --from=build /messaging/.yarnrc.yml .yarnrc.yml
 
