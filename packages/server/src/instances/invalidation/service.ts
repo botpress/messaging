@@ -1,16 +1,17 @@
 import { uuid } from '@botpress/messaging-base'
+import { Service } from '@botpress/messaging-engine'
 import yn from 'yn'
-import { ChannelService } from '../channels/service'
-import { ClientEvents, ClientUpdatedEvent } from '../clients/events'
-import { ClientService } from '../clients/service'
-import { ConduitEvents } from '../conduits/events'
-import { ConduitService } from '../conduits/service'
-import { ProviderEvents, ProviderUpdatedEvent } from '../providers/events'
-import { ProviderService } from '../providers/service'
-import { StatusService } from '../status/service'
-import { InstanceService } from './service'
+import { ChannelService } from '../../channels/service'
+import { ClientEvents, ClientUpdatedEvent } from '../../clients/events'
+import { ClientService } from '../../clients/service'
+import { ConduitEvents } from '../../conduits/events'
+import { ConduitService } from '../../conduits/service'
+import { ProviderEvents, ProviderUpdatedEvent } from '../../providers/events'
+import { ProviderService } from '../../providers/service'
+import { StatusService } from '../../status/service'
+import { InstanceLifetimeService } from '../lifetime/service'
 
-export class InstanceInvalidator {
+export class InstanceInvalidationService extends Service {
   private lazyLoadingEnabled!: boolean
 
   constructor(
@@ -19,8 +20,10 @@ export class InstanceInvalidator {
     private conduits: ConduitService,
     private clients: ClientService,
     private status: StatusService,
-    private instances: InstanceService
-  ) {}
+    private instanceLifetime: InstanceLifetimeService
+  ) {
+    super()
+  }
 
   async setup() {
     this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
@@ -37,20 +40,20 @@ export class InstanceInvalidator {
     const channel = this.channels.getById(conduit.channelId)
 
     if (channel.meta.initiable) {
-      await this.instances.initialize(conduitId)
+      await this.instanceLifetime.initialize(conduitId)
     }
 
     if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
-      await this.instances.start(conduit.id)
+      await this.instanceLifetime.start(conduit.id)
     }
   }
 
   private async onConduitDeleting(conduitId: uuid) {
-    await this.instances.stop(conduitId)
+    await this.instanceLifetime.stop(conduitId)
   }
 
   private async onConduitUpdated(conduitId: uuid) {
-    await this.instances.stop(conduitId)
+    await this.instanceLifetime.stop(conduitId)
     await this.status.updateInitializedOn(conduitId, undefined)
     await this.status.clearErrors(conduitId)
 
@@ -58,11 +61,11 @@ export class InstanceInvalidator {
     const channel = this.channels.getById(conduit.channelId)
 
     if (channel.meta.initiable) {
-      await this.instances.initialize(conduitId)
+      await this.instanceLifetime.initialize(conduitId)
     }
 
     if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
-      await this.instances.start(conduit.id)
+      await this.instanceLifetime.start(conduit.id)
     }
   }
 
@@ -80,7 +83,7 @@ export class InstanceInvalidator {
 
     const conduits = await this.conduits.listByProvider(oldClient.providerId)
     for (const conduit of conduits) {
-      await this.instances.stop(conduit.id)
+      await this.instanceLifetime.stop(conduit.id)
     }
   }
 
@@ -88,7 +91,7 @@ export class InstanceInvalidator {
     const conduits = await this.conduits.listByProvider(providerId)
 
     for (const conduit of conduits) {
-      await this.instances.stop(conduit.id)
+      await this.instanceLifetime.stop(conduit.id)
     }
   }
 }

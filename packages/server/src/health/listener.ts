@@ -1,7 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
-import { InstanceEvents } from '../instances/events'
+import { InstanceEvents } from '../instances/clearing/events'
 import { InstanceService } from '../instances/service'
 import { HealthService } from './service'
 import { HealthEventType } from './types'

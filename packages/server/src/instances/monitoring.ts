@@ -4,7 +4,7 @@ import yn from 'yn'
 import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
 import { StatusService } from '../status/service'
-import { InstanceService } from './service'
+import { InstanceLifetimeService } from './lifetime/service'
 
 const MAX_ALLOWED_FAILURES = 5
 const MAX_INITIALIZE_BATCH = 100
@@ -18,7 +18,7 @@ export class InstanceMonitoring {
     private channels: ChannelService,
     private conduits: ConduitService,
     private status: StatusService,
-    private instances: InstanceService
+    private instanceLifetime: InstanceLifetimeService
   ) {}
 
   async monitor() {
@@ -51,7 +51,7 @@ export class InstanceMonitoring {
 
     const outdateds = await this.status.listOutdated(ms('10h'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
     for (const outdated of outdateds) {
-      await this.instances.initialize(outdated.conduitId)
+      await this.instanceLifetime.initialize(outdated.conduitId)
     }
   }
 
@@ -72,7 +72,7 @@ export class InstanceMonitoring {
           continue
         }
 
-        await this.instances.start(conduit.id)
+        await this.instanceLifetime.start(conduit.id)
       }
     }
   }

@@ -1,11 +1,11 @@
-import { CachingService, Logger, ServerCache2D } from '@botpress/messaging-engine'
+import { CachingService, Logger, ServerCache2D, Service } from '@botpress/messaging-engine'
 import ms from 'ms'
 import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'
 import { ProviderService } from '../../providers/service'
-import { InstanceService } from '../service'
+import { InstanceLifetimeService } from '../lifetime/service'
 
-export class InstanceClearingService {
+export class InstanceClearingService extends Service {
   private destroyed: boolean
   private channelStateCache!: ServerCache2D<any>
   private channelStateDeleting!: { [key: string]: any }
@@ -15,9 +15,10 @@ export class InstanceClearingService {
     private channelService: ChannelService,
     private providerService: ProviderService,
     private conduitService: ConduitService,
-    private instanceService: InstanceService,
+    private instanceLifetime: InstanceLifetimeService,
     private logger: Logger
   ) {
+    super()
     this.destroyed = false
   }
 
@@ -62,7 +63,7 @@ export class InstanceClearingService {
       const provider = await this.providerService.getByName(providerName)
       const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channelId)
 
-      await this.instanceService.stop(conduit.id)
+      await this.instanceLifetime.stop(conduit.id)
       delete this.channelStateDeleting[key]
     } catch (e) {
       this.logger.error(e, 'Error trying to clear channel')
