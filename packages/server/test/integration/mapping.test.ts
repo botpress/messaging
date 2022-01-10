@@ -1,10 +1,9 @@
 import { uuid } from '@botpress/messaging-base'
 import { Endpoint } from '@botpress/messaging-channels'
-import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
 import { MappingService } from '../../src/mapping/service'
 import { Provider } from '../../src/providers/types'
-import { app, setupApp } from './utils'
+import { app, randStr, setupApp } from './utils'
 
 export interface Mapping {
   tunnelId: uuid
@@ -17,9 +16,9 @@ export interface Mapping {
 
 const generateEndpoint = (args?: { identity?: string; sender?: string; thread?: string }) => {
   return {
-    identity: args?.identity || crypto.randomBytes(20).toString('hex'),
-    sender: args?.sender || crypto.randomBytes(20).toString('hex'),
-    thread: args?.thread || crypto.randomBytes(20).toString('hex')
+    identity: args?.identity || randStr(),
+    sender: args?.sender || randStr(),
+    thread: args?.thread || randStr()
   }
 }
 
