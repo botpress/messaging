@@ -1,12 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import {
-  Batcher,
-  CachingService,
-  CryptoService,
-  DatabaseService,
-  ServerCache,
-  Service
-} from '@botpress/messaging-engine'
+import { CachingService, CryptoService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
@@ -16,8 +9,6 @@ import { ClientToken } from './types'
 export const USER_TOKEN_LENGTH = 66
 
 export class ClientTokenService extends Service {
-  public batcher!: Batcher<ClientToken>
-
   private table: ClientTokenTable
   private cacheById!: ServerCache<uuid, ClientToken>
   private cacheTokens!: ServerCache<uuid, string>
@@ -67,7 +58,6 @@ export class ClientTokenService extends Service {
       return cached
     }
 
-    await this.batcher.flush()
     const rows = await this.query().where({ id })
 
     if (rows?.length) {
