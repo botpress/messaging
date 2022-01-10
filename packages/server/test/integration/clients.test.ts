@@ -13,7 +13,7 @@ describe('Clients', () => {
   beforeAll(async () => {
     await setupApp()
     clients = app.clients
-    querySpy = jest.spyOn(clients, 'query')
+    querySpy = jest.spyOn(clients as any, 'query')
 
     state = {
       provider: await app.providers.create(crypto.randomBytes(20).toString('hex'), false)

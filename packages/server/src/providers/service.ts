@@ -126,7 +126,7 @@ export class ProviderService extends Service {
     await this.query().where({ id }).del()
   }
 
-  query() {
+  private query() {
     return this.db.knex(this.table.id)
   }
 

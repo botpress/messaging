@@ -121,7 +121,7 @@ export class UserTokenService extends Service {
     }
   }
 
-  public query() {
+  private query() {
     return this.db.knex(this.table.id)
   }
 

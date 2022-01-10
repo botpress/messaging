@@ -1,11 +1,10 @@
 import { User } from '@botpress/messaging-base'
-import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
 import { Client } from '../../src/clients/types'
 import { Provider } from '../../src/providers/types'
 import { UserTokenService } from '../../src/user-tokens/service'
 import { UserToken } from '../../src/user-tokens/types'
-import { app, setupApp } from './utils'
+import { app, randStr, setupApp } from './utils'
 
 describe('UserTokens', () => {
   let userTokens: UserTokenService
@@ -18,9 +17,9 @@ describe('UserTokens', () => {
 
     await setupApp()
     userTokens = app.userTokens
-    querySpy = jest.spyOn(userTokens, 'query')
+    querySpy = jest.spyOn(userTokens as any, 'query')
 
-    const provider = await app.providers.create(crypto.randomBytes(20).toString('hex'), false)
+    const provider = await app.providers.create(randStr(), false)
     const client = await app.clients.create(provider.id, await app.clients.generateToken())
     const user = await app.users.create(client.id)
 
@@ -96,7 +95,7 @@ describe('UserTokens', () => {
   })
 
   test('Get user token by id and wrong token should return undefined', async () => {
-    const userToken = await app.userTokens.verifyToken(state.userToken!.id, 'abc')
+    const userToken = await app.userTokens.verifyToken(state.userToken!.id, randStr())
     expect(userToken).toBeUndefined()
   })
 

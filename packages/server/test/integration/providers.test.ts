@@ -1,8 +1,7 @@
-import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
 import { ProviderService } from '../../src/providers/service'
 import { Provider } from '../../src/providers/types'
-import { app, setupApp } from './utils'
+import { app, randStr, setupApp } from './utils'
 
 describe('Providers', () => {
   let providers: ProviderService
@@ -12,7 +11,7 @@ describe('Providers', () => {
   beforeAll(async () => {
     await setupApp()
     providers = app.providers
-    querySpy = jest.spyOn(providers, 'query')
+    querySpy = jest.spyOn(providers as any, 'query')
   })
 
   afterAll(async () => {
@@ -24,7 +23,7 @@ describe('Providers', () => {
   })
 
   test('Create provider', async () => {
-    const name = crypto.randomBytes(20).toString('hex')
+    const name = randStr()
     const provider = await providers.create(name, false)
 
     expect(provider).toBeDefined()
@@ -105,7 +104,7 @@ describe('Providers', () => {
   })
 
   test('Updating provider name clears cache and persists changes', async () => {
-    const newName = crypto.randomBytes(20).toString('hex')
+    const newName = randStr()
     await providers.updateName(state.provider!.id, newName)
     const calls = querySpy.mock.calls.length
 
