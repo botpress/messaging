@@ -21,17 +21,17 @@ import { StatusService } from '../status/service'
 import { InstanceClearingService } from './clearing/service'
 import { InstanceInvalidationService } from './invalidation/service'
 import { InstanceLifetimeService } from './lifetime/service'
-import { InstanceMonitoring } from './monitoring'
+import { InstanceMonitoringService } from './monitoring/service'
 import { LinkedQueue } from './queue'
 import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
-  public lifetimes: InstanceLifetimeService
-  public invalidation: InstanceInvalidationService
-  public clearing: InstanceClearingService
+  lifetimes: InstanceLifetimeService
+  invalidation: InstanceInvalidationService
+  clearing: InstanceClearingService
+  monitoring: InstanceMonitoringService
 
   public readonly sandbox: InstanceSandbox
-  private monitoring: InstanceMonitoring
   private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
 
@@ -69,7 +69,7 @@ export class InstanceService extends Service {
       this.lifetimes
     )
     this.clearing = new InstanceClearingService(caching, channels, providers, conduits, this.lifetimes, this.logger)
-    this.monitoring = new InstanceMonitoring(
+    this.monitoring = new InstanceMonitoringService(
       this.logger.sub('monitoring'),
       this.distributed,
       this.channels,
@@ -112,7 +112,7 @@ export class InstanceService extends Service {
   }
 
   async monitor() {
-    await this.monitoring.monitor()
+    await this.monitoring.setup()
   }
 
   async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {

@@ -1,15 +1,15 @@
-import { DistributedService, Logger } from '@botpress/messaging-engine'
+import { DistributedService, Logger, Service } from '@botpress/messaging-engine'
 import ms from 'ms'
 import yn from 'yn'
-import { ChannelService } from '../channels/service'
-import { ConduitService } from '../conduits/service'
-import { StatusService } from '../status/service'
-import { InstanceLifetimeService } from './lifetime/service'
+import { ChannelService } from '../../channels/service'
+import { ConduitService } from '../../conduits/service'
+import { StatusService } from '../../status/service'
+import { InstanceLifetimeService } from '../lifetime/service'
 
 const MAX_ALLOWED_FAILURES = 5
 const MAX_INITIALIZE_BATCH = 100
 
-export class InstanceMonitoring {
+export class InstanceMonitoringService extends Service {
   private timeout?: NodeJS.Timeout
 
   constructor(
@@ -19,9 +19,11 @@ export class InstanceMonitoring {
     private conduits: ConduitService,
     private status: StatusService,
     private lifetimes: InstanceLifetimeService
-  ) {}
+  ) {
+    super()
+  }
 
-  async monitor() {
+  async setup() {
     void this.tickMonitoring()
   }
 
