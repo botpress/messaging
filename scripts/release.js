@@ -1,8 +1,5 @@
 const { execute } = require('./exec')
-const semver = require('semver')
 const yargs = require('yargs')
-const fse = require('fs-extra')
-const path = require('path')
 const changelog = require('./changelog')
 const logger = require('./logger')
 
@@ -15,10 +12,7 @@ yargs
     })
 
     try {
-      const version = (await fse.readJSON(path.join('package.json'))).version
-      const newVersion = semver.inc(version, argv.releaseType)
-
-      const bumpCommand = `version --new-version ${newVersion} --no-git-tag-version`
+      const bumpCommand = `version ${argv.releaseType}`
       await execute(`yarn ${bumpCommand}`, undefined, { silent: true })
       await execute(`yarn workspace @botpress/messaging-server ${bumpCommand}`, undefined, { silent: true })
 

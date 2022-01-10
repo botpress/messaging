@@ -16,7 +16,9 @@
     // Specific settings for npm package
     "target": "es6",
     "declaration": true,
-    "sourceMap": false
+    "sourceMap": false,
+    "resolveJsonModule": true
   },
+  "include": ["src", "src/**/*.json"],
   "exclude": ["dist", "node_modules"]
 }

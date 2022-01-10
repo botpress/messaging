@@ -74,6 +74,18 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true
+    },
+    {
+      "type": "node",
+      "runtimeVersion": "16.13.0",
+
+      "name": "Debug Migration Tests",
+      "request": "launch",
+      "runtimeExecutable": "yarn",
+      "args": ["test:mig", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true
     }
   ]
 }

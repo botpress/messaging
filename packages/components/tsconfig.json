@@ -16,6 +16,7 @@
 
     // We use react
     "jsx": "react",
+    "lib": ["dom", "es2021", "es2021.intl"],
     "resolveJsonModule": true
   },
   "include": ["src", "src/**/*.json"],
