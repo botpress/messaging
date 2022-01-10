@@ -23,15 +23,15 @@ import { InstanceInvalidationService } from './invalidation/service'
 import { InstanceLifetimeService } from './lifetime/service'
 import { InstanceMonitoringService } from './monitoring/service'
 import { LinkedQueue } from './queue'
-import { InstanceSandbox } from './sandbox'
+import { InstanceSandboxService } from './sandbox/service'
 
 export class InstanceService extends Service {
   lifetimes: InstanceLifetimeService
   invalidation: InstanceInvalidationService
   clearing: InstanceClearingService
   monitoring: InstanceMonitoringService
+  sandbox: InstanceSandboxService
 
-  public readonly sandbox: InstanceSandbox
   private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
 
@@ -52,12 +52,12 @@ export class InstanceService extends Service {
     super()
     this.logger = this.loggers.root.sub('instances')
     this.lifetimes = new InstanceLifetimeService(
-      distributed,
-      dispatches,
-      channels,
-      providers,
-      conduits,
-      status,
+      this.distributed,
+      this.dispatches,
+      this.channels,
+      this.providers,
+      this.conduits,
+      this.status,
       this.logger
     )
     this.invalidation = new InstanceInvalidationService(
@@ -77,13 +77,14 @@ export class InstanceService extends Service {
       this.status,
       this.lifetimes
     )
-    this.sandbox = new InstanceSandbox(this.clients, this.mapping, this)
+    this.sandbox = new InstanceSandboxService(this.clients, this.mapping, this)
   }
 
   async setup() {
     await this.lifetimes.setup()
     await this.invalidation.setup()
     await this.clearing.setup()
+    await this.sandbox.setup()
 
     this.messageQueueCache = await this.caching.newServerCache('cache_thread_queues_cache')
     this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))

@@ -1,17 +1,21 @@
 import { uuid } from '@botpress/messaging-base'
 import { Endpoint } from '@botpress/messaging-channels'
-import { Logger } from '@botpress/messaging-engine'
+import { Logger, Service } from '@botpress/messaging-engine'
 import { validate as uuidValidate } from 'uuid'
-import { ClientService } from '../clients/service'
-import { MappingService } from '../mapping/service'
-import { InstanceService } from './service'
+import { ClientService } from '../../clients/service'
+import { MappingService } from '../../mapping/service'
+import { InstanceService } from '../service'
 
 const JOIN_KEYWORD = '!join'
 
-export class InstanceSandbox {
+export class InstanceSandboxService extends Service {
   private logger = new Logger('Sandbox')
 
-  constructor(private clients: ClientService, private mapping: MappingService, private instances: InstanceService) {}
+  constructor(private clients: ClientService, private mapping: MappingService, private instances: InstanceService) {
+    super()
+  }
+
+  async setup() {}
 
   async getClientId(conduitId: uuid, endpoint: Endpoint, content: any): Promise<uuid | undefined> {
     const sandboxmap = await this.mapping.sandboxmap.get(conduitId, endpoint)
