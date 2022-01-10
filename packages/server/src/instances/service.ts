@@ -88,14 +88,6 @@ export class InstanceService extends Service {
 
     this.messageQueueCache = await this.caching.newServerCache('cache_thread_queues_cache')
     this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
-
-    for (const channel of this.channels.list()) {
-      channel.autoStart(async (providerName) => {
-        const provider = await this.providers.getByName(providerName)
-        const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
-        await this.lifetimes.start(conduit.id)
-      })
-    }
   }
 
   async destroy() {

@@ -31,6 +31,14 @@ export class InstanceLifetimeService extends Service {
   async setup() {
     this.dispatcher = await this.dispatches.create('dispatch_converse', InstanceLifetimeDispatcher)
     this.dispatcher.on(InstanceLifetimeDispatches.Stop, this.handleDispatchStop.bind(this))
+
+    for (const channel of this.channels.list()) {
+      channel.autoStart(async (providerName) => {
+        const provider = await this.providers.getByName(providerName)
+        const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
+        await this.start(conduit.id)
+      })
+    }
   }
 
   async initialize(conduitId: uuid) {
