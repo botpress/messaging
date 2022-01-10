@@ -36,8 +36,20 @@ export class InstanceLifetimeService extends Service {
       channel.autoStart(async (providerName) => {
         const provider = await this.providers.getByName(providerName)
         const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
+
         await this.start(conduit.id)
       })
+    }
+  }
+
+  async destroy() {
+    for (const channel of this.channels.list()) {
+      for (const scope of channel.scopes) {
+        const provider = await this.providers.getByName(scope)
+        const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
+
+        await this.stop(conduit.id)
+      }
     }
   }
 
