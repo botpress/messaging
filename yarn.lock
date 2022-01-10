@@ -2120,6 +2120,7 @@ __metadata:
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.0.2
+    "@parcel/config-default": ^2.1.1
     "@types/lodash": ^4.14.172
     "@types/mime": ^2.0.3
     "@types/node": ^16.11.13
