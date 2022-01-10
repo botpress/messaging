@@ -75,8 +75,12 @@ export class ServerCache2D<V> {
     return this.lru.keys()
   }
 
-  private getKey(keyX: string, keyY: string) {
+  getKey(keyX: string, keyY: string) {
     return `${keyX}~\`${keyY}`
+  }
+
+  getValues(key: string) {
+    return key.split('~`')
   }
 }
 

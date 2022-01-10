@@ -17,7 +17,7 @@ export interface Channel {
   set logger(logger: Logger | undefined)
   get kvs(): Kvs | undefined
   set kvs(kvs: Kvs | undefined)
-  setup(router: Router): Promise<void>
+  setup(router: Router, logger?: Logger): Promise<void>
   start(scope: string, config: any): Promise<void>
   initialize(scope: string): Promise<void>
   send(scope: string, endpoint: any, content: any): Promise<void>
@@ -28,7 +28,14 @@ export interface Channel {
     listener: ((arg: ChannelEvents[K]) => Promise<void>) | ((arg: ChannelEvents[K]) => void)
   ): void
   autoStart(callback: (scope: string) => Promise<void>): void
+  stateManager(manager: ChannelStateManager): void
   makeUrl(callback: (scope: string) => Promise<string>): void
+}
+
+export interface ChannelStateManager {
+  set(scope: string, val: any): boolean
+  get(scope: string): any
+  del(scope: string): void
 }
 
 export abstract class ChannelTemplate<
@@ -62,9 +69,9 @@ export abstract class ChannelTemplate<
 
   constructor(public readonly service: TService, public readonly api: TApi, public readonly stream: TStream) {}
 
-  async setup(router: Router) {
+  async setup(router: Router, logger?: Logger) {
     await this.service.setup()
-    await this.api.setup(new ChannelApiManager(this.service, router))
+    await this.api.setup(new ChannelApiManager(this.service, router, logger))
     await this.stream.setup()
   }
 
@@ -101,6 +108,10 @@ export abstract class ChannelTemplate<
 
   autoStart(callback: (scope: string) => Promise<void>) {
     this.service.autoStart(callback)
+  }
+
+  stateManager(manager: ChannelStateManager): void {
+    this.service.stateManager(manager)
   }
 
   makeUrl(callback: (scope: string) => Promise<string>): void {

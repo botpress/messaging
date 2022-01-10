@@ -7,8 +7,10 @@ import {
   Logger,
   LoggerService,
   ServerCache,
+  ServerCache2D,
   Service
 } from '@botpress/messaging-engine'
+import ms from 'ms'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
@@ -31,9 +33,12 @@ export class InstanceService extends Service {
   }
 
   public readonly sandbox: InstanceSandbox
+  private destroyed: boolean
   private emitter: InstanceEmitter
   private invalidator: InstanceInvalidator
   private monitoring: InstanceMonitoring
+  private channelStateCache!: ServerCache2D<any>
+  private channelStateDeleting!: { [key: string]: any }
   private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
   private dispatcher!: InstanceDispatcher
@@ -53,6 +58,7 @@ export class InstanceService extends Service {
     private statusService: StatusService
   ) {
     super()
+    this.destroyed = false
     this.emitter = new InstanceEmitter()
     this.invalidator = new InstanceInvalidator(
       this.channelService,
@@ -76,6 +82,18 @@ export class InstanceService extends Service {
 
   async setup() {
     this.messageQueueCache = await this.cachingService.newServerCache('cache_thread_queues_cache')
+    this.channelStateCache = await this.cachingService.newServerCache2D('cache_channel_states', {
+      dispose: async (k, v) => {
+        if (!this.destroyed) {
+          this.channelStateDeleting[k] = v
+          await this.handleCacheDispose(k)
+        }
+      },
+      max: 50000,
+      maxAge: ms('30min')
+    })
+    this.channelStateDeleting = {}
+
     await this.invalidator.setup()
     this.messageService.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
 
@@ -88,10 +106,23 @@ export class InstanceService extends Service {
         const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
         await this.start(conduit.id)
       })
+
+      channel.stateManager({
+        set: (providerName, val) => this.channelStateCache.set(channel.meta.id, providerName, val),
+        get: (providerName) => {
+          return (
+            this.channelStateCache.get(channel.meta.id, providerName) ||
+            this.channelStateDeleting[this.channelStateCache.getKey(channel.meta.id, providerName)]
+          )
+        },
+        del: (providerName) => this.channelStateCache.del(channel.meta.id, providerName)
+      })
     }
   }
 
   async destroy() {
+    this.destroyed = true
+
     await this.monitoring.destroy()
 
     for (const channel of this.channelService.list()) {
@@ -180,6 +211,19 @@ export class InstanceService extends Service {
       this.logger.error(e, 'Error trying to destroy conduit')
     } finally {
       await this.dispatcher.unsubscribe(conduitId)
+    }
+  }
+
+  private async handleCacheDispose(key: string) {
+    try {
+      const [channelId, providerName] = this.channelStateCache.getValues(key)
+      const provider = await this.providerService.getByName(providerName)
+      const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channelId)
+
+      await this.stop(conduit.id)
+      delete this.channelStateDeleting[key]
+    } catch (e) {
+      this.logger.error(e, 'Error trying to clear channel')
     }
   }
 
