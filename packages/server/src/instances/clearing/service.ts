@@ -7,15 +7,15 @@ import { InstanceLifetimeService } from '../lifetime/service'
 
 export class InstanceClearingService extends Service {
   private destroyed: boolean
-  private channelStateCache!: ServerCache2D<any>
-  private channelStateDeleting!: { [key: string]: any }
+  private statesCache!: ServerCache2D<any>
+  private statesDeleting!: { [key: string]: any }
 
   constructor(
-    private cachingService: CachingService,
-    private channelService: ChannelService,
-    private providerService: ProviderService,
-    private conduitService: ConduitService,
-    private instanceLifetime: InstanceLifetimeService,
+    private caching: CachingService,
+    private channels: ChannelService,
+    private providers: ProviderService,
+    private conduits: ConduitService,
+    private lifetimes: InstanceLifetimeService,
     private logger: Logger
   ) {
     super()
@@ -23,28 +23,28 @@ export class InstanceClearingService extends Service {
   }
 
   public async setup() {
-    this.channelStateCache = await this.cachingService.newServerCache2D('cache_channel_states', {
+    this.statesCache = await this.caching.newServerCache2D('cache_channel_states', {
       dispose: async (k, v) => {
         if (!this.destroyed) {
-          this.channelStateDeleting[k] = v
+          this.statesDeleting[k] = v
           await this.handleCacheDispose(k)
         }
       },
       max: 50000,
       maxAge: ms('30min')
     })
-    this.channelStateDeleting = {}
+    this.statesDeleting = {}
 
-    for (const channel of this.channelService.list()) {
+    for (const channel of this.channels.list()) {
       channel.stateManager({
-        set: (providerName, val) => this.channelStateCache.set(channel.meta.id, providerName, val),
+        set: (providerName, val) => this.statesCache.set(channel.meta.id, providerName, val),
         get: (providerName) => {
           return (
-            this.channelStateCache.get(channel.meta.id, providerName) ||
-            this.channelStateDeleting[this.channelStateCache.getKey(channel.meta.id, providerName)]
+            this.statesCache.get(channel.meta.id, providerName) ||
+            this.statesDeleting[this.statesCache.getKey(channel.meta.id, providerName)]
           )
         },
-        del: (providerName) => this.channelStateCache.del(channel.meta.id, providerName)
+        del: (providerName) => this.statesCache.del(channel.meta.id, providerName)
       })
     }
   }
@@ -55,12 +55,12 @@ export class InstanceClearingService extends Service {
 
   private async handleCacheDispose(key: string) {
     try {
-      const [channelId, providerName] = this.channelStateCache.getValues(key)
-      const provider = await this.providerService.getByName(providerName)
-      const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channelId)
+      const [channelId, providerName] = this.statesCache.getValues(key)
+      const provider = await this.providers.getByName(providerName)
+      const conduit = await this.conduits.getByProviderAndChannel(provider.id, channelId)
 
-      await this.instanceLifetime.stop(conduit.id)
-      delete this.channelStateDeleting[key]
+      await this.lifetimes.stop(conduit.id)
+      delete this.statesDeleting[key]
     } catch (e) {
       this.logger.error(e, 'Error trying to clear channel')
     }

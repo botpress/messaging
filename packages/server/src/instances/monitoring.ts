@@ -18,7 +18,7 @@ export class InstanceMonitoring {
     private channels: ChannelService,
     private conduits: ConduitService,
     private status: StatusService,
-    private instanceLifetime: InstanceLifetimeService
+    private lifetimes: InstanceLifetimeService
   ) {}
 
   async monitor() {
@@ -51,7 +51,7 @@ export class InstanceMonitoring {
 
     const outdateds = await this.status.listOutdated(ms('10h'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
     for (const outdated of outdateds) {
-      await this.instanceLifetime.initialize(outdated.conduitId)
+      await this.lifetimes.initialize(outdated.conduitId)
     }
   }
 
@@ -72,7 +72,7 @@ export class InstanceMonitoring {
           continue
         }
 
-        await this.instanceLifetime.start(conduit.id)
+        await this.lifetimes.start(conduit.id)
       }
     }
   }

@@ -1,11 +1,11 @@
 import { Dispatcher } from '@botpress/messaging-engine'
 
-export enum InstanceDispatches {
+export enum InstanceLifetimeDispatches {
   Stop
 }
 
-export interface InstanceStopDispatch {}
+export interface InstanceLifetimeStopDispatch {}
 
-export class InstanceDispatcher extends Dispatcher<{
-  [InstanceDispatches.Stop]: InstanceStopDispatch
+export class InstanceLifetimeDispatcher extends Dispatcher<{
+  [InstanceLifetimeDispatches.Stop]: InstanceLifetimeStopDispatch
 }> {}

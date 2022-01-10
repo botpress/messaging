@@ -26,7 +26,7 @@ import { LinkedQueue } from './queue'
 import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
-  public lifetime: InstanceLifetimeService
+  public lifetimes: InstanceLifetimeService
   public invalidation: InstanceInvalidationService
   public clearing: InstanceClearingService
 
@@ -36,70 +36,63 @@ export class InstanceService extends Service {
   private logger: Logger
 
   constructor(
-    private loggerService: LoggerService,
-    private distributedService: DistributedService,
-    private dispatchService: DispatchService,
-    private cachingService: CachingService,
-    private channelService: ChannelService,
-    private providerService: ProviderService,
-    private conduitService: ConduitService,
-    private conversationService: ConversationService,
-    private messageService: MessageService,
-    private clientService: ClientService,
-    private mappingService: MappingService,
-    private statusService: StatusService
+    private loggers: LoggerService,
+    private distributed: DistributedService,
+    private dispatches: DispatchService,
+    private caching: CachingService,
+    private channels: ChannelService,
+    private providers: ProviderService,
+    private conduits: ConduitService,
+    private conversations: ConversationService,
+    private messages: MessageService,
+    private clients: ClientService,
+    private mapping: MappingService,
+    private status: StatusService
   ) {
     super()
-    this.logger = this.loggerService.root.sub('instances')
-    this.lifetime = new InstanceLifetimeService(
-      distributedService,
-      dispatchService,
-      channelService,
-      providerService,
-      conduitService,
-      statusService,
+    this.logger = this.loggers.root.sub('instances')
+    this.lifetimes = new InstanceLifetimeService(
+      distributed,
+      dispatches,
+      channels,
+      providers,
+      conduits,
+      status,
       this.logger
     )
     this.invalidation = new InstanceInvalidationService(
-      this.channelService,
-      this.providerService,
-      this.conduitService,
-      this.clientService,
-      this.statusService,
-      this.lifetime
+      this.channels,
+      this.providers,
+      this.conduits,
+      this.clients,
+      this.status,
+      this.lifetimes
     )
-    this.clearing = new InstanceClearingService(
-      cachingService,
-      channelService,
-      providerService,
-      conduitService,
-      this.lifetime,
-      this.logger
-    )
+    this.clearing = new InstanceClearingService(caching, channels, providers, conduits, this.lifetimes, this.logger)
     this.monitoring = new InstanceMonitoring(
       this.logger.sub('monitoring'),
-      this.distributedService,
-      this.channelService,
-      this.conduitService,
-      this.statusService,
-      this.lifetime
+      this.distributed,
+      this.channels,
+      this.conduits,
+      this.status,
+      this.lifetimes
     )
-    this.sandbox = new InstanceSandbox(this.clientService, this.mappingService, this)
+    this.sandbox = new InstanceSandbox(this.clients, this.mapping, this)
   }
 
   async setup() {
-    await this.lifetime.setup()
+    await this.lifetimes.setup()
     await this.invalidation.setup()
     await this.clearing.setup()
 
-    this.messageQueueCache = await this.cachingService.newServerCache('cache_thread_queues_cache')
-    this.messageService.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
+    this.messageQueueCache = await this.caching.newServerCache('cache_thread_queues_cache')
+    this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
 
-    for (const channel of this.channelService.list()) {
+    for (const channel of this.channels.list()) {
       channel.autoStart(async (providerName) => {
-        const provider = await this.providerService.getByName(providerName)
-        const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
-        await this.lifetime.start(conduit.id)
+        const provider = await this.providers.getByName(providerName)
+        const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
+        await this.lifetimes.start(conduit.id)
       })
     }
   }
@@ -108,12 +101,12 @@ export class InstanceService extends Service {
     await this.monitoring.destroy()
     await this.clearing.destroy()
 
-    for (const channel of this.channelService.list()) {
+    for (const channel of this.channels.list()) {
       for (const scope of channel.scopes) {
-        const provider = await this.providerService.getByName(scope)
-        const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
+        const provider = await this.providers.getByName(scope)
+        const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
 
-        await this.lifetime.stop(conduit.id)
+        await this.lifetimes.stop(conduit.id)
       }
     }
   }
@@ -123,17 +116,17 @@ export class InstanceService extends Service {
   }
 
   async sendToEndpoint(conduitId: uuid, endpoint: Endpoint, content: any) {
-    const conduit = await this.conduitService.get(conduitId)
-    const provider = await this.providerService.getById(conduit.providerId)
-    const channel = this.channelService.getById(conduit.channelId)
+    const conduit = await this.conduits.get(conduitId)
+    const provider = await this.providers.getById(conduit.providerId)
+    const channel = this.channels.getById(conduit.channelId)
 
     await channel.send(provider.name, endpoint, content)
   }
 
   private async handleMessageCreated({ message, source }: MessageCreatedEvent) {
-    const conversation = await this.conversationService.get(message.conversationId)
-    const client = await this.clientService.getById(conversation.clientId)
-    const convmaps = await this.mappingService.convmap.listByConversationId(message.conversationId)
+    const conversation = await this.conversations.get(message.conversationId)
+    const client = await this.clients.getById(conversation.clientId)
+    const convmaps = await this.mapping.convmap.listByConversationId(message.conversationId)
 
     // small optimization. If the message comes from a channel, and we are only linked to one channel,
     // then we already know that we don't need to spread the message to other connected channels
@@ -142,11 +135,11 @@ export class InstanceService extends Service {
     }
 
     for (const { threadId, tunnelId } of convmaps) {
-      const endpoint = await this.mappingService.getEndpoint(threadId)
-      const tunnel = await this.mappingService.tunnels.get(tunnelId)
+      const endpoint = await this.mapping.getEndpoint(threadId)
+      const tunnel = await this.mapping.tunnels.get(tunnelId)
 
       if (!source?.endpoint || !this.endpointEqual(source.endpoint, endpoint)) {
-        const conduit = await this.conduitService.fetchByProviderAndChannel(client.providerId, tunnel!.channelId)
+        const conduit = await this.conduits.fetchByProviderAndChannel(client.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }

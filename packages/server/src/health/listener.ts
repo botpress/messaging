@@ -17,20 +17,20 @@ export class HealthListener {
     this.conduitService.events.on(ConduitEvents.Created, this.handleConduitCreated.bind(this), true)
     this.conduitService.events.on(ConduitEvents.Updated, this.handleConduitUpdated.bind(this), true)
     this.conduitService.events.on(ConduitEvents.Deleting, this.handleConduitDeleting.bind(this), true)
-    this.instanceService.lifetime.events.on(InstanceLifetimeEvents.Setup, this.handleInstanceSetup.bind(this))
-    this.instanceService.lifetime.events.on(
+    this.instanceService.lifetimes.events.on(InstanceLifetimeEvents.Setup, this.handleInstanceSetup.bind(this))
+    this.instanceService.lifetimes.events.on(
       InstanceLifetimeEvents.SetupFailed,
       this.handleInstanceSetupFailed.bind(this)
     )
-    this.instanceService.lifetime.events.on(
+    this.instanceService.lifetimes.events.on(
       InstanceLifetimeEvents.Initialized,
       this.handleInstanceInitialized.bind(this)
     )
-    this.instanceService.lifetime.events.on(
+    this.instanceService.lifetimes.events.on(
       InstanceLifetimeEvents.InitializationFailed,
       this.handleInstanceInitializationFailed.bind(this)
     )
-    this.instanceService.lifetime.events.on(InstanceLifetimeEvents.Destroyed, this.handleInstanceDestroyed.bind(this))
+    this.instanceService.lifetimes.events.on(InstanceLifetimeEvents.Destroyed, this.handleInstanceDestroyed.bind(this))
   }
 
   private async handleConduitCreated(conduitId: uuid) {

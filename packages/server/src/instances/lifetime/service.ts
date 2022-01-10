@@ -4,7 +4,7 @@ import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'
 import { ProviderService } from '../../providers/service'
 import { StatusService } from '../../status/service'
-import { InstanceDispatcher, InstanceDispatches } from './dispatch'
+import { InstanceLifetimeDispatcher, InstanceLifetimeDispatches } from './dispatch'
 import { InstanceLifetimeEmitter, InstanceLifetimeEvents, InstanceLifetimeWatcher } from './events'
 
 export class InstanceLifetimeService extends Service {
@@ -13,15 +13,15 @@ export class InstanceLifetimeService extends Service {
   }
 
   private emitter: InstanceLifetimeEmitter
-  private dispatcher!: InstanceDispatcher
+  private dispatcher!: InstanceLifetimeDispatcher
 
   constructor(
-    private distributedService: DistributedService,
-    private dispatchService: DispatchService,
-    private channelService: ChannelService,
-    private providerService: ProviderService,
-    private conduitService: ConduitService,
-    private statusService: StatusService,
+    private distributed: DistributedService,
+    private dispatches: DispatchService,
+    private channels: ChannelService,
+    private providers: ProviderService,
+    private conduits: ConduitService,
+    private status: StatusService,
     private logger: Logger
   ) {
     super()
@@ -29,62 +29,62 @@ export class InstanceLifetimeService extends Service {
   }
 
   async setup() {
-    this.dispatcher = await this.dispatchService.create('dispatch_converse', InstanceDispatcher)
-    this.dispatcher.on(InstanceDispatches.Stop, this.handleDispatchStop.bind(this))
+    this.dispatcher = await this.dispatches.create('dispatch_converse', InstanceLifetimeDispatcher)
+    this.dispatcher.on(InstanceLifetimeDispatches.Stop, this.handleDispatchStop.bind(this))
   }
 
   async initialize(conduitId: uuid) {
     await this.start(conduitId)
 
-    const conduit = await this.conduitService.get(conduitId)
-    const provider = await this.providerService.getById(conduit.providerId)
-    const channel = this.channelService.getById(conduit.channelId)
+    const conduit = await this.conduits.get(conduitId)
+    const provider = await this.providers.getById(conduit.providerId)
+    const channel = this.channels.getById(conduit.channelId)
 
     try {
-      await this.distributedService.using(`lock_dyn_instance_init::${conduitId}`, async () => {
+      await this.distributed.using(`lock_dyn_instance_init::${conduitId}`, async () => {
         await channel.initialize(provider.name)
       })
     } catch (e) {
-      await this.statusService.addError(conduitId, e as Error)
+      await this.status.addError(conduitId, e as Error)
       this.logger.error(e, 'Error trying to initialize conduit', provider.name)
       return this.emitter.emit(InstanceLifetimeEvents.InitializationFailed, conduitId)
     }
 
-    await this.statusService.updateInitializedOn(conduitId, new Date())
-    await this.statusService.clearErrors(conduitId)
+    await this.status.updateInitializedOn(conduitId, new Date())
+    await this.status.clearErrors(conduitId)
     return this.emitter.emit(InstanceLifetimeEvents.Initialized, conduitId)
   }
 
   async start(conduitId: uuid) {
-    const conduit = await this.conduitService.get(conduitId)
-    const provider = await this.providerService.getById(conduit.providerId)
-    const channel = this.channelService.getById(conduit.channelId)
+    const conduit = await this.conduits.get(conduitId)
+    const provider = await this.providers.getById(conduit.providerId)
+    const channel = this.channels.getById(conduit.channelId)
 
     if (channel.has(provider.name)) {
       return
     }
 
     try {
-      await this.distributedService.using(`lock_dyn_instance_setup::${conduitId}`, async () => {
+      await this.distributed.using(`lock_dyn_instance_setup::${conduitId}`, async () => {
         await channel.start(provider.name, conduit.config)
         await this.dispatcher.subscribe(conduitId)
       })
       await this.emitter.emit(InstanceLifetimeEvents.Setup, conduitId)
     } catch (e) {
-      await this.statusService.addError(conduitId, e as Error)
+      await this.status.addError(conduitId, e as Error)
       this.logger.error(e, 'Error trying to setup conduit', provider.name)
       await this.emitter.emit(InstanceLifetimeEvents.SetupFailed, conduitId)
     }
   }
 
   async stop(conduitId: uuid) {
-    await this.dispatcher.publish(InstanceDispatches.Stop, conduitId, {})
+    await this.dispatcher.publish(InstanceLifetimeDispatches.Stop, conduitId, {})
   }
 
   private async handleDispatchStop(conduitId: uuid) {
-    const conduit = await this.conduitService.get(conduitId)
-    const provider = await this.providerService.getById(conduit.providerId)
-    const channel = this.channelService.getById(conduit.channelId)
+    const conduit = await this.conduits.get(conduitId)
+    const provider = await this.providers.getById(conduit.providerId)
+    const channel = this.channels.getById(conduit.channelId)
 
     if (!channel.has(provider.name)) {
       return

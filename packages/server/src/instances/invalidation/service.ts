@@ -20,7 +20,7 @@ export class InstanceInvalidationService extends Service {
     private conduits: ConduitService,
     private clients: ClientService,
     private status: StatusService,
-    private instanceLifetime: InstanceLifetimeService
+    private lifetimes: InstanceLifetimeService
   ) {
     super()
   }
@@ -40,20 +40,20 @@ export class InstanceInvalidationService extends Service {
     const channel = this.channels.getById(conduit.channelId)
 
     if (channel.meta.initiable) {
-      await this.instanceLifetime.initialize(conduitId)
+      await this.lifetimes.initialize(conduitId)
     }
 
     if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
-      await this.instanceLifetime.start(conduit.id)
+      await this.lifetimes.start(conduit.id)
     }
   }
 
   private async onConduitDeleting(conduitId: uuid) {
-    await this.instanceLifetime.stop(conduitId)
+    await this.lifetimes.stop(conduitId)
   }
 
   private async onConduitUpdated(conduitId: uuid) {
-    await this.instanceLifetime.stop(conduitId)
+    await this.lifetimes.stop(conduitId)
     await this.status.updateInitializedOn(conduitId, undefined)
     await this.status.clearErrors(conduitId)
 
@@ -61,11 +61,11 @@ export class InstanceInvalidationService extends Service {
     const channel = this.channels.getById(conduit.channelId)
 
     if (channel.meta.initiable) {
-      await this.instanceLifetime.initialize(conduitId)
+      await this.lifetimes.initialize(conduitId)
     }
 
     if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
-      await this.instanceLifetime.start(conduit.id)
+      await this.lifetimes.start(conduit.id)
     }
   }
 
@@ -83,7 +83,7 @@ export class InstanceInvalidationService extends Service {
 
     const conduits = await this.conduits.listByProvider(oldClient.providerId)
     for (const conduit of conduits) {
-      await this.instanceLifetime.stop(conduit.id)
+      await this.lifetimes.stop(conduit.id)
     }
   }
 
@@ -91,7 +91,7 @@ export class InstanceInvalidationService extends Service {
     const conduits = await this.conduits.listByProvider(providerId)
 
     for (const conduit of conduits) {
-      await this.instanceLifetime.stop(conduit.id)
+      await this.lifetimes.stop(conduit.id)
     }
   }
 }
