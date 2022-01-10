@@ -27,7 +27,7 @@ export abstract class ChannelService<
 
   protected cacheIndexResponses: LRU<string, IndexChoiceOption[]> = new LRU({ max: 50000, maxAge: ms('5min') })
   protected states: { [scope: string]: TState } = {}
-  protected startCallback?: (scope: string) => Promise<TConfig>
+  protected startCallback?: (scope: string) => Promise<void>
 
   get scopes() {
     return Object.keys(this.states)
@@ -49,10 +49,10 @@ export abstract class ChannelService<
       return
     }
 
-    await this.start(scope, await this.startCallback!(scope))
+    await this.startCallback!(scope)
   }
 
-  autoStart(callback: (scope: string) => Promise<TConfig>) {
+  autoStart(callback: (scope: string) => Promise<void>) {
     this.startCallback = callback
   }
 

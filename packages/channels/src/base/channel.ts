@@ -27,7 +27,7 @@ export interface Channel {
     event: K,
     listener: ((arg: ChannelEvents[K]) => Promise<void>) | ((arg: ChannelEvents[K]) => void)
   ): void
-  autoStart(callback: (scope: string) => Promise<any>): void
+  autoStart(callback: (scope: string) => Promise<void>): void
   makeUrl(callback: (scope: string) => Promise<string>): void
 }
 
@@ -99,7 +99,7 @@ export abstract class ChannelTemplate<
     }
   }
 
-  autoStart(callback: (scope: string) => Promise<TConfig>) {
+  autoStart(callback: (scope: string) => Promise<void>) {
     this.service.autoStart(callback)
   }
 

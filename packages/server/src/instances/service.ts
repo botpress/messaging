@@ -86,7 +86,7 @@ export class InstanceService extends Service {
       channel.autoStart(async (providerName) => {
         const provider = await this.providerService.getByName(providerName)
         const conduit = await this.conduitService.getByProviderAndChannel(provider.id, channel.meta.id)
-        return conduit.config
+        await this.start(conduit.id)
       })
     }
   }
