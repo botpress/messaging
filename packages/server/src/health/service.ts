@@ -87,7 +87,7 @@ export class HealthService extends Service {
     return rows.map((x) => this.deserialize(x))
   }
 
-  public makeReadable(event: HealthEvent): HealthReportEvent {
+  private makeReadable(event: HealthEvent): HealthReportEvent {
     return {
       type: event.type,
       time: event.time,
@@ -99,7 +99,7 @@ export class HealthService extends Service {
     return this.db.knex(this.table.id)
   }
 
-  public serialize(event: Partial<HealthEvent>) {
+  private serialize(event: Partial<HealthEvent>) {
     return {
       ...event,
       time: this.db.setDate(event.time),
@@ -107,7 +107,7 @@ export class HealthService extends Service {
     }
   }
 
-  public deserialize(event: any): HealthEvent {
+  private deserialize(event: any): HealthEvent {
     return {
       ...event,
       time: this.db.getDate(event.time),
