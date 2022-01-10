@@ -87,7 +87,7 @@ export class HealthService extends Service {
     return rows.map((x) => this.deserialize(x))
   }
 
-  private makeReadable(event: HealthEvent): HealthReportEvent {
+  makeReadable(event: HealthEvent): HealthReportEvent {
     return {
       type: event.type,
       time: event.time,
