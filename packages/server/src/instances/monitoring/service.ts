@@ -13,12 +13,12 @@ export class InstanceMonitoringService extends Service {
   private timeout?: NodeJS.Timeout
 
   constructor(
-    private logger: Logger,
     private distributed: DistributedService,
     private channels: ChannelService,
     private conduits: ConduitService,
     private status: StatusService,
-    private lifetimes: InstanceLifetimeService
+    private lifetimes: InstanceLifetimeService,
+    private logger: Logger
   ) {
     super()
   }

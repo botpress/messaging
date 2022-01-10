@@ -78,12 +78,12 @@ export class InstanceService extends Service {
     )
     this.clearing = new InstanceClearingService(caching, channels, providers, conduits, this.lifetimes, this.logger)
     this.monitoring = new InstanceMonitoringService(
-      this.logger.sub('monitoring'),
       this.distributed,
       this.channels,
       this.conduits,
       this.status,
-      this.lifetimes
+      this.lifetimes,
+      this.logger
     )
     this.sandbox = new InstanceSandboxService(this.clients, this.mapping, this.messaging)
   }
