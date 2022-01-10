@@ -4,10 +4,15 @@ import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'
 import { ProviderService } from '../../providers/service'
 import { StatusService } from '../../status/service'
-import { InstanceEmitter, InstanceEvents } from '../clearing/events'
 import { InstanceDispatcher, InstanceDispatches } from './dispatch'
+import { InstanceLifetimeEmitter, InstanceLifetimeEvents, InstanceLifetimeWatcher } from './events'
 
 export class InstanceLifetimeService extends Service {
+  get events(): InstanceLifetimeWatcher {
+    return this.emitter
+  }
+
+  private emitter: InstanceLifetimeEmitter
   private dispatcher!: InstanceDispatcher
 
   constructor(
@@ -17,10 +22,10 @@ export class InstanceLifetimeService extends Service {
     private providerService: ProviderService,
     private conduitService: ConduitService,
     private statusService: StatusService,
-    private logger: Logger,
-    private emitter: InstanceEmitter
+    private logger: Logger
   ) {
     super()
+    this.emitter = new InstanceLifetimeEmitter()
   }
 
   async setup() {
@@ -42,12 +47,12 @@ export class InstanceLifetimeService extends Service {
     } catch (e) {
       await this.statusService.addError(conduitId, e as Error)
       this.logger.error(e, 'Error trying to initialize conduit', provider.name)
-      return this.emitter.emit(InstanceEvents.InitializationFailed, conduitId)
+      return this.emitter.emit(InstanceLifetimeEvents.InitializationFailed, conduitId)
     }
 
     await this.statusService.updateInitializedOn(conduitId, new Date())
     await this.statusService.clearErrors(conduitId)
-    return this.emitter.emit(InstanceEvents.Initialized, conduitId)
+    return this.emitter.emit(InstanceLifetimeEvents.Initialized, conduitId)
   }
 
   async start(conduitId: uuid) {
@@ -64,11 +69,11 @@ export class InstanceLifetimeService extends Service {
         await channel.start(provider.name, conduit.config)
         await this.dispatcher.subscribe(conduitId)
       })
-      await this.emitter.emit(InstanceEvents.Setup, conduitId)
+      await this.emitter.emit(InstanceLifetimeEvents.Setup, conduitId)
     } catch (e) {
       await this.statusService.addError(conduitId, e as Error)
       this.logger.error(e, 'Error trying to setup conduit', provider.name)
-      await this.emitter.emit(InstanceEvents.SetupFailed, conduitId)
+      await this.emitter.emit(InstanceLifetimeEvents.SetupFailed, conduitId)
     }
   }
 
@@ -87,7 +92,7 @@ export class InstanceLifetimeService extends Service {
 
     try {
       await channel.stop(provider.name)
-      await this.emitter.emit(InstanceEvents.Destroyed, conduitId)
+      await this.emitter.emit(InstanceLifetimeEvents.Destroyed, conduitId)
     } catch (e) {
       this.logger.error(e, 'Error trying to destroy conduit')
     } finally {

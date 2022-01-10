@@ -31,13 +31,9 @@ export class InstanceClearingService extends Service {
         }
       },
       max: 50000,
-      maxAge: ms('10s')
+      maxAge: ms('30min')
     })
     this.channelStateDeleting = {}
-
-    setInterval(() => {
-      this.channelStateCache.prune()
-    }, ms('2s'))
 
     for (const channel of this.channelService.list()) {
       channel.stateManager({

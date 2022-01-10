@@ -18,7 +18,6 @@ import { MessageCreatedEvent, MessageEvents } from '../messages/events'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
 import { StatusService } from '../status/service'
-import { InstanceEmitter, InstanceWatcher } from './clearing/events'
 import { InstanceClearingService } from './clearing/service'
 import { InstanceInvalidationService } from './invalidation/service'
 import { InstanceLifetimeService } from './lifetime/service'
@@ -27,16 +26,11 @@ import { LinkedQueue } from './queue'
 import { InstanceSandbox } from './sandbox'
 
 export class InstanceService extends Service {
-  get events(): InstanceWatcher {
-    return this.emitter
-  }
-
   public lifetime: InstanceLifetimeService
   public invalidation: InstanceInvalidationService
   public clearing: InstanceClearingService
 
   public readonly sandbox: InstanceSandbox
-  private emitter: InstanceEmitter
   private monitoring: InstanceMonitoring
   private messageQueueCache!: ServerCache<uuid, LinkedQueue<QueuedMessage>>
   private logger: Logger
@@ -56,7 +50,6 @@ export class InstanceService extends Service {
     private statusService: StatusService
   ) {
     super()
-    this.emitter = new InstanceEmitter()
     this.logger = this.loggerService.root.sub('instances')
     this.lifetime = new InstanceLifetimeService(
       distributedService,
@@ -65,8 +58,7 @@ export class InstanceService extends Service {
       providerService,
       conduitService,
       statusService,
-      this.logger,
-      this.emitter
+      this.logger
     )
     this.invalidation = new InstanceInvalidationService(
       this.channelService,
