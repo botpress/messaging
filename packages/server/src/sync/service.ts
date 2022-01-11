@@ -121,7 +121,7 @@ export class SyncService extends Service {
           // updating the config will clear the number of errors.
           // But if the config is identical we still want to clear it
           const status = await this.status.fetch(oldConduit.id)
-          if ((status?.numberOfErrors || 0) > 0) {
+          if (status?.numberOfErrors) {
             await this.status.clearErrors(oldConduit.id)
           }
         }

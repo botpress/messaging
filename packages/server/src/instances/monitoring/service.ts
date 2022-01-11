@@ -4,9 +4,8 @@ import yn from 'yn'
 import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'
 import { StatusService } from '../../status/service'
-import { InstanceLifetimeService } from '../lifetime/service'
+import { InstanceLifetimeService, MAX_ALLOWED_FAILURES } from '../lifetime/service'
 
-const MAX_ALLOWED_FAILURES = 5
 const MAX_INITIALIZE_BATCH = 100
 
 export class InstanceMonitoringService extends Service {

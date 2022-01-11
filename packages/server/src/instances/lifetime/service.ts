@@ -8,7 +8,7 @@ import { StatusService } from '../../status/service'
 import { InstanceLifetimeDispatcher, InstanceLifetimeDispatches } from './dispatch'
 import { InstanceLifetimeEmitter, InstanceLifetimeEvents, InstanceLifetimeWatcher } from './events'
 
-const MAX_ALLOWED_FAILURES = 5
+export const MAX_ALLOWED_FAILURES = 5
 
 export class InstanceLifetimeService extends Service {
   get events(): InstanceLifetimeWatcher {
