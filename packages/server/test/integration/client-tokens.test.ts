@@ -19,7 +19,7 @@ describe('ClientTokens', () => {
     querySpy = jest.spyOn(clientTokens as any, 'query')
 
     const provider = await app.providers.create(randStr(), false)
-    const client = await app.clients.create(provider.id, await app.clients.generateToken())
+    const client = await app.clients.create(provider.id)
 
     state = {
       provider,

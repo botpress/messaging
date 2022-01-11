@@ -17,7 +17,7 @@ describe('Health', () => {
     querySpy = jest.spyOn(health as any, 'query')
 
     const provider = await app.providers.create(randStr(), false)
-    const client = await app.clients.create(provider.id, await app.clients.generateToken())
+    const client = await app.clients.create(provider.id)
     const conduit = await app.conduits.create(provider.id, app.channels.getByName(TEST_CHANNEL).meta.id, {
       botToken: randStr()
     })

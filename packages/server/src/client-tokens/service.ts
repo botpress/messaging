@@ -6,7 +6,7 @@ import yn from 'yn'
 import { ClientTokenTable } from './table'
 import { ClientToken } from './types'
 
-export const USER_TOKEN_LENGTH = 66
+export const CLIENT_TOKEN_LENGTH = 66
 
 export class ClientTokenService extends Service {
   private table: ClientTokenTable
@@ -35,7 +35,7 @@ export class ClientTokenService extends Service {
   }
 
   async generateToken(): Promise<string> {
-    return crypto.randomBytes(USER_TOKEN_LENGTH).toString('base64')
+    return crypto.randomBytes(CLIENT_TOKEN_LENGTH).toString('base64')
   }
 
   async create(clientId: uuid, token: string, expiry: Date | undefined): Promise<ClientToken> {
