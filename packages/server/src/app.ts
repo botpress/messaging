@@ -81,7 +81,8 @@ export class App extends Engine {
       this.conduits,
       this.clients,
       this.clientTokens,
-      this.webhooks
+      this.webhooks,
+      this.status
     )
     this.health = new HealthService(
       this.database,

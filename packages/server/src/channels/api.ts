@@ -7,10 +7,11 @@ export class ChannelApi {
   constructor(private router: Router, private app: App) {}
 
   async setup() {
+    const logger = this.app.logger.root.sub('channels')
     const webhookRouter = Router()
 
     for (const channel of this.app.channels.list()) {
-      await channel.setup(webhookRouter)
+      await channel.setup(webhookRouter, logger.sub(channel.meta.name))
 
       channel.logger = this.app.logger.root.sub(channel.meta.name)
       channel.kvs = this.app.kvs

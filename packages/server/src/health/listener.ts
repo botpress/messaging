@@ -1,7 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
-import { InstanceEvents } from '../instances/events'
+import { InstanceLifetimeEvents } from '../instances/lifetime/events'
 import { InstanceService } from '../instances/service'
 import { HealthService } from './service'
 import { HealthEventType } from './types'
@@ -17,14 +17,20 @@ export class HealthListener {
     this.conduitService.events.on(ConduitEvents.Created, this.handleConduitCreated.bind(this), true)
     this.conduitService.events.on(ConduitEvents.Updated, this.handleConduitUpdated.bind(this), true)
     this.conduitService.events.on(ConduitEvents.Deleting, this.handleConduitDeleting.bind(this), true)
-    this.instanceService.events.on(InstanceEvents.Setup, this.handleInstanceSetup.bind(this))
-    this.instanceService.events.on(InstanceEvents.SetupFailed, this.handleInstanceSetupFailed.bind(this))
-    this.instanceService.events.on(InstanceEvents.Initialized, this.handleInstanceInitialized.bind(this))
-    this.instanceService.events.on(
-      InstanceEvents.InitializationFailed,
+    this.instanceService.lifetimes.events.on(InstanceLifetimeEvents.Setup, this.handleInstanceSetup.bind(this))
+    this.instanceService.lifetimes.events.on(
+      InstanceLifetimeEvents.SetupFailed,
+      this.handleInstanceSetupFailed.bind(this)
+    )
+    this.instanceService.lifetimes.events.on(
+      InstanceLifetimeEvents.Initialized,
+      this.handleInstanceInitialized.bind(this)
+    )
+    this.instanceService.lifetimes.events.on(
+      InstanceLifetimeEvents.InitializationFailed,
       this.handleInstanceInitializationFailed.bind(this)
     )
-    this.instanceService.events.on(InstanceEvents.Destroyed, this.handleInstanceDestroyed.bind(this))
+    this.instanceService.lifetimes.events.on(InstanceLifetimeEvents.Destroyed, this.handleInstanceDestroyed.bind(this))
   }
 
   private async handleConduitCreated(conduitId: uuid) {

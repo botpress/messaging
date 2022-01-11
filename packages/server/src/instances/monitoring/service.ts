@@ -1,27 +1,28 @@
-import { DistributedService, Logger } from '@botpress/messaging-engine'
+import { DistributedService, Logger, Service } from '@botpress/messaging-engine'
 import ms from 'ms'
 import yn from 'yn'
-import { ChannelService } from '../channels/service'
-import { ConduitService } from '../conduits/service'
-import { StatusService } from '../status/service'
-import { InstanceService } from './service'
+import { ChannelService } from '../../channels/service'
+import { ConduitService } from '../../conduits/service'
+import { StatusService } from '../../status/service'
+import { InstanceLifetimeService, MAX_ALLOWED_FAILURES } from '../lifetime/service'
 
-const MAX_ALLOWED_FAILURES = 5
 const MAX_INITIALIZE_BATCH = 100
 
-export class InstanceMonitoring {
+export class InstanceMonitoringService extends Service {
   private timeout?: NodeJS.Timeout
 
   constructor(
-    private logger: Logger,
     private distributed: DistributedService,
     private channels: ChannelService,
     private conduits: ConduitService,
     private status: StatusService,
-    private instances: InstanceService
-  ) {}
+    private lifetimes: InstanceLifetimeService,
+    private logger: Logger
+  ) {
+    super()
+  }
 
-  async monitor() {
+  async setup() {
     void this.tickMonitoring()
   }
 
@@ -51,7 +52,7 @@ export class InstanceMonitoring {
 
     const outdateds = await this.status.listOutdated(ms('10h'), MAX_ALLOWED_FAILURES, MAX_INITIALIZE_BATCH)
     for (const outdated of outdateds) {
-      await this.instances.initialize(outdated.conduitId)
+      await this.lifetimes.initialize(outdated.conduitId)
     }
   }
 
@@ -72,7 +73,7 @@ export class InstanceMonitoring {
           continue
         }
 
-        await this.instances.start(conduit.id)
+        await this.lifetimes.start(conduit.id)
       }
     }
   }
