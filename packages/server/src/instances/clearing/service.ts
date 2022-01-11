@@ -60,9 +60,10 @@ export class InstanceClearingService extends Service {
       const conduit = await this.conduits.getByProviderAndChannel(provider.id, channelId)
 
       await this.lifetimes.stop(conduit.id)
-      delete this.statesDeleting[key]
     } catch (e) {
       this.logger.error(e, 'Error trying to clear channel')
+    } finally {
+      delete this.statesDeleting[key]
     }
   }
 }
