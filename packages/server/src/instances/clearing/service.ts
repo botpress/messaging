@@ -9,6 +9,7 @@ export class InstanceClearingService extends Service {
   private destroyed: boolean
   private statesCache!: ServerCache2D<any>
   private statesDeleting!: { [key: string]: any }
+  private statesDeleted!: { [key: string]: boolean }
 
   constructor(
     private caching: CachingService,
@@ -24,16 +25,12 @@ export class InstanceClearingService extends Service {
 
   public async setup() {
     this.statesCache = await this.caching.newServerCache2D('cache_channel_states', {
-      dispose: async (k, v) => {
-        if (!this.destroyed) {
-          this.statesDeleting[k] = v
-          await this.handleCacheDispose(k)
-        }
-      },
-      max: 50000,
+      dispose: this.handleCacheDispose.bind(this),
+      max: 2000,
       maxAge: ms('30min')
     })
     this.statesDeleting = {}
+    this.statesDeleted = {}
 
     for (const channel of this.channels.list()) {
       channel.stateManager({
@@ -44,7 +41,11 @@ export class InstanceClearingService extends Service {
             this.statesDeleting[this.statesCache.getKey(channel.meta.id, providerName)]
           )
         },
-        del: (providerName) => this.statesCache.del(channel.meta.id, providerName)
+        del: (providerName) => {
+          // indicates this key is deleted intentionnaly, and did not fall out of the cache
+          this.statesDeleted[this.statesCache.getKey(channel.meta.id, providerName)] = true
+          this.statesCache.del(channel.meta.id, providerName)
+        }
       })
     }
   }
@@ -53,7 +54,22 @@ export class InstanceClearingService extends Service {
     this.destroyed = true
   }
 
-  private async handleCacheDispose(key: string) {
+  private handleCacheDispose(key: string, value: any) {
+    if (this.destroyed) {
+      return
+    }
+
+    // if it's been deleted intentionally we assume disposing was done
+    if (this.statesDeleted) {
+      delete this.statesDeleted[key]
+      return
+    }
+
+    this.statesDeleting[key] = value
+    void this.handleInstanceClearing(key)
+  }
+
+  private async handleInstanceClearing(key: string) {
     try {
       const [channelId, providerName] = this.statesCache.getValues(key)
       const provider = await this.providers.getByName(providerName)
