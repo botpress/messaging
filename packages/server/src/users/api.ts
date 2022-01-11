@@ -14,7 +14,7 @@ export class UserApi {
   }
 
   async create(req: ClientApiRequest, res: Response) {
-    const user = await this.users.create(req.client.id)
+    const user = await this.users.create(req.clientId)
     res.status(201).send(user)
   }
 
@@ -22,7 +22,7 @@ export class UserApi {
     const id = req.params.id as uuid
 
     const user = await this.users.fetch(id)
-    if (!user || user.clientId !== req.client.id) {
+    if (!user || user.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 

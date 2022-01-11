@@ -9,6 +9,5 @@ export class ClientTable extends Table {
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
     table.uuid('providerId').references('id').inTable('msg_providers').unique().nullable()
-    table.string('token').unique().notNullable()
   }
 }

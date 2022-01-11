@@ -41,7 +41,7 @@ export class App extends Engine {
     super()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
-    this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
+    this.clients = new ClientService(this.database, this.caching, this.providers)
     this.clientTokens = new ClientTokenService(this.database, this.crypto, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
@@ -80,6 +80,7 @@ export class App extends Engine {
       this.providers,
       this.conduits,
       this.clients,
+      this.clientTokens,
       this.webhooks
     )
     this.health = new HealthService(

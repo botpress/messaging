@@ -41,13 +41,13 @@ export class MessageApi {
 
     if (authorId) {
       const author = await this.users.fetch(authorId)
-      if (!author || author.clientId !== req.client.id) {
+      if (!author || author.clientId !== req.clientId) {
         return res.sendStatus(404)
       }
     }
 
     const conversation = await this.conversations.fetch(conversationId)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
@@ -59,7 +59,7 @@ export class MessageApi {
     const source = authorId
       ? undefined
       : {
-          client: { id: req.client.id }
+          client: { id: req.clientId }
         }
     const message = await this.messages.create(conversationId, authorId, payload, source, messageId)
 
@@ -75,12 +75,12 @@ export class MessageApi {
     }
 
     const author = await this.users.fetch(authorId)
-    if (!author || author.clientId !== req.client.id) {
+    if (!author || author.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
     const conversation = await this.conversations.fetch(conversationId)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
@@ -100,7 +100,7 @@ export class MessageApi {
     }
 
     const conversation = await this.conversations.fetch(message.conversationId)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
@@ -112,7 +112,7 @@ export class MessageApi {
     const limit = +(req.query.limit || 20)
 
     const conversation = await this.conversations.fetch(conversationId)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
@@ -129,7 +129,7 @@ export class MessageApi {
     }
 
     const conversation = await this.conversations.fetch(message.conversationId)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
@@ -141,7 +141,7 @@ export class MessageApi {
     const { conversationId } = req.params
 
     const conversation = await this.conversations.fetch(conversationId)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
@@ -158,7 +158,7 @@ export class MessageApi {
     }
 
     const conversation = await this.conversations.fetch(message.conversationId)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 

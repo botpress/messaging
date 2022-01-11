@@ -1,6 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { CachingService, CryptoService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
-import crypto from 'crypto'
+import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { ProviderDeletingEvent, ProviderEvents } from '../providers/events'
 import { ProviderService } from '../providers/service'
@@ -17,11 +16,9 @@ export class ClientService extends Service {
   private table: ClientTable
   private cacheById!: ServerCache<uuid, Client>
   private cacheByProvider!: ServerCache<uuid, Client>
-  private cacheTokens!: ServerCache<uuid, string>
 
   constructor(
     private db: DatabaseService,
-    private cryptoService: CryptoService,
     private cachingService: CachingService,
     private providerService: ProviderService
   ) {
@@ -33,22 +30,16 @@ export class ClientService extends Service {
   async setup() {
     this.cacheById = await this.cachingService.newServerCache('cache_client_by_id')
     this.cacheByProvider = await this.cachingService.newServerCache('cache_client_by_provider')
-    this.cacheTokens = await this.cachingService.newServerCache('cache_client_tokens')
 
     await this.db.registerTable(this.table)
 
     this.providerService.events.on(ProviderEvents.Deleting, this.onProviderDeleting.bind(this))
   }
 
-  async generateToken(): Promise<string> {
-    return crypto.randomBytes(66).toString('base64')
-  }
-
-  async create(providerId: uuid, token: string, forceId?: string): Promise<Client> {
+  async create(providerId: uuid, forceId?: string): Promise<Client> {
     const client: Client = {
       id: forceId ?? uuidv4(),
-      providerId,
-      token: await this.cryptoService.hash(token)
+      providerId
     }
 
     await this.query().insert(client)
@@ -80,29 +71,6 @@ export class ClientService extends Service {
     return val
   }
 
-  async getByIdAndToken(id: uuid, token: string): Promise<Client | undefined> {
-    const client = await this.fetchById(id)
-    if (!client) {
-      return undefined
-    }
-
-    const cachedToken = this.cacheTokens.get(id)
-    if (cachedToken) {
-      if (token === cachedToken) {
-        return client
-      } else {
-        return undefined
-      }
-    }
-
-    if (await this.cryptoService.compareHash(client.token, token)) {
-      this.cacheTokens.set(id, token)
-      return client
-    } else {
-      return undefined
-    }
-  }
-
   async fetchByProviderId(providerId: uuid): Promise<Client | undefined> {
     const cached = this.cacheByProvider.get(providerId)
     if (cached) {
@@ -132,22 +100,8 @@ export class ClientService extends Service {
 
     this.cacheByProvider.del(oldClient.providerId, true)
     this.cacheById.del(id, true)
-    this.cacheTokens.del(id, true)
 
     await this.query().where({ id }).update({ providerId })
-    await this.emitter.emit(ClientEvents.Updated, { clientId: id, oldClient })
-  }
-
-  async updateToken(id: uuid, token: string) {
-    const oldClient = await this.getById(id)
-
-    this.cacheByProvider.del(oldClient.providerId, true)
-    this.cacheById.del(id, true)
-    this.cacheTokens.del(id, true)
-
-    await this.query()
-      .where({ id })
-      .update({ token: await this.cryptoService.hash(token) })
     await this.emitter.emit(ClientEvents.Updated, { clientId: id, oldClient })
   }
 

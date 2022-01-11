@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
 import { ChannelService } from '../channels/service'
+import { ClientTokenService } from '../client-tokens/service'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
@@ -21,6 +22,7 @@ export class SyncService extends Service {
     private providers: ProviderService,
     private conduits: ConduitService,
     private clients: ClientService,
+    private clientTokens: ClientTokenService,
     private webhooks: WebhookService
   ) {
     super()
@@ -146,8 +148,9 @@ export class SyncService extends Service {
       if (exisingProvider) {
         const existingClient = await this.clients.fetchByProviderId(exisingProvider.id)
         if (existingClient) {
-          token = forceToken || (await this.clients.generateToken())
-          await this.clients.updateToken(existingClient.id, token)
+          const rawToken = await this.clientTokens.generateToken()
+          const clientToken = await this.clientTokens.create(existingClient.id, rawToken, undefined)
+          token = forceToken || `${clientToken.id}.${rawToken}`
           client = await this.clients.getById(existingClient.id)
         }
       }
@@ -156,9 +159,11 @@ export class SyncService extends Service {
     if (!client) {
       const clientId = forceClientId || uuidv4()
       provider = await this.providers.create(clientId, false)
+      client = await this.clients.create(provider.id, clientId)
 
-      token = forceToken || (await this.clients.generateToken())
-      client = await this.clients.create(provider.id, token, clientId)
+      const rawToken = await this.clientTokens.generateToken()
+      const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
+      token = forceToken || `${clientToken.id}.${rawToken}`
     } else {
       provider = await this.providers.fetchById(client.providerId)
 

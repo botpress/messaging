@@ -1,11 +1,10 @@
-import { Request, Response, NextFunction } from 'express'
-import { validate as validateUuid } from 'uuid'
-import { ClientService } from '../../clients/service'
-import { Client } from '../../clients/types'
+import { uuid } from '@botpress/messaging-base'
+import { Request, Response } from 'express'
+import { ClientTokenService } from '../../client-tokens/service'
 import { AuthHandler, Middleware } from './base'
 
 export class ClientAuthHandler extends AuthHandler {
-  constructor(private clients: ClientService) {
+  constructor(private clientTokens: ClientTokenService) {
     super()
   }
 
@@ -14,22 +13,18 @@ export class ClientAuthHandler extends AuthHandler {
       const clientId = req.headers['x-bp-messaging-client-id'] as string
       const clientToken = req.headers['x-bp-messaging-client-token'] as string
 
-      if (!validateUuid(clientId)) {
-        return res.sendStatus(401)
-      }
-
-      const client = await this.clients.getByIdAndToken(clientId, clientToken)
+      const client = await this.clientTokens.verifyToken(clientId, clientToken)
       if (!client) {
         return res.sendStatus(401)
       }
 
       const clientApiReq = req as ClientApiRequest
-      clientApiReq.client = client
+      clientApiReq.clientId = clientId
       return fn(clientApiReq, res)
     })
   }
 }
 
 export type ClientApiRequest = Request & {
-  client: Client
+  clientId: uuid
 }

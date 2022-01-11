@@ -6,6 +6,7 @@ import yn from 'yn'
 import { methodNotAllowed } from '../base/api/utils'
 import { Auth } from '../base/auth/auth'
 import { ChannelService } from '../channels/service'
+import { ClientTokenService } from '../client-tokens/service'
 import { ClientService } from '../clients/service'
 import { makeSyncRequestSchema } from './schema'
 import { SyncService } from './service'
@@ -14,7 +15,12 @@ export class SyncApi {
   private force!: boolean
   private schema!: Joi.ObjectSchema
 
-  constructor(private syncs: SyncService, private clients: ClientService, private channels: ChannelService) {}
+  constructor(
+    private syncs: SyncService,
+    private clients: ClientService,
+    private clientTokens: ClientTokenService,
+    private channels: ChannelService
+  ) {}
 
   setup(router: Router, auth: Auth) {
     this.force = !!yn(process.env.SPINNED)
@@ -51,7 +57,7 @@ export class SyncApi {
     // A sync request will also accept no client id (we assume the caller wants a new client id and we send it as a response)
     if (sync.id) {
       const client = await this.clients.fetchById(sync.id)
-      if (client && (!sync.token || !(await this.clients.getByIdAndToken(sync.id, sync.token)))) {
+      if (client && (!sync.token || !(await this.clientTokens.verifyToken(sync.id, sync.token)))) {
         return res.sendStatus(403)
       }
     }
