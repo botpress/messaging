@@ -74,17 +74,26 @@ describe('ClientTokens', () => {
   })
 
   test('Get client token by id and token', async () => {
-    const clientToken = await app.clientTokens.verifyToken(state.clientToken!.id, state.rawToken!)
+    const clientToken = await app.clientTokens.verifyToken(
+      state.client.id,
+      `${state.clientToken!.id}.${state.rawToken!}`
+    )
     expect(clientToken).toEqual(state.clientToken)
   })
 
   test('Get client token by id and token cached', async () => {
-    const clientToken = await app.clientTokens.verifyToken(state.clientToken!.id, state.rawToken!)
+    const clientToken = await app.clientTokens.verifyToken(
+      state.client.id,
+      `${state.clientToken!.id}.${state.rawToken!}`
+    )
     expect(clientToken).toEqual(state.clientToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
 
     for (let i = 0; i < 10; i++) {
-      const clientToken = await app.clientTokens.verifyToken(state.clientToken!.id, state.rawToken!)
+      const clientToken = await app.clientTokens.verifyToken(
+        state.client.id,
+        `${state.clientToken!.id}.${state.rawToken!}`
+      )
       expect(clientToken).toEqual(state.clientToken)
     }
 
@@ -92,7 +101,12 @@ describe('ClientTokens', () => {
   })
 
   test('Get client token by id and wrong token should return undefined', async () => {
-    const clientToken = await app.clientTokens.verifyToken(state.clientToken!.id, randStr())
+    const clientToken = await app.clientTokens.verifyToken(state.client.id, `${state.clientToken!.id}.${randStr()}`)
+    expect(clientToken).toBeUndefined()
+  })
+
+  test('Get client token by id and wrong client should return undefined', async () => {
+    const clientToken = await app.clientTokens.verifyToken(randStr(), `${state.clientToken!.id}.${state.rawToken}`)
     expect(clientToken).toBeUndefined()
   })
 
@@ -117,7 +131,10 @@ describe('ClientTokens', () => {
   })
 
   test('Get client token by id with outdated expiry should return undefined', async () => {
-    const clientToken = await app.clientTokens.verifyToken(state.clientToken!.id, state.rawToken!)
+    const clientToken = await app.clientTokens.verifyToken(
+      state.client.id,
+      `${state.clientToken!.id}.${state.rawToken}`
+    )
     expect(clientToken).toBeUndefined()
   })
 })
