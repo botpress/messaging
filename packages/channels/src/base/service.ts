@@ -1,5 +1,6 @@
 import LRU from 'lru-cache'
 import ms from 'ms'
+import { ChannelStateManager } from '..'
 import { Emitter } from '../base/emitter'
 import { Endpoint } from '../base/endpoint'
 import { ChannelConfig } from './config'
@@ -27,7 +28,8 @@ export abstract class ChannelService<
 
   protected cacheIndexResponses: LRU<string, IndexChoiceOption[]> = new LRU({ max: 50000, maxAge: ms('5min') })
   protected states: { [scope: string]: TState } = {}
-  protected startCallback?: (scope: string) => Promise<TConfig>
+  protected startCallback?: (scope: string) => Promise<void>
+  protected manager?: ChannelStateManager
 
   get scopes() {
     return Object.keys(this.states)
@@ -36,7 +38,14 @@ export abstract class ChannelService<
   async setup() {}
 
   async start(scope: string, config: TConfig) {
-    this.states[scope] = await this.create(scope, config)
+    const state = await this.create(scope, config)
+
+    if (this.manager) {
+      this.manager.set(scope, state)
+    } else {
+      this.states[scope] = state
+    }
+
     await this.emit('start', { scope })
   }
 
@@ -49,11 +58,15 @@ export abstract class ChannelService<
       return
     }
 
-    await this.start(scope, await this.startCallback!(scope))
+    await this.startCallback!(scope)
   }
 
-  autoStart(callback: (scope: string) => Promise<TConfig>) {
+  autoStart(callback: (scope: string) => Promise<void>) {
     this.startCallback = callback
+  }
+
+  stateManager(manager: ChannelStateManager) {
+    this.manager = manager
   }
 
   abstract create(scope: string, config: TConfig): Promise<TState>
@@ -73,13 +86,22 @@ export abstract class ChannelService<
   async stop(scope: string) {
     await this.emit('stop', { scope })
     await this.destroy(scope, this.get(scope))
-    delete this.states[scope]
+
+    if (this.manager) {
+      this.manager.del(scope)
+    } else {
+      delete this.states[scope]
+    }
   }
 
   async destroy(scope: string, state: TState): Promise<void> {}
 
-  public get(scope: string) {
-    return this.states[scope]
+  public get(scope: string): TState {
+    if (this.manager) {
+      return this.manager.get(scope)
+    } else {
+      return this.states[scope]
+    }
   }
 
   public prepareIndexResponse(scope: string, identity: string, sender: string, options: IndexChoiceOption[]) {

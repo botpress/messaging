@@ -1,17 +1,25 @@
 import { uuid } from '@botpress/messaging-base'
 import { Endpoint } from '@botpress/messaging-channels'
-import { Logger } from '@botpress/messaging-engine'
+import { Logger, Service } from '@botpress/messaging-engine'
 import { validate as uuidValidate } from 'uuid'
-import { ClientService } from '../clients/service'
-import { MappingService } from '../mapping/service'
-import { InstanceService } from './service'
+import { ClientService } from '../../clients/service'
+import { MappingService } from '../../mapping/service'
+import { InstanceMessagingService } from '../messaging/service'
 
 const JOIN_KEYWORD = '!join'
 
-export class InstanceSandbox {
+export class InstanceSandboxService extends Service {
   private logger = new Logger('Sandbox')
 
-  constructor(private clients: ClientService, private mapping: MappingService, private instances: InstanceService) {}
+  constructor(
+    private clients: ClientService,
+    private mapping: MappingService,
+    private messaging: InstanceMessagingService
+  ) {
+    super()
+  }
+
+  async setup() {}
 
   async getClientId(conduitId: uuid, endpoint: Endpoint, content: any): Promise<uuid | undefined> {
     const sandboxmap = await this.mapping.sandboxmap.get(conduitId, endpoint)
@@ -36,7 +44,7 @@ export class InstanceSandbox {
   }
 
   async printAskJoinSandbox(conduitId: uuid, endpoint: Endpoint) {
-    await this.instances.sendToEndpoint(conduitId, endpoint, {
+    await this.messaging.send(conduitId, endpoint, {
       type: 'text',
       text: 'Please join the sandbox by sending : !join your_passphrase'
     })
@@ -60,7 +68,7 @@ export class InstanceSandbox {
   }
 
   async printWrongPassphrase(conduitId: uuid, endpoint: Endpoint) {
-    await this.instances.sendToEndpoint(conduitId, endpoint, {
+    await this.messaging.send(conduitId, endpoint, {
       type: 'text',
       text: 'Wrong passphrase'
     })

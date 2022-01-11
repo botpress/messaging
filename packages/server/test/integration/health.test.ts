@@ -4,7 +4,7 @@ import { HealthService } from '../../src/health/service'
 import { HealthEventType, HealthReport } from '../../src/health/types'
 import { app, randStr, setupApp } from './utils'
 
-const TEST_CHANNEL = 'telegram'
+const TEST_CHANNEL = 'messenger'
 
 describe('Health', () => {
   let health: HealthService
@@ -19,8 +19,11 @@ describe('Health', () => {
     const provider = await app.providers.create(randStr(), false)
     const client = await app.clients.create(provider.id, await app.clients.generateToken())
     const conduit = await app.conduits.create(provider.id, app.channels.getByName(TEST_CHANNEL).meta.id, {
-      botToken: randStr()
+      accessToken: randStr(),
+      appSecret: randStr(),
+      verifyToken: randStr()
     })
+    await app.instances.lifetimes.stop(conduit.id)
 
     state = {
       client,
@@ -38,7 +41,7 @@ describe('Health', () => {
 
   test('Register health event', async () => {
     const data = { val: randStr() }
-    await health.register(state.conduit.id, HealthEventType.StartFailure, data)
+    await health.register(state.conduit.id, HealthEventType.Sleep, data)
 
     state.eventData = data
   })
@@ -74,7 +77,7 @@ describe('Health', () => {
 
   test('Register another health event', async () => {
     const data = { val: randStr() }
-    await health.register(state.conduit.id, HealthEventType.StartFailure, data)
+    await health.register(state.conduit.id, HealthEventType.Sleep, data)
 
     state.eventData2 = data
   })

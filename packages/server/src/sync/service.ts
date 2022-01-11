@@ -9,6 +9,7 @@ import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
+import { StatusService } from '../status/service'
 import { WebhookService } from '../webhooks/service'
 
 export class SyncService extends Service {
@@ -21,7 +22,8 @@ export class SyncService extends Service {
     private providers: ProviderService,
     private conduits: ConduitService,
     private clients: ClientService,
-    private webhooks: WebhookService
+    private webhooks: WebhookService,
+    private status: StatusService
   ) {
     super()
     this.logger = this.loggers.root.sub('sync')
@@ -115,6 +117,13 @@ export class SyncService extends Service {
 
         if (!_.isEqual(configWithoutEnabled, oldConduit.config)) {
           await this.conduits.updateConfig(oldConduit.id, configWithoutEnabled)
+        } else {
+          // updating the config will clear the number of errors.
+          // But if the config is identical we still want to clear it
+          const status = await this.status.fetch(oldConduit.id)
+          if (status?.numberOfErrors) {
+            await this.status.clearErrors(oldConduit.id)
+          }
         }
 
         oldConduits.splice(oldConduitIndex, 1)
