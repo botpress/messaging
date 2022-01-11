@@ -1,4 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
+import { Channel } from '@botpress/messaging-channels'
 import { DispatchService, Logger, Service, DistributedService } from '@botpress/messaging-engine'
 import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'
@@ -6,6 +7,8 @@ import { ProviderService } from '../../providers/service'
 import { StatusService } from '../../status/service'
 import { InstanceLifetimeDispatcher, InstanceLifetimeDispatches } from './dispatch'
 import { InstanceLifetimeEmitter, InstanceLifetimeEvents, InstanceLifetimeWatcher } from './events'
+
+const MAX_ALLOWED_FAILURES = 5
 
 export class InstanceLifetimeService extends Service {
   get events(): InstanceLifetimeWatcher {
@@ -33,12 +36,7 @@ export class InstanceLifetimeService extends Service {
     this.dispatcher.on(InstanceLifetimeDispatches.Stop, this.handleDispatchStop.bind(this))
 
     for (const channel of this.channels.list()) {
-      channel.autoStart(async (providerName) => {
-        const provider = await this.providers.getByName(providerName)
-        const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
-
-        await this.start(conduit.id)
-      })
+      channel.autoStart(async (providerName) => this.handleAutoStart(channel, providerName))
     }
   }
 
@@ -54,7 +52,10 @@ export class InstanceLifetimeService extends Service {
   }
 
   async initialize(conduitId: uuid) {
-    await this.start(conduitId)
+    const started = await this.start(conduitId)
+    if (!started) {
+      return false
+    }
 
     const conduit = await this.conduits.get(conduitId)
     const provider = await this.providers.getById(conduit.providerId)
@@ -67,12 +68,16 @@ export class InstanceLifetimeService extends Service {
     } catch (e) {
       await this.status.addError(conduitId, e as Error)
       this.logger.error(e, 'Error trying to initialize conduit', provider.name)
-      return this.emitter.emit(InstanceLifetimeEvents.InitializationFailed, conduitId)
+
+      await this.emitter.emit(InstanceLifetimeEvents.InitializationFailed, conduitId)
+      await this.stop(conduitId)
+      return false
     }
 
     await this.status.updateInitializedOn(conduitId, new Date())
     await this.status.clearErrors(conduitId)
-    return this.emitter.emit(InstanceLifetimeEvents.Initialized, conduitId)
+    await this.emitter.emit(InstanceLifetimeEvents.Initialized, conduitId)
+    return true
   }
 
   async start(conduitId: uuid) {
@@ -81,7 +86,7 @@ export class InstanceLifetimeService extends Service {
     const channel = this.channels.getById(conduit.channelId)
 
     if (channel.has(provider.name)) {
-      return
+      return true
     }
 
     try {
@@ -94,7 +99,10 @@ export class InstanceLifetimeService extends Service {
       await this.status.addError(conduitId, e as Error)
       this.logger.error(e, 'Error trying to setup conduit', provider.name)
       await this.emitter.emit(InstanceLifetimeEvents.SetupFailed, conduitId)
+      return false
     }
+
+    return true
   }
 
   async stop(conduitId: uuid) {
@@ -117,6 +125,28 @@ export class InstanceLifetimeService extends Service {
       this.logger.error(e, 'Error trying to destroy conduit')
     } finally {
       await this.dispatcher.unsubscribe(conduitId)
+    }
+  }
+
+  private async handleAutoStart(channel: Channel, providerName: string) {
+    const provider = await this.providers.getByName(providerName)
+    const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
+
+    const status = await this.status.fetch(conduit.id)
+    if ((status?.numberOfErrors || 0) >= MAX_ALLOWED_FAILURES) {
+      throw new Error('Cannot auto start conduit since it is in an errored state')
+    }
+
+    if (!status?.initializedOn && channel.meta.initiable) {
+      const initialized = await this.initialize(conduit.id)
+      if (!initialized) {
+        throw new Error('Failed to auto initialize conduit')
+      }
+    } else {
+      const started = await this.start(conduit.id)
+      if (!started) {
+        throw new Error('Failed to auto start conduit')
+      }
     }
   }
 }
