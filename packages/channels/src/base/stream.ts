@@ -15,6 +15,8 @@ export abstract class ChannelStream<TService extends ChannelService<any, any>, T
   }
 
   protected async handleSend({ scope, endpoint, content }: ChannelSendEvent) {
+    await this.service.require(scope)
+
     const context = await this.getContext({
       scope,
       state: this.service.get(scope),
