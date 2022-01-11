@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid'
 import froth from './mocha-froth'
 
 const UUID_LENGTH = uuid().length
-const TOKEN_LENGTH = 88
+const TOKEN_LENGTH = 125
 const MAX_PAYLOAD_SIZE = 100 * 1024 * 1024 // ~100kb
 const FAKE_CLIENT_ID = uuid()
 const FAKE_CLIENT_TOKEN = froth(TOKEN_LENGTH, TOKEN_LENGTH, {
@@ -162,7 +162,7 @@ describe('API', () => {
               token: expect.anything(),
               webhooks: expect.anything()
             })
-            expect(err.response?.data).toEqual('"token" length must be 88 characters long')
+            expect(err.response?.data).toEqual('"token" length must be 125 characters long')
             expect(err.response?.status).toEqual(400)
           }
         )

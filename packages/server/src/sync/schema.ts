@@ -16,7 +16,7 @@ export const makeSyncRequestSchema = (channels: Channel[]) => {
     channels: Joi.object(channelsSchema).allow(null),
     webhooks: Joi.array().items(SyncWebhookSchema).allow(null),
     id: Joi.string().guid().allow(null),
-    token: Joi.string().allow(null),
+    token: Joi.string().length(125).allow(null),
     name: Joi.string().max(50).allow(null)
   }).options({ stripUnknown: true })
 }

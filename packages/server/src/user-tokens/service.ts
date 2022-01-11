@@ -95,6 +95,10 @@ export class UserTokenService extends Service {
   }
 
   async verifyToken(userId: string, rawToken: string): Promise<UserToken | undefined> {
+    if (!rawToken?.length) {
+      return undefined
+    }
+
     const [id, token] = rawToken.split('.')
 
     if (!validateUuid(id) || !token?.length) {
