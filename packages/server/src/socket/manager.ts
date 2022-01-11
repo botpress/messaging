@@ -4,7 +4,6 @@ import clc from 'cli-color'
 import { Server } from 'http'
 import Joi from 'joi'
 import Socket from 'socket.io'
-import { validate as validateUuid } from 'uuid'
 import yn from 'yn'
 import { ClientService } from '../clients/service'
 import { UserTokenService } from '../user-tokens/service'
@@ -97,18 +96,11 @@ export class SocketManager {
 
       if (creds) {
         const user = await this.users.fetch(creds.userId)
-        if (user?.clientId === clientId) {
-          const [userTokenId, userTokenToken] = creds.userToken.split('.')
-          if (
-            validateUuid(userTokenId) &&
-            userTokenToken?.length &&
-            (await this.userTokens.verifyToken(userTokenId, userTokenToken))
-          ) {
-            socket.data.creds = creds
-            // we don't need to send it back if it was already sent to us
-            delete socket.data.creds.userToken
-            return next()
-          }
+        if (user?.clientId === clientId && (await this.userTokens.verifyToken(user.id, creds.userToken))) {
+          socket.data.creds = creds
+          // we don't need to send it back if it was already sent to us
+          delete socket.data.creds.userToken
+          return next()
         }
       }
 

@@ -1,7 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import { CachingService, CryptoService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import crypto from 'crypto'
-import { v4 as uuidv4 } from 'uuid'
+import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
 import { ClientTokenTable } from './table'
 import { ClientToken } from './types'
@@ -69,9 +69,19 @@ export class ClientTokenService extends Service {
     }
   }
 
-  async verifyToken(id: string, token: string): Promise<ClientToken | undefined> {
+  async verifyToken(clientId: string, rawToken: string): Promise<ClientToken | undefined> {
+    const [id, token] = rawToken.split('.')
+
+    if (!validateUuid(id) || !token?.length) {
+      return undefined
+    }
+
     const clientToken = await this.fetchById(id)
     if (!clientToken) {
+      return undefined
+    }
+
+    if (clientToken.clientId !== clientId) {
       return undefined
     }
 
