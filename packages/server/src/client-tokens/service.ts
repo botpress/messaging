@@ -23,11 +23,6 @@ export class ClientTokenService extends Service {
   }
 
   async setup() {
-    if (!yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
-      // let's not create a table we don't need for now
-      return
-    }
-
     this.cacheById = await this.cachingService.newServerCache('cache_client_token_by_id')
     this.cacheTokens = await this.cachingService.newServerCache('cache_client_token_raw')
 
