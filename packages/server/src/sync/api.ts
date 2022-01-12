@@ -62,7 +62,7 @@ export class SyncApi {
       }
     }
 
-    const result = await this.syncs.sync(sync, { name: this.force })
+    const result = await this.syncs.sync(sync, this.force ? sync.name : undefined)
 
     res.send(result)
   }
