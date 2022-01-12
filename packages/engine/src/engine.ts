@@ -50,4 +50,11 @@ export class Engine {
     await this.barriers.setup()
     await this.kvs.setup()
   }
+
+  async postSetup() {
+    const trx = await this.database.knex.transaction()
+    await this.database.createTables(trx)
+    await this.meta.update(this.meta.app(), trx)
+    await trx.commit()
+  }
 }

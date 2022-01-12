@@ -39,6 +39,9 @@ export class App extends Engine {
 
   constructor() {
     super()
+    this.meta.setPkg(require('../package.json'))
+    this.migration.setMigrations(Migrations)
+
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.caching, this.providers)
@@ -96,10 +99,7 @@ export class App extends Engine {
   }
 
   async setup() {
-    this.meta.setupPkg(require('../package.json'))
-    this.migration.setupMigrations(Migrations)
     await super.setup()
-
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
@@ -116,6 +116,11 @@ export class App extends Engine {
     await this.instances.setup()
     await this.health.setup()
     await this.sockets.setup()
+  }
+
+  async postSetup() {
+    await super.postSetup()
+    await this.channels.postSetup()
   }
 
   async monitor() {

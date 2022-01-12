@@ -1,3 +1,5 @@
+import { Knex } from 'knex'
+import semver from 'semver'
 import { Service } from '../base/service'
 import { DatabaseService } from '../database/service'
 import { MetaTable } from './table'
@@ -6,29 +8,20 @@ import { ServerMetadata, ServerMetadataSchema, ServerMetaEntry } from './types'
 export class MetaService extends Service {
   private pkg: any
   private table: MetaTable
-  private current!: ServerMetaEntry
+  private current?: ServerMetaEntry
 
   constructor(private db: DatabaseService) {
     super()
     this.table = new MetaTable()
   }
 
-  setupPkg(pkg: any) {
+  setPkg(pkg: any) {
     this.pkg = pkg
   }
 
   async setup() {
     await this.db.registerTable(this.table)
-
-    const stored = await this.fetch()
-    if (stored) {
-      this.current = stored
-    } else {
-      const meta: ServerMetadata = {
-        version: this.pkg.version
-      }
-      await this.update(meta)
-    }
+    await this.refresh()
   }
 
   app() {
@@ -36,10 +29,18 @@ export class MetaService extends Service {
   }
 
   get() {
-    return this.current.data
+    return this.current?.data
   }
 
-  async update(data: ServerMetadata) {
+  async refresh() {
+    this.current = await this.fetch()
+  }
+
+  async update(data: ServerMetadata, trx?: Knex.Transaction) {
+    if (this.get() && semver.eq(this.get()!.version, data.version)) {
+      return
+    }
+
     await ServerMetadataSchema.validateAsync(data)
 
     const entry = {
@@ -48,10 +49,18 @@ export class MetaService extends Service {
     }
     this.current = entry
 
-    return this.query().insert(this.serialize(entry))
+    if (trx) {
+      await trx(this.table.id).insert(this.serialize(entry))
+    } else {
+      await this.query().insert(this.serialize(entry))
+    }
   }
 
   async fetch(): Promise<ServerMetaEntry | undefined> {
+    if (!(await this.db.knex.schema.hasTable(this.table.id))) {
+      return undefined
+    }
+
     const rows = await this.query().orderBy('time', 'desc').limit(1)
 
     if (rows?.length) {

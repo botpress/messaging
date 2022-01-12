@@ -24,12 +24,16 @@ export class MigrationService extends Service {
     super()
   }
 
-  setupMigrations(migs: { new (): Migration }[]) {
+  setMigrations(migs: { new (): Migration }[]) {
     this.migs = migs
   }
 
   async setup() {
-    this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get().version
+    if (!this.databaseExists()) {
+      return
+    }
+
+    this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get()!.version
     this.dstVersion = process.env.MIGRATE_TARGET || this.meta.app().version
     this.autoMigrate = !!yn(process.env.AUTO_MIGRATE) || !!process.env.MIGRATE_CMD?.length
     this.isDown = process.env.MIGRATE_CMD === 'down'
@@ -37,11 +41,14 @@ export class MigrationService extends Service {
     this.loggerDry = this.logger.prefix(this.isDry ? '[DRY] ' : '')
 
     await this.migrate()
-    await this.updateDbVersion()
 
     if (process.env.MIGRATE_CMD) {
       throw new ShutDownSignal()
     }
+  }
+
+  private databaseExists() {
+    return this.meta.get() !== undefined
   }
 
   private async migrate() {
@@ -49,7 +56,9 @@ export class MigrationService extends Service {
 
     const migrations = this.listMigrationsToRun()
     if (!migrations.length && !this.isDry && !process.env.MIGRATE_CMD?.length) {
-      return
+      // if there's no migration to run, and we didn't explicitly specify migration commands
+      // then there's no need to show all the fanfare of migration plans and we just update the db version silently
+      return this.updateDbVersion()
     }
 
     this.showMigrationsRequiredWindow(migrations.length)
@@ -108,6 +117,8 @@ export class MigrationService extends Service {
         await this.runMigrationsForVersion(version, migrations, trx)
       }
 
+      await this.updateDbVersion(trx)
+
       if (this.isDry) {
         await trx.rollback()
       } else {
@@ -121,6 +132,7 @@ export class MigrationService extends Service {
       throw new ShutDownSignal(1)
     } finally {
       await this.enableSqliteForeignKeys()
+      await this.meta.refresh()
     }
   }
 
@@ -168,10 +180,8 @@ export class MigrationService extends Service {
     })
   }
 
-  private async updateDbVersion() {
-    if (!semver.eq(this.meta.get().version, this.dstVersion)) {
-      await this.meta.update({ version: this.dstVersion })
-    }
+  private async updateDbVersion(trx?: Knex.Transaction) {
+    await this.meta.update({ version: this.dstVersion }, trx)
   }
 
   private showMigrationsRequiredWindow(migrationCount: number) {

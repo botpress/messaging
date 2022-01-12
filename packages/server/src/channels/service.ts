@@ -45,7 +45,9 @@ export class ChannelService extends Service {
 
   async setup() {
     await this.db.registerTable(this.table)
+  }
 
+  async postSetup() {
     for (const channel of this.channels) {
       if (!(await this.getInDb(channel.meta.name))) {
         await this.createInDb(channel)
