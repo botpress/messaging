@@ -1,5 +1,6 @@
 import { Migration } from '@botpress/messaging-engine'
 import { StatusMigration } from './0.1.19-status'
 import { FixClientSchemaMigration } from './0.1.20-fix-client-schema'
+import { ClientTokensMigration } from './0.1.21-client-tokens'
 
-export const Migrations: { new (): Migration }[] = [StatusMigration, FixClientSchemaMigration]
+export const Migrations: { new (): Migration }[] = [StatusMigration, FixClientSchemaMigration, ClientTokensMigration]
