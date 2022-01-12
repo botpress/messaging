@@ -29,11 +29,7 @@ export class MigrationService extends Service {
   }
 
   async setup() {
-    if (!this.databaseExists()) {
-      return
-    }
-
-    this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get()!.version
+    this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get()?.version || '0.0.0'
     this.dstVersion = process.env.MIGRATE_TARGET || this.meta.app().version
     this.autoMigrate = !!yn(process.env.AUTO_MIGRATE) || !!process.env.MIGRATE_CMD?.length
     this.isDown = process.env.MIGRATE_CMD === 'down'
@@ -47,12 +43,15 @@ export class MigrationService extends Service {
     }
   }
 
-  private databaseExists() {
-    return this.meta.get() !== undefined
-  }
-
   private async migrate() {
     this.validateSrcAndDst()
+
+    if (!this.meta.get() && semver.eq(this.dstVersion, this.meta.app().version) && !process.env.MIGRATE_CMD?.length) {
+      // if there is no meta entry in the database, this means that the db hasn't been created yet
+      // in that case we don't run any migrations at all and just let the server create the db if
+      // the target version is the same version as the server and we aren't explicitly migrating
+      return
+    }
 
     const migrations = this.listMigrationsToRun()
     if (!migrations.length && !this.isDry && !process.env.MIGRATE_CMD?.length) {

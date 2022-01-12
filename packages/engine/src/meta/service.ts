@@ -37,6 +37,10 @@ export class MetaService extends Service {
   }
 
   async update(data: ServerMetadata, trx?: Knex.Transaction) {
+    if (!(await (trx || this.db.knex).schema.hasTable(this.table.id))) {
+      return
+    }
+
     if (this.get() && semver.eq(this.get()!.version, data.version)) {
       return
     }
