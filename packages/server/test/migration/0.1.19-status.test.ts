@@ -106,10 +106,6 @@ describe('0.1.19 - Status', () => {
     return database.knex.schema.hasColumn(table, column)
   }
 
-  const hasTable = async (table: string) => {
-    return database.knex.schema.hasTable(table)
-  }
-
   describe('Down', () => {
     test('Should be able to run the down migration successfully', async () => {
       await expect(insertConduit(true)).rejects.toThrow()
@@ -165,7 +161,7 @@ describe('0.1.19 - Status', () => {
         },
         async () => {
           await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
-          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(true)
         }
       )
 
@@ -180,7 +176,7 @@ describe('0.1.19 - Status', () => {
         },
         async () => {
           await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
-          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(true)
         }
       )
     })
@@ -198,7 +194,7 @@ describe('0.1.19 - Status', () => {
         },
         async () => {
           await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
-          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(true)
         }
       )
     })
