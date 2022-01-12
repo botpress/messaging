@@ -1,14 +1,17 @@
 import { Knex } from 'knex'
+import { Logger } from '..'
 
 export abstract class Migration {
   protected trx!: Knex.Transaction
+  protected logger!: Logger
   protected isDown!: boolean
   protected isLite!: boolean
 
   abstract get meta(): MigrationMeta
 
-  async init(trx: Knex.Transaction, isDown: boolean, isLite: boolean) {
+  async init(trx: Knex.Transaction, logger: Logger, isDown: boolean, isLite: boolean) {
     this.trx = trx
+    this.logger = logger
     this.isDown = isDown
     this.isLite = isLite
   }

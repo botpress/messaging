@@ -4,12 +4,12 @@ import { v4 as uuidv4 } from 'uuid'
 export class ClientTokensMigration extends Migration {
   meta = {
     name: ClientTokensMigration.name,
-    description: 'Removes the token field from the msg_clients table',
+    description: 'Transfers client tokens from msg_clients to a new table msg_client_tokens',
     version: '0.1.21'
   }
 
   async valid() {
-    return (await this.trx.schema.hasTable('msg_clients')) && this.trx.schema.hasTable('msg_client_tokens')
+    return this.trx.schema.hasTable('msg_clients')
   }
 
   async applied() {
@@ -17,8 +17,14 @@ export class ClientTokensMigration extends Migration {
   }
 
   async up() {
-    const clients = await this.trx('msg_clients')
+    await this.trx.schema.createTable('msg_client_tokens', (table) => {
+      table.uuid('id').primary()
+      table.uuid('clientId').references('id').inTable('msg_clients')
+      table.string('token').notNullable()
+      table.timestamp('expiry').nullable()
+    })
 
+    const clients = await this.trx('msg_clients')
     for (const client of clients) {
       await this.trx('msg_client_tokens').insert({ id: uuidv4(), clientId: client.id, token: client.token })
     }
@@ -36,12 +42,17 @@ export class ClientTokensMigration extends Migration {
     const clients = await this.trx('msg_clients')
 
     for (const client of clients) {
-      const [clientToken] = await this.trx('msg_client_tokens').where({ clientId: client.id })
-      await this.trx('msg_clients').update({ token: clientToken.token }).where({ id: client.id })
+      const clientTokens = await this.trx('msg_client_tokens').where({ clientId: client.id })
+      if (clientTokens.length > 1) {
+        this.logger.warn(`Client ${client.id} has more than one token. This may cause unexpected behavior`)
+      }
+
+      await this.trx('msg_clients').update({ token: clientTokens[0].token }).where({ id: client.id })
     }
 
     await this.trx.schema.alterTable('msg_clients', (table) => {
       table.string('token').notNullable().alter()
     })
+    await this.trx.schema.dropTable('msg_client_tokens')
   }
 }

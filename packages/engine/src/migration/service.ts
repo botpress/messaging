@@ -129,7 +129,7 @@ export class MigrationService extends Service {
 
     for (const migration of migrations) {
       this.loggerDry.info(`Running ${migration.meta.name}`)
-      await migration.init(trx, this.isDown, this.db.getIsLite())
+      await migration.init(trx, this.loggerDry, this.isDown, this.db.getIsLite())
 
       if (await migration.shouldRun()) {
         await migration.run()
