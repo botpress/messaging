@@ -16,7 +16,16 @@ export class StatusMigration extends Migration {
   }
 
   async up() {
-    await this.trx.schema.dropTableIfExists('msg_status')
+    // we don't care about losing data that was in this table
+    await this.trx.schema.dropTable('msg_status')
+
+    await this.trx.schema.createTable('msg_status', (table) => {
+      table.uuid('conduitId').primary().references('id').inTable('msg_conduits').onDelete('cascade')
+      table.integer('numberOfErrors').notNullable()
+      table.timestamp('initializedOn').nullable()
+      table.text('lastError').nullable()
+      table.index(['numberOfErrors', 'initializedOn'])
+    })
 
     return this.trx.schema.alterTable('msg_conduits', (table) => {
       table.dropIndex(['initialized'])
@@ -25,7 +34,14 @@ export class StatusMigration extends Migration {
   }
 
   async down() {
-    await this.trx.schema.dropTableIfExists('msg_status')
+    // we don't care about losing data that was in this table
+    await this.trx.schema.dropTable('msg_status')
+
+    await this.trx.schema.createTable('msg_status', (table) => {
+      table.uuid('conduitId').primary().references('id').inTable('msg_conduits').onDelete('cascade')
+      table.integer('numberOfErrors').defaultTo(0)
+      table.text('lastError')
+    })
 
     return this.trx.schema.alterTable('msg_conduits', (table) => {
       table.timestamp('initialized').nullable()
