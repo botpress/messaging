@@ -22,7 +22,7 @@ describe('0.1.19 - Status', () => {
     migration = app.migration
     database = app.database
 
-    migration.setupMigrations([StatusMigration])
+    migration.setMigrations([StatusMigration])
   })
 
   afterAll(async () => {
