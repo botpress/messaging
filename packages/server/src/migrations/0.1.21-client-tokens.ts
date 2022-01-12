@@ -9,11 +9,11 @@ export class ClientTokensMigration extends Migration {
   }
 
   async valid() {
-    return this.trx.schema.hasTable('msg_clients')
+    return (await this.trx.schema.hasTable('msg_clients')) && this.trx.schema.hasTable('msg_client_tokens')
   }
 
   async applied() {
-    return !this.trx.schema.hasColumn('msg_clients', 'token')
+    return !(await this.trx.schema.hasColumn('msg_clients', 'token'))
   }
 
   async up() {
@@ -28,5 +28,20 @@ export class ClientTokensMigration extends Migration {
     })
   }
 
-  async down() {}
+  async down() {
+    await this.trx.schema.alterTable('msg_clients', (table) => {
+      table.string('token').unique()
+    })
+
+    const clients = await this.trx('msg_clients')
+
+    for (const client of clients) {
+      const [clientToken] = await this.trx('msg_client_tokens').where({ clientId: client.id })
+      await this.trx('msg_clients').update({ token: clientToken.token }).where({ id: client.id })
+    }
+
+    await this.trx.schema.alterTable('msg_clients', (table) => {
+      table.string('token').notNullable().alter()
+    })
+  }
 }
