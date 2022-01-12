@@ -172,24 +172,6 @@ describe('0.1.19 - Status', () => {
       await up(
         async () => {
           await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
-          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
-        },
-        async () => {
-          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
-          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(true)
-        }
-      )
-    })
-
-    test('Should remove the status table when it exists', async () => {
-      await down()
-
-      const table = new StatusTable()
-      await database.registerTable(table)
-
-      await up(
-        async () => {
-          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(true)
           await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(true)
         },
         async () => {
