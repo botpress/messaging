@@ -7,9 +7,10 @@ import { app, setupApp } from '../integration/utils'
 const MIGRATION_VERSION = '0.1.19'
 const PREVIOUS_VERSION = '0.1.18'
 
-const TABLE = 'msg_conduits'
-const COLUMN = 'initialized'
+const CONDUITS_TABLE = 'msg_conduits'
+const CONDUITS_INITIALIZED = 'initialized'
 const STATUS_TABLE = 'msg_status'
+const STATUS_TEST_COLUMN = 'initializedOn'
 
 const TELEGRAM_CHANNEL_ID = '0198f4f5-6100-4549-92e5-da6cc31b4ad1'
 
@@ -88,8 +89,8 @@ describe('0.1.19 - Status', () => {
         conduit['initialized'] = initialized
       }
 
-      await trx(TABLE).insert(conduit)
-      const data = await trx(TABLE).select().where({ id: conduit.id }).first()
+      await trx(CONDUITS_TABLE).insert(conduit)
+      const data = await trx(CONDUITS_TABLE).select().where({ id: conduit.id }).first()
 
       await trx.commit()
 
@@ -115,12 +116,12 @@ describe('0.1.19 - Status', () => {
 
       await down(
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(false)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(true)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(true)
         },
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(true)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(true)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         }
       )
 
@@ -136,12 +137,12 @@ describe('0.1.19 - Status', () => {
     test('Should be able to run the down migration more than once', async () => {
       await down(
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(true)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(true)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         },
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(true)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(true)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         }
       )
     })
@@ -159,12 +160,12 @@ describe('0.1.19 - Status', () => {
 
       await up(
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(true)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(true)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         },
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(false)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         }
       )
 
@@ -174,12 +175,12 @@ describe('0.1.19 - Status', () => {
     test('Should be able to run the up migration more than once', async () => {
       await up(
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(false)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         },
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(false)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         }
       )
     })
@@ -192,12 +193,12 @@ describe('0.1.19 - Status', () => {
 
       await up(
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(true)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(true)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(true)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(true)
         },
         async () => {
-          await expect(hasColumn(TABLE, COLUMN)).resolves.toEqual(false)
-          await expect(hasTable(STATUS_TABLE)).resolves.toEqual(false)
+          await expect(hasColumn(CONDUITS_TABLE, CONDUITS_INITIALIZED)).resolves.toEqual(false)
+          await expect(hasColumn(STATUS_TABLE, STATUS_TEST_COLUMN)).resolves.toEqual(false)
         }
       )
     })
