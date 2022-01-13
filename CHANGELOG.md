@@ -1,3 +1,19 @@
+## [0.1.21](https://github.com/botpress/messaging/compare/v0.1.20...v0.1.21) (2022-01-13)
+
+
+### Bug Fixes
+
+* **channels:** readd clearing and fix auto start ([#297](https://github.com/botpress/messaging/issues/297)) ([8d01733](https://github.com/botpress/messaging/commit/8d01733ce7e6befc78fe91f479e706d32ed2bebe))
+* **migration:** fix alter table migration not working with sqlite ([#290](https://github.com/botpress/messaging/issues/290)) ([2599256](https://github.com/botpress/messaging/commit/2599256fe583d9bd0ddd773ee51bbc6f96f20276))
+
+
+### Features
+
+* **client:** client tokens ([#298](https://github.com/botpress/messaging/issues/298)) ([709f120](https://github.com/botpress/messaging/commit/709f1202f54b53a97909e8894ccd3fbbf638c2be))
+* **migrations:** improve migration system ([#299](https://github.com/botpress/messaging/issues/299)) ([c8ae63e](https://github.com/botpress/messaging/commit/c8ae63e2db18a9108b1001da376387a769f1a966))
+
+
+
 ## [0.1.20](https://github.com/botpress/messaging/compare/v0.1.19...v0.1.20) (2021-12-13)
 
 
