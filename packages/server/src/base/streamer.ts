@@ -82,13 +82,17 @@ export class Streamer {
   }
 
   public async send(url: string, data?: any, headers?: { [name: string]: string }) {
-    const config: AxiosRequestConfig = { headers: {} }
+    const config: AxiosRequestConfig<typeof data> = {}
 
     if (headers) {
       config.headers = headers
     }
 
     if (process.env.INTERNAL_PASSWORD) {
+      if (!config.headers) {
+        config.headers = {}
+      }
+
       config.headers.password = process.env.INTERNAL_PASSWORD
     }
 
@@ -102,7 +106,7 @@ export class Streamer {
       })
     } catch (e) {
       this.logger.warn(
-        `Unabled to reach webhook after ${MAX_ATTEMPTS} attempts ${clc.blackBright(url)} ${clc.blackBright(
+        `Unable to reach webhook after ${MAX_ATTEMPTS} attempts ${clc.blackBright(url)} ${clc.blackBright(
           `Error: ${(e as Error).message}`
         )}`
       )
