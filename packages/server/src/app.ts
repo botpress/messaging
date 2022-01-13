@@ -1,5 +1,6 @@
 import { Engine } from '@botpress/messaging-engine'
 import { ChannelService } from './channels/service'
+import { ClientTokenService } from './client-tokens/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
@@ -21,6 +22,7 @@ export class App extends Engine {
   channels: ChannelService
   providers: ProviderService
   clients: ClientService
+  clientTokens: ClientTokenService
   webhooks: WebhookService
   conduits: ConduitService
   users: UserService
@@ -39,7 +41,8 @@ export class App extends Engine {
     super()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
-    this.clients = new ClientService(this.database, this.crypto, this.caching, this.providers)
+    this.clients = new ClientService(this.database, this.caching, this.providers)
+    this.clientTokens = new ClientTokenService(this.database, this.crypto, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
@@ -77,6 +80,7 @@ export class App extends Engine {
       this.providers,
       this.conduits,
       this.clients,
+      this.clientTokens,
       this.webhooks,
       this.status
     )
@@ -99,6 +103,7 @@ export class App extends Engine {
     await this.channels.setup()
     await this.providers.setup()
     await this.clients.setup()
+    await this.clientTokens.setup()
     await this.webhooks.setup()
     await this.conduits.setup()
     await this.users.setup()

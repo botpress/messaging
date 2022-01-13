@@ -12,7 +12,7 @@ export class HealthApi {
   }
 
   async get(req: ClientApiRequest, res: Response) {
-    const health = await this.health.getHealthForClient(req.client.id)
+    const health = await this.health.getHealthForClient(req.clientId)
     res.send(health)
   }
 }

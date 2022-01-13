@@ -26,10 +26,10 @@ export class Api {
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
-    this.auth = new Auth(app.clients)
+    this.auth = new Auth(app.clientTokens)
     this.manager = new ApiManager(this.router, this.auth)
 
-    this.syncs = new SyncApi(this.app.syncs, this.app.clients, this.app.channels)
+    this.syncs = new SyncApi(this.app.syncs, this.app.clients, this.app.clientTokens, this.app.channels)
     this.health = new HealthApi(this.app.health)
     this.users = new UserApi(this.app.users)
     this.conversations = new ConversationApi(this.app.users, this.app.conversations)

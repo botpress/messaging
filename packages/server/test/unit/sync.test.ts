@@ -67,7 +67,8 @@ describe('Sync', () => {
     webhooks,
     name: 'a test config',
     id: 'a5869bcf-fee3-45f4-b083-1d177ea0d9cc',
-    token: 'Eg4NWrUhW8TEMrZ39Gc4Y+vs2tl0VYt0/PgL4yhCZx1r/5QP0RQ2hbg/bWsKSfdn4R4/pQcK9S9tMk5XDdzkAbsb'
+    token:
+      '492595b7-0d24-42a0-9192-8404158dfdf3.3jVAWFtI8J0rdBYQ/OZy8KFKac11CctUmIxjDlod6kUsmypHNYDB+pv1/qTW0/B61mg1mphQWYaHWvsmwmLa2qMD'
   }
   const validObjWithUnknownProperties = {
     ...cloneDeep(validObj),

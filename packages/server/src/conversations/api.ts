@@ -23,11 +23,11 @@ export class ConversationApi {
     const userId = req.body.userId as uuid
 
     const user = await this.users.fetch(userId)
-    if (!user || user.clientId !== req.client.id) {
+    if (!user || user.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
-    const conversation = await this.conversations.create(req.client.id, userId)
+    const conversation = await this.conversations.create(req.clientId, userId)
     res.status(201).send(conversation)
   }
 
@@ -35,7 +35,7 @@ export class ConversationApi {
     const id = req.params.id as uuid
 
     const conversation = await this.conversations.fetch(id)
-    if (!conversation || conversation.clientId !== req.client.id) {
+    if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
@@ -47,11 +47,11 @@ export class ConversationApi {
     const limit = +(req.query.limit || DEFAULT_LIMIT)
 
     const user = await this.users.fetch(userId)
-    if (!user || user.clientId !== req.client.id) {
+    if (!user || user.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
-    const conversations = await this.conversations.listByUserId(req.client.id, userId, limit)
+    const conversations = await this.conversations.listByUserId(req.clientId, userId, limit)
     res.send(conversations)
   }
 
@@ -59,13 +59,13 @@ export class ConversationApi {
     const userId = req.params.userId as uuid
 
     const user = await this.users.fetch(userId)
-    if (!user || user.clientId !== req.client.id) {
+    if (!user || user.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
 
-    let conversation = await this.conversations.fetchMostRecent(req.client.id, userId)
+    let conversation = await this.conversations.fetchMostRecent(req.clientId, userId)
     if (!conversation) {
-      conversation = await this.conversations.create(req.client.id, userId)
+      conversation = await this.conversations.create(req.clientId, userId)
     }
 
     res.send(conversation)

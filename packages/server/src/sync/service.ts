@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
 import { ChannelService } from '../channels/service'
+import { ClientTokenService } from '../client-tokens/service'
 import { ClientService } from '../clients/service'
 import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
@@ -22,6 +23,7 @@ export class SyncService extends Service {
     private providers: ProviderService,
     private conduits: ConduitService,
     private clients: ClientService,
+    private clientTokens: ClientTokenService,
     private webhooks: WebhookService,
     private status: StatusService
   ) {
@@ -38,23 +40,18 @@ export class SyncService extends Service {
       const config = JSON.parse(process.env.SYNC) || {}
 
       for (const req of config || []) {
-        req.sandbox ? await this.syncSandbox(req) : await this.sync(req, { name: true, id: true, token: true })
+        req.sandbox ? await this.syncSandbox(req) : await this.sync(req)
       }
     } catch {
       this.logger.warn('SYNC is not valid json')
     }
   }
 
-  async sync(req: SyncRequest, force: { name?: boolean; id?: boolean; token?: boolean }): Promise<SyncResult> {
+  async sync(req: SyncRequest, forceProviderName?: string): Promise<SyncResult> {
     let result: SyncResult
 
     const lockedTask = async () => {
-      const client = await this.syncClient(
-        req.id,
-        force.name ? req.name : undefined,
-        force.id ? req.id : undefined,
-        force.token ? req.token : undefined
-      )
+      const client = await this.syncClient(req.id, forceProviderName)
 
       // TODO: we should check the .json here
       if (yn(process.env.LOGGING_ENABLED)) {
@@ -137,9 +134,7 @@ export class SyncService extends Service {
 
   private async syncClient(
     clientId: uuid | undefined,
-    forceProviderName?: string,
-    forceClientId?: uuid,
-    forceToken?: string
+    forceProviderName?: string
   ): Promise<Omit<Client, 'token'> & { token?: string }> {
     let client: Client | undefined = undefined
     let token: string | undefined = undefined
@@ -150,24 +145,27 @@ export class SyncService extends Service {
     }
 
     // For when messaging is spinned. Assures that a certain botId always gets back the same clientId when calling messaging
-    if (!client && forceProviderName && !forceClientId) {
+    if (!client && forceProviderName) {
       const exisingProvider = await this.providers.fetchByName(forceProviderName)
       if (exisingProvider) {
         const existingClient = await this.clients.fetchByProviderId(exisingProvider.id)
         if (existingClient) {
-          token = forceToken || (await this.clients.generateToken())
-          await this.clients.updateToken(existingClient.id, token)
+          const rawToken = await this.clientTokens.generateToken()
+          const clientToken = await this.clientTokens.create(existingClient.id, rawToken, undefined)
+          token = `${clientToken.id}.${rawToken}`
           client = await this.clients.getById(existingClient.id)
         }
       }
     }
 
     if (!client) {
-      const clientId = forceClientId || uuidv4()
+      const clientId = uuidv4()
       provider = await this.providers.create(clientId, false)
+      client = await this.clients.create(provider.id, clientId)
 
-      token = forceToken || (await this.clients.generateToken())
-      client = await this.clients.create(provider.id, token, clientId)
+      const rawToken = await this.clientTokens.generateToken()
+      const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
+      token = `${clientToken.id}.${rawToken}`
     } else {
       provider = await this.providers.fetchById(client.providerId)
 

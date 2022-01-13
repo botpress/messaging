@@ -60,8 +60,7 @@ describe('0.1.20 - Fix Client Schema', () => {
     const id = uuid()
     await database.knex(TABLE).insert({
       id,
-      providerId: null,
-      token: uuid()
+      providerId: null
     })
 
     return database.knex(TABLE).select().where({ id }).first()
@@ -89,16 +88,14 @@ describe('0.1.20 - Fix Client Schema', () => {
 
       await expect(insertClient()).resolves.toEqual({
         id: expect.anything(),
-        providerId: null,
-        token: expect.anything()
+        providerId: null
       })
     })
 
     test('Should be able to run the up migration more than once', async () => {
       await expect(insertClient()).resolves.toEqual({
         id: expect.anything(),
-        providerId: null,
-        token: expect.anything()
+        providerId: null
       })
 
       await up(

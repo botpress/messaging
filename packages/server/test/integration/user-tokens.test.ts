@@ -20,7 +20,7 @@ describe('UserTokens', () => {
     querySpy = jest.spyOn(userTokens as any, 'query')
 
     const provider = await app.providers.create(randStr(), false)
-    const client = await app.clients.create(provider.id, await app.clients.generateToken())
+    const client = await app.clients.create(provider.id)
     const user = await app.users.create(client.id)
 
     state = {
@@ -77,17 +77,17 @@ describe('UserTokens', () => {
   })
 
   test('Get user token by id and token', async () => {
-    const userToken = await app.userTokens.verifyToken(state.userToken!.id, state.rawToken!)
+    const userToken = await app.userTokens.verifyToken(state.user.id, `${state.userToken!.id}.${state.rawToken!}`)
     expect(userToken).toEqual(state.userToken)
   })
 
   test('Get user token by id and token cached', async () => {
-    const userToken = await app.userTokens.verifyToken(state.userToken!.id, state.rawToken!)
+    const userToken = await app.userTokens.verifyToken(state.user.id, `${state.userToken!.id}.${state.rawToken!}`)
     expect(userToken).toEqual(state.userToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
 
     for (let i = 0; i < 10; i++) {
-      const userToken = await app.userTokens.verifyToken(state.userToken!.id, state.rawToken!)
+      const userToken = await app.userTokens.verifyToken(state.user.id, `${state.userToken!.id}.${state.rawToken!}`)
       expect(userToken).toEqual(state.userToken)
     }
 
@@ -95,7 +95,12 @@ describe('UserTokens', () => {
   })
 
   test('Get user token by id and wrong token should return undefined', async () => {
-    const userToken = await app.userTokens.verifyToken(state.userToken!.id, randStr())
+    const userToken = await app.userTokens.verifyToken(state.user.id, `${state.userToken!.id}.${randStr()}`)
+    expect(userToken).toBeUndefined()
+  })
+
+  test('Get user token by id and wrong user should return undefined', async () => {
+    const userToken = await app.userTokens.verifyToken(randStr(), `${state.userToken!.id}.${state.rawToken!}`)
     expect(userToken).toBeUndefined()
   })
 
@@ -120,7 +125,7 @@ describe('UserTokens', () => {
   })
 
   test('Get user token by id with outdated expiry should return undefined', async () => {
-    const userToken = await app.userTokens.verifyToken(state.userToken!.id, state.rawToken!)
+    const userToken = await app.userTokens.verifyToken(state.userToken!.id, `${state.userToken!.id}.${state.rawToken!}`)
     expect(userToken).toBeUndefined()
   })
 })

@@ -12,7 +12,8 @@ import {
 
 const FAKE_UUID = uuid()
 const FAKE_CLIENT_ID = uuid()
-const FAKE_CLIENT_TOKEN = 'djhejsfj3498frh9erf8j3948fj398fj3498fj349f8j349834jf934fj93284fj3498fj3498fj3498f3j4f983'
+const FAKE_CLIENT_TOKEN =
+  'djhejsfj3498frh9erf8j3948fj398fj3498fj349f8j3dfgfdgfdsrswe49834jf934fj93284fj3498fj3498fj3498f3j4f983ffsdfddasddasdasdasdasda'
 
 describe('Http Client', () => {
   test('Should create a client with credential information and URL', async () => {
@@ -98,7 +99,7 @@ describe('Http Client', () => {
         await expect(client.syncs.sync(config)).rejects.toThrow('Request failed with status code 403')
       })
 
-      test('Should not throw an error when the both credentials are invalid', async () => {
+      test('Should not throw an error when both credentials are invalid', async () => {
         const config: SyncRequest = { id: FAKE_CLIENT_ID, token: FAKE_CLIENT_TOKEN }
 
         await expect(client.syncs.sync(config)).resolves.not.toEqual({
