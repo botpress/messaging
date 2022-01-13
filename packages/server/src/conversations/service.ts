@@ -22,7 +22,6 @@ export class ConversationService extends Service {
   private emitter: ConversationEmitter
   private table: ConversationTable
   private cache!: ServerCache<uuid, Conversation>
-  private cacheMostRecent!: ServerCache<uuid, Conversation>
 
   constructor(
     private db: DatabaseService,
@@ -37,7 +36,6 @@ export class ConversationService extends Service {
 
   async setup() {
     this.cache = await this.cachingService.newServerCache('cache_conversation_by_id')
-    this.cacheMostRecent = await this.cachingService.newServerCache('cache_conversation_most_recent_by_user_id')
 
     this.batcher = await this.batchingService.newBatcher(
       'batcher_conversations',
@@ -74,12 +72,7 @@ export class ConversationService extends Service {
 
   public async delete(id: uuid): Promise<number> {
     await this.batcher.flush()
-
-    const conversation = await this.get(id)
-
     this.cache.del(id, true)
-    this.cacheMostRecent.del(conversation.userId, true)
-
     return this.query().where({ id }).del()
   }
 
@@ -109,34 +102,6 @@ export class ConversationService extends Service {
       throw new Error(`Conversation ${id} not found`)
     }
     return val
-  }
-
-  public async fetchMostRecent(clientId: uuid, userId: uuid): Promise<Conversation | undefined> {
-    // TODO: need to figure out batching for this
-
-    const cached = this.cacheMostRecent.get(userId)
-    if (cached) {
-      return cached
-    }
-
-    const query = this.queryRecents(clientId, userId).limit(1)
-    const rows = await query
-
-    if (rows?.length) {
-      const row = rows[0]
-      const conversation = this.deserialize({
-        id: row.id,
-        clientId: row.clientId,
-        userId: row.userId,
-        createdOn: row.createdOn
-      })
-
-      this.cacheMostRecent.set(userId, conversation)
-
-      return conversation
-    }
-
-    return undefined
   }
 
   public async listByUserId(
@@ -176,19 +141,6 @@ export class ConversationService extends Service {
 
       return { ...conversation, lastMessage: message }
     })
-  }
-
-  public invalidateMostRecent(userId: uuid) {
-    this.cacheMostRecent.del(userId, true)
-  }
-
-  public async setMostRecent(userId: uuid, conversationId: uuid) {
-    const currentMostRecent = this.cacheMostRecent.peek(userId)
-
-    if (currentMostRecent?.id !== conversationId) {
-      const conversation = await this.get(conversationId)
-      this.cacheMostRecent.set(userId, conversation)
-    }
   }
 
   private queryRecents(clientId: string, userId: string) {

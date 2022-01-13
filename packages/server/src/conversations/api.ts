@@ -15,8 +15,6 @@ export class ConversationApi {
     router.post('/conversations', Schema.Api.Create, this.create.bind(this))
     router.get('/conversations/:id', Schema.Api.Get, this.get.bind(this))
     router.get('/conversations/user/:userId', Schema.Api.List, this.list.bind(this))
-    // TODO: remove this route
-    router.get('/conversations/user/:userId/recent', Schema.Api.Recent, this.recent.bind(this))
   }
 
   async create(req: ClientApiRequest, res: Response) {
@@ -53,21 +51,5 @@ export class ConversationApi {
 
     const conversations = await this.conversations.listByUserId(req.clientId, userId, limit)
     res.send(conversations)
-  }
-
-  async recent(req: ClientApiRequest, res: Response) {
-    const userId = req.params.userId as uuid
-
-    const user = await this.users.fetch(userId)
-    if (!user || user.clientId !== req.clientId) {
-      return res.sendStatus(404)
-    }
-
-    let conversation = await this.conversations.fetchMostRecent(req.clientId, userId)
-    if (!conversation) {
-      conversation = await this.conversations.create(req.clientId, userId)
-    }
-
-    res.send(conversation)
   }
 }
