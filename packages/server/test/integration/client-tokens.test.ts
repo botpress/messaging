@@ -8,7 +8,13 @@ import { app, randStr, setupApp } from './utils'
 describe('ClientTokens', () => {
   let clientTokens: ClientTokenService
   let querySpy: jest.SpyInstance
-  let state: { provider: Provider; client: Client; rawToken?: string; clientToken?: ClientToken }
+  let state: {
+    provider: Provider
+    client: Client
+    rawToken?: string
+    clientToken?: ClientToken
+    clientToken2?: ClientToken
+  }
 
   beforeAll(async () => {
     // This should be reset after those tests
@@ -42,7 +48,7 @@ describe('ClientTokens', () => {
   })
 
   test('Create client token', async () => {
-    const clientToken = await app.clientTokens.create(state.client.id, state.rawToken!, undefined)
+    const clientToken = await clientTokens.create(state.client.id, state.rawToken!, undefined)
 
     expect(clientToken).toBeDefined()
     expect(validateUuid(clientToken.id)).toBeTruthy()
@@ -55,64 +61,83 @@ describe('ClientTokens', () => {
   })
 
   test('Get client token by id', async () => {
-    const clientToken = await app.clientTokens.fetchById(state.clientToken!.id)
+    const clientToken = await clientTokens.fetchById(state.clientToken!.id)
     expect(clientToken).toEqual(state.clientToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
   test('Get client token by id cached', async () => {
-    const clientToken = await app.clientTokens.fetchById(state.clientToken!.id)
+    const clientToken = await clientTokens.fetchById(state.clientToken!.id)
     expect(clientToken).toEqual(state.clientToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
 
     for (let i = 0; i < 10; i++) {
-      const clientToken = await app.clientTokens.fetchById(state.clientToken!.id)
+      const clientToken = await clientTokens.fetchById(state.clientToken!.id)
       expect(clientToken).toEqual(state.clientToken)
     }
 
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
-  test('Get client token by id and token', async () => {
-    const clientToken = await app.clientTokens.verifyToken(
-      state.client.id,
-      `${state.clientToken!.id}.${state.rawToken!}`
-    )
+  test('Verify client token', async () => {
+    const clientToken = await clientTokens.verifyToken(state.client.id, `${state.clientToken!.id}.${state.rawToken!}`)
     expect(clientToken).toEqual(state.clientToken)
   })
 
-  test('Get client token by id and token cached', async () => {
-    const clientToken = await app.clientTokens.verifyToken(
-      state.client.id,
-      `${state.clientToken!.id}.${state.rawToken!}`
-    )
+  test('Verify legacy client token', async () => {
+    const clientToken = await clientTokens.verifyToken(state.client.id, state.rawToken!)
+    expect(clientToken).toEqual(state.clientToken)
+  })
+
+  test('Verify client token cached', async () => {
+    const clientToken = await clientTokens.verifyToken(state.client.id, `${state.clientToken!.id}.${state.rawToken!}`)
     expect(clientToken).toEqual(state.clientToken)
     expect(querySpy).toHaveBeenCalledTimes(1)
 
     for (let i = 0; i < 10; i++) {
-      const clientToken = await app.clientTokens.verifyToken(
-        state.client.id,
-        `${state.clientToken!.id}.${state.rawToken!}`
-      )
+      const clientToken = await clientTokens.verifyToken(state.client.id, `${state.clientToken!.id}.${state.rawToken!}`)
       expect(clientToken).toEqual(state.clientToken)
     }
 
     expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Verify legacy client token cached', async () => {
+    const clientToken = await clientTokens.verifyToken(state.client.id, state.rawToken!)
+    expect(clientToken).toEqual(state.clientToken)
+    expect(querySpy).toHaveBeenCalledTimes(2)
+
+    for (let i = 0; i < 10; i++) {
+      const clientToken = await clientTokens.verifyToken(state.client.id, state.rawToken!)
+      expect(clientToken).toEqual(state.clientToken)
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(2)
   })
 
   test('Get client token by id and wrong token should return undefined', async () => {
-    const clientToken = await app.clientTokens.verifyToken(state.client.id, `${state.clientToken!.id}.${randStr()}`)
+    const clientToken = await clientTokens.verifyToken(state.client.id, `${state.clientToken!.id}.${randStr()}`)
+    expect(clientToken).toBeUndefined()
+  })
+
+  test('Get legacy client token by id and wrong token should return undefined', async () => {
+    const clientToken = await clientTokens.verifyToken(state.client.id, randStr())
     expect(clientToken).toBeUndefined()
   })
 
   test('Get client token by id and wrong client should return undefined', async () => {
-    const clientToken = await app.clientTokens.verifyToken(randStr(), `${state.clientToken!.id}.${state.rawToken}`)
+    const clientToken = await clientTokens.verifyToken(randStr(), `${state.clientToken!.id}.${state.rawToken}`)
+    expect(clientToken).toBeUndefined()
+  })
+
+  test('Get legacy client token by id and wrong client should return undefined', async () => {
+    const clientToken = await clientTokens.verifyToken(randStr(), state.rawToken!)
     expect(clientToken).toBeUndefined()
   })
 
   test('Create client token with outdated expiry', async () => {
     const oldDate = new Date(1982, 3, 1)
-    const clientToken = await app.clientTokens.create(state.client.id, state.rawToken!, oldDate)
+    const clientToken = await clientTokens.create(state.client.id, state.rawToken!, oldDate)
 
     expect(clientToken).toBeDefined()
     expect(validateUuid(clientToken.id)).toBeTruthy()
@@ -121,20 +146,43 @@ describe('ClientTokens', () => {
     expect(clientToken.token).not.toBe(state.rawToken)
     expect(clientToken.expiry).toEqual(oldDate)
 
-    state.clientToken = clientToken
+    state.clientToken2 = clientToken
   })
 
   test('Get client token by id with outdated expiry', async () => {
-    const clientToken = await app.clientTokens.fetchById(state.clientToken!.id)
-    expect(clientToken).toEqual(state.clientToken)
+    const clientToken = await clientTokens.fetchById(state.clientToken2!.id)
+    expect(clientToken).toEqual(state.clientToken2)
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
   test('Get client token by id with outdated expiry should return undefined', async () => {
-    const clientToken = await app.clientTokens.verifyToken(
-      state.client.id,
-      `${state.clientToken!.id}.${state.rawToken}`
-    )
+    const clientToken = await clientTokens.verifyToken(state.client.id, `${state.clientToken2!.id}.${state.rawToken}`)
     expect(clientToken).toBeUndefined()
+  })
+
+  test('List client tokens', async () => {
+    const tokens = await clientTokens.listByClient(state.client.id)
+    expect(tokens).toEqual([state.clientToken, state.clientToken2])
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('List client tokens cached', async () => {
+    const tokens = await clientTokens.listByClient(state.client.id)
+    expect(tokens).toEqual([state.clientToken, state.clientToken2])
+    expect(querySpy).toHaveBeenCalledTimes(1)
+
+    for (let i = 0; i < 10; i++) {
+      const tokens = await clientTokens.listByClient(state.client.id)
+      expect(tokens).toEqual([state.clientToken, state.clientToken2])
+    }
+
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('List client tokens cache is invalidated by token creation', async () => {
+    const clientToken3 = await clientTokens.create(state.client.id, await clientTokens.generateToken(), undefined)
+
+    const tokens = await clientTokens.listByClient(state.client.id)
+    expect(tokens).toEqual([state.clientToken, state.clientToken2, clientToken3])
   })
 })

@@ -2,7 +2,6 @@ import { uuid } from '@botpress/messaging-base'
 import { CachingService, CryptoService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import crypto from 'crypto'
 import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
-import yn from 'yn'
 import { ClientTokenTable } from './table'
 import { ClientToken } from './types'
 
@@ -12,6 +11,7 @@ export class ClientTokenService extends Service {
   private table: ClientTokenTable
   private cacheById!: ServerCache<uuid, ClientToken>
   private cacheTokens!: ServerCache<uuid, string>
+  private cacheTokensByClient!: ServerCache<uuid, ClientToken[]>
 
   constructor(
     private db: DatabaseService,
@@ -25,6 +25,7 @@ export class ClientTokenService extends Service {
   async setup() {
     this.cacheById = await this.cachingService.newServerCache('cache_client_token_by_id')
     this.cacheTokens = await this.cachingService.newServerCache('cache_client_token_raw')
+    this.cacheTokensByClient = await this.cachingService.newServerCache('cache_tokens_by_client')
 
     await this.db.registerTable(this.table)
   }
@@ -43,6 +44,7 @@ export class ClientTokenService extends Service {
 
     await this.query().insert(this.serialize(clientToken))
     this.cacheById.set(clientToken.id, clientToken)
+    this.cacheTokensByClient.del(clientId, true)
 
     return clientToken
   }
@@ -64,13 +66,36 @@ export class ClientTokenService extends Service {
     }
   }
 
-  async verifyToken(clientId: string, rawToken: string): Promise<ClientToken | undefined> {
+  async listByClient(clientId: uuid): Promise<ClientToken[]> {
+    const cached = this.cacheTokensByClient.get(clientId)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ clientId })
+    const tokens = rows.map((x) => this.deserialize(x))
+    this.cacheTokensByClient.set(clientId, tokens)
+
+    return tokens
+  }
+
+  async verifyToken(clientId: uuid, rawToken: string): Promise<ClientToken | undefined> {
     if (!rawToken?.length) {
       return undefined
     }
 
-    const [id, token] = rawToken.split('.')
+    const parts = rawToken.split('.')
+    if (parts.length === 2) {
+      const [id, token] = parts
+      return this.verifyClientToken(clientId, id, token)
+    } else if (parts.length === 1) {
+      return this.verifyLegacyToken(clientId, rawToken)
+    } else {
+      return undefined
+    }
+  }
 
+  private async verifyClientToken(clientId: uuid, id: uuid, token: string) {
     if (!validateUuid(id) || !token?.length) {
       return undefined
     }
@@ -103,6 +128,15 @@ export class ClientTokenService extends Service {
     } else {
       return undefined
     }
+  }
+
+  private async verifyLegacyToken(clientId: uuid, token: string): Promise<ClientToken | undefined> {
+    const clientTokens = await this.listByClient(clientId)
+    if (clientTokens.length !== 1) {
+      return undefined
+    }
+
+    return this.verifyClientToken(clientId, clientTokens[0].id, token)
   }
 
   private query() {
