@@ -162,7 +162,7 @@ describe('API', () => {
               token: expect.anything(),
               webhooks: expect.anything()
             })
-            expect(err.response?.data).toEqual('"token" length must be 125 characters long')
+            expect(err.response?.data).toEqual('"token" length must be less than or equal to 125 characters long')
             expect(err.response?.status).toEqual(400)
           }
         )
