@@ -1,4 +1,4 @@
-import { Conversation, ConversationWithLastMessage } from '@botpress/messaging-base'
+import { Conversation } from '@botpress/messaging-base'
 import { BaseClient } from './base'
 import { handleNotFound } from './errors'
 
@@ -13,7 +13,7 @@ export class ConversationClient extends BaseClient {
     }, undefined)
   }
 
-  async list(userId: string, limit?: number): Promise<ConversationWithLastMessage[]> {
+  async list(userId: string, limit?: number): Promise<Conversation[]> {
     return (await this.http.get<Conversation[]>(`/conversations/user/${userId}`, { params: { limit } })).data.map((x) =>
       this.deserialize(x)
     )

@@ -1,4 +1,4 @@
-import { Conversation, ConversationWithLastMessage, uuid } from '@botpress/messaging-base'
+import { Conversation, uuid } from '@botpress/messaging-base'
 import {
   Batcher,
   BatchingService,
@@ -104,14 +104,7 @@ export class ConversationService extends Service {
     return val
   }
 
-  public async listByUserId(
-    clientId: uuid,
-    userId: string,
-    limit?: number,
-    offset?: number
-  ): Promise<ConversationWithLastMessage[]> {
-    // TODO: need to figure out batching for this
-
+  public async listByUserId(clientId: uuid, userId: string, limit?: number, offset?: number): Promise<Conversation[]> {
     let query = this.queryRecents(clientId, userId)
 
     if (limit) {
@@ -121,26 +114,16 @@ export class ConversationService extends Service {
       query = query.offset(offset)
     }
 
-    return (await query).map((row: any) => {
-      const conversation = this.deserialize({
-        id: row.id,
-        clientId: row.clientId,
-        userId: row.userId,
-        createdOn: row.createdOn
+    const rows = await query
+
+    return rows.map((x) =>
+      this.deserialize({
+        id: x.id,
+        clientId: x.clientId,
+        userId: x.userId,
+        createdOn: x.createdOn
       })
-
-      const message = row.messageId
-        ? {
-            id: row.messageId,
-            conversationId: conversation.id,
-            authorId: row.authorId,
-            sentOn: this.db.getDate(row.sentOn),
-            payload: this.db.getJson(row.payload)
-          }
-        : undefined
-
-      return { ...conversation, lastMessage: message }
-    })
+    )
   }
 
   private queryRecents(clientId: string, userId: string) {
