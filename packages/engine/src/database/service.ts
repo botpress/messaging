@@ -90,8 +90,8 @@ export class DatabaseService extends Service {
   async createTables(trx: Knex.Transaction) {
     for (const table of this.tables) {
       if (!(await trx.schema.hasTable(table.id))) {
-        this.logger.debug(`Created table '${table.id}'`)
         await trx.schema.createTable(table.id, table.create)
+        this.logger.debug(`Created table '${table.id}'`)
       }
     }
   }

@@ -6,7 +6,7 @@ import { MetaTable } from './table'
 import { ServerMetadata, ServerMetadataSchema, ServerMetaEntry } from './types'
 
 export class MetaService extends Service {
-  private pkg: any
+  private pkg!: ServerMetadata
   private table: MetaTable
   private current?: ServerMetaEntry
 
@@ -15,7 +15,7 @@ export class MetaService extends Service {
     this.table = new MetaTable()
   }
 
-  setPkg(pkg: any) {
+  setPkg(pkg: ServerMetadata) {
     this.pkg = pkg
   }
 
