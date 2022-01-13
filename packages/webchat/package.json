@@ -14,13 +14,13 @@
   ],
   "devDependencies": {
     "@parcel/config-default": "^2.1.1",
-    "@types/lodash": "^4.14.172",
+    "@types/lodash": "^4.14.178",
     "@types/mime": "^2.0.3",
     "@types/node": "^16.11.13",
-    "@types/react": "^17.0.34",
+    "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
-    "@types/uuid": "^8.3.3",
-    "prop-types": "^15.7.2"
+    "@types/uuid": "^8.3.4",
+    "prop-types": "^15.8.1"
   },
   "dependencies": {
     "@blueprintjs/core": "^3.23.1",
@@ -29,7 +29,7 @@
     "@formatjs/intl-pluralrules": "^4.1.6",
     "@formatjs/intl-utils": "^3.8.4",
     "@juggle/resize-observer": "^3.0.2",
-    "axios": "^0.21.1",
+    "axios": "^0.24.0",
     "classnames": "^2.3.1",
     "date-fns": "^1.30.1",
     "lodash": "^4.17.21",
@@ -37,7 +37,7 @@
     "mobx": "5.15.7",
     "mobx-react": "^6.2.1",
     "mobx-react-lite": "2.0.0",
-    "query-string": "^7.0.1",
+    "query-string": "^7.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-ga": "^2.7.0",

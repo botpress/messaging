@@ -10,14 +10,14 @@
   "files": [
     "dist"
   ],
+  "devDependencies": {
+    "@parcel/transformer-typescript-tsc": "^2.1.1",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11"
+  },
   "dependencies": {
     "@botpress/webchat": "0.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
-  },
-  "devDependencies": {
-    "@parcel/transformer-typescript-tsc": "^2.1.1",
-    "@types/react": "^17.0.34",
-    "@types/react-dom": "^17.0.11"
   }
 }
