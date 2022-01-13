@@ -7,6 +7,7 @@ import { Logger } from '../logger/types'
 
 export class DatabaseService extends Service {
   public knex!: Knex
+  private tables: Table[] = []
   private url!: string
   private pool!: Knex.PoolConfig
   private isLite!: boolean
@@ -83,10 +84,15 @@ export class DatabaseService extends Service {
   }
 
   async registerTable(table: Table) {
-    if (!(await this.knex.schema.hasTable(table.id))) {
-      this.logger.debug(`Created table '${table.id}'`)
+    this.tables.push(table)
+  }
 
-      await this.knex.schema.createTable(table.id, table.create)
+  async createTables(trx: Knex.Transaction) {
+    for (const table of this.tables) {
+      if (!(await trx.schema.hasTable(table.id))) {
+        await trx.schema.createTable(table.id, table.create)
+        this.logger.debug(`Created table '${table.id}'`)
+      }
     }
   }
 

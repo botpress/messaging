@@ -21,7 +21,7 @@ describe('0.1.20 - Fix Client Schema', () => {
     database = app.database
 
     inspector = schemaInspector(database.knex)
-    migration.setupMigrations([FixClientSchemaMigration])
+    migration.setMigrations([FixClientSchemaMigration])
   })
 
   afterAll(async () => {

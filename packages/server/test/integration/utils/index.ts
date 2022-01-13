@@ -12,6 +12,7 @@ export const setupApp = async () => {
 
   app = new App()
   await app.setup()
+  await app.postSetup()
   return app
 }
 

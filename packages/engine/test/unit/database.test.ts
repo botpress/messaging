@@ -146,38 +146,6 @@ describe('DatabaseService', () => {
       })
     })
 
-    describe('registerTable', () => {
-      test('Should create a new table if it does not exists', async () => {
-        const db = new DatabaseService()
-        await db.setup()
-
-        mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(false))
-        mocked(db.knex.schema.createTable as any).mockReturnValueOnce(Promise.resolve({}))
-
-        await db.registerTable(table)
-
-        expect(db.knex.schema.hasTable).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.hasTable).toHaveBeenCalledWith(table.id)
-        expect(db['logger'].debug).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.createTable).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.createTable).toHaveBeenCalledWith(table.id, table.create)
-      })
-
-      test('Should not create a new table if it already exists', async () => {
-        const db = new DatabaseService()
-        await db.setup()
-
-        mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(true))
-
-        await db.registerTable(table)
-
-        expect(db.knex.schema.hasTable).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.hasTable).toHaveBeenCalledWith(table.id)
-        expect(db['logger'].debug).not.toHaveBeenCalled()
-        expect(db.knex.schema.createTable).not.toHaveBeenCalled()
-      })
-    })
-
     describe('getJson', () => {
       test('Should return the value as is', async () => {
         const db = new DatabaseService()
@@ -359,38 +327,6 @@ describe('DatabaseService', () => {
 
         expect(db.knex.destroy).toHaveBeenCalledTimes(1)
         expect(db['logger'].error).toHaveBeenCalledTimes(1)
-      })
-    })
-
-    describe('registerTable', () => {
-      test('Should create a new table if it does not exists', async () => {
-        const db = new DatabaseService()
-        await db.setup()
-
-        mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(false))
-        mocked(db.knex.schema.createTable as any).mockReturnValueOnce(Promise.resolve({}))
-
-        await db.registerTable(table)
-
-        expect(db.knex.schema.hasTable).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.hasTable).toHaveBeenCalledWith(table.id)
-        expect(db['logger'].debug).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.createTable).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.createTable).toHaveBeenCalledWith(table.id, table.create)
-      })
-
-      test('Should not create a new table if it already exists', async () => {
-        const db = new DatabaseService()
-        await db.setup()
-
-        mocked(db.knex.schema.hasTable).mockReturnValueOnce(Promise.resolve(true))
-
-        await db.registerTable(table)
-
-        expect(db.knex.schema.hasTable).toHaveBeenCalledTimes(1)
-        expect(db.knex.schema.hasTable).toHaveBeenCalledWith(table.id)
-        expect(db['logger'].debug).not.toHaveBeenCalled()
-        expect(db.knex.schema.createTable).not.toHaveBeenCalled()
       })
     })
 

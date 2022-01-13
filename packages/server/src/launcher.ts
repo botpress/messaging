@@ -60,6 +60,7 @@ export class Launcher {
     try {
       this.printLogo()
       await this.app.setup()
+      await this.app.postSetup()
       this.printChannels()
 
       await this.api.setup()
