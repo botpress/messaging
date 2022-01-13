@@ -20,7 +20,9 @@ export class ConversationClient extends BaseClient {
   }
 
   async getRecent(userId: string): Promise<Conversation> {
-    return this.deserialize((await this.http.get<Conversation>(`/conversations/user/${userId}/recent`)).data)
+    return (await this.http.get<Conversation[]>(`/conversations/user/${userId}`, { params: { limit: 1 } })).data.map(
+      (x) => this.deserialize(x)
+    )[0]
   }
 
   private deserialize(conversation: Conversation): Conversation {
