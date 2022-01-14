@@ -8,7 +8,7 @@
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
     "clean": "rimraf packages/*/dist bin etc/jest/.test-data",
-    "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz",
+    "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
     "package": "yarn clean && yarn build && node ./etc/scripts/package",
     "release": "yarn node ./etc/scripts/release",
     "build": "yarn workspace @botpress/messaging-server build",
