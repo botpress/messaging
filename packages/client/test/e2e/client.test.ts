@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import {
+  ClientSyncRequest,
   CLIENT_ID_HEADER,
   CLIENT_TOKEN_HEADER,
   Conversation,
@@ -71,9 +72,7 @@ describe('Http Client', () => {
       })
 
       test('Should return webhooks with token when provided in the config', async () => {
-        const config: SyncRequest = {
-          id: state.clientId,
-          token: state.clientToken,
+        const config: ClientSyncRequest = {
           webhooks
         }
         const res = await client.sync(config)
@@ -89,9 +88,7 @@ describe('Http Client', () => {
       })
 
       test('Should return the same token for the same webhooks', async () => {
-        const config: SyncRequest = {
-          id: state.clientId,
-          token: state.clientToken,
+        const config: ClientSyncRequest = {
           webhooks
         }
         const res = await client.sync(config)
@@ -102,13 +99,13 @@ describe('Http Client', () => {
       test('Should throw when the provided clientId is valid but not the clientToken', async () => {
         const config: SyncRequest = { id: state.clientId, token: FAKE_CLIENT_TOKEN }
 
-        await expect(client.sync(config)).rejects.toThrow('Request failed with status code 403')
+        await expect(adminClient.sync(config)).rejects.toThrow('Request failed with status code 403')
       })
 
       test('Should not throw an error when both credentials are invalid', async () => {
         const config: SyncRequest = { id: FAKE_CLIENT_ID, token: FAKE_CLIENT_TOKEN }
 
-        await expect(client.sync(config)).resolves.not.toEqual({
+        await expect(adminClient.sync(config)).resolves.not.toEqual({
           id: expect.anything(),
           token: expect.anything()
         })

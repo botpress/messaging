@@ -2,9 +2,11 @@ import { Conversation, HealthReport, Message, SyncRequest, SyncResult, User, uui
 import { BaseClient } from '.'
 import { handleNotFound } from './errors'
 
+export type ClientSyncRequest = Omit<SyncRequest, 'id' | 'token'>
+
 export class MessagingClient extends BaseClient {
-  async sync(config: SyncRequest): Promise<SyncResult> {
-    return (await this.http.post('/sync', config)).data
+  async sync(config: ClientSyncRequest): Promise<SyncResult> {
+    return (await this.http.post('/sync', { ...config, id: this._creds.clientId, token: this._creds.clientToken })).data
   }
 
   async getHealth(): Promise<HealthReport> {

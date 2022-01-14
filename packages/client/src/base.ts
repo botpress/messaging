@@ -8,7 +8,7 @@ export const CLIENT_TOKEN_HEADER = 'x-bp-messaging-client-token'
 
 export abstract class BaseClient {
   public get creds(): MessagingClientCredentials {
-    return this.creds
+    return this._creds
   }
 
   protected readonly http: AxiosInstance
