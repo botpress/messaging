@@ -105,8 +105,11 @@
     "@botpress/chat-skin": "@botpress/chat-skin/src"
   },
   "dependenciesMeta": {
-    "@blueprintjs/core@3.52.0": {
-      "unplugged": true
+    "core-js@3.20.0": {
+      "built": false
+    },
+    "core-js-pure@3.20.0": {
+      "built": false
     }
   }
 }
