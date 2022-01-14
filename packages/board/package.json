@@ -9,13 +9,16 @@
     "dev": "yarn --silent && yarn run -T parcel"
   },
   "devDependencies": {
+    "@parcel/config-default": "^2.1.1",
+    "@parcel/transformer-typescript-tsc": "^2.1.1",
     "@types/react": "^17.0.38",
-    "@types/react-dom": "^17.0.11"
+    "@types/react-dom": "^17.0.11",
+    "typescript": ">=3.0.0"
   },
   "dependencies": {
-    "@botpress/chat": "0.0.1",
-    "@botpress/chat-skin": "0.0.1",
+    "@botpress/messaging-base": "0.0.1",
     "@botpress/messaging-client": "*",
+    "@botpress/messaging-socket": "0.0.2",
     "@botpress/webchat": "0.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"

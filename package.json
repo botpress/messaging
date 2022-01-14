@@ -7,10 +7,10 @@
   "scripts": {
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
-    "clean": "rimraf packages/*/dist bin",
-    "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules && rimraf node_modules",
-    "package": "yarn clean && yarn build && node ./scripts/package",
-    "release": "yarn node ./scripts/release",
+    "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin test/.test-data",
+    "reset": "yarn clean && mkdirp packages/base/node_modules && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
+    "package": "yarn clean && yarn build && node ./misc/scripts/package",
+    "release": "yarn node ./misc/scripts/release",
     "build": "yarn workspace @botpress/messaging-server build",
     "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
@@ -18,11 +18,11 @@
     "board": "yarn workspace @botpress/messaging-board dev",
     "channels": "yarn workspace @botpress/messaging-channels example",
     "test": "yarn test:unit && yarn test:int && yarn test:mig && yarn test:e2e && yarn test:sec",
-    "test:unit": "jest -c jest.unit.config.ts",
-    "test:int": "jest -c jest.integration.config.ts",
-    "test:e2e": "jest -c jest.e2e.config.ts",
-    "test:sec": "jest -c jest.security.config.ts",
-    "test:mig": "jest -c jest.migration.config.ts"
+    "test:unit": "jest -c ./test/jest.unit.config.ts",
+    "test:int": "jest -c ./test/jest.integration.config.ts",
+    "test:e2e": "jest -c ./test/jest.e2e.config.ts",
+    "test:sec": "jest -c ./test/jest.security.config.ts",
+    "test:mig": "jest -c ./test/jest.migration.config.ts"
   },
   "bin": "./packages/server/dist/index.js",
   "pkg": {
@@ -72,6 +72,7 @@
     "jest": "^27.4.7",
     "jest-dev-server": "^6.0.3",
     "jest-mock": "^27.4.6",
+    "mkdirp": "^1.0.4",
     "parcel": "^2.1.1",
     "pkg": "^5.5.1",
     "portfinder": "^1.0.28",
@@ -105,8 +106,11 @@
     "@botpress/chat-skin": "@botpress/chat-skin/src"
   },
   "dependenciesMeta": {
-    "@blueprintjs/core@3.52.0": {
-      "unplugged": true
+    "core-js@3.20.0": {
+      "built": false
+    },
+    "core-js-pure@3.20.0": {
+      "built": false
     }
   }
 }
