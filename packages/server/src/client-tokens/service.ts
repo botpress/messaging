@@ -80,7 +80,7 @@ export class ClientTokenService extends Service {
   }
 
   async verifyToken(clientId: uuid, rawToken: string): Promise<ClientToken | undefined> {
-    if (!rawToken?.length) {
+    if (!validateUuid(clientId) || !rawToken?.length) {
       return undefined
     }
 
