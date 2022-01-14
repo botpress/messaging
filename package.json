@@ -18,11 +18,11 @@
     "board": "yarn workspace @botpress/messaging-board dev",
     "channels": "yarn workspace @botpress/messaging-channels example",
     "test": "yarn test:unit && yarn test:int && yarn test:mig && yarn test:e2e && yarn test:sec",
-    "test:unit": "jest -c jest.unit.config.ts",
-    "test:int": "jest -c jest.integration.config.ts",
-    "test:e2e": "jest -c jest.e2e.config.ts",
-    "test:sec": "jest -c jest.security.config.ts",
-    "test:mig": "jest -c jest.migration.config.ts"
+    "test:unit": "jest -c ./etc/jest.unit.config.ts",
+    "test:int": "jest -c ./etc/jest.integration.config.ts",
+    "test:e2e": "jest -c ./etc/jest.e2e.config.ts",
+    "test:sec": "jest -c ./etc/jest.security.config.ts",
+    "test:mig": "jest -c ./etc/jest.migration.config.ts"
   },
   "bin": "./packages/server/dist/index.js",
   "pkg": {

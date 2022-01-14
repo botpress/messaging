@@ -1,15 +1,15 @@
-import ServerConfig from './packages/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
+import ServerConfig from '../packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  globalTeardown: './test/jest.integration.teardown.ts',
+  globalTeardown: './jest.integration.teardown.ts',
   projects: [
     {
       rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
-      displayName: { name: 'Server', color: 'blue' },
+      testMatch: ['<rootDir>/test/migration/**/(*.)test.ts'],
+      displayName: { name: 'Server', color: 'white' },
       testEnvironment: 'node',
       transform: {
         '^.+\\.tsx?$': require.resolve('ts-jest')
