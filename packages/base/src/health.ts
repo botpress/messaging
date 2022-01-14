@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from './uuid'
 
 export enum HealthEventType {
   Create = 'create',

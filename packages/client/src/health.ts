@@ -1,3 +1,4 @@
+import { HealthReport } from '@botpress/messaging-base'
 import { BaseClient } from './base'
 
 export class HealthClient extends BaseClient {
@@ -12,30 +13,4 @@ export class HealthClient extends BaseClient {
 
     return report
   }
-}
-
-// TODO: these typings are copy pasted. Maybe a "common" package would be good for this?
-export enum HealthEventType {
-  Create = 'create',
-  Configure = 'configure',
-  Start = 'start',
-  StartFailure = 'start-failure',
-  Initialize = 'initialize',
-  InitializeFailure = 'initialize-failure',
-  Sleep = 'sleep',
-  Delete = 'delete'
-}
-
-export interface HealthReport {
-  channels: {
-    [channel: string]: {
-      events: HealthReportEvent[]
-    }
-  }
-}
-
-export interface HealthReportEvent {
-  time: Date
-  type: HealthEventType
-  data?: any
 }

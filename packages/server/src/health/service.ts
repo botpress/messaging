@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent, uuid } from '@botpress/messaging-base'
 import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { ChannelService } from '../channels/service'
@@ -8,7 +8,6 @@ import { InstanceService } from '../instances/service'
 import { HealthEmitter, HealthEvents, HealthWatcher } from './events'
 import { HealthListener } from './listener'
 import { HealthTable } from './table'
-import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from './types'
 
 export class HealthService extends Service {
   get events(): HealthWatcher {
