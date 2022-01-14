@@ -317,20 +317,20 @@ describe('Http Client', () => {
 
     describe('DeleteByConversation', () => {
       test('Should be able to delete all messages from a conversation without throwing any error', async () => {
-        const deleted = await client.deleteConversationMessages(state.conversation!.id)
+        const deleted = await client.deleteMessagesByConversation(state.conversation!.id)
 
         // Deletes the second conversation
         expect(deleted).toEqual(1)
       })
 
       test('Should not delete messages that were already deleted', async () => {
-        const deleted = await client.deleteConversationMessages(state.conversation!.id)
+        const deleted = await client.deleteMessagesByConversation(state.conversation!.id)
 
         expect(deleted).toEqual(0)
       })
 
       test('Should return false if the conversationId does not exists', async () => {
-        const deleted = await client.deleteConversationMessages(FAKE_UUID)
+        const deleted = await client.deleteMessagesByConversation(FAKE_UUID)
 
         expect(deleted).toEqual(0)
       })

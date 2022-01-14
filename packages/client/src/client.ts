@@ -95,7 +95,7 @@ export class MessagingClient {
     }, false)
   }
 
-  async deleteConversationMessages(conversationId: uuid): Promise<number> {
+  async deleteMessagesByConversation(conversationId: uuid): Promise<number> {
     return handleNotFound(async () => {
       return (await this.http.delete<{ count: number }>(`/messages/conversation/${conversationId}`)).data.count
     }, 0)
