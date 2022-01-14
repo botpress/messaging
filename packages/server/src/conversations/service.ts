@@ -103,7 +103,7 @@ export class ConversationService extends Service {
     }
     return val
   }
-  
+
   public async listByUserId(clientId: uuid, userId: string, limit?: number, offset?: number): Promise<Conversation[]> {
     let query = this.queryRecents(clientId, userId)
 
