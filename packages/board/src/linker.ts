@@ -1,6 +1,6 @@
-import { ConversationEvents, UserEvents, Webchat } from '@botpress/chat'
-import { text, element, WebchatRenderer } from '@botpress/chat-skin'
 import { MessagingClient } from '@botpress/messaging-client'
+import { ConversationEvents, UserEvents, Webchat } from './chat'
+import { text, element, WebchatRenderer } from './skin'
 import { BoardWatcher } from './watcher'
 
 export class BoardLinker {
@@ -95,7 +95,7 @@ export class BoardLinker {
   private listen() {}
 
   private async create() {
-    this.webchat?.destroy()
+    await this.webchat?.destroy()
 
     let host = this.inputHost.value
     if (!host?.length) {
