@@ -2276,6 +2276,7 @@ __metadata:
     jest: ^27.4.7
     jest-dev-server: ^6.0.3
     jest-mock: ^27.4.6
+    mkdirp: ^1.0.4
     parcel: ^2.1.1
     pkg: ^5.5.1
     portfinder: ^1.0.28
