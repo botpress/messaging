@@ -1,35 +1,8 @@
 import { Conversation, HealthReport, Message, SyncRequest, SyncResult, User, uuid } from '@botpress/messaging-base'
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { MessagingAuth } from './auth'
-import { handleError, handleNotFound } from './errors'
-import { MessagingOptions } from './options'
+import { BaseClient } from '.'
+import { handleNotFound } from './errors'
 
-export const CLIENT_ID_HEADER = 'x-bp-messaging-client-id'
-export const CLIENT_TOKEN_HEADER = 'x-bp-messaging-client-token'
-
-export class MessagingClient {
-  http: AxiosInstance
-  auth?: MessagingAuth
-
-  constructor(options: MessagingOptions) {
-    const { auth } = options
-
-    const config = this.getAxiosConfig(options)
-    this.http = axios.create(config)
-    this.http.interceptors.response.use(
-      (response) => {
-        return response
-      },
-      (error) => {
-        return handleError(error)
-      }
-    )
-
-    if (auth) {
-      this.authenticate(auth.clientId, auth.clientToken)
-    }
-  }
-
+export class MessagingClient extends BaseClient {
   async sync(config: SyncRequest): Promise<SyncResult> {
     return (await this.http.post('/sync', config)).data
   }
@@ -103,18 +76,6 @@ export class MessagingClient {
 
   async endTurn(id: uuid) {
     await this.http.post(`/messages/turn/${id}`)
-  }
-
-  public authenticate(clientId: string, clientToken: string) {
-    this.auth = { clientId, clientToken }
-    this.http.defaults.headers.common[CLIENT_ID_HEADER] = clientId
-    this.http.defaults.headers.common[CLIENT_TOKEN_HEADER] = clientToken
-  }
-
-  private getAxiosConfig({ url, config }: MessagingOptions): AxiosRequestConfig {
-    const defaultConfig: AxiosRequestConfig = { baseURL: `${url}/api` }
-
-    return { ...config, ...defaultConfig }
   }
 
   private deserializeHealth(report: HealthReport) {

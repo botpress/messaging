@@ -1,4 +1,5 @@
 export * from '@botpress/messaging-base'
+export * from './admin'
 export * from './auth'
 export * from './base'
 export * from './client'

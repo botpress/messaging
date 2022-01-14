@@ -4,6 +4,7 @@ import {
   CLIENT_TOKEN_HEADER,
   Conversation,
   Message,
+  MessagingAdminClient,
   MessagingClient,
   SyncRequest,
   SyncWebhook,
@@ -17,22 +18,22 @@ const FAKE_CLIENT_TOKEN =
 
 describe('Http Client', () => {
   test('Should create a client with credential information and URL', async () => {
-    const auth = {
+    const creds = {
       clientId: FAKE_CLIENT_ID,
       clientToken: FAKE_CLIENT_TOKEN
     }
     const url = 'http://messaging.best'
     const client = new MessagingClient({
       url,
-      auth
+      creds
     })
 
-    expect(client.auth).toEqual(auth)
-    expect(Object.keys(client.http.defaults.headers.common)).toEqual(
+    expect(client.creds).toEqual(creds)
+    expect(Object.keys((client as any).http.defaults.headers.common)).toEqual(
       expect.arrayContaining([CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER])
     )
 
-    expect(client.http.defaults.baseURL).toContain(url)
+    expect((client as any).http.defaults.baseURL).toContain(url)
   })
 
   const state: {
@@ -43,14 +44,16 @@ describe('Http Client', () => {
     message?: Message
     webhooks?: SyncWebhook[]
   } = {}
-  const client = new MessagingClient({ url: 'http://localhost:3100' })
+  const url = 'http://localhost:3100'
+  const adminClient = new MessagingAdminClient({ url })
+  let client: MessagingClient
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
 
   describe('Syncs', () => {
     describe('Sync', () => {
       test('Should return a clientId/clientToken when sync is called with an empty config', async () => {
         const config: SyncRequest = {}
-        const res = await client.sync(config)
+        const res = await adminClient.sync(config)
 
         expect(res.id).toBeDefined()
         expect(res.token).toBeDefined()
@@ -61,7 +64,10 @@ describe('Http Client', () => {
       })
 
       test('Should authenticate using clientId/clientToken', async () => {
-        client.authenticate(state.clientId!, state.clientToken!)
+        client = new MessagingClient({
+          url,
+          creds: { clientId: state.clientId!, clientToken: state.clientToken! }
+        })
       })
 
       test('Should return webhooks with token when provided in the config', async () => {
