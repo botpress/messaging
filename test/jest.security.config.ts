@@ -1,11 +1,11 @@
-import ServerConfig from './packages/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
+import ServerConfig from '../packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  globalSetup: './test/jest.e2e.setup.ts',
-  globalTeardown: './test/jest.e2e.teardown.ts',
+  globalSetup: './jest.e2e.setup.ts',
+  globalTeardown: './jest.e2e.teardown.ts',
   projects: [
     {
       rootDir: 'packages/server',

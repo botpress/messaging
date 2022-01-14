@@ -12,4 +12,4 @@ The botpress messaging server provides a standardized messaging api to communica
 
 ## Documentation
 
-You can read the documentation [here](./doc/readme.md)
+You can read the documentation [here](./docs/readme.md)
