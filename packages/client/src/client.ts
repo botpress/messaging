@@ -1,42 +1,46 @@
 import { Conversation, HealthReport, Message, SyncRequest, SyncResult, User, uuid } from '@botpress/messaging-base'
-import { BaseClient } from '.'
-import { handleNotFound } from './errors'
+import { MessagingChannel, MessagingChannelOptions } from './channel'
 
-export type ClientSyncRequest = Omit<SyncRequest, 'id' | 'token'>
+export class MessagingClient {
+  public get creds(): MessagingClientCredentials {
+    return this._creds
+  }
 
-export class MessagingClient extends BaseClient {
+  protected readonly channel: MessagingChannel
+  protected readonly _creds: MessagingClientCredentials
+
+  constructor(options: MessagingOptions) {
+    this.channel = new MessagingChannel(options)
+    this._creds = options.creds
+    this.channel.start(this._creds.clientId, { clientToken: this.creds.clientToken })
+  }
+
   async sync(config: ClientSyncRequest): Promise<SyncResult> {
-    return (await this.http.post('/sync', { ...config, id: this._creds.clientId, token: this._creds.clientToken })).data
+    return this.channel.sync({ ...config, id: this._creds.clientId, token: this._creds.clientToken })
   }
 
   async getHealth(): Promise<HealthReport> {
-    return this.deserializeHealth((await this.http.get<HealthReport>('/health')).data)
+    return this.channel.getHealth(this._creds.clientId)
   }
 
   async createUser(): Promise<User> {
-    return (await this.http.post<User>('/users')).data
+    return this.channel.createUser(this._creds.clientId)
   }
 
   async getUser(id: uuid): Promise<User | undefined> {
-    return handleNotFound(async () => {
-      return (await this.http.get<User>(`/users/${id}`)).data
-    }, undefined)
+    return this.channel.getUser(this._creds.clientId, id)
   }
 
   async createConversation(userId: uuid): Promise<Conversation> {
-    return this.deserializeConversation((await this.http.post<Conversation>('/conversations', { userId })).data)
+    return this.channel.createConversation(this._creds.clientId, userId)
   }
 
   async getConversation(id: uuid): Promise<Conversation | undefined> {
-    return handleNotFound(async () => {
-      return this.deserializeConversation((await this.http.get<Conversation>(`/conversations/${id}`)).data)
-    }, undefined)
+    return this.channel.getConversation(this._creds.clientId, id)
   }
 
   async listConversations(userId: uuid, limit?: number): Promise<Conversation[]> {
-    return (await this.http.get<Conversation[]>(`/conversations/user/${userId}`, { params: { limit } })).data.map((x) =>
-      this.deserializeConversation(x)
-    )
+    return this.channel.listConversations(this._creds.clientId, userId, limit)
   }
 
   async createMessage(
@@ -45,60 +49,38 @@ export class MessagingClient extends BaseClient {
     payload: any,
     flags?: { incomingId: uuid }
   ): Promise<Message> {
-    return this.deserializeMessage(
-      (await this.http.post<Message>('/messages', { conversationId, authorId, payload, incomingId: flags?.incomingId }))
-        .data
-    )
+    return this.channel.createMessage(this._creds.clientId, conversationId, authorId, payload, flags)
   }
 
   async getMessage(id: uuid): Promise<Message | undefined> {
-    return handleNotFound(async () => {
-      return this.deserializeMessage((await this.http.get<Message>(`/messages/${id}`)).data)
-    }, undefined)
+    return this.channel.getMessage(this._creds.clientId, id)
   }
 
   async listMessages(conversationId: uuid, limit?: number) {
-    return (await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, { params: { limit } })).data.map(
-      (x) => this.deserializeMessage(x)
-    )
+    return this.channel.listMessages(this._creds.clientId, conversationId, limit)
   }
 
   async deleteMessage(id: uuid): Promise<boolean> {
-    return handleNotFound(async () => {
-      await this.http.delete<boolean>(`/messages/${id}`)
-      return true
-    }, false)
+    return this.channel.deleteMessage(this._creds.clientId, id)
   }
 
   async deleteMessagesByConversation(conversationId: uuid): Promise<number> {
-    return handleNotFound(async () => {
-      return (await this.http.delete<{ count: number }>(`/messages/conversation/${conversationId}`)).data.count
-    }, 0)
+    return this.channel.deleteMessagesByConversation(this._creds.clientId, conversationId)
   }
 
   async endTurn(id: uuid) {
-    await this.http.post(`/messages/turn/${id}`)
+    return this.channel.endTurn(this._creds.clientId, id)
   }
+}
 
-  private deserializeHealth(report: HealthReport) {
-    for (const channel of Object.keys(report.channels)) {
-      report.channels[channel].events = report.channels[channel].events.map((x) => ({ ...x, time: new Date(x.time) }))
-    }
+export type ClientSyncRequest = Omit<SyncRequest, 'id' | 'token'>
 
-    return report
-  }
+export interface MessagingOptions extends MessagingChannelOptions {
+  /** Client credentials to access client owned resources */
+  creds: MessagingClientCredentials
+}
 
-  private deserializeConversation(conversation: Conversation): Conversation {
-    return {
-      ...conversation,
-      createdOn: new Date(conversation.createdOn)
-    }
-  }
-
-  private deserializeMessage(message: Message): Message {
-    return {
-      ...message,
-      sentOn: new Date(message.sentOn)
-    }
-  }
+export interface MessagingClientCredentials {
+  clientId: string
+  clientToken: string
 }

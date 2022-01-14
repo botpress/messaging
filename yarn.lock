@@ -2087,9 +2087,12 @@ __metadata:
   resolution: "@botpress/messaging-client@workspace:packages/client"
   dependencies:
     "@botpress/messaging-base": 0.0.1
+    "@types/express": ^4.17.13
     "@types/jest": ^27.4.0
+    "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
     axios: ^0.24.0
+    joi: ^17.5.0
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft

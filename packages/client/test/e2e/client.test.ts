@@ -1,8 +1,6 @@
 import { v4 as uuid } from 'uuid'
 import {
   ClientSyncRequest,
-  CLIENT_ID_HEADER,
-  CLIENT_TOKEN_HEADER,
   Conversation,
   Message,
   MessagingAdminClient,
@@ -30,11 +28,7 @@ describe('Http Client', () => {
     })
 
     expect(client.creds).toEqual(creds)
-    expect(Object.keys((client as any).http.defaults.headers.common)).toEqual(
-      expect.arrayContaining([CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER])
-    )
-
-    expect((client as any).http.defaults.baseURL).toContain(url)
+    expect((client as any).channel.http.defaults.baseURL).toContain(url)
   })
 
   const state: {
