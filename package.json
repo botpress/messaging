@@ -7,7 +7,7 @@
   "scripts": {
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
-    "clean": "rimraf packages/*/dist bin",
+    "clean": "rimraf packages/*/dist bin etc/jest/.test-data",
     "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache ./yarn/install-state.gz",
     "package": "yarn clean && yarn build && node ./etc/scripts/package",
     "release": "yarn node ./etc/scripts/release",
