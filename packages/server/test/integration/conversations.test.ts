@@ -66,25 +66,6 @@ describe('Conversations', () => {
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
-  test('Get most recent conversation', async () => {
-    const conversation = await conversations.fetchMostRecent(state.client.id, state.user!.id)
-    expect(conversation).toEqual(state.conversation)
-    expect(querySpy).toHaveBeenCalledTimes(1)
-  })
-
-  test('Get conversation by id cached', async () => {
-    const conversation = await conversations.fetchMostRecent(state.client.id, state.user!.id)
-    expect(conversation).toEqual(state.conversation)
-    expect(querySpy).toHaveBeenCalledTimes(1)
-
-    for (let i = 0; i < 10; i++) {
-      const cached = await conversations.fetchMostRecent(state.client.id, state.user!.id)
-      expect(cached).toEqual(state.conversation)
-    }
-
-    expect(querySpy).toHaveBeenCalledTimes(1)
-  })
-
   test('List conversations by user', async () => {
     const user = await users.create(state.client.id)
     const convo1 = await conversations.create(state.client.id, user.id)
@@ -104,9 +85,5 @@ describe('Conversations', () => {
     const notCachedById = await conversations.fetch(state.conversation!.id)
     expect(notCachedById).toBeUndefined()
     expect(querySpy).toHaveBeenCalledTimes(calls + 1)
-
-    const notCachedByRecent = await conversations.fetchMostRecent(state.client.id, state.user.id)
-    expect(notCachedByRecent).toBeUndefined()
-    expect(querySpy).toHaveBeenCalledTimes(calls + 2)
   })
 })

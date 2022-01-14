@@ -130,14 +130,6 @@ x-bp-messaging-client-token: `clientToken`
 
 Lists the conversations of a user
 
-GET `/api/conversations/user/:userId/recent`
-
-x-bp-messaging-client-id: `clientId`
-
-x-bp-messaging-client-token: `clientToken`
-
-Gets the most recent conversation of a user
-
 ## Messages
 
 POST `/api/messages`
