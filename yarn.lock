@@ -2034,13 +2034,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-board@workspace:packages/board"
   dependencies:
+    "@botpress/messaging-base": 0.0.1
     "@botpress/messaging-client": "*"
     "@botpress/messaging-socket": 0.0.2
     "@botpress/webchat": 0.0.1
+    "@parcel/config-default": ^2.1.1
+    "@parcel/transformer-typescript-tsc": ^2.1.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     react: ^17.0.2
     react-dom: ^17.0.2
+    typescript: ">=3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -2272,6 +2276,7 @@ __metadata:
     jest: ^27.4.7
     jest-dev-server: ^6.0.3
     jest-mock: ^27.4.6
+    mkdirp: ^1.0.4
     parcel: ^2.1.1
     pkg: ^5.5.1
     portfinder: ^1.0.28
@@ -2287,8 +2292,10 @@ __metadata:
     uuid: ^8.3.2
     yargs: ^17.3.1
   dependenciesMeta:
-    "@blueprintjs/core@3.52.0":
-      unplugged: true
+    core-js-pure@3.20.0:
+      built: false
+    core-js@3.20.0:
+      built: false
   bin:
     messaging: ./packages/server/dist/index.js
   languageName: unknown
@@ -2299,6 +2306,7 @@ __metadata:
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
     "@botpress/webchat": 0.0.1
+    "@parcel/config-default": ^2.1.1
     "@parcel/transformer-typescript-tsc": ^2.1.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
@@ -2317,7 +2325,6 @@ __metadata:
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.0.2
-    "@parcel/config-default": ^2.1.1
     "@types/lodash": ^4.14.178
     "@types/mime": ^2.0.3
     "@types/node": ^16.11.13
@@ -22645,7 +22652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.5.4":
+"typescript@npm:>=3.0.0, typescript@npm:^4.5.4":
   version: 4.5.4
   resolution: "typescript@npm:4.5.4"
   bin:
@@ -22655,7 +22662,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@>=3.0.0#~builtin<compat/typescript>, typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
   version: 4.5.4
   resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=493e53"
   bin:

@@ -7,8 +7,8 @@
   "scripts": {
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
-    "clean": "rimraf packages/*/dist bin etc/jest/.test-data",
-    "reset": "yarn clean && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz",
+    "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin etc/jest/.test-data",
+    "reset": "yarn clean && mkdirp packages/base/node_modules && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
     "package": "yarn clean && yarn build && node ./etc/scripts/package",
     "release": "yarn node ./etc/scripts/release",
     "build": "yarn workspace @botpress/messaging-server build",
@@ -72,6 +72,7 @@
     "jest": "^27.4.7",
     "jest-dev-server": "^6.0.3",
     "jest-mock": "^27.4.6",
+    "mkdirp": "^1.0.4",
     "parcel": "^2.1.1",
     "pkg": "^5.5.1",
     "portfinder": "^1.0.28",
@@ -105,8 +106,11 @@
     "@botpress/chat-skin": "@botpress/chat-skin/src"
   },
   "dependenciesMeta": {
-    "@blueprintjs/core@3.52.0": {
-      "unplugged": true
+    "core-js@3.20.0": {
+      "built": false
+    },
+    "core-js-pure@3.20.0": {
+      "built": false
     }
   }
 }
