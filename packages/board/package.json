@@ -16,6 +16,7 @@
     "typescript": ">=3.0.0"
   },
   "dependencies": {
+    "@botpress/messaging-base": "0.0.1",
     "@botpress/messaging-client": "*",
     "@botpress/messaging-socket": "0.0.2",
     "@botpress/webchat": "0.0.1",

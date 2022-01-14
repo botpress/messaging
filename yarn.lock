@@ -2034,6 +2034,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-board@workspace:packages/board"
   dependencies:
+    "@botpress/messaging-base": 0.0.1
     "@botpress/messaging-client": "*"
     "@botpress/messaging-socket": 0.0.2
     "@botpress/webchat": 0.0.1
@@ -2290,8 +2291,10 @@ __metadata:
     uuid: ^8.3.2
     yargs: ^17.3.1
   dependenciesMeta:
-    "@blueprintjs/core@3.52.0":
-      unplugged: true
+    core-js-pure@3.20.0:
+      built: false
+    core-js@3.20.0:
+      built: false
   bin:
     messaging: ./packages/server/dist/index.js
   languageName: unknown
