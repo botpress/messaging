@@ -8,7 +8,7 @@ export let app: App
 export const setupApp = async () => {
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.SUPPRESS_LOGGING = 'true'
-  process.env.DATABASE_URL = path.join(__dirname, '../../../../../etc/jest/test/.test-data', `${uuidv4()}.sqlite`)
+  process.env.DATABASE_URL = path.join(__dirname, '../../../../../etc/jest/.test-data', `${uuidv4()}.sqlite`)
 
   app = new App()
   await app.setup()
