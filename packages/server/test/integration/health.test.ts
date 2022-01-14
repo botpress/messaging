@@ -1,7 +1,7 @@
+import { HealthEventType, HealthReport } from '@botpress/messaging-base'
 import { Client } from '../../src/clients/types'
 import { Conduit } from '../../src/conduits/types'
 import { HealthService } from '../../src/health/service'
-import { HealthEventType, HealthReport } from '../../src/health/types'
 import { app, randStr, setupApp } from './utils'
 
 const TEST_CHANNEL = 'messenger'
