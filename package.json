@@ -7,10 +7,10 @@
   "scripts": {
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
-    "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin etc/jest/.test-data",
+    "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin test/.test-data",
     "reset": "yarn clean && mkdirp packages/base/node_modules && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
-    "package": "yarn clean && yarn build && node ./etc/scripts/package",
-    "release": "yarn node ./etc/scripts/release",
+    "package": "yarn clean && yarn build && node ./misc/scripts/package",
+    "release": "yarn node ./misc/scripts/release",
     "build": "yarn workspace @botpress/messaging-server build",
     "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
@@ -18,11 +18,11 @@
     "board": "yarn workspace @botpress/messaging-board dev",
     "channels": "yarn workspace @botpress/messaging-channels example",
     "test": "yarn test:unit && yarn test:int && yarn test:mig && yarn test:e2e && yarn test:sec",
-    "test:unit": "jest -c ./etc/jest/jest.unit.config.ts",
-    "test:int": "jest -c ./etc/jest/jest.integration.config.ts",
-    "test:e2e": "jest -c ./etc/jest/jest.e2e.config.ts",
-    "test:sec": "jest -c ./etc/jest/jest.security.config.ts",
-    "test:mig": "jest -c ./etc/jest/jest.migration.config.ts"
+    "test:unit": "jest -c ./test/jest.unit.config.ts",
+    "test:int": "jest -c ./test/jest.integration.config.ts",
+    "test:e2e": "jest -c ./test/jest.e2e.config.ts",
+    "test:sec": "jest -c ./test/jest.security.config.ts",
+    "test:mig": "jest -c ./test/jest.migration.config.ts"
   },
   "bin": "./packages/server/dist/index.js",
   "pkg": {

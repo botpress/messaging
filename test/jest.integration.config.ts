@@ -1,6 +1,6 @@
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import ServerConfig from '../../packages/server/test/tsconfig.json'
+import ServerConfig from '../packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -8,8 +8,8 @@ const config: Config.InitialOptions = {
   projects: [
     {
       rootDir: 'packages/server',
-      testMatch: ['<rootDir>/test/migration/**/(*.)test.ts'],
-      displayName: { name: 'Server', color: 'white' },
+      testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
+      displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
       transform: {
         '^.+\\.tsx?$': require.resolve('ts-jest')

@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import ClientConfig from '../../packages/client/test/tsconfig.json'
-import SocketConfig from '../../packages/socket/test/tsconfig.json'
+import ClientConfig from '../packages/client/test/tsconfig.json'
+import SocketConfig from '../packages/socket/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
