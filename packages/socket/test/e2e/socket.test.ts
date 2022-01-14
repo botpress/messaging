@@ -391,13 +391,9 @@ describe('Socket Client', () => {
     test('Should be able to list the users conversations when authenticated', async () => {
       const conversations = await state.first.socket.listConversations()
 
-      expect(
-        _.orderBy(
-          conversations.map((c) => _.omit(c, 'lastMessage')),
-          'createdOn',
-          'desc'
-        )
-      ).toEqual(_.orderBy(state.first.conversations, 'createdOn', 'desc'))
+      expect(_.orderBy(conversations, 'createdOn', 'desc')).toEqual(
+        _.orderBy(state.first.conversations, 'createdOn', 'desc')
+      )
     })
 
     test('Should not be able to list the users conversations when disconnected', async () => {
