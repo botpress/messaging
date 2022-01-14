@@ -2024,24 +2024,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@botpress/chat-skin@0.0.1, @botpress/chat-skin@workspace:packages/skin":
-  version: 0.0.0-use.local
-  resolution: "@botpress/chat-skin@workspace:packages/skin"
-  dependencies:
-    "@botpress/chat": 0.0.1
-    "@botpress/messaging-base": 0.0.1
-  languageName: unknown
-  linkType: soft
-
-"@botpress/chat@0.0.1, @botpress/chat@workspace:packages/chat":
-  version: 0.0.0-use.local
-  resolution: "@botpress/chat@workspace:packages/chat"
-  dependencies:
-    "@botpress/messaging-base": 0.0.1
-    "@botpress/messaging-socket": 0.0.2
-  languageName: unknown
-  linkType: soft
-
 "@botpress/messaging-base@0.0.1, @botpress/messaging-base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-base@workspace:packages/base"
@@ -2052,9 +2034,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-board@workspace:packages/board"
   dependencies:
-    "@botpress/chat": 0.0.1
-    "@botpress/chat-skin": 0.0.1
     "@botpress/messaging-client": "*"
+    "@botpress/messaging-socket": 0.0.2
     "@botpress/webchat": 0.0.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
