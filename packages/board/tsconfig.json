@@ -2,10 +2,7 @@
   // Manage references here
   "references": [
     {
-      "path": "../chat"
-    },
-    {
-      "path": "../skin"
+      "path": "../socket"
     },
     {
       "path": "../client"
@@ -25,7 +22,9 @@
     // Specific settings for frontend
     "target": "es6",
     "lib": ["dom", "es2021"],
-    "jsx": "react"
+    "jsx": "react",
+    "resolveJsonModule": true
   },
+  "include": ["src", "src/**/*.json"],
   "exclude": ["dist", "node_modules"]
 }

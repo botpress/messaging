@@ -1,5 +1,5 @@
-import { Webchat, MessagesEvents } from '@botpress/chat'
 import { Message } from '@botpress/messaging-base'
+import { Webchat, MessagesEvents } from '../chat'
 import lang from './lang'
 import { element, text } from './ui'
 
