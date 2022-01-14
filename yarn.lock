@@ -2037,10 +2037,13 @@ __metadata:
     "@botpress/messaging-client": "*"
     "@botpress/messaging-socket": 0.0.2
     "@botpress/webchat": 0.0.1
+    "@parcel/config-default": ^2.1.1
+    "@parcel/transformer-typescript-tsc": ^2.1.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     react: ^17.0.2
     react-dom: ^17.0.2
+    typescript: ">=3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -2299,6 +2302,7 @@ __metadata:
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
     "@botpress/webchat": 0.0.1
+    "@parcel/config-default": ^2.1.1
     "@parcel/transformer-typescript-tsc": ^2.1.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
@@ -2317,7 +2321,6 @@ __metadata:
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.0.2
-    "@parcel/config-default": ^2.1.1
     "@types/lodash": ^4.14.178
     "@types/mime": ^2.0.3
     "@types/node": ^16.11.13
@@ -22645,7 +22648,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.5.4":
+"typescript@npm:>=3.0.0, typescript@npm:^4.5.4":
   version: 4.5.4
   resolution: "typescript@npm:4.5.4"
   bin:
@@ -22655,7 +22658,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@>=3.0.0#~builtin<compat/typescript>, typescript@patch:typescript@^4.5.4#~builtin<compat/typescript>":
   version: 4.5.4
   resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=493e53"
   bin:
