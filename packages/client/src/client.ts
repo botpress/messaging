@@ -1,5 +1,7 @@
 import { Conversation, HealthReport, Message, SyncRequest, SyncResult, User, uuid } from '@botpress/messaging-base'
-import { MessagingChannel, MessagingChannelOptions } from './channel'
+import { MessagingClientCredentials } from './auth'
+import { MessagingChannel } from './channel'
+import { MessagingOptions } from './options'
 
 export class MessagingClient {
   public get creds(): MessagingClientCredentials {
@@ -74,13 +76,3 @@ export class MessagingClient {
 }
 
 export type ClientSyncRequest = Omit<SyncRequest, 'id' | 'token'>
-
-export interface MessagingOptions extends MessagingChannelOptions {
-  /** Client credentials to access client owned resources */
-  creds: MessagingClientCredentials
-}
-
-export interface MessagingClientCredentials {
-  clientId: string
-  clientToken: string
-}
