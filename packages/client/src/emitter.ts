@@ -1,7 +1,13 @@
-export class Emitter<T extends { [key: number]: any }> {
-  private listeners: { [eventId: number]: (((arg: any) => Promise<void>) | ((arg: any) => void))[] } = {}
+import { uuid } from '@botpress/messaging-base'
 
-  public on<K extends keyof T>(event: K, listener: ((arg: T[K]) => Promise<void>) | ((arg: T[K]) => void)) {
+export class Emitter<T extends { [key: number]: any }> {
+  private listeners: { [eventId: number]: (((clientId: uuid, arg: any) => Promise<void>) | ((arg: any) => void))[] } =
+    {}
+
+  public on<K extends keyof T>(
+    event: K,
+    listener: ((clientId: uuid, arg: T[K]) => Promise<void>) | ((arg: T[K]) => void)
+  ) {
     const listeners = this.listeners[event as number]
     if (!listeners) {
       this.listeners[event as number] = [listener]
@@ -10,11 +16,11 @@ export class Emitter<T extends { [key: number]: any }> {
     }
   }
 
-  protected async emit<K extends keyof T>(event: K, arg: T[K]): Promise<boolean> {
+  protected async emit<K extends keyof T>(event: K, clientId: uuid, arg: T[K]): Promise<boolean> {
     const listeners = this.listeners[event as number]
     if (listeners?.length) {
       for (const listener of listeners) {
-        await listener(arg)
+        await listener(clientId, arg)
       }
       return true
     } else {

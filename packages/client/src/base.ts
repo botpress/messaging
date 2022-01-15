@@ -1,11 +1,16 @@
 import { uuid } from '@botpress/messaging-base'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
 import { Emitter } from './emitter'
 import { handleError } from './errors'
 import { MessagingChannelOptions } from './options'
 
-export abstract class MessagingChannelBase extends Emitter<{ user: any; started: any; message: any }> {
+export abstract class MessagingChannelBase extends Emitter<{
+  user: UserNewEvent
+  started: ConversationStartedEvent
+  message: MessageNewEvent
+}> {
   protected readonly http: AxiosInstance
   protected auths: { [clientId: uuid]: MessagingClientAuth } = {}
   protected headers: { [clientId: uuid]: any } = {}

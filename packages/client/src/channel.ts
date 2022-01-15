@@ -34,21 +34,21 @@ export class MessagingChannel extends MessagingChannelApi {
         return res.status(400).send(error.message)
       }
 
-      await this.emit('message', { clientId, data })
+      await this.emit('message', clientId, data)
     } else if (type === 'conversation.started') {
       const { error } = Schemas.ConversationStarted.validate(data)
       if (error) {
         return res.status(400).send(error.message)
       }
 
-      await this.emit('started', { clientId, data })
+      await this.emit('started', clientId, data)
     } else if (type === 'user.new') {
       const { error } = Schemas.UserNew.validate(data)
       if (error) {
         return res.status(400).send(error.message)
       }
 
-      await this.emit('user', { clientId, data })
+      await this.emit('user', clientId, data)
     }
 
     res.sendStatus(200)
