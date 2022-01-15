@@ -3,7 +3,7 @@ import {
   ClientSyncRequest,
   Conversation,
   Message,
-  MessagingAdminClient,
+  MessagingChannel,
   MessagingClient,
   SyncRequest,
   SyncWebhook,
@@ -40,7 +40,7 @@ describe('Http Client', () => {
     webhooks?: SyncWebhook[]
   } = {}
   const url = 'http://localhost:3100'
-  const adminClient = new MessagingAdminClient({ url })
+  const adminClient = new MessagingChannel({ url })
   let client: MessagingClient
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
 
