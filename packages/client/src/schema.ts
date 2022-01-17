@@ -5,7 +5,7 @@ export const Schemas = {
     .object({
       userId: joi.string().guid().required()
     })
-    .required(),
+    .required() as any,
 
   ConversationStarted: joi
     .object({
@@ -13,7 +13,7 @@ export const Schemas = {
       conversationId: joi.string().guid().required(),
       channel: joi.string().required()
     })
-    .required(),
+    .required() as any,
 
   MessageNew: joi
     .object({
@@ -31,5 +31,5 @@ export const Schemas = {
         })
         .required()
     })
-    .required()
+    .required() as any
 }
