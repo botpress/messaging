@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.23.1",
-    "@botpress/messaging-components": "*",
+    "@botpress/messaging-components": "0.0.8",
     "@botpress/messaging-socket": "0.0.2",
     "@formatjs/intl-pluralrules": "^4.1.6",
     "@formatjs/intl-utils": "^3.8.4",
