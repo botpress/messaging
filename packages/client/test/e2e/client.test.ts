@@ -17,17 +17,14 @@ const FAKE_CLIENT_TOKEN =
 
 describe('Http Client', () => {
   test('Should create a client with credential information and URL', async () => {
-    const creds = {
-      clientId: FAKE_CLIENT_ID,
-      clientToken: FAKE_CLIENT_TOKEN
-    }
     const url = 'http://messaging.best'
     const client = new MessagingClient({
       url,
-      creds
+      clientId: FAKE_CLIENT_ID,
+      clientToken: FAKE_CLIENT_TOKEN
     })
 
-    expect(client.creds).toEqual(creds)
+    expect(client.creds).toEqual({ clientToken: FAKE_CLIENT_TOKEN })
     expect((client as any).channel.http.defaults.baseURL).toContain(url)
   })
 
@@ -61,7 +58,8 @@ describe('Http Client', () => {
       test('Should authenticate using clientId/clientToken', async () => {
         client = new MessagingClient({
           url,
-          creds: { clientId: state.clientId!, clientToken: state.clientToken! }
+          clientId: state.clientId!,
+          clientToken: state.clientToken!
         })
       })
 

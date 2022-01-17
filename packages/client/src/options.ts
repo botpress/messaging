@@ -1,5 +1,6 @@
+import { uuid } from '@botpress/messaging-base'
 import { AxiosRequestConfig } from 'axios'
-import { MessagingClientCredentials } from './auth'
+import { MessagingClientAuth } from './auth'
 
 export interface MessagingChannelOptions {
   /** Base url of the messaging server */
@@ -8,7 +9,7 @@ export interface MessagingChannelOptions {
   config?: Omit<AxiosRequestConfig, 'baseURL'>
 }
 
-export interface MessagingOptions extends MessagingChannelOptions {
-  /** Client credentials to access client owned resources */
-  creds: MessagingClientCredentials
+export interface MessagingOptions extends MessagingChannelOptions, MessagingClientAuth {
+  /** Messaging client id */
+  clientId: uuid
 }
