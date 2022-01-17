@@ -15,12 +15,26 @@ export class ClientApi {
 
   setup(router: AdminApiManager) {
     router.post('/admin/clients', Schema.Api.Create, this.create.bind(this))
+    router.post('/admin/clients/named', Schema.Api.CreateNamed, this.createNamed.bind(this))
   }
 
   async create(req: Request, res: Response) {
     const clientId = uuidv4()
 
     const provider = await this.providers.create(clientId, false)
+    const client = await this.clients.create(provider.id, clientId)
+
+    const rawToken = await this.clientTokens.generateToken()
+    const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
+
+    res.status(201).send({ id: client.id, token: `${clientToken.id}.${rawToken}` })
+  }
+
+  async createNamed(req: Request, res: Response) {
+    const name = req.body.name as string
+    const clientId = uuidv4()
+
+    const provider = await this.providers.create(name, false)
     const client = await this.clients.create(provider.id, clientId)
 
     const rawToken = await this.clientTokens.generateToken()
