@@ -52,7 +52,7 @@ jobs:
         run: |
           yarn test:int --coverage --verbose
         env:
-          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
+          DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
 
   e2e:
     name: E2E
@@ -87,7 +87,7 @@ jobs:
         run: |
           yarn test:e2e --coverage --verbose
         env:
-          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
+          DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
 
   security:
     name: Security
@@ -122,7 +122,7 @@ jobs:
         run: |
           yarn test:sec --verbose
         env:
-          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
+          DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
 
   migration:
     name: Migration
@@ -157,4 +157,4 @@ jobs:
         run: |
           yarn test:mig --verbose
         env:
-          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
+          DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
