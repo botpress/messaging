@@ -1,4 +1,4 @@
-FROM node:16.13.0-alpine AS build
+FROM node:16.13.2-alpine AS build
 
 ADD . /messaging
 
@@ -7,7 +7,7 @@ WORKDIR /messaging
 RUN yarn --immutable
 RUN yarn build
 
-FROM node:16.13.0-alpine
+FROM node:16.13.2-alpine
 
 WORKDIR /messaging
 

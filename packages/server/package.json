@@ -22,9 +22,9 @@
     "knex-schema-inspector": "^1.7.0"
   },
   "dependencies": {
-    "@botpress/messaging-base": "0.0.1",
-    "@botpress/messaging-channels": "0.0.1",
-    "@botpress/messaging-engine": "0.0.1",
+    "@botpress/messaging-base": "*",
+    "@botpress/messaging-channels": "*",
+    "@botpress/messaging-engine": "*",
     "@sentry/node": "^6.16.1",
     "axios": "^0.24.0",
     "cli-color": "^2.0.1",
