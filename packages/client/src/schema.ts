@@ -1,5 +1,8 @@
 import joi from 'joi'
 
+// we put as any here, because joi changed their typings at some version,
+// and having the joi typings here might created unecessary incompatibilites.
+
 export const Schemas = {
   UserNew: joi
     .object({
