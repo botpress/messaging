@@ -25,7 +25,7 @@
     "jest-mock": "^27.4.6"
   },
   "dependencies": {
-    "@botpress/messaging-base": "0.0.1",
+    "@botpress/messaging-base": "*",
     "bcryptjs": "^2.4.3",
     "cli-color": "^2.0.1",
     "express": "^4.17.2",

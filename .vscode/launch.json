@@ -4,7 +4,7 @@
     {
       "name": "Attach",
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
       "request": "attach",
       "restart": true,
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"]
@@ -12,7 +12,7 @@
     {
       "name": "Debug Transpile",
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/server",
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
@@ -21,7 +21,7 @@
     {
       "name": "Debug Compiled",
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
       "request": "launch",
       "cwd": "${workspaceFolder}/packages/server",
       "skipFiles": ["${workspaceFolder}/node_modules/**/*.js", "<node_internals>/**/*.js"],
@@ -30,7 +30,7 @@
     },
     {
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
       "name": "Debug Unit Tests",
       "request": "launch",
       "runtimeExecutable": "yarn",
@@ -41,7 +41,7 @@
     },
     {
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
 
       "name": "Debug E2E Tests",
       "request": "launch",
@@ -53,7 +53,7 @@
     },
     {
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
 
       "name": "Debug Integration Tests",
       "request": "launch",
@@ -65,7 +65,7 @@
     },
     {
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
 
       "name": "Debug Security Tests",
       "request": "launch",
@@ -77,7 +77,7 @@
     },
     {
       "type": "node",
-      "runtimeVersion": "16.13.0",
+      "runtimeVersion": "16.13.2",
 
       "name": "Debug Migration Tests",
       "request": "launch",
