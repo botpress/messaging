@@ -17,7 +17,7 @@ export class SyncApi {
   }
 
   async sync(req: ClientApiRequest, res: Response) {
-    const body = { ...req.body, channels: this.removeDisabledChannels(req.body.channels) }
+    const body = { ...req.body, channels: this.removeDisabledChannels(req.body.channels || {}) }
     const { value } = this.schema.validate(body)
 
     const result = await this.syncs.sync(req.clientId, value)

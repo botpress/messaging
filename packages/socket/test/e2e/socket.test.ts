@@ -5,17 +5,14 @@ import { Conversation, Message, MessagingSocket } from '../../src'
 
 const MESSAGING_SERVER_URL = 'http://localhost:3100'
 
-const sync = async () => {
+const createClient = async () => {
   const url = new URL(MESSAGING_SERVER_URL)
   const options = {
     protocol: url.protocol,
     hostname: url.hostname,
     port: url.port,
-    path: '/api/sync',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    path: '/api/admin/clients',
+    method: 'POST'
   }
 
   return new Promise<string>((resolve, reject) => {
@@ -95,10 +92,10 @@ describe('Socket Client', () => {
   }
 
   beforeAll(async () => {
-    state.first.clientId = await sync()
+    state.first.clientId = await createClient()
     ;(state.first.socket.clientId as string) = state.first.clientId
 
-    state.second.clientId = await sync()
+    state.second.clientId = await createClient()
     ;(state.second.socket.clientId as string) = state.second.clientId
   })
 
