@@ -27,10 +27,10 @@ jobs:
         id: release_details
         uses: botpress/gh-actions/get_release_details@v1
 
-      - name: Fix Change Log
+      - name: Display Release Details
         id: changelog
         run: |
-          echo "::set-output name=value::${{ steps.release_details.outputs.changelog }}"
+          echo "Changelog: ${{ steps.release_details.outputs.changelog }}"
           echo "Is new release?: ${{ steps.release_details.outputs.is_new_release }}"
           echo "Version: ${{ steps.release_details.outputs.version }}"
           echo "Latest Tag: ${{ steps.release_details.outputs.latest_tag }}"
