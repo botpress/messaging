@@ -85,55 +85,55 @@ describe('Sync', () => {
       const schema = makeSyncRequestSchema(channelService.list())
 
       const obj = {}
-      const { error, value } = schema.validate(obj)
+      const { error, value } = schema.validate({ body: obj, params: {}, query: {} })
       if (error) {
         throw error
       }
 
-      expect(value).toEqual(obj)
+      expect(value).toEqual({ body: obj, params: {}, query: {} })
     })
 
     test('Should not throw any error with an object that contains only valid properties', async () => {
       const schema = makeSyncRequestSchema(channelService.list())
 
-      const { error, value } = schema.validate(validObj)
+      const { error, value } = schema.validate({ body: validObj, params: {}, query: {} })
       if (error) {
         throw error
       }
 
-      expect(value).toEqual(validObj)
+      expect(value).toEqual({ body: validObj, params: {}, query: {} })
     })
 
     test('Should strip unknown properties from object', async () => {
       const schema = makeSyncRequestSchema(channelService.list())
 
-      const { error, value } = schema.validate(validObjWithUnknownProperties)
+      const { error, value } = schema.validate({ body: validObjWithUnknownProperties, params: {}, query: {} })
       if (error) {
         throw error
       }
 
-      expect(value).toEqual(validObj)
+      expect(value).toEqual({ body: validObj, params: {}, query: {} })
     })
 
     test('Should only accept objects', async () => {
       const schema = makeSyncRequestSchema(channelService.list())
 
       const val = ''
-      const { error, value } = schema.validate(val)
+      const { error, value } = schema.validate({ body: val, params: {}, query: {} })
 
       expect(error).not.toBeUndefined()
-      expect(error!.message).toEqual('"value" must be of type object')
-      expect(value).toEqual(val)
+      expect(error!.message).toEqual('"body" must be of type object')
+      expect(value).toEqual({ body: val, params: {}, query: {} })
     })
 
     test('Should only accept valid URI as webhook url', async () => {
       const schema = makeSyncRequestSchema(channelService.list())
 
-      const { error, value } = schema.validate(validObjWithInvalidWebhook)
+      const { error, value } = schema.validate({ body: validObjWithInvalidWebhook, params: {}, query: {} })
 
       expect(error).not.toBeUndefined()
-      expect(error!.message).toEqual('"webhooks[0].url" must be a valid uri')
-      expect(value).toEqual(validObjWithInvalidWebhook)
+      expect(error!.message).toEqual('"body.webhooks[0].url" must be a valid uri')
+      expect(value).toEqual({ body: validObjWithInvalidWebhook, params: {}, query: {} })
     })
   })
 })
