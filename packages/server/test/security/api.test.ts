@@ -1,6 +1,7 @@
 import { Conversation, Message, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
 import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios'
 import _ from 'lodash'
+import querystring from 'querystring'
 import { v4 as uuid } from 'uuid'
 import froth from './mocha-froth'
 
@@ -93,17 +94,14 @@ describe('API', () => {
     test('Should not allow any other methods than POST and OPTIONS', async () => {
       const allowed: Method[] = ['POST', 'OPTIONS']
       const unallowed: Method[] = ['GET', 'HEAD', 'PUT', 'DELETE', 'PURGE', 'LINK', 'UNLINK', 'PATCH']
-      const client = http()
+      const client = http(clients.first.clientId, clients.first.clientToken)
 
       for (const method of unallowed) {
         const config: AxiosRequestConfig = { method, url: '/api/sync' }
         await shouldFail(
           async () => client.request<SyncResult>(config),
           (err) => {
-            if (err.response?.data) {
-              expect(err.response?.data).toEqual('Method Not Allowed')
-            }
-            expect(err.response?.status).toEqual(405)
+            expect(err.response?.status).toEqual(404)
           }
         )
       }
@@ -123,10 +121,10 @@ describe('API', () => {
 
       for (const token of tokens) {
         await shouldFail(
-          async () => sync(clients.first.clientId, token),
+          async () => sync(clients.first.clientId, Buffer.from(token).toString('base64url')),
           (err) => {
-            expect(err.response?.data).toEqual('Forbidden')
-            expect(err.response?.status).toEqual(403)
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
           }
         )
       }
@@ -167,15 +165,15 @@ describe('API', () => {
 
       for (const token of tokens) {
         await shouldFail(
-          async () => sync(clients.first.clientId, token),
+          async () => sync(clients.first.clientId, Buffer.from(token).toString('base64url')),
           (err) => {
             expect(err.response?.data).not.toEqual({
               id: expect.anything(),
               token: expect.anything(),
               webhooks: expect.anything()
             })
-            expect(err.response?.data).toEqual('"token" length must be less than or equal to 125 characters long')
-            expect(err.response?.status).toEqual(400)
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
           }
         )
       }
