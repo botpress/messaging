@@ -21,13 +21,15 @@ client_id=CLOUD_CLIENT
 POST {{baseUrl}}/api/admin/clients
 Authorization: Bearer {{authToken}}
 
-### Create named client
-POST {{baseUrl}}/api/admin/clients/named
+### Sync client
+POST {{baseUrl}}/api/admin/clients/sync
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "my-bot-name"
+  "name": "my-bot-name",
+  "id": null,
+  "token": null
 }
 
 ### Sync
