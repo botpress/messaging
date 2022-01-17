@@ -3,9 +3,10 @@ import cors from 'cors'
 import express, { Request, Response, Router } from 'express'
 import yn from 'yn'
 import { App } from './app'
-import { ApiManager } from './base/api-manager'
+import { AdminApiManager, ApiManager } from './base/api-manager'
 import { Auth } from './base/auth/auth'
 import { ChannelApi } from './channels/api'
+import { ClientApi } from './clients/api'
 import { ConversationApi } from './conversations/api'
 import { HealthApi } from './health/api'
 import { MessageApi } from './messages/api'
@@ -15,8 +16,10 @@ import { UserApi } from './users/api'
 export class Api {
   private router: Router
   private auth: Auth
+  private adminManager: AdminApiManager
   private manager: ApiManager
 
+  private clients: ClientApi
   private syncs: SyncApi
   private health: HealthApi
   private users: UserApi
@@ -26,10 +29,12 @@ export class Api {
 
   constructor(private app: App, private root: Router) {
     this.router = Router()
-    this.auth = new Auth(app.clientTokens)
+    this.auth = new Auth(this.app.clientTokens)
+    this.adminManager = new AdminApiManager(this.router, this.auth)
     this.manager = new ApiManager(this.router, this.auth)
 
-    this.syncs = new SyncApi(this.app.syncs, this.app.clients, this.app.clientTokens, this.app.channels)
+    this.clients = new ClientApi(this.app.providers, this.app.clients, this.app.clientTokens)
+    this.syncs = new SyncApi(this.app.syncs, this.app.channels)
     this.health = new HealthApi(this.app.health)
     this.users = new UserApi(this.app.users)
     this.conversations = new ConversationApi(this.app.users, this.app.conversations)
@@ -55,7 +60,8 @@ export class Api {
     this.router.use(express.json({ limit: '100kb' }))
     this.router.use(express.urlencoded({ extended: true }))
 
-    this.syncs.setup(this.router, this.auth)
+    this.clients.setup(this.adminManager)
+    this.syncs.setup(this.manager)
     this.health.setup(this.manager)
     this.users.setup(this.manager)
     this.conversations.setup(this.manager)
