@@ -48,7 +48,7 @@ jobs:
           files: ./bin/messaging-v*
           prerelease: false
           draft: false
-          body: ${{ steps.changelog.outputs.value }}
+          body: ${{ steps.release_details.outputs.changelog }}
           name: v${{ steps.release_details.outputs.version }}
           tag_name: v${{ steps.release_details.outputs.version }}
         env:
