@@ -22,10 +22,21 @@ jobs:
   integration:
     name: Integration
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        database: ['sqlite', 'postgres']
 
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Set up PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        run: |
+          docker run -d -p 5432:5432 \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_DB=postgres \
+            postgres:latest
       - uses: actions/setup-node@v2
         with:
           node-version: '16.13.0'
@@ -33,17 +44,34 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --immutable
+      - name: Await PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        timeout-minutes: 2
+        run: until pg_isready -h localhost; do sleep 1; done
       - name: Run tests
         run: |
           yarn test:int --coverage --verbose
+        env:
+          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
 
   e2e:
     name: E2E
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        database: ['sqlite', 'postgres']
 
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Set up PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        run: |
+          docker run -d -p 5432:5432 \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_DB=postgres \
+            postgres:latest
       - uses: actions/setup-node@v2
         with:
           node-version: '16.13.0'
@@ -51,17 +79,34 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --immutable
+      - name: Await PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        timeout-minutes: 2
+        run: until pg_isready -h localhost; do sleep 1; done
       - name: Run tests
         run: |
           yarn test:e2e --coverage --verbose
+        env:
+          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
 
   security:
     name: Security
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        database: ['sqlite', 'postgres']
 
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Set up PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        run: |
+          docker run -d -p 5432:5432 \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_DB=postgres \
+            postgres:latest
       - uses: actions/setup-node@v2
         with:
           node-version: '16.13.0'
@@ -69,17 +114,34 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --frozen-lockfile
+      - name: Await PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        timeout-minutes: 2
+        run: until pg_isready -h localhost; do sleep 1; done
       - name: Run tests
         run: |
           yarn test:sec --verbose
+        env:
+          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
 
   migration:
     name: Migration
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        database: ['sqlite', 'postgres']
 
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      - name: Set up PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        run: |
+          docker run -d -p 5432:5432 \
+            -e POSTGRES_PASSWORD=postgres \
+            -e POSTGRES_USER=postgres \
+            -e POSTGRES_DB=postgres \
+            postgres:latest
       - uses: actions/setup-node@v2
         with:
           node-version: '16.13.0'
@@ -87,6 +149,12 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --frozen-lockfile
+      - name: Await PostgreSQL
+        if: ${{ matrix.database == 'postgres' }}
+        timeout-minutes: 2
+        run: until pg_isready -h localhost; do sleep 1; done
       - name: Run tests
         run: |
           yarn test:mig --verbose
+        env:
+          DATABASE_URL: ${{ matrix.database == 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
