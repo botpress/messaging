@@ -22,7 +22,7 @@
     "uuid": "^8.3.2"
   },
   "dependencies": {
-    "@botpress/messaging-base": "0.0.1",
+    "@botpress/messaging-base": "*",
     "socket.io-client": "^4.4.1"
   }
 }
