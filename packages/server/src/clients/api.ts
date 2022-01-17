@@ -1,4 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
+import { DistributedService } from '@botpress/messaging-engine'
 import { Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { AdminApiManager } from '../base/api-manager'
@@ -11,6 +12,7 @@ import { Client } from './types'
 
 export class ClientApi {
   constructor(
+    private distributed: DistributedService,
     private providers: ProviderService,
     private clients: ClientService,
     private clientTokens: ClientTokenService
@@ -34,6 +36,12 @@ export class ClientApi {
   }
 
   async sync(req: Request, res: Response) {
+    this.distributed.using(`lock_dyn_client_sync::${req.body.name}`, async () => {
+      await this.syncClient(req, res)
+    })
+  }
+
+  async syncClient(req: Request, res: Response) {
     const sync = { id: req.body.id, token: req.body.token, name: req.body.name } as {
       id?: uuid
       token?: string
