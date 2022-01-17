@@ -28,7 +28,7 @@ export class SyncApi {
     const filtered: any = {}
 
     for (const [key, value] of Object.entries(body)) {
-      if (body[key].enabled !== false) {
+      if (body[key]?.enabled !== false) {
         filtered[key] = value
       }
     }
