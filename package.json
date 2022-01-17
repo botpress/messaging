@@ -74,7 +74,7 @@
     "jest-mock": "^27.4.6",
     "mkdirp": "^1.0.4",
     "parcel": "^2.2.0",
-    "pkg": "^5.5.1",
+    "pkg": "^5.5.2",
     "portfinder": "^1.0.28",
     "prettier": "^2.5.1",
     "pretty-format": "^27.4.6",
@@ -93,7 +93,7 @@
     "packages/*"
   ],
   "engines": {
-    "node": "16.13.0"
+    "node": "16.13.2"
   },
   "packageManager": "yarn@3.1.1",
   "alias": {
