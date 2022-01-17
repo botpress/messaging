@@ -53,7 +53,7 @@ export class ClientApi {
     let provider: Provider | undefined = undefined
 
     if (sync.id) {
-      client = await this.clients.getById(sync.id)
+      client = await this.clients.fetchById(sync.id)
       if (client) {
         token = sync.token
       }
