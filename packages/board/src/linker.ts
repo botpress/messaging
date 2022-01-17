@@ -1,4 +1,4 @@
-import { MessagingAdminClient } from '@botpress/messaging-client'
+import { MessagingChannel } from '@botpress/messaging-client'
 import { ConversationEvents, UserEvents, Webchat } from './chat'
 import { text, element, WebchatRenderer } from './skin'
 import { BoardWatcher } from './watcher'
@@ -107,7 +107,7 @@ export class BoardLinker {
       clientId = localStorage.getItem('bp-board-client')!
     }
     if (!clientId?.length) {
-      const client = new MessagingAdminClient({ url: host })
+      const client = new MessagingChannel({ url: host })
       const res = await client.sync({})
       clientId = res.id
     }
