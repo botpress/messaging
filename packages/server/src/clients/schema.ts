@@ -4,7 +4,9 @@ import { ReqSchema } from '../base/schema'
 const Api = {
   Create: ReqSchema(),
 
-  CreateNamed: ReqSchema({ body: { name: Joi.string().required() } })
+  Sync: ReqSchema({
+    body: { id: Joi.string().optional(), token: Joi.string().optional(), name: Joi.string().required() }
+  })
 }
 
 export const Schema = { Api }

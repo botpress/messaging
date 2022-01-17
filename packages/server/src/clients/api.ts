@@ -1,10 +1,13 @@
+import { uuid } from '@botpress/messaging-base'
 import { Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { AdminApiManager } from '../base/api-manager'
 import { ClientTokenService } from '../client-tokens/service'
 import { ProviderService } from '../providers/service'
+import { Provider } from '../providers/types'
 import { Schema } from './schema'
 import { ClientService } from './service'
+import { Client } from './types'
 
 export class ClientApi {
   constructor(
@@ -15,7 +18,7 @@ export class ClientApi {
 
   setup(router: AdminApiManager) {
     router.post('/admin/clients', Schema.Api.Create, this.create.bind(this))
-    router.post('/admin/clients/named', Schema.Api.CreateNamed, this.createNamed.bind(this))
+    router.post('/admin/clients/sync', Schema.Api.Sync, this.sync.bind(this))
   }
 
   async create(req: Request, res: Response) {
@@ -30,16 +33,63 @@ export class ClientApi {
     res.status(201).send({ id: client.id, token: `${clientToken.id}.${rawToken}` })
   }
 
-  async createNamed(req: Request, res: Response) {
-    const name = req.body.name as string
-    const clientId = uuidv4()
+  async sync(req: Request, res: Response) {
+    const sync = { id: req.body.id, token: req.body.token, name: req.body.name } as {
+      id?: uuid
+      token?: string
+      name: string
+    }
 
-    const provider = await this.providers.create(name, false)
-    const client = await this.clients.create(provider.id, clientId)
+    let client: Client | undefined = undefined
+    let token: string | undefined = undefined
+    let provider: Provider | undefined = undefined
 
-    const rawToken = await this.clientTokens.generateToken()
-    const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
+    if (sync.id) {
+      client = await this.clients.getById(sync.id)
+      if (client) {
+        token = sync.token
+      }
+    }
 
-    res.status(201).send({ id: client.id, token: `${clientToken.id}.${rawToken}` })
+    if (!client) {
+      const exisingProvider = await this.providers.fetchByName(sync.name)
+      if (exisingProvider) {
+        const existingClient = await this.clients.fetchByProviderId(exisingProvider.id)
+        if (existingClient) {
+          client = await this.clients.getById(existingClient.id)
+        }
+      }
+    }
+
+    if (!client) {
+      provider = await this.providers.create(sync.name, false)
+      client = await this.clients.create(provider.id)
+    } else {
+      provider = await this.providers.fetchById(client.providerId)
+
+      if (!provider) {
+        provider = await this.providers.create(sync.name, false)
+
+        await this.clients.updateProvider(client.id, provider.id)
+        client = await this.clients.getById(client.id)
+      }
+    }
+
+    if (!token || !(await this.clientTokens.verifyToken(client.id, token))) {
+      const rawToken = await this.clientTokens.generateToken()
+      const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
+      token = `${clientToken.id}.${rawToken}`
+    }
+
+    if (provider.name !== sync.name) {
+      const providerWithSameName = await this.providers.fetchByName(sync.name)
+      if (providerWithSameName && providerWithSameName.id !== provider.id) {
+        await this.providers.delete(providerWithSameName.id)
+      }
+
+      await this.providers.updateName(provider.id, sync.name)
+    }
+
+    res.status(200).send({ id: client.id, token })
   }
 }
