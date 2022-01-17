@@ -3,8 +3,16 @@ import { MessagingChannelBase } from './base'
 import { handleNotFound } from './errors'
 
 export abstract class MessagingChannelApi extends MessagingChannelBase {
-  async sync(config: SyncRequest): Promise<SyncResult> {
-    return (await this.http.post('/sync', config)).data
+  async createClient(): Promise<{ id: string; token: string }> {
+    return (await this.http.post('/admin/clients')).data
+  }
+
+  async syncClient(config: { name: string; id?: uuid; token?: string }): Promise<{ id: uuid; token: string }> {
+    return (await this.http.post('/admin/clients/sync', config)).data
+  }
+
+  async sync(clientId: uuid, config: SyncRequest): Promise<SyncResult> {
+    return (await this.http.post('/sync', config, { headers: this.headers[clientId] })).data
   }
 
   async getHealth(clientId: uuid): Promise<HealthReport> {
