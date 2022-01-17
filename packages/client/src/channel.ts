@@ -34,7 +34,7 @@ export class MessagingChannel extends MessagingChannelApi {
         return res.status(400).send(error.message)
       }
 
-      await this.emit('message', clientId, data)
+      await this.emit('message', clientId, { ...data, message: this.deserializeMessage(data.message) })
     } else if (type === 'conversation.started') {
       const { error } = Schemas.ConversationStarted.validate(data)
       if (error) {
