@@ -2269,7 +2269,7 @@ __metadata:
     jest-mock: ^27.4.6
     mkdirp: ^1.0.4
     parcel: ^2.2.0
-    pkg: ^5.5.1
+    pkg: ^5.5.2
     portfinder: ^1.0.28
     prettier: ^2.5.1
     pretty-format: ^27.4.6
@@ -17956,9 +17956,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pkg-fetch@npm:3.2.5":
-  version: 3.2.5
-  resolution: "pkg-fetch@npm:3.2.5"
+"pkg-fetch@npm:3.2.6":
+  version: 3.2.6
+  resolution: "pkg-fetch@npm:3.2.6"
   dependencies:
     chalk: ^4.1.2
     fs-extra: ^9.1.0
@@ -17970,13 +17970,13 @@ __metadata:
     yargs: ^16.2.0
   bin:
     pkg-fetch: lib-es5/bin.js
-  checksum: 0a9baca7ba16e1ab978e1522f365dae6f9426f671d32b04495e34e77ad3c148317e083c01515f0b7dc9dbaf942b601c09e23f47ad450af407dd42366353a6fd8
+  checksum: ca62a39fbcf7dd7f096f425e9e24e685d6831104fae034ce6ec8445402253443d74f3f70c5192631ccccd86d09edb4fae8a3ed2eb5c03a8d1d2be67c6229004f
   languageName: node
   linkType: hard
 
-"pkg@npm:^5.5.1":
-  version: 5.5.1
-  resolution: "pkg@npm:5.5.1"
+"pkg@npm:^5.5.2":
+  version: 5.5.2
+  resolution: "pkg@npm:5.5.2"
   dependencies:
     "@babel/parser": 7.16.2
     "@babel/types": 7.16.0
@@ -17987,7 +17987,7 @@ __metadata:
     into-stream: ^6.0.0
     minimist: ^1.2.5
     multistream: ^4.1.0
-    pkg-fetch: 3.2.5
+    pkg-fetch: 3.2.6
     prebuild-install: 6.1.4
     progress: ^2.0.3
     resolve: ^1.20.0
@@ -18000,7 +18000,7 @@ __metadata:
       optional: true
   bin:
     pkg: lib-es5/bin.js
-  checksum: c7183527c5e0b3aebf104343a28ffea157e8d5d99c8a9c8738f6e527967aea1928e1abd574fbd390b121adf6cd67e2afdfee31b502eaa6c9824a78bb7810898a
+  checksum: 8f3309cef1080b45d7abaa3b95dd7cfb00ae6867bfb4a30e52c078b781482040f24a7e65e90618e5d33339d788ad3aeda4d89bffeee7042e2f868799ca6d182f
   languageName: node
   linkType: hard
 
