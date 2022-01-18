@@ -91,31 +91,6 @@ describe('API', () => {
       return res.data
     }
 
-    test('Should not allow any other methods than POST and OPTIONS', async () => {
-      const allowed: Method[] = ['POST', 'OPTIONS']
-      const unallowed: Method[] = ['GET', 'HEAD', 'PUT', 'DELETE', 'PURGE', 'LINK', 'UNLINK', 'PATCH']
-      const client = http(clients.first.clientId, clients.first.clientToken)
-
-      for (const method of unallowed) {
-        const config: AxiosRequestConfig = { method, url: '/api/sync' }
-        await shouldFail(
-          async () => client.request<SyncResult>(config),
-          (err) => {
-            expect(err.response?.status).toEqual(404)
-          }
-        )
-      }
-
-      for (const method of allowed) {
-        const config: AxiosRequestConfig = { method, url: '/api/sync' }
-        const res = await client.request<SyncResult>(config)
-
-        expect(res.data).not.toBeUndefined()
-        expect(res.status).toBeGreaterThanOrEqual(200)
-        expect(res.status).toBeLessThan(300)
-      }
-    })
-
     test('Should return unauthorized if token is invalid', async () => {
       const tokens = Array.from({ length: 10 }, () => froth(TOKEN_LENGTH))
 
