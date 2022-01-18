@@ -22,10 +22,6 @@ export const setupApp = async () => {
   return app
 }
 
-export const destroyApp = async () => {
-  await app.destroy()
-}
-
 const randomLetters = (length: number) => {
   const chars = 'abcdefghijklmnopqrstuvwxyz'
   let str = ''
