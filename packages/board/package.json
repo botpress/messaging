@@ -4,9 +4,9 @@
   "source": "src/index.html",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && yarn run -T parcel build",
-    "watch": "yarn --silent && yarn run -T parcel watch",
-    "dev": "yarn --silent && yarn run -T parcel"
+    "build": "yarn && yarn run -T parcel build",
+    "watch": "yarn && yarn run -T parcel watch",
+    "dev": "yarn && yarn run -T parcel"
   },
   "devDependencies": {
     "@parcel/config-default": "^2.2.0",

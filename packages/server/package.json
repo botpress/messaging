@@ -4,11 +4,11 @@
   "main": "index.ts",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && yarn run -T tsc --build",
+    "build": "yarn && yarn run -T tsc --build",
     "postbuild": "node ./dist/build",
-    "watch": "yarn --silent && yarn run -T tsc --build --watch",
+    "watch": "yarn && yarn run -T tsc --build --watch",
     "start": "node ./dist/index.js",
-    "dev": "yarn --silent && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts"
+    "dev": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts"
   },
   "devDependencies": {
     "@types/cli-color": "^2.0.2",

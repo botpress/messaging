@@ -3,9 +3,9 @@
   "version": "0.0.2",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && yarn run -T parcel build src/index.html src/inject.js",
-    "watch": "yarn --silent && yarn run -T parcel watch src/index.html src/inject.js",
-    "dev": "yarn --silent && yarn run -T parcel src/index.html src/inject.js"
+    "build": "yarn && yarn run -T parcel build src/index.html src/inject.js",
+    "watch": "yarn && yarn run -T parcel watch src/index.html src/inject.js",
+    "dev": "yarn && yarn run -T parcel src/index.html src/inject.js"
   },
   "files": [
     "dist"

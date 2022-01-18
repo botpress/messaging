@@ -8,8 +8,8 @@
   "scripts": {
     "prebuild": "rimraf dist/",
     "postbuild": "ncp ./src/css ./dist/css",
-    "build": "yarn --silent && yarn run -T tsc --build",
-    "watch": "yarn --silent && yarn run -T tsc --build --watch",
+    "build": "yarn && yarn run -T tsc --build",
+    "watch": "yarn && yarn run -T tsc --build --watch",
     "storybook": "start-storybook -p 6006 -c story/config",
     "build-storybook": "build-storybook -c story/config",
     "prepublishOnly": "yarn build"
