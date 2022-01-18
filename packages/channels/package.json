@@ -6,9 +6,9 @@
   "source": "src/index.ts",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && yarn run -T tsc --build",
-    "watch": "yarn --silent && yarn run -T tsc --build --watch",
-    "example": "yarn --silent && yarn run -T ts-node-dev --debounce 500 --transpile-only example/index.ts"
+    "build": "yarn && yarn run -T tsc --build",
+    "watch": "yarn && yarn run -T tsc --build --watch",
+    "example": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only example/index.ts"
   },
   "devDependencies": {
     "@types/cli-color": "^2.0.2",
