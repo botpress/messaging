@@ -28,7 +28,7 @@ describe('Http Client', () => {
     webhooks?: SyncWebhook[]
   } = {}
   const url = 'http://localhost:3100'
-  const adminClient = new MessagingChannel({ url, adminKey: 'admin123' })
+  const adminClient = new MessagingChannel({ url, adminKey: process.env.ADMIN_KEY })
   let client: MessagingClient
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
 

@@ -13,7 +13,7 @@ const createClient = async () => {
     port: url.port,
     path: '/api/admin/clients',
     method: 'POST',
-    headers: { 'x-bp-messaging-admin-key': 'admin123' }
+    headers: { 'x-bp-messaging-admin-key': process.env.ADMIN_KEY }
   }
 
   return new Promise<string>((resolve, reject) => {

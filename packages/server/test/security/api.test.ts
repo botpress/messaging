@@ -53,7 +53,7 @@ describe('API', () => {
   describe('Admin', () => {
     const createClient = async (override?: { adminKey?: string }) => {
       let options: any = {
-        headers: { 'x-bp-messaging-admin-key': 'admin123' }
+        headers: { 'x-bp-messaging-admin-key': process.env.ADMIN_KEY }
       }
       if (override) {
         if (override.adminKey) {
