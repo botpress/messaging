@@ -1,15 +1,10 @@
-import { SyncChannels, SyncRequest, SyncResult, SyncSandboxRequest, SyncWebhook, uuid } from '@botpress/messaging-base'
+import { SyncChannels, SyncRequest, SyncResult, SyncWebhook, uuid } from '@botpress/messaging-base'
 import { DistributedService, Logger, LoggerService, Service } from '@botpress/messaging-engine'
 import _ from 'lodash'
-import { v4 as uuidv4 } from 'uuid'
 import yn from 'yn'
 import { ChannelService } from '../channels/service'
-import { ClientTokenService } from '../client-tokens/service'
 import { ClientService } from '../clients/service'
-import { Client } from '../clients/types'
 import { ConduitService } from '../conduits/service'
-import { ProviderService } from '../providers/service'
-import { Provider } from '../providers/types'
 import { StatusService } from '../status/service'
 import { WebhookService } from '../webhooks/service'
 
@@ -20,10 +15,8 @@ export class SyncService extends Service {
     private loggers: LoggerService,
     private distributed: DistributedService,
     private channels: ChannelService,
-    private providers: ProviderService,
     private conduits: ConduitService,
     private clients: ClientService,
-    private clientTokens: ClientTokenService,
     private webhooks: WebhookService,
     private status: StatusService
   ) {
@@ -32,88 +25,41 @@ export class SyncService extends Service {
   }
 
   async setup() {
-    if (!process.env.SYNC) {
-      return
-    }
-
-    try {
-      const config = JSON.parse(process.env.SYNC) || {}
-
-      for (const req of config || []) {
-        req.sandbox ? await this.syncSandbox(req) : await this.sync(req)
-      }
-    } catch {
-      this.logger.warn('SYNC is not valid json')
-    }
+    // TODO: reimplement sync calls from env vars (for sandbox)
   }
 
-  async sync(req: SyncRequest, forceProviderName?: string): Promise<SyncResult> {
+  async sync(clientId: uuid, req: SyncRequest): Promise<SyncResult> {
     let result: SyncResult
 
-    const lockedTask = async () => {
-      const client = await this.syncClient(req.id, forceProviderName)
-
-      // TODO: we should check the .json here
+    await this.distributed.using(`lock_dyn_sync_client::${clientId}`, async () => {
       if (yn(process.env.LOGGING_ENABLED)) {
-        this.logger.info(`[${client.id}] sync`)
+        this.logger.info(`[${clientId}] sync`)
       }
 
+      const client = await this.clients.getById(clientId)
       await this.syncConduits(client.providerId, req.channels || {})
       const webhooks = await this.syncWebhooks(client.id, req.webhooks || [])
 
-      result = { id: client.id, token: client.token || req.token!, webhooks }
-    }
-
-    if (req.name) {
-      await this.distributed.using(`lock_dyn_sync_provider::${req.name}`, lockedTask)
-    } else if (req.id) {
-      await this.distributed.using(`lock_dyn_sync_client::${req.id}`, lockedTask)
-    } else {
-      await lockedTask()
-    }
+      result = { webhooks }
+    })
 
     return result!
-  }
-
-  async syncSandbox(req: SyncSandboxRequest) {
-    const provider = await this.syncProvider(req.name, true)
-    await this.syncConduits(provider.id, req.channels || {})
-  }
-
-  private async syncProvider(name: string, sandbox: boolean): Promise<Provider> {
-    let provider = await this.providers.fetchByName(name)
-
-    if (!provider) {
-      provider = await this.providers.create(name, sandbox)
-    }
-
-    if (provider.sandbox !== sandbox) {
-      await this.providers.updateSandbox(provider.id, sandbox)
-    }
-
-    return provider
   }
 
   private async syncConduits(providerId: uuid, conduits: SyncChannels) {
     const oldConduits = [...(await this.conduits.listByProvider(providerId))]
 
     for (const [channel, config] of Object.entries(conduits)) {
-      // A conduit is enabled by default (don't need to set enabled: true)
-      if (config.enabled !== undefined && !config.enabled) {
-        continue
-      }
-      const configWithoutEnabled = _.omit(config, ['enabled'])
-
       const channelId = this.channels.getByName(channel).meta.id
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (oldConduitIndex < 0) {
-        await this.conduits.create(providerId, channelId, configWithoutEnabled)
+        await this.conduits.create(providerId, channelId, config)
       } else {
         const oldConduit = await this.conduits.getByProviderAndChannel(providerId, channelId)
 
-        if (!_.isEqual(configWithoutEnabled, oldConduit.config)) {
-          await this.conduits.updateConfig(oldConduit.id, configWithoutEnabled)
+        if (!_.isEqual(config, oldConduit.config)) {
+          await this.conduits.updateConfig(oldConduit.id, config)
         } else {
           // updating the config will clear the number of errors.
           // But if the config is identical we still want to clear it
@@ -130,68 +76,6 @@ export class SyncService extends Service {
     for (const unusedConduit of oldConduits) {
       await this.conduits.delete(unusedConduit.id)
     }
-  }
-
-  private async syncClient(
-    clientId: uuid | undefined,
-    forceProviderName?: string
-  ): Promise<Omit<Client, 'token'> & { token?: string }> {
-    let client: Client | undefined = undefined
-    let token: string | undefined = undefined
-    let provider: Provider | undefined = undefined
-
-    if (clientId) {
-      client = await this.clients.fetchById(clientId)
-    }
-
-    // For when messaging is spinned. Assures that a certain botId always gets back the same clientId when calling messaging
-    if (!client && forceProviderName) {
-      const exisingProvider = await this.providers.fetchByName(forceProviderName)
-      if (exisingProvider) {
-        const existingClient = await this.clients.fetchByProviderId(exisingProvider.id)
-        if (existingClient) {
-          const rawToken = await this.clientTokens.generateToken()
-          const clientToken = await this.clientTokens.create(existingClient.id, rawToken, undefined)
-          token = `${clientToken.id}.${rawToken}`
-          client = await this.clients.getById(existingClient.id)
-        }
-      }
-    }
-
-    if (!client) {
-      const clientId = uuidv4()
-      provider = await this.providers.create(clientId, false)
-      client = await this.clients.create(provider.id, clientId)
-
-      const rawToken = await this.clientTokens.generateToken()
-      const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
-      token = `${clientToken.id}.${rawToken}`
-    } else {
-      provider = await this.providers.fetchById(client.providerId)
-
-      if (!provider) {
-        provider = await this.providers.create(client.id, false)
-
-        await this.clients.updateProvider(client.id, provider.id)
-        client = await this.clients.getById(client.id)
-      }
-    }
-
-    const targetName = forceProviderName || client.id
-    if (provider.name !== targetName) {
-      // If this provider's name conflicts with an old provider, we delete the old provider
-      // We only do this when setting a name ourselves to the provider (meaning we made a call to sync with sufficient authority)
-      if (forceProviderName) {
-        const providerWithSameName = await this.providers.fetchByName(targetName)
-        if (providerWithSameName && providerWithSameName.id !== provider.id) {
-          await this.providers.delete(providerWithSameName.id)
-        }
-      }
-
-      await this.providers.updateName(provider.id, targetName)
-    }
-
-    return { ...client, token }
   }
 
   private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]): Promise<SyncWebhook[]> {

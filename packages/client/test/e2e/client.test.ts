@@ -1,14 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import {
-  CLIENT_ID_HEADER,
-  CLIENT_TOKEN_HEADER,
-  Conversation,
-  Message,
-  MessagingClient,
-  SyncRequest,
-  SyncWebhook,
-  User
-} from '../../src'
+import { Conversation, Message, MessagingChannel, MessagingClient, SyncRequest, SyncWebhook, User } from '../../src'
 
 const FAKE_UUID = uuid()
 const FAKE_CLIENT_ID = uuid()
@@ -17,22 +8,15 @@ const FAKE_CLIENT_TOKEN =
 
 describe('Http Client', () => {
   test('Should create a client with credential information and URL', async () => {
-    const auth = {
-      clientId: FAKE_CLIENT_ID,
-      clientToken: FAKE_CLIENT_TOKEN
-    }
     const url = 'http://messaging.best'
     const client = new MessagingClient({
       url,
-      auth
+      clientId: FAKE_CLIENT_ID,
+      clientToken: FAKE_CLIENT_TOKEN
     })
 
-    expect(client.auth).toEqual(auth)
-    expect(Object.keys(client.authHttp.defaults.headers.common)).toEqual(
-      expect.arrayContaining([CLIENT_ID_HEADER, CLIENT_TOKEN_HEADER])
-    )
-
-    expect(client.http.defaults.baseURL).toContain(url)
+    expect(client.creds).toEqual({ clientToken: FAKE_CLIENT_TOKEN })
+    expect((client as any).channel.http.defaults.baseURL).toContain(url)
   })
 
   const state: {
@@ -43,38 +27,38 @@ describe('Http Client', () => {
     message?: Message
     webhooks?: SyncWebhook[]
   } = {}
-  const client = new MessagingClient({ url: 'http://localhost:3100' })
+  const url = 'http://localhost:3100'
+  const adminClient = new MessagingChannel({ url, adminKey: process.env.ADMIN_KEY })
+  let client: MessagingClient
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
 
   describe('Syncs', () => {
     describe('Sync', () => {
       test('Should return a clientId/clientToken when sync is called with an empty config', async () => {
-        const config: SyncRequest = {}
-        const res = await client.syncs.sync(config)
+        const res = await adminClient.syncClient({ name: 'yoyo' })
 
         expect(res.id).toBeDefined()
         expect(res.token).toBeDefined()
-        expect(res.webhooks).toEqual([])
 
         state.clientId = res.id
         state.clientToken = res.token
       })
 
       test('Should authenticate using clientId/clientToken', async () => {
-        client.authenticate(state.clientId!, state.clientToken!)
+        client = new MessagingClient({
+          url,
+          clientId: state.clientId!,
+          clientToken: state.clientToken!
+        })
       })
 
       test('Should return webhooks with token when provided in the config', async () => {
-        const config: SyncRequest = {
-          id: state.clientId,
-          token: state.clientToken,
+        const config = {
           webhooks
         }
-        const res = await client.syncs.sync(config)
+        const res = await client.sync(config)
         state.webhooks = res.webhooks
 
-        expect(res.id).toBeDefined()
-        expect(res.token).toBeDefined()
         expect(res.webhooks.length).toEqual(webhooks.length)
         for (let i = 0; i < webhooks.length; i++) {
           expect(res.webhooks[i].url).toEqual(webhooks[i].url)
@@ -83,29 +67,12 @@ describe('Http Client', () => {
       })
 
       test('Should return the same token for the same webhooks', async () => {
-        const config: SyncRequest = {
-          id: state.clientId,
-          token: state.clientToken,
+        const config = {
           webhooks
         }
-        const res = await client.syncs.sync(config)
+        const res = await client.sync(config)
 
         expect(res.webhooks).toEqual(state.webhooks)
-      })
-
-      test('Should throw when the provided clientId is valid but not the clientToken', async () => {
-        const config: SyncRequest = { id: state.clientId, token: FAKE_CLIENT_TOKEN }
-
-        await expect(client.syncs.sync(config)).rejects.toThrow('Request failed with status code 403')
-      })
-
-      test('Should not throw an error when both credentials are invalid', async () => {
-        const config: SyncRequest = { id: FAKE_CLIENT_ID, token: FAKE_CLIENT_TOKEN }
-
-        await expect(client.syncs.sync(config)).resolves.not.toEqual({
-          id: expect.anything(),
-          token: expect.anything()
-        })
       })
     })
   })
@@ -114,7 +81,7 @@ describe('Http Client', () => {
     let secondUser: User
     describe('Create', () => {
       test('Should create a user without throwing any error', async () => {
-        const user = await client.users.create()
+        const user = await client.createUser()
 
         expect(user.clientId).toBe(state.clientId)
         expect(user.id).toBeDefined()
@@ -123,7 +90,7 @@ describe('Http Client', () => {
       })
 
       test('Should be able to create more than one users', async () => {
-        const user = await client.users.create()
+        const user = await client.createUser()
 
         expect(user).not.toEqual(state.user)
         expect(user.clientId).toBe(state.clientId)
@@ -135,13 +102,13 @@ describe('Http Client', () => {
 
     describe('Get', () => {
       test('Should be able to get the newly created user', async () => {
-        const user = await client.users.get(state.user!.id)
+        const user = await client.getUser(state.user!.id)
 
         expect(user).toEqual(state.user)
       })
 
       test('Should return undefined when the user does not exists', async () => {
-        const user = await client.users.get(FAKE_UUID)
+        const user = await client.getUser(FAKE_UUID)
 
         expect(user).toBeUndefined()
       })
@@ -153,7 +120,7 @@ describe('Http Client', () => {
 
     describe('Create', () => {
       test('Should create a conversation without throwing any error', async () => {
-        const conversation = await client.conversations.create(state.user!.id)
+        const conversation = await client.createConversation(state.user!.id)
 
         expect(conversation.clientId).toBe(state.clientId)
         expect(conversation.userId).toBe(state.user!.id)
@@ -164,7 +131,7 @@ describe('Http Client', () => {
       })
 
       test('Should be able to create more than one conversation for a given user', async () => {
-        const conversation = await client.conversations.create(state.user!.id)
+        const conversation = await client.createConversation(state.user!.id)
 
         expect(conversation).not.toEqual(state.conversation)
         expect(conversation.clientId).toBe(state.clientId)
@@ -176,7 +143,7 @@ describe('Http Client', () => {
       })
 
       test('Should throw an error if the userId does not exists', async () => {
-        await expect(client.conversations.create(FAKE_UUID)).rejects.toThrow(
+        await expect(client.createConversation(FAKE_UUID)).rejects.toThrow(
           new Error('Request failed with status code 404')
         )
       })
@@ -184,47 +151,33 @@ describe('Http Client', () => {
 
     describe('Get', () => {
       test('Should be able to get the newly created conversation', async () => {
-        const conversation = await client.conversations.get(state.conversation!.id)
+        const conversation = await client.getConversation(state.conversation!.id)
 
         expect(conversation).toEqual(state.conversation)
       })
 
       test('Should return undefined when the conversation does not exists', async () => {
-        const conversation = await client.conversations.get(FAKE_UUID)
+        const conversation = await client.getConversation(FAKE_UUID)
 
         expect(conversation).toBeUndefined()
       })
     })
 
-    describe('GetRecent', () => {
-      test('Should be able to only get a users most recent conversations', async () => {
-        const conversations = await client.conversations.getRecent(state.user!.id)
-
-        expect(conversations).toEqual(secondConversation)
-      })
-
-      test('Should throw an error if the userId does not exists', async () => {
-        await expect(client.conversations.getRecent(FAKE_UUID)).rejects.toThrow(
-          new Error('Request failed with status code 404')
-        )
-      })
-    })
-
     describe('List', () => {
       test('Should be able to list all the users conversations', async () => {
-        const conversations = await client.conversations.list(state.user!.id)
+        const conversations = await client.listConversations(state.user!.id)
 
         expect(conversations).toEqual([secondConversation, state.conversation])
       })
 
       test('Should be able to list a fixed number of the users conversations', async () => {
-        const conversations = await client.conversations.list(state.user!.id, 1)
+        const conversations = await client.listConversations(state.user!.id, 1)
 
         expect(conversations).toEqual([secondConversation])
       })
 
       test('Should throw an error if the userId does not exists', async () => {
-        await expect(client.conversations.list(FAKE_UUID)).rejects.toThrow(
+        await expect(client.listConversations(FAKE_UUID)).rejects.toThrow(
           new Error('Request failed with status code 404')
         )
       })
@@ -240,7 +193,7 @@ describe('Http Client', () => {
 
     describe('Create', () => {
       test('Should create a message without throwing any error', async () => {
-        const message = await client.messages.create(state.conversation!.id, state.user!.id, payload)
+        const message = await client.createMessage(state.conversation!.id, state.user!.id, payload)
 
         expect(message.conversationId).toBe(state.conversation!.id)
         expect(message.authorId).toBe(state.user!.id)
@@ -252,7 +205,7 @@ describe('Http Client', () => {
       })
 
       test('Should be able to create more then one message in a conversation', async () => {
-        const message = await client.messages.create(state.conversation!.id, state.user!.id, payload)
+        const message = await client.createMessage(state.conversation!.id, state.user!.id, payload)
 
         expect(message).not.toEqual(state.message)
         expect(message.conversationId).toBe(state.conversation!.id)
@@ -265,13 +218,13 @@ describe('Http Client', () => {
       })
 
       test('Should throw an error if the userId does not exists', async () => {
-        await expect(client.messages.create(state.conversation!.id, FAKE_UUID, payload)).rejects.toThrow(
+        await expect(client.createMessage(state.conversation!.id, FAKE_UUID, payload)).rejects.toThrow(
           new Error('Request failed with status code 404')
         )
       })
 
       test('Should throw an error if the conversationId does not exists', async () => {
-        await expect(client.messages.create(FAKE_UUID, state.user?.id, payload)).rejects.toThrow(
+        await expect(client.createMessage(FAKE_UUID, state.user?.id, payload)).rejects.toThrow(
           new Error('Request failed with status code 404')
         )
       })
@@ -279,13 +232,13 @@ describe('Http Client', () => {
 
     describe('Get', () => {
       test('Should be able to get the newly created message', async () => {
-        const message = await client.messages.get(state.message!.id)
+        const message = await client.getMessage(state.message!.id)
 
         expect(message).toEqual(state.message)
       })
 
       test('Should return undefined when the message does not exists', async () => {
-        const message = await client.messages.get(FAKE_UUID)
+        const message = await client.getMessage(FAKE_UUID)
 
         expect(message).toBeUndefined()
       })
@@ -293,37 +246,37 @@ describe('Http Client', () => {
 
     describe('List', () => {
       test('Should be able to list messages in a conversation', async () => {
-        const messages = await client.messages.list(state.conversation!.id)
+        const messages = await client.listMessages(state.conversation!.id)
 
         expect(messages).toEqual([secondMessage, state.message])
       })
 
       test('Should be able to lista fixes number of messages in a conversation', async () => {
-        const messages = await client.messages.list(state.conversation!.id, 1)
+        const messages = await client.listMessages(state.conversation!.id, 1)
 
         expect(messages).toEqual([secondMessage])
       })
 
       test('Should throw an error if the conversationId does not exists', async () => {
-        await expect(client.messages.list(FAKE_UUID)).rejects.toThrow(new Error('Request failed with status code 404'))
+        await expect(client.listMessages(FAKE_UUID)).rejects.toThrow(new Error('Request failed with status code 404'))
       })
     })
 
     describe('Delete', () => {
       test('Should be able to delete a message without throwing any error', async () => {
-        const deleted = await client.messages.delete(state.message!.id)
+        const deleted = await client.deleteMessage(state.message!.id)
 
         expect(deleted).toEqual(true)
       })
 
       test('Should not delete a message that was already deleted', async () => {
-        const deleted = await client.messages.delete(state.message!.id)
+        const deleted = await client.deleteMessage(state.message!.id)
 
         expect(deleted).toEqual(false)
       })
 
       test('Should return false if the messageId does not exists', async () => {
-        const deleted = await client.messages.delete(FAKE_UUID)
+        const deleted = await client.deleteMessage(FAKE_UUID)
 
         expect(deleted).toEqual(false)
       })
@@ -331,20 +284,20 @@ describe('Http Client', () => {
 
     describe('DeleteByConversation', () => {
       test('Should be able to delete all messages from a conversation without throwing any error', async () => {
-        const deleted = await client.messages.deleteByConversation(state.conversation!.id)
+        const deleted = await client.deleteMessagesByConversation(state.conversation!.id)
 
         // Deletes the second conversation
         expect(deleted).toEqual(1)
       })
 
       test('Should not delete messages that were already deleted', async () => {
-        const deleted = await client.messages.deleteByConversation(state.conversation!.id)
+        const deleted = await client.deleteMessagesByConversation(state.conversation!.id)
 
         expect(deleted).toEqual(0)
       })
 
       test('Should return false if the conversationId does not exists', async () => {
-        const deleted = await client.messages.deleteByConversation(FAKE_UUID)
+        const deleted = await client.deleteMessagesByConversation(FAKE_UUID)
 
         expect(deleted).toEqual(0)
       })
@@ -354,7 +307,7 @@ describe('Http Client', () => {
   describe('Health', () => {
     describe('Get', () => {
       test('Should be able to get the a clients health report', async () => {
-        const healthReport = await client.health.get()
+        const healthReport = await client.getHealth()
 
         // No report since no channel config we synced
         expect(healthReport).toEqual({ channels: {} })

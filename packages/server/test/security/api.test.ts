@@ -1,6 +1,7 @@
 import { Conversation, Message, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
 import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios'
 import _ from 'lodash'
+import querystring from 'querystring'
 import { v4 as uuid } from 'uuid'
 import froth from './mocha-froth'
 
@@ -49,54 +50,36 @@ const shouldFail = async (func: Function, onError: (err: AxiosError) => void) =>
 }
 
 describe('API', () => {
-  const sync = async (data?: SyncRequest, config?: AxiosRequestConfig) => {
-    const client = http()
+  describe('Admin', () => {
+    const createClient = async (override?: { adminKey?: string }) => {
+      let options: any = {
+        headers: { 'x-bp-messaging-admin-key': process.env.ADMIN_KEY }
+      }
+      if (override) {
+        if (override.adminKey) {
+          options.headers['x-bp-messaging-admin-key'] = override.adminKey
+        } else {
+          options = undefined
+        }
+      }
 
-    const res = await client.post<SyncResult>('/api/sync', data, config)
-
-    expect(res.data).toEqual({ id: expect.anything(), token: expect.anything(), webhooks: expect.anything() })
-    expect(res.status).toEqual(200)
-
-    return res.data
-  }
-
-  describe('Sync', () => {
-    test('Should not allow any other methods than POST and OPTIONS', async () => {
-      const allowed: Method[] = ['POST', 'OPTIONS']
-      const unallowed: Method[] = ['GET', 'HEAD', 'PUT', 'DELETE', 'PURGE', 'LINK', 'UNLINK', 'PATCH']
       const client = http()
+      const res = await client.post('/api/admin/clients', undefined, options)
 
-      for (const method of unallowed) {
-        const config: AxiosRequestConfig = { method, url: '/api/sync' }
-        await shouldFail(
-          async () => client.request<SyncResult>(config),
-          (err) => {
-            if (err.response?.data) {
-              expect(err.response?.data).toEqual('Method Not Allowed')
-            }
-            expect(err.response?.status).toEqual(405)
-          }
-        )
-      }
+      expect(res.data).toEqual({ id: expect.anything(), token: expect.anything() })
+      expect(res.status).toEqual(201)
 
-      for (const method of allowed) {
-        const config: AxiosRequestConfig = { method, url: '/api/sync' }
-        const res = await client.request<SyncResult>(config)
+      return res.data
+    }
 
-        expect(res.data).not.toBeUndefined()
-        expect(res.status).toBeGreaterThanOrEqual(200)
-        expect(res.status).toBeLessThan(300)
-      }
-    })
-
-    test('Should allow anyone to make a sync request', async () => {
-      const res = await sync()
+    test('Should be able to create clients', async () => {
+      const res = await createClient()
 
       clients.first.clientId = res.id
       clients.first.clientToken = res.token
 
       {
-        const res = await sync()
+        const res = await createClient()
 
         clients.second.clientId = res.id
         clients.second.clientToken = res.token
@@ -106,15 +89,48 @@ describe('API', () => {
       }
     })
 
+    test('Should not be able to create clients without admin key', async () => {
+      await shouldFail(
+        async () => createClient({ adminKey: undefined }),
+        (err) => {
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
+        }
+      )
+    })
+
+    test('Should not be able to create clients with wrong admin key', async () => {
+      await shouldFail(
+        async () => createClient({ adminKey: 'bob' }),
+        (err) => {
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
+        }
+      )
+    })
+  })
+
+  describe('Sync', () => {
+    const sync = async (clientId?: string, clientToken?: string, data?: any, config?: AxiosRequestConfig) => {
+      const client = http(clientId, clientToken)
+
+      const res = await client.post<SyncResult>('/api/sync', data || {}, config)
+
+      expect(res.data).toEqual({ webhooks: expect.anything() })
+      expect(res.status).toEqual(200)
+
+      return res.data
+    }
+
     test('Should return unauthorized if token is invalid', async () => {
       const tokens = Array.from({ length: 10 }, () => froth(TOKEN_LENGTH))
 
       for (const token of tokens) {
         await shouldFail(
-          async () => sync({ id: clients.first.clientId, token }),
+          async () => sync(clients.first.clientId, Buffer.from(token).toString('base64url')),
           (err) => {
-            expect(err.response?.data).toEqual('Forbidden')
-            expect(err.response?.status).toEqual(403)
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
           }
         )
       }
@@ -122,30 +138,30 @@ describe('API', () => {
 
     test('Should not allow the token of another client', async () => {
       await shouldFail(
-        async () => sync({ id: clients.first.clientId, token: clients.second.clientToken }),
+        async () => sync(clients.first.clientId, clients.second.clientToken),
         (err) => {
-          expect(err.response?.data).toEqual('Forbidden')
-          expect(err.response?.status).toEqual(403)
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
         }
       )
     })
 
     test('Should return unauthorized if token is empty', async () => {
       await shouldFail(
-        async () => sync({ id: clients.first.clientId, token: '' }),
+        async () => sync(clients.first.clientId, ''),
         (err) => {
-          expect(err.response?.data).toEqual('"token" is not allowed to be empty')
-          expect(err.response?.status).toEqual(400)
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
         }
       )
     })
 
     test('Should return unauthorized if token is undefined', async () => {
       await shouldFail(
-        async () => sync({ id: clients.first.clientId, token: undefined }),
+        async () => sync(clients.first.clientId, undefined),
         (err) => {
-          expect(err.response?.data).toEqual('Forbidden')
-          expect(err.response?.status).toEqual(403)
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
         }
       )
     })
@@ -155,15 +171,15 @@ describe('API', () => {
 
       for (const token of tokens) {
         await shouldFail(
-          async () => sync({ id: clients.first.clientId, token }),
+          async () => sync(clients.first.clientId, Buffer.from(token).toString('base64url')),
           (err) => {
             expect(err.response?.data).not.toEqual({
               id: expect.anything(),
               token: expect.anything(),
               webhooks: expect.anything()
             })
-            expect(err.response?.data).toEqual('"token" length must be less than or equal to 125 characters long')
-            expect(err.response?.status).toEqual(400)
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
           }
         )
       }
@@ -171,15 +187,10 @@ describe('API', () => {
 
     test('Should handle object token and clientId', async () => {
       await shouldFail(
-        async () => sync({ id: [] as any, token: {} as any }),
+        async () => sync([] as any, {} as any),
         (err) => {
-          expect(err.response?.data).not.toEqual({
-            id: expect.anything(),
-            token: expect.anything(),
-            webhooks: expect.anything()
-          })
-          expect(err.response?.data).toEqual('"id" must be a string')
-          expect(err.response?.status).toEqual(400)
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
         }
       )
     })
@@ -189,37 +200,25 @@ describe('API', () => {
 
       for (const id of ids) {
         await shouldFail(
-          async () => sync({ id }),
+          async () => sync(id),
           (err) => {
-            expect(err.response?.data).not.toEqual({
-              id: expect.anything(),
-              token: expect.anything(),
-              webhooks: expect.anything()
-            })
-            expect(err.response?.data).toEqual('"id" must be a valid GUID')
-            expect(err.response?.status).toEqual(400)
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
           }
         )
       }
     })
 
-    test('Should return a new set of credentials if clientId is unknown', async () => {
-      const id = uuid()
-
-      const res = await sync({ id })
-      expect(res.id).not.toEqual(id)
-    })
-
     test('Should not be able to sync an empty channel config', async () => {
       await shouldFail(
-        async () => sync({ channels: { teams: null } }),
+        async () => sync(clients.first.clientId, clients.first.clientToken, { channels: { teams: null } }),
         (err) => {
           expect(err.response?.data).not.toEqual({
             id: expect.anything(),
             token: expect.anything(),
             webhooks: expect.anything()
           })
-          expect(err.response?.data).toEqual('"channels.teams.appId" is required')
+          expect(err.response?.data).toEqual('"body.channels.teams" must be of type object')
           expect(err.response?.status).toEqual(400)
         }
       )
@@ -229,7 +228,11 @@ describe('API', () => {
       const str = 'a'.repeat(MAX_PAYLOAD_SIZE * 2)
 
       await shouldFail(
-        async () => sync({ str } as any, { maxContentLength: Infinity, maxBodyLength: Infinity }),
+        async () =>
+          sync(clients.first.clientId, clients.first.clientToken, { str } as any, {
+            maxContentLength: Infinity,
+            maxBodyLength: Infinity
+          }),
         (err) => {
           expect(err.response?.data).toContain('PayloadTooLargeError: request entity too large')
           expect(err.response?.status).toEqual(413)

@@ -1,10 +1,9 @@
-import { uuid } from '@botpress/messaging-base'
+import { HealthEventType, uuid } from '@botpress/messaging-base'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
 import { InstanceLifetimeEvents } from '../instances/lifetime/events'
 import { InstanceService } from '../instances/service'
 import { HealthService } from './service'
-import { HealthEventType } from './types'
 
 export class HealthListener {
   constructor(

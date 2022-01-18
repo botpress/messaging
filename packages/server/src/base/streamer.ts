@@ -54,7 +54,6 @@ export class Streamer {
     const payload = {
       type,
       data: {
-        clientId,
         ...(userId ? { userId } : {}),
         ...data
       }
@@ -69,14 +68,13 @@ export class Streamer {
     }
 
     if (source?.client?.id !== clientId) {
-      if (yn(process.env.SPINNED)) {
-        void this.send(process.env.SPINNED_URL!, payload)
-      } else {
-        const webhooks = await this.webhooks.list(clientId)
+      const webhooks = await this.webhooks.list(clientId)
 
-        for (const webhook of webhooks) {
-          void this.send(webhook.url, payload, { 'x-webhook-token': webhook.token })
-        }
+      for (const webhook of webhooks) {
+        void this.send(process.env.SPINNED_URL || webhook.url, payload, {
+          'x-bp-messaging-client-id': clientId,
+          'x-bp-messaging-webhook-token': webhook.token
+        })
       }
     }
   }

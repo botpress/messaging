@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:3100
 // @baseUrl =  https://messaging.botpress.dev/
+@adminKey = ADMIN_KEY
 @clientId = YOUR_CLIENT_ID
 @clientToken = YOUR_TOKEN
 @userId = YOUR_USER_ID
@@ -17,21 +18,37 @@ client_id=CLOUD_CLIENT
 ###
 @authToken = {{auth.response.body.access_token}}
 
+### Create client
+POST {{baseUrl}}/api/admin/clients
+Authorization: Bearer {{authToken}}
+x-bp-messaging-admin-key: {{adminKey}}
+
+### Sync client
+POST {{baseUrl}}/api/admin/clients/sync
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+x-bp-messaging-admin-key: {{adminKey}}
+
+{
+  "name": "my-bot-name",
+  "id": null,
+  "token": null
+}
+
 ### Sync
 POST {{baseUrl}}/api/sync
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
 
 {
   "channels": {
     "telegram": {
-      "enabled": true,
       "botToken": "my-telegram-token"
     }
   },
-  "webhooks": [{"url": "https://mywebsite.com/mycallbackurl"}],
-  "id": null,
-  "token": null
+  "webhooks": [{"url": "https://mywebsite.com/mycallbackurl"}]
 }
 
 ### Health
