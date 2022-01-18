@@ -52,7 +52,7 @@ export class AdminApiManager {
   use(type: 'post' | 'get' | 'delete', path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
     this.router[type](
       path,
-      this.auth.public.auth(async (req, res) => {
+      this.auth.admin.auth(async (req, res) => {
         const { error } = schema.validate({ query: req.query, body: req.body, params: req.params })
         if (error) {
           return res.status(400).send(error.message)

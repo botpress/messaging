@@ -1,5 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
-import { DistributedService } from '@botpress/messaging-engine'
+import { DistributedService, Logger, LoggerLevel } from '@botpress/messaging-engine'
+import clc from 'cli-color'
 import { Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { AdminApiManager } from '../base/api-manager'
@@ -19,6 +20,14 @@ export class ClientApi {
   ) {}
 
   setup(router: AdminApiManager) {
+    if (!process.env.ADMIN_KEY) {
+      new Logger('Admin').window(
+        [clc.redBright('ADMIN_KEY IS NOT SET'), 'ADMIN ROUTES ARE UNPROTECTED'],
+        LoggerLevel.Critical,
+        75
+      )
+    }
+
     router.post('/admin/clients', Schema.Api.Create, this.create.bind(this))
     router.post('/admin/clients/sync', Schema.Api.Sync, this.sync.bind(this))
   }
