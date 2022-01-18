@@ -1,15 +1,14 @@
-import { MigrationService, DatabaseService, ShutDownSignal } from '@botpress/messaging-engine'
+import { MigrationService, DatabaseService, ShutDownSignal, getTableId } from '@botpress/messaging-engine'
 import { v4 as uuid } from 'uuid'
 import { StatusMigration } from '../../src/migrations/0.1.19-status'
-import { StatusTable } from '../../src/status/table'
 import { app, setupApp } from '../integration/utils'
 
 const MIGRATION_VERSION = '0.1.19'
 const PREVIOUS_VERSION = '0.1.18'
 
-const CONDUITS_TABLE = 'msg_conduits'
+let CONDUITS_TABLE: string
+let STATUS_TABLE: string
 const CONDUITS_INITIALIZED = 'initialized'
-const STATUS_TABLE = 'msg_status'
 const STATUS_TEST_COLUMN = 'initializedOn'
 
 const TELEGRAM_CHANNEL_ID = '0198f4f5-6100-4549-92e5-da6cc31b4ad1'
@@ -20,6 +19,8 @@ describe('0.1.19 - Status', () => {
 
   beforeAll(async () => {
     await setupApp()
+    CONDUITS_TABLE = getTableId('msg_conduits')
+    STATUS_TABLE = getTableId('msg_status')
     migration = app.migration
     database = app.database
 
@@ -28,7 +29,6 @@ describe('0.1.19 - Status', () => {
 
   afterAll(async () => {
     await app.destroy()
-    await database.destroy()
   })
 
   beforeEach(async () => {
@@ -72,7 +72,7 @@ describe('0.1.19 - Status', () => {
 
     try {
       const providerId = uuid()
-      await trx('msg_providers').insert({
+      await trx(getTableId('msg_providers')).insert({
         id: providerId,
         name: uuid(),
         sandbox: false
@@ -86,7 +86,7 @@ describe('0.1.19 - Status', () => {
       }
 
       if (initialized) {
-        conduit['initialized'] = initialized
+        conduit['initialized'] = database.setDate(new Date())
       }
 
       await trx(CONDUITS_TABLE).insert(conduit)
@@ -126,7 +126,7 @@ describe('0.1.19 - Status', () => {
         providerId: expect.anything(),
         config: expect.anything(),
         channelId: TELEGRAM_CHANNEL_ID,
-        initialized: Number(true)
+        initialized: expect.anything()
       })
     })
 
@@ -151,7 +151,7 @@ describe('0.1.19 - Status', () => {
         providerId: expect.anything(),
         config: expect.anything(),
         channelId: TELEGRAM_CHANNEL_ID,
-        initialized: Number(true)
+        initialized: expect.anything()
       })
 
       await up(

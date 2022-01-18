@@ -1,4 +1,4 @@
-import { Migration } from '@botpress/messaging-engine'
+import { getTableId, Migration } from '@botpress/messaging-engine'
 
 export class FixClientSchemaMigration extends Migration {
   meta = {
@@ -8,7 +8,7 @@ export class FixClientSchemaMigration extends Migration {
   }
 
   async valid() {
-    return this.trx.schema.hasTable('msg_clients')
+    return this.trx.schema.hasTable(getTableId('msg_clients'))
   }
 
   async applied() {
@@ -16,7 +16,7 @@ export class FixClientSchemaMigration extends Migration {
   }
 
   async up() {
-    return this.trx.schema.alterTable('msg_clients', (table) => {
+    return this.trx.schema.alterTable(getTableId('msg_clients'), (table) => {
       table.uuid('providerId').nullable().alter()
     })
   }

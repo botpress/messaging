@@ -10,6 +10,8 @@ export interface EngineEnv {
   // database
   DATABASE_URL?: string
   DATABASE_POOL?: string
+  DATABASE_SUFFIX?: string
+  DATABASE_TRANSIENT?: string
 
   // migration
   AUTO_MIGRATE?: string
