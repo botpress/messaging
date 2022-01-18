@@ -29,7 +29,6 @@ describe('0.1.19 - Status', () => {
 
   afterAll(async () => {
     await app.destroy()
-    await database.destroy()
   })
 
   beforeEach(async () => {
