@@ -4,11 +4,11 @@ import { handleNotFound } from './errors'
 
 export abstract class MessagingChannelApi extends MessagingChannelBase {
   async createClient(): Promise<{ id: string; token: string }> {
-    return (await this.http.post('/admin/clients')).data
+    return (await this.http.post('/admin/clients', undefined, { headers: this.adminHeader })).data
   }
 
   async syncClient(config: { name: string; id?: uuid; token?: string }): Promise<{ id: uuid; token: string }> {
-    return (await this.http.post('/admin/clients/sync', config)).data
+    return (await this.http.post('/admin/clients/sync', config, { headers: this.adminHeader })).data
   }
 
   async sync(clientId: uuid, config: SyncRequest): Promise<SyncResult> {

@@ -5,11 +5,13 @@ import { MessagingClientAuth } from './auth'
 export interface MessagingChannelOptions {
   /** Base url of the messaging server */
   url: string
+  /** Key to access admin routes. Optional */
+  adminKey?: string
   /** A custom axios config giving more control over the HTTP client used internally. Optional */
   config?: Omit<AxiosRequestConfig, 'baseURL'>
 }
 
-export interface MessagingOptions extends MessagingChannelOptions, MessagingClientAuth {
+export interface MessagingOptions extends Omit<MessagingChannelOptions, 'adminKey'>, MessagingClientAuth {
   /** Messaging client id */
   clientId: uuid
 }

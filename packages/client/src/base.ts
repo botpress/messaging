@@ -14,12 +14,14 @@ export abstract class MessagingChannelBase extends Emitter<{
   protected readonly http: AxiosInstance
   protected auths: { [clientId: uuid]: MessagingClientAuth } = {}
   protected headers: { [clientId: uuid]: any } = {}
+  protected adminHeader: any
 
   constructor(options: MessagingChannelOptions) {
     super()
 
     const config = this.getAxiosConfig(options)
     this.http = axios.create(config)
+    this.adminHeader = options.adminKey?.length ? { 'x-bp-messaging-admin-key': options.adminKey } : {}
 
     this.http.interceptors.response.use(
       (response) => {
