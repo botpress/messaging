@@ -51,9 +51,20 @@ const shouldFail = async (func: Function, onError: (err: AxiosError) => void) =>
 
 describe('API', () => {
   describe('Admin', () => {
-    const createClient = async () => {
+    const createClient = async (override?: { adminKey?: string }) => {
+      let options: any = {
+        headers: { 'x-bp-messaging-admin-key': 'admin123' }
+      }
+      if (override) {
+        if (override.adminKey) {
+          options.headers['x-bp-messaging-admin-key'] = override.adminKey
+        } else {
+          options = undefined
+        }
+      }
+
       const client = http()
-      const res = await client.post('/api/admin/clients')
+      const res = await client.post('/api/admin/clients', undefined, options)
 
       expect(res.data).toEqual({ id: expect.anything(), token: expect.anything() })
       expect(res.status).toEqual(201)
@@ -76,6 +87,26 @@ describe('API', () => {
         expect(res.id).not.toEqual(clients.first.clientId)
         expect(res.token).not.toEqual(clients.first.clientToken)
       }
+    })
+
+    test('Should not be able to create clients without admin key', async () => {
+      await shouldFail(
+        async () => createClient({ adminKey: undefined }),
+        (err) => {
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
+        }
+      )
+    })
+
+    test('Should not be able to create clients with wrong admin key', async () => {
+      await shouldFail(
+        async () => createClient({ adminKey: 'bob' }),
+        (err) => {
+          expect(err.response?.data).toEqual('Unauthorized')
+          expect(err.response?.status).toEqual(401)
+        }
+      )
     })
   })
 
