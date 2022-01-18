@@ -1,6 +1,7 @@
 // Global setup is performed before a TypeScript environment is made available, so we need to create the environment manually
 require('ts-node/register')
 
+import crypto from 'crypto'
 import { setup as setupDevServer } from 'jest-dev-server'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
@@ -9,6 +10,11 @@ const setup = async () => {
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.ENABLE_EXPERIMENTAL_SOCKETS = 'true'
   process.env.DATABASE_URL = process.env.DATABASE_URL || path.join(__dirname, '.test-data', `${uuidv4()}.sqlite`)
+
+  if (process.env.DATABASE_URL.startsWith('postgres')) {
+    process.env.DATABASE_SUFFIX = `__${randomLetters(8)}`
+    process.env.DATABASE_TRANSIENT = 'true'
+  }
 
   await setupDevServer({
     command: 'yarn dev',
@@ -19,6 +25,15 @@ const setup = async () => {
     path: 'status',
     usedPortAction: 'error'
   })
+}
+
+const randomLetters = (length: number) => {
+  const chars = 'abcdefghijklmnopqrstuvwxyz'
+  let str = ''
+  for (let i = 0; i < length; i++) {
+    str += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return str
 }
 
 export default setup

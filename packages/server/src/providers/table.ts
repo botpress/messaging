@@ -2,7 +2,7 @@ import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class ProviderTable extends Table {
-  get id() {
+  get name() {
     return 'msg_providers'
   }
 

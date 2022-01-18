@@ -1,6 +1,7 @@
 import fs from 'fs'
 import knex, { Knex } from 'knex'
 import path from 'path'
+import yn from 'yn'
 import { Service } from '../base/service'
 import { Table } from '../base/table'
 import { Logger } from '../logger/types'
@@ -76,6 +77,19 @@ export class DatabaseService extends Service {
   }
 
   async destroy() {
+    if (yn(process.env.DATABASE_TRANSIENT)) {
+      try {
+        const trx = await this.knex.transaction()
+        for (const table of this.tables.reverse()) {
+          await trx.schema.dropTable(table.id)
+          this.logger.debug(`Dropped table '${table.id}'`)
+        }
+        await trx.commit()
+      } catch (e) {
+        this.logger.error(e, 'Failed to destroy transient database')
+      }
+    }
+
     try {
       await this.knex.destroy()
     } catch (e) {
