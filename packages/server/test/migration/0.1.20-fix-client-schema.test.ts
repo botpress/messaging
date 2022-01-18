@@ -1,4 +1,4 @@
-import { MigrationService, DatabaseService, ShutDownSignal } from '@botpress/messaging-engine'
+import { MigrationService, DatabaseService, ShutDownSignal, getTableId } from '@botpress/messaging-engine'
 import schemaInspector from 'knex-schema-inspector'
 import { v4 as uuid } from 'uuid'
 import { FixClientSchemaMigration } from '../../src/migrations/0.1.20-fix-client-schema'
@@ -7,7 +7,7 @@ import { app, setupApp } from '../integration/utils'
 const MIGRATION_VERSION = '0.1.20'
 const PREVIOUS_VERSION = '0.1.19'
 
-const TABLE = 'msg_clients'
+let TABLE: string
 const COLUMN = 'providerId'
 
 describe('0.1.20 - Fix Client Schema', () => {
@@ -17,6 +17,7 @@ describe('0.1.20 - Fix Client Schema', () => {
 
   beforeAll(async () => {
     await setupApp()
+    TABLE = getTableId('msg_clients')
     migration = app.migration
     database = app.database
 

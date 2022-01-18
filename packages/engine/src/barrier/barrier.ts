@@ -7,12 +7,13 @@ export class Barrier2D<T> {
     let promise = this.locks.get(keyX, keyY)
 
     if (!promise) {
-      promise = new Promise(async (resolve) => {
-        resolve(await callback())
-        this.locks.del(keyX, keyY)
+      let resolve: (value: T) => void
+      promise = new Promise(async (r) => {
+        resolve = r
       })
 
       this.locks.set(keyX, keyY, promise)
+      resolve!(await callback())
     }
 
     return promise

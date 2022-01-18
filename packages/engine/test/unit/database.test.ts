@@ -21,7 +21,7 @@ jest.mock('knex', () => {
 })
 
 export class TestTable extends Table {
-  get id() {
+  get name() {
     return 'test_table'
   }
 
@@ -211,6 +211,10 @@ describe('DatabaseService', () => {
   })
 
   describe('SQLite', () => {
+    beforeEach(() => {
+      process.env.DATABASE_URL = undefined
+    })
+
     describe('setup', () => {
       test('Should configure a SQLite database connection', async () => {
         mocked(fs.existsSync).mockReturnValueOnce(true)

@@ -1,4 +1,4 @@
-import { Migration } from '@botpress/messaging-engine'
+import { getTableId, Migration } from '@botpress/messaging-engine'
 
 export class StatusMigration extends Migration {
   meta = {
@@ -8,26 +8,26 @@ export class StatusMigration extends Migration {
   }
 
   async valid() {
-    return this.trx.schema.hasTable('msg_conduits')
+    return this.trx.schema.hasTable(getTableId('msg_conduits'))
   }
 
   async applied() {
-    return !(await this.trx.schema.hasColumn('msg_conduits', 'initialized'))
+    return !(await this.trx.schema.hasColumn(getTableId('msg_conduits'), 'initialized'))
   }
 
   async up() {
     // we don't care about losing data that was in this table
-    await this.trx.schema.dropTable('msg_status')
+    await this.trx.schema.dropTable(getTableId('msg_status'))
 
-    await this.trx.schema.createTable('msg_status', (table) => {
-      table.uuid('conduitId').primary().references('id').inTable('msg_conduits').onDelete('cascade')
+    await this.trx.schema.createTable(getTableId('msg_status'), (table) => {
+      table.uuid('conduitId').primary().references('id').inTable(getTableId('msg_conduits')).onDelete('cascade')
       table.integer('numberOfErrors').notNullable()
       table.timestamp('initializedOn').nullable()
       table.text('lastError').nullable()
       table.index(['numberOfErrors', 'initializedOn'])
     })
 
-    return this.trx.schema.alterTable('msg_conduits', (table) => {
+    return this.trx.schema.alterTable(getTableId('msg_conduits'), (table) => {
       table.dropIndex(['initialized'])
       table.dropColumn('initialized')
     })
@@ -35,15 +35,15 @@ export class StatusMigration extends Migration {
 
   async down() {
     // we don't care about losing data that was in this table
-    await this.trx.schema.dropTable('msg_status')
+    await this.trx.schema.dropTable(getTableId('msg_status'))
 
-    await this.trx.schema.createTable('msg_status', (table) => {
-      table.uuid('conduitId').primary().references('id').inTable('msg_conduits').onDelete('cascade')
+    await this.trx.schema.createTable(getTableId('msg_status'), (table) => {
+      table.uuid('conduitId').primary().references('id').inTable(getTableId('msg_conduits')).onDelete('cascade')
       table.integer('numberOfErrors').defaultTo(0)
       table.text('lastError')
     })
 
-    return this.trx.schema.alterTable('msg_conduits', (table) => {
+    return this.trx.schema.alterTable(getTableId('msg_conduits'), (table) => {
       table.timestamp('initialized').nullable()
       table.index(['initialized'])
     })

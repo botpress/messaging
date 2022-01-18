@@ -159,7 +159,7 @@ describe('Status', () => {
   test('List outdated should contain both conduits since errors have been cleaned', async () => {
     const outdateds = await status.listOutdated(TOLERANCE, MAX_ERRORS, LIMIT)
 
-    expect(outdateds).toEqual([state.status, state.status2])
+    expect(new Set(outdateds)).toEqual(new Set([state.status, state.status2]))
   })
 
   test('Update intializedOn', async () => {
@@ -181,7 +181,7 @@ describe('Status', () => {
   test('List outdated should contain initialized conduit if the tolerance is very low', async () => {
     const outdateds = await status.listOutdated(0, MAX_ERRORS, LIMIT)
 
-    expect(outdateds).toEqual([state.status2, state.status])
+    expect(new Set(outdateds)).toEqual(new Set([state.status2, state.status]))
   })
 
   test('Update intializedOn for second conduit', async () => {
@@ -203,7 +203,7 @@ describe('Status', () => {
   test('List outdated should contain both initialized conduits if the tolerance is very low', async () => {
     const outdateds = await status.listOutdated(0, MAX_ERRORS, LIMIT)
 
-    expect(outdateds).toEqual([state.status, state.status2])
+    expect(new Set(outdateds)).toEqual(new Set([state.status, state.status2]))
   })
 
   test('Set intializedOn to null', async () => {

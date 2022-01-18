@@ -2250,15 +2250,14 @@ __metadata:
     "@parcel/transformer-react-refresh-wrap": ^2.2.0
     "@parcel/transformer-typescript-tsc": ^2.2.0
     "@parcel/transformer-typescript-types": ^2.2.0
+    "@types/conventional-changelog": ^3.1.1
     "@types/jest": ^27.4.0
     "@types/jest-dev-server": ^5.0.0
     "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
+    "@types/yargs": ^17.0.8
     "@typescript-eslint/eslint-plugin": ^5.9.1
     "@typescript-eslint/parser": ^5.9.1
-    bluebird: ^3.7.2
-    bluebird-global: ^1.0.1
-    chalk: ^4.1.2
     conventional-changelog: ^3.1.25
     cross-env: ^7.0.3
     eslint: ^8.7.0
@@ -2266,19 +2265,13 @@ __metadata:
     eslint-import-resolver-node: ^0.3.6
     eslint-plugin-import: ^2.25.4
     eslint-plugin-jsdoc: 37.6.1
-    fs-extra: ^10.0.0
     jest: ^27.4.7
     jest-dev-server: ^6.0.3
-    jest-mock: ^27.4.6
     mkdirp: ^1.0.4
     parcel: ^2.2.0
     pkg: ^5.5.2
-    portfinder: ^1.0.28
     prettier: ^2.5.1
-    pretty-format: ^27.4.6
     rimraf: ^3.0.2
-    semver: ^7.3.5
-    source-map-support: ^0.5.21
     ts-jest: 27.1.2
     ts-node: ^10.4.0
     ts-node-dev: ^1.1.8
@@ -5618,6 +5611,62 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/conventional-changelog-core@npm:*":
+  version: 4.2.1
+  resolution: "@types/conventional-changelog-core@npm:4.2.1"
+  dependencies:
+    "@types/conventional-changelog-writer": "*"
+    "@types/conventional-commits-parser": "*"
+    "@types/conventional-recommended-bump": "*"
+    "@types/git-raw-commits": "*"
+    "@types/node": "*"
+    "@types/normalize-package-data": "*"
+  checksum: bd8557c1cb2cfc225d728e874eca794ef75270dcfaa1681efe4599c5fdd69d8352a10526f07321b870c7c6a23df1b2a21508dd5317255ab71dd65f2eadbad44c
+  languageName: node
+  linkType: hard
+
+"@types/conventional-changelog-writer@npm:*":
+  version: 4.0.1
+  resolution: "@types/conventional-changelog-writer@npm:4.0.1"
+  dependencies:
+    "@types/conventional-commits-parser": "*"
+    "@types/node": "*"
+  checksum: 1e029327a97406de0be4df76ee98a183a0c67a6d90d518e7b72a922e3e4f66e56e4c4c829f1bce02a80946ed474389742708739dd0ecb3e144ec0e421140ae48
+  languageName: node
+  linkType: hard
+
+"@types/conventional-changelog@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@types/conventional-changelog@npm:3.1.1"
+  dependencies:
+    "@types/conventional-changelog-core": "*"
+    "@types/conventional-changelog-writer": "*"
+    "@types/conventional-commits-parser": "*"
+    "@types/node": "*"
+  checksum: 9278f6603fd5594ede86d1c48bdd12f5871564a9070e4c3df6e60f83a723e55e2fb878e572648e92ccb99bea21074090633562240cebb6106c93f930a6cbd442
+  languageName: node
+  linkType: hard
+
+"@types/conventional-commits-parser@npm:*":
+  version: 3.0.2
+  resolution: "@types/conventional-commits-parser@npm:3.0.2"
+  dependencies:
+    "@types/node": "*"
+  checksum: 886c9c35db7b1f82ff29b405e0de2f0545bc310fd543c7b770cdc02841c1952ae9501f31b6ab97b2d089f7994012ff9986055899683122b0fd6d5343ccaccc4f
+  languageName: node
+  linkType: hard
+
+"@types/conventional-recommended-bump@npm:*":
+  version: 6.1.0
+  resolution: "@types/conventional-recommended-bump@npm:6.1.0"
+  dependencies:
+    "@types/conventional-changelog-core": "*"
+    "@types/conventional-changelog-writer": "*"
+    "@types/conventional-commits-parser": "*"
+  checksum: 123c0d7a3b9cbf3e4a55f5d0bc9a889e65ccfc22a88543e43b73fb840c5a9c5b386285e5a1c873d86af405dae94c957b3f2401c8b86ee9dcd880558c8a1c79f3
+  languageName: node
+  linkType: hard
+
 "@types/cookie@npm:^0.4.1":
   version: 0.4.1
   resolution: "@types/cookie@npm:0.4.1"
@@ -5675,6 +5724,15 @@ __metadata:
     "@types/qs": "*"
     "@types/serve-static": "*"
   checksum: 12a2a0e6c4b993fc0854bec665906788aea0d8ee4392389d7a98a5de1eefdd33c9e1e40a91f3afd274011119c506f7b4126acb97fae62ae20b654974d44cba12
+  languageName: node
+  linkType: hard
+
+"@types/git-raw-commits@npm:*":
+  version: 2.0.1
+  resolution: "@types/git-raw-commits@npm:2.0.1"
+  dependencies:
+    "@types/node": "*"
+  checksum: b5d41433a5201b8fbd475d29d08df77d60a402acfdba9703125eab96449a7040721d698e8bad8debbb3377338e08c3d75faab409e2e2b47b6f0a66f535d1594f
   languageName: node
   linkType: hard
 
@@ -5990,7 +6048,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/normalize-package-data@npm:^2.4.0":
+"@types/normalize-package-data@npm:*, @types/normalize-package-data@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
   checksum: e87bccbf11f95035c89a132b52b79ce69a1e3652fe55962363063c9c0dae0fe2477ebc585e03a9652adc6f381d24ba5589cc5e51849df4ced3d3e004a7d40ed5
@@ -7838,15 +7896,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bluebird-global@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "bluebird-global@npm:1.0.1"
-  peerDependencies:
-    bluebird: "*"
-  checksum: fa0448ba6f33e0e970fe2e26cc437c1aa706438112d2ddc00c24fcbf0b73b745a7cbca94fa62248309d774e775ab96a44d038abc5e82eb0b7201068eb3d1c779
-  languageName: node
-  linkType: hard
-
 "bluebird@npm:^3.3.5, bluebird@npm:^3.5.5, bluebird@npm:^3.7.2":
   version: 3.7.2
   resolution: "bluebird@npm:3.7.2"
@@ -8559,7 +8608,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chokidar@npm:^3.4.1, chokidar@npm:^3.4.2, chokidar@npm:^3.5.1":
+"chokidar@npm:^3.4.1, chokidar@npm:^3.4.2":
   version: 3.5.2
   resolution: "chokidar@npm:3.5.2"
   dependencies:
@@ -8575,6 +8624,25 @@ __metadata:
     fsevents:
       optional: true
   checksum: d1fda32fcd67d9f6170a8468ad2630a3c6194949c9db3f6a91b16478c328b2800f433fb5d2592511b6cb145a47c013ea1cce60b432b1a001ae3ee978a8bffc2d
+  languageName: node
+  linkType: hard
+
+"chokidar@npm:^3.5.1":
+  version: 3.5.3
+  resolution: "chokidar@npm:3.5.3"
+  dependencies:
+    anymatch: ~3.1.2
+    braces: ~3.0.2
+    fsevents: ~2.3.2
+    glob-parent: ~5.1.2
+    is-binary-path: ~2.1.0
+    is-glob: ~4.0.1
+    normalize-path: ~3.0.0
+    readdirp: ~3.6.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: b49fcde40176ba007ff361b198a2d35df60d9bb2a5aab228279eb810feae9294a6b4649ab15981304447afe1e6ffbf4788ad5db77235dc770ab777c6e771980c
   languageName: node
   linkType: hard
 
@@ -12050,17 +12118,6 @@ __metadata:
     path-is-absolute: ^1.0.0
     rimraf: ^2.2.8
   checksum: 6edfd65fc813baa27f1603778c0f5ec11f8c5006a20b920437813ee2023eba18aeec8bef1c89b2e6c84f9fc90fdc7c916f4a700466c8c69d22a35d018f2570f0
-  languageName: node
-  linkType: hard
-
-"fs-extra@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "fs-extra@npm:10.0.0"
-  dependencies:
-    graceful-fs: ^4.2.0
-    jsonfile: ^6.0.1
-    universalify: ^2.0.0
-  checksum: 5285a3d8f34b917cf2b66af8c231a40c1623626e9d701a20051d3337be16c6d7cac94441c8b3732d47a92a2a027886ca93c69b6a4ae6aee3c89650d2a8880c0a
   languageName: node
   linkType: hard
 
@@ -17754,7 +17811,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-parse@npm:^1.0.6":
+"path-parse@npm:^1.0.6, path-parse@npm:^1.0.7":
   version: 1.0.7
   resolution: "path-parse@npm:1.0.7"
   checksum: 49abf3d81115642938a8700ec580da6e830dde670be21893c62f4e10bd7dd4c3742ddc603fe24f898cba7eb0c6bc1777f8d9ac14185d34540c6d4d80cd9cae8a
@@ -20067,7 +20124,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@npm:^1.0.0, resolve@npm:^1.10.0, resolve@npm:^1.12.0, resolve@npm:^1.14.2, resolve@npm:^1.19.0, resolve@npm:^1.20.0, resolve@npm:^1.3.2, resolve@npm:^1.9.0":
+"resolve@npm:^1.0.0":
+  version: 1.21.0
+  resolution: "resolve@npm:1.21.0"
+  dependencies:
+    is-core-module: ^2.8.0
+    path-parse: ^1.0.7
+    supports-preserve-symlinks-flag: ^1.0.0
+  bin:
+    resolve: bin/resolve
+  checksum: d7d9092a5c04a048bea16c7e5a2eb605ac3e8363a0cc5644de1fde17d5028e8d5f4343aab1d99bd327b98e91a66ea83e242718150c64dfedcb96e5e7aad6c4f5
+  languageName: node
+  linkType: hard
+
+"resolve@npm:^1.10.0, resolve@npm:^1.12.0, resolve@npm:^1.14.2, resolve@npm:^1.19.0, resolve@npm:^1.20.0, resolve@npm:^1.3.2, resolve@npm:^1.9.0":
   version: 1.20.0
   resolution: "resolve@npm:1.20.0"
   dependencies:
@@ -20077,7 +20147,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"resolve@patch:resolve@^1.0.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.12.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.9.0#~builtin<compat/resolve>":
+"resolve@patch:resolve@^1.0.0#~builtin<compat/resolve>":
+  version: 1.21.0
+  resolution: "resolve@patch:resolve@npm%3A1.21.0#~builtin<compat/resolve>::version=1.21.0&hash=07638b"
+  dependencies:
+    is-core-module: ^2.8.0
+    path-parse: ^1.0.7
+    supports-preserve-symlinks-flag: ^1.0.0
+  bin:
+    resolve: bin/resolve
+  checksum: a0a4d1f7409e73190f31f901f8a619960bb3bd4ae38ba3a54c7ea7e1c87758d28a73256bb8d6a35996a903d1bf14f53883f0dcac6c571c063cb8162d813ad26e
+  languageName: node
+  linkType: hard
+
+"resolve@patch:resolve@^1.10.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.12.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.14.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.19.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.20.0#~builtin<compat/resolve>, resolve@patch:resolve@^1.3.2#~builtin<compat/resolve>, resolve@patch:resolve@^1.9.0#~builtin<compat/resolve>":
   version: 1.20.0
   resolution: "resolve@patch:resolve@npm%3A1.20.0#~builtin<compat/resolve>::version=1.20.0&hash=07638b"
   dependencies:
@@ -20903,7 +20986,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map-support@npm:^0.5.12, source-map-support@npm:^0.5.16, source-map-support@npm:^0.5.17, source-map-support@npm:^0.5.21, source-map-support@npm:^0.5.6, source-map-support@npm:~0.5.12, source-map-support@npm:~0.5.20":
+"source-map-support@npm:^0.5.12, source-map-support@npm:^0.5.16, source-map-support@npm:^0.5.17, source-map-support@npm:^0.5.6, source-map-support@npm:~0.5.12, source-map-support@npm:~0.5.20":
   version: 0.5.21
   resolution: "source-map-support@npm:0.5.21"
   dependencies:
@@ -21549,6 +21632,13 @@ __metadata:
     has-flag: ^4.0.0
     supports-color: ^7.0.0
   checksum: aef04fb41f4a67f1bc128f7c3e88a81b6cf2794c800fccf137006efe5bafde281da3e42e72bf9206c2fcf42e6438f37e3a820a389214d0a88613ca1f2d36076a
+  languageName: node
+  linkType: hard
+
+"supports-preserve-symlinks-flag@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "supports-preserve-symlinks-flag@npm:1.0.0"
+  checksum: 53b1e247e68e05db7b3808b99b892bd36fb096e6fba213a06da7fab22045e97597db425c724f2bbd6c99a3c295e1e73f3e4de78592289f38431049e1277ca0ae
   languageName: node
   linkType: hard
 
