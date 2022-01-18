@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:3100
 // @baseUrl =  https://messaging.botpress.dev/
+@adminKey = ADMIN_KEY
 @clientId = YOUR_CLIENT_ID
 @clientToken = YOUR_TOKEN
 @userId = YOUR_USER_ID
@@ -20,11 +21,13 @@ client_id=CLOUD_CLIENT
 ### Create client
 POST {{baseUrl}}/api/admin/clients
 Authorization: Bearer {{authToken}}
+x-bp-messaging-admin-key: {{adminKey}}
 
 ### Sync client
 POST {{baseUrl}}/api/admin/clients/sync
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+x-bp-messaging-admin-key: {{adminKey}}
 
 {
   "name": "my-bot-name",
