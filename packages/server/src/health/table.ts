@@ -3,7 +3,7 @@ import { Knex } from 'knex'
 
 export class HealthTable extends Table {
   get name() {
-    return getTableId('msg_health')
+    return 'msg_health'
   }
 
   create(table: Knex.CreateTableBuilder) {
