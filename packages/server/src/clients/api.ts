@@ -36,7 +36,7 @@ export class ClientApi {
   }
 
   async sync(req: Request, res: Response) {
-    this.distributed.using(`lock_dyn_client_sync::${req.body.name}`, async () => {
+    this.distributed.using(`lock_dyn_admin_client_sync::${req.body.name}`, async () => {
       await this.syncClient(req, res)
     })
   }
