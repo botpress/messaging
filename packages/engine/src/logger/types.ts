@@ -45,6 +45,10 @@ export class Logger {
     this.printPrefix([message, data], LoggerLevel.Warn)
   }
 
+  critical(message: string, data?: Param) {
+    this.printPrefix([message, data], LoggerLevel.Critical)
+  }
+
   window(lines: string[], level = LoggerLevel.Info, width = 40) {
     const line = '='.repeat(width)
     this.print(

@@ -1,14 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import {
-  ClientSyncRequest,
-  Conversation,
-  Message,
-  MessagingChannel,
-  MessagingClient,
-  SyncRequest,
-  SyncWebhook,
-  User
-} from '../../src'
+import { Conversation, Message, MessagingChannel, MessagingClient, SyncRequest, SyncWebhook, User } from '../../src'
 
 const FAKE_UUID = uuid()
 const FAKE_CLIENT_ID = uuid()
@@ -37,19 +28,17 @@ describe('Http Client', () => {
     webhooks?: SyncWebhook[]
   } = {}
   const url = 'http://localhost:3100'
-  const adminClient = new MessagingChannel({ url })
+  const adminClient = new MessagingChannel({ url, adminKey: process.env.ADMIN_KEY })
   let client: MessagingClient
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
 
   describe('Syncs', () => {
     describe('Sync', () => {
       test('Should return a clientId/clientToken when sync is called with an empty config', async () => {
-        const config: SyncRequest = {}
-        const res = await adminClient.sync(config)
+        const res = await adminClient.syncClient({ name: 'yoyo' })
 
         expect(res.id).toBeDefined()
         expect(res.token).toBeDefined()
-        expect(res.webhooks).toEqual([])
 
         state.clientId = res.id
         state.clientToken = res.token
@@ -64,14 +53,12 @@ describe('Http Client', () => {
       })
 
       test('Should return webhooks with token when provided in the config', async () => {
-        const config: ClientSyncRequest = {
+        const config = {
           webhooks
         }
         const res = await client.sync(config)
         state.webhooks = res.webhooks
 
-        expect(res.id).toBeDefined()
-        expect(res.token).toBeDefined()
         expect(res.webhooks.length).toEqual(webhooks.length)
         for (let i = 0; i < webhooks.length; i++) {
           expect(res.webhooks[i].url).toEqual(webhooks[i].url)
@@ -80,27 +67,12 @@ describe('Http Client', () => {
       })
 
       test('Should return the same token for the same webhooks', async () => {
-        const config: ClientSyncRequest = {
+        const config = {
           webhooks
         }
         const res = await client.sync(config)
 
         expect(res.webhooks).toEqual(state.webhooks)
-      })
-
-      test('Should throw when the provided clientId is valid but not the clientToken', async () => {
-        const config: SyncRequest = { id: state.clientId, token: FAKE_CLIENT_TOKEN }
-
-        await expect(adminClient.sync(config)).rejects.toThrow('Request failed with status code 403')
-      })
-
-      test('Should not throw an error when both credentials are invalid', async () => {
-        const config: SyncRequest = { id: FAKE_CLIENT_ID, token: FAKE_CLIENT_TOKEN }
-
-        await expect(adminClient.sync(config)).resolves.not.toEqual({
-          id: expect.anything(),
-          token: expect.anything()
-        })
       })
     })
   })

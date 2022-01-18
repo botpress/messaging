@@ -38,8 +38,8 @@ export class MessagingClient extends ProtectedEmitter<{
     this.channel.setup(router, route)
   }
 
-  async sync(config: ClientSyncRequest): Promise<SyncResult> {
-    return this.channel.sync({ ...config, id: this._clientId, token: this._creds.clientToken })
+  async sync(config: SyncRequest): Promise<SyncResult> {
+    return this.channel.sync(this._clientId, config)
   }
 
   async getHealth(): Promise<HealthReport> {
@@ -95,5 +95,3 @@ export class MessagingClient extends ProtectedEmitter<{
     return this.channel.endTurn(this._clientId, id)
   }
 }
-
-export type ClientSyncRequest = Omit<SyncRequest, 'id' | 'token'>
