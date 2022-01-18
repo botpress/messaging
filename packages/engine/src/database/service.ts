@@ -78,14 +78,15 @@ export class DatabaseService extends Service {
 
   async destroy() {
     if (yn(process.env.DATABASE_TRANSIENT)) {
+      const trx = await this.knex.transaction()
       try {
-        const trx = await this.knex.transaction()
         for (const table of this.tables.reverse()) {
           await trx.schema.dropTable(table.id)
           this.logger.debug(`Dropped table '${table.id}'`)
         }
         await trx.commit()
       } catch (e) {
+        await trx.rollback()
         this.logger.error(e, 'Failed to destroy transient database')
       }
     }
