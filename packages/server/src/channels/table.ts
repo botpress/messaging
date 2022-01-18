@@ -2,7 +2,7 @@ import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class ChannelTable extends Table {
-  get id() {
+  get name() {
     return 'msg_channels'
   }
 

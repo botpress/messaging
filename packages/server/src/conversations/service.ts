@@ -4,6 +4,7 @@ import {
   BatchingService,
   CachingService,
   DatabaseService,
+  getTableId,
   ServerCache,
   Service
 } from '@botpress/messaging-engine'
@@ -129,16 +130,20 @@ export class ConversationService extends Service {
   private queryRecents(clientId: string, userId: string) {
     return this.query()
       .select(
-        'msg_conversations.id',
-        'msg_conversations.userId',
-        'msg_conversations.clientId',
-        'msg_conversations.createdOn',
-        'msg_messages.id as messageId',
-        'msg_messages.authorId',
-        'msg_messages.payload',
-        'msg_messages.sentOn'
+        `${getTableId('msg_conversations')}.id`,
+        `${getTableId('msg_conversations')}.userId`,
+        `${getTableId('msg_conversations')}.clientId`,
+        `${getTableId('msg_conversations')}.createdOn`,
+        `${getTableId('msg_messages')}.id as messageId`,
+        `${getTableId('msg_messages')}.authorId`,
+        `${getTableId('msg_messages')}.payload`,
+        `${getTableId('msg_messages')}.sentOn`
       )
-      .leftJoin('msg_messages', 'msg_messages.conversationId', 'msg_conversations.id')
+      .leftJoin(
+        `${getTableId('msg_messages')}`,
+        `${getTableId('msg_messages')}.conversationId`,
+        `${getTableId('msg_messages')}.id`
+      )
       .where({
         clientId,
         userId
@@ -148,12 +153,15 @@ export class ConversationService extends Service {
           .where({
             sentOn: this.db.knex
               .max('sentOn')
-              .from('msg_messages')
-              .where('msg_messages.conversationId', this.db.knex.ref('msg_conversations.id'))
+              .from(`${getTableId('msg_messages')}`)
+              .where(
+                `${getTableId('msg_messages')}.conversationId`,
+                this.db.knex.ref(`${getTableId('msg_conversations')}.id`)
+              )
           })
           .orWhereNull('sentOn')
       })
-      .groupBy('msg_conversations.id', 'msg_messages.id')
+      .groupBy(`${getTableId('msg_conversations')}.id`, `${getTableId('msg_messages')}.id`)
       .orderBy('sentOn', 'desc')
       .orderBy('createdOn', 'desc')
   }

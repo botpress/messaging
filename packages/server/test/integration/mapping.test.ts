@@ -173,7 +173,7 @@ describe('Mapping', () => {
     expect(endpoint).toEqual(state.endpoint)
   })
 
-  test('Mapping repeateldy does not produce race conditions', async () => {
+  test('Mapping repeatedly does not produce race conditions', async () => {
     const endpoint = generateEndpoint()
     const promises: Promise<Mapping>[] = []
 

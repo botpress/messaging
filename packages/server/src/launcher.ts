@@ -107,16 +107,21 @@ export class Launcher {
     if (!this.shuttingDown && !yn(process.env.SPINNED)) {
       this.shuttingDown = true
 
-      this.logger.info('Server gracefully closing down...')
+      try {
+        this.logger.info('Server gracefully closing down...')
 
-      await this.stream.destroy()
-      await this.socket.manager.destroy()
-      await this.httpTerminator?.terminate()
-      await this.app.destroy()
+        await this.stream.destroy()
+        await this.socket.manager.destroy()
+        await this.httpTerminator?.terminate()
+        await this.app.destroy()
 
-      this.logger.info('Server shutdown complete')
+        this.logger.info('Server shutdown complete')
+      } catch (e) {
+        this.logger.error(e, 'Server failed to shutdown gracefully')
+      } finally {
+        process.exit(code)
+      }
     }
-    process.exit(code)
   }
 
   private printLogo() {

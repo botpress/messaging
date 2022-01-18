@@ -2,7 +2,7 @@ import { Knex } from 'knex'
 import { Table } from '../base/table'
 
 export class MetaTable extends Table {
-  get id() {
+  get name() {
     return 'msg_meta'
   }
 

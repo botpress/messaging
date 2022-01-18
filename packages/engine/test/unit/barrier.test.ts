@@ -72,32 +72,5 @@ describe('Barrier', () => {
       // Promise never resolves
       expect(spyDel).toBeCalledTimes(0)
     })
-
-    test("Should remove the promise from its cache once it't resolved", async () => {
-      const cacheInstance = cache<any>()
-      const barrier = new Barrier2D<any>(id, cacheInstance)
-
-      const spyGet = jest.spyOn(cacheInstance, 'get')
-      const spySet = jest.spyOn(cacheInstance, 'set')
-      const spyDel = jest.spyOn(cacheInstance, 'del')
-
-      const callback = jest.fn().mockImplementation(async () => {})
-      const callBarrier = async () => {
-        return barrier.once(keyX, keyY, callback)
-      }
-      const promise = callBarrier()
-
-      expect(callback).toHaveBeenCalledTimes(1)
-      expect(spyGet).toBeCalledTimes(1)
-      expect(spySet).toBeCalledTimes(1)
-      expect(spyDel).toBeCalledTimes(0)
-
-      await promise
-
-      expect(callback).toHaveBeenCalledTimes(1)
-      expect(spyGet).toBeCalledTimes(1)
-      expect(spySet).toBeCalledTimes(1)
-      expect(spyDel).toBeCalledTimes(1)
-    })
   })
 })
