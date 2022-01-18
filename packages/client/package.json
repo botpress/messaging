@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-client",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
@@ -21,7 +21,7 @@
     "uuid": "^8.3.2"
   },
   "dependencies": {
-    "@botpress/messaging-base": "0.0.1",
+    "@botpress/messaging-base": "0.0.2",
     "axios": "^0.24.0",
     "joi": "^17.5.0"
   }

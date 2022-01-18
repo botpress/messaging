@@ -1,2 +1,5 @@
 undecided:
   - "@botpress/messaging"
+  - "@botpress/messaging-base"
+  - "@botpress/messaging-client"
+  - "@botpress/messaging-server"
