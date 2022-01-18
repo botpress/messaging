@@ -6,11 +6,14 @@
   "source": "src/index.ts",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn --silent && yarn run -T tsc --build",
-    "watch": "yarn --silent && yarn run -T tsc --build --watch",
-    "prepublishOnly": "yarn --silent && yarn run -T tsc --build"
+    "build": "yarn && yarn run -T tsc --build",
+    "watch": "yarn && yarn run -T tsc --build --watch",
+    "prepublish": "yarn --immutable && yarn run -T tsc --build && rimraf dist/.tsbuildinfo"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "devDependencies": {
+    "rimraf": "^3.0.2"
+  }
 }

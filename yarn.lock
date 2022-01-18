@@ -2018,6 +2018,8 @@ __metadata:
 "@botpress/messaging-base@*, @botpress/messaging-base@0.0.2, @botpress/messaging-base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-base@workspace:packages/base"
+  dependencies:
+    rimraf: ^3.0.2
   languageName: unknown
   linkType: soft
 
@@ -2084,6 +2086,7 @@ __metadata:
     "@types/uuid": ^8.3.4
     axios: ^0.24.0
     joi: ^17.5.0
+    rimraf: ^3.0.2
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft
@@ -2227,6 +2230,7 @@ __metadata:
     "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
     lodash: ^4.17.21
+    rimraf: ^3.0.2
     socket.io-client: ^4.4.1
     uuid: ^8.3.2
   languageName: unknown
