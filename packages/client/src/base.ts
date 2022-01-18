@@ -3,7 +3,6 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
 import { Emitter } from './emitter'
-import { handleError } from './errors'
 import { MessagingChannelOptions } from './options'
 
 export abstract class MessagingChannelBase extends Emitter<{
@@ -22,20 +21,11 @@ export abstract class MessagingChannelBase extends Emitter<{
     const config = this.getAxiosConfig(options)
     this.http = axios.create(config)
     this.adminHeader = options.adminKey?.length ? { 'x-bp-messaging-admin-key': options.adminKey } : {}
-
-    this.http.interceptors.response.use(
-      (response) => {
-        return response
-      },
-      (error) => {
-        return handleError(error)
-      }
-    )
   }
 
-  private getAxiosConfig({ url, config }: MessagingChannelOptions): AxiosRequestConfig {
+  private getAxiosConfig({ url, axios }: MessagingChannelOptions): AxiosRequestConfig {
     const defaultConfig: AxiosRequestConfig = { baseURL: `${url}/api` }
-    return { ...config, ...defaultConfig }
+    return { ...axios, ...defaultConfig }
   }
 
   start(clientId: uuid, auth: MessagingClientAuth) {

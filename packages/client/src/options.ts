@@ -8,7 +8,7 @@ export interface MessagingChannelOptions {
   /** Key to access admin routes. Optional */
   adminKey?: string
   /** A custom axios config giving more control over the HTTP client used internally. Optional */
-  config?: Omit<AxiosRequestConfig, 'baseURL'>
+  axios?: Omit<AxiosRequestConfig, 'baseURL'>
 }
 
 export interface MessagingOptions extends Omit<MessagingChannelOptions, 'adminKey'>, MessagingClientAuth {
