@@ -1,3 +1,12 @@
+## [0.1.23](https://github.com/botpress/messaging/compare/v0.1.22...v0.1.23) (2022-01-19)
+
+
+### Bug Fixes
+
+* **server:** fix server not closing when spinned ([4bd6a6f](https://github.com/botpress/messaging/commit/4bd6a6fb9ea48a6792b29c0ea05f2485f2f6b4d2))
+
+
+
 ## [0.1.22](https://github.com/botpress/messaging/compare/v0.1.21...v0.1.22) (2022-01-18)
 
 
