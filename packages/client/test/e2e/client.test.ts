@@ -15,7 +15,7 @@ describe('Http Client', () => {
       clientToken: FAKE_CLIENT_TOKEN
     })
 
-    expect(client.creds).toEqual({ clientToken: FAKE_CLIENT_TOKEN })
+    expect(client.clientToken).toEqual(FAKE_CLIENT_TOKEN)
     expect((client as any).channel.http.defaults.baseURL).toContain(url)
   })
 
