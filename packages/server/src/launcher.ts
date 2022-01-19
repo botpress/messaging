@@ -104,9 +104,7 @@ export class Launcher {
   }
 
   async shutDown(code?: number) {
-    if (yn(process.env.SPINNED)) {
-      process.exit(code)
-    } else if (!this.shuttingDown) {
+    if (!this.shuttingDown && !yn(process.env.SPINNED)) {
       this.shuttingDown = true
 
       try {
