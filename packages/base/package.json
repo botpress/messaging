@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-base",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
@@ -8,12 +8,9 @@
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
-    "prepublish": "yarn --immutable && yarn run -T tsc --build && rimraf dist/.tsbuildinfo"
+    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T tsc --build && yarn run -T rimraf dist/.tsbuildinfo"
   },
   "files": [
     "dist"
-  ],
-  "devDependencies": {
-    "rimraf": "^3.0.2"
-  }
+  ]
 }

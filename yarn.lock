@@ -2015,11 +2015,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@botpress/messaging-base@*, @botpress/messaging-base@0.0.2, @botpress/messaging-base@workspace:packages/base":
+"@botpress/messaging-base@*, @botpress/messaging-base@1.0.0, @botpress/messaging-base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-base@workspace:packages/base"
-  dependencies:
-    rimraf: ^3.0.2
   languageName: unknown
   linkType: soft
 
@@ -2079,19 +2077,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-client@workspace:packages/client"
   dependencies:
-    "@botpress/messaging-base": 0.0.2
+    "@botpress/messaging-base": 1.0.0
     "@types/express": ^4.17.13
     "@types/jest": ^27.4.0
     "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
     axios: ^0.21.4
     joi: ^17.5.0
-    rimraf: ^3.0.2
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-components@0.0.8, @botpress/messaging-components@workspace:packages/components":
+"@botpress/messaging-components@0.1.0, @botpress/messaging-components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-components@workspace:packages/components"
   dependencies:
@@ -2129,7 +2126,6 @@ __metadata:
     react-slick: ^0.28.1
     react-test-renderer: ^17.0.2
     react-text-format: ^2.0.28
-    rimraf: ^3.0.2
     snarkdown: ^2.0.0
   peerDependencies:
     html-truncate: ^1.2.2
@@ -2220,17 +2216,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-socket@*, @botpress/messaging-socket@0.0.3, @botpress/messaging-socket@workspace:packages/socket":
+"@botpress/messaging-socket@*, @botpress/messaging-socket@0.1.0, @botpress/messaging-socket@workspace:packages/socket":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-socket@workspace:packages/socket"
   dependencies:
-    "@botpress/messaging-base": 0.0.2
+    "@botpress/messaging-base": 1.0.0
     "@types/jest": ^27.4.0
     "@types/lodash": ^4.14.178
     "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
     lodash: ^4.17.21
-    rimraf: ^3.0.2
     socket.io-client: ^4.4.1
     uuid: ^8.3.2
   languageName: unknown
@@ -2296,7 +2291,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
-    "@botpress/webchat": 0.0.1
+    "@botpress/webchat": 0.1.0
     "@parcel/config-default": ^2.2.0
     "@parcel/transformer-typescript-tsc": ^2.2.0
     "@types/react": ^17.0.38
@@ -2306,13 +2301,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat@*, @botpress/webchat@0.0.1, @botpress/webchat@workspace:packages/webchat":
+"@botpress/webchat@*, @botpress/webchat@0.1.0, @botpress/webchat@workspace:packages/webchat":
   version: 0.0.0-use.local
   resolution: "@botpress/webchat@workspace:packages/webchat"
   dependencies:
     "@blueprintjs/core": ^3.23.1
-    "@botpress/messaging-components": 0.0.8
-    "@botpress/messaging-socket": 0.0.3
+    "@botpress/messaging-components": 0.1.0
+    "@botpress/messaging-socket": 0.1.0
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.0.2
