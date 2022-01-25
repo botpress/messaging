@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-socket",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
-    "prepublish": "yarn --immutable && yarn run -T tsc --build && rimraf dist/.tsbuildinfo"
+    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T tsc --build && yarn run -T rimraf dist/.tsbuildinfo"
   },
   "files": [
     "dist"
@@ -19,11 +19,10 @@
     "@types/node": "^16.11.13",
     "@types/uuid": "^8.3.4",
     "lodash": "^4.17.21",
-    "rimraf": "^3.0.2",
     "uuid": "^8.3.2"
   },
   "dependencies": {
-    "@botpress/messaging-base": "0.0.2",
+    "@botpress/messaging-base": "1.0.0",
     "socket.io-client": "^4.4.1"
   }
 }

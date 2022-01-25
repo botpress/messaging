@@ -1,18 +1,16 @@
 {
   "name": "@botpress/messaging-components",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.tsx",
   "license": "AGPL-3.0",
   "scripts": {
-    "prebuild": "rimraf dist/",
-    "postbuild": "ncp ./src/css ./dist/css",
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
     "storybook": "start-storybook -p 6006 -c story/config",
     "build-storybook": "build-storybook -c story/config",
-    "prepublishOnly": "yarn build"
+    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T tsc --build && yarn run -T rimraf dist/.tsbuildinfo && yarn run ncp ./src/css ./dist/css"
   },
   "files": [
     "dist"
@@ -54,8 +52,7 @@
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-test-renderer": "^17.0.2",
-    "rimraf": "^3.0.2"
+    "react-test-renderer": "^17.0.2"
   },
   "peerDependencies": {
     "html-truncate": "^1.2.2",

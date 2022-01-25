@@ -1,13 +1,14 @@
 {
   "name": "@botpress/webchat",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.tsx",
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
-    "watch": "yarn && yarn run -T tsc --build --watch"
+    "watch": "yarn && yarn run -T tsc --build --watch",
+    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T tsc --build && yarn run -T rimraf dist/.tsbuildinfo"
   },
   "files": [
     "dist"
@@ -23,8 +24,8 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.23.1",
-    "@botpress/messaging-components": "0.0.8",
-    "@botpress/messaging-socket": "0.0.3",
+    "@botpress/messaging-components": "0.1.0",
+    "@botpress/messaging-socket": "0.1.0",
     "@formatjs/intl-pluralrules": "^4.1.6",
     "@formatjs/intl-utils": "^3.8.4",
     "@juggle/resize-observer": "^3.0.2",
