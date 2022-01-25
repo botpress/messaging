@@ -1,12 +1,15 @@
 import clc from 'cli-color'
 import { Router } from 'express'
 import { Channel } from '../src/base/channel'
+import { TelegramChannel } from '../src/telegram/channel'
 import payloads from './payloads.json'
 
 export class App {
   constructor(private router: Router, private config: any) {}
 
-  async setup() {}
+  async setup() {
+    await this.setupChannel('telegram', new TelegramChannel())
+  }
 
   async setupChannel(name: string, channel: Channel) {
     await channel.setup(this.router)
