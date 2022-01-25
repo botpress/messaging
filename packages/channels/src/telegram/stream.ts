@@ -1,21 +1,26 @@
 import _ from 'lodash'
 import { ChannelContext } from '../base/context'
+import { CardToCarouselRenderer } from '../base/renderers/card'
+import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { ChannelStream } from '../base/stream'
 import { TelegramContext } from './context'
+import { TelegramRenderers } from './renderers'
+import { TelegramSenders } from './senders'
 import { TelegramService } from './service'
 
 export class TelegramStream extends ChannelStream<TelegramService, TelegramContext> {
   get renderers() {
-    return []
+    return [new CardToCarouselRenderer(), new DropdownToChoicesRenderer(), ...TelegramRenderers]
   }
 
   get senders() {
-    return []
+    return TelegramSenders
   }
 
   protected async getContext(base: ChannelContext<any>): Promise<TelegramContext> {
     return {
-      ...base
+      ...base,
+      messages: []
     }
   }
 }
