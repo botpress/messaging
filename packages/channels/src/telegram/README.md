@@ -15,12 +15,14 @@
 
 ### Receiving
 
-| Channels | Telegram |
-| -------- | :------: |
-| Text     |    ✅    |
-| Voice    |    ❌    |
-| Image    |    ❌    |
-| File     |    ❌    |
-| Audio    |    ❌    |
-| Video    |    ❌    |
-| Location |    ❌    |
+| Channels      | Telegram |
+| ------------- | :------: |
+| Text          |    ✅    |
+| Postback      |    ✅    |
+| Say Something |    ✅    |
+| Voice         |    ❌    |
+| Image         |    ❌    |
+| File          |    ❌    |
+| Audio         |    ❌    |
+| Video         |    ❌    |
+| Location      |    ❌    |
