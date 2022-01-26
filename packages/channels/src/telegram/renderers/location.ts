@@ -5,9 +5,9 @@ import { TelegramContext } from '../context'
 export class TelegramLocationRenderer extends LocationRenderer {
   renderLocation(context: TelegramContext, payload: LocationContent) {
     context.messages.push({
-      location: { latitude: payload.latitude, longitude: payload.longitude },
-      // This extra seems to not work
-      extra: { caption: payload.title }
+      location: { latitude: payload.latitude, longitude: payload.longitude }
+      // For some reason this does not work, so we need to send a seperate text message
+      // extra: { caption: payload.title }
     })
 
     let text = payload.title
