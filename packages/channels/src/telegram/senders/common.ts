@@ -28,6 +28,9 @@ export class TelegramCommonSender extends CommonSender {
       if (message.video) {
         await telegram.sendVideo(chatId, message.video, message.extra)
       }
+      if (message.location) {
+        await telegram.sendLocation(chatId, message.location.latitude, message.location.longitude, message.extra)
+      }
     }
   }
 }

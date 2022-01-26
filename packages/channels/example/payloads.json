@@ -99,6 +99,14 @@
     "typing": true
   },
   {
+    "type": "location",
+    "title": "this is the location of my house",
+    "address": "1600 Pennsylvania Avenue NW, Washington, DC 20500, États-Unis",
+    "latitude": 38.89764765487744,
+    "longitude": -77.03709704833226,
+    "typing": true
+  },
+  {
     "type": "single-choice",
     "text": "Make a choice :",
     "choices": [

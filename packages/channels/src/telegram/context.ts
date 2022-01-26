@@ -15,5 +15,9 @@ export interface TelegramMessage {
   document?: InputFile
   audio?: InputFile
   video?: InputFile
+  location?: {
+    latitude: number
+    longitude: number
+  }
   extra?: any
 }
