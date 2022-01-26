@@ -1,15 +1,12 @@
 import clc from 'cli-color'
 import { Router } from 'express'
 import { Channel } from '../src/base/channel'
-import { TwilioChannel } from '../src/twilio/channel'
 import payloads from './payloads.json'
 
 export class App {
   constructor(private router: Router, private config: any) {}
 
-  async setup() {
-    await this.setupChannel('twilio', new TwilioChannel())
-  }
+  async setup() {}
 
   async setupChannel(name: string, channel: Channel) {
     await channel.setup(this.router)
