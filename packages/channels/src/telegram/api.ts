@@ -5,6 +5,7 @@ import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { ChannelInitializeEvent, ChannelStartEvent } from '../base/service'
 import { POSTBACK_PREFIX, SAY_PREFIX } from './renderers/carousel'
+import { QUICK_REPLY_PREFIX } from './renderers/choices'
 import { TelegramService } from './service'
 
 export class TelegramApi extends ChannelApi<TelegramService> {
@@ -61,7 +62,12 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     if ('data' in ctx.callbackQuery) {
       const data = ctx.callbackQuery.data
 
-      if (data.startsWith(SAY_PREFIX)) {
+      if (data.startsWith(QUICK_REPLY_PREFIX)) {
+        await this.service.receive(scope, this.extractEndpoint(ctx), {
+          type: 'quick_reply',
+          text: data.replace(QUICK_REPLY_PREFIX, '')
+        })
+      } else if (data.startsWith(SAY_PREFIX)) {
         await this.service.receive(scope, this.extractEndpoint(ctx), {
           type: 'say_something',
           text: data.replace(SAY_PREFIX, '')
@@ -73,6 +79,8 @@ export class TelegramApi extends ChannelApi<TelegramService> {
         })
       }
     }
+
+    await ctx.answerCbQuery()
   }
 
   private extractEndpoint(ctx: Context) {

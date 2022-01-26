@@ -18,6 +18,7 @@
 | Channels      | Telegram |
 | ------------- | :------: |
 | Text          |    ✅    |
+| Quick Reply   |    ✅    |
 | Postback      |    ✅    |
 | Say Something |    ✅    |
 | Voice         |    ❌    |
