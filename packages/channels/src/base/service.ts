@@ -112,9 +112,6 @@ export abstract class ChannelService<
     if (index) {
       const key = this.getIndexCacheKey(scope, identity, sender)
       const options = this.cacheIndexResponses.get(key)
-
-      this.cacheIndexResponses.del(key)
-
       const option = options?.[index - 1]
 
       if (option) {
