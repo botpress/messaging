@@ -8,10 +8,10 @@
 | Dropdown |   ✅   |
 | Card     |   ✅   |
 | Carousel |   ✅   |
-| File     |   ❌   |
-| Audio    |   ❌   |
-| Video    |   ❌   |
-| Location |   ❌   |
+| File     |   ✅   |
+| Audio    |   ✅   |
+| Video    |   ✅   |
+| Location |   ✅   |
 
 ### Receiving
 
