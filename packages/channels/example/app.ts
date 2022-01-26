@@ -19,7 +19,7 @@ export class App {
 
       const respond = async () => {
         try {
-          for (const payload of payloads) {
+          for (const payload of this.filterResponsePayloads(payloads, content.text)) {
             await channel.send(scope, endpoint, payload)
           }
         } catch (e) {
@@ -45,5 +45,16 @@ export class App {
 
   private log(type: string, channel: string, context: string, obj: any) {
     console.info(clc.blue(type), clc.bold(channel), context, obj)
+  }
+
+  private filterResponsePayloads(payloads: any[], filter: string) {
+    const filtered = []
+    for (const payload of payloads) {
+      if (filter.includes(payload.type)) {
+        filtered.push(payload)
+      }
+    }
+
+    return filtered.length ? filtered : payloads
   }
 }

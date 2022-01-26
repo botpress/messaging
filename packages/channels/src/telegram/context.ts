@@ -13,5 +13,7 @@ export interface TelegramMessage {
   markdown?: boolean
   action?: ChatAction
   document?: InputFile
+  audio?: InputFile
+  video?: InputFile
   extra?: any
 }

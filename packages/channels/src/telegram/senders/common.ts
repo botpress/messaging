@@ -22,6 +22,12 @@ export class TelegramCommonSender extends CommonSender {
       if (message.document) {
         await telegram.sendDocument(chatId, message.document, message.extra)
       }
+      if (message.audio) {
+        await telegram.sendAudio(chatId, message.audio, message.extra)
+      }
+      if (message.video) {
+        await telegram.sendVideo(chatId, message.video, message.extra)
+      }
     }
   }
 }

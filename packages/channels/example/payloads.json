@@ -87,6 +87,18 @@
     "typing": true
   },
   {
+    "type": "video",
+    "title": "look at the big bunny video",
+    "video": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "typing": true
+  },
+  {
+    "type": "audio",
+    "title": "this is audio of a horse",
+    "audio": "https://www.w3schools.com/html/horse.mp3",
+    "typing": true
+  },
+  {
     "type": "single-choice",
     "text": "Make a choice :",
     "choices": [

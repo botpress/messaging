@@ -8,9 +8,9 @@
 | Dropdown |    ✅    |
 | Card     |    ✅    |
 | Carousel |    ✅    |
-| File     |    ❌    |
-| Audio    |    ❌    |
-| Video    |    ❌    |
+| File     |    ✅    |
+| Audio    |    ✅    |
+| Video    |    ✅    |
 | Location |    ❌    |
 
 ### Receiving
