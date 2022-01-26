@@ -81,6 +81,12 @@
     ]
   },
   {
+    "type": "file",
+    "title": "here is a zip of the 1.0.0 messaging codebase",
+    "file": "https://github.com/botpress/messaging/archive/refs/tags/v1.0.0.zip",
+    "typing": true
+  },
+  {
     "type": "single-choice",
     "text": "Make a choice :",
     "choices": [

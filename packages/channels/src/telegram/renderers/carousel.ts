@@ -1,3 +1,4 @@
+import path from 'path'
 import { Markup } from 'telegraf'
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
@@ -35,7 +36,8 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
       context.channel.messages.push({ action: 'upload_photo' })
       context.channel.messages.push({
         photo: {
-          url: card.image
+          url: card.image,
+          filename: path.basename(card.image)
         },
         extra: { caption: text, parse_mode: 'Markdown', ...Markup.inlineKeyboard(context.buttons) }
       })

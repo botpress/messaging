@@ -19,6 +19,9 @@ export class TelegramCommonSender extends CommonSender {
       if (message.animation) {
         await telegram.sendAnimation(chatId, message.animation, message.extra)
       }
+      if (message.document) {
+        await telegram.sendDocument(chatId, message.document, message.extra)
+      }
     }
   }
 }
