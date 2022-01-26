@@ -8,6 +8,9 @@ type Context = CarouselContext<TelegramContext> & {
   buttons: InlineKeyboardButton[]
 }
 
+export const POSTBACK_PREFIX = 'postback::'
+export const SAY_PREFIX = 'say::'
+
 export class TelegramCarouselRenderer extends CarouselRenderer {
   startRenderCard(context: Context, _card: CardContent) {
     context.buttons = []
@@ -18,11 +21,11 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
   }
 
   renderButtonPostback(context: Context, button: ActionPostback) {
-    context.buttons.push(Markup.button.callback(button.title, `postback::${button.payload}`))
+    context.buttons.push(Markup.button.callback(button.title, `${POSTBACK_PREFIX}${button.payload}`))
   }
 
   renderButtonSay(context: Context, button: ActionSaySomething) {
-    context.buttons.push(Markup.button.callback(button.title, `say::${button.text}`))
+    context.buttons.push(Markup.button.callback(button.title, `${SAY_PREFIX}${button.text}`))
   }
 
   endRenderCard(context: Context, card: CardContent) {

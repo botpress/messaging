@@ -4,6 +4,7 @@ import { Update } from 'telegraf/typings/core/types/typegram'
 import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { ChannelInitializeEvent, ChannelStartEvent } from '../base/service'
+import { POSTBACK_PREFIX, SAY_PREFIX } from './renderers/carousel'
 import { TelegramService } from './service'
 
 export class TelegramApi extends ChannelApi<TelegramService> {
@@ -57,8 +58,20 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     scope: string,
     ctx: NarrowedContext<Context<Update>, Update.CallbackQueryUpdate>
   ) {
-    // TODO: handle callback query
     if ('data' in ctx.callbackQuery) {
+      const data = ctx.callbackQuery.data
+
+      if (data.startsWith(SAY_PREFIX)) {
+        await this.service.receive(scope, this.extractEndpoint(ctx), {
+          type: 'say_something',
+          text: data.replace(SAY_PREFIX, '')
+        })
+      } else if (data.startsWith(POSTBACK_PREFIX)) {
+        await this.service.receive(scope, this.extractEndpoint(ctx), {
+          type: 'postback',
+          payload: data.replace(POSTBACK_PREFIX, '')
+        })
+      }
     }
   }
 
