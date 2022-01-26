@@ -7,6 +7,12 @@
     "typing": true
   },
   {
+    "type": "image",
+    "title": "YOU SHALL NOT PASS",
+    "image": "https://digginginthedirt.de/photos/upload/2018/05/26/20180526172235-15859610.gif",
+    "typing": true
+  },
+  {
     "type": "card",
     "title": "A banana card",
     "subtitle": "This is a banana",
