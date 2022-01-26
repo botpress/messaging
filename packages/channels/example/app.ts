@@ -23,10 +23,14 @@ export class App {
             await channel.send(scope, endpoint, { type: 'text', text: `Say Something: ${content.text}` })
           } else if (content.type === 'postback') {
             await channel.send(scope, endpoint, { type: 'text', text: `Postback: ${content.payload}` })
-          } else {
+          } else if (content.type === 'quick_reply') {
+            await channel.send(scope, endpoint, { type: 'text', text: `Quick Reply: ${content.text}` })
+          } else if (content.text?.startsWith('test')) {
             for (const payload of this.filterResponsePayloads(payloads, content.text)) {
               await channel.send(scope, endpoint, payload)
             }
+          } else {
+            await channel.send(scope, endpoint, { type: 'text', text: 'OK' })
           }
         } catch (e) {
           console.error('Error occurred sending message', e)
