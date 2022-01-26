@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-client",
-  "version": "0.0.14",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
@@ -8,7 +8,7 @@
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
-    "prepublish": "yarn --immutable && yarn run -T tsc --build && rimraf dist/.tsbuildinfo"
+    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T tsc --build && yarn run -T rimraf dist/.tsbuildinfo"
   },
   "files": [
     "dist"
@@ -18,11 +18,10 @@
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.13",
     "@types/uuid": "^8.3.4",
-    "rimraf": "^3.0.2",
     "uuid": "^8.3.2"
   },
   "dependencies": {
-    "@botpress/messaging-base": "0.0.2",
+    "@botpress/messaging-base": "1.0.0",
     "axios": "^0.21.4",
     "joi": "^17.5.0"
   }
