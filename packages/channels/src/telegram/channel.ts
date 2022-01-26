@@ -7,6 +7,7 @@ import { TelegramStream } from './stream'
 export class TelegramChannel extends ChannelTemplate<TelegramConfig, TelegramService, TelegramApi, TelegramStream> {
   get meta() {
     return {
+      // TODO: change the meta here
       id: '0198f4f5-6100-4549-92e5-da6cc31b4ad1',
       name: 'telegram',
       schema: TelegramConfigSchema,
