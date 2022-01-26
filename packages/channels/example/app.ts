@@ -19,8 +19,14 @@ export class App {
 
       const respond = async () => {
         try {
-          for (const payload of this.filterResponsePayloads(payloads, content.text)) {
-            await channel.send(scope, endpoint, payload)
+          if (content.type === 'say_something') {
+            await channel.send(scope, endpoint, { type: 'text', text: `Say Something: ${content.text}` })
+          } else if (content.type === 'postback') {
+            await channel.send(scope, endpoint, { type: 'text', text: `Postback: ${content.payload}` })
+          } else {
+            for (const payload of this.filterResponsePayloads(payloads, content.text)) {
+              await channel.send(scope, endpoint, payload)
+            }
           }
         } catch (e) {
           console.error('Error occurred sending message', e)
@@ -50,7 +56,7 @@ export class App {
   private filterResponsePayloads(payloads: any[], filter: string) {
     const filtered = []
     for (const payload of payloads) {
-      if (filter.includes(payload.type)) {
+      if (filter?.includes(payload.type)) {
         filtered.push(payload)
       }
     }

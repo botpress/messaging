@@ -13,7 +13,7 @@ export type ChannelContext<TState extends ChannelState<any>> = {
 export interface IndexChoiceOption {
   type: IndexChoiceType
   title: string
-  value: string
+  value?: string
 }
 
 export enum IndexChoiceType {
