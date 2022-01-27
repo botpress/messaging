@@ -162,7 +162,7 @@ export class ConversationService extends Service {
           .orWhereNull('sentOn')
       })
       .groupBy(`${getTableId('msg_conversations')}.id`, `${getTableId('msg_messages')}.id`)
-      .orderBy('sentOn', 'desc')
+      .orderBy('sentOn', 'desc', 'first')
       .orderBy('createdOn', 'desc')
   }
 
