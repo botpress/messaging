@@ -4,6 +4,7 @@ import {
   BatchingService,
   CachingService,
   DatabaseService,
+  getTableId,
   ServerCache,
   Service
 } from '@botpress/messaging-engine'
@@ -134,6 +135,20 @@ export class MessageService extends Service {
     }
 
     return deletedIds.length
+  }
+
+  public async countByClientId(clientId: uuid): Promise<number> {
+    const [count] = await this.query()
+      .innerJoin(
+        getTableId('msg_conversations'),
+        `${getTableId('msg_messages')}.conversationId`,
+        `${getTableId('msg_conversations')}.id`
+      )
+      .count()
+      .as('count')
+      .where({ clientId })
+
+    return +Object.values(count)[0]
   }
 
   public serialize(message: Partial<Message>) {
