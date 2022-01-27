@@ -49,7 +49,7 @@ export class ChannelService extends Service {
 
   async postSetup() {
     for (const channel of this.channels) {
-      if (!(await this.getInDb(channel.meta.name))) {
+      if (!(await this.getInDb(channel.meta.name, channel.meta.version))) {
         await this.createInDb(channel)
       }
     }
@@ -67,8 +67,8 @@ export class ChannelService extends Service {
     return this.channels
   }
 
-  private async getInDb(name: string) {
-    const rows = await this.query().where({ name })
+  private async getInDb(name: string, version: string) {
+    const rows = await this.query().where({ name, version })
     if (rows?.length) {
       return rows[0]
     } else {
@@ -80,6 +80,7 @@ export class ChannelService extends Service {
     await this.query().insert({
       id: channel.meta.id,
       name: channel.meta.name,
+      version: channel.meta.version,
       lazy: channel.meta.lazy,
       initiable: channel.meta.initiable
     })
