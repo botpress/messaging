@@ -39,7 +39,7 @@ export interface NestedButton {
   call_to_actions: CallToAction[]
 }
 
-export const MessengerConfigSchema = Joi.object({
+export const MessengerConfigSchema = {
   accessToken: Joi.string().required(),
   appSecret: Joi.string().required(),
   verifyToken: Joi.string().required(),
@@ -47,4 +47,4 @@ export const MessengerConfigSchema = Joi.object({
   greeting: Joi.string().optional(),
   getStarted: Joi.string().optional(),
   persistentMenu: Joi.array().optional()
-}).options({ stripUnknown: true })
+}

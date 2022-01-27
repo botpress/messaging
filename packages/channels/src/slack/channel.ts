@@ -9,6 +9,7 @@ export class SlackChannel extends ChannelTemplate<SlackConfig, SlackService, Sla
     return {
       id: 'd6111009-712d-485e-a62d-1540f966f4f3',
       name: 'slack',
+      version: '0.1.0',
       schema: SlackConfigSchema,
       initiable: false,
       lazy: true

@@ -9,6 +9,7 @@ export class TwilioChannel extends ChannelTemplate<TwilioConfig, TwilioService, 
     return {
       id: '330ca935-6441-4159-8969-d0a0d3f188a1',
       name: 'twilio',
+      version: '0.1.0',
       schema: TwilioConfigSchema,
       initiable: false,
       lazy: true

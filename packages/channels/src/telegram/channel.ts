@@ -9,6 +9,7 @@ export class TelegramChannel extends ChannelTemplate<TelegramConfig, TelegramSer
     return {
       id: '0198f4f5-6100-4549-92e5-da6cc31b4ad1',
       name: 'telegram',
+      version: '0.1.0',
       schema: TelegramConfigSchema,
       initiable: true,
       lazy: true

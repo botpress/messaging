@@ -50,7 +50,7 @@ export class SyncService extends Service {
     const oldConduits = [...(await this.conduits.listByProvider(providerId))]
 
     for (const [channel, config] of Object.entries(conduits)) {
-      const channelId = this.channels.getByName(channel).meta.id
+      const channelId = this.channels.getByName(channel, config.version).meta.id
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (oldConduitIndex < 0) {

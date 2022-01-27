@@ -7,8 +7,8 @@ export interface SlackConfig extends ChannelConfig {
   useRTM: boolean
 }
 
-export const SlackConfigSchema = Joi.object({
+export const SlackConfigSchema = {
   botToken: Joi.string().required(),
   signingSecret: Joi.string().required(),
   useRTM: Joi.boolean().optional()
-}).options({ stripUnknown: true })
+}

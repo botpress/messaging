@@ -9,6 +9,7 @@ export class TeamsChannel extends ChannelTemplate<TeamsConfig, TeamsService, Tea
     return {
       id: '0491806d-ceb4-4397-8ebf-b8e6deb038da',
       name: 'teams',
+      version: '0.1.0',
       schema: TeamsConfigSchema,
       initiable: false,
       lazy: true

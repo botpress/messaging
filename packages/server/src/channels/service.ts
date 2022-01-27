@@ -38,7 +38,7 @@ export class ChannelService extends Service {
     this.channelsById = {}
 
     for (const channel of this.channels) {
-      this.channelsByName[channel.meta.name] = channel
+      this.channelsByName[`${channel.meta.name}@${channel.meta.version}`] = channel
       this.channelsById[channel.meta.id] = channel
     }
   }
@@ -55,8 +55,8 @@ export class ChannelService extends Service {
     }
   }
 
-  getByName(name: string) {
-    return this.channelsByName[name]
+  getByName(name: string, version: string | undefined) {
+    return this.channelsByName[`${name}@${version || '0.1.0'}`]
   }
 
   getById(id: uuid) {

@@ -7,10 +7,24 @@ const SyncWebhookSchema = Joi.object({
 })
 
 export const makeSyncRequestSchema = (channels: Channel[]) => {
-  const channelsSchema: { [name: string]: Joi.ObjectSchema<any> } = {}
+  const channelsSchema: { [name: string]: Joi.AlternativesSchema } = {}
+  const channelsByName: { [name: string]: Channel[] } = {}
 
   for (const channel of channels) {
-    channelsSchema[channel.meta.name] = channel.meta.schema.optional()
+    if (!channelsByName[channel.meta.name]) {
+      channelsByName[channel.meta.name] = []
+    }
+    channelsByName[channel.meta.name].push(channel)
+  }
+
+  for (const [name, channels] of Object.entries(channelsByName)) {
+    channelsSchema[name] = Joi.alternatives().try(
+      ...channels.map((x) =>
+        Joi.object({ version: Joi.string().valid(x.meta.version).required(), ...x.meta.schema }).options({
+          stripUnknown: true
+        })
+      )
+    )
   }
 
   return ReqSchema({

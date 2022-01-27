@@ -10,11 +10,11 @@ export interface VonageConfig extends ChannelConfig {
   useTestingApi?: boolean
 }
 
-export const VonageConfigSchema = Joi.object({
+export const VonageConfigSchema = {
   apiKey: Joi.string().required(),
   apiSecret: Joi.string().required(),
   signatureSecret: Joi.string().required(),
   applicationId: Joi.string().required(),
   privateKey: Joi.string().required(),
   useTestingApi: Joi.boolean().optional()
-}).options({ stripUnknown: true })
+}
