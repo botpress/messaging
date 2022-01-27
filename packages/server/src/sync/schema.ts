@@ -20,7 +20,13 @@ export const makeSyncRequestSchema = (channels: Channel[]) => {
   for (const [name, channels] of Object.entries(channelsByName)) {
     channelsSchema[name] = Joi.alternatives().try(
       ...channels.map((x) =>
-        Joi.object({ version: Joi.string().valid(x.meta.version).required(), ...x.meta.schema }).options({
+        Joi.object({
+          version:
+            x.meta.version === '0.1.0'
+              ? Joi.string().valid(x.meta.version).optional()
+              : Joi.string().valid(x.meta.version).required(),
+          ...x.meta.schema
+        }).options({
           stripUnknown: true
         })
       )
