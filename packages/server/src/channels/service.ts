@@ -10,13 +10,15 @@ import {
   VonageChannel
 } from '@botpress/messaging-channels'
 import { Service, DatabaseService } from '@botpress/messaging-engine'
+import semver from 'semver'
 import { ChannelTable } from './table'
 
 export class ChannelService extends Service {
   private table: ChannelTable
 
   private channels: Channel[]
-  private channelsByName: { [name: string]: Channel }
+  private channelsByNameAndVersion: { [name: string]: Channel }
+  private channelsByName: { [name: string]: Channel[] }
   private channelsById: { [id: string]: Channel }
 
   constructor(private db: DatabaseService) {
@@ -34,12 +36,22 @@ export class ChannelService extends Service {
       new VonageChannel()
     ]
 
+    this.channelsByNameAndVersion = {}
     this.channelsByName = {}
     this.channelsById = {}
 
     for (const channel of this.channels) {
-      this.channelsByName[`${channel.meta.name}@${channel.meta.version}`] = channel
+      this.channelsByNameAndVersion[`${channel.meta.name}@${channel.meta.version}`] = channel
       this.channelsById[channel.meta.id] = channel
+
+      if (!this.channelsByName[channel.meta.name]) {
+        this.channelsByName[channel.meta.name] = []
+      }
+      this.channelsByName[channel.meta.name].push(channel)
+    }
+
+    for (const [name, channels] of Object.entries(this.channelsByName)) {
+      this.channelsByName[name] = channels.sort((a, b) => (semver.gt(a.meta.version, b.meta.version) ? -1 : 1))
     }
   }
 
@@ -55,8 +67,8 @@ export class ChannelService extends Service {
     }
   }
 
-  getByName(name: string, version: string | undefined) {
-    return this.channelsByName[`${name}@${version || '0.1.0'}`]
+  getByNameAndVersion(name: string, version: string) {
+    return this.channelsByNameAndVersion[`${name}@${version}`]
   }
 
   getById(id: uuid) {
@@ -65,6 +77,10 @@ export class ChannelService extends Service {
 
   list() {
     return this.channels
+  }
+
+  listByName(name: string) {
+    return this.channelsByName[name]
   }
 
   private async getInDb(name: string, version: string) {
