@@ -1,6 +1,7 @@
 import { SyncChannels, SyncWebhook } from '@botpress/messaging-base'
 import { Response } from 'express'
 import Joi from 'joi'
+import _ from 'lodash'
 import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
 import { ChannelService } from '../channels/service'
@@ -41,7 +42,7 @@ export class SyncApi {
       if (error) {
         return res.status(400).send(error.message)
       } else if (channels[name].enabled !== false) {
-        channels[name] = { version: channel.meta.version, ...value.body[channel.meta.name] }
+        channels[name] = { version: channel.meta.version, ..._.omit(value.body[channel.meta.name], 'enabled') }
       } else {
         delete channels[name]
       }
