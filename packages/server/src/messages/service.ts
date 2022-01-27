@@ -145,7 +145,6 @@ export class MessageService extends Service {
         `${getTableId('msg_conversations')}.id`
       )
       .count()
-      .as('count')
       .where({ clientId })
 
     return +Object.values(count)[0]
