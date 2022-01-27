@@ -8,16 +8,26 @@ export class ChannelApi {
 
   async setup() {
     const logger = this.app.logger.root.sub('channels')
-    const webhookRouter = Router()
+    const routers: { [version: string]: { router: Router; path: string } } = {
+      '0.1.0': {
+        router: Router(),
+        path: ''
+      },
+      '1.0.0': {
+        router: Router(),
+        path: '/v1'
+      }
+    }
 
     for (const channel of this.app.channels.list()) {
-      await channel.setup(webhookRouter, logger.sub(channel.meta.name))
+      const router = routers[channel.meta.version]
+      await channel.setup(router.router, logger.sub(channel.meta.name))
 
       channel.logger = this.app.logger.root.sub(channel.meta.name)
       channel.kvs = this.app.kvs
 
       channel.makeUrl(async (scope: string) => {
-        return `${process.env.EXTERNAL_URL}/webhooks/${scope}/${channel.meta.name}`
+        return `${process.env.EXTERNAL_URL}/webhooks${router.path}/${scope}/${channel.meta.name}`
       })
 
       channel.on('message', async ({ scope, endpoint, content }) => {
@@ -45,7 +55,8 @@ export class ChannelApi {
       })
     }
 
-    this.router.use('/webhooks', webhookRouter)
+    this.router.use('/webhooks/v1', routers['1.0.0'].router)
+    this.router.use('/webhooks', routers['0.1.0'].router)
   }
 
   async map(channel: Channel, scope: string, endpoint: Endpoint, content: any): Promise<Mapping | undefined> {
