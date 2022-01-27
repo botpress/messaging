@@ -18,10 +18,10 @@ export class SyncApi {
 
   async sync(req: ClientApiRequest, res: Response) {
     const webhooks: SyncWebhook[] = req.body.webhooks
-    const channels: SyncChannels = this.removeDisabledChannels(req.body.channels || {})
+    const channels: SyncChannels = req.body.channels
 
     for (const [name, config] of Object.entries(channels)) {
-      const channel = this.channels.getByNameAndVersion(name, config.version || LEGACY_VERSION)
+      const channel = this.channels.getByNameAndVersion(name, config?.version || LEGACY_VERSION)
 
       const { error, value } = Joi.object({
         body: {
@@ -30,6 +30,7 @@ export class SyncApi {
               channel.meta.version === LEGACY_VERSION
                 ? Joi.string().valid(channel.meta.version).optional()
                 : Joi.string().valid(channel.meta.version).required(),
+            enabled: Joi.boolean().optional(),
             ...channel.meta.schema
           }
         }
@@ -39,24 +40,14 @@ export class SyncApi {
 
       if (error) {
         return res.status(400).send(error.message)
-      } else {
+      } else if (channels[name].enabled !== false) {
         channels[name] = { version: channel.meta.version, ...value.body[channel.meta.name] }
+      } else {
+        delete channels[name]
       }
     }
 
     const result = await this.syncs.sync(req.clientId, { webhooks, channels })
     res.send(result)
-  }
-
-  private removeDisabledChannels(body: any) {
-    const filtered: any = {}
-
-    for (const [key, value] of Object.entries(body)) {
-      if (body[key]?.enabled !== false) {
-        filtered[key] = value
-      }
-    }
-
-    return filtered
   }
 }
