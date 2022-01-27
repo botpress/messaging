@@ -18,7 +18,7 @@ describe('Conduits', () => {
 
     state = {
       provider: await app.providers.create(randStr(), false),
-      channel: app.channels.getByName('telegram'),
+      channel: app.channels.getByName('telegram', '0.1.0'),
       channelConfig: { botToken: randStr() }
     }
   })
@@ -107,17 +107,17 @@ describe('Conduits', () => {
   })
 
   test('List conduits by provider', async () => {
-    const conduit1 = await conduits.create(state.provider.id, app.channels.getByName('twilio').meta.id, {
+    const conduit1 = await conduits.create(state.provider.id, app.channels.getByName('twilio', '0.1.0').meta.id, {
       accountSID: randStr(),
       authToken: randStr()
     })
-    const conduit2 = await conduits.create(state.provider.id, app.channels.getByName('teams').meta.id, {
+    const conduit2 = await conduits.create(state.provider.id, app.channels.getByName('teams', '0.1.0').meta.id, {
       appId: randStr(),
       appPassword: randStr()
     })
 
     const otherProvider = await app.providers.create(randStr(), false)
-    const conduit3 = await conduits.create(otherProvider.id, app.channels.getByName('slack').meta.id, {
+    const conduit3 = await conduits.create(otherProvider.id, app.channels.getByName('slack', '0.1.0').meta.id, {
       botToken: randStr(),
       signingSecret: randStr(),
       useRTM: false
