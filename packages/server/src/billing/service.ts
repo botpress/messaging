@@ -22,11 +22,15 @@ export class BillingService extends Service {
   }
 
   async destroy() {
-    if (this.timeout) {
-      clearTimeout(this.timeout)
-    }
+    try {
+      if (this.timeout) {
+        clearTimeout(this.timeout)
+      }
 
-    await this.flushBilling()
+      await this.flushBilling()
+    } catch (e) {
+      this.logger.error(e, 'Failed to destroy billing')
+    }
   }
 
   private async tickBilling() {

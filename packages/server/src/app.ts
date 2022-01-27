@@ -132,6 +132,7 @@ export class App extends Engine {
 
   async destroy() {
     await this.batching?.destroy()
+    await this.billing?.destroy()
     await this.instances?.destroy()
     await this.distributed?.destroy()
     await this.database?.destroy()
