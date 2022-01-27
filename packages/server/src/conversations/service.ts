@@ -142,7 +142,7 @@ export class ConversationService extends Service {
       .leftJoin(
         `${getTableId('msg_messages')}`,
         `${getTableId('msg_messages')}.conversationId`,
-        `${getTableId('msg_messages')}.id`
+        `${getTableId('msg_conversations')}.id`
       )
       .where({
         clientId,
