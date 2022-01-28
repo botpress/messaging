@@ -1,4 +1,4 @@
-import { SyncChannels, SyncWebhook } from '@botpress/messaging-base'
+import { SyncChannels, SyncRequest, SyncWebhook } from '@botpress/messaging-base'
 import { Response } from 'express'
 import Joi from 'joi'
 import _ from 'lodash'
@@ -18,8 +18,18 @@ export class SyncApi {
   }
 
   async sync(req: ClientApiRequest, res: Response) {
-    const webhooks: SyncWebhook[] = req.body.webhooks || []
-    const channels: SyncChannels = req.body.channels || {}
+    const { value, error } = this.validate(req.body)
+    if (error) {
+      return res.status(400).send(error.message)
+    }
+
+    const result = await this.syncs.sync(req.clientId, value!)
+    res.send(result)
+  }
+
+  validate(req: SyncRequest): { value?: SyncRequest; error?: Joi.ValidationError } {
+    const webhooks: SyncWebhook[] = req.webhooks || []
+    const channels: SyncChannels = req.channels || {}
 
     for (const [name, config] of Object.entries(channels)) {
       const channel = this.channels.getByNameAndVersion(name, config?.version || LEGACY_VERSION)
@@ -42,7 +52,7 @@ export class SyncApi {
         .validate({ body: { channels: { [channel.meta.name]: config } } })
 
       if (error) {
-        return res.status(400).send(error.message)
+        return { error }
       } else if (channels[name].enabled !== false) {
         channels[name] = { version: channel.meta.version, ..._.omit(value.body.channels[channel.meta.name], 'enabled') }
       } else {
@@ -50,7 +60,6 @@ export class SyncApi {
       }
     }
 
-    const result = await this.syncs.sync(req.clientId, { webhooks, channels })
-    res.send(result)
+    return { value: { webhooks, channels } }
   }
 }
