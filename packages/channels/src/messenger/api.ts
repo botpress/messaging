@@ -14,6 +14,10 @@ export class MessengerApi extends ChannelApi<MessengerService> {
     router.post('/messenger', this.handleMessageRequest.bind(this))
   }
 
+  private prepareAuth(_req: IncomingMessage, res: Response, buffer: Buffer, _encoding: string) {
+    res.locals.authBuffer = Buffer.from(buffer)
+  }
+
   private async handleWebhookVerification(req: ChannelApiRequest, res: Response) {
     const { config } = this.service.get(req.scope)
 
@@ -25,6 +29,20 @@ export class MessengerApi extends ChannelApi<MessengerService> {
       res.status(200).send(challenge)
     } else {
       res.sendStatus(403)
+    }
+  }
+
+  private async auth(req: Request, res: Response, next: NextFunction) {
+    const signature = req.headers['x-hub-signature'] as string
+    const [, hash] = signature.split('=')
+
+    const { config } = this.service.get(req.params.scope)
+    const expectedHash = crypto.createHmac('sha1', config.appSecret).update(res.locals.authBuffer).digest('hex')
+
+    if (hash !== expectedHash) {
+      return res.sendStatus(403)
+    } else {
+      next()
     }
   }
 
@@ -46,23 +64,5 @@ export class MessengerApi extends ChannelApi<MessengerService> {
       { identity: '*', sender: message.sender.id, thread: '*' },
       { type: 'text', text: message.message.text }
     )
-  }
-
-  private async auth(req: Request, res: Response, next: NextFunction) {
-    const signature = req.headers['x-hub-signature'] as string
-    const [, hash] = signature.split('=')
-
-    const { config } = this.service.get(req.params.scope)
-    const expectedHash = crypto.createHmac('sha1', config.appSecret).update(res.locals.authBuffer).digest('hex')
-
-    if (hash !== expectedHash) {
-      return res.sendStatus(403)
-    } else {
-      next()
-    }
-  }
-
-  private prepareAuth(_req: IncomingMessage, res: Response, buffer: Buffer, _encoding: string) {
-    res.locals.authBuffer = Buffer.from(buffer)
   }
 }
