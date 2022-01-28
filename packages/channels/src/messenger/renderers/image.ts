@@ -15,6 +15,7 @@ export class MessengerImageRenderer extends ImageRenderer {
     })
 
     if (payload.title?.length) {
+      // TODO: could maybe use the media templat instead?
       context.messages.push({ text: payload.title })
     }
   }
