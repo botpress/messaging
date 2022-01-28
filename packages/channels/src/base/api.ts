@@ -14,7 +14,7 @@ export class ChannelApi<TService extends ChannelService<any, any>> {
   }
 }
 
-export type Middleware<T> = (req: T, res: Response, next: NextFunction) => Promise<void>
+export type Middleware<T> = (req: T, res: Response, next: NextFunction) => Promise<any>
 
 export class ChannelApiManager {
   constructor(private service: ChannelService<any, any>, private router: Router, private logger?: Logger) {}

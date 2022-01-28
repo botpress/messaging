@@ -46,9 +46,14 @@ export class App {
 
     for (const [key, val] of Object.entries<any>(this.config.scopes)) {
       if (val[name]) {
-        await channel.start(key, val[name])
-        await channel.initialize(key)
-        this.log('conf', name, key, val[name])
+        const { error } = channel.meta.schema.validate(val[name])
+        if (error) {
+          this.log('conf-err', name, key, error.message)
+        } else {
+          await channel.start(key, val[name])
+          await channel.initialize(key)
+          this.log('conf', name, key, val[name])
+        }
       }
     }
   }
