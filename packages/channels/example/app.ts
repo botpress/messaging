@@ -1,5 +1,6 @@
 import clc from 'cli-color'
 import { Router } from 'express'
+import Joi from 'joi'
 import { Channel } from '../src/base/channel'
 import { MessengerChannel } from '../src/messenger/channel'
 import payloads from './payloads.json'
@@ -60,7 +61,7 @@ export class App {
 
     for (const [key, val] of Object.entries<any>(this.config.scopes)) {
       if (val[name]) {
-        const { error } = channel.meta.schema.validate(val[name])
+        const { error } = Joi.object(channel.meta.schema).validate(val[name])
         if (error) {
           this.log('conf-err', name, key, error.message)
         } else {
