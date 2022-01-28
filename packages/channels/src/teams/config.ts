@@ -10,9 +10,9 @@ export interface TeamsConfig extends ChannelConfig {
   }
 }
 
-export const TeamsConfigSchema = Joi.object({
+export const TeamsConfigSchema = {
   appId: Joi.string().required(),
   appPassword: Joi.string().required(),
   tenantId: Joi.string().optional(),
   proactiveMessages: Joi.object().optional()
-}).options({ stripUnknown: true })
+}

@@ -7,8 +7,8 @@ export interface SmoochConfig extends ChannelConfig {
   forwardRawPayloads?: string[]
 }
 
-export const SmoochConfigSchema = Joi.object({
+export const SmoochConfigSchema = {
   keyId: Joi.string().required(),
   secret: Joi.string().required(),
   forwardRawPayloads: Joi.array().items(Joi.string()).optional()
-}).options({ stripUnknown: true })
+}

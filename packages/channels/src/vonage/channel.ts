@@ -9,6 +9,7 @@ export class VonageChannel extends ChannelTemplate<VonageConfig, VonageService, 
     return {
       id: 'bf045a3c-5627-416d-974d-5cfeb277a23f',
       name: 'vonage',
+      version: '0.1.0',
       schema: VonageConfigSchema,
       initiable: false,
       lazy: true

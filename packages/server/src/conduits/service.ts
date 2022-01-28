@@ -7,6 +7,7 @@ import {
   ServerCache2D,
   Service
 } from '@botpress/messaging-engine'
+import Joi from 'joi'
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { ChannelService } from '../channels/service'
@@ -49,7 +50,7 @@ export class ConduitService extends Service {
 
   async create(providerId: uuid, channelId: uuid, config: any): Promise<Conduit> {
     const channel = this.channelService.getById(channelId)
-    const validConfig = await channel.meta.schema.validateAsync(config)
+    const validConfig = await Joi.object(channel.meta.schema).validateAsync(config)
 
     const conduit = {
       id: uuidv4(),
@@ -77,7 +78,7 @@ export class ConduitService extends Service {
   async updateConfig(id: uuid, config: any) {
     const conduit = await this.get(id)
     const channel = this.channelService.getById(conduit.channelId)
-    const validConfig = await channel.meta.schema.validateAsync(config)
+    const validConfig = await Joi.object(channel.meta.schema).validateAsync(config)
 
     this.cacheById.del(id, true)
     this.cacheByProviderAndChannel.del(conduit.providerId, conduit.channelId, true)

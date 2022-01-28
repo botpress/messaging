@@ -9,6 +9,7 @@ export class SmoochChannel extends ChannelTemplate<SmoochConfig, SmoochService, 
     return {
       id: '3c5c160f-d673-4ef8-8b6f-75448af048ce',
       name: 'smooch',
+      version: '0.1.0',
       schema: SmoochConfigSchema,
       initiable: true,
       lazy: true
