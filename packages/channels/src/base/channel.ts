@@ -70,6 +70,7 @@ export abstract class ChannelTemplate<
   constructor(public readonly service: TService, public readonly api: TApi, public readonly stream: TStream) {}
 
   async setup(router: Router, logger?: Logger) {
+    this.logger = logger
     await this.service.setup()
     await this.api.setup(new ChannelApiManager(this.service, router, logger))
     await this.stream.setup()

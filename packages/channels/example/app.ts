@@ -1,5 +1,6 @@
 import clc from 'cli-color'
 import { Router } from 'express'
+import Joi from 'joi'
 import { Channel } from '../src/base/channel'
 import { TelegramChannel } from '../src/telegram/channel'
 import payloads from './payloads.json'
@@ -12,7 +13,21 @@ export class App {
   }
 
   async setupChannel(name: string, channel: Channel) {
-    await channel.setup(this.router)
+    await channel.setup(this.router, {
+      info: (message: string, data?: any) => {
+        // eslint-disable-next-line no-console
+        console.log(message, data)
+      },
+      debug: (message: string, data?: any) => {
+        console.debug(message, data)
+      },
+      warn: (message: string, data?: any) => {
+        console.warn(message, data)
+      },
+      error: (error: Error, message?: string, data?: any) => {
+        console.error(message, error?.message, (<any>error).response?.data, data)
+      }
+    })
 
     channel.on('message', async ({ scope, endpoint, content }) => {
       this.log('message', name, scope, { endpoint, content })
@@ -30,7 +45,7 @@ export class App {
               await channel.send(scope, endpoint, payload)
             }
           } else {
-            await channel.send(scope, endpoint, { type: 'text', text: 'OK' })
+            await channel.send(scope, endpoint, { type: 'text', text: 'OK', typing: true })
           }
         } catch (e) {
           console.error('Error occurred sending message', e)
@@ -46,9 +61,14 @@ export class App {
 
     for (const [key, val] of Object.entries<any>(this.config.scopes)) {
       if (val[name]) {
-        await channel.start(key, val[name])
-        await channel.initialize(key)
-        this.log('conf', name, key, val[name])
+        const { error } = Joi.object(channel.meta.schema).validate(val[name])
+        if (error) {
+          this.log('conf-err', name, key, error.message)
+        } else {
+          await channel.start(key, val[name])
+          await channel.initialize(key)
+          this.log('conf', name, key, val[name])
+        }
       }
     }
   }
