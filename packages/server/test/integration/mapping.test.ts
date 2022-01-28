@@ -33,8 +33,8 @@ describe('Mapping', () => {
     await setupApp()
     mapping = app.mapping
     clientId = (await app.clients.create(undefined!)).id
-    channelId = app.channels.getByName('telegram', '0.1.0').meta.id
-    channelId2 = app.channels.getByName('twilio', '0.1.0').meta.id
+    channelId = app.channels.getByNameAndVersion('telegram', '0.1.0').meta.id
+    channelId2 = app.channels.getByNameAndVersion('twilio', '0.1.0').meta.id
   })
 
   afterAll(async () => {
