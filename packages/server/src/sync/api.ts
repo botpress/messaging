@@ -26,23 +26,25 @@ export class SyncApi {
 
       const { error, value } = Joi.object({
         body: {
-          [channel.meta.name]: {
-            version:
-              channel.meta.version === LEGACY_VERSION
-                ? Joi.string().valid(channel.meta.version).optional()
-                : Joi.string().valid(channel.meta.version).required(),
-            enabled: Joi.boolean().optional(),
-            ...channel.meta.schema
+          channels: {
+            [channel.meta.name]: {
+              version:
+                channel.meta.version === LEGACY_VERSION
+                  ? Joi.string().valid(channel.meta.version).optional()
+                  : Joi.string().valid(channel.meta.version).required(),
+              enabled: Joi.boolean().optional(),
+              ...channel.meta.schema
+            }
           }
         }
       })
         .options({ stripUnknown: channel.meta.version === LEGACY_VERSION })
-        .validate({ body: { [channel.meta.name]: config } })
+        .validate({ body: { channels: { [channel.meta.name]: config } } })
 
       if (error) {
         return res.status(400).send(error.message)
       } else if (channels[name].enabled !== false) {
-        channels[name] = { version: channel.meta.version, ..._.omit(value.body[channel.meta.name], 'enabled') }
+        channels[name] = { version: channel.meta.version, ..._.omit(value.body.channels[channel.meta.name], 'enabled') }
       } else {
         delete channels[name]
       }
