@@ -8,7 +8,7 @@ import {
   TelegramChannel,
   TwilioChannel,
   VonageChannel
-} from '@botpress/messaging-channels'
+} from '@botpress/messaging-channels-legacy'
 import { Service, DatabaseService } from '@botpress/messaging-engine'
 import semver from 'semver'
 import { ChannelTable } from './table'

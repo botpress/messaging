@@ -7,6 +7,12 @@
     "typing": true
   },
   {
+    "type": "image",
+    "title": "YOU SHALL NOT PASS",
+    "image": "https://digginginthedirt.de/photos/upload/2018/05/26/20180526172235-15859610.gif",
+    "typing": true
+  },
+  {
     "type": "card",
     "title": "A banana card",
     "subtitle": "This is a banana",
@@ -81,11 +87,54 @@
     ]
   },
   {
+    "type": "file",
+    "title": "here is a zip of the 1.0.0 messaging codebase",
+    "file": "https://github.com/botpress/messaging/archive/refs/tags/v1.0.0.zip",
+    "typing": true
+  },
+  {
+    "type": "video",
+    "title": "look at the big bunny video",
+    "video": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "typing": true
+  },
+  {
+    "type": "audio",
+    "title": "this is audio of a horse",
+    "audio": "https://www.w3schools.com/html/horse.mp3",
+    "typing": true
+  },
+  {
+    "type": "location",
+    "title": "this is the location of my house",
+    "address": "1600 Pennsylvania Avenue NW, Washington, DC 20500, États-Unis",
+    "latitude": 38.89764765487744,
+    "longitude": -77.03709704833226,
+    "typing": true
+  },
+  {
+    "type": "dropdown",
+    "message": "Pick something :",
+    "options": [
+      { "label": "Mars", "value": "planet_mars" },
+      { "label": "Venus", "value": "planet_venus" },
+      { "label": "Jupiter", "value": "planet_jupiter" },
+      { "label": "Mars2", "value": "planet_mars2" },
+      { "label": "Venus2", "value": "planet_venus2" },
+      { "label": "Jupiter2", "value": "planet_jupiter2" },
+      { "label": "Mars3", "value": "planet_mars3" },
+      { "label": "Venus3", "value": "planet_venus3" },
+      { "label": "Jupiter3", "value": "planet_jupiter3" }
+    ],
+    "typing": true
+  },
+  {
     "type": "single-choice",
     "text": "Make a choice :",
     "choices": [
       { "title": "Yay", "value": "YES" },
       { "title": "Nay", "value": "NO" }
-    ]
+    ],
+    "typing": true
   }
 ]
