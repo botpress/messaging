@@ -142,7 +142,7 @@ export class ConversationService extends Service {
       .leftJoin(
         `${getTableId('msg_messages')}`,
         `${getTableId('msg_messages')}.conversationId`,
-        `${getTableId('msg_messages')}.id`
+        `${getTableId('msg_conversations')}.id`
       )
       .where({
         clientId,
@@ -162,7 +162,7 @@ export class ConversationService extends Service {
           .orWhereNull('sentOn')
       })
       .groupBy(`${getTableId('msg_conversations')}.id`, `${getTableId('msg_messages')}.id`)
-      .orderBy('sentOn', 'desc')
+      .orderBy('sentOn', 'desc', 'first')
       .orderBy('createdOn', 'desc')
   }
 
