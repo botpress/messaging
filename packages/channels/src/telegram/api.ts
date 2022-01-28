@@ -3,7 +3,7 @@ import { Context, NarrowedContext } from 'telegraf'
 import { Update } from 'telegraf/typings/core/types/typegram'
 import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
-import { ChannelInitializeEvent, ChannelStartEvent } from '../base/service'
+import { ChannelInitializeEvent, ChannelStartEvent, ChannelStopEvent } from '../base/service'
 import { POSTBACK_PREFIX, SAY_PREFIX } from './renderers/carousel'
 import { TelegramService } from './service'
 
@@ -13,6 +13,7 @@ export class TelegramApi extends ChannelApi<TelegramService> {
 
     this.service.on('start', this.handleStart.bind(this))
     this.service.on('initialize', this.handleInitialize.bind(this))
+    this.service.on('stop', this.handleStop.bind(this))
   }
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {
@@ -45,6 +46,12 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     } else {
       await telegraf.telegram.deleteWebhook()
       await telegraf.launch()
+    }
+  }
+
+  private async handleStop({ scope }: ChannelStopEvent) {
+    if (!this.useWebhook()) {
+      this.service.get(scope).telegraf.stop()
     }
   }
 
