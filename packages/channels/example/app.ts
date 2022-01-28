@@ -1,12 +1,15 @@
 import clc from 'cli-color'
 import { Router } from 'express'
 import { Channel } from '../src/base/channel'
+import { MessengerChannel } from '../src/messenger/channel'
 import payloads from './payloads.json'
 
 export class App {
   constructor(private router: Router, private config: any) {}
 
-  async setup() {}
+  async setup() {
+    await this.setupChannel('messenger', new MessengerChannel())
+  }
 
   async setupChannel(name: string, channel: Channel) {
     await channel.setup(this.router)
