@@ -12,8 +12,9 @@ export class MessengerChannel extends ChannelTemplate<
 > {
   get meta() {
     return {
-      id: 'c4bb1487-b3bd-49b3-a3dd-36db908d165d',
+      id: 'aa88f73d-a9fb-456f-b0d0-5c0031e4aa34',
       name: 'messenger',
+      version: '1.0.0',
       schema: MessengerConfigSchema,
       initiable: true,
       lazy: true

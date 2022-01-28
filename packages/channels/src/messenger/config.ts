@@ -9,10 +9,10 @@ export interface MessengerConfig extends ChannelConfig {
   accessToken: string
 }
 
-export const MessengerConfigSchema = Joi.object({
+export const MessengerConfigSchema = {
   appId: Joi.string().required(),
   appSecret: Joi.string().required(),
   verifyToken: Joi.string().required(),
   pageId: Joi.string().required(),
   accessToken: Joi.string().required()
-}).options({ stripUnknown: true })
+}
