@@ -1,16 +1,17 @@
 import { uuid } from '@botpress/messaging-base'
+import { Channel, TelegramChannel } from '@botpress/messaging-channels'
 import {
-  Channel,
-  MessengerChannel,
-  SlackChannel,
-  SmoochChannel,
-  TeamsChannel,
-  TelegramChannel,
-  TwilioChannel,
-  VonageChannel
+  MessengerChannel as MessengerChannelLegacy,
+  SlackChannel as SlackChannelLegacy,
+  SmoochChannel as SmoochChannelLegacy,
+  TeamsChannel as TeamsChannelLegacy,
+  TelegramChannel as TelegramChannelLegacy,
+  TwilioChannel as TwilioChannelLegacy,
+  VonageChannel as VonageChannelLegacy
 } from '@botpress/messaging-channels-legacy'
 import { Service, DatabaseService } from '@botpress/messaging-engine'
 import semver from 'semver'
+import yn from 'yn'
 import { ChannelTable } from './table'
 
 export class ChannelService extends Service {
@@ -26,15 +27,24 @@ export class ChannelService extends Service {
 
     this.table = new ChannelTable()
 
-    this.channels = [
-      new MessengerChannel(),
-      new SlackChannel(),
-      new TeamsChannel(),
-      new TelegramChannel(),
-      new TwilioChannel(),
-      new SmoochChannel(),
-      new VonageChannel()
-    ]
+    this.channels = []
+
+    if (yn(process.env.ENABLE_EXPERIMENTAL_CHANNELS)) {
+      this.channels = [...this.channels, new TelegramChannel()]
+    }
+
+    if (!yn(process.env.DISABLE_LEGACY_CHANNELS)) {
+      this.channels = [
+        ...this.channels,
+        new MessengerChannelLegacy(),
+        new SlackChannelLegacy(),
+        new TeamsChannelLegacy(),
+        new TelegramChannelLegacy(),
+        new TwilioChannelLegacy(),
+        new SmoochChannelLegacy(),
+        new VonageChannelLegacy()
+      ]
+    }
 
     this.channelsByNameAndVersion = {}
     this.channelsByName = {}
