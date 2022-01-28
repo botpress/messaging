@@ -4,6 +4,6 @@ import { MessengerContext } from '../context'
 
 export class MessengerTextRenderer extends TextRenderer {
   renderText(context: MessengerContext, payload: TextContent): void {
-    // TODO
+    context.messages.push({ text: payload.text })
   }
 }

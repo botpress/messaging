@@ -30,7 +30,7 @@ export class App {
               await channel.send(scope, endpoint, payload)
             }
           } else {
-            await channel.send(scope, endpoint, { type: 'text', text: 'OK' })
+            await channel.send(scope, endpoint, { type: 'text', text: 'OK', typing: true })
           }
         } catch (e) {
           console.error('Error occurred sending message', e)

@@ -3,6 +3,8 @@ import { MessengerContext } from '../context'
 
 export class MessengerCommonSender extends CommonSender {
   async send(context: MessengerContext) {
-    // TODO
+    for (const message of context.messages) {
+      await context.stream.sendMessage(context.scope, context, message)
+    }
   }
 }
