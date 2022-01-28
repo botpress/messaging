@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/botpress/messaging/compare/v1.0.0...v1.0.1) (2022-01-27)
+
+
+### Bug Fixes
+
+* **conversations:** fix ordering ([#326](https://github.com/botpress/messaging/issues/326)) ([fb40676](https://github.com/botpress/messaging/commit/fb406765475ace16267d6b1cb63426191e982e8a))
+
+
+
 # [1.0.0](https://github.com/botpress/messaging/compare/v0.1.23...v1.0.0) (2022-01-25)
 
 
