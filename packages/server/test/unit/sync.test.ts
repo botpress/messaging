@@ -2,7 +2,7 @@ import { DatabaseService } from '@botpress/messaging-engine'
 import cloneDeep from 'lodash/cloneDeep'
 
 import { ChannelService } from '../../src/channels/service'
-import { makeSyncRequestSchema } from '../../src/sync/schema'
+import { SyncApi } from '../../src/sync/api'
 
 jest.mock('@botpress/messaging-engine')
 
@@ -45,95 +45,43 @@ const channels = {
     privateKey: 'privateKey'
   }
 }
-const webhooks = [
-  {
-    url: 'https://url.com'
-  },
-  {
-    url: 'http://localhost:3100'
-  }
-]
-const invalidWebhook = [
-  {
-    url: '83.23.12.1:3100'
-  }
-]
 
 describe('Sync', () => {
-  let channelService: ChannelService
-
-  const validObj = {
-    channels,
-    webhooks
-  }
-  const validObjWithUnknownProperties = {
-    ...cloneDeep(validObj),
-    unknownProperty: 'unknown'
-  }
-  const validObjWithInvalidWebhook = {
-    ...cloneDeep(validObj),
-    webhooks: invalidWebhook
-  }
+  let syncApi: SyncApi
 
   beforeEach(() => {
-    const databaseService = new DatabaseService()
-    channelService = new ChannelService(databaseService)
+    const channelService = new ChannelService(undefined as any)
+    syncApi = new SyncApi(undefined as any, channelService)
   })
 
-  describe('makeSyncRequestSchema', () => {
-    test('Should not throw any error with all required fields', async () => {
-      const schema = makeSyncRequestSchema(channelService.list())
-
-      const obj = {}
-      const { error, value } = schema.validate({ body: obj, params: {}, query: {} })
+  describe('Validation', () => {
+    test('Should not throw any error with no channel', async () => {
+      const { error, value } = syncApi.validate({})
       if (error) {
         throw error
       }
 
-      expect(value).toEqual({ body: obj, params: {}, query: {} })
+      expect(value).toEqual({ channels: {}, webhooks: [] })
     })
 
-    test('Should not throw any error with an object that contains only valid properties', async () => {
-      const schema = makeSyncRequestSchema(channelService.list())
-
-      const { error, value } = schema.validate({ body: validObj, params: {}, query: {} })
+    test('Should not throw any error with every channel configured correctly', async () => {
+      const { error, value } = syncApi.validate({ channels })
       if (error) {
         throw error
       }
 
-      expect(value).toEqual({ body: validObj, params: {}, query: {} })
+      expect(value).toEqual({ channels, webhooks: [] })
     })
 
-    test('Should strip unknown properties from object', async () => {
-      const schema = makeSyncRequestSchema(channelService.list())
-
-      const { error, value } = schema.validate({ body: validObjWithUnknownProperties, params: {}, query: {} })
+    test('Should strip unknown properties from legacy channels', async () => {
+      const { error, value } = syncApi.validate({
+        channels: { ...channels, telegram: { ...channels.telegram, randomProp: 'yoyo' } }
+      })
       if (error) {
         throw error
       }
 
-      expect(value).toEqual({ body: validObj, params: {}, query: {} })
-    })
-
-    test('Should only accept objects', async () => {
-      const schema = makeSyncRequestSchema(channelService.list())
-
-      const val = ''
-      const { error, value } = schema.validate({ body: val, params: {}, query: {} })
-
-      expect(error).not.toBeUndefined()
-      expect(error!.message).toEqual('"body" must be of type object')
-      expect(value).toEqual({ body: val, params: {}, query: {} })
-    })
-
-    test('Should only accept valid URI as webhook url', async () => {
-      const schema = makeSyncRequestSchema(channelService.list())
-
-      const { error, value } = schema.validate({ body: validObjWithInvalidWebhook, params: {}, query: {} })
-
-      expect(error).not.toBeUndefined()
-      expect(error!.message).toEqual('"body.webhooks[0].url" must be a valid uri')
-      expect(value).toEqual({ body: validObjWithInvalidWebhook, params: {}, query: {} })
+      expect(value).toEqual({ channels, webhooks: [] })
     })
   })
 })
