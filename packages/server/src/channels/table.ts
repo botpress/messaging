@@ -8,8 +8,10 @@ export class ChannelTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.string('name').unique().notNullable()
+    table.string('name').notNullable()
+    table.string('version').notNullable()
     table.boolean('lazy').notNullable()
     table.boolean('initiable').notNullable()
+    table.unique(['name', 'version'])
   }
 }

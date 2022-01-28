@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/botpress/messaging/compare/v1.0.1...v1.0.2) (2022-01-28)
+
+
+### Features
+
+* **channels:** channel versioning ([#328](https://github.com/botpress/messaging/issues/328)) ([6632794](https://github.com/botpress/messaging/commit/6632794425e2b96ecb77d545bf11a9255c434cc0))
+
+
+
 ## [1.0.1](https://github.com/botpress/messaging/compare/v1.0.0...v1.0.1) (2022-01-27)
 
 

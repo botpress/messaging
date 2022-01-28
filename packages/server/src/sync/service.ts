@@ -49,8 +49,9 @@ export class SyncService extends Service {
   private async syncConduits(providerId: uuid, conduits: SyncChannels) {
     const oldConduits = [...(await this.conduits.listByProvider(providerId))]
 
-    for (const [channel, config] of Object.entries(conduits)) {
-      const channelId = this.channels.getByName(channel).meta.id
+    for (const [channel, configWithVersion] of Object.entries(conduits)) {
+      const channelId = this.channels.getByNameAndVersion(channel, configWithVersion.version).meta.id
+      const config = _.omit(configWithVersion, 'version')
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (oldConduitIndex < 0) {

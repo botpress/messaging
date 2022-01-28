@@ -25,9 +25,9 @@ describe('Status', () => {
     await setupApp()
 
     const provider = await app.providers.create(randStr(), false)
-    const channel = app.channels.getByName('twilio')
+    const channel = app.channels.getByNameAndVersion('twilio', '0.1.0')
     const conduit = await app.conduits.create(provider.id, channel.meta.id, { accountSID: 'abc', authToken: 'sds' })
-    const channel2 = app.channels.getByName('slack')
+    const channel2 = app.channels.getByNameAndVersion('slack', '0.1.0')
     const conduit2 = await app.conduits.create(provider.id, channel2.meta.id, { botToken: 'abc', signingSecret: 'sds' })
 
     status = app.status
