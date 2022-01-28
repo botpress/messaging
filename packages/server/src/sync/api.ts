@@ -18,8 +18,8 @@ export class SyncApi {
   }
 
   async sync(req: ClientApiRequest, res: Response) {
-    const webhooks: SyncWebhook[] = req.body.webhooks
-    const channels: SyncChannels = req.body.channels
+    const webhooks: SyncWebhook[] = req.body.webhooks || []
+    const channels: SyncChannels = req.body.channels || {}
 
     for (const [name, config] of Object.entries(channels)) {
       const channel = this.channels.getByNameAndVersion(name, config?.version || LEGACY_VERSION)
