@@ -7,8 +7,7 @@ if (process.env.TS_NODE_DEV) {
   const rewire = function (this: (id: string) => any, mod: string) {
     if (
       mod.startsWith('@botpress/messaging') &&
-      // we don't want to rewire the legacy channels since we get them from npm
-      // so we don't have the source code in the repo
+      // we don't want to rewire the legacy channels because we get them from npm
       mod !== '@botpress/messaging-channels-legacy'
     ) {
       return originalRequire.apply(this, [mod + '/src'])
