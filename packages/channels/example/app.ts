@@ -12,7 +12,21 @@ export class App {
   }
 
   async setupChannel(name: string, channel: Channel) {
-    await channel.setup(this.router)
+    await channel.setup(this.router, {
+      info: (message: string, data?: any) => {
+        // eslint-disable-next-line no-console
+        console.log(message, data)
+      },
+      debug: (message: string, data?: any) => {
+        console.debug(message, data)
+      },
+      warn: (message: string, data?: any) => {
+        console.warn(message, data)
+      },
+      error: (error: Error, message?: string, data?: any) => {
+        console.error(message, error?.message, (<any>error).response?.data, data)
+      }
+    })
 
     channel.on('message', async ({ scope, endpoint, content }) => {
       this.log('message', name, scope, { endpoint, content })
