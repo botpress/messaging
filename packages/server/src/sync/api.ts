@@ -5,7 +5,7 @@ import _ from 'lodash'
 import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
 import { ChannelService } from '../channels/service'
-import { Schema } from './schema'
+import { makeSyncRequestSchema } from './schema'
 import { SyncService } from './service'
 
 const LEGACY_VERSION = '0.1.0'
@@ -14,7 +14,7 @@ export class SyncApi {
   constructor(private syncs: SyncService, private channels: ChannelService) {}
 
   setup(router: ApiManager) {
-    router.post('/sync', Schema.Api.Sync, this.sync.bind(this))
+    router.post('/sync', makeSyncRequestSchema(this.channels.list()), this.sync.bind(this))
   }
 
   async sync(req: ClientApiRequest, res: Response) {
@@ -48,7 +48,7 @@ export class SyncApi {
           }
         }
       })
-        .options({ stripUnknown: channel.meta.version === LEGACY_VERSION })
+        .options({ stripUnknown: channel.meta.version === LEGACY_VERSION, abortEarly: false })
         .validate({ body: { channels: { [channel.meta.name]: config } } })
 
       if (error) {
