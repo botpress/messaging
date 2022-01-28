@@ -54,7 +54,7 @@ export class ChannelVersionsMigration extends Migration {
     await this.trx.schema.alterTable(getTableId('msg_channels'), (table) => {
       table.dropUnique(['name', 'version'])
       table.dropColumn('version')
-      table.string('name').unique().notNullable().alter()
+      table.unique(['name'])
     })
   }
 }
