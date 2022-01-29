@@ -6,8 +6,8 @@
 | Image    |   ✅   |
 | Choice   |   ✅   |
 | Dropdown |   ✅   |
-| Card     |   ❌   |
-| Carousel |   ❌   |
+| Card     |   ✅   |
+| Carousel |   ✅   |
 | File     |   ❌   |
 | Audio    |   ❌   |
 | Video    |   ❌   |
@@ -19,8 +19,8 @@
 | ------------- | :----: |
 | Text          |   ✅   |
 | Quick Reply   |   ✅   |
-| Postback      |   ❌   |
-| Say Something |   ❌   |
+| Postback      |   ✅   |
+| Say Something |   ✅   |
 | Voice         |   ❌   |
 | Image         |   ❌   |
 | File          |   ❌   |

@@ -3,6 +3,7 @@ import express, { Response, Request, NextFunction } from 'express'
 import { IncomingMessage } from 'http'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { MessengerMessage, MessengerPayload } from './messenger'
+import { POSTBACK_PREFIX, SAY_PREFIX } from './renderers/carousel'
 import { MessengerService } from './service'
 
 export class MessengerApi extends ChannelApi<MessengerService> {
@@ -71,6 +72,22 @@ export class MessengerApi extends ChannelApi<MessengerService> {
           scope,
           { identity: '*', sender: message.sender.id, thread: '*' },
           { type: 'text', text: message.message.text }
+        )
+      }
+    } else if (message.postback) {
+      const payload = message.postback.payload
+
+      if (payload.startsWith(SAY_PREFIX)) {
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: message.sender.id, thread: '*' },
+          { type: 'say_something', text: payload.replace(SAY_PREFIX, '') }
+        )
+      } else if (payload.startsWith(POSTBACK_PREFIX)) {
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: message.sender.id, thread: '*' },
+          { type: 'postback', payload: payload.replace(POSTBACK_PREFIX, '') }
         )
       }
     }
