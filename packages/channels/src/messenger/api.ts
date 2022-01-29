@@ -62,34 +62,32 @@ export class MessengerApi extends ChannelApi<MessengerService> {
   private async receive(scope: string, message: MessengerMessage) {
     if (message.message) {
       if (message.message?.quick_reply?.payload) {
-        await this.service.receive(
-          scope,
-          { identity: '*', sender: message.sender.id, thread: '*' },
-          { type: 'quick_reply', text: message.message.text, payload: message.message.quick_reply.payload }
-        )
+        await this.service.receive(scope, this.extractEndpoint(message), {
+          type: 'quick_reply',
+          text: message.message.text,
+          payload: message.message.quick_reply.payload
+        })
       } else {
-        await this.service.receive(
-          scope,
-          { identity: '*', sender: message.sender.id, thread: '*' },
-          { type: 'text', text: message.message.text }
-        )
+        await this.service.receive(scope, this.extractEndpoint(message), { type: 'text', text: message.message.text })
       }
     } else if (message.postback) {
       const payload = message.postback.payload
 
       if (payload.startsWith(SAY_PREFIX)) {
-        await this.service.receive(
-          scope,
-          { identity: '*', sender: message.sender.id, thread: '*' },
-          { type: 'say_something', text: payload.replace(SAY_PREFIX, '') }
-        )
+        await this.service.receive(scope, this.extractEndpoint(message), {
+          type: 'say_something',
+          text: payload.replace(SAY_PREFIX, '')
+        })
       } else if (payload.startsWith(POSTBACK_PREFIX)) {
-        await this.service.receive(
-          scope,
-          { identity: '*', sender: message.sender.id, thread: '*' },
-          { type: 'postback', payload: payload.replace(POSTBACK_PREFIX, '') }
-        )
+        await this.service.receive(scope, this.extractEndpoint(message), {
+          type: 'postback',
+          payload: payload.replace(POSTBACK_PREFIX, '')
+        })
       }
     }
+  }
+
+  private extractEndpoint(message: MessengerMessage) {
+    return { identity: '*', sender: message.sender.id, thread: '*' }
   }
 }
