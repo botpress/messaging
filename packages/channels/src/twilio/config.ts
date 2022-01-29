@@ -6,7 +6,7 @@ export interface TwilioConfig extends ChannelConfig {
   authToken: string
 }
 
-export const TwilioConfigSchema = Joi.object({
+export const TwilioConfigSchema = {
   accountSID: Joi.string().required(),
   authToken: Joi.string().required()
-}).options({ stripUnknown: true })
+}

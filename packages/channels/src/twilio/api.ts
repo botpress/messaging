@@ -8,23 +8,15 @@ export class TwilioApi extends ChannelApi<TwilioService> {
   async setup(router: ChannelApiManager) {
     router.use('/twilio', express.urlencoded({ extended: true }))
     router.post('/twilio', this.handleRequest.bind(this))
-
-    this.service.on('start', this.handleStart.bind(this))
-  }
-
-  private async handleStart({ scope }: { scope: string }) {
-    await this.printWebhook(scope, 'twilio')
   }
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {
-    const signature = req.headers['x-twilio-signature'] as string
     const { config } = this.service.get(req.scope)
+
+    const signature = req.headers['x-twilio-signature'] as string
     const webhookUrl = await this.urlCallback!(req.scope)
 
-    if (yn(process.env.TWILIO_TESTING)) {
-      await this.receive(req.scope, req.body)
-      res.sendStatus(200)
-    } else if (validateRequest(config.authToken, signature, webhookUrl, req.body)) {
+    if (validateRequest(config.authToken, signature, webhookUrl, req.body) || yn(process.env.TWILIO_TESTING)) {
       await this.receive(req.scope, req.body)
       res.sendStatus(204)
     } else {

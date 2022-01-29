@@ -1,7 +1,6 @@
 import path from 'path'
-import { Extra, Markup } from 'telegraf'
-import { InlineKeyboardButton } from 'telegraf/typings/markup'
-import { ExtraReplyMessage } from 'telegraf/typings/telegram-types'
+import { Markup } from 'telegraf'
+import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '../../content/types'
 import { TelegramContext } from '../context'
@@ -10,21 +9,24 @@ type Context = CarouselContext<TelegramContext> & {
   buttons: InlineKeyboardButton[]
 }
 
+export const POSTBACK_PREFIX = 'postback::'
+export const SAY_PREFIX = 'say::'
+
 export class TelegramCarouselRenderer extends CarouselRenderer {
   startRenderCard(context: Context, _card: CardContent) {
     context.buttons = []
   }
 
   renderButtonUrl(context: Context, button: ActionOpenURL) {
-    context.buttons.push(Markup.urlButton(button.title, button.url))
+    context.buttons.push(Markup.button.url(button.title, button.url))
   }
 
   renderButtonPostback(context: Context, button: ActionPostback) {
-    context.buttons.push(Markup.callbackButton(button.title, `postback::${button.payload}`))
+    context.buttons.push(Markup.button.callback(button.title, `${POSTBACK_PREFIX}${button.payload}`))
   }
 
   renderButtonSay(context: Context, button: ActionSaySomething) {
-    context.buttons.push(Markup.callbackButton(button.title, `say::${button.text}`))
+    context.buttons.push(Markup.button.callback(button.title, `${SAY_PREFIX}${button.text}`))
   }
 
   endRenderCard(context: Context, card: CardContent) {
@@ -37,14 +39,12 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
           url: card.image,
           filename: path.basename(card.image)
         },
-        extra: new Extra({ caption: text })
-          .markdown(true)
-          .markup(Markup.inlineKeyboard(context.buttons)) as ExtraReplyMessage
+        extra: { caption: text, parse_mode: 'Markdown', ...Markup.inlineKeyboard(context.buttons) }
       })
     } else {
       context.channel.messages.push({
         text,
-        extra: Extra.markdown(true).markup(Markup.inlineKeyboard(context.buttons)) as ExtraReplyMessage
+        extra: Markup.inlineKeyboard(context.buttons)
       })
     }
   }

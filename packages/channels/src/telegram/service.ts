@@ -1,11 +1,11 @@
+import { Request, Response } from 'express'
 import { Telegraf } from 'telegraf'
-import { TelegrafContext } from 'telegraf/typings/context'
 import { ChannelService, ChannelState } from '../base/service'
 import { TelegramConfig } from './config'
 
 export interface TelegramState extends ChannelState<TelegramConfig> {
-  telegraf: Telegraf<TelegrafContext>
-  callback?: (req: any, res: any) => void
+  telegraf: Telegraf
+  callback?: (req: Request, res: Response) => any
 }
 
 export class TelegramService extends ChannelService<TelegramConfig, TelegramState> {
@@ -16,9 +16,5 @@ export class TelegramService extends ChannelService<TelegramConfig, TelegramStat
       config,
       telegraf
     }
-  }
-
-  async destroy(scope: string, state: TelegramState) {
-    await state.telegraf.stop()
   }
 }

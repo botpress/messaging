@@ -7,8 +7,9 @@ import { TwilioStream } from './stream'
 export class TwilioChannel extends ChannelTemplate<TwilioConfig, TwilioService, TwilioApi, TwilioStream> {
   get meta() {
     return {
-      id: '330ca935-6441-4159-8969-d0a0d3f188a1',
+      id: 'a711e325-7e71-4955-a76c-b46e62cdebd7',
       name: 'twilio',
+      version: '1.0.0',
       schema: TwilioConfigSchema,
       initiable: false,
       lazy: true

@@ -4,6 +4,6 @@ export interface TelegramConfig {
   botToken: string
 }
 
-export const TelegramConfigSchema = Joi.object({
+export const TelegramConfigSchema = {
   botToken: Joi.string().required()
-}).options({ stripUnknown: true })
+}

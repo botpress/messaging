@@ -16,7 +16,7 @@ const setup = async () => {
   await app.setup()
 
   const port = 3100
-  exp.use('/webhooks', router)
+  exp.use('/webhooks/v1', router)
   exp.listen(port)
 
   console.info(`${clc.cyan('url')} ${config.externalUrl}`)

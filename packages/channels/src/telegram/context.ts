@@ -1,4 +1,4 @@
-import { ChatAction, ExtraReplyMessage, InputFile } from 'telegraf/typings/telegram-types'
+import { ChatAction, InputFile } from 'telegraf/typings/core/types/typegram'
 import { ChannelContext } from '../base/context'
 import { TelegramState } from './service'
 
@@ -12,5 +12,12 @@ export interface TelegramMessage {
   photo?: InputFile
   markdown?: boolean
   action?: ChatAction
-  extra?: ExtraReplyMessage
+  document?: InputFile
+  audio?: InputFile
+  video?: InputFile
+  location?: {
+    latitude: number
+    longitude: number
+  }
+  extra?: any
 }
