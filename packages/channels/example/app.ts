@@ -3,6 +3,7 @@ import { Router } from 'express'
 import Joi from 'joi'
 import { Channel } from '../src/base/channel'
 import { MessengerChannel } from '../src/messenger/channel'
+import { TelegramChannel } from '../src/telegram/channel'
 import payloads from './payloads.json'
 
 export class App {
@@ -10,6 +11,7 @@ export class App {
 
   async setup() {
     await this.setupChannel('messenger', new MessengerChannel())
+    await this.setupChannel('telegram', new TelegramChannel())
   }
 
   async setupChannel(name: string, channel: Channel) {
