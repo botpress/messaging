@@ -2086,6 +2086,7 @@ __metadata:
     lru-cache: ^6.0.0
     ms: ^2.1.3
     telegraf: ^4.6.0
+    twilio: ^3.73.1
     uuid: ^8.3.2
     yn: ^4.0.0
   languageName: unknown
@@ -22505,9 +22506,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"twilio@npm:^3.67.0":
-  version: 3.72.0
-  resolution: "twilio@npm:3.72.0"
+"twilio@npm:^3.67.0, twilio@npm:^3.73.1":
+  version: 3.73.1
+  resolution: "twilio@npm:3.73.1"
   dependencies:
     axios: ^0.21.4
     dayjs: ^1.8.29
@@ -22520,7 +22521,7 @@ __metadata:
     scmp: ^2.1.0
     url-parse: ^1.5.3
     xmlbuilder: ^13.0.2
-  checksum: 10b456ba32b7d3c4731edd18c7ef2dbb7ce9ad7778101e2786b5982fd38af7a7eebde7c3e7312a2567d6cac81c56cc782ebf360974796ade43ce3acece67999c
+  checksum: df67c3dd275a3a9c1f4ae30ec07cdcd0a5289f62b327d2f53cfa45d0f11820eaeefd5d611256ed5806d5e1cc2e71c800d9ace0e9fc610e9e7abb3ceb02b62b70
   languageName: node
   linkType: hard
 

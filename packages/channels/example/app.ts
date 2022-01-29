@@ -3,12 +3,14 @@ import { Router } from 'express'
 import Joi from 'joi'
 import { Channel } from '../src/base/channel'
 import { TelegramChannel } from '../src/telegram/channel'
+import { TwilioChannel } from '../src/twilio/channel'
 import payloads from './payloads.json'
 
 export class App {
   constructor(private router: Router, private config: any) {}
 
   async setup() {
+    await this.setupChannel('twilio', new TwilioChannel())
     await this.setupChannel('telegram', new TelegramChannel())
   }
 
@@ -56,7 +58,7 @@ export class App {
     })
 
     channel.makeUrl(async (scope: string) => {
-      return `${this.config.externalUrl}/webhooks/${scope}/${channel.meta.name}`
+      return `${this.config.externalUrl}/webhooks/v1/${scope}/${channel.meta.name}`
     })
 
     for (const [key, val] of Object.entries<any>(this.config.scopes)) {
