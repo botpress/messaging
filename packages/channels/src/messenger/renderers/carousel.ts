@@ -45,6 +45,14 @@ export class MessengerCarouselRenderer extends CarouselRenderer {
   }
 
   endRenderCard(context: Context, card: CardContent) {
+    if (context.buttons.length === 0) {
+      context.buttons.push({
+        type: 'postback',
+        title: card.title,
+        payload: card.title
+      })
+    }
+
     context.cards.push({
       title: card.title,
       image_url: card.image ? card.image : undefined,
