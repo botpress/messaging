@@ -155,7 +155,7 @@ export class Launcher {
 
       for (const channel of this.app.channels.list()) {
         enabled++
-        text += `\n${padding}${clc.green('⦿')} ${channel.meta.name}`
+        text += `\n${padding}${clc.green('⦿')} ${channel.meta.name}@${channel.meta.version}`
       }
 
       this.logger.info(`Using ${clc.bold(enabled)} channels` + text)
