@@ -3,5 +3,7 @@ import { TextContent } from '../../content/types'
 import { SlackContext } from '../context'
 
 export class SlackTextRenderer extends TextRenderer {
-  renderText(context: SlackContext, payload: TextContent) {}
+  renderText(context: SlackContext, payload: TextContent) {
+    context.messages.push({ text: payload.text })
+  }
 }
