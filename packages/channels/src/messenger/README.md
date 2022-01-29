@@ -9,9 +9,9 @@
 | Card     |   ✅   |
 | Carousel |   ✅   |
 | File     |   ❌   |
-| Audio    |   ❌   |
-| Video    |   ❌   |
-| Location |   ❌   |
+| Audio    |   ✅   |
+| Video    |   ✅   |
+| Location |   ✅   |
 
 ### Receiving
 
