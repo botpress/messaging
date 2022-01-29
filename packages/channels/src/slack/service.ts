@@ -12,7 +12,7 @@ export class SlackService extends ChannelService<SlackConfig, SlackState> {
       config,
       app: new App({
         signingSecret: config.signingSecret,
-        token: config.token,
+        token: config.botToken,
         tokenVerificationEnabled: false,
         // We send a fake receiver here because we implement a receiver
         // that works completely different than what bolt expects
