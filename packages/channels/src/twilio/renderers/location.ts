@@ -7,7 +7,7 @@ export class TwilioLocationRenderer extends LocationRenderer {
     const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${payload.latitude},${payload.longitude}`
 
     context.messages.push({
-      body: `${payload.title}${payload.address ? `\n${payload.address}` : ''}\n\n${googleMapsLink}`
+      body: `${payload.title}${payload.address ? `\n${payload.address}` : ''}\n${googleMapsLink}`
     })
   }
 }

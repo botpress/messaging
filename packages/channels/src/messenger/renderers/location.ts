@@ -7,7 +7,7 @@ export class MessengerLocationRenderer extends LocationRenderer {
     const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${payload.latitude},${payload.longitude}`
 
     context.messages.push({
-      text: `${payload.title}${payload.address ? `\n${payload.address}` : ''}\n\n${googleMapsLink}`
+      text: `${payload.title}${payload.address ? `\n${payload.address}` : ''}\n${googleMapsLink}`
     })
   }
 }

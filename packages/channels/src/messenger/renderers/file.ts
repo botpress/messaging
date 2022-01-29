@@ -4,18 +4,6 @@ import { MessengerContext } from '../context'
 
 export class MessengerFileRenderer extends FileRenderer {
   renderFile(context: MessengerContext, payload: FileContent) {
-    context.messages.push({
-      attachment: {
-        type: 'file',
-        payload: {
-          is_reusable: true,
-          url: payload.file
-        }
-      }
-    })
-
-    if (payload.title?.length) {
-      context.messages.push({ text: payload.title })
-    }
+    context.messages.push({ text: `${payload.title ? `${payload.title}\n` : payload.title}${payload.file}` })
   }
 }

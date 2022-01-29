@@ -88,8 +88,8 @@
   },
   {
     "type": "file",
-    "title": "here is a zip of the 1.0.0 messaging codebase",
-    "file": "https://github.com/botpress/messaging/archive/refs/tags/v1.0.0.zip",
+    "title": "here is a zip of the 0.0.1 messaging codebase",
+    "file": "https://github.com/botpress/messaging/archive/refs/tags/v0.0.1.zip",
     "typing": true
   },
   {
