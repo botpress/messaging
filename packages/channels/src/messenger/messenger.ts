@@ -23,11 +23,10 @@ export interface MessengerMessage {
   sender: { id: string }
   recipient: { id: string }
   timestamp: number
-  message: {
+  message?: {
     mid: string
     text: string
-    // TODO: better typings
-    quick_reply: any
+    quick_reply?: { payload: string }
   }
   // TODO: better typings
   postback: any

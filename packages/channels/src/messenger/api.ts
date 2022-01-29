@@ -59,10 +59,20 @@ export class MessengerApi extends ChannelApi<MessengerService> {
   }
 
   private async receive(scope: string, message: MessengerMessage) {
-    await this.service.receive(
-      scope,
-      { identity: '*', sender: message.sender.id, thread: '*' },
-      { type: 'text', text: message.message.text }
-    )
+    if (message.message) {
+      if (message.message?.quick_reply?.payload) {
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: message.sender.id, thread: '*' },
+          { type: 'quick_reply', text: message.message.text, payload: message.message.quick_reply.payload }
+        )
+      } else {
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: message.sender.id, thread: '*' },
+          { type: 'text', text: message.message.text }
+        )
+      }
+    }
   }
 }

@@ -3,9 +3,9 @@
 | Channels | Twilio |
 | -------- | :----: |
 | Text     |   ✅   |
-| Image    |   ❌   |
-| Choice   |   ❌   |
-| Dropdown |   ❌   |
+| Image    |   ✅   |
+| Choice   |   ✅   |
+| Dropdown |   ✅   |
 | Card     |   ❌   |
 | Carousel |   ❌   |
 | File     |   ❌   |
@@ -18,6 +18,7 @@
 | Channels      | Twilio |
 | ------------- | :----: |
 | Text          |   ✅   |
+| Quick Reply   |   ✅   |
 | Postback      |   ❌   |
 | Say Something |   ❌   |
 | Voice         |   ❌   |
