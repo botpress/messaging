@@ -2,6 +2,7 @@ import clc from 'cli-color'
 import { Router } from 'express'
 import Joi from 'joi'
 import { Channel } from '../src/base/channel'
+import { MessengerChannel } from '../src/messenger/channel'
 import { TelegramChannel } from '../src/telegram/channel'
 import { TwilioChannel } from '../src/twilio/channel'
 import payloads from './payloads.json'
@@ -10,6 +11,7 @@ export class App {
   constructor(private router: Router, private config: any) {}
 
   async setup() {
+    await this.setupChannel('messenger', new MessengerChannel())
     await this.setupChannel('twilio', new TwilioChannel())
     await this.setupChannel('telegram', new TelegramChannel())
   }

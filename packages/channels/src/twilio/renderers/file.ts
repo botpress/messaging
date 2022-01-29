@@ -4,6 +4,6 @@ import { TwilioContext } from '../context'
 
 export class TwilioFileRenderer extends FileRenderer {
   renderFile(context: TwilioContext, payload: FileContent) {
-    context.messages.push({ body: `${payload.title}\n\n${payload.file}` })
+    context.messages.push({ body: `${payload.title ? `${payload.title}\n` : payload.title}${payload.file}` })
   }
 }

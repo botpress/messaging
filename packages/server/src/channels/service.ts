@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { Channel, TelegramChannel, TwilioChannel } from '@botpress/messaging-channels'
+import { Channel, MessengerChannel, TelegramChannel, TwilioChannel } from '@botpress/messaging-channels'
 import {
   MessengerChannel as MessengerChannelLegacy,
   SlackChannel as SlackChannelLegacy,
@@ -30,7 +30,7 @@ export class ChannelService extends Service {
     this.channels = []
 
     if (yn(process.env.ENABLE_EXPERIMENTAL_CHANNELS)) {
-      this.channels = [...this.channels, new TelegramChannel(), new TwilioChannel()]
+      this.channels = [...this.channels, new MessengerChannel(), new TelegramChannel(), new TwilioChannel()]
     }
 
     if (!yn(process.env.DISABLE_LEGACY_CHANNELS)) {
