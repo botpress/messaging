@@ -58,7 +58,7 @@ export class App {
     })
 
     channel.makeUrl(async (scope: string) => {
-      return `${this.config.externalUrl}/webhooks/${scope}/${channel.meta.name}`
+      return `${this.config.externalUrl}/webhooks/v1/${scope}/${channel.meta.name}`
     })
 
     for (const [key, val] of Object.entries<any>(this.config.scopes)) {
