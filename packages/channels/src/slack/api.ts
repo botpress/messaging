@@ -40,7 +40,7 @@ export class SlackApi extends ChannelApi<SlackService> {
     const stringBody = (await rawBody(req)).toString()
 
     const hmac = crypto.createHmac('sha256', config.signingSecret)
-    const [version, hash] = (signature as string).split('=')
+    const [version, hash] = signature.split('=')
     hmac.update(`${version}:${ts}:${stringBody}`)
 
     if (!tsscmp(hash, hmac.digest('hex'))) {
