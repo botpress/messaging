@@ -5,6 +5,8 @@ import rawBody from 'raw-body'
 import tsscmp from 'tsscmp'
 import { URLSearchParams } from 'url'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { POSTBACK_PREFIX, SAY_PREFIX } from '../messenger/renderers/carousel'
+import { QUICK_REPLY_PREFIX } from './renderers/choices'
 import { SlackService } from './service'
 
 export class SlackApi extends ChannelApi<SlackService> {
@@ -102,15 +104,37 @@ export class SlackApi extends ChannelApi<SlackService> {
       }
     })
 
-    app.action({}, async ({ action, body, respond }) => {
+    app.action({}, async ({ ack, action, body, respond }) => {
       if ('text' in action) {
-        await respond({ text: `*${action.text.text}*` })
+        const actionId = action.action_id
 
-        await this.service.receive(
-          scope,
-          { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
-          { type: 'quick_reply', text: action.text.text, payload: action.value }
-        )
+        if (actionId.startsWith(SAY_PREFIX)) {
+          await ack()
+
+          await this.service.receive(
+            scope,
+            { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
+            { type: 'say_something', text: action.value }
+          )
+        } else if (actionId.startsWith(POSTBACK_PREFIX)) {
+          await ack()
+
+          await this.service.receive(
+            scope,
+            { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
+            { type: 'postback', payload: action.value }
+          )
+        } else if (actionId.startsWith(QUICK_REPLY_PREFIX)) {
+          await respond({ text: `*${action.text.text}*` })
+
+          await this.service.receive(
+            scope,
+            { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
+            { type: 'quick_reply', text: action.text.text, payload: action.value }
+          )
+        } else {
+          await ack()
+        }
       } else if (action.type === 'static_select') {
         await respond(`*${action.selected_option.text.text}*`)
 

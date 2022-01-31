@@ -6,8 +6,8 @@
 | Image    |  ✅   |
 | Choice   |  ✅   |
 | Dropdown |  ✅   |
-| Card     |  ❌   |
-| Carousel |  ❌   |
+| Card     |  ✅   |
+| Carousel |  ✅   |
 | File     |  ❌   |
 | Audio    |  ❌   |
 | Video    |  ❌   |
@@ -18,9 +18,9 @@
 | Channels      | Slack |
 | ------------- | :---: |
 | Text          |  ✅   |
-| Quick Reply   |  ❌   |
-| Postback      |  ❌   |
-| Say Something |  ❌   |
+| Quick Reply   |  ✅   |
+| Postback      |  ✅   |
+| Say Something |  ✅   |
 | Voice         |  ❌   |
 | Image         |  ❌   |
 | File          |  ❌   |
