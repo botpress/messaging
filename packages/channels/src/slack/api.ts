@@ -105,44 +105,33 @@ export class SlackApi extends ChannelApi<SlackService> {
     })
 
     app.action({}, async ({ ack, action, body, respond }) => {
-      if ('text' in action) {
+      const endpoint = { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' }
+
+      if (action.type === 'button' && 'text' in action) {
+        await ack()
         const actionId = action.action_id
 
         if (actionId.startsWith(SAY_PREFIX)) {
-          await ack()
-
-          await this.service.receive(
-            scope,
-            { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
-            { type: 'say_something', text: action.value }
-          )
+          await this.service.receive(scope, endpoint, { type: 'say_something', text: action.value })
         } else if (actionId.startsWith(POSTBACK_PREFIX)) {
-          await ack()
-
-          await this.service.receive(
-            scope,
-            { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
-            { type: 'postback', payload: action.value }
-          )
+          await this.service.receive(scope, endpoint, { type: 'postback', payload: action.value })
         } else if (actionId.startsWith(QUICK_REPLY_PREFIX)) {
           await respond({ text: `*${action.text.text}*` })
 
-          await this.service.receive(
-            scope,
-            { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
-            { type: 'quick_reply', text: action.text.text, payload: action.value }
-          )
-        } else {
-          await ack()
+          await this.service.receive(scope, endpoint, {
+            type: 'quick_reply',
+            text: action.text.text,
+            payload: action.value
+          })
         }
       } else if (action.type === 'static_select') {
         await respond(`*${action.selected_option.text.text}*`)
 
-        await this.service.receive(
-          scope,
-          { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
-          { type: 'quick_reply', text: action.selected_option.text.text, payload: action.selected_option.value }
-        )
+        await this.service.receive(scope, endpoint, {
+          type: 'quick_reply',
+          text: action.selected_option.text.text,
+          payload: action.selected_option.value
+        })
       }
     })
   }
