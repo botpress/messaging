@@ -4,7 +4,7 @@ import { SlackContext } from '../context'
 
 export class SlackFileRenderer extends FileRenderer {
   renderFile(context: SlackContext, payload: FileContent) {
-    context.message.blocks?.push({
+    context.message.blocks.push({
       type: 'section',
       text: { type: 'mrkdwn', text: `<${payload.file}|${payload.title || payload.file}>` }
     })

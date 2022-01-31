@@ -7,7 +7,7 @@ export const QUICK_REPLY_PREFIX = 'quick_reply::'
 
 export class SlackChoicesRenderer extends ChoicesRenderer {
   renderChoice(context: SlackContext, payload: ChoiceContent) {
-    context.message.blocks?.push({
+    context.message.blocks.push({
       type: 'actions',
       elements: payload.choices.map((x) => ({
         type: 'button',

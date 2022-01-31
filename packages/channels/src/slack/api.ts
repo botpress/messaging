@@ -28,6 +28,9 @@ export class SlackApi extends ChannelApi<SlackService> {
   }
 
   private async verifyRequestSignature(req: ChannelApiRequest, res: Response, next: NextFunction) {
+    // The verification code is mostly copy pasted from the ExpressReceiver code
+    // see : https://github.com/slackapi/bolt-js/blob/main/src/receivers/ExpressReceiver.ts
+
     const signature = req.headers['x-slack-signature'] as string | undefined
     const requestTimestamp = req.headers['x-slack-request-timestamp'] as string | undefined
     const contentType = req.headers['content-type'] as string | undefined

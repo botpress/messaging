@@ -4,7 +4,7 @@ import { SlackContext } from '../context'
 
 export class SlackImageRenderer extends ImageRenderer {
   renderImage(context: SlackContext, payload: ImageContent) {
-    context.message.blocks?.push({
+    context.message.blocks.push({
       type: 'image',
       title: payload.title
         ? {

@@ -53,7 +53,7 @@ export class SlackCarouselRenderer extends CarouselRenderer {
   }
 
   endRenderCard(context: Context, card: CardContent) {
-    context.channel.message.blocks?.push(
+    context.channel.message.blocks.push(
       {
         type: 'section',
         text: {

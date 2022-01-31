@@ -20,7 +20,7 @@ export class SlackStream extends ChannelStream<SlackService, SlackContext> {
   protected async getContext(base: ChannelContext<any>): Promise<SlackContext> {
     return {
       ...base,
-      message: { blocks: [] } as any
+      message: { channel: base.thread, blocks: [] }
     }
   }
 }

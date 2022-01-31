@@ -4,7 +4,7 @@ import { SlackContext } from '../context'
 
 export class SlackVideoRenderer extends VideoRenderer {
   renderVideo(context: SlackContext, payload: VideoContent) {
-    context.message.blocks?.push({
+    context.message.blocks.push({
       type: 'section',
       text: { type: 'mrkdwn', text: `<${payload.video}|${payload.title || payload.video}>` }
     })

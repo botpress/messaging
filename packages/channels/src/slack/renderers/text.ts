@@ -4,7 +4,7 @@ import { SlackContext } from '../context'
 
 export class SlackTextRenderer extends TextRenderer {
   renderText(context: SlackContext, payload: TextContent) {
-    context.message.blocks?.push({
+    context.message.blocks.push({
       type: 'section',
       text: { type: payload.markdown ? 'mrkdwn' : 'plain_text', text: payload.text }
     })

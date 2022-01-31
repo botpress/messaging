@@ -6,7 +6,7 @@ export class SlackLocationRenderer extends LocationRenderer {
   renderLocation(context: SlackContext, payload: LocationContent) {
     const googleMapsLink = `https://www.google.com/maps/search/?api=1&query=${payload.latitude},${payload.longitude}`
 
-    context.message.blocks?.push({
+    context.message.blocks.push({
       type: 'section',
       text: {
         type: 'mrkdwn',

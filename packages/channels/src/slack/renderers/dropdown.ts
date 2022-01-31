@@ -13,7 +13,7 @@ export class SlackDropdownRenderer implements ChannelRenderer<SlackContext> {
   render(context: SlackContext): void {
     const payload = context.payload // as DropdownContent
 
-    context.message.blocks?.push({
+    context.message.blocks.push({
       type: 'actions',
       elements: [
         {
