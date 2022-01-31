@@ -107,7 +107,7 @@ export class SlackApi extends ChannelApi<SlackService> {
         await respond({ text: `*${action.text.text}*` })
         await this.service.receive(
           scope,
-          { identity: '*', sender: body.user.id || '*', thread: body.channel?.id || '*' },
+          { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
           { type: 'quick_reply', text: action.text.text, payload: action.value }
         )
       }
