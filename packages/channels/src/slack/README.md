@@ -3,7 +3,7 @@
 | Channels | Slack |
 | -------- | :---: |
 | Text     |  ✅   |
-| Image    |  ❌   |
+| Image    |  ✅   |
 | Choice   |  ❌   |
 | Dropdown |  ❌   |
 | Card     |  ❌   |
