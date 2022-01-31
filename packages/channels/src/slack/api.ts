@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { NextFunction, Response } from 'express'
 import rawBody from 'raw-body'
 import tsscmp from 'tsscmp'
+import { URLSearchParams } from 'url'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { SlackService } from './service'
 
@@ -17,6 +18,7 @@ export class SlackApi extends ChannelApi<SlackService> {
   private async verifyRequestSignature(req: ChannelApiRequest, res: Response, next: NextFunction) {
     const signature = req.headers['x-slack-signature'] as string | undefined
     const requestTimestamp = req.headers['x-slack-request-timestamp'] as string | undefined
+    const contentType = req.headers['content-type'] as string | undefined
 
     if (!signature || !requestTimestamp) {
       return res.sendStatus(401)
@@ -47,7 +49,15 @@ export class SlackApi extends ChannelApi<SlackService> {
       return res.sendStatus(403)
     }
 
-    req.body = JSON.parse(stringBody)
+    // interactive api works with url encoded and events api with json...
+    if (contentType === 'application/x-www-form-urlencoded') {
+      const parsedBody = new URLSearchParams(stringBody)
+      // when we click a button, the payload is actually there in json string
+      req.body = JSON.parse(parsedBody.get('payload')!)
+    } else {
+      req.body = JSON.parse(stringBody)
+    }
+
     next()
   }
 
@@ -79,11 +89,28 @@ export class SlackApi extends ChannelApi<SlackService> {
     const { app } = this.service.get(scope)
 
     app.message(async ({ message }) => {
-      await this.service.receive(
-        scope,
-        { identity: '*', sender: (message as any).user || '*', thread: message.channel },
-        { type: 'text', text: (message as any).text }
-      )
+      if ('bot_id' in message) {
+        return
+      }
+
+      if ('user' in message) {
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: message.user, thread: message.channel },
+          { type: 'text', text: message.text }
+        )
+      }
+    })
+
+    app.action({}, async ({ action, body, respond }) => {
+      if ('text' in action) {
+        await respond({ text: `*${action.text.text}*` })
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: body.user.id || '*', thread: body.channel?.id || '*' },
+          { type: 'quick_reply', text: action.text.text, payload: action.value }
+        )
+      }
     })
   }
 }
