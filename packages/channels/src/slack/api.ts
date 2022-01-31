@@ -108,14 +108,9 @@ export class SlackApi extends ChannelApi<SlackService> {
       const endpoint = { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' }
 
       if (action.type === 'button' && 'text' in action) {
-        await ack()
         const actionId = action.action_id
 
-        if (actionId.startsWith(SAY_PREFIX)) {
-          await this.service.receive(scope, endpoint, { type: 'say_something', text: action.value })
-        } else if (actionId.startsWith(POSTBACK_PREFIX)) {
-          await this.service.receive(scope, endpoint, { type: 'postback', payload: action.value })
-        } else if (actionId.startsWith(QUICK_REPLY_PREFIX)) {
+        if (actionId.startsWith(QUICK_REPLY_PREFIX)) {
           await respond({ text: `*${action.text.text}*` })
 
           await this.service.receive(scope, endpoint, {
@@ -123,6 +118,14 @@ export class SlackApi extends ChannelApi<SlackService> {
             text: action.text.text,
             payload: action.value
           })
+        } else {
+          await ack()
+
+          if (actionId.startsWith(SAY_PREFIX)) {
+            await this.service.receive(scope, endpoint, { type: 'say_something', text: action.value })
+          } else if (actionId.startsWith(POSTBACK_PREFIX)) {
+            await this.service.receive(scope, endpoint, { type: 'postback', payload: action.value })
+          }
         }
       } else if (action.type === 'static_select') {
         await respond(`*${action.selected_option.text.text}*`)
