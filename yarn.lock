@@ -2070,6 +2070,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-channels@workspace:packages/channels"
   dependencies:
+    "@slack/bolt": ^3.9.0
     "@types/cli-color": ^2.0.2
     "@types/express": ^4.17.13
     "@types/jsonwebtoken": ^8.5.7
@@ -2085,6 +2086,7 @@ __metadata:
     lodash: ^4.17.21
     lru-cache: ^6.0.0
     ms: ^2.1.3
+    raw-body: ^2.4.2
     telegraf: ^4.6.0
     twilio: ^3.73.1
     uuid: ^8.3.2
@@ -4171,6 +4173,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slack/bolt@npm:^3.9.0":
+  version: 3.9.0
+  resolution: "@slack/bolt@npm:3.9.0"
+  dependencies:
+    "@slack/logger": ^3.0.0
+    "@slack/oauth": ^2.4.0
+    "@slack/socket-mode": ^1.2.0
+    "@slack/types": ^2.4.0
+    "@slack/web-api": ^6.6.0
+    "@types/express": ^4.16.1
+    "@types/node": ">=12"
+    "@types/promise.allsettled": ^1.0.3
+    "@types/tsscmp": ^1.0.0
+    axios: ^0.21.4
+    express: ^4.16.4
+    please-upgrade-node: ^3.2.0
+    promise.allsettled: ^1.0.2
+    raw-body: ^2.3.3
+    tsscmp: ^1.0.6
+  checksum: cf38d8556f7562410a666bc39e1e1f000f1d5e002195a94909b19606a1db885feee3618c6b9a353f96e032efd5937c50e30bc9c2edb2e635f5d8ddee7ba708d1
+  languageName: node
+  linkType: hard
+
 "@slack/events-api@npm:^2.3.2":
   version: 2.3.4
   resolution: "@slack/events-api@npm:2.3.4"
@@ -4227,6 +4252,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slack/logger@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@slack/logger@npm:3.0.0"
+  dependencies:
+    "@types/node": ">=12.0.0"
+  checksum: 6512d0e9e4be47ea465705ab9b6e6901f36fa981da0d4a657fde649d452b567b351002049b5ee0a22569b5119bf6c2f61befd5b8022d878addb7a99c91b03389
+  languageName: node
+  linkType: hard
+
+"@slack/oauth@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@slack/oauth@npm:2.4.0"
+  dependencies:
+    "@slack/logger": ^3.0.0
+    "@slack/web-api": ^6.3.0
+    "@types/jsonwebtoken": ^8.3.7
+    "@types/node": ">=12"
+    jsonwebtoken: ^8.5.1
+    lodash.isstring: ^4.0.1
+  checksum: 286f03a90f60117bc3250760941114fd7e23500eb9c17e8ab4ef3b7ce8b9f8193eae7ec0e38e6c722fa6acb079e8fd6c7eace7b812cb749c80f84ee75987476f
+  languageName: node
+  linkType: hard
+
 "@slack/rtm-api@npm:^5.0.3":
   version: 5.0.5
   resolution: "@slack/rtm-api@npm:5.0.5"
@@ -4245,10 +4293,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@slack/socket-mode@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@slack/socket-mode@npm:1.2.0"
+  dependencies:
+    "@slack/logger": ^3.0.0
+    "@slack/web-api": ^6.2.3
+    "@types/node": ">=12.0.0"
+    "@types/p-queue": ^2.3.2
+    "@types/ws": ^7.4.7
+    eventemitter3: ^3.1.0
+    finity: ^0.5.4
+    p-cancelable: ^1.1.0
+    p-queue: ^2.4.2
+    ws: ^7.5.3
+  checksum: e3bd98fbe913d26feafe5682c48e1b68e6f4deec7e45b730f295aab0789366bcb2aedb6b2d42747e0427758b5f62c7c06d9ca904a8acece560f4c6273b491f56
+  languageName: node
+  linkType: hard
+
 "@slack/types@npm:^1.7.0":
   version: 1.10.0
   resolution: "@slack/types@npm:1.10.0"
   checksum: 9dcf254ad4882146de7ed2db948e7ee56614c3aca47a1df7cbbf4faebe6f2672a704239c0c259b4825be140bd8bb97d994241f35dc432b9ca722333828dac666
+  languageName: node
+  linkType: hard
+
+"@slack/types@npm:^2.0.0, @slack/types@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@slack/types@npm:2.4.0"
+  checksum: f2661ab4f6bb20a67f01879f8e32e82bb1ef2b9384cc4c854091cd1f6c0f26db95bc10f630355c1ae8f99eb377a92c84a8ec26cf56cbd547fc9b4d7efbcc78d7
   languageName: node
   linkType: hard
 
@@ -4267,6 +4340,25 @@ __metadata:
     p-queue: ^6.6.1
     p-retry: ^4.0.0
   checksum: c0500b88f9acd3c0581b1e7c51bc4edf013db93ec81f0fc7bed878be1a2710722ac9ccc35a4198e0d86ec64f4b733de0a622d759cfe7e1de493c46dcc41985b5
+  languageName: node
+  linkType: hard
+
+"@slack/web-api@npm:^6.2.3, @slack/web-api@npm:^6.3.0, @slack/web-api@npm:^6.6.0":
+  version: 6.6.0
+  resolution: "@slack/web-api@npm:6.6.0"
+  dependencies:
+    "@slack/logger": ^3.0.0
+    "@slack/types": ^2.0.0
+    "@types/is-stream": ^1.1.0
+    "@types/node": ">=12.0.0"
+    axios: ^0.25.0
+    eventemitter3: ^3.1.0
+    form-data: ^2.5.0
+    is-electron: 2.2.0
+    is-stream: ^1.1.0
+    p-queue: ^6.6.1
+    p-retry: ^4.0.0
+  checksum: d3f385137643267f5eaed7413d7fef4e2416bdfedac971393c16307a504829b1c927efdbf0ed4b8895bdc9534a5013dbe840e266493c9db446af765e932babce
   languageName: node
   linkType: hard
 
@@ -5734,7 +5826,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express@npm:^4.17.0, @types/express@npm:^4.17.13":
+"@types/express@npm:^4.16.1, @types/express@npm:^4.17.0, @types/express@npm:^4.17.13":
   version: 4.17.13
   resolution: "@types/express@npm:4.17.13"
   dependencies:
@@ -5926,6 +6018,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jsonwebtoken@npm:^8.3.7":
+  version: 8.5.8
+  resolution: "@types/jsonwebtoken@npm:8.5.8"
+  dependencies:
+    "@types/node": "*"
+  checksum: 56738a918c543dba30786066959f801212e7fb5cd4ec53cf7b8d227711ed358834feb9e5141f7f88ec7c642bb39757330a5a8917e3b22e0ff9084940d35f0d70
+  languageName: node
+  linkType: hard
+
 "@types/jsonwebtoken@npm:^8.5.7":
   version: 8.5.7
   resolution: "@types/jsonwebtoken@npm:8.5.7"
@@ -6046,6 +6147,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:>=12, @types/node@npm:>=12.0.0":
+  version: 17.0.13
+  resolution: "@types/node@npm:17.0.13"
+  checksum: 8b87c850c1604c65e3474bd03d122914464b7970caed20f65f4a7706ab429353b896a3916be4d2581164eccda9e3dd95c338fbccf686ff85a824c40d15e8f3fa
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:>=4.2.0 < 13":
   version: 12.20.37
   resolution: "@types/node@npm:12.20.37"
@@ -6120,6 +6228,13 @@ __metadata:
   version: 1.0.1
   resolution: "@types/pretty-hrtime@npm:1.0.1"
   checksum: a6cdee417eea6f7af914e4fcd13e05822864ce10b5d7646525632e86d69b79123eec55a5d3fff0155ba46b61902775e1644bcb80e1e4dffdac28e7febb089083
+  languageName: node
+  linkType: hard
+
+"@types/promise.allsettled@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@types/promise.allsettled@npm:1.0.3"
+  checksum: 19cee762f8d9ec09937f2eaa5e6fc3b05a3421627535e09cfd10b05d961c8e9347d9cba45fdcad4960143d020e267be670e8eebcd9da128dbc306ea90be62c91
   languageName: node
   linkType: hard
 
@@ -6294,6 +6409,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/tsscmp@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@types/tsscmp@npm:1.0.0"
+  checksum: 019825388505048db08fa26f41e29f2ca6ea94f7fa4567e5fd7903f49cadac9aa0f2771e9d6e9e17cf241ec0db74308f99de78bbe9062d5b7673bd4e27036621
+  languageName: node
+  linkType: hard
+
 "@types/tunnel@npm:0.0.0":
   version: 0.0.0
   resolution: "@types/tunnel@npm:0.0.0"
@@ -6376,7 +6498,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^7.2.5":
+"@types/ws@npm:^7.2.5, @types/ws@npm:^7.4.7":
   version: 7.4.7
   resolution: "@types/ws@npm:7.4.7"
   dependencies:
@@ -7522,6 +7644,15 @@ __metadata:
   dependencies:
     follow-redirects: ^1.14.4
   checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
+  languageName: node
+  linkType: hard
+
+"axios@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "axios@npm:0.25.0"
+  dependencies:
+    follow-redirects: ^1.14.7
+  checksum: 2a8a3787c05f2a0c9c3878f49782357e2a9f38945b93018fb0c4fd788171c43dceefbb577988628e09fea53952744d1ecebde234b561f1e703aa43e0a598a3ad
   languageName: node
   linkType: hard
 
@@ -11463,7 +11594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express@npm:^4.17.2":
+"express@npm:^4.16.4, express@npm:^4.17.2":
   version: 4.17.2
   resolution: "express@npm:4.17.2"
   dependencies:
@@ -11971,7 +12102,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.4":
+"follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.7":
   version: 1.14.7
   resolution: "follow-redirects@npm:1.14.7"
   peerDependenciesMeta:
@@ -13849,6 +13980,13 @@ __metadata:
     is-object: ^1.0.1
     is-window: ^1.0.2
   checksum: 72aff0a7366b801c9d598d49452ec06544b52c3da92a0c6c3cacace33bb0c3df5ba1b4e422ac39224773316a553699d5920a1eb136919319f57d00e6384eb41b
+  languageName: node
+  linkType: hard
+
+"is-electron@npm:2.2.0":
+  version: 2.2.0
+  resolution: "is-electron@npm:2.2.0"
+  checksum: 79e497bd5077018ed2e243c1524a2af21d9cac56962a1aa09284450f315626ca41b184f5599c9ab6526245d0cd8fe4abe962817fde48100f632c104ad5d03560
   languageName: node
   linkType: hard
 
@@ -18130,6 +18268,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"please-upgrade-node@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "please-upgrade-node@npm:3.2.0"
+  dependencies:
+    semver-compare: ^1.0.0
+  checksum: d87c41581a2a022fbe25965a97006238cd9b8cbbf49b39f78d262548149a9d30bd2bdf35fec3d810e0001e630cd46ef13c7e19c389dea8de7e64db271a2381bb
+  languageName: node
+  linkType: hard
+
 "pn@npm:^1.1.0":
   version: 1.1.0
   resolution: "pn@npm:1.1.0"
@@ -18900,7 +19047,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"promise.allsettled@npm:^1.0.0":
+"promise.allsettled@npm:^1.0.0, promise.allsettled@npm:^1.0.2":
   version: 1.0.5
   resolution: "promise.allsettled@npm:1.0.5"
   dependencies:
@@ -19224,7 +19371,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"raw-body@npm:2.4.2, raw-body@npm:^2.3.3":
+"raw-body@npm:2.4.2, raw-body@npm:^2.3.3, raw-body@npm:^2.4.2":
   version: 2.4.2
   resolution: "raw-body@npm:2.4.2"
   dependencies:
@@ -23686,7 +23833,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^7.0.0, ws@npm:^7.1.2, ws@npm:^7.4.6":
+"ws@npm:^7.0.0, ws@npm:^7.1.2, ws@npm:^7.4.6, ws@npm:^7.5.3":
   version: 7.5.6
   resolution: "ws@npm:7.5.6"
   peerDependencies:
