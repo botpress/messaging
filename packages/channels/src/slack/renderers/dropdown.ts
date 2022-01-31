@@ -14,24 +14,27 @@ export class SlackDropdownRenderer implements ChannelRenderer<SlackContext> {
     const payload = context.payload // as DropdownContent
 
     context.message.blocks?.push({
-      type: 'actions',
-      elements: [
-        {
-          type: 'static_select',
-          action_id: 'option_selected',
-          placeholder: {
-            type: 'plain_text',
-            text: payload.message
-          },
-          options: payload.options.map((q: any) => ({
-            text: {
+      type: 'input',
+      element: {
+        type: 'static_select',
+        placeholder: payload.placeholderText
+          ? {
               type: 'plain_text',
-              text: q.label
-            },
-            value: q.value
-          }))
-        }
-      ]
+              text: payload.placeholderText
+            }
+          : undefined,
+        options: payload.options.map((q: any) => ({
+          text: {
+            type: 'plain_text',
+            text: q.label
+          },
+          value: q.value
+        }))
+      },
+      label: {
+        type: 'plain_text',
+        text: payload.message
+      }
     })
   }
 }
