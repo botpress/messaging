@@ -122,14 +122,16 @@ export class SlackApi extends ChannelApi<SlackService> {
     const endpoint = { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' }
 
     if (action.type === 'button' && 'text' in action) {
-      return this.handleButtonAction(scope, { endpoint, action, respond, ack })
+      await this.handleButtonAction(scope, { endpoint, action, respond })
     } else if (action.type === 'static_select') {
-      return this.handleSelectAction(scope, { endpoint, action, respond, ack })
+      await this.handleSelectAction(scope, { endpoint, action, respond })
     }
+
+    await ack()
   }
 
   private async handleButtonAction(scope: string, e: SlackActionHandler<ButtonAction>) {
-    const { respond, ack, endpoint, action } = e
+    const { respond, endpoint, action } = e
 
     if (action.action_id.startsWith(QUICK_REPLY_PREFIX)) {
       await respond({ text: `*${action.text.text}*` })
@@ -140,8 +142,6 @@ export class SlackApi extends ChannelApi<SlackService> {
         payload: action.value
       })
     } else {
-      await ack()
-
       if (action.action_id.startsWith(SAY_PREFIX)) {
         await this.service.receive(scope, endpoint, { type: 'say_something', text: action.value })
       } else if (action.action_id.startsWith(POSTBACK_PREFIX)) {
@@ -167,5 +167,4 @@ interface SlackActionHandler<T> {
   endpoint: Endpoint
   action: T
   respond: RespondFn
-  ack: AckFn<any>
 }
