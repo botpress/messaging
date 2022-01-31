@@ -34,3 +34,11 @@ const randomLetters = (length: number) => {
 export const randStr = () => {
   return crypto.randomBytes(20).toString('hex')
 }
+
+export const sleep = (time: number = 10) => {
+  return new Promise<void>((resolve) => {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
+}

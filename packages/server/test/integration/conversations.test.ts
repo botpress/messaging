@@ -4,7 +4,7 @@ import { Client } from '../../src/clients/types'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
 import { UserService } from '../../src/users/service'
-import { app, randStr, setupApp } from './utils'
+import { app, randStr, setupApp, sleep } from './utils'
 
 describe('Conversations', () => {
   let conversations: ConversationService
@@ -72,7 +72,9 @@ describe('Conversations', () => {
   test('List conversations by user', async () => {
     const user = await users.create(state.client.id)
     const convo1 = await conversations.create(state.client.id, user.id)
+    await sleep()
     const convo2 = await conversations.create(state.client.id, user.id)
+    await sleep()
     const convo3 = await conversations.create(state.client.id, user.id)
 
     const otherUser = await users.create(state.client.id)
@@ -84,7 +86,9 @@ describe('Conversations', () => {
   test('List conversations by user should be ordered by most recently used', async () => {
     const user = await users.create(state.client.id)
     const convo1 = await conversations.create(state.client.id, user.id)
+    await sleep()
     const convo2 = await conversations.create(state.client.id, user.id)
+    await sleep()
     const convo3 = await conversations.create(state.client.id, user.id)
 
     const otherUser = await users.create(state.client.id)
