@@ -105,10 +105,19 @@ export class SlackApi extends ChannelApi<SlackService> {
     app.action({}, async ({ action, body, respond }) => {
       if ('text' in action) {
         await respond({ text: `*${action.text.text}*` })
+
         await this.service.receive(
           scope,
           { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
           { type: 'quick_reply', text: action.text.text, payload: action.value }
+        )
+      } else if (action.type === 'static_select') {
+        await respond(`*${action.selected_option.text.text}*`)
+
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' },
+          { type: 'quick_reply', text: action.selected_option.text.text, payload: action.selected_option.value }
         )
       }
     })

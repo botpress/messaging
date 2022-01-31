@@ -4,8 +4,8 @@
 | -------- | :---: |
 | Text     |  ✅   |
 | Image    |  ✅   |
-| Choice   |  ❌   |
-| Dropdown |  ❌   |
+| Choice   |  ✅   |
+| Dropdown |  ✅   |
 | Card     |  ❌   |
 | Carousel |  ❌   |
 | File     |  ❌   |
