@@ -1,9 +1,19 @@
-import { ReceiverEvent } from '@slack/bolt'
+import {
+  AckFn,
+  ButtonAction,
+  ReceiverEvent,
+  RespondFn,
+  SlackAction,
+  SlackActionMiddlewareArgs,
+  SlackEventMiddlewareArgs,
+  StaticSelectAction
+} from '@slack/bolt'
 import crypto from 'crypto'
 import { NextFunction, Response } from 'express'
 import rawBody from 'raw-body'
 import tsscmp from 'tsscmp'
 import { URLSearchParams } from 'url'
+import { Endpoint } from '..'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { POSTBACK_PREFIX, SAY_PREFIX } from '../messenger/renderers/carousel'
 import { QUICK_REPLY_PREFIX } from './renderers/choices'
@@ -89,53 +99,73 @@ export class SlackApi extends ChannelApi<SlackService> {
 
   private async handleStart({ scope }: { scope: string }) {
     const { app } = this.service.get(scope)
+    app.message(async (e) => this.handleMessage(scope, e))
+    app.action({}, async (e) => this.handleAction(scope, e))
+  }
 
-    app.message(async ({ message }) => {
-      if ('bot_id' in message) {
-        return
+  private async handleMessage(scope: string, { message }: SlackEventMiddlewareArgs<'message'>) {
+    if ('bot_id' in message) {
+      return
+    }
+
+    if ('user' in message) {
+      await this.service.receive(
+        scope,
+        { identity: '*', sender: message.user, thread: message.channel },
+        { type: 'text', text: message.text }
+      )
+    }
+  }
+
+  private async handleAction(scope: string, e: SlackActionMiddlewareArgs<SlackAction>) {
+    const { body, action, respond, ack } = e
+    const endpoint = { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' }
+
+    if (action.type === 'button' && 'text' in action) {
+      return this.handleButtonAction(scope, { endpoint, action, respond, ack })
+    } else if (action.type === 'static_select') {
+      return this.handleSelectAction(scope, { endpoint, action, respond, ack })
+    }
+  }
+
+  private async handleButtonAction(scope: string, e: SlackActionHandler<ButtonAction>) {
+    const { respond, ack, endpoint, action } = e
+
+    if (action.action_id.startsWith(QUICK_REPLY_PREFIX)) {
+      await respond({ text: `*${action.text.text}*` })
+
+      await this.service.receive(scope, endpoint, {
+        type: 'quick_reply',
+        text: action.text.text,
+        payload: action.value
+      })
+    } else {
+      await ack()
+
+      if (action.action_id.startsWith(SAY_PREFIX)) {
+        await this.service.receive(scope, endpoint, { type: 'say_something', text: action.value })
+      } else if (action.action_id.startsWith(POSTBACK_PREFIX)) {
+        await this.service.receive(scope, endpoint, { type: 'postback', payload: action.value })
       }
+    }
+  }
 
-      if ('user' in message) {
-        await this.service.receive(
-          scope,
-          { identity: '*', sender: message.user, thread: message.channel },
-          { type: 'text', text: message.text }
-        )
-      }
-    })
+  private async handleSelectAction(scope: string, e: SlackActionHandler<StaticSelectAction>) {
+    const { respond, action, endpoint } = e
 
-    app.action({}, async ({ ack, action, body, respond }) => {
-      const endpoint = { identity: '*', sender: body.user.id, thread: body.channel?.id || '*' }
+    await respond(`*${action.selected_option.text.text}*`)
 
-      if (action.type === 'button' && 'text' in action) {
-        const actionId = action.action_id
-
-        if (actionId.startsWith(QUICK_REPLY_PREFIX)) {
-          await respond({ text: `*${action.text.text}*` })
-
-          await this.service.receive(scope, endpoint, {
-            type: 'quick_reply',
-            text: action.text.text,
-            payload: action.value
-          })
-        } else {
-          await ack()
-
-          if (actionId.startsWith(SAY_PREFIX)) {
-            await this.service.receive(scope, endpoint, { type: 'say_something', text: action.value })
-          } else if (actionId.startsWith(POSTBACK_PREFIX)) {
-            await this.service.receive(scope, endpoint, { type: 'postback', payload: action.value })
-          }
-        }
-      } else if (action.type === 'static_select') {
-        await respond(`*${action.selected_option.text.text}*`)
-
-        await this.service.receive(scope, endpoint, {
-          type: 'quick_reply',
-          text: action.selected_option.text.text,
-          payload: action.selected_option.value
-        })
-      }
+    await this.service.receive(scope, endpoint, {
+      type: 'quick_reply',
+      text: action.selected_option.text.text,
+      payload: action.selected_option.value
     })
   }
+}
+
+interface SlackActionHandler<T> {
+  endpoint: Endpoint
+  action: T
+  respond: RespondFn
+  ack: AckFn<any>
 }
