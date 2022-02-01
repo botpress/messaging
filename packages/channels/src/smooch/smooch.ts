@@ -23,3 +23,24 @@ export interface SmoochEvent {
     }
   }
 }
+
+export interface SmoochCard {
+  title: string
+  description?: string
+  mediaUrl?: string
+  actions: SmoochAction[]
+}
+
+export type SmoochAction = SmoochLinkAction | SmoochPostbackAction
+
+export interface SmoochLinkAction {
+  type: 'link'
+  text: string
+  uri: string
+}
+
+export interface SmoochPostbackAction {
+  type: 'postback'
+  text: string
+  payload: string
+}

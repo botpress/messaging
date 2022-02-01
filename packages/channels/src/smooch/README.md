@@ -4,10 +4,10 @@
 | -------- | :----: |
 | Text     |   ✅   |
 | Image    |   ✅   |
-| Choice   |   ❌   |
-| Dropdown |   ❌   |
-| Card     |   ❌   |
-| Carousel |   ❌   |
+| Choice   |   ✅   |
+| Dropdown |   ✅   |
+| Card     |   ✅   |
+| Carousel |   ✅   |
 | File     |   ❌   |
 | Audio    |   ❌   |
 | Video    |   ❌   |
@@ -18,7 +18,7 @@
 | Channels      | Smooch |
 | ------------- | :----: |
 | Text          |   ✅   |
-| Quick Reply   |   ❌   |
+| Quick Reply   |  N/A   |
 | Postback      |   ❌   |
 | Say Something |   ❌   |
 | Voice         |   ❌   |
