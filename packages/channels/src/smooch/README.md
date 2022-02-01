@@ -19,8 +19,8 @@
 | ------------- | :----: |
 | Text          |   ✅   |
 | Quick Reply   |  N/A   |
-| Postback      |   ❌   |
-| Say Something |   ❌   |
+| Postback      |   ✅   |
+| Say Something |   ✅   |
 | Voice         |   ❌   |
 | Image         |   ❌   |
 | File          |   ❌   |
