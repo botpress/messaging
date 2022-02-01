@@ -3,23 +3,25 @@ import { SmoochConfig } from './config'
 const SunshineConversationsClient = require('sunshine-conversations-client')
 
 export interface SmoochState extends ChannelState<SmoochConfig> {
-  smooch: any
+  smooch: {
+    messages: any
+    activity: any
+  }
 }
 
 export class SmoochService extends ChannelService<SmoochConfig, SmoochState> {
   async create(scope: string, config: SmoochConfig) {
-    const SunshineConversationsClient = require('sunshine-conversations-client')
-    const defaultClient = SunshineConversationsClient.ApiClient.instance
-
-    const basicAuth = defaultClient.authentications['basicAuth']
-    basicAuth.username = config.keyId
-    basicAuth.password = config.keySecret
-
-    const appInstance = new SunshineConversationsClient.MessagesApi()
+    const client = new SunshineConversationsClient.ApiClient()
+    const auth = client.authentications['basicAuth']
+    auth.username = config.keyId
+    auth.password = config.keySecret
 
     return {
       config,
-      smooch: appInstance
+      smooch: {
+        messages: new SunshineConversationsClient.MessagesApi(client),
+        activity: new SunshineConversationsClient.ActivitiesApi(client)
+      }
     }
   }
 }
