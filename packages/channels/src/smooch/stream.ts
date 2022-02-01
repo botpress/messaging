@@ -18,7 +18,8 @@ export class SmoochStream extends ChannelStream<SmoochService, SmoochContext> {
 
   protected async getContext(base: ChannelContext<any>): Promise<SmoochContext> {
     return {
-      ...base
+      ...base,
+      messages: []
     }
   }
 }
