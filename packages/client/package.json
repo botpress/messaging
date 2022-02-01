@@ -23,6 +23,6 @@
   "dependencies": {
     "@botpress/messaging-base": "1.0.0",
     "axios": "^0.21.4",
-    "joi": "^17.5.0"
+    "joi": "^17.6.0"
   }
 }
