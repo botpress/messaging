@@ -1,4 +1,5 @@
+import { SmoochChoicesRenderer } from './choices'
 import { SmoochImageRenderer } from './image'
 import { SmoochTextRenderer } from './text'
 
-export const SmoochRenderers = [new SmoochTextRenderer(), new SmoochImageRenderer()]
+export const SmoochRenderers = [new SmoochTextRenderer(), new SmoochImageRenderer(), new SmoochChoicesRenderer()]
