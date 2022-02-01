@@ -1,7 +1,20 @@
-export interface SmoochEvent {
+export interface SmoochRequestBody {
+  app: { id: string }
+  webhook: { id: string; version: string }
+  events: SmoochEvent[]
+}
+
+export type SmoochEvent = SmoochMessageEvent | SmoochPostbackEvent
+
+export interface SmoochBaseEvent {
   id: string
   createdAt: string
   type: string
+  payload: any
+}
+
+export interface SmoochMessageEvent extends SmoochBaseEvent {
+  type: 'conversation:message'
   payload: {
     conversation: { id: string; type: string }
     message: {
@@ -24,6 +37,16 @@ export interface SmoochEvent {
   }
 }
 
+export interface SmoochPostbackEvent extends SmoochBaseEvent {
+  type: 'conversation:postback'
+  payload: {
+    conversation: { id: string; type: string }
+    postback: { payload: string }
+    user: { id: string }
+    source: { type: string; integrationId: string }
+  }
+}
+
 export interface SmoochCard {
   title: string
   description?: string
@@ -33,14 +56,17 @@ export interface SmoochCard {
 
 export type SmoochAction = SmoochLinkAction | SmoochPostbackAction
 
-export interface SmoochLinkAction {
-  type: 'link'
+export interface SmoochBaseAction {
+  type: string
   text: string
+}
+
+export interface SmoochLinkAction extends SmoochBaseAction {
+  type: 'link'
   uri: string
 }
 
-export interface SmoochPostbackAction {
+export interface SmoochPostbackAction extends SmoochBaseAction {
   type: 'postback'
-  text: string
   payload: string
 }
