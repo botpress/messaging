@@ -1,4 +1,5 @@
 import { Logger, LoggerService, Service } from '@botpress/messaging-engine'
+import axios from 'axios'
 import clc from 'cli-color'
 import ms from 'ms'
 import { ConversationService } from '../conversations/service'
@@ -16,9 +17,11 @@ export class BillingService extends Service {
   }
 
   async setup() {
-    this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
+    if (process.env.BILLING_ENDPOINT?.length) {
+      this.messages.events.on(MessageEvents.Created, this.handleMessageCreated.bind(this))
 
-    void this.tickBilling()
+      void this.tickBilling()
+    }
   }
 
   async destroy() {
@@ -57,13 +60,39 @@ export class BillingService extends Service {
   }
 
   private async flushBilling() {
-    for (const [clientId, stat] of Object.entries(this.stats)) {
-      const count = await this.messages.countByClientId(clientId)
+    const entries = [...Object.entries(this.stats)]
 
-      this.logger.info(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan('stats')}`, { count, ...stat })
-      // TODO: make a call to billing route here
+    for (const [clientId, stat] of entries) {
+      const sentStats = { ...stat }
+      const timestamp = new Date().toISOString()
+
+      stat.sent = 0
+      stat.received = 0
+
+      await axios.post(process.env.BILLING_ENDPOINT!, {
+        meta: {
+          timestamp,
+          sender: 'messaging',
+          type: 'messages_processed',
+          schema_version: '1.0.0'
+        },
+        schema_version: '1.0.0',
+        records: [
+          {
+            client_id: clientId,
+            messages: sentStats,
+            timestamp
+          }
+        ]
+      })
+
+      // it's possible that new stats have been entered while the post request
+      // was waiting since it's async
+      if (stat.received === 0 && stat.sent === 0) {
+        delete this.stats[clientId]
+      }
+
+      this.logger.info(`${clc.blackBright(`[${clientId}]`)} ${clc.cyan('stats')}`, sentStats)
     }
-
-    this.stats = {}
   }
 }
