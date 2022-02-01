@@ -8,7 +8,8 @@ export const Schemas = {
     .object({
       userId: joi.string().guid().required()
     })
-    .required() as any,
+    .required()
+    .options({ stripUnknown: true }) as any,
 
   ConversationStarted: joi
     .object({
@@ -16,7 +17,8 @@ export const Schemas = {
       conversationId: joi.string().guid().required(),
       channel: joi.string().required()
     })
-    .required() as any,
+    .required()
+    .options({ stripUnknown: true }) as any,
 
   MessageNew: joi
     .object({
@@ -34,5 +36,6 @@ export const Schemas = {
         })
         .required()
     })
-    .required() as any
+    .required()
+    .options({ stripUnknown: true }) as any
 }
