@@ -1,6 +1,7 @@
 import { ActivityTypes, TurnContext } from 'botbuilder'
 import { Response } from 'express'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { POSTBACK_PREFIX, SAY_PREFIX } from './renderers/carousel'
 import { QUICK_REPLY_PREFIX } from './renderers/choices'
 import { TeamsService } from './service'
 
@@ -41,6 +42,16 @@ export class TeamsApi extends ChannelApi<TeamsService> {
     if (text.startsWith(QUICK_REPLY_PREFIX)) {
       const [_prefix, payload, title] = text.split('::')
       await this.service.receive(scope, endpoint, { type: 'quick_reply', text: title, payload })
+    } else if (text.startsWith(SAY_PREFIX)) {
+      await this.service.receive(scope, endpoint, {
+        type: 'say_something',
+        text: text.replace(SAY_PREFIX, '')
+      })
+    } else if (text.startsWith(POSTBACK_PREFIX)) {
+      await this.service.receive(scope, endpoint, {
+        type: 'postback',
+        payload: text.replace(POSTBACK_PREFIX, '')
+      })
     } else {
       await this.service.receive(scope, endpoint, { type: 'text', text })
     }

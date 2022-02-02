@@ -3,6 +3,9 @@ import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel
 import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../content/types'
 import { TeamsContext } from '../context'
 
+export const POSTBACK_PREFIX = 'postback::'
+export const SAY_PREFIX = 'say::'
+
 type Context = CarouselContext<TeamsContext> & {
   attachements: Attachment[]
   actions: CardAction[]
@@ -29,8 +32,8 @@ export class TeamsCarouselRenderer extends CarouselRenderer {
     context.actions.push({
       type: 'messageBack',
       title: button.title,
-      value: button.payload,
-      text: button.payload
+      value: `${POSTBACK_PREFIX}${button.payload}`,
+      text: `${POSTBACK_PREFIX}${button.payload}`
     })
   }
 
@@ -39,8 +42,8 @@ export class TeamsCarouselRenderer extends CarouselRenderer {
       type: 'messageBack',
       title: button.title,
       value: button.text,
-      text: button.text,
-      displayText: button.text
+      text: `${SAY_PREFIX}${button.text}`,
+      displayText: `${SAY_PREFIX}${button.text}`
     })
   }
 
