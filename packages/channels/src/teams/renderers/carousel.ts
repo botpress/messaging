@@ -41,20 +41,16 @@ export class TeamsCarouselRenderer extends CarouselRenderer {
     context.actions.push({
       type: 'messageBack',
       title: button.title,
-      value: button.text,
-      text: `${SAY_PREFIX}${button.text}`,
-      displayText: `${SAY_PREFIX}${button.text}`
+      value: `${SAY_PREFIX}${button.text}`,
+      text: `${SAY_PREFIX}${button.text}`
     })
   }
 
   endRenderCard(context: Context, card: CardContent) {
     context.attachements.push(
-      CardFactory.heroCard(
-        // TODO: what about the subtitle?
-        card.title,
-        CardFactory.images([card.image!]),
-        CardFactory.actions(context.actions)
-      )
+      CardFactory.heroCard(card.title, CardFactory.images([card.image!]), CardFactory.actions(context.actions), {
+        subtitle: card.subtitle
+      })
     )
   }
 
