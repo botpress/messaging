@@ -1,6 +1,7 @@
 import { ActivityTypes, TurnContext } from 'botbuilder'
 import { Response } from 'express'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { QUICK_REPLY_PREFIX } from './renderers/choices'
 import { TeamsService } from './service'
 
 export class TeamsApi extends ChannelApi<TeamsService> {
@@ -29,11 +30,20 @@ export class TeamsApi extends ChannelApi<TeamsService> {
     const convoRef = TurnContext.getConversationReference(activity)
 
     await this.service.setRef(scope, convoRef.conversation!.id, convoRef)
-    await this.service.receive(
-      scope,
-      { identity: '*', sender: activity.from.id, thread: convoRef.conversation!.id },
-      { type: 'text', text: activity.value?.text || activity.text }
-    )
+
+    const endpoint = { identity: '*', sender: activity.from.id, thread: convoRef.conversation!.id }
+    const text: string | undefined = activity.value?.text || activity.text
+
+    if (!text) {
+      return
+    }
+
+    if (text.startsWith(QUICK_REPLY_PREFIX)) {
+      const [_prefix, payload, title] = text.split('::')
+      await this.service.receive(scope, endpoint, { type: 'quick_reply', text: title, payload })
+    } else {
+      await this.service.receive(scope, endpoint, { type: 'text', text })
+    }
   }
 
   private isProactive(turnContext: TurnContext): boolean {

@@ -3,6 +3,8 @@ import { ChoicesRenderer } from '../../base/renderers/choices'
 import { ChoiceContent } from '../../content/types'
 import { TeamsContext } from '../context'
 
+export const QUICK_REPLY_PREFIX = 'quick_reply::'
+
 export class TeamsChoicesRenderer extends ChoicesRenderer {
   renderChoice(context: TeamsContext, payload: ChoiceContent) {
     if (!context.messages.length) {
@@ -20,11 +22,11 @@ export class TeamsChoicesRenderer extends ChoicesRenderer {
         CardFactory.actions(
           payload.choices.map((x) => {
             return {
-              title: x.title,
               type: 'messageBack',
-              value: x.value,
-              text: x.value,
-              displayText: x.title
+              title: x.title,
+              displayText: x.title,
+              value: `${QUICK_REPLY_PREFIX}${x.value}::${x.title}`,
+              text: `${QUICK_REPLY_PREFIX}${x.value}::${x.title}`
             }
           })
         )

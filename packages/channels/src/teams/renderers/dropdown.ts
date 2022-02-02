@@ -1,6 +1,7 @@
 import { ActivityTypes, CardFactory } from 'botbuilder'
 import { ChannelRenderer } from '../../base/renderer'
 import { TeamsContext } from '../context'
+import { QUICK_REPLY_PREFIX } from './choices'
 
 export class TeamsDropdownRenderer implements ChannelRenderer<TeamsContext> {
   get priority(): number {
@@ -31,7 +32,7 @@ export class TeamsDropdownRenderer implements ChannelRenderer<TeamsContext> {
               choices: payload.options.map((opt: any, idx: any) => ({
                 title: opt.label,
                 id: `choice-${idx}`,
-                value: opt.value
+                value: `${QUICK_REPLY_PREFIX}${opt.value}::${opt.label}`
               })),
               id: 'text',
               placeholder: payload.placeholderText,
