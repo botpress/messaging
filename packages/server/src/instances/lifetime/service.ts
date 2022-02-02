@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-base'
-import { AutoStartNotFoundError, Channel } from '@botpress/messaging-channels'
+import { Channel } from '@botpress/messaging-channels'
 import { DispatchService, Logger, Service, DistributedService } from '@botpress/messaging-engine'
 import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'
@@ -129,17 +129,8 @@ export class InstanceLifetimeService extends Service {
   }
 
   private async handleAutoStart(channel: Channel, providerName: string) {
-    const provider = await this.providers.fetchByName(providerName)
-    if (!provider) {
-      throw new AutoStartNotFoundError(`Failed to auto start because provider ${providerName} does not exist`)
-    }
-
-    const conduit = await this.conduits.fetchByProviderAndChannel(provider.id, channel.meta.id)
-    if (!conduit) {
-      throw new AutoStartNotFoundError(
-        `Failed to auto start because conduit ${provider.id}:${channel.meta.name} does not exist`
-      )
-    }
+    const provider = await this.providers.getByName(providerName)
+    const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)
 
     const status = await this.status.fetch(conduit.id)
     if ((status?.numberOfErrors || 0) >= MAX_ALLOWED_FAILURES) {
