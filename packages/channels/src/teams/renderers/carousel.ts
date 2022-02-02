@@ -1,4 +1,4 @@
-import { Attachment, CardAction, CardFactory } from 'botbuilder'
+import { Attachment, AttachmentLayoutTypes, CardAction, CardFactory } from 'botbuilder'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
 import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../content/types'
 import { TeamsContext } from '../context'
@@ -61,7 +61,8 @@ export class TeamsCarouselRenderer extends CarouselRenderer {
   endRender(context: Context, carousel: CarouselContent) {
     context.channel.messages.push({
       type: 'message',
-      attachments: context.attachements
+      attachments: context.attachements,
+      attachmentLayout: AttachmentLayoutTypes.Carousel
     })
   }
 }
