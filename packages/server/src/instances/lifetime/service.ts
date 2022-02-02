@@ -137,7 +137,7 @@ export class InstanceLifetimeService extends Service {
     const conduit = await this.conduits.fetchByProviderAndChannel(provider.id, channel.meta.id)
     if (!conduit) {
       throw new AutoStartNotFoundError(
-        `Failed to auto start because conduit ${provider.id}:${channel.meta.id} does not exist`
+        `Failed to auto start because conduit ${provider.id}:${channel.meta.name} does not exist`
       )
     }
 
