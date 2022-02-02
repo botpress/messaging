@@ -1,4 +1,5 @@
 import { Request, Router, Response, RequestHandler, NextFunction } from 'express'
+import { AutoStartNotFoundError } from '..'
 import { Logger } from './logger'
 import { ChannelService } from './service'
 
@@ -41,7 +42,17 @@ export class ChannelApiManager {
       this.asyncMiddleware(async (req, res, next) => {
         const nreq = req as ChannelApiRequest
         nreq.scope = req.params.scope
-        await this.service.require(nreq.scope)
+
+        try {
+          await this.service.require(nreq.scope)
+        } catch (e) {
+          if (e instanceof AutoStartNotFoundError) {
+            return res.sendStatus(404)
+          } else {
+            throw e
+          }
+        }
+
         await fn(nreq, res, next)
       })
     )

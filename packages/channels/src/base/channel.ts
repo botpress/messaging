@@ -38,6 +38,13 @@ export interface ChannelStateManager {
   del(scope: string): void
 }
 
+export class AutoStartNotFoundError extends Error {
+  constructor(msg: string) {
+    super(msg)
+    Object.setPrototypeOf(this, AutoStartNotFoundError.prototype)
+  }
+}
+
 export abstract class ChannelTemplate<
   TConfig extends ChannelConfig,
   TService extends ChannelService<TConfig, any>,
