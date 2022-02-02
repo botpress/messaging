@@ -1,5 +1,12 @@
 import { uuid } from '@botpress/messaging-base'
-import { Channel, MessengerChannel, SlackChannel, TelegramChannel, TwilioChannel } from '@botpress/messaging-channels'
+import {
+  Channel,
+  MessengerChannel,
+  SlackChannel,
+  SmoochChannel,
+  TelegramChannel,
+  TwilioChannel
+} from '@botpress/messaging-channels'
 import {
   MessengerChannel as MessengerChannelLegacy,
   SlackChannel as SlackChannelLegacy,
@@ -35,7 +42,8 @@ export class ChannelService extends Service {
         new MessengerChannel(),
         new SlackChannel(),
         new TelegramChannel(),
-        new TwilioChannel()
+        new TwilioChannel(),
+        new SmoochChannel()
       ]
     }
 
