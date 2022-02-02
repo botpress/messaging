@@ -8,7 +8,7 @@
 | Dropdown |  ✅   |
 | Card     |  ✅   |
 | Carousel |  ✅   |
-| File     |  ❌   |
+| File     |  ✅   |
 | Audio    |  ✅   |
 | Video    |  ✅   |
 | Location |  ❌   |
