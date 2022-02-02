@@ -44,7 +44,7 @@ export class ChannelApiManager {
 
         try {
           await this.service.require(nreq.scope)
-        } catch (e) {
+        } catch {
           return res.sendStatus(404)
         }
 
