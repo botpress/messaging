@@ -16,10 +16,11 @@ export class TeamsDropdownRenderer implements ChannelRenderer<TeamsContext> {
     const payload = context.payload // TODO: as sdk.DropdownContent
 
     context.messages.push({
-      type: ActivityTypes.Message,
       attachments: [
         CardFactory.adaptiveCard({
+          $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
           type: 'AdaptiveCard',
+          version: '1.2',
           body: [
             {
               type: 'TextBlock',
@@ -45,9 +46,7 @@ export class TeamsDropdownRenderer implements ChannelRenderer<TeamsContext> {
               title: payload.buttonText,
               id: 'btnSubmit'
             }
-          ],
-          $schema: 'http://adaptivecards.io/schemas/adaptive-card.json',
-          version: '1.2'
+          ]
         })
       ]
     })

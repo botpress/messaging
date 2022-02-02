@@ -15,10 +15,11 @@ export class TeamsChoicesRenderer extends ChoicesRenderer {
       context.messages[0].attachments = []
     }
 
-    context.messages[0].attachments?.push(
+    context.messages[0].text = undefined
+    context.messages[0].attachments.push(
       CardFactory.heroCard(
-        '',
-        CardFactory.images([]),
+        payload.text,
+        undefined,
         CardFactory.actions(
           payload.choices.map((x) => {
             return {
