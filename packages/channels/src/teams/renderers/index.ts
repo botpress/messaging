@@ -4,6 +4,7 @@ import { TeamsChoicesRenderer } from './choices'
 import { TeamsDropdownRenderer } from './dropdown'
 import { TeamsFileRenderer } from './file'
 import { TeamsImageRenderer } from './image'
+import { TeamsLocationRenderer } from './location'
 import { TeamsTextRenderer } from './text'
 import { TeamsVideoRenderer } from './video'
 
@@ -15,5 +16,6 @@ export const TeamsRenderers = [
   new TeamsChoicesRenderer(),
   new TeamsFileRenderer(),
   new TeamsAudioRenderer(),
-  new TeamsVideoRenderer()
+  new TeamsVideoRenderer(),
+  new TeamsLocationRenderer()
 ]
