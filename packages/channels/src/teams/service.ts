@@ -12,8 +12,7 @@ export class TeamsService extends ChannelService<TeamsConfig, TeamsState> {
   async create(scope: string, config: TeamsConfig) {
     const adapter = new BotFrameworkAdapter({
       appId: config.appId,
-      appPassword: config.appPassword,
-      channelAuthTenant: config.tenantId
+      appPassword: config.appPassword
     })
 
     return {
