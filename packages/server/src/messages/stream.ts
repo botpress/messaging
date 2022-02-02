@@ -23,13 +23,14 @@ export class MessageStream {
 
   private async handleMessageCreate({ message, source }: MessageCreatedEvent) {
     const conversation = await this.conversations.get(message.conversationId)
+    const collect = this.converse.isCollectingForMessage(message.id)
 
     await this.streamer.stream(
       'message.new',
       {
-        channel: await this.getChannel(conversation.id),
         conversationId: conversation.id,
-        collect: this.converse.isCollectingForMessage(message.id),
+        channel: await this.getChannel(conversation.id),
+        ...(collect ? { collect } : {}),
         message
       },
       conversation.clientId,
