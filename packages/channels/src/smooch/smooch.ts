@@ -54,7 +54,7 @@ export interface SmoochCard {
   actions: SmoochAction[]
 }
 
-export type SmoochAction = SmoochLinkAction | SmoochPostbackAction
+export type SmoochAction = SmoochLinkAction | SmoochPostbackAction | SmoochReplyAction
 
 export interface SmoochBaseAction {
   type: string
@@ -69,4 +69,32 @@ export interface SmoochLinkAction extends SmoochBaseAction {
 export interface SmoochPostbackAction extends SmoochBaseAction {
   type: 'postback'
   payload: string
+}
+
+export interface SmoochReplyAction extends SmoochBaseAction {
+  type: 'reply'
+  payload: string
+}
+
+export type SmoochContent = SmoochTextContent | SmoochImageContent | SmoochCarouselContent
+
+export interface SmoochBaseContent {
+  type: string
+  actions?: SmoochAction[]
+}
+
+export interface SmoochTextContent extends SmoochBaseContent {
+  type: 'text'
+  text: string
+}
+
+export interface SmoochImageContent extends SmoochBaseContent {
+  type: 'image'
+  mediaUrl: string
+  text?: string
+}
+
+export interface SmoochCarouselContent extends SmoochBaseContent {
+  type: 'carousel'
+  items: SmoochCard[]
 }
