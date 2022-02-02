@@ -17,7 +17,9 @@ export class TeamsStream extends ChannelStream<TeamsService, TeamsContext> {
 
   protected async getContext(base: ChannelContext<any>): Promise<TeamsContext> {
     return {
-      ...base
+      ...base,
+      messages: [],
+      convoRef: await this.service.getRef(base.scope, base.thread)
     }
   }
 }
