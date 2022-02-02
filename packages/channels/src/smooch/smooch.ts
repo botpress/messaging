@@ -76,7 +76,7 @@ export interface SmoochReplyAction extends SmoochBaseAction {
   payload: string
 }
 
-export type SmoochContent = SmoochTextContent | SmoochImageContent | SmoochCarouselContent
+export type SmoochContent = SmoochTextContent | SmoochImageContent | SmoochCarouselContent | SmoochLocationContent
 
 export interface SmoochBaseContent {
   type: string
@@ -97,4 +97,16 @@ export interface SmoochImageContent extends SmoochBaseContent {
 export interface SmoochCarouselContent extends SmoochBaseContent {
   type: 'carousel'
   items: SmoochCard[]
+}
+
+export interface SmoochLocationContent extends SmoochBaseContent {
+  type: 'location'
+  coordinates: {
+    lat: number
+    long: number
+  }
+  location?: {
+    address?: string
+    name?: string
+  }
 }
