@@ -9,12 +9,15 @@ export class TeamsImageRenderer extends ImageRenderer {
       type: ActivityTypes.Message,
       attachments: [
         {
-          // TODO: this isn't working (no image caption)
           name: payload.title,
           contentType: 'image/png',
           contentUrl: payload.image
         }
       ]
     })
+
+    if (payload.title) {
+      context.messages.push({ text: payload.title })
+    }
   }
 }
