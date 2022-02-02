@@ -41,7 +41,13 @@ export class ChannelApiManager {
       this.asyncMiddleware(async (req, res, next) => {
         const nreq = req as ChannelApiRequest
         nreq.scope = req.params.scope
-        await this.service.require(nreq.scope)
+
+        try {
+          await this.service.require(nreq.scope)
+        } catch {
+          return res.sendStatus(404)
+        }
+
         await fn(nreq, res, next)
       })
     )
