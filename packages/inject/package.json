@@ -12,8 +12,8 @@
     "dist"
   ],
   "devDependencies": {
-    "@parcel/config-default": "^2.2.0",
-    "@parcel/transformer-typescript-tsc": "^2.2.0",
+    "@parcel/config-default": "^2.2.1",
+    "@parcel/transformer-typescript-tsc": "^2.2.1",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11"
   },

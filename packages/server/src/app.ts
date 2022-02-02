@@ -1,4 +1,5 @@
 import { Engine } from '@botpress/messaging-engine'
+import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
 import { ClientTokenService } from './client-tokens/service'
 import { ClientService } from './clients/service'
@@ -36,6 +37,7 @@ export class App extends Engine {
   syncs: SyncService
   health: HealthService
   sockets: SocketService
+  billing: BillingService
 
   constructor() {
     super()
@@ -94,6 +96,7 @@ export class App extends Engine {
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
+    this.billing = new BillingService(this.logger, this.conversations, this.messages)
   }
 
   async setup() {
@@ -124,10 +127,12 @@ export class App extends Engine {
   async monitor() {
     await this.syncs.setup()
     await this.instances.monitor()
+    await this.billing.setup()
   }
 
   async destroy() {
     await this.batching?.destroy()
+    await this.billing?.destroy()
     await this.instances?.destroy()
     await this.distributed?.destroy()
     await this.database?.destroy()
