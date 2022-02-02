@@ -46,11 +46,10 @@ export class SmoochCarouselRenderer extends CarouselRenderer {
 
   endRenderCard(context: Context, card: CardContent) {
     if (context.actions.length === 0) {
-      // Smooch requires this array to have at least one item, so we add a dummy item that will be ignored
       context.actions.push({
         type: 'postback',
-        text: '',
-        payload: ''
+        text: card.title,
+        payload: card.title
       })
     }
 
@@ -65,6 +64,9 @@ export class SmoochCarouselRenderer extends CarouselRenderer {
   }
 
   endRender(context: Context, carousel: CarouselContent) {
-    context.channel.messages.push({ type: 'carousel', items: context.items })
+    context.channel.messages.push({
+      type: 'carousel',
+      items: context.items
+    })
   }
 }
