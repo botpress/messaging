@@ -34,7 +34,7 @@ export class TeamsDropdownRenderer implements ChannelRenderer<TeamsContext> {
                 value: opt.value
               })),
               id: 'text',
-              placeholder: 'Select a choice',
+              placeholder: payload.placeholderText,
               wrap: true
             }
           ],
