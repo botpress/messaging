@@ -1,4 +1,6 @@
-import express, { Response } from 'express'
+import crypto from 'crypto'
+import express, { NextFunction, Response } from 'express'
+import jwt from 'jsonwebtoken'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { VonageService } from './service'
 
@@ -6,15 +8,45 @@ export class VonageApi extends ChannelApi<VonageService> {
   async setup(router: ChannelApiManager) {
     router.use('/vonage', express.json())
 
-    router.post('/vonage/inbound', this.handleInboundRequest.bind(this))
-    router.post('/vonage/status', this.handleStatusRequest.bind(this))
+    router.post('/vonage', this.verifyRequestSignature.bind(this))
+    router.post('/vonage', this.handleRequest.bind(this))
   }
 
-  private async handleInboundRequest(req: ChannelApiRequest, res: Response) {
-    res.sendStatus(200)
+  private async verifyRequestSignature(req: ChannelApiRequest, res: Response, next: NextFunction) {
+    const { config } = this.service.get(req.scope)
+
+    const body = req.body
+    const [scheme, token] = (req.headers.authorization || '').split(' ')
+
+    if (body.channel !== 'whatsapp' || scheme.toLowerCase() !== 'bearer' || !token) {
+      return res.sendStatus(401)
+    }
+
+    try {
+      const decoded = jwt.verify(token, config.signatureSecret, { algorithms: ['HS256'] }) as {
+        api_key: string
+        payload_hash: string
+      }
+
+      if (
+        decoded.api_key === config.apiKey &&
+        crypto.createHash('sha256').update(JSON.stringify(body)).digest('hex') === decoded.payload_hash
+      ) {
+        next()
+      } else {
+        return res.sendStatus(403)
+      }
+    } catch (e) {
+      return res.sendStatus(403)
+    }
   }
 
-  private async handleStatusRequest(req: ChannelApiRequest, res: Response) {
+  private async handleRequest(req: ChannelApiRequest, res: Response) {
+    // TODO: handle messages
+
+    console.log('header', req.headers)
+    console.log('body', req.body)
+
     res.sendStatus(200)
   }
 }

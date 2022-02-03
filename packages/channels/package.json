@@ -26,11 +26,13 @@
   },
   "dependencies": {
     "@slack/bolt": "^3.9.0",
+    "@vonage/server-sdk": "^2.10.10",
     "axios": "^0.25.0",
     "botbuilder": "^4.15.0",
     "cli-color": "^2.0.1",
     "express": "^4.17.2",
     "joi": "^17.6.0",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "lru-cache": "^6.0.0",
     "ms": "^2.1.3",

@@ -2156,11 +2156,13 @@ __metadata:
     "@types/ms": ^0.7.31
     "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
+    "@vonage/server-sdk": ^2.10.10
     axios: ^0.25.0
     botbuilder: ^4.15.0
     cli-color: ^2.0.1
     express: ^4.17.2
     joi: ^17.6.0
+    jsonwebtoken: ^8.5.1
     lodash: ^4.17.21
     lru-cache: ^6.0.0
     ms: ^2.1.3
@@ -6766,6 +6768,17 @@ __metadata:
     request: ^2.88.2
     uuid: ^8.3.0
   checksum: ae781e36a78f24c5e1ef4645e5798c9c1bb5dd503d41767c7f2dd15bac48ad5df9a433a5dbb874eae9774a6a46626618cc3d642a955f3dc58d66e55721f89302
+  languageName: node
+  linkType: hard
+
+"@vonage/server-sdk@npm:^2.10.10":
+  version: 2.10.10
+  resolution: "@vonage/server-sdk@npm:2.10.10"
+  dependencies:
+    jsonwebtoken: ^8.4.0
+    request: ^2.88.2
+    uuid: ^8.3.0
+  checksum: e9d3e0e634a148938349d7ee0d8bc0a8ffc6fa1bc0217c8ae6b7a1af2a03b772cf9ad205236f053b2e2843caf86f0cddd9865644bbc27ed65421c7d2a9d06554
   languageName: node
   linkType: hard
 
