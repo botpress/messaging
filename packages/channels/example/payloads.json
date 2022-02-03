@@ -115,6 +115,8 @@
   {
     "type": "dropdown",
     "message": "Pick something :",
+    "buttonText": "buuutontext",
+    "placeholderText": "plaaaceholder",
     "options": [
       { "label": "Mars", "value": "planet_mars" },
       { "label": "Venus", "value": "planet_venus" },

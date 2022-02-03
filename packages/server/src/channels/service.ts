@@ -4,6 +4,7 @@ import {
   MessengerChannel,
   SlackChannel,
   SmoochChannel,
+  TeamsChannel,
   TelegramChannel,
   TwilioChannel
 } from '@botpress/messaging-channels'
@@ -41,6 +42,7 @@ export class ChannelService extends Service {
         ...this.channels,
         new MessengerChannel(),
         new SlackChannel(),
+        new TeamsChannel(),
         new TelegramChannel(),
         new TwilioChannel(),
         new SmoochChannel()
