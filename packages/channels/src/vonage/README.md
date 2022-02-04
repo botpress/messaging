@@ -11,7 +11,7 @@
 | File     |   ✅   |
 | Audio    |   ✅   |
 | Video    |   ✅   |
-| Location |   ❌   |
+| Location |   ✅   |
 
 ### Receiving
 
