@@ -43,7 +43,7 @@ export class VonageApi extends ChannelApi<VonageService> {
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {
     if (req.body.status) {
-      return
+      return res.sendStatus(200)
     }
 
     await this.service.receive(

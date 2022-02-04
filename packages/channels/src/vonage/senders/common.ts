@@ -20,6 +20,11 @@ export class VonageCommonSender extends CommonSender {
       await axios.post(context.state.config.useTestingApi ? url.sandbox : url.production, data, {
         auth: { username: context.state.config.apiKey, password: context.state.config.apiSecret }
       })
+
+      if (context.state.config.useTestingApi) {
+        // sandbox is limited to 1 msg / sec
+        await new Promise((resolve) => setTimeout(resolve, 1100))
+      }
     }
   }
 }
