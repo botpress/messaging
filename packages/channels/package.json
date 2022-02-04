@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@slack/bolt": "^3.9.0",
-    "@vonage/server-sdk": "^2.10.10",
     "axios": "^0.25.0",
     "botbuilder": "^4.15.0",
     "cli-color": "^2.0.1",
