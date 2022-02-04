@@ -5,6 +5,7 @@ import { VonageDropdownRenderer } from './dropdown'
 import { VonageFileRenderer } from './file'
 import { VonageImageRenderer } from './image'
 import { VonageLocationRenderer } from './location'
+import { VonageTemplateRenderer } from './template'
 import { VonageTextRenderer } from './text'
 import { VonageVideoRenderer } from './video'
 
@@ -17,5 +18,6 @@ export const VonageRenderers = [
   new VonageFileRenderer(),
   new VonageAudioRenderer(),
   new VonageVideoRenderer(),
-  new VonageLocationRenderer()
+  new VonageLocationRenderer(),
+  new VonageTemplateRenderer()
 ]
