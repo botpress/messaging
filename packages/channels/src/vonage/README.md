@@ -3,9 +3,9 @@
 | Channels | Vonage |
 | -------- | :----: |
 | Text     |   ✅   |
-| Image    |   ❌   |
-| Choice   |   ❌   |
-| Dropdown |   ❌   |
+| Image    |   ✅   |
+| Choice   |   ✅   |
+| Dropdown |   ✅   |
 | Card     |   ❌   |
 | Carousel |   ❌   |
 | File     |   ❌   |

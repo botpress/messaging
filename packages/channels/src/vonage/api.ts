@@ -46,11 +46,16 @@ export class VonageApi extends ChannelApi<VonageService> {
       return res.sendStatus(200)
     }
 
-    await this.service.receive(
-      req.scope,
-      { identity: req.body.to, sender: req.body.from, thread: '*' },
-      { type: 'text', text: req.body.text }
-    )
+    const text = req.body.text
+    const endpoint = { identity: req.body.to, sender: req.body.from, thread: '*' }
+
+    const index = Number(text)
+    const content = this.service.handleIndexResponse(req.scope, index, endpoint.identity, endpoint.sender) || {
+      type: 'text',
+      text
+    }
+
+    await this.service.receive(req.scope, endpoint, content)
 
     res.sendStatus(200)
   }
