@@ -1,3 +1,25 @@
+## [1.0.3](https://github.com/botpress/messaging/compare/v1.0.2...v1.0.3) (2022-02-04)
+
+
+### Bug Fixes
+
+* **client:** strip unknown data received from webhook ([#332](https://github.com/botpress/messaging/issues/332)) ([84a4baa](https://github.com/botpress/messaging/commit/84a4baa653db78355124b80784708958be3e195d))
+* **instance:** auto start error 404 instead of 500 ([#335](https://github.com/botpress/messaging/issues/335)) ([4671560](https://github.com/botpress/messaging/commit/467156074c32d7038e2d975b71705df266046b42))
+
+
+### Features
+
+* **billing:** billing service ([#325](https://github.com/botpress/messaging/issues/325)) ([6882299](https://github.com/botpress/messaging/commit/6882299b2932319e456a985159053559f1789531))
+* **messenger:** messenger v1 ([#329](https://github.com/botpress/messaging/issues/329)) ([6717e0a](https://github.com/botpress/messaging/commit/6717e0a1b402f8f38755519758ba05366c31bee8))
+* **slack:** slack v1 ([#331](https://github.com/botpress/messaging/issues/331)) ([bf3c5f5](https://github.com/botpress/messaging/commit/bf3c5f5a5159309fce6ff116d4d6ce3068c9ea4e))
+* **smooch:** smooch v1 ([#333](https://github.com/botpress/messaging/issues/333)) ([c10e228](https://github.com/botpress/messaging/commit/c10e2288ce649ee65a22d8c2221ffdf15a5581b3))
+* **teams:** teams v1 ([#336](https://github.com/botpress/messaging/issues/336)) ([3720261](https://github.com/botpress/messaging/commit/372026187c48cf446aca3b487641b14957451cdd))
+* **telegram:** telegram v1 ([#322](https://github.com/botpress/messaging/issues/322)) ([626ffb9](https://github.com/botpress/messaging/commit/626ffb94d39774ee7641a7eacfba4faddd207ab1))
+* **twilio:** twilio v1 ([#324](https://github.com/botpress/messaging/issues/324)) ([a1acd2f](https://github.com/botpress/messaging/commit/a1acd2f119b94125d9f0771b3dbe8165956fa6fe))
+* **vonage:** vonage v1 ([#338](https://github.com/botpress/messaging/issues/338)) ([c8436d2](https://github.com/botpress/messaging/commit/c8436d2c71cf1610ed5ca2c5cde582537af93f10))
+
+
+
 ## [1.0.2](https://github.com/botpress/messaging/compare/v1.0.1...v1.0.2) (2022-01-28)
 
 
