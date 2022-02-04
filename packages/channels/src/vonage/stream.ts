@@ -19,7 +19,8 @@ export class VonageStream extends ChannelStream<VonageService, VonageContext> {
 
   protected async getContext(base: ChannelContext<any>): Promise<VonageContext> {
     return {
-      ...base
+      ...base,
+      messages: []
     }
   }
 }

@@ -42,10 +42,15 @@ export class VonageApi extends ChannelApi<VonageService> {
   }
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {
-    // TODO: handle messages
+    if (req.body.status) {
+      return
+    }
 
-    console.log('header', req.headers)
-    console.log('body', req.body)
+    await this.service.receive(
+      req.scope,
+      { identity: req.body.to, sender: req.body.from, thread: '*' },
+      { type: 'text', text: req.body.text }
+    )
 
     res.sendStatus(200)
   }
