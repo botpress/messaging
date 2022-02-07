@@ -1,3 +1,7 @@
+## [1.0.4](https://github.com/botpress/messaging/compare/v1.0.3...v1.0.4) (2022-02-07)
+
+
+
 ## [1.0.3](https://github.com/botpress/messaging/compare/v1.0.2...v1.0.3) (2022-02-04)
 
 

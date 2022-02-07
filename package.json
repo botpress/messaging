@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Botpress messaging repo",
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
@@ -28,7 +28,8 @@
   "pkg": {
     "scripts": "./packages/server/dist/**/*.js",
     "assets": [
-      "./node_modules/sqlite3/lib/binding/**/*"
+      "./node_modules/sqlite3/lib/binding/**/*",
+      "./node_modules/es-get-iterator/node.js"
     ],
     "targets": [
       "node16-win32-x64",
