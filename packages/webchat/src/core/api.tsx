@@ -58,7 +58,7 @@ export default class WebchatApi {
     try {
       const conversation = await this.socket.socket.getConversation(conversationId)
       this.socket.socket.switchConversation(conversation!.id)
-      const messages = await this.socket.socket.listMessages()
+      const messages = (await this.socket.socket.listMessages()).filter((x) => x.payload.type !== 'visit')
       return { ...conversation, messages }
     } catch (err) {
       await this.handleApiError(err)
