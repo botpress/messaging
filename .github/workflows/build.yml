@@ -2,7 +2,7 @@ name: Build
 on: [pull_request]
 jobs:
   build:
-    name: Build Server
+    name: Server
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -20,7 +20,7 @@ jobs:
 
   # Taken from: https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#local-cache
   docker:
-    name: Build Dockerfile
+    name: Docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -51,7 +51,7 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   webchat:
-    name: Build Webchat
+    name: Webchat
     runs-on: ubuntu-latest
     defaults:
       run:
