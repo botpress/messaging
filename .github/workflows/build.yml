@@ -2,9 +2,8 @@ name: Build
 on: [pull_request]
 jobs:
   build:
-    name: build
+    name: Build Server
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -21,6 +20,7 @@ jobs:
 
   # Taken from: https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#local-cache
   docker:
+    name: Build Dockerfile
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,3 +49,23 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  webchat:
+    name: Build Webchat
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/webchat
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.13.2'
+          cache: 'yarn'
+      - name: Fetch Node Packages
+        run: |
+          yarn --immutable
+      - name: Build Webchat
+        run: |
+          yarn build
