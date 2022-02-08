@@ -17,7 +17,7 @@ import { Config, Message, Overrides, uuid } from './typings'
 import { checkLocationOrigin, initializeAnalytics, isIE, trackMessage, trackWebchatState } from './utils'
 
 const _values = (obj: Overrides) => Object.keys(obj).map((x) => obj[x])
-const DEFAULT_TYPING_DELAY = 500
+const DEFAULT_TYPING_DELAY = 1000
 
 class Web extends React.Component<MainProps> {
   private config!: Config
