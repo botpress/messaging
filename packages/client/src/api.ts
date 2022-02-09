@@ -3,8 +3,8 @@ import { MessagingChannelBase } from './base'
 import { handleNotFound } from './errors'
 
 export abstract class MessagingChannelApi extends MessagingChannelBase {
-  async createClient(): Promise<{ id: string; token: string }> {
-    return (await this.http.post('/admin/clients', undefined, { headers: this.adminHeader })).data
+  async createClient(id?: uuid): Promise<{ id: uuid; token: string }> {
+    return (await this.http.post('/admin/clients', { id }, { headers: this.adminHeader })).data
   }
 
   async syncClient(config: { name: string; id?: uuid; token?: string }): Promise<{ id: uuid; token: string }> {
