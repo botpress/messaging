@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid'
+import { v4 as uuid, validate as validateUuid } from 'uuid'
 import { Conversation, Message, MessagingChannel, MessagingClient, SyncRequest, SyncWebhook, User } from '../../src'
 
 const FAKE_UUID = uuid()
@@ -19,6 +19,34 @@ describe('Http Client', () => {
     expect((client as any).channel.http.defaults.baseURL).toContain(url)
   })
 
+  const url = 'http://localhost:3100'
+  const adminClient = new MessagingChannel({ url, adminKey: process.env.ADMIN_KEY })
+
+  describe('Clients', () => {
+    const customId = uuid()
+
+    test('Should create a messaging client', async () => {
+      const client = await adminClient.createClient()
+
+      expect(validateUuid(client.id)).toBeTruthy()
+      expect(client.token).toBeDefined()
+      expect(client.token.length).toBe(125)
+    })
+
+    test('Should create a messaging client that has the specified id', async () => {
+      const client = await adminClient.createClient(customId)
+
+      expect(validateUuid(client.id)).toBeTruthy()
+      expect(client.id).toBe(customId)
+      expect(client.token).toBeDefined()
+      expect(client.token.length).toBe(125)
+    })
+
+    test('Should not be able to create another client with the same id', async () => {
+      await expect(adminClient.createClient(customId)).rejects.toThrow(new Error('Request failed with status code 403'))
+    })
+  })
+
   const state: {
     clientId?: string
     clientToken?: string
@@ -27,8 +55,6 @@ describe('Http Client', () => {
     message?: Message
     webhooks?: SyncWebhook[]
   } = {}
-  const url = 'http://localhost:3100'
-  const adminClient = new MessagingChannel({ url, adminKey: process.env.ADMIN_KEY })
   let client: MessagingClient
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
 
