@@ -20,8 +20,13 @@ client_id=CLOUD_CLIENT
 
 ### Create client
 POST {{baseUrl}}/api/admin/clients
+Content-Type: application/json
 Authorization: Bearer {{authToken}}
 x-bp-messaging-admin-key: {{adminKey}}
+
+{
+  // "id": "customid"
+}
 
 ### Sync client
 POST {{baseUrl}}/api/admin/clients/sync

@@ -1,3 +1,12 @@
+## [1.0.5](https://github.com/botpress/messaging/compare/v1.0.4...v1.0.5) (2022-02-09)
+
+
+### Features
+
+* **clients:** allow specifying a custom client id ([#343](https://github.com/botpress/messaging/issues/343)) ([cd42f30](https://github.com/botpress/messaging/commit/cd42f30d331e67654163d354b646facef814228a))
+
+
+
 ## [1.0.4](https://github.com/botpress/messaging/compare/v1.0.3...v1.0.4) (2022-02-07)
 
 
