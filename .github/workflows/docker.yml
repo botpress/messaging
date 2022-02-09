@@ -19,6 +19,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
+      # Temporarily build the Docker Image of the Webchat
+      - name: Build Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./packages/webchat
+          push: false
+          tags: botpress/webchat:latest
 # TODO: Publish image on S3
 #      - uses: botpress/gh-actions/build/docker@v1
 #        with:
