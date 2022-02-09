@@ -35,7 +35,7 @@ export class ClientApi {
   async create(req: Request, res: Response) {
     const clientId: uuid = req.body.id
 
-    if (clientId && (await this.clients.getById(clientId))) {
+    if (clientId && (await this.clients.fetchById(clientId))) {
       return res.status(403).send(`client with id "${clientId}" already exists`)
     }
 
