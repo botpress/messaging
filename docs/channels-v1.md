@@ -8,7 +8,7 @@ It's now possible to use a `version` field when making a sync call that will ind
 
 This will configure telegram at version 1.0.0
 
-```json
+```jsonc
 {
   "channels": {
     "telegram": {
