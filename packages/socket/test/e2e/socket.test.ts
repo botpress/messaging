@@ -11,7 +11,7 @@ const createClient = async () => {
     protocol: url.protocol,
     hostname: url.hostname,
     port: url.port,
-    path: '/api/admin/clients',
+    path: '/api/v1/admin/clients',
     method: 'POST',
     headers: { 'x-bp-messaging-admin-key': process.env.ADMIN_KEY }
   }

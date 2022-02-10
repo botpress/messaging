@@ -62,7 +62,7 @@ export abstract class MessagingChannelBase extends Emitter<{
   }
 
   private getAxiosConfig({ url, axios }: MessagingChannelOptions): AxiosRequestConfig {
-    const defaultConfig: AxiosRequestConfig = { baseURL: `${url}/api` }
+    const defaultConfig: AxiosRequestConfig = { baseURL: `${url}/api/v1` }
     return { ...axios, ...defaultConfig }
   }
 

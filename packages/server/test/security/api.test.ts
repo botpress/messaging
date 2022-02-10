@@ -64,7 +64,7 @@ describe('API', () => {
       }
 
       const client = http()
-      const res = await client.post('/api/admin/clients', undefined, options)
+      const res = await client.post('/api/v1/admin/clients', undefined, options)
 
       expect(res.data).toEqual({ id: expect.anything(), token: expect.anything() })
       expect(res.status).toEqual(201)
@@ -114,7 +114,7 @@ describe('API', () => {
     const sync = async (clientId?: string, clientToken?: string, data?: any, config?: AxiosRequestConfig) => {
       const client = http(clientId, clientToken)
 
-      const res = await client.post<SyncResult>('/api/sync', data || {}, config)
+      const res = await client.post<SyncResult>('/api/v1/sync', data || {}, config)
 
       expect(res.data).toEqual({ webhooks: expect.anything() })
       expect(res.status).toEqual(200)
@@ -243,7 +243,7 @@ describe('API', () => {
 
   describe('User', () => {
     const user = async (clientId?: string, clientToken?: string, config?: AxiosRequestConfig) => {
-      const res = await http(clientId, clientToken).post<User>('/api/users', null, config)
+      const res = await http(clientId, clientToken).post<User>('/api/v1/users', null, config)
 
       expect(res.data).toEqual({ id: expect.anything(), clientId })
       expect(res.status).toEqual(201)
@@ -252,7 +252,7 @@ describe('API', () => {
     }
 
     const getUser = async (userId: string, clientId?: string, clientToken?: string, config?: AxiosRequestConfig) => {
-      const res = await http(clientId, clientToken).get<User>(`/api/users/${userId}`, config)
+      const res = await http(clientId, clientToken).get<User>(`/api/v1/users/${userId}`, config)
 
       expect(res.data).toEqual({ id: userId, clientId })
       expect(res.status).toEqual(200)
@@ -346,7 +346,7 @@ describe('API', () => {
       clientToken?: string,
       config?: AxiosRequestConfig
     ) => {
-      const res = await http(clientId, clientToken).post<Conversation>('/api/conversations', { userId }, config)
+      const res = await http(clientId, clientToken).post<Conversation>('/api/v1/conversations', { userId }, config)
 
       expect(res.data).toEqual({ id: expect.anything(), clientId, userId, createdOn: expect.anything() })
       expect(res.status).toEqual(201)
@@ -361,7 +361,7 @@ describe('API', () => {
       clientToken?: string,
       config?: AxiosRequestConfig
     ) => {
-      const res = await http(clientId, clientToken).get<Conversation>(`/api/conversations/${conversationId}`, config)
+      const res = await http(clientId, clientToken).get<Conversation>(`/api/v1/conversations/${conversationId}`, config)
 
       expect(res.data).toEqual({ id: expect.anything(), clientId, userId, createdOn: expect.anything() })
       expect(res.status).toEqual(200)
@@ -379,7 +379,7 @@ describe('API', () => {
     ) => {
       const query = limit ? `?limit=${limit}` : ''
       const res = await http(clientId, clientToken).get<Conversation[]>(
-        `/api/conversations/user/${userId}${query}`,
+        `/api/v1/conversations/user/${userId}${query}`,
         config
       )
 
@@ -576,7 +576,7 @@ describe('API', () => {
       config?: AxiosRequestConfig
     ) => {
       const res = await http(clientId, clientToken).post<Message>(
-        '/api/messages',
+        '/api/v1/messages',
         { conversationId, authorId, payload, incomingId },
         config
       )
@@ -595,7 +595,7 @@ describe('API', () => {
       clientToken?: string,
       config?: AxiosRequestConfig
     ) => {
-      const res = await http(clientId, clientToken).get<Message>(`/api/messages/${messageId}`, config)
+      const res = await http(clientId, clientToken).get<Message>(`/api/v1/messages/${messageId}`, config)
 
       expect(res.data).toEqual({
         id: messageId,
@@ -620,7 +620,7 @@ describe('API', () => {
     ) => {
       const query = limit ? `?limit=${limit}` : ''
       const res = await http(clientId, clientToken).get<Message[]>(
-        `/api/messages/conversation/${conversationId}${query}`,
+        `/api/v1/messages/conversation/${conversationId}${query}`,
         config
       )
 
@@ -642,7 +642,7 @@ describe('API', () => {
       clientToken?: string,
       config?: AxiosRequestConfig
     ) => {
-      const res = await http(clientId, clientToken).get<void>(`/api/messages/${messageId}`, config)
+      const res = await http(clientId, clientToken).get<void>(`/api/v1/messages/${messageId}`, config)
 
       expect(res.data).toBeUndefined()
       expect(res.status).toEqual(204)
@@ -654,7 +654,7 @@ describe('API', () => {
       clientToken?: string,
       config?: AxiosRequestConfig
     ) => {
-      const res = await http(clientId, clientToken).get<void>(`/api/messages/conversation/${conversationId}`, config)
+      const res = await http(clientId, clientToken).get<void>(`/api/v1/messages/conversation/${conversationId}`, config)
 
       expect(res.data).toEqual({ count: 1 })
       expect(res.status).toEqual(200)

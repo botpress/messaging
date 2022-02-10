@@ -49,7 +49,7 @@ export class Api {
 
     this.root.get('/version', this.version.bind(this))
     this.root.get('/status', this.status.bind(this))
-    this.root.use('/api', this.router)
+    this.root.use('/api/v1', this.router)
     this.router.use(
       cors({
         origin: '*',
