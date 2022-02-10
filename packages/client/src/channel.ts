@@ -58,7 +58,7 @@ export class MessagingChannel extends MessagingChannelApi {
     const clientId = req.headers['x-bp-messaging-client-id'] as string
     const webhookToken = req.headers['x-bp-messaging-webhook-token'] as string
 
-    if (!webhookToken || webhookToken !== this.auths[clientId].webhookToken) {
+    if (!webhookToken || !this.auths[clientId] || webhookToken !== this.auths[clientId]?.webhookToken) {
       return undefined
     }
 

@@ -45,7 +45,7 @@ export abstract class MessagingChannelBase extends Emitter<{
   protected _options: MessagingChannelOptions
 
   protected http!: AxiosInstance
-  protected auths: { [clientId: uuid]: MessagingClientAuth } = {}
+  protected auths: { [clientId: uuid]: MessagingClientAuth | undefined } = {}
   protected headers: { [clientId: uuid]: any } = {}
   protected adminHeader: any
 
