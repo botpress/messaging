@@ -6,7 +6,8 @@ import {
   SmoochChannel,
   TeamsChannel,
   TelegramChannel,
-  TwilioChannel
+  TwilioChannel,
+  VonageChannel
 } from '@botpress/messaging-channels'
 import {
   MessengerChannel as MessengerChannelLegacy,
@@ -35,19 +36,15 @@ export class ChannelService extends Service {
 
     this.table = new ChannelTable()
 
-    this.channels = []
-
-    if (yn(process.env.ENABLE_EXPERIMENTAL_CHANNELS)) {
-      this.channels = [
-        ...this.channels,
-        new MessengerChannel(),
-        new SlackChannel(),
-        new TeamsChannel(),
-        new TelegramChannel(),
-        new TwilioChannel(),
-        new SmoochChannel()
-      ]
-    }
+    this.channels = [
+      new MessengerChannel(),
+      new SlackChannel(),
+      new TeamsChannel(),
+      new TelegramChannel(),
+      new TwilioChannel(),
+      new SmoochChannel(),
+      new VonageChannel()
+    ]
 
     if (!yn(process.env.DISABLE_LEGACY_CHANNELS)) {
       this.channels = [
