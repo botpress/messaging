@@ -10,16 +10,24 @@ export class MessagingChannel extends MessagingChannelApi {
 
   private asyncMiddleware(fn: (req: Request, res: Response, next: NextFunction) => Promise<any>) {
     return (req: Request, res: Response, next: NextFunction) => {
-      fn(req, res, next).catch(() => {
+      fn(req, res, next).catch((e) => {
+        this.logger?.error(e, 'Error occured processing webhook event')
         return res.sendStatus(500)
       })
     }
   }
 
   private async handleRequest(req: Request, res: Response) {
-    const clientId = this.verifyToken(req)
-    if (!clientId) {
-      return res.sendStatus(403)
+    const clientId = req.headers['x-bp-messaging-client-id'] as string
+    const webhookToken = req.headers['x-bp-messaging-webhook-token'] as string
+    const auth = this.auths[clientId]
+
+    if (!webhookToken) {
+      return res.status(401).send('Unauthorized. Webhook token is missing')
+    } else if (!auth) {
+      return res.status(404).send('Not Found. Client id is unknown')
+    } else if (webhookToken !== auth.webhookToken) {
+      return res.status(403).send('Forbidden. Webhook token is incorrect')
     }
 
     const type = req.body?.type
@@ -52,16 +60,5 @@ export class MessagingChannel extends MessagingChannelApi {
     }
 
     res.sendStatus(200)
-  }
-
-  private verifyToken(req: Request) {
-    const clientId = req.headers['x-bp-messaging-client-id'] as string
-    const webhookToken = req.headers['x-bp-messaging-webhook-token'] as string
-
-    if (!webhookToken || !this.auths[clientId] || webhookToken !== this.auths[clientId]?.webhookToken) {
-      return undefined
-    }
-
-    return clientId
   }
 }

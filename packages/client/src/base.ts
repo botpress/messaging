@@ -3,6 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
 import { Emitter } from './emitter'
+import { Logger } from './logger'
 import { MessagingChannelOptions } from './options'
 
 export abstract class MessagingChannelBase extends Emitter<{
@@ -39,6 +40,14 @@ export abstract class MessagingChannelBase extends Emitter<{
   }
   public set axios(val: Omit<AxiosRequestConfig, 'baseURL'> | undefined) {
     this._options.axios = val
+    this.applyOptions()
+  }
+
+  public get logger() {
+    return this._options.logger
+  }
+  public set logger(val: Logger | undefined) {
+    this._options.logger = val
     this.applyOptions()
   }
 
