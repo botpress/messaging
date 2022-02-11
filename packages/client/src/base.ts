@@ -3,6 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
 import { Emitter } from './emitter'
+import { Logger } from './logger'
 import { MessagingChannelOptions } from './options'
 
 export abstract class MessagingChannelBase extends Emitter<{
@@ -42,10 +43,18 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
+  public get logger() {
+    return this._options.logger
+  }
+  public set logger(val: Logger | undefined) {
+    this._options.logger = val
+    this.applyOptions()
+  }
+
   protected _options: MessagingChannelOptions
 
   protected http!: AxiosInstance
-  protected auths: { [clientId: uuid]: MessagingClientAuth } = {}
+  protected auths: { [clientId: uuid]: MessagingClientAuth | undefined } = {}
   protected headers: { [clientId: uuid]: any } = {}
   protected adminHeader: any
 
@@ -62,7 +71,7 @@ export abstract class MessagingChannelBase extends Emitter<{
   }
 
   private getAxiosConfig({ url, axios }: MessagingChannelOptions): AxiosRequestConfig {
-    const defaultConfig: AxiosRequestConfig = { baseURL: `${url}/api` }
+    const defaultConfig: AxiosRequestConfig = { baseURL: `${url}/api/v1` }
     return { ...axios, ...defaultConfig }
   }
 
