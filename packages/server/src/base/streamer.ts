@@ -1,6 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import { Dispatcher, DispatchService, Logger } from '@botpress/messaging-engine'
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import clc from 'cli-color'
 import { backOff } from 'exponential-backoff'
 import yn from 'yn'
@@ -98,17 +98,25 @@ export class Streamer {
       await backOff(async () => axios.post(url, data, config), {
         jitter: 'none',
         numOfAttempts: MAX_ATTEMPTS,
-        retry: (_e: any, _attemptNumber: number) => {
+        retry: (e: AxiosError, attemptNumber: number) => {
+          if (attemptNumber === 1) {
+            this.logWebhookError(e, url, 'Failed to send webhook event on first attempt. Retrying 9 more times')
+          }
           return !this.destroyed
         }
       })
     } catch (e) {
-      this.logger.warn(
-        `Unable to reach webhook after ${MAX_ATTEMPTS} attempts ${clc.blackBright(url)} ${clc.blackBright(
-          `Error: ${(e as Error).message}`
-        )}`
-      )
+      this.logWebhookError(e as AxiosError, url, `Unable to send webhook event after ${MAX_ATTEMPTS} attempts`)
     }
+  }
+
+  private logWebhookError(e: AxiosError, url: string, message: string) {
+    this.logger.warn(message, {
+      url,
+      message: e.message,
+      response: e.response?.data,
+      status: e.response?.status
+    })
   }
 }
 
