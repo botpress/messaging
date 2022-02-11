@@ -19,7 +19,7 @@ client_id=CLOUD_CLIENT
 @authToken = {{auth.response.body.access_token}}
 
 ### Create client
-POST {{baseUrl}}/api/admin/clients
+POST {{baseUrl}}/api/v1/admin/clients
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 x-bp-messaging-admin-key: {{adminKey}}
@@ -29,7 +29,7 @@ x-bp-messaging-admin-key: {{adminKey}}
 }
 
 ### Sync client
-POST {{baseUrl}}/api/admin/clients/sync
+POST {{baseUrl}}/api/v1/admin/clients/sync
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 x-bp-messaging-admin-key: {{adminKey}}
@@ -41,7 +41,7 @@ x-bp-messaging-admin-key: {{adminKey}}
 }
 
 ### Sync
-POST {{baseUrl}}/api/sync
+POST {{baseUrl}}/api/v1/sync
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
@@ -57,19 +57,19 @@ x-bp-messaging-client-token: {{clientToken}}
 }
 
 ### Health
-GET {{baseUrl}}/api/health
+GET {{baseUrl}}/api/v1/health
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 
 ### Create User
-POST {{baseUrl}}/api/users
+POST {{baseUrl}}/api/v1/users
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 
 ### Create Conversation
-POST {{baseUrl}}/api/conversations
+POST {{baseUrl}}/api/v1/conversations
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
@@ -80,7 +80,7 @@ Content-Type: application/json
 }
 
 ### Send Text
-POST {{baseUrl}}/api/messages
+POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
@@ -96,7 +96,7 @@ Content-Type: application/json
 }
 
 ### Converse
-POST {{baseUrl}}/api/messages/collect
+POST {{baseUrl}}/api/v1/messages/collect
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
@@ -112,7 +112,7 @@ Content-Type: application/json
 }
 
 ### Send Image
-POST {{baseUrl}}/api/messages
+POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
@@ -128,7 +128,7 @@ Content-Type: application/json
 }
 
 ### Send Choices
-POST {{baseUrl}}/api/messages
+POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
@@ -147,7 +147,7 @@ Content-Type: application/json
 }
 
 ### Send Card
-POST {{baseUrl}}/api/messages
+POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
@@ -181,7 +181,7 @@ Content-Type: application/json
 }
 
 ### Send Carousel
-POST {{baseUrl}}/api/messages
+POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}

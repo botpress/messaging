@@ -1,3 +1,12 @@
+## [1.0.6](https://github.com/botpress/messaging/compare/v1.0.5...v1.0.6) (2022-02-11)
+
+
+### Features
+
+* **channels:** remove experimental channels feature flag ([#350](https://github.com/botpress/messaging/issues/350)) ([fffaf9b](https://github.com/botpress/messaging/commit/fffaf9b5e95cf64c74770c90f579985e41256e05))
+
+
+
 ## [1.0.5](https://github.com/botpress/messaging/compare/v1.0.4...v1.0.5) (2022-02-09)
 
 

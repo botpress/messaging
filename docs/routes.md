@@ -2,7 +2,7 @@
 
 ## Sync
 
-POST `/api/sync`
+POST `/api/v1/sync`
 
 - `channels`: Dictionary of channel configurations
 - `webhooks`: List of webhoook configurations
@@ -45,7 +45,7 @@ const config = {
 
 // This request creates a new client and token because a client id wasn't supplied.
 // It will also configure the telegram and slack channel, as well as return a token for the provided webhook
-const { id, token, webhooks } = (await axios.post('MESSAGING_URL/api/sync', config)).data
+const { id, token, webhooks } = (await axios.post('MESSAGING_URL/api/v1/sync', config)).data
 
 const newConfig = {
   id,
@@ -67,7 +67,7 @@ const newConfig = {
 // This request won't create a new client because we gave it our previously obtained client id along with
 // the correct token. It will however update the configuration of our existing client. In this case the
 // twilio channel will be configured, and the slack channel will be unconfigured
-await axios.post('MESSAGING_URL/api/sync', newConfig))
+await axios.post('MESSAGING_URL/api/v1/sync', newConfig))
 
 router.post('/mycallbackroute', (req, req) => {})
 ```
@@ -76,7 +76,7 @@ As you can see from the example, you need to provide your entire configuration e
 
 ## Health
 
-GET `/api/health`
+GET `/api/v1/health`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -86,7 +86,7 @@ Provides information on configured channels
 
 ## Users
 
-POST `/api/users`
+POST `/api/v1/users`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -94,7 +94,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Creates a new users
 
-GET `/api/users/:id`
+GET `/api/v1/users/:id`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -104,7 +104,7 @@ Get a user by id
 
 ## Conversations
 
-POST `/api/conversations`
+POST `/api/v1/conversations`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -114,7 +114,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Creates a new conversation
 
-GET `/api/conversations/:id`
+GET `/api/v1/conversations/:id`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -122,7 +122,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Gets a conversation by id
 
-GET `/api/conversations/user/:userId?limit=`
+GET `/api/v1/conversations/user/:userId?limit=`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -132,7 +132,7 @@ Lists the conversations of a user
 
 ## Messages
 
-POST `/api/messages`
+POST `/api/v1/messages`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -144,7 +144,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Creates a new message
 
-POST `/api/messages/collect`
+POST `/api/v1/messages/collect`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -157,7 +157,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Creates a new message and collects responses
 
-GET `/api/messages/:id`
+GET `/api/v1/messages/:id`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -165,7 +165,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Gets a message by id
 
-DELETE `/api/messages/:id`
+DELETE `/api/v1/messages/:id`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -173,7 +173,7 @@ x-bp-messaging-client-token: `clientToken`
 
 Deletes a message by id
 
-GET `/api/messages/conversation/:conversationId?limit=`
+GET `/api/v1/messages/conversation/:conversationId?limit=`
 
 x-bp-messaging-client-id: `clientId`
 
@@ -181,7 +181,7 @@ x-bp-messaging-client-token: `clientToken`
 
 List messages of a conversation
 
-DELETE `/api/messages/conversation/:conversationId`
+DELETE `/api/v1/messages/conversation/:conversationId`
 
 x-bp-messaging-client-id: `clientId`
 
