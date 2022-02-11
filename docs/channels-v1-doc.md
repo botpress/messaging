@@ -1,5 +1,7 @@
 # Channels V1 Documentation Changes
 
+This document details how the documentation for channels that is currently hosted [here](https://github.com/botpress/docs/tree/master/docs/channels) should be changed to accomodate the changes that were made to the channels (detailed changelog - [here](./channels-v1.md)). They also instruct how to change the documentation to be better suited for the cloud and CDM
+
 ## Messenger
 
 Messenger needs a few more configs and requires setting the API version to v12 in the facebook UI.
