@@ -8,7 +8,7 @@ clientToken=YOUR_CLIENT_TOKEN
 conversationId=YOUR_CONVERSATION_ID
 authorId=YOUR_AUTHOR_ID
 
-yarn dlx loadtest http://localhost:3100/api/messages \
+yarn dlx loadtest http://localhost:3100/api/v1/messages \
  -m POST \
  -T application/json \
  -c 64 \
