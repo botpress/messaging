@@ -1,3 +1,12 @@
+## [1.0.7](https://github.com/botpress/messaging/compare/v1.0.6...v1.0.7) (2022-02-11)
+
+
+### Bug Fixes
+
+* **api:** fix broken providers creation ([#354](https://github.com/botpress/messaging/issues/354)) ([1527d39](https://github.com/botpress/messaging/commit/1527d39b7d1ccad565a080cefae20a75c614000c))
+
+
+
 ## [1.0.6](https://github.com/botpress/messaging/compare/v1.0.5...v1.0.6) (2022-02-11)
 
 
