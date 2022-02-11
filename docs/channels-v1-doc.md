@@ -1,6 +1,8 @@
-# Channels V1 Documentation Changes
+# Channels Documentation Changes
 
 This document details how the documentation for channels that is currently hosted [here](https://github.com/botpress/docs/tree/master/docs/channels) should be changed to accomodate the changes that were made to the channels (detailed changelog - [here](./channels-v1.md)). They also instruct how to change the documentation to be better suited for the cloud and CDM
+
+To make sense of this document, simply read the old documentation and look at the points listed. They comment the changes needed from top to bottom.
 
 ## Messenger
 
