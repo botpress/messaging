@@ -13,7 +13,7 @@ Messenger needs a few more configs and requires setting the API version to v12 i
 - We need to tell the user to also go in the "Settings" > "Advanced" section and change their API version to v12 (or higher).
 - When telling the user to add a facebook page, we should also tell them to copy that page's id and put it in the `pageId` config
 - For the verifyToken config, it would be nice to have a button in the CDM ui to generate that random string for us.
-- All the doc about greeting text, get started and perisitent menu can be removed
+- All the doc about greeting text, get started and persistent menu can be removed
 
 ## Smooch
 
