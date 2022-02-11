@@ -1,6 +1,6 @@
 # Slack
 
-Slack
+Slack has changes in the config and the webhook routes were merged into a single route. I found that some steps were out of order, but the UI is still the same
 
 - There's no reason why setting the webhook in the "Interactivity & Shortcuts" section would be the first step we tell the user to do. They only reason this works is because setting this webhook does not check if the url is valid, but the other one does! Let's keep webhook configuration as the last step for all channels.
 - Need to do the Install App step before the "Allow users to send Slash commands" step. Also it's Basic Information -> "Install your app" not "Install app"
