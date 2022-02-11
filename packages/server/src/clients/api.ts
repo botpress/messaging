@@ -33,13 +33,17 @@ export class ClientApi {
   }
 
   async create(req: Request, res: Response) {
-    const clientId: uuid = req.body.id
+    let clientId: uuid | undefined = req.body.id
 
     if (clientId && (await this.clients.fetchById(clientId))) {
       return res.status(403).send(`client with id "${clientId}" already exists`)
     }
 
-    const provider = await this.providers.create(clientId || uuidv4(), false)
+    if (!clientId) {
+      clientId = uuidv4()
+    }
+
+    const provider = await this.providers.create(clientId, false)
     const client = await this.clients.create(provider.id, clientId)
 
     const rawToken = await this.clientTokens.generateToken()
