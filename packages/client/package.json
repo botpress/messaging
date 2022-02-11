@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-client",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
