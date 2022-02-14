@@ -1,8 +1,9 @@
-import { Emitter, Message } from '@botpress/messaging-base'
+import { Emitter, Message, uuid } from '@botpress/messaging-base'
 import { ActionSource } from '../base/source'
 
 export enum MessageEvents {
-  Created
+  Created,
+  Feedback
 }
 
 export interface MessageCreatedEvent {
@@ -10,8 +11,14 @@ export interface MessageCreatedEvent {
   source?: ActionSource
 }
 
+export interface MessageFeedbackEvent {
+  messageId: uuid
+  feedback: number
+}
+
 export class MessageEmitter extends Emitter<{
   [MessageEvents.Created]: MessageCreatedEvent
+  [MessageEvents.Feedback]: MessageFeedbackEvent
 }> {}
 
 export type MessageWatcher = Omit<MessageEmitter, 'emit'>

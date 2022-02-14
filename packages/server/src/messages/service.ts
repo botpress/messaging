@@ -72,6 +72,10 @@ export class MessageService extends Service {
     return message
   }
 
+  public async feedback(id: uuid, feedback: number) {
+    await this.emitter.emit(MessageEvents.Feedback, { messageId: id, feedback })
+  }
+
   public async delete(id: uuid): Promise<number> {
     await this.batcher.flush()
     this.cache.del(id, true)

@@ -136,7 +136,7 @@ export default class WebchatApi {
 
   async sendFeedback(feedback: number, messageId: uuid): Promise<void> {
     try {
-      return this.axios.post('/saveFeedback', { messageId, target: this.userId, feedback }, this.axiosConfig)
+      return this.socket.socket.sendFeedback(messageId, feedback)
     } catch (err) {
       await this.handleApiError(err)
     }
