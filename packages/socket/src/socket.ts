@@ -103,8 +103,8 @@ export class MessagingSocket extends SocketEmitter<{
     })
   }
 
-  async sendVisit(timezone: number, locale: string): Promise<Message> {
-    return this.request('conversations.visit', {
+  async sendVisit(timezone: number, locale: string) {
+    await this.request('conversations.visit', {
       id: this._conversationId,
       timezone,
       locale
