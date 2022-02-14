@@ -11,6 +11,7 @@ export class ConversationSocket {
     this.sockets.handle('conversations.get', Schema.Socket.Get, this.get.bind(this))
     this.sockets.handle('conversations.list', Schema.Socket.List, this.list.bind(this))
     this.sockets.handle('conversations.delete', Schema.Socket.Delete, this.delete.bind(this))
+    this.sockets.handle('conversations.visit', Schema.Socket.Visit, this.visit.bind(this))
   }
 
   async create(socket: SocketRequest) {
@@ -25,7 +26,7 @@ export class ConversationSocket {
     const conversation = await this.conversations.fetch(id)
 
     if (!conversation || conversation.userId !== socket.userId) {
-      return socket.reply(undefined)
+      return socket.notFound('Conversation does not exist')
     }
 
     socket.reply(conversation)
@@ -44,13 +45,23 @@ export class ConversationSocket {
     const { id } = socket.data
     const conversation = await this.conversations.fetch(id)
 
-    if (!conversation) {
-      return socket.reply(false)
-    } else if (conversation.userId !== socket.userId) {
-      return socket.forbid('Conversation does not belong to user')
+    if (!conversation || conversation.userId !== socket.userId) {
+      return socket.forbid('Conversation does not exist')
     }
 
     await this.conversations.delete(id)
+    socket.reply(true)
+  }
+
+  async visit(socket: SocketRequest) {
+    const { id, timezone, locale } = socket.data
+    const conversation = await this.conversations.fetch(id)
+
+    if (!conversation || conversation.userId !== socket.userId) {
+      return socket.forbid('Conversation does not exist')
+    }
+
+    await this.conversations.visit(id, timezone, locale)
     socket.reply(true)
   }
 }

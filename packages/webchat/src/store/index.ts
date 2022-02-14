@@ -353,12 +353,10 @@ class RootStore {
 
   @action.bound
   async sendUserVisit(): Promise<void> {
-    await this.sendData({
-      type: 'visit',
-      text: 'User visit',
-      timezone: -(new Date().getTimezoneOffset() / 60), // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset#description
-      language: getUserLocale()
-    })
+    await this.api.sendVisit(
+      -(new Date().getTimezoneOffset() / 60), // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset#description
+      getUserLocale()
+    )
   }
 
   @action.bound

@@ -103,6 +103,14 @@ export class MessagingSocket extends SocketEmitter<{
     })
   }
 
+  async sendVisit(timezone: number, locale: string): Promise<Message> {
+    return this.request('conversations.visit', {
+      id: this._conversationId,
+      timezone,
+      locale
+    })
+  }
+
   async sendText(text: string): Promise<Message> {
     return this.request('messages.create', {
       conversationId: this._conversationId,

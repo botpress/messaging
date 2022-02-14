@@ -114,6 +114,14 @@ export default class WebchatApi {
     }
   }
 
+  async sendVisit(timezone: number, locale: string) {
+    try {
+      return this.socket.socket.sendVisit(timezone, locale)
+    } catch (err) {
+      await this.handleApiError(err)
+    }
+  }
+
   async deleteMessages(conversationId: uuid) {
     try {
       await this.axios.post(

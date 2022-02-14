@@ -29,7 +29,13 @@ const Socket = {
 
   Delete: Joi.object({
     id: Joi.string().guid().required()
-  }).required()
+  }).required(),
+
+  Visit: Joi.object({
+    id: Joi.string().guid().required(),
+    timezone: Joi.number().required(),
+    locale: Joi.string().required()
+  })
 }
 
 export const Schema = { Api, Socket }
