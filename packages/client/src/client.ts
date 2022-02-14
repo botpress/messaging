@@ -155,4 +155,8 @@ export class MessagingClient extends ProtectedEmitter<{
   async mapEndpoint(endpoint: Endpoint): Promise<uuid> {
     return this.channel.mapEndpoint(this.clientId, endpoint)
   }
+
+  async revmapEndpoint(conversationId: uuid): Promise<Endpoint[]> {
+    return this.channel.revmapEndpoint(this.clientId, conversationId)
+  }
 }

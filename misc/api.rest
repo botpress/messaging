@@ -62,6 +62,34 @@ Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 
+### Map Endpoint
+POST {{baseUrl}}/api/v1/endpoints
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "channel": {
+    "name": "telegram",
+    "version": "1.0.0"
+  },
+  "identity": "*",
+  "sender": "bob",
+  "thread": "yoy"
+}
+
+### Revmap Endpoint
+POST {{baseUrl}}/api/v1/endpoints/reverse
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}"
+}
+
 ### Create User
 POST {{baseUrl}}/api/v1/users
 Authorization: Bearer {{authToken}}

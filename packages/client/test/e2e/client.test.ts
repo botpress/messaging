@@ -355,6 +355,11 @@ describe('Http Client', () => {
         const convoId2 = await client.mapEndpoint(endpoint)
         expect(convoId2).toBe(convoId)
       })
+
+      test('Should be able to reverse map the conversation id to get back the same endpoint', async () => {
+        const [mappedEndpoint] = await client.revmapEndpoint(convoId!)
+        expect(mappedEndpoint).toEqual(endpoint)
+      })
     })
   })
 })

@@ -124,6 +124,18 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
       .data.conversationId
   }
 
+  async revmapEndpoint(clientId: uuid, conversationId: uuid): Promise<Endpoint[]> {
+    return (
+      await this.http.post<Endpoint[]>(
+        '/endpoints/reverse',
+        { conversationId },
+        {
+          headers: this.headers[clientId]
+        }
+      )
+    ).data
+  }
+
   protected deserializeHealth(report: HealthReport) {
     for (const channel of Object.keys(report.channels)) {
       report.channels[channel].events = report.channels[channel].events.map((x) => ({ ...x, time: new Date(x.time) }))

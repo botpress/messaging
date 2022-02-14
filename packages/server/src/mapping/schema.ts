@@ -12,6 +12,12 @@ const Api = {
       sender: Joi.string().required(),
       thread: Joi.string().required()
     }
+  }),
+
+  Revmap: ReqSchema({
+    body: {
+      conversationId: Joi.string().required()
+    }
   })
 }
 
