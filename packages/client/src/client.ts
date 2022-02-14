@@ -1,4 +1,13 @@
-import { Conversation, HealthReport, Message, SyncRequest, SyncResult, User, uuid } from '@botpress/messaging-base'
+import {
+  Conversation,
+  Endpoint,
+  HealthReport,
+  Message,
+  SyncRequest,
+  SyncResult,
+  User,
+  uuid
+} from '@botpress/messaging-base'
 import { AxiosRequestConfig } from 'axios'
 import { Router } from 'express'
 import { MessagingChannel } from './channel'
@@ -141,5 +150,9 @@ export class MessagingClient extends ProtectedEmitter<{
 
   async endTurn(id: uuid) {
     return this.channel.endTurn(this.clientId, id)
+  }
+
+  async mapEndpoint(endpoint: Endpoint): Promise<uuid> {
+    return this.channel.mapEndpoint(this.clientId, endpoint)
   }
 }

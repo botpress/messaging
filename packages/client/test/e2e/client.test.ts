@@ -340,4 +340,21 @@ describe('Http Client', () => {
       })
     })
   })
+
+  describe('Endpoints', () => {
+    describe('Map', () => {
+      const endpoint = { channel: { name: 'telegram', version: '1.0.0' }, identity: '*', sender: 'yoyo', thread: 'ya' }
+      let convoId: string | undefined
+
+      test('Should be able to map an endpoint to a conversation id', async () => {
+        convoId = await client.mapEndpoint(endpoint)
+        expect(validateUuid(convoId)).toBeTruthy()
+      })
+
+      test('Should be able to map the endpoint to the same conversation id again', async () => {
+        const convoId2 = await client.mapEndpoint(endpoint)
+        expect(convoId2).toBe(convoId)
+      })
+    })
+  })
 })
