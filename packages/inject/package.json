@@ -3,16 +3,18 @@
   "version": "0.1.0",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn && yarn run -T parcel build src/index.html src/inject.js",
+    "build": "yarn && yarn run -T parcel build src/index.html src/inject.js --public-url ./",
     "watch": "yarn && yarn run -T parcel watch src/index.html src/inject.js",
     "dev": "yarn && yarn run -T parcel src/index.html src/inject.js",
-    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T parcel build src/index.html src/inject.js"
+    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T parcel build src/index.html src/inject.js",
+    "analyze": "yarn run -T parcel build src/index.html --reporter @parcel/reporter-bundle-analyzer"
   },
   "files": [
     "dist"
   ],
   "devDependencies": {
     "@parcel/config-default": "^2.2.1",
+    "@parcel/reporter-bundle-analyzer": "2.2.1",
     "@parcel/transformer-typescript-tsc": "^2.2.1",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11"
