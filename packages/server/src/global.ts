@@ -14,6 +14,7 @@ export type MessagingEnv = EngineEnv & {
   APM_ENABLED?: string
   TWILIO_TESTING?: string
   BILLING_ENDPOINT?: string
+  DISABLE_SOCKETS?: string
 }
 
 declare global {

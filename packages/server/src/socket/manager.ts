@@ -24,11 +24,13 @@ export class SocketManager {
   ) {}
 
   async setup(server: Server) {
-    if (yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
-      this.ws = new Socket.Server(server, { serveClient: false, cors: { origin: '*' } })
-      this.ws.use(this.handleSocketAuthentication.bind(this))
-      this.ws.on('connection', this.handleSocketConnection.bind(this))
+    if (yn(process.env.DISABLE_SOCKETS)) {
+      return
     }
+
+    this.ws = new Socket.Server(server, { serveClient: false, cors: { origin: '*' } })
+    this.ws.use(this.handleSocketAuthentication.bind(this))
+    this.ws.on('connection', this.handleSocketConnection.bind(this))
   }
 
   async destroy() {
