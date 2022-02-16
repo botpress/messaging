@@ -3,6 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios'
 import _ from 'lodash'
 import querystring from 'querystring'
 import { v4 as uuid } from 'uuid'
+import { randStr } from '../integration/utils'
 import froth from './mocha-froth'
 
 const UUID_LENGTH = uuid().length
@@ -972,6 +973,20 @@ describe('API', () => {
   })
 
   describe('Endpoints', () => {
+    const mapEndpoint = async (
+      endpoint: Endpoint,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const res = await http(clientId, clientToken).post<{ conversationId: string }>(
+        '/api/v1/endpoints/map',
+        endpoint,
+        config
+      )
+      return res.data.conversationId
+    }
+
     const listEndpoints = async (
       conversationId: string,
       clientId?: string,
@@ -985,6 +1000,27 @@ describe('API', () => {
 
       return res.data
     }
+
+    describe('Map', () => {
+      test('Mapping an endpoint on two different clients should produce two different results', async () => {
+        const endpoint = {
+          channel: { name: 'telegram', version: '1.0.0' },
+          identity: randStr(),
+          sender: randStr(),
+          thread: randStr()
+        }
+
+        const convFirst1 = await mapEndpoint(endpoint, clients.first.clientId, clients.first.clientToken)
+        const convFirst2 = await mapEndpoint(endpoint, clients.first.clientId, clients.first.clientToken)
+        expect(convFirst1).toEqual(convFirst2)
+
+        const convSecond1 = await mapEndpoint(endpoint, clients.second.clientId, clients.second.clientToken)
+        const convSecond2 = await mapEndpoint(endpoint, clients.second.clientId, clients.second.clientToken)
+        expect(convSecond1).toEqual(convSecond2)
+
+        expect(convFirst1).not.toEqual(convSecond1)
+      })
+    })
 
     describe('List', () => {
       test('Should not be able to list endpoints without being authenticated', async () => {
