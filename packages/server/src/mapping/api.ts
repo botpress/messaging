@@ -4,7 +4,7 @@ import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
 import { ChannelService } from '../channels/service'
 import { ConversationService } from '../conversations/service'
-import { Schema } from './schema'
+import { makeMapRequestSchema, Schema } from './schema'
 import { MappingService } from './service'
 
 export class MappingApi {
@@ -15,8 +15,8 @@ export class MappingApi {
   ) {}
 
   setup(router: ApiManager) {
-    router.post('/endpoints/map', Schema.Api.Map, this.map.bind(this))
-    router.get('/endpoints/conversation/:conversationId', Schema.Api.Revmap, this.list.bind(this))
+    router.post('/endpoints/map', makeMapRequestSchema(this.channels.list()), this.map.bind(this))
+    router.get('/endpoints/conversation/:conversationId', Schema.Api.List, this.list.bind(this))
   }
 
   async map(req: ClientApiRequest, res: Response) {

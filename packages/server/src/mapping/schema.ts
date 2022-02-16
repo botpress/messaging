@@ -1,20 +1,27 @@
+import { Channel } from '@botpress/messaging-channels'
 import Joi from 'joi'
 import { ReqSchema } from '../base/schema'
 
-const Api = {
-  Map: ReqSchema({
+export const makeMapRequestSchema = (channels: Channel[]) => {
+  return ReqSchema({
     body: {
-      channel: Joi.object({
-        name: Joi.string().required(),
-        version: Joi.string().required()
-      }).required(),
+      channel: Joi.alternatives(
+        channels.map((x) =>
+          Joi.object({
+            name: Joi.string().valid(x.meta.name).required(),
+            version: Joi.string().valid(x.meta.version).required()
+          })
+        )
+      ).required(),
       identity: Joi.string().required(),
       sender: Joi.string().required(),
       thread: Joi.string().required()
     }
-  }),
+  })
+}
 
-  Revmap: ReqSchema({
+const Api = {
+  List: ReqSchema({
     params: {
       conversationId: Joi.string().guid().required()
     }
