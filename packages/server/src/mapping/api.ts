@@ -3,11 +3,16 @@ import { Response } from 'express'
 import { ApiManager } from '../base/api-manager'
 import { ClientApiRequest } from '../base/auth/client'
 import { ChannelService } from '../channels/service'
+import { ConversationService } from '../conversations/service'
 import { Schema } from './schema'
 import { MappingService } from './service'
 
 export class MappingApi {
-  constructor(private channels: ChannelService, private mapping: MappingService) {}
+  constructor(
+    private channels: ChannelService,
+    private conversations: ConversationService,
+    private mapping: MappingService
+  ) {}
 
   setup(router: ApiManager) {
     router.post('/endpoints', Schema.Api.Map, this.map.bind(this))
@@ -27,6 +32,11 @@ export class MappingApi {
 
   async revmap(req: ClientApiRequest, res: Response) {
     const { conversationId } = req.body
+
+    const conversation = await this.conversations.fetch(conversationId)
+    if (!conversation || conversation.clientId !== req.clientId) {
+      return res.sendStatus(404)
+    }
 
     const convmaps = await this.mapping.convmap.listByConversationId(conversationId)
     const endpoints = []

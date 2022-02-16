@@ -41,7 +41,7 @@ export class Api {
     this.users = new UserApi(this.app.users)
     this.conversations = new ConversationApi(this.app.users, this.app.conversations)
     this.messages = new MessageApi(this.app.users, this.app.conversations, this.app.messages, this.app.converse)
-    this.mapping = new MappingApi(this.app.channels, this.app.mapping)
+    this.mapping = new MappingApi(this.app.channels, this.app.conversations, this.app.mapping)
 
     this.channels = new ChannelApi(this.root, this.app)
   }
