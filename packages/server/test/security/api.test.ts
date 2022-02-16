@@ -1,4 +1,4 @@
-import { Conversation, Message, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
+import { Conversation, Endpoint, Message, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
 import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios'
 import _ from 'lodash'
 import querystring from 'querystring'
@@ -962,6 +962,44 @@ describe('API', () => {
               clients.first.clientId,
               clients.first.clientToken
             ),
+          (err) => {
+            expect(err.response?.data).toEqual('Not Found')
+            expect(err.response?.status).toEqual(404)
+          }
+        )
+      })
+    })
+  })
+
+  describe('Endpoints', () => {
+    const listEndpoints = async (
+      conversationId: string,
+      clientId?: string,
+      clientToken?: string,
+      config?: AxiosRequestConfig
+    ) => {
+      const res = await http(clientId, clientToken).get<Endpoint[]>(
+        `/api/v1/endpoints/conversation/${conversationId}`,
+        config
+      )
+
+      return res.data
+    }
+
+    describe('List', () => {
+      test('Should not be able to list endpoints without being authenticated', async () => {
+        await shouldFail(
+          async () => listEndpoints(clients.first.conversationId),
+          (err) => {
+            expect(err.response?.data).toEqual('Unauthorized')
+            expect(err.response?.status).toEqual(401)
+          }
+        )
+      })
+
+      test('Should not be able to list endpoints of another client', async () => {
+        await shouldFail(
+          async () => listEndpoints(clients.second.conversationId, clients.first.clientId, clients.first.clientToken),
           (err) => {
             expect(err.response?.data).toEqual('Not Found')
             expect(err.response?.status).toEqual(404)
