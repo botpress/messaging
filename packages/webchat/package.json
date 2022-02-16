@@ -1,6 +1,6 @@
 {
   "name": "@botpress/webchat",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.tsx",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.23.1",
-    "@botpress/messaging-components": "0.1.0",
+    "@botpress/messaging-components": "0.2.0",
     "@botpress/messaging-socket": "1.1.0",
     "@formatjs/intl-pluralrules": "^4.1.6",
     "@formatjs/intl-utils": "^3.8.4",
