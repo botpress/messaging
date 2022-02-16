@@ -50,6 +50,7 @@ x-bp-messaging-client-token: {{clientToken}}
 {
   "channels": {
     "telegram": {
+      "version": "1.0.0",
       "botToken": "my-telegram-token"
     }
   },
@@ -63,7 +64,7 @@ x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
 
 ### Map Endpoint
-POST {{baseUrl}}/api/v1/endpoints
+POST {{baseUrl}}/api/v1/endpoints/map
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
@@ -75,20 +76,15 @@ Content-Type: application/json
     "version": "1.0.0"
   },
   "identity": "*",
-  "sender": "bob",
-  "thread": "yoy"
+  "sender": "my-sender-id",
+  "thread": "my-thread-id"
 }
 
-### Revmap Endpoint
-POST {{baseUrl}}/api/v1/endpoints/reverse
+### List Endpoints
+POST {{baseUrl}}/api/v1/endpoints/conversation/{{convoId}}
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}
-Content-Type: application/json
-
-{
-  "conversationId": "{{convoId}}"
-}
 
 ### Create User
 POST {{baseUrl}}/api/v1/users

@@ -15,8 +15,8 @@ const Api = {
   }),
 
   Revmap: ReqSchema({
-    body: {
-      conversationId: Joi.string().required()
+    params: {
+      conversationId: Joi.string().guid().required()
     }
   })
 }

@@ -15,10 +15,8 @@ export class MappingApi {
   ) {}
 
   setup(router: ApiManager) {
-    router.post('/endpoints', Schema.Api.Map, this.map.bind(this))
-
-    // TODO: terrible name. To be renamed to something else. Both routes are likely to change name
-    router.post('/endpoints/reverse', Schema.Api.Revmap, this.revmap.bind(this))
+    router.post('/endpoints/map', Schema.Api.Map, this.map.bind(this))
+    router.post('/endpoints/conversation/:conversationId', Schema.Api.Revmap, this.revmap.bind(this))
   }
 
   async map(req: ClientApiRequest, res: Response) {
@@ -31,7 +29,7 @@ export class MappingApi {
   }
 
   async revmap(req: ClientApiRequest, res: Response) {
-    const { conversationId } = req.body
+    const { conversationId } = req.params
 
     const conversation = await this.conversations.fetch(conversationId)
     if (!conversation || conversation.clientId !== req.clientId) {
