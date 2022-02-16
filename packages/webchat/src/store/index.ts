@@ -229,7 +229,6 @@ class RootStore {
     }
 
     await this.fetchPreferences()
-    await this.sendUserVisit()
   }
 
   @action.bound
@@ -349,14 +348,6 @@ class RootStore {
     this.composer.setLocked(false)
 
     return this.api.resetSession(this.currentConversationId)
-  }
-
-  @action.bound
-  async sendUserVisit(): Promise<void> {
-    await this.api.sendVisit(
-      -(new Date().getTimezoneOffset() / 60), // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/getTimezoneOffset#description
-      getUserLocale()
-    )
   }
 
   @action.bound
