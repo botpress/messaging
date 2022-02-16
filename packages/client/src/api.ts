@@ -120,19 +120,16 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
   }
 
   async mapEndpoint(clientId: uuid, endpoint: Endpoint): Promise<uuid> {
-    return (await this.http.post<{ conversationId: uuid }>('/endpoints', endpoint, { headers: this.headers[clientId] }))
-      .data.conversationId
+    return (
+      await this.http.post<{ conversationId: uuid }>('/endpoints/map', endpoint, { headers: this.headers[clientId] })
+    ).data.conversationId
   }
 
-  async revmapEndpoint(clientId: uuid, conversationId: uuid): Promise<Endpoint[]> {
+  async listEndpoints(clientId: uuid, conversationId: uuid): Promise<Endpoint[]> {
     return (
-      await this.http.post<Endpoint[]>(
-        '/endpoints/reverse',
-        { conversationId },
-        {
-          headers: this.headers[clientId]
-        }
-      )
+      await this.http.get<Endpoint[]>(`/endpoints/conversation/${conversationId}`, {
+        headers: this.headers[clientId]
+      })
     ).data
   }
 

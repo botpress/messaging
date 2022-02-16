@@ -16,7 +16,7 @@ export class MappingApi {
 
   setup(router: ApiManager) {
     router.post('/endpoints/map', Schema.Api.Map, this.map.bind(this))
-    router.post('/endpoints/conversation/:conversationId', Schema.Api.Revmap, this.revmap.bind(this))
+    router.get('/endpoints/conversation/:conversationId', Schema.Api.Revmap, this.revmap.bind(this))
   }
 
   async map(req: ClientApiRequest, res: Response) {
