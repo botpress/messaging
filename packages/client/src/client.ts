@@ -1,6 +1,7 @@
 import { Conversation, HealthReport, Message, SyncRequest, SyncResult, User, uuid } from '@botpress/messaging-base'
 import { AxiosRequestConfig } from 'axios'
 import { Router } from 'express'
+import { MessageFeedbackEvent } from '.'
 import { MessagingChannel } from './channel'
 import { ProtectedEmitter } from './emitter'
 import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from './events'
@@ -10,6 +11,7 @@ export class MessagingClient extends ProtectedEmitter<{
   user: UserNewEvent
   started: ConversationStartedEvent
   message: MessageNewEvent
+  feedback: MessageFeedbackEvent
 }> {
   public get options() {
     return this._options
@@ -68,6 +70,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.channel.on('user', async (_, e) => this.emit('user', e))
     this.channel.on('started', async (_, e) => this.emit('started', e))
     this.channel.on('message', async (_, e) => this.emit('message', e))
+    this.channel.on('feedback', async (_, e) => this.emit('feedback', e))
 
     this._options = options
     this.applyOptions()

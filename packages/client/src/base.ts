@@ -1,6 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from '.'
+import { ConversationStartedEvent, MessageFeedbackEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
 import { Emitter } from './emitter'
 import { Logger } from './logger'
@@ -10,6 +10,7 @@ export abstract class MessagingChannelBase extends Emitter<{
   user: UserNewEvent
   started: ConversationStartedEvent
   message: MessageNewEvent
+  feedback: MessageFeedbackEvent
 }> {
   public get options() {
     return this._options

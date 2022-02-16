@@ -124,6 +124,13 @@ export class MessagingSocket extends SocketEmitter<{
     })
   }
 
+  async sendFeedback(messageId: uuid, feedback: number) {
+    await this.request('messages.feedback', {
+      messageId,
+      feedback
+    })
+  }
+
   protected request<T>(type: string, data: any) {
     return this.com.request<T>(type, data)
   }

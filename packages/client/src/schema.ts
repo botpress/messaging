@@ -6,15 +6,15 @@ import joi from 'joi'
 export const Schemas = {
   UserNew: joi
     .object({
-      userId: joi.string().guid().required()
+      userId: joi.string().uuid().required()
     })
     .required()
     .options({ stripUnknown: true }) as any,
 
   ConversationStarted: joi
     .object({
-      userId: joi.string().guid().required(),
-      conversationId: joi.string().guid().required(),
+      userId: joi.string().uuid().required(),
+      conversationId: joi.string().uuid().required(),
       channel: joi.string().required()
     })
     .required()
@@ -22,19 +22,30 @@ export const Schemas = {
 
   MessageNew: joi
     .object({
-      userId: joi.string().guid().required(),
-      conversationId: joi.string().guid().required(),
+      userId: joi.string().uuid().required(),
+      conversationId: joi.string().uuid().required(),
       channel: joi.string().required(),
       collect: joi.boolean().optional(),
       message: joi
         .object({
-          id: joi.string().guid().required(),
-          conversationId: joi.string().guid().required(),
-          authorId: joi.string().guid().required(),
+          id: joi.string().uuid().required(),
+          conversationId: joi.string().uuid().required(),
+          authorId: joi.string().uuid().required(),
           sentOn: joi.date().required(),
           payload: joi.object().required()
         })
         .required()
+    })
+    .required()
+    .options({ stripUnknown: true }) as any,
+
+  MessageFeedback: joi
+    .object({
+      userId: joi.string().uuid().required(),
+      conversationId: joi.string().uuid().required(),
+      channel: joi.string().required(),
+      messageId: joi.string().uuid().required(),
+      feedback: joi.number().allow(1, -1)
     })
     .required()
     .options({ stripUnknown: true }) as any

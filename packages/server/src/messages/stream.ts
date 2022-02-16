@@ -4,7 +4,7 @@ import { ChannelService } from '../channels/service'
 import { ConversationService } from '../conversations/service'
 import { ConverseService } from '../converse/service'
 import { MappingService } from '../mapping/service'
-import { MessageCreatedEvent, MessageEvents } from './events'
+import { MessageCreatedEvent, MessageEvents, MessageFeedbackEvent } from './events'
 import { MessageService } from './service'
 
 export class MessageStream {
@@ -19,6 +19,7 @@ export class MessageStream {
 
   async setup() {
     this.messages.events.on(MessageEvents.Created, this.handleMessageCreate.bind(this))
+    this.messages.events.on(MessageEvents.Feedback, this.handleMessageFeedback.bind(this))
   }
 
   private async handleMessageCreate({ message, source }: MessageCreatedEvent) {
@@ -36,6 +37,23 @@ export class MessageStream {
       conversation.clientId,
       conversation.userId,
       source
+    )
+  }
+
+  private async handleMessageFeedback({ messageId, feedback }: MessageFeedbackEvent) {
+    const message = await this.messages.get(messageId)
+    const conversation = await this.conversations.get(message.conversationId)
+
+    await this.streamer.stream(
+      'message.feedback',
+      {
+        userId: conversation.userId,
+        conversationId: conversation.id,
+        channel: await this.getChannel(conversation.id),
+        messageId,
+        feedback
+      },
+      conversation.clientId
     )
   }
 
