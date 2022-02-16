@@ -328,6 +328,7 @@ class RootStore {
   @action.bound
   async createConversation(): Promise<uuid> {
     const newId = await this.api.createConversation()
+    await this.api.startConversation()
     await this.fetchConversations()
     await this.fetchConversation(newId)
     return newId!
