@@ -409,9 +409,10 @@ body {
   border-bottom-left-radius: inherit;
 }
 
-.bpw-bubble-image a img,
+.bpw-bubble-image img,
 .bpw-bubble-audio audio,
 .bpw-bubble-video video {
+  display: block;
   max-height: 240px;
   max-width: 100%;
   border-top-left-radius: inherit;

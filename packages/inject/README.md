@@ -24,4 +24,4 @@ For example with a server started on port 8080, and a messaging server started o
 </html>
 ```
 
-`hostUrl` should be the same base url that you get the inject.js script from. `messagingUrl` is simply the the url of the messaging server. To test this locally you will need to have a messaging server running as standalone from botpress (using the MESSAGING_ENDPOINT variable) with sockets enabled (ENABLE_EXPERIMENTAL_SOCKETS=true on the messaging server)
+`hostUrl` should be the same base url that you get the inject.js script from. `messagingUrl` is simply the the url of the messaging server. To test this locally you will need to have a messaging server running as standalone from botpress (using the MESSAGING_ENDPOINT variable)

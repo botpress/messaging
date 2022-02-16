@@ -57,6 +57,13 @@ export class MessagingChannel extends MessagingChannelApi {
       }
 
       await this.emit('user', clientId, data)
+    } else if (type === 'message.feedback') {
+      const { error } = Schemas.MessageFeedback.validate(data)
+      if (error) {
+        return res.status(400).send(error.message)
+      }
+
+      await this.emit('feedback', clientId, data)
     }
 
     res.sendStatus(200)

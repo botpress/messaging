@@ -3,6 +3,7 @@ dist/
 bin/
 *.log
 .parcel-cache
+parcel-bundle-reports
 .cache
 coverage/
 storybook-static/

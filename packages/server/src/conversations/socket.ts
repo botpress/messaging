@@ -8,6 +8,7 @@ export class ConversationSocket {
 
   setup() {
     this.sockets.handle('conversations.create', Schema.Socket.Create, this.create.bind(this))
+    this.sockets.handle('conversations.start', Schema.Socket.Start, this.start.bind(this))
     this.sockets.handle('conversations.get', Schema.Socket.Get, this.get.bind(this))
     this.sockets.handle('conversations.list', Schema.Socket.List, this.list.bind(this))
     this.sockets.handle('conversations.delete', Schema.Socket.Delete, this.delete.bind(this))
@@ -20,12 +21,25 @@ export class ConversationSocket {
     socket.reply(conversation)
   }
 
+  async start(socket: SocketRequest) {
+    const { id } = socket.data
+    const conversation = await this.conversations.fetch(id)
+
+    if (!conversation || conversation.userId !== socket.userId) {
+      return socket.notFound('Conversation does not exist')
+    }
+
+    await this.conversations.start(id)
+
+    socket.reply(true)
+  }
+
   async get(socket: SocketRequest) {
     const { id } = socket.data
     const conversation = await this.conversations.fetch(id)
 
     if (!conversation || conversation.userId !== socket.userId) {
-      return socket.reply(undefined)
+      return socket.notFound('Conversation does not exist')
     }
 
     socket.reply(conversation)
@@ -44,10 +58,8 @@ export class ConversationSocket {
     const { id } = socket.data
     const conversation = await this.conversations.fetch(id)
 
-    if (!conversation) {
-      return socket.reply(false)
-    } else if (conversation.userId !== socket.userId) {
-      return socket.forbid('Conversation does not belong to user')
+    if (!conversation || conversation.userId !== socket.userId) {
+      return socket.forbid('Conversation does not exist')
     }
 
     await this.conversations.delete(id)

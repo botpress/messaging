@@ -79,6 +79,10 @@ export class MessagingSocket extends SocketEmitter<{
     return conversation
   }
 
+  async startConversation(id?: uuid) {
+    await this.request<Conversation>('conversations.start', { id: id || this._conversationId })
+  }
+
   async getConversation(id?: uuid): Promise<Conversation | undefined> {
     return this.request('conversations.get', {
       id: id || this._conversationId
@@ -121,6 +125,13 @@ export class MessagingSocket extends SocketEmitter<{
     return this.request('messages.list', {
       conversationId: this._conversationId,
       limit: limit || 20
+    })
+  }
+
+  async sendFeedback(messageId: uuid, feedback: number) {
+    await this.request('messages.feedback', {
+      messageId,
+      feedback
     })
   }
 

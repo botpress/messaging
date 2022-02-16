@@ -22,3 +22,11 @@ export interface MessageNewEvent extends ChannelEvent {
 export interface ConversationStartedEvent extends ChannelEvent {
   channel: string
 }
+
+export interface MessageEvent extends ChannelEvent {
+  messageId: Message
+}
+
+export interface MessageFeedbackEvent extends MessageEvent {
+  feedback: number
+}

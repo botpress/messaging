@@ -16,27 +16,25 @@ export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'
   }
 
   componentDidMount() {
-    this.setState({ adjustedWidth: this.ref.current?.offsetWidth || 0 - window.innerWidth })
+    this.setState({ adjustedWidth: (this.ref.current?.offsetWidth || 0) - window.innerWidth })
   }
 
   renderCarousel() {
     // Breakpoints must be adjusted since the carousel is based on the page width, and not its parent component
     const adjustBreakpoint = (size: number): number => size - this.state.adjustedWidth
 
-    const defaultSettings: Settings = {
+    const settings: Settings = {
       dots: false,
       infinite: false,
-      responsive: [...Array(this.props.items.length)].map((_, i) => ({
+      responsive: [...Array(10)].map((_, i) => ({
         breakpoint: adjustBreakpoint(550 + i * 524),
         settings: { slidesToShow: i + 1 }
-      })),
+      })), // Carousel will be responsive for screens as width as ~5300px
       slidesToScroll: 1,
       autoplay: false,
       centerMode: false,
       arrows: this.props.items.length > 1
     }
-
-    const settings = defaultSettings
 
     return (
       <Slider {...settings}>

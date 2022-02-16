@@ -294,7 +294,9 @@ describe('Socket Client', () => {
     })
 
     test('Should not be able to get a conversation of another socket client', async () => {
-      await expect(state.first.socket.getConversation(state.second.activeConversation!.id)).resolves.toBeUndefined()
+      await expect(state.first.socket.getConversation(state.second.activeConversation!.id)).rejects.toThrow(
+        'Conversation does not exist'
+      )
     })
 
     test('Should not be able to get a conversation with a disconnected socket', async () => {

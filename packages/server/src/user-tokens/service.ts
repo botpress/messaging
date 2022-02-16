@@ -36,11 +36,6 @@ export class UserTokenService extends Service {
   }
 
   async setup() {
-    if (!yn(process.env.ENABLE_EXPERIMENTAL_SOCKETS)) {
-      // let's not create a table we don't need for now
-      return
-    }
-
     this.batcher = await this.batchingService.newBatcher(
       'batcher_user_tokens',
       [this.userService.batcher],

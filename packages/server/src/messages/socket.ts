@@ -13,6 +13,7 @@ export class MessageSocket {
   setup() {
     this.sockets.handle('messages.create', Schema.Socket.Create, this.create.bind(this))
     this.sockets.handle('messages.list', Schema.Socket.List, this.list.bind(this))
+    this.sockets.handle('messages.feedback', Schema.Socket.Feedback, this.feedback.bind(this))
   }
 
   async create(socket: SocketRequest) {
@@ -39,5 +40,22 @@ export class MessageSocket {
 
     const messages = await this.messages.listByConversationId(conversationId, limit)
     socket.reply(messages)
+  }
+
+  async feedback(socket: SocketRequest) {
+    const { messageId, feedback } = socket.data
+
+    const message = await this.messages.fetch(messageId)
+    if (!message) {
+      return socket.notFound('Message does not exist')
+    }
+
+    const conversation = await this.conversations.fetch(message.conversationId)
+    if (!conversation || conversation.userId !== socket.userId) {
+      return socket.notFound('Conversation does not exist')
+    }
+
+    await this.messages.feedback(messageId, feedback)
+    socket.reply(true)
   }
 }

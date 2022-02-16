@@ -2395,6 +2395,7 @@ __metadata:
   dependencies:
     "@botpress/webchat": 0.1.0
     "@parcel/config-default": ^2.2.1
+    "@parcel/reporter-bundle-analyzer": 2.2.1
     "@parcel/transformer-typescript-tsc": ^2.2.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
@@ -3714,6 +3715,17 @@ __metadata:
   dependencies:
     "@parcel/types": ^2.2.1
   checksum: 47712a2af23b6890fddacf15fe2e3e82553bc77710590345287c5a8983b9db132f7d25fd36f66d32b547e70a2fd9bd021964ca002496d2af15cc15dd93daced7
+  languageName: node
+  linkType: hard
+
+"@parcel/reporter-bundle-analyzer@npm:2.2.1":
+  version: 2.2.1
+  resolution: "@parcel/reporter-bundle-analyzer@npm:2.2.1"
+  dependencies:
+    "@parcel/plugin": ^2.2.1
+    "@parcel/utils": ^2.2.1
+    nullthrows: ^1.1.1
+  checksum: 577d117e198e9d353bbd416b4f8005209db23933a43a74888d63858b1724d732534ea826434747310929e02ecfafd9cc7f2d0f6cc6aabee3af576622a90c6d86
   languageName: node
   linkType: hard
 

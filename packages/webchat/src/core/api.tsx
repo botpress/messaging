@@ -82,6 +82,14 @@ export default class WebchatApi {
     }
   }
 
+  async startConversation(): Promise<void> {
+    try {
+      await this.socket.socket.startConversation()
+    } catch (err) {
+      console.error('Error in start conversation', err)
+    }
+  }
+
   async downloadConversation(conversationId: uuid): Promise<any> {
     try {
       const { data } = await this.axios.post(
@@ -128,7 +136,7 @@ export default class WebchatApi {
 
   async sendFeedback(feedback: number, messageId: uuid): Promise<void> {
     try {
-      return this.axios.post('/saveFeedback', { messageId, target: this.userId, feedback }, this.axiosConfig)
+      return this.socket.socket.sendFeedback(messageId, feedback)
     } catch (err) {
       await this.handleApiError(err)
     }
@@ -196,6 +204,7 @@ export default class WebchatApi {
     if (data && typeof data === 'string' && data.includes('BP_CONV_NOT_FOUND')) {
       console.error('Conversation not found, starting a new one...')
       await this.createConversation()
+      await this.startConversation()
     }
   }
 }
