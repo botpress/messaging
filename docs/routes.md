@@ -188,3 +188,21 @@ x-bp-messaging-client-id: `clientId`
 x-bp-messaging-client-token: `clientToken`
 
 Deletes all messages of a conversation
+
+## Endpoints
+
+POST `/api/v1/endpoints/map`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
+
+Maps an endpoints and returns a conversation id
+
+GET `/api/v1/endpoints/conversation/:conversationId`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
+
+List endpoints of a conversation
