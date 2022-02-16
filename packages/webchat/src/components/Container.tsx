@@ -1,3 +1,4 @@
+import { Keyboard } from '@botpress/messaging-components'
 import classnames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
@@ -10,7 +11,6 @@ import Composer from './Composer'
 import ConversationList from './ConversationList'
 import Footer from './Footer'
 import Header from './Header'
-import * as Keyboard from './Keyboard'
 import MessageList from './messages/MessageList'
 import OverridableComponent from './OverridableComponent'
 
@@ -37,9 +37,9 @@ class Container extends React.Component<ContainerProps> {
           })}
         >
           <MessageList />
-          <Keyboard.Default>
+          <Keyboard>
             <OverridableComponent name={'composer'} original={Composer} />
-          </Keyboard.Default>
+          </Keyboard>
         </div>
       )
     }

@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { Content, MessageType } from './content-typings'
 import defaultRenderer, { Renderer } from './renderer'
+import { Keyboard } from './renderer/keyboard'
 import { MessageConfig } from './typings'
 import { defaultMessageConfig } from './utils'
 
@@ -16,4 +17,4 @@ const ReactMessageRenderer: FC<ReactMessageRendererProps> = ({ content, config, 
 
 export default ReactMessageRenderer
 
-export { defaultRenderer, defaultMessageConfig, Content, MessageType, MessageConfig, Renderer }
+export { defaultRenderer, defaultMessageConfig, Content, MessageType, MessageConfig, Renderer, Keyboard }

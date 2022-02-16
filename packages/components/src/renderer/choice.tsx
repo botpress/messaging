@@ -20,7 +20,7 @@ export class SingleChoice extends Component<MessageTypeHandlerProps<'single-choi
   }
 
   handleButtonClicked = (title: string, payload: any) => {
-    this.props.config.onSendData?.({
+    void this.props.config.onSendData?.({
       type: 'quick_reply',
       text: title,
       payload
