@@ -17,9 +17,6 @@ describe('ClientTokens', () => {
   }
 
   beforeAll(async () => {
-    // This should be reset after those tests
-    process.env.ENABLE_EXPERIMENTAL_SOCKETS = '1'
-
     await setupApp()
     clientTokens = app.clientTokens
     querySpy = jest.spyOn(clientTokens as any, 'query')
