@@ -1,3 +1,21 @@
+# [1.1.0](https://github.com/botpress/messaging/compare/v1.0.7...v1.1.0) (2022-02-16)
+
+
+### Bug Fixes
+
+* **inject:** fix inject script public path ([#361](https://github.com/botpress/messaging/issues/361)) ([6736b59](https://github.com/botpress/messaging/commit/6736b59b365fc83e7cc9aeb3b58f388a58f4742c))
+
+
+### Features
+
+* **channels:** disable legacy channels by default ([#365](https://github.com/botpress/messaging/issues/365)) ([aae6946](https://github.com/botpress/messaging/commit/aae69465c22828871eff2a8450bd2b6c1e7db0fc))
+* **mapping:** endpoint api ([#360](https://github.com/botpress/messaging/issues/360)) ([b94d3e5](https://github.com/botpress/messaging/commit/b94d3e56a3dec60a0a6bc1a3b02bfd0ee847ed35))
+* **sockets:** enable sockets by default ([#364](https://github.com/botpress/messaging/issues/364)) ([da24263](https://github.com/botpress/messaging/commit/da242634db287b84d8b8853ee781242bcac89970))
+* **webchat:** builtin feedback event ([#358](https://github.com/botpress/messaging/issues/358)) ([ff00118](https://github.com/botpress/messaging/commit/ff001182da8e8fa41ae812c522d92705e793ee03))
+* **webchat:** send conversation.started event ([#363](https://github.com/botpress/messaging/issues/363)) ([fcf5d8c](https://github.com/botpress/messaging/commit/fcf5d8c2cef1f544288533177e8fa4661b01da6f))
+
+
+
 ## [1.0.7](https://github.com/botpress/messaging/compare/v1.0.6...v1.0.7) (2022-02-11)
 
 
