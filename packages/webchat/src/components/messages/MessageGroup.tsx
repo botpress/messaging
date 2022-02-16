@@ -89,12 +89,7 @@ class MessageGroup extends React.Component<Props> {
             </span>
             {sortBy(messages, ['sent_on', 'eventId']).map((message, i, messages) => {
               const isLastMsg = i === messages.length - 1
-              let payload = this.convertPayloadFromOldFormat(message)
-
-              // TODO: remove this. quick_reply should be single-choice
-              if (payload.type === 'single-choice') {
-                payload = { ...payload, type: 'quick_reply' }
-              }
+              const payload = this.convertPayloadFromOldFormat(message)
 
               const showInlineFeedback =
                 isBot && isLastMsg && (payload.wrapped ? payload.wrapped.collectFeedback : payload.collectFeedback)
