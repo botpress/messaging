@@ -71,10 +71,6 @@ export class ConversationService extends Service {
     await this.emitter.emit(ConversationEvents.Started, { conversationId: id })
   }
 
-  public async visit(id: uuid, timezone: number, locale: string): Promise<void> {
-    await this.emitter.emit(ConversationEvents.Visit, { conversationId: id, timezone, locale })
-  }
-
   public async delete(id: uuid): Promise<number> {
     await this.batcher.flush()
     this.cache.del(id, true)

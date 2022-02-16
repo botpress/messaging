@@ -2,12 +2,7 @@ import { uuid } from '@botpress/messaging-base'
 import { Streamer } from '../base/streamer'
 import { ChannelService } from '../channels/service'
 import { MappingService } from '../mapping/service'
-import {
-  ConversationCreatedEvent,
-  ConversationEvents,
-  ConversationStartedEvent,
-  ConversationVisitEvent
-} from './events'
+import { ConversationCreatedEvent, ConversationEvents, ConversationStartedEvent } from './events'
 import { ConversationService } from './service'
 
 export class ConversationStream {
@@ -21,7 +16,6 @@ export class ConversationStream {
   async setup() {
     this.conversations.events.on(ConversationEvents.Created, this.handleConversationCreated.bind(this))
     this.conversations.events.on(ConversationEvents.Started, this.handleConversationStarted.bind(this))
-    this.conversations.events.on(ConversationEvents.Visit, this.handleConversationVisit.bind(this))
   }
 
   private async handleConversationCreated({ conversation }: ConversationCreatedEvent) {
@@ -38,15 +32,6 @@ export class ConversationStream {
     await this.streamer.stream(
       'conversation.started',
       { userId: conversation.userId, conversationId, channel: await this.getChannel(conversationId) },
-      conversation.clientId
-    )
-  }
-
-  private async handleConversationVisit({ conversationId, timezone, locale }: ConversationVisitEvent) {
-    const conversation = await this.conversations.get(conversationId)
-    await this.streamer.stream(
-      'conversation.visit',
-      { userId: conversation.userId, conversationId, channel: await this.getChannel(conversationId), timezone, locale },
       conversation.clientId
     )
   }
