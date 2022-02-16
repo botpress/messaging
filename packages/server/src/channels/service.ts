@@ -46,7 +46,7 @@ export class ChannelService extends Service {
       new VonageChannel()
     ]
 
-    if (!yn(process.env.DISABLE_LEGACY_CHANNELS)) {
+    if (yn(process.env.ENABLE_LEGACY_CHANNELS)) {
       this.channels = [
         ...this.channels,
         new MessengerChannelLegacy(),

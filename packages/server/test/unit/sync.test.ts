@@ -8,41 +8,45 @@ jest.mock('@botpress/messaging-engine')
 
 const channels = {
   messenger: {
-    accessToken: 'accessToken',
+    version: '1.0.0',
+    appId: 'appId',
     appSecret: 'appSecret',
-    verifyToken: 'verifyToken'
+    verifyToken: 'verifyToken',
+    pageId: 'pageId',
+    accessToken: 'accessToken'
   },
   slack: {
+    version: '1.0.0',
     signingSecret: 'signingSecret',
-    useRTM: false,
     botToken: 'botToken'
   },
   smooch: {
+    version: '1.0.0',
+    appId: 'appId',
     keyId: 'keyId',
-    secret: 'secret',
-    forwardRawPayloads: ['text']
+    keySecret: 'keySecret',
+    webhookSecret: 'webhookSecret'
   },
   teams: {
+    version: '1.0.0',
     appId: 'appId',
-    appPassword: 'appPassword',
-    proactiveMessages: {
-      proactiveMessages: 'proactiveMessages'
-    }
+    appPassword: 'appPassword'
   },
   telegram: {
+    version: '1.0.0',
     botToken: 'botToken'
   },
   twilio: {
+    version: '1.0.0',
     accountSID: 'accountSID',
     authToken: 'authToken'
   },
   vonage: {
-    useTestingApi: true,
+    version: '1.0.0',
     apiKey: 'apiKey',
     apiSecret: 'apiSecret',
     signatureSecret: 'signatureSecret',
-    applicationId: 'applicationId',
-    privateKey: 'privateKey'
+    useTestingApi: true
   }
 }
 
@@ -66,17 +70,6 @@ describe('Sync', () => {
 
     test('Should not throw any error with every channel configured correctly', async () => {
       const { error, value } = syncApi.validate({ channels })
-      if (error) {
-        throw error
-      }
-
-      expect(value).toEqual({ channels, webhooks: [] })
-    })
-
-    test('Should strip unknown properties from legacy channels', async () => {
-      const { error, value } = syncApi.validate({
-        channels: { ...channels, telegram: { ...channels.telegram, randomProp: 'yoyo' } }
-      })
       if (error) {
         throw error
       }

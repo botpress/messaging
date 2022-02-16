@@ -15,6 +15,7 @@ export type MessagingEnv = EngineEnv & {
   TWILIO_TESTING?: string
   BILLING_ENDPOINT?: string
   DISABLE_SOCKETS?: string
+  ENABLE_LEGACY_CHANNELS?: string
 }
 
 declare global {
