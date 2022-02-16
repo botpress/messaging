@@ -79,6 +79,10 @@ export class MessagingSocket extends SocketEmitter<{
     return conversation
   }
 
+  async startConversation(id?: uuid) {
+    await this.request<Conversation>('conversations.start', { id: id || this._conversationId })
+  }
+
   async getConversation(id?: uuid): Promise<Conversation | undefined> {
     return this.request('conversations.get', {
       id: id || this._conversationId

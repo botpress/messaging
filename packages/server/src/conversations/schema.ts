@@ -19,6 +19,8 @@ const Api = {
 const Socket = {
   Create: Joi.object({}).required(),
 
+  Start: Joi.object({ id: Joi.string().guid().required() }).required(),
+
   Get: Joi.object({
     id: Joi.string().guid().required()
   }).required(),
