@@ -11,7 +11,7 @@ let STATUS_TABLE: string
 const CONDUITS_INITIALIZED = 'initialized'
 const STATUS_TEST_COLUMN = 'initializedOn'
 
-const TELEGRAM_CHANNEL_ID = '0198f4f5-6100-4549-92e5-da6cc31b4ad1'
+const TELEGRAM_CHANNEL_ID = 'e578723f-ab57-463c-bc13-b483db9bf547'
 
 describe('0.1.19 - Status', () => {
   let migration: MigrationService

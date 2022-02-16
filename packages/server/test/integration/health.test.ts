@@ -20,8 +20,10 @@ describe('Health', () => {
     const client = await app.clients.create(provider.id)
     const conduit = await app.conduits.create(
       provider.id,
-      app.channels.getByNameAndVersion(TEST_CHANNEL, '0.1.0').meta.id,
+      app.channels.getByNameAndVersion(TEST_CHANNEL, '1.0.0').meta.id,
       {
+        appId: randStr(),
+        pageId: randStr(),
         accessToken: randStr(),
         appSecret: randStr(),
         verifyToken: randStr()
