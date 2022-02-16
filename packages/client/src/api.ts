@@ -1,4 +1,13 @@
-import { Conversation, HealthReport, Message, SyncRequest, SyncResult, User, uuid } from '@botpress/messaging-base'
+import {
+  Conversation,
+  Endpoint,
+  HealthReport,
+  Message,
+  SyncRequest,
+  SyncResult,
+  User,
+  uuid
+} from '@botpress/messaging-base'
 import { MessagingChannelBase } from './base'
 import { handleNotFound } from './errors'
 
@@ -108,6 +117,20 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
 
   async endTurn(clientId: uuid, id: uuid) {
     await this.http.post(`/messages/turn/${id}`, undefined, { headers: this.headers[clientId] })
+  }
+
+  async mapEndpoint(clientId: uuid, endpoint: Endpoint): Promise<uuid> {
+    return (
+      await this.http.post<{ conversationId: uuid }>('/endpoints/map', endpoint, { headers: this.headers[clientId] })
+    ).data.conversationId
+  }
+
+  async listEndpoints(clientId: uuid, conversationId: uuid): Promise<Endpoint[]> {
+    return (
+      await this.http.get<Endpoint[]>(`/endpoints/conversation/${conversationId}`, {
+        headers: this.headers[clientId]
+      })
+    ).data
   }
 
   protected deserializeHealth(report: HealthReport) {

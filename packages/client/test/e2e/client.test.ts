@@ -340,4 +340,46 @@ describe('Http Client', () => {
       })
     })
   })
+
+  describe('Endpoints', () => {
+    describe('Map', () => {
+      const endpoint = { channel: { name: 'telegram', version: '1.0.0' }, identity: '*', sender: 'yoyo', thread: 'ya' }
+      let convoId: string | undefined
+
+      test('Should be able to map an endpoint to a conversation id', async () => {
+        convoId = await client.mapEndpoint(endpoint)
+        expect(validateUuid(convoId)).toBeTruthy()
+      })
+
+      test('Should be able to map the endpoint to the same conversation id again', async () => {
+        const convoId2 = await client.mapEndpoint(endpoint)
+        expect(convoId2).toBe(convoId)
+      })
+
+      test('Should fail to map an endpoint with an unknown channel', async () => {
+        await expect(client.mapEndpoint({ ...endpoint, channel: { name: 'yoyo', version: '1.0.0' } })).rejects.toThrow(
+          new Error('Request failed with status code 400')
+        )
+      })
+
+      test('Should fail to map an endpoint with invalid fields', async () => {
+        await expect(client.mapEndpoint({ ...endpoint, identity: null as any })).rejects.toThrow(
+          new Error('Request failed with status code 400')
+        )
+      })
+
+      test('Should be able to list the endpoints of a conversation to get back the same endpoint', async () => {
+        const [mappedEndpoint] = await client.listEndpoints(convoId!)
+        expect(mappedEndpoint).toEqual(endpoint)
+      })
+
+      test('Should be able to list the endpoints of a conversation that has not endpoints', async () => {
+        const user = await client.createUser()
+        const conversation = await client.createConversation(user.id)
+
+        const endpoints = await client.listEndpoints(conversation.id)
+        expect(endpoints).toEqual([])
+      })
+    })
+  })
 })

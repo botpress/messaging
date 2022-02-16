@@ -50,6 +50,7 @@ x-bp-messaging-client-token: {{clientToken}}
 {
   "channels": {
     "telegram": {
+      "version": "1.0.0",
       "botToken": "my-telegram-token"
     }
   },
@@ -58,6 +59,29 @@ x-bp-messaging-client-token: {{clientToken}}
 
 ### Health
 GET {{baseUrl}}/api/v1/health
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+
+### Map Endpoint
+POST {{baseUrl}}/api/v1/endpoints/map
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "channel": {
+    "name": "telegram",
+    "version": "1.0.0"
+  },
+  "identity": "*",
+  "sender": "my-sender-id",
+  "thread": "my-thread-id"
+}
+
+### List Endpoints
+GET {{baseUrl}}/api/v1/endpoints/conversation/{{convoId}}
 Authorization: Bearer {{authToken}}
 x-bp-messaging-client-id: {{clientId}}
 x-bp-messaging-client-token: {{clientToken}}

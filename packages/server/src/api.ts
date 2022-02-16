@@ -9,6 +9,7 @@ import { ChannelApi } from './channels/api'
 import { ClientApi } from './clients/api'
 import { ConversationApi } from './conversations/api'
 import { HealthApi } from './health/api'
+import { MappingApi } from './mapping/api'
 import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
 import { UserApi } from './users/api'
@@ -25,6 +26,7 @@ export class Api {
   private users: UserApi
   private conversations: ConversationApi
   private messages: MessageApi
+  private mapping: MappingApi
   private channels: ChannelApi
 
   constructor(private app: App, private root: Router) {
@@ -39,6 +41,7 @@ export class Api {
     this.users = new UserApi(this.app.users)
     this.conversations = new ConversationApi(this.app.users, this.app.conversations)
     this.messages = new MessageApi(this.app.users, this.app.conversations, this.app.messages, this.app.converse)
+    this.mapping = new MappingApi(this.app.channels, this.app.conversations, this.app.mapping)
 
     this.channels = new ChannelApi(this.root, this.app)
   }
@@ -67,6 +70,7 @@ export class Api {
     this.users.setup(this.manager)
     this.conversations.setup(this.manager)
     this.messages.setup(this.manager)
+    this.mapping.setup(this.manager)
 
     await this.channels.setup()
 
