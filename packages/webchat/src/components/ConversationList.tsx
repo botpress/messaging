@@ -10,7 +10,7 @@ import { RecentConversation } from '../typings'
 const ConversationListItem = injectIntl(({ conversation, onClick, hasFocus, intl }: ConversationListItemProps) => {
   const title = intl.formatMessage({ id: 'conversationList.title' }, { id: conversation.id })
 
-  const { value, unit } = selectUnit(conversation.lastMessage?.sentOn || conversation.createdOn)
+  const { value, unit } = selectUnit(new Date(conversation.lastMessage?.sentOn || conversation.createdOn))
   const date = intl.formatRelativeTime(value, unit)
 
   const message = conversation.lastMessage?.payload?.text || '...'

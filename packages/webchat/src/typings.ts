@@ -292,7 +292,7 @@ export interface Message {
   sentOn: Date
   payload: any
   // The typing delay in ms
-  timeInMs: number
+  timeInMs?: number
 }
 
 export interface QueuedMessage {

@@ -16,7 +16,7 @@ import { RootStore, StoreDef } from './store'
 import { Config, Message, Overrides, uuid } from './typings'
 import { checkLocationOrigin, initializeAnalytics, isIE, trackMessage, trackWebchatState } from './utils'
 
-const DEFAULT_TYPING_DELAY = 1000
+export const DEFAULT_TYPING_DELAY = 1000
 
 class Web extends React.Component<MainProps> {
   private config!: Config
@@ -254,6 +254,8 @@ class Web extends React.Component<MainProps> {
     }
 
     trackMessage('received')
+
+    this.props.updateLastMessage!(event.conversationId, event)
     await this.props.addEventToConversation!(event)
 
     // there's no focus on the actual conversation
@@ -414,7 +416,8 @@ export default inject(({ store }: { store: RootStore }) => ({
   widgetTransition: store.view.widgetTransition,
   displayWidgetView: store.view.displayWidgetView,
   setLoadingCompleted: store.view.setLoadingCompleted,
-  sendFeedback: store.sendFeedback
+  sendFeedback: store.sendFeedback,
+  updateLastMessage: store.updateLastMessage
 }))(injectIntl(observer(Web)))
 
 type MainProps = { store: RootStore } & WrappedComponentProps &
@@ -451,4 +454,5 @@ type MainProps = { store: RootStore } & WrappedComponentProps &
     | 'resetUnread'
     | 'setLoadingCompleted'
     | 'dimensions'
+    | 'updateLastMessage'
   >
