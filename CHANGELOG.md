@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/botpress/messaging/compare/v1.1.0...v1.1.1) (2022-02-17)
+
+
+### Bug Fixes
+
+* **teams:** error crashing server ([#370](https://github.com/botpress/messaging/issues/370)) ([46269bc](https://github.com/botpress/messaging/commit/46269bcd3db9c09567256f128a6250be6ace1551))
+
+
+
 # [1.1.0](https://github.com/botpress/messaging/compare/v1.0.7...v1.1.0) (2022-02-16)
 
 
