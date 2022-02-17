@@ -151,6 +151,38 @@ Content-Type: application/json
   }
 }
 
+### Send Video
+POST {{baseUrl}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "video",
+    "title": "big buck bunny video",
+    "video": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+  }
+}
+
+### Send Audio
+POST {{baseUrl}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "audio",
+    "title": "drum loop audio",
+    "audio": "https://sampleswap.org/samples-ghost/DRUM%20LOOPS%20and%20BREAKS/000%20to%20080%20bpm/827[kb]050_barbituate-beat.wav.mp3"
+  }
+}
+
 ### Send Choices
 POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
@@ -167,6 +199,27 @@ Content-Type: application/json
       { "title": "Yay", "value": "YES" },
       { "title": "Nay", "value": "NO" }
     ]
+  }
+}
+
+### Send Dropdown
+POST {{baseUrl}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "dropdown",
+    "buttonText": "Send",
+    "message": "Dropdown choices:",
+    "options": [
+      { "label": "Yay", "value": "YES" },
+      { "label": "Nay", "value": "NO" }
+    ],
+    "displayInKeyboard": false
   }
 }
 
