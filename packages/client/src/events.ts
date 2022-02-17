@@ -24,7 +24,7 @@ export interface ConversationStartedEvent extends ChannelEvent {
 }
 
 export interface MessageEvent extends ChannelEvent {
-  messageId: Message
+  messageId: uuid
 }
 
 export interface MessageFeedbackEvent extends MessageEvent {
