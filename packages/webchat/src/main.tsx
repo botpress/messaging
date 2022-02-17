@@ -16,7 +16,6 @@ import { RootStore, StoreDef } from './store'
 import { Config, Message, Overrides, uuid } from './typings'
 import { checkLocationOrigin, initializeAnalytics, isIE, trackMessage, trackWebchatState } from './utils'
 
-const _values = (obj: Overrides) => Object.keys(obj).map((x) => obj[x])
 const DEFAULT_TYPING_DELAY = 1000
 
 class Web extends React.Component<MainProps> {
@@ -35,9 +34,8 @@ class Web extends React.Component<MainProps> {
   }
 
   async componentDidMount() {
-    // TODO: serve this from cdn
-    this.audio = new Audio(`${window.ROOT_PATH}/assets/modules/channel-web/notification.mp3`)
-    this.props.store.setIntlProvider(this.props.intl!)
+    this.audio = new Audio(require('url:../assets/notification.mp3'))
+    this.props.store.setIntlProvider(this.props.intl)
     window.store = this.props.store
 
     window.addEventListener('message', this.handleIframeApi)
@@ -160,7 +158,7 @@ class Web extends React.Component<MainProps> {
 
   loadOverrides(overrides: Overrides) {
     try {
-      for (const override of _values(overrides)) {
+      for (const override of Object.values(overrides)) {
         // TODO: load module view this can't work
         // override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
       }
@@ -352,12 +350,13 @@ class Web extends React.Component<MainProps> {
       this.parentClass = parentClass
     }
 
-    const { isEmulator, stylesheet, extraStylesheet } = this.props.config!
+    const { stylesheet, extraStylesheet } = this.props.config!
+    const RobotoFont = React.lazy(() => import('./fonts/roboto'))
+
     return (
       <React.Fragment>
         {!!stylesheet?.length && <Stylesheet href={stylesheet} />}
-        {!stylesheet && <Stylesheet href={`assets/modules/channel-web/default${isEmulator ? '-emulator' : ''}.css`} />}
-        {!isIE && <Stylesheet href={'assets/modules/channel-web/font.css'} />}
+        <React.Suspense fallback={<></>}>{!isIE && <RobotoFont />}</React.Suspense>
         {!!extraStylesheet?.length && <Stylesheet href={extraStylesheet} />}
       </React.Fragment>
     )
