@@ -10,7 +10,10 @@ export abstract class AuthHandler {
     return (req: Request, res: Response) => {
       fn(req, res).catch((e) => {
         this.logger.error(e, `Error occurred calling route ${req.originalUrl}`)
-        return res.sendStatus(500)
+
+        if (!res.headersSent) {
+          return res.sendStatus(500)
+        }
       })
     }
   }
