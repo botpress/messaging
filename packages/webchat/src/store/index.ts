@@ -361,7 +361,8 @@ class RootStore {
   async extractFeedback(messages: Message[]): Promise<void> {
     const feedbackMessageIds = messages.filter((x) => x.payload && x.payload.collectFeedback).map((x) => x.id)
 
-    const feedbackInfo = await this.api.getMessageIdsFeedbackInfo(feedbackMessageIds)
+    // TODO: store feedback somewhere
+    const feedbackInfo = feedbackMessageIds.map((x) => ({ messageId: x, feedback: 1 }))
     runInAction('-> setFeedbackInfo', () => {
       this.messageFeedbacks = feedbackInfo!
     })
