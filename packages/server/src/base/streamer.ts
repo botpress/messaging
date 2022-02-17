@@ -99,7 +99,7 @@ export class Streamer {
         jitter: 'none',
         numOfAttempts: MAX_ATTEMPTS,
         retry: (e: AxiosError, attemptNumber: number) => {
-          if (attemptNumber === 1) {
+          if (attemptNumber === 1 && (e.response?.status !== 503 || !yn(process.env.SPINNED))) {
             this.logWebhookError(e, url, 'Failed to send webhook event on first attempt. Retrying 9 more times')
           }
           return !this.destroyed

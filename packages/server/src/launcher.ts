@@ -163,7 +163,7 @@ export class Launcher {
       this.logger.info(
         `Using channels: ${this.app.channels
           .list()
-          .map((x) => x.meta.name)
+          .map((x) => `${x.meta.name}@${x.meta.version}`)
           .join(', ')}`
       )
     }
