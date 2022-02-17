@@ -1,10 +1,10 @@
 @baseUrl = http://localhost:3100
 // @baseUrl =  https://messaging.botpress.dev/
-@adminKey = ADMIN_KEY
-@clientId = YOUR_CLIENT_ID
-@clientToken = YOUR_TOKEN
-@userId = YOUR_USER_ID
-@convoId = YOUR_CONVO_ID
+@adminKey = ""
+@clientId = bd5f6d95-b8a0-45e4-baf0-631e269a78ea
+@clientToken = 9f9e952b-a0e3-4c55-ac51-0ff199198b54.xrcAfMrmdPpqvaYWSIQ+9Vj306kyhAaxTtchqaW8Vr7zHGRfIn1gklmUkQhgdqc8gYO0w8vmGkUxiz6/1iWyukjd
+@userId = 7e9419b4-b490-410a-af29-8f973aa00074
+@convoId = 6d87d98c-b3a2-4299-8f2d-1cd2ea9bea5c
 
 ### Auth messaging cloud
 # @name auth
@@ -151,6 +151,38 @@ Content-Type: application/json
   }
 }
 
+### Send Video
+POST {{baseUrl}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "video",
+    "title": "big buck bunny video",
+    "video": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+  }
+}
+
+### Send Audio
+POST {{baseUrl}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "audio",
+    "title": "drum loop audio",
+    "audio": "https://sampleswap.org/samples-ghost/DRUM%20LOOPS%20and%20BREAKS/000%20to%20080%20bpm/827[kb]050_barbituate-beat.wav.mp3"
+  }
+}
+
 ### Send Choices
 POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
@@ -167,6 +199,27 @@ Content-Type: application/json
       { "title": "Yay", "value": "YES" },
       { "title": "Nay", "value": "NO" }
     ]
+  }
+}
+
+### Send Dropdown
+POST {{baseUrl}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "dropdown",
+    "buttonText": "Send",
+    "message": "Dropdown choices:",
+    "options": [
+      { "label": "Yay", "value": "YES" },
+      { "label": "Nay", "value": "NO" }
+    ],
+    "displayInKeyboard": false
   }
 }
 
