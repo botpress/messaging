@@ -56,8 +56,11 @@ export class ChannelApiManager {
   protected asyncMiddleware(fn: Middleware<Request>) {
     return (req: Request, res: Response, next: NextFunction) => {
       fn(req, res, next).catch((e) => {
-        this.logger?.error(`Error occurred calling route ${req.originalUrl}`, e)
-        return res.sendStatus(500)
+        this.logger?.error(e, `Error occurred calling route ${req.originalUrl}`)
+
+        if (!res.headersSent) {
+          return res.sendStatus(500)
+        }
       })
     }
   }
