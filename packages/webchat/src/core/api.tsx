@@ -47,8 +47,21 @@ export default class WebchatApi {
 
   async fetchConversations() {
     try {
-      const convos = await this.socket.socket.listConversations()
-      return convos as RecentConversation[]
+      const convos = (await this.socket.socket.listConversations()) as RecentConversation[]
+
+      // Add the last message of each conversation
+      for (const convo of convos) {
+        const limit = 1
+
+        await this.socket.socket.switchConversation(convo.id)
+        const lastMessages = await this.socket.socket.listMessages(limit)
+
+        if (lastMessages.length >= limit) {
+          convo.lastMessage = { ...lastMessages[0], timeInMs: 0 }
+        }
+      }
+
+      return convos
     } catch (err) {
       console.error('Error while fetching convos', err)
     }
