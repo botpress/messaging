@@ -148,7 +148,6 @@ class RootStore {
 
   @action.bound
   updateLastMessage(conversationId: string, message?: Message) {
-    console.log('updateLastMessage called', conversationId, message)
     for (const conversation of this.conversations) {
       if (conversation.id === conversationId) {
         conversation.lastMessage = message
