@@ -13,17 +13,17 @@ export class TeamsApi extends ChannelApi<TeamsService> {
   private async handleRequest(req: ChannelApiRequest, res: Response) {
     const { adapter } = this.service.get(req.scope)
 
-    await adapter.processActivity(req, res, async (turnContext) => {
-      try {
+    try {
+      await adapter.processActivity(req, res, async (turnContext) => {
         if (this.isProactive(turnContext)) {
           await this.handleProactive(req.scope, turnContext)
         } else {
           await this.handleMessage(req.scope, turnContext)
         }
-      } catch (e) {
-        this.service.logger?.error(e, 'Error occurred processing teams activity')
-      }
-    })
+      })
+    } catch (e) {
+      this.service.logger?.error(e, 'Error occurred processing teams activity')
+    }
   }
 
   private async handleMessage(scope: string, turnContext: TurnContext) {
