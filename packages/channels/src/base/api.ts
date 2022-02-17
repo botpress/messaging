@@ -29,7 +29,7 @@ export class ChannelApi<TService extends ChannelService<any, any>> {
   }
 }
 
-export type Middleware<T> = (req: T, res: Response, next: NextFunction) => Promise<void>
+export type Middleware<T> = (req: T, res: Response, next: NextFunction) => Promise<any>
 
 export class ChannelApiManager {
   constructor(private service: ChannelService<any, any>, private router: Router, private logger?: Logger) {}
@@ -56,7 +56,13 @@ export class ChannelApiManager {
       this.asyncMiddleware(async (req, res, next) => {
         const nreq = req as ChannelApiRequest
         nreq.scope = req.params.scope
-        await this.service.require(nreq.scope)
+
+        try {
+          await this.service.require(nreq.scope)
+        } catch {
+          return res.sendStatus(404)
+        }
+
         await fn(nreq, res, next)
       })
     )
@@ -65,8 +71,11 @@ export class ChannelApiManager {
   protected asyncMiddleware(fn: Middleware<Request>) {
     return (req: Request, res: Response, next: NextFunction) => {
       fn(req, res, next).catch((e) => {
-        this.logger?.error(`Error occurred calling route ${req.originalUrl}`, e)
-        return res.sendStatus(500)
+        this.logger?.error(e, `Error occurred calling route ${req.originalUrl}`)
+
+        if (!res.headersSent) {
+          return res.sendStatus(500)
+        }
       })
     }
   }
