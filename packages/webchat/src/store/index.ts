@@ -6,6 +6,7 @@ import { IntlShape } from 'react-intl'
 
 import WebchatApi from '../core/api'
 import BpSocket from '../core/socket'
+import { DEFAULT_TYPING_DELAY } from '../main'
 import { getUserLocale } from '../translations'
 import {
   BotInfo,
@@ -146,6 +147,18 @@ class RootStore {
   }
 
   @action.bound
+  updateLastMessage(conversationId: string, message?: Message) {
+    console.log('updateLastMessage called', conversationId, message)
+    for (const conversation of this.conversations) {
+      if (conversation.id === conversationId) {
+        conversation.lastMessage = message
+
+        return
+      }
+    }
+  }
+
+  @action.bound
   clearMessages() {
     this.currentConversation.messages = []
   }
@@ -203,7 +216,7 @@ class RootStore {
     if (isBefore(start, this.currentConversation.typingUntil)) {
       start = this.currentConversation.typingUntil
     }
-    this.currentConversation.typingUntil = new Date(+start + event.timeInMs)
+    this.currentConversation.typingUntil = new Date(+start + (event.timeInMs || DEFAULT_TYPING_DELAY))
     this._startTypingTimer()
   }
 
@@ -387,7 +400,9 @@ class RootStore {
     }
     */
 
-    await this.api.sendMessage(data, this.currentConversationId)
+    const message = await this.api.sendMessage(data, this.currentConversationId)
+
+    this.updateLastMessage(this.currentConversationId, message)
   }
 
   @action.bound

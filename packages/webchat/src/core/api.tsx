@@ -57,7 +57,7 @@ export default class WebchatApi {
         const lastMessages = await this.socket.socket.listMessages(limit)
 
         if (lastMessages.length >= limit) {
-          convo.lastMessage = { ...lastMessages[0], timeInMs: 0 }
+          convo.lastMessage = lastMessages[0]
         }
       }
 
