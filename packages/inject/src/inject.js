@@ -25,7 +25,15 @@ function _injectDOMElement(tagName, selector, options) {
 }
 
 function _generateIFrameHTML(host, config) {
-  const options = encodeURIComponent(JSON.stringify({ config: config }))
+  const keyStorage = `bp-chat-key-${config.clientId}`
+  let encryptionKey = localStorage.getItem(keyStorage)
+
+  if (!encryptionKey) {
+    encryptionKey = _generateRandomString(32)
+    localStorage.setItem(keyStorage, encryptionKey)
+  }
+
+  const options = encodeURIComponent(JSON.stringify({ config: { ...config, encryptionKey } }))
   const title = config.botConvoDescription || config.botName || config.botId
   const iframeSrc = host + '/index.html?options=' + options
   const iframeId = _getIframeId(config.chatId)
@@ -40,6 +48,17 @@ function _generateIFrameHTML(host, config) {
     DEFAULT_IFRAME_CLASS +
     '"/>'
   )
+}
+
+function _generateRandomString(length) {
+  let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+
+  let str = ''
+  for (let i = 0; i < length; i++) {
+    str += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+
+  return str
 }
 
 const chatRefs = {}

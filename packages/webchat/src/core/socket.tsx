@@ -1,9 +1,14 @@
 import { Message, MessagingSocket, UserCredentials } from '@botpress/messaging-socket'
+import AES from 'crypto-js/aes'
+import utf8 from 'crypto-js/enc-utf8'
+import SHA256 from 'crypto-js/sha256'
 import { Config } from '../typings'
 
 export default class BpSocket {
   public socket: MessagingSocket
   private chatId: string | undefined
+  private encryptionKey: string | undefined
+  private clientId: string | undefined
   private waitingForUser?: Promise<void>
 
   public onClear!: (event: any) => void
@@ -14,6 +19,8 @@ export default class BpSocket {
 
   constructor(config: Config) {
     this.chatId = config.chatId
+    this.encryptionKey = config.encryptionKey
+    this.clientId = config.clientId
     this.socket = new MessagingSocket({ url: config.messagingUrl, clientId: config.clientId })
   }
 
@@ -71,9 +78,14 @@ export default class BpSocket {
   }
 
   public getStorage<T>(key: string): T | undefined {
-    const stored = localStorage.getItem(this.getStorageKey(key))
+    let stored = localStorage.getItem(this.getStorageKey(key))
+
     if (!stored) {
       return undefined
+    }
+
+    if (this.encryptionKey?.length) {
+      stored = AES.decrypt(stored, this.encryptionKey).toString(utf8)
     }
 
     try {
@@ -85,10 +97,22 @@ export default class BpSocket {
   }
 
   public setStorage<T>(key: string, object: T) {
-    localStorage.setItem(this.getStorageKey(key), JSON.stringify(object))
+    let string = JSON.stringify(object)
+
+    if (this.encryptionKey?.length) {
+      string = AES.encrypt(string, this.encryptionKey).toString()
+    }
+
+    localStorage.setItem(this.getStorageKey(key), string)
   }
 
   private getStorageKey(key: string) {
-    return `bp-chat-${key}`
+    const rawKey = `bp-chat-${key}`
+
+    if (this.encryptionKey?.length) {
+      return `${rawKey}-${SHA256(`${this.clientId}-${this.encryptionKey}`).toString()}`
+    } else {
+      return `${rawKey}-${this.clientId}`
+    }
   }
 }
