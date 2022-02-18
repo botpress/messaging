@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@master
       - uses: actions/setup-node@v2
         with:
-          node-version: '16.13.2'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
@@ -39,7 +39,7 @@ jobs:
             postgres:latest
       - uses: actions/setup-node@v2
         with:
-          node-version: '16.13.2'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
@@ -74,7 +74,7 @@ jobs:
             postgres:latest
       - uses: actions/setup-node@v2
         with:
-          node-version: '16.13.2'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
@@ -109,7 +109,7 @@ jobs:
             postgres:latest
       - uses: actions/setup-node@v2
         with:
-          node-version: '16.13.2'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
@@ -144,7 +144,7 @@ jobs:
             postgres:latest
       - uses: actions/setup-node@v2
         with:
-          node-version: '16.13.2'
+          node-version-file: '.nvmrc'
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
