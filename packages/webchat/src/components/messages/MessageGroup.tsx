@@ -19,39 +19,6 @@ class MessageGroup extends React.Component<Props> {
     return { hasError: true }
   }
 
-  /**
-   * @deprecated 12.0
-   * Here, we convert old format to the new format Botpress uses internally.
-   * - payload: all the data (raw, whatever) that is necessary to display the element
-   * - type: extracted from payload for easy sorting
-   */
-  convertPayloadFromOldFormat = (data: any) => {
-    let payload = data.payload || data.message_data || data.message_raw || { text: data.message_text }
-    if (!payload.type) {
-      payload.type = data.message_type || data.message_data?.type || 'text'
-    }
-
-    // Keeping compatibility with old schema for the quick reply
-    if (data.message_type === 'quick_reply' && !payload.text) {
-      payload.text = data.message_text
-    }
-
-    if (data.message_type === 'file' && !payload.url) {
-      payload.url = data.message_data?.url || data.message_raw?.url
-    }
-
-    if (this.props.messageWrapper && payload.type !== 'session_reset') {
-      payload = {
-        type: 'custom',
-        module: this.props.messageWrapper.module,
-        component: this.props.messageWrapper.component,
-        wrapped: payload
-      }
-    }
-
-    return payload
-  }
-
   onAudioEnded = () => {
     if (this.state.audioPlayingIndex >= this.props.messages.length - 1) {
       this.state.audioPlayingIndex = -1
@@ -89,15 +56,12 @@ class MessageGroup extends React.Component<Props> {
             </span>
             {sortBy(messages, ['sent_on', 'eventId']).map((message, i, messages) => {
               const isLastMsg = i === messages.length - 1
-              const payload = this.convertPayloadFromOldFormat(message)
+              const payload = message.payload
 
-              const showInlineFeedback =
-                isBot && isLastMsg && (payload.wrapped ? payload.wrapped.collectFeedback : payload.collectFeedback)
-
+              const showInlineFeedback = isBot && isLastMsg && payload.collectFeedback
               return (
                 <Message
                   key={`${message.id}-${message.payload.type}`}
-                  isHighlighted={this.props.highlightedMessages && this.props.highlightedMessages.includes(message.id)}
                   inlineFeedback={
                     showInlineFeedback && (
                       <InlineFeedback
@@ -136,9 +100,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   onFeedback: store.sendFeedback,
   onSendData: store.sendData,
   onFileUpload: store.uploadFile,
-  messageWrapper: store.messageWrapper,
-  showUserName: store.config.showUserName,
-  highlightedMessages: store.view.highlightedMessages
+  showUserName: store.config.showUserName
 }))(MessageGroup)
 
 type Props = {
@@ -151,5 +113,4 @@ type Props = {
   onSendData?: any
   onFeedback?: any
   store?: RootStore
-  highlightedMessages?: string[]
-} & Pick<StoreDef, 'showUserName' | 'messageWrapper'>
+} & Pick<StoreDef, 'showUserName'>

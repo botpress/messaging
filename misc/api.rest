@@ -112,7 +112,6 @@ Content-Type: application/json
 
 {
   "conversationId": "{{convoId}}",
-  "authorId": null,
   "payload": {
     "type": "text",
     "text": "Hello this is a text message!"

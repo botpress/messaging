@@ -36,14 +36,14 @@ body {
   color: #000000;
 }
 
-.bp-emulator-history .bpw-chat-bubble {
+.bpw-chat-bubble {
   color: #000000;
   background: none;
   border: 0px;
   display: inline-block;
 }
 
-.bp-emulator-history .bpw-bubble-carousel {
+.bpw-bubble-carousel {
   display: block;
   margin-left: 30px;
 }
@@ -366,11 +366,11 @@ body {
   justify-content: space-evenly;
 }
 
-.bpw-from-bot .bpw-bubble-highlight .bpw-chat-bubble-content {
+.bpw-from-bot .bpw-chat-bubble-content {
   background-color: rgba(255, 192, 114, 0.25);
 }
 
-.bpw-from-user .bpw-bubble-highlight .bpw-chat-bubble-content {
+.bpw-from-user .bpw-chat-bubble-content {
   background-color: #ffa73a;
 }
 
@@ -526,8 +526,6 @@ body {
 }
 
 /* Custom styling for the login form*/
-.bpw-form-container {
-}
 .bpw-form-container label {
   display: block;
 }

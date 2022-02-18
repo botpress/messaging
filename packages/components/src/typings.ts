@@ -17,7 +17,6 @@ export interface MessageConfig {
   authorId?: uuid
   sentOn: Date
   escapeHTML: boolean
-  isInEmulator: boolean
   intl: IntlShape
   showTimestamp: boolean
   noMessageBubble: boolean

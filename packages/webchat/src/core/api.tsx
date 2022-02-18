@@ -203,14 +203,6 @@ export default class WebchatApi {
     }
   }
 
-  async listByIncomingEvent(messageId: uuid) {
-    const { data: messages } = await this.axios.get(`/messaging/list-by-incoming-event/${messageId}`, {
-      baseURL: window['BOT_API_PATH']
-    })
-
-    return messages
-  }
-
   handleApiError = async (error: any) => {
     // @deprecated 11.9 (replace with proper error management)
     const data = get(error, 'response.data', {})

@@ -13,7 +13,6 @@ export const renderUnsafeHTML = (message: string = '', escaped: boolean): string
 
 export const defaultMessageConfig: MessageConfig = {
   escapeHTML: true,
-  isInEmulator: false,
   onSendData: async () => {
     console.warn('onSendData was called but no handler was configured, set message.config.onSendData')
     return

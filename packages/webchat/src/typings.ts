@@ -7,13 +7,7 @@ declare global {
     __BP_VISITOR_ID: string
     botpressWebChat: any
     store: RootStore
-    BOT_API_PATH: string
-    API_PATH: string
-    BOTPRESS_VERSION: string
-    BOT_NAME: string
-    ROOT_PATH: string
     BOT_ID: string
-    BP_BASE_PATH: string
     SEND_USAGE_STATS: boolean
     SHOW_POWERED_BY: boolean
     USE_SESSION_STORAGE: boolean
@@ -39,7 +33,6 @@ export namespace Renderer {
     keyboard?: any
     eventId?: string
 
-    isHighlighted?: boolean
     isLastGroup?: boolean
     isLastOfGroup?: boolean
     isBotMessage?: boolean
@@ -177,7 +170,6 @@ export interface Config {
   userIdScope?: string
   enableReset: boolean
   stylesheet?: string
-  isEmulator?: boolean
   extraStylesheet?: string
   showConversationsButton: boolean
   showUserName: boolean
@@ -334,14 +326,6 @@ export interface CustomAction {
   label: string
   /** The event triggered when the action is clicked */
   onClick: (actionId: string, messageProps: any, event: React.MouseEvent) => void
-}
-
-/** When set, this will wrap every messages displayed in the webchat */
-export interface MessageWrapper {
-  /** The name of the module hosting the component */
-  module: string
-  /** Name of the component exposed by the module */
-  component: string
 }
 
 export interface EventFeedback {
