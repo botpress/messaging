@@ -19,7 +19,7 @@ export default class BpSocket {
 
   constructor(config: Config) {
     this.chatId = config.chatId
-    this.encryptionKey = config.encryptionKey || config.clientId
+    this.encryptionKey = config.encryptionKey
     this.clientId = config.clientId
     this.socket = new MessagingSocket({ url: config.messagingUrl, clientId: config.clientId })
   }
@@ -107,12 +107,12 @@ export default class BpSocket {
   }
 
   private getStorageKey(key: string) {
-    const rawKey = `bp-chat-${key}-${this.clientId}`
+    const rawKey = `bp-chat-${key}`
 
     if (this.encryptionKey?.length) {
-      return SHA256(`${rawKey}-${this.encryptionKey}`).toString()
+      return `${rawKey}-${SHA256(`${this.clientId}-${this.encryptionKey}`).toString()}`
     } else {
-      return rawKey
+      return `${rawKey}-${this.clientId}`
     }
   }
 }
