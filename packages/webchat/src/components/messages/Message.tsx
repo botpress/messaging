@@ -30,10 +30,6 @@ class Message extends Component<MessageProps> {
     )
   }
 
-  async onMessageClicked() {
-    await this.props.store!.loadEventInDebugger(this.props.messageId!, true)
-  }
-
   render() {
     if (this.state.hasError) {
       return '* Cannot display message *'
@@ -84,7 +80,6 @@ class Message extends Component<MessageProps> {
       <div
         className={classnames(this.props.className, wrappedClass, 'bpw-chat-bubble', `bpw-bubble-${type}`)}
         data-from={this.props.fromLabel}
-        onClick={() => this.onMessageClicked()}
         tabIndex={-1}
         style={additionalStyle}
       >
