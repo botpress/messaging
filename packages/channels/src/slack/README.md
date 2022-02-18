@@ -1,3 +1,5 @@
+# Slack (v1.0.0)
+
 ### Sending
 
 | Channels | Slack |

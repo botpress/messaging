@@ -1,3 +1,5 @@
+# Telegram (v1.0.0)
+
 ### Sending
 
 | Channels | Telegram |
