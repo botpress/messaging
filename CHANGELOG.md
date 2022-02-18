@@ -1,3 +1,18 @@
+## [1.1.3](https://github.com/botpress/messaging/compare/v1.1.2...v1.1.3) (2022-02-18)
+
+
+### Bug Fixes
+
+* **channels:** logging incorrect webhook ([#381](https://github.com/botpress/messaging/issues/381)) ([cf5a296](https://github.com/botpress/messaging/commit/cf5a2960405ea8ea0aaa9795c06f592807052736))
+* **client:** wrong typing ([#376](https://github.com/botpress/messaging/issues/376)) ([307b9f8](https://github.com/botpress/messaging/commit/307b9f82153e15d1020c70bbadfa4b72893291cc))
+
+
+### Features
+
+* **webchat:** local storage encryption ([#377](https://github.com/botpress/messaging/issues/377)) ([be16c91](https://github.com/botpress/messaging/commit/be16c91896f5a100dc18ef9b1794c50aa56fcd68))
+
+
+
 ## [1.1.2](https://github.com/botpress/messaging/compare/v1.1.1...v1.1.2) (2022-02-17)
 
 
