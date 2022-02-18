@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-channels",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",

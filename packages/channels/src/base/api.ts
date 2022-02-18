@@ -23,7 +23,7 @@ export class ChannelApi<TService extends ChannelService<any, any>> {
       this.service.logger?.info(
         `[${scope}] ${clc.bold(name.charAt(0).toUpperCase() + name.slice(1))}${
           path ? ' ' + path : ''
-        } webhook ${clc.blackBright(`${externalUrl}/${name}${path ? `/${path}` : ''}`)}`
+        } webhook ${clc.blackBright(`${externalUrl}${path ? `/${path}` : ''}`)}`
       )
     }
   }
