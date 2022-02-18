@@ -122,19 +122,14 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
                 onNotAvailable={this.onVoiceNotAvailable}
               />
             )}
-            {/* TODO: unmcomment this
+            {/* TODO: uncomment this
              <ToolTip
               childId="btn-send"
               content={
-                this.props.isEmulator
-                  ? this.props.intl.formatMessage({
-                      id: 'composer.interact',
-                      defaultMessage: 'Interact with your chatbot'
-                    })
-                  : this.props.intl.formatMessage({
-                      id: 'composer.sendMessage',
-                      defaultMessage: 'Send Message'
-                    })
+                this.props.intl.formatMessage({
+                  id: 'composer.sendMessage',
+                  defaultMessage: 'Send Message'
+                })
               }
             >
               <button
@@ -177,7 +172,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   enableResetSessionShortcut: store.config.enableResetSessionShortcut,
   resetSession: store.resetSession,
   currentConversation: store.currentConversation,
-  isEmulator: store.isEmulator,
   preferredLanguage: store.preferredLanguage
 }))(injectIntl(observer(Composer)))
 
@@ -203,7 +197,6 @@ type ComposerProps = {
     | 'message'
     | 'enableArrowNavigation'
     | 'resetSession'
-    | 'isEmulator'
     | 'enableResetSessionShortcut'
     | 'enableVoiceComposer'
     | 'currentConversation'

@@ -42,7 +42,6 @@ class Message extends Component<MessageProps> {
     const type = this.props.type || (this.props.payload && this.props.payload.type)
     const wrappedType = this.props.payload && this.props.payload.wrapped && this.props.payload.wrapped.type
     const wrappedClass = `bpw-bubble-${wrappedType}`
-    const isEmulator = this.props.store!.config.isEmulator
 
     const rendered = (
       <ReactMessageRenderer
@@ -62,7 +61,6 @@ class Message extends Component<MessageProps> {
           shouldPlay: this.props.shouldPlay,
           intl: this.props.store!.intl,
           escapeHTML: true,
-          isInEmulator: this.props.store!.config.isEmulator!,
           showTimestamp: this.props.store!.config.showTimestamp
         }}
       />
@@ -84,10 +82,7 @@ class Message extends Component<MessageProps> {
 
     return (
       <div
-        className={classnames(this.props.className, wrappedClass, 'bpw-chat-bubble', `bpw-bubble-${type}`, {
-          'bpw-bubble-highlight': this.props.isHighlighted,
-          'bpw-msg-hovering': isEmulator
-        })}
+        className={classnames(this.props.className, wrappedClass, 'bpw-chat-bubble', `bpw-bubble-${type}`)}
         data-from={this.props.fromLabel}
         onClick={() => this.onMessageClicked()}
         tabIndex={-1}

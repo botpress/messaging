@@ -24,7 +24,6 @@ class Web extends React.Component<MainProps> {
   private parentClass!: string
   private hasBeenInitialized: boolean = false
   private audio!: HTMLAudioElement
-  private lastMessageId!: uuid
 
   constructor(props: MainProps) {
     super(props)
@@ -39,18 +38,7 @@ class Web extends React.Component<MainProps> {
     window.store = this.props.store
 
     window.addEventListener('message', this.handleIframeApi)
-    window.addEventListener('keydown', (e) => {
-      if (!this.props.config!.closeOnEscape) {
-        return
-      }
-      if (e.key === 'Escape') {
-        this.props.hideChat!()
-        // TODO: what to do with emulator mode?
-        if (this.props.config!.isEmulator) {
-          window.parent.document!.getElementById('mainLayout')!.focus()
-        }
-      }
-    })
+    window.addEventListener('keydown', this.handleKeyDown)
 
     await this.load()
     await this.initializeIfChatDisplayed()
@@ -60,12 +48,12 @@ class Web extends React.Component<MainProps> {
 
   componentWillUnmount() {
     window.removeEventListener('message', this.handleIframeApi)
+    window.removeEventListener('keydown', this.handleKeyDown)
   }
 
   componentDidUpdate() {
     if (this.config) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this.initializeIfChatDisplayed()
+      void this.initializeIfChatDisplayed()
     }
   }
 
@@ -103,9 +91,10 @@ class Web extends React.Component<MainProps> {
       this.postMessageToParent('setWidth', this.config.containerWidth)
     }
 
-    if (this.config.reference) {
-      await this.props.setReference!()
-    }
+    // TODO: properly implement of deprecate this feature
+    //if (this.config.reference) {
+    //  await this.props.setReference!()
+    //}
 
     // TODO: replace this by frontend configuration
     // await this.props.fetchBotInfo!()
@@ -194,7 +183,17 @@ class Web extends React.Component<MainProps> {
   }
 
   isCurrentConversation = (event: Message) => {
-    return !this.props.config?.conversationId || this.props.config.conversationId === event.conversationId
+    return !this.props.config?.conversationId || this.props.config?.conversationId === event.conversationId
+  }
+
+  handleKeyDown = async (e: KeyboardEvent) => {
+    if (!this.props.config?.closeOnEscape) {
+      return
+    }
+
+    if (e.key === 'Escape') {
+      this.props.hideChat!()
+    }
   }
 
   handleIframeApi = async ({ data: { action, payload } }: { data: { action: any; payload: any } }) => {
@@ -204,8 +203,6 @@ class Web extends React.Component<MainProps> {
       this.props.mergeConfig!(payload)
     } else if (action === 'sendPayload') {
       await this.props.sendData!(payload)
-    } else if (action === 'change-user-id') {
-      this.props.store.setUserId(payload)
     } else if (action === 'event') {
       const { type, text } = payload
 
@@ -259,17 +256,12 @@ class Web extends React.Component<MainProps> {
     await this.props.addEventToConversation!(event)
 
     // there's no focus on the actual conversation
-    if ((document.hasFocus && !document.hasFocus()) || this.props.activeView !== 'side') {
+    if (!document.hasFocus() || this.props.activeView !== 'side') {
       await this.playSound()
       this.props.incrementUnread!()
     }
 
     this.handleResetUnreadCount()
-
-    if (!['session_reset'].includes(event.payload.type) && event.id !== this.lastMessageId) {
-      this.lastMessageId = event.id
-      await this.props.store.loadEventInDebugger(event.id)
-    }
   }
 
   handleTyping = async (event: Message) => {
@@ -316,7 +308,7 @@ class Web extends React.Component<MainProps> {
   }
 
   handleResetUnreadCount = () => {
-    if (document.hasFocus?.() && this.props.activeView === 'side') {
+    if (document.hasFocus() && this.props.activeView === 'side') {
       this.props.resetUnread!()
     }
   }
@@ -331,7 +323,7 @@ class Web extends React.Component<MainProps> {
         className={classnames('bpw-widget-btn', 'bpw-floating-button', {
           [`bpw-anim-${this.props.widgetTransition}` || 'none']: true
         })}
-        aria-label={this.props.intl!.formatMessage({ id: 'widget.toggle' })}
+        aria-label={this.props.intl.formatMessage({ id: 'widget.toggle' })}
         onClick={this.props.showChat!.bind(this)}
       >
         <ChatIcon />
@@ -341,8 +333,7 @@ class Web extends React.Component<MainProps> {
   }
 
   applyAndRenderStyle() {
-    const emulatorClass = this.props.isEmulator ? ' emulator' : ''
-    const parentClass = classnames(`bp-widget-web bp-widget-${this.props.activeView}${emulatorClass}`, {
+    const parentClass = classnames(`bp-widget-web bp-widget-${this.props.activeView}`, {
       'bp-widget-hidden': !this.props.showWidgetButton && this.props.displayWidgetView,
       [this.props.config!.className!]: !!this.props.config!.className
     })
@@ -399,7 +390,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   updateTyping: store.updateTyping,
   sendMessage: store.sendMessage,
   setReference: store.setReference,
-  isEmulator: store.isEmulator,
   updateBotUILanguage: store.updateBotUILanguage,
   isWebchatReady: store.view.isWebchatReady,
   showWidgetButton: store.view.showWidgetButton,
@@ -431,7 +421,6 @@ type MainProps = { store: RootStore } & WrappedComponentProps &
     | 'setUserId'
     | 'sendData'
     | 'intl'
-    | 'isEmulator'
     | 'updateTyping'
     | 'setReference'
     | 'updateBotUILanguage'

@@ -278,18 +278,6 @@ class Header extends React.Component<HeaderProps> {
       })
     }
 
-    if (this.props.isEmulator) {
-      return (
-        <div className="bpw-emulator-header">
-          <span className="bpw-emulator-header-tab">Emulator</span>
-          <div>
-            <span className="bpw-emulator-buttons">{this.props.showResetButton && this.renderResetButton()}</span>
-            {/* <MoreOptions show={this.state.showingOption} onToggle={this.setShowingOption} items={optionsItems} /> */}
-          </div>
-        </div>
-      )
-    }
-
     return (
       <div className={'bpw-header-container'}>
         <div className={'bpw-header-title-flexbox'}>
@@ -335,7 +323,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   botName: store.botName,
   botAvatarUrl: store.botAvatarUrl,
   hasBotInfoDescription: store.hasBotInfoDescription,
-  isEmulator: store.isEmulator,
   botConvoDescription: store.config.botConvoDescription,
   enableArrowNavigation: store.config.enableArrowNavigation
 }))(observer(Header))
@@ -349,7 +336,6 @@ type HeaderProps = Pick<
   | 'focusedArea'
   | 'isConversationsDisplayed'
   | 'botName'
-  | 'isEmulator'
   | 'hasUnreadMessages'
   | 'unreadCount'
   | 'hasBotInfoDescription'

@@ -32,7 +32,6 @@ class Container extends React.Component<ContainerProps> {
       return (
         <div
           className={classnames('bpw-msg-list-container', {
-            'bpw-emulator': this.props.isEmulator,
             'bpw-rtl': this.props.rtl
           })}
         >
@@ -72,7 +71,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   isFullscreen: store.view.isFullscreen,
   sideTransition: store.view.sideTransition,
   dimensions: store.view.dimensions,
-  isEmulator: store.isEmulator,
   isInitialized: store.isInitialized,
   isPoweredByDisplayed: store.view.isPoweredByDisplayed,
   config: store.config,
@@ -91,7 +89,6 @@ type ContainerProps = { store?: RootStore } & WrappedComponentProps &
     | 'sideTransition'
     | 'isInitialized'
     | 'dimensions'
-    | 'isEmulator'
     | 'isPoweredByDisplayed'
     | 'rtl'
   >

@@ -14,7 +14,6 @@ import {
   CurrentConversation,
   EventFeedback,
   Message,
-  MessageWrapper,
   QueuedMessage,
   RecentConversation,
   StudioConnector,
@@ -62,10 +61,6 @@ class RootStore {
 
   public isBotTyping = observable.box(false)
 
-  /** When a wrapper is defined, every messages are wrapped by the specified component */
-  @observable
-  public messageWrapper: MessageWrapper | undefined
-
   @observable
   public botUILanguage: string = chosenLocale
 
@@ -98,11 +93,6 @@ class RootStore {
   @computed
   get botName(): string {
     return this.config?.botName || this.botInfo?.name || 'Bot'
-  }
-
-  @computed
-  get isEmulator(): boolean {
-    return this.config?.isEmulator || false
   }
 
   @computed
@@ -169,17 +159,6 @@ class RootStore {
 
       this.clearMessages()
     }
-  }
-
-  @action.bound
-  async loadEventInDebugger(messageId: uuid, isManual?: boolean): Promise<void> {
-    if (!this.config.isEmulator || !messageId) {
-      return
-    }
-
-    const messages = await this.api.listByIncomingEvent(messageId)
-    this.view.setHighlightedMessages(messages)
-    window.parent.postMessage({ action: 'load-event', payload: { messageId, isManual } }, '*')
   }
 
   @action.bound
@@ -466,11 +445,6 @@ class RootStore {
   @action.bound
   publishConfigChanged() {
     this.postMessage('configChanged', JSON.stringify(this.config, undefined, 2))
-  }
-
-  @action.bound
-  setMessageWrapper(messageWrapper: MessageWrapper) {
-    this.messageWrapper = messageWrapper
   }
 
   @action.bound
