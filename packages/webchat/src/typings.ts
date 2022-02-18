@@ -228,6 +228,8 @@ export interface Config {
   chatId?: string
   /** CSS class to be applied to iframe */
   className?: string
+  /** Key used to encrypt data in the localStorage */
+  encryptionKey?: string
 }
 
 export type OverridableComponents = 'below_conversation' | 'before_container' | 'composer'
