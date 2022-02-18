@@ -38,7 +38,7 @@ export class VonageCarouselRenderer extends CarouselRenderer {
   }
 
   endRenderCard(context: Context, card: CardContent) {
-    const body = `*${card.title}*\n\n${`${card.subtitle}\n\n` || ''}${context.options
+    const body = `*${card.title}*\n\n${card.subtitle ? `${card.subtitle}\n\n` : ''}${context.options
       .map(({ title }, idx) => `*(${idx + context.allOptions.length + 1})* ${title}`)
       .join('\n')}`
 

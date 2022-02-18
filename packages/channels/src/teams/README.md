@@ -2,30 +2,30 @@
 
 ### Sending
 
-| Channels | Teams |
-| -------- | :---: |
-| Text     |  ✅   |
-| Image    |  ✅   |
-| Choice   |  ✅   |
-| Dropdown |  ✅   |
-| Card     |  ✅   |
-| Carousel |  ✅   |
-| File     |  ✅   |
-| Audio    |  ✅   |
-| Video    |  ✅   |
-| Location |  ✅   |
+| Channels | Teams | Details               |
+| -------- | :---: | :-------------------- |
+| Text     |  ✅   |                       |
+| Image    |  ✅   |                       |
+| Choice   |  ✅   |                       |
+| Dropdown |  ✅   |                       |
+| Card     |  ✅   |                       |
+| Carousel |  ✅   |                       |
+| File     |  ✅   | File sent as text     |
+| Audio    |  ✅   | Audio sent as text    |
+| Video    |  ✅   | Video sent as text    |
+| Location |  ✅   | Location sent as text |
 
 ### Receiving
 
-| Channels      | Teams |
-| ------------- | :---: |
-| Text          |  ✅   |
-| Quick Reply   |  ✅   |
-| Postback      |  ✅   |
-| Say Something |  ✅   |
-| Voice         |  ❌   |
-| Image         |  ❌   |
-| File          |  ❌   |
-| Audio         |  ❌   |
-| Video         |  ❌   |
-| Location      |  ❌   |
+| Channels      | Teams | Details |
+| ------------- | :---: | :------ |
+| Text          |  ✅   |         |
+| Quick Reply   |  ✅   |         |
+| Postback      |  ✅   |         |
+| Say Something |  ✅   |         |
+| Voice         |  ❌   |         |
+| Image         |  ❌   |         |
+| File          |  ❌   |         |
+| Audio         |  ❌   |         |
+| Video         |  ❌   |         |
+| Location      |  ❌   |         |
