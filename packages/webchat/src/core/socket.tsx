@@ -19,7 +19,7 @@ export default class BpSocket {
 
   constructor(config: Config) {
     this.chatId = config.chatId
-    this.encryptionKey = config.encryptionKey
+    this.encryptionKey = config.encryptionKey || config.clientId
     this.clientId = config.clientId
     this.socket = new MessagingSocket({ url: config.messagingUrl, clientId: config.clientId })
   }
@@ -112,7 +112,7 @@ export default class BpSocket {
     if (this.encryptionKey?.length) {
       return SHA256(`${rawKey}-${this.encryptionKey}`).toString()
     } else {
-      return key
+      return rawKey
     }
   }
 }
