@@ -2,18 +2,18 @@
 
 ### Sending
 
-| Channels | Messenger | Details                    |
-| -------- | :-------: | :------------------------- |
-| Text     |    ✅     |                            |
-| Image    |    ✅     |                            |
-| Choice   |    ✅     |                            |
-| Dropdown |    ✅     |                            |
-| Card     |    ✅     |                            |
-| Carousel |    ✅     |                            |
-| File     |    ✅     | File sent as text link     |
-| Audio    |    ✅     | Audio sent as text link    |
-| Video    |    ✅     | Video sent as text link    |
-| Location |    ✅     | Location sent as text link |
+| Channels | Messenger | Details                           |
+| -------- | :-------: | :-------------------------------- |
+| Text     |    ✅     |                                   |
+| Image    |    ✅     |                                   |
+| Choice   |    ✅     |                                   |
+| Dropdown |    ✅     |                                   |
+| Card     |    ✅     |                                   |
+| Carousel |    ✅     |                                   |
+| File     |    ✅     | File sent as URL                  |
+| Audio    |    ✅     | Audio sent as URL                 |
+| Video    |    ✅     | Video sent as URL                 |
+| Location |    ✅     | Location sent as Google Maps Link |
 
 ### Receiving
 

@@ -9,7 +9,7 @@
 | Choice   |   ✅   |                       |
 | Dropdown |   ✅   |                       |
 | Card     |   ✅   | Buttons down rendered |
-| Carousel |   ✅   |                       |
+| Carousel |   ✅   | Buttons down rendered |
 | File     |   ✅   |                       |
 | Audio    |   ✅   |                       |
 | Video    |   ✅   |                       |
