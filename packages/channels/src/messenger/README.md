@@ -6,8 +6,8 @@
 | -------- | :-------: | :------------------------- |
 | Text     |    ✅     |                            |
 | Image    |    ✅     |                            |
-| Choice   |    ✅     | Choices down rendered      |
-| Dropdown |    ✅     | Choices down rendered      |
+| Choice   |    ✅     |                            |
+| Dropdown |    ✅     |                            |
 | Card     |    ✅     |                            |
 | Carousel |    ✅     |                            |
 | File     |    ✅     | File sent as text link     |
