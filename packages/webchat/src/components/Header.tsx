@@ -2,9 +2,6 @@ import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 
-// TODO: put this back
-// import confirmDialog from '../../../../../../packages/ui-shared-lite/ConfirmDialog'
-// import MoreOptions from '../../../../../../packages/ui-shared-lite/MoreOptions'
 import Close from '../icons/Close'
 import Delete from '../icons/Delete'
 import Download from '../icons/Download'
@@ -14,6 +11,8 @@ import Reload from '../icons/Reload'
 import { RootStore, StoreDef } from '../store'
 
 import Avatar from './common/Avatar'
+import confirmDialog from './common/ConfirmDialog'
+import MoreOptions from './common/MoreOptions'
 
 class Header extends React.Component<HeaderProps> {
   private btnEls: { [index: number]: HTMLElement } = {}
@@ -78,8 +77,6 @@ class Header extends React.Component<HeaderProps> {
   }
 
   handleDeleteConversation = async () => {
-    // TODO: put this back
-    /*
     if (
       await confirmDialog(
         this.props.intl!.formatMessage({
@@ -97,7 +94,6 @@ class Header extends React.Component<HeaderProps> {
     ) {
       await this.props.deleteConversation!()
     }
-    */
   }
 
   renderDeleteConversationButton() {

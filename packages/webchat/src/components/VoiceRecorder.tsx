@@ -2,9 +2,8 @@ import cx from 'classnames'
 import mime from 'mime/lite'
 import React, { FC, useCallback, useState, useEffect, useRef, Fragment } from 'react'
 
-// TODO: put this back
-// import Cancel from '../../../../../../packages/ui-shared-lite/Icons/Cancel'
-// import Microphone from '../../../../../../packages/ui-shared-lite/Icons/Microphone'
+import Cancel from '../icons/Cancel'
+import Microphone from '../icons/Microphone'
 
 interface Props {
   onDone: (voice: Buffer, ext: string) => Promise<void>
@@ -124,13 +123,11 @@ const VoiceRecorder: FC<Props> = (props: Props) => {
     <Fragment>
       {isRecording && (
         <button className={cx('bpw-send-button', props.className)} onClick={cancelRecording}>
-          {/* TODO: add this back
-           <Cancel fill="#ff0000" /> */}
+          <Cancel fill="#ff0000" />
         </button>
       )}
       <button className={cx('bpw-send-button', props.className)} onClick={isRecording ? stopRecording : startRecording}>
-        {/* TODO: add this back
-         <Microphone fill={isRecording ? '#f1f1f1' : 'black'} /> */}
+        <Microphone fill={isRecording ? '#f1f1f1' : 'black'} />
       </button>
     </Fragment>
   )

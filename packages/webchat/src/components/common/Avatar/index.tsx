@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 
 const Avatar = ({ name, avatarUrl, height, width }: AvatarProps) => {
   return (
