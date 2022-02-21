@@ -2,18 +2,18 @@
 
 ### Sending
 
-| Channels | Twilio | Details               |
-| -------- | :----: | :-------------------- |
-| Text     |   ✅   |                       |
-| Image    |   ✅   |                       |
-| Choice   |   ✅   | Choices down rendered |
-| Dropdown |   ✅   | Choices down rendered |
-| Card     |   ✅   | Buttons down rendered |
-| Carousel |   ✅   |                       |
-| File     |   ✅   |                       |
-| Audio    |   ✅   |                       |
-| Video    |   ✅   | Video sent as text    |
-| Location |   ✅   | Location sent as text |
+| Channels | Twilio | Details                    |
+| -------- | :----: | :------------------------- |
+| Text     |   ✅   |                            |
+| Image    |   ✅   |                            |
+| Choice   |   ✅   | Choices down rendered      |
+| Dropdown |   ✅   | Choices down rendered      |
+| Card     |   ✅   | Buttons down rendered      |
+| Carousel |   ✅   |                            |
+| File     |   ✅   |                            |
+| Audio    |   ✅   |                            |
+| Video    |   ✅   | Video sent as text link    |
+| Location |   ✅   | Location sent as text link |
 
 ### Receiving
 
