@@ -158,19 +158,6 @@ export default class WebchatApi {
     }
   }
 
-  async setReference(reference: string, conversationId: uuid): Promise<void> {
-    // TODO: this can't work. We don't have a reference route
-    try {
-      return this.axios.post(
-        '/conversations/reference',
-        { ...this.baseUserPayload, conversationId, reference },
-        this.axiosConfig
-      )
-    } catch (err) {
-      await this.handleApiError(err)
-    }
-  }
-
   // TODO: Remove this once we stop making HTTP calls
   handleApiError = async (error: any) => {
     // @deprecated 11.9 (replace with proper error management)
