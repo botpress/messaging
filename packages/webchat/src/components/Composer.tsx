@@ -1,10 +1,10 @@
 import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
-import { WrappedComponentProps, injectIntl } from 'react-intl'
+import { WrappedComponentProps, injectIntl, FormattedMessage } from 'react-intl'
 
-// import ToolTip from '../../../../../../packages/ui-shared-lite/ToolTip'
 import { RootStore, StoreDef } from '../store'
+import ToolTip from './common/ToolTip'
 
 import VoiceRecorder from './VoiceRecorder'
 
@@ -122,15 +122,12 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
                 onNotAvailable={this.onVoiceNotAvailable}
               />
             )}
-            {/* TODO: uncomment this
-             <ToolTip
+            <ToolTip
               childId="btn-send"
-              content={
-                this.props.intl.formatMessage({
-                  id: 'composer.sendMessage',
-                  defaultMessage: 'Send Message'
-                })
-              }
+              content={this.props.intl.formatMessage({
+                id: 'composer.sendMessage',
+                defaultMessage: 'Send Message'
+              })}
             >
               <button
                 className={'bpw-send-button'}
@@ -144,7 +141,7 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
               >
                 <FormattedMessage id={'composer.send'} />
               </button>
-            </ToolTip> */}
+            </ToolTip>
           </div>
         </div>
       </div>
