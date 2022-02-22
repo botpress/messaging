@@ -91,11 +91,6 @@ class Web extends React.Component<MainProps> {
       this.postMessageToParent('setWidth', this.config.containerWidth)
     }
 
-    // TODO: properly implement of deprecate this feature
-    //if (this.config.reference) {
-    //  await this.props.setReference!()
-    //}
-
     // TODO: replace this by frontend configuration
     // await this.props.fetchBotInfo!()
 
@@ -118,11 +113,10 @@ class Web extends React.Component<MainProps> {
         return options
       }
     }
-    const { options, ref } = queryString.parse(location.search)
+    const { options } = queryString.parse(location.search)
     const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
 
     const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, this.props.config, config)
-    userConfig.reference = config?.ref || ref
 
     this.props.updateConfig!(userConfig)
 
@@ -389,7 +383,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   setUserId: store.setUserId,
   updateTyping: store.updateTyping,
   sendMessage: store.sendMessage,
-  setReference: store.setReference,
   updateBotUILanguage: store.updateBotUILanguage,
   isWebchatReady: store.view.isWebchatReady,
   showWidgetButton: store.view.showWidgetButton,
@@ -422,7 +415,6 @@ type MainProps = { store: RootStore } & WrappedComponentProps &
     | 'sendData'
     | 'intl'
     | 'updateTyping'
-    | 'setReference'
     | 'updateBotUILanguage'
     | 'hideChat'
     | 'showChat'
