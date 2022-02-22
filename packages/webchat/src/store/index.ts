@@ -7,7 +7,7 @@ import { IntlShape } from 'react-intl'
 import WebchatApi from '../core/api'
 import BpSocket from '../core/socket'
 import { DEFAULT_TYPING_DELAY } from '../main'
-import { getUserLocale } from '../translations'
+import { getUserLocale, setUserLocale } from '../translations'
 import {
   BotInfo,
   Config,
@@ -26,9 +26,6 @@ import ViewStore from './view'
 
 /** Includes the partial definitions of all classes */
 export type StoreDef = Partial<RootStore> & Partial<ViewStore> & Partial<ComposerStore> & Partial<Config>
-
-const chosenLocale = getUserLocale()
-
 class RootStore {
   public composer: ComposerStore
   public view: ViewStore
@@ -62,7 +59,7 @@ class RootStore {
   public isBotTyping = observable.box(false)
 
   @observable
-  public botUILanguage: string = chosenLocale
+  public botUILanguage!: string
 
   public delayedMessages: QueuedMessage[] = []
 
@@ -72,6 +69,7 @@ class RootStore {
 
     if (config) {
       this.updateConfig(config)
+      this.botUILanguage = getUserLocale()
     }
   }
 
@@ -213,7 +211,7 @@ class RootStore {
       await this.createConversation()
     }
 
-    await this.fetchPreferences()
+    this.fetchLanguage()
   }
 
   @action.bound
@@ -229,14 +227,11 @@ class RootStore {
   }
 
   @action.bound
-  async fetchPreferences(): Promise<void> {
-    // TODO: where to fetch this from? Can this just be set in the frontend?
-    const preferences = { language: 'en' } // await this.api.fetchPreferences()
-    if (!preferences.language) {
-      return
-    }
+  fetchLanguage(): void {
+    const language = getUserLocale(this.config.locale)
+
     runInAction('-> setPreferredLanguage', () => {
-      this.updateBotUILanguage(preferences.language)
+      this.updateBotUILanguage(language)
     })
   }
 
@@ -410,6 +405,8 @@ class RootStore {
   }
 
   private _applyConfig() {
+    window.BP_STORAGE.setKeyPrefix(`bp-chat-${this.config.clientId}`)
+
     this.config.layoutWidth && this.view.setLayoutWidth(this.config.layoutWidth)
     this.config.containerWidth && this.view.setContainerWidth(this.config.containerWidth)
     this.view.disableAnimations = this.config.disableAnimations
@@ -426,7 +423,7 @@ class RootStore {
       console.warn('[WebChat] "useSessionStorage" value cannot be altered once the webchat is initialized')
     }
 
-    const locale = this.config.locale ? getUserLocale(this.config.locale) : chosenLocale
+    const locale = getUserLocale(this.config.locale)
     this.updateBotUILanguage(locale)
     document.documentElement.setAttribute('lang', locale)
 
@@ -448,9 +445,9 @@ class RootStore {
   }
 
   @action.bound
-  async updatePreferredLanguage(lang: string): Promise<void> {
+  updatePreferredLanguage(lang: string): void {
     this.preferredLanguage = lang
-    await this.api.updateUserPreferredLanguage(lang)
+    setUserLocale(lang)
   }
 
   /** Starts a timer to remove the typing animation when it's completed */
@@ -487,7 +484,7 @@ class RootStore {
     runInAction('-> setBotUILanguage', () => {
       this.botUILanguage = lang
       this.preferredLanguage = lang
-      window.BP_STORAGE?.set('bp/channel-web/user-lang', lang)
+      setUserLocale(lang)
     })
   }
 

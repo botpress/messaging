@@ -36,9 +36,9 @@ class BotInfoPage extends React.Component<BotInfoProps> {
     return <div className={'bpw-botinfo-description'} dangerouslySetInnerHTML={{ __html: html }} />
   }
 
-  changeLanguage = async (e: any) => {
+  changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value
-    await this.props.updatePreferredLanguage!(lang)
+    this.props.updatePreferredLanguage!(lang)
   }
 
   render() {

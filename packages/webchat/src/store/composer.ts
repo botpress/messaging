@@ -7,7 +7,7 @@ import constants from '../core/constants'
 import { RootStore } from '.'
 
 const HISTORY_UP = 'ArrowUp'
-const SENT_HISTORY_KEY = `bp::${window.BOT_ID}::sentHistory`
+const SENT_HISTORY_KEY = 'sent-history'
 
 class ComposerStore {
   private rootStore: RootStore
@@ -30,9 +30,7 @@ class ComposerStore {
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
 
-    if (window.BP_STORAGE) {
-      this._sentHistory = window.BP_STORAGE.get(SENT_HISTORY_KEY) || []
-    }
+    this._sentHistory = window.BP_STORAGE.get(SENT_HISTORY_KEY) || []
   }
 
   @computed
@@ -52,7 +50,7 @@ class ComposerStore {
       this._sentHistoryIndex = 0
 
       if (this.rootStore.config.enablePersistHistory) {
-        window.BP_STORAGE?.set(SENT_HISTORY_KEY, takeRight(this._sentHistory, constants.SENT_HISTORY_SIZE))
+        window.BP_STORAGE.set(SENT_HISTORY_KEY, takeRight(this._sentHistory, constants.SENT_HISTORY_SIZE))
       }
     }
   }

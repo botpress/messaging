@@ -3,7 +3,7 @@ import { AxiosInstance, AxiosRequestConfig } from 'axios'
 import get from 'lodash/get'
 import { v4 as uuidv4 } from 'uuid'
 import { RecentConversation } from '..'
-import { EventFeedback, uuid } from '../typings'
+import { uuid } from '../typings'
 import BpSocket from './socket'
 
 export default class WebchatApi {
@@ -13,35 +13,20 @@ export default class WebchatApi {
 
   constructor(private socket: BpSocket) {}
 
+  // TODO: Do we still need this?
   private get baseUserPayload() {
     return {
       webSessionId: window.__BP_VISITOR_SOCKET_ID
     }
   }
 
+  // TODO: Fix this
   async fetchBotInfo() {
     try {
       const { data } = await this.axios.get('/botInfo', this.axiosConfig)
       return data
     } catch (err) {
       console.error('Error while loading bot info', err)
-    }
-  }
-
-  async fetchPreferences() {
-    try {
-      const { data } = await this.axios.post('/preferences/get', this.baseUserPayload, this.axiosConfig)
-      return data
-    } catch (err) {
-      console.error('Error while fetching preferences', err)
-    }
-  }
-
-  async updateUserPreferredLanguage(language: string) {
-    try {
-      await this.axios.post('/preferences', { ...this.baseUserPayload, language }, this.axiosConfig)
-    } catch (err) {
-      console.error('Error in updating user preferred language', err)
     }
   }
 
@@ -78,6 +63,7 @@ export default class WebchatApi {
     }
   }
 
+  // TODO: Fis this
   async resetSession(conversationId: uuid): Promise<void> {
     try {
       await this.axios.post('/conversations/reset', { ...this.baseUserPayload, conversationId }, this.axiosConfig)
@@ -103,6 +89,7 @@ export default class WebchatApi {
     }
   }
 
+  // TODO: Fix this
   async downloadConversation(conversationId: uuid): Promise<any> {
     try {
       const { data } = await this.axios.post(
@@ -135,6 +122,7 @@ export default class WebchatApi {
     }
   }
 
+  // TODO: Fix this
   async deleteMessages(conversationId: uuid) {
     try {
       await this.axios.post(
@@ -150,15 +138,6 @@ export default class WebchatApi {
   async sendFeedback(feedback: number, messageId: uuid): Promise<void> {
     try {
       return this.socket.socket.sendFeedback(messageId, feedback)
-    } catch (err) {
-      await this.handleApiError(err)
-    }
-  }
-
-  async getMessageIdsFeedbackInfo(messageIds: uuid[]): Promise<EventFeedback[] | undefined> {
-    try {
-      const { data } = await this.axios.post('/feedbackInfo', { messageIds, target: this.userId }, this.axiosConfig)
-      return data
     } catch (err) {
       await this.handleApiError(err)
     }
@@ -203,6 +182,7 @@ export default class WebchatApi {
     }
   }
 
+  // TODO: Remove this once we stop making HTTP calls
   handleApiError = async (error: any) => {
     // @deprecated 11.9 (replace with proper error management)
     const data = get(error, 'response.data', {})
