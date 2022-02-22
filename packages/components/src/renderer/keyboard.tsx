@@ -60,16 +60,19 @@ export class Append extends React.Component<Partial<KeyboardElementsProps>> {
   }
 }
 
-export class Keyboard extends React.Component<Partial<KeyboardElementsProps>> {
+export class Keyboard extends React.Component<Partial<KeyboardElementsProps> & { onRendered?: () => void }> {
   static prependRef: React.RefObject<HTMLDivElement> = React.createRef()
   static appendRef: React.RefObject<HTMLDivElement> = React.createRef()
   static isReady = () => Keyboard.appendRef.current !== null
+
+  componentDidMount(): void {
+    this.props.onRendered?.()
+  }
 
   render() {
     return (
       <div className={'bpw-keyboard'}>
         <div ref={Keyboard.prependRef} />
-        {this.props.children}
         <div ref={Keyboard.appendRef} />
       </div>
     )
