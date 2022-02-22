@@ -1,3 +1,6 @@
+// Makes sure storage is always available
+import './utils/storage'
+
 import { configure } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import React from 'react'

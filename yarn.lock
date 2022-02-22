@@ -2416,6 +2416,7 @@ __metadata:
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.0.2
     "@types/crypto-js": ^4.1.1
+    "@types/js-cookie": ^3.0.1
     "@types/lodash": ^4.14.178
     "@types/mime": ^2.0.3
     "@types/node": ^16.11.13
@@ -2426,6 +2427,7 @@ __metadata:
     classnames: ^2.3.1
     crypto-js: ^4.1.1
     date-fns: ^1.30.1
+    js-cookie: ^3.0.1
     lodash: ^4.17.21
     mime: ^3.0.0
     mobx: 5.15.7
@@ -6133,6 +6135,13 @@ __metadata:
     jest-diff: ^27.0.0
     pretty-format: ^27.0.0
   checksum: d2350267f954f9a2e4a15e5f02fbf19a77abfb9fd9e57a954de1fb0e9a0d3d5f8d3646ac7d9c42aeb4b4d828d2e70624ec149c85bb50a48634a54eed8429e1f8
+  languageName: node
+  linkType: hard
+
+"@types/js-cookie@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@types/js-cookie@npm:3.0.1"
+  checksum: 134abb4a3f139ae791bdef3735ab14c4c098cb564b34363cc8f0aa6210a715e5e4f25b53717b32acb18099d53221e4f13776917e65ac54b3a60ee676a943abdc
   languageName: node
   linkType: hard
 
@@ -15127,6 +15136,13 @@ __metadata:
     "@sideway/formula": ^3.0.0
     "@sideway/pinpoint": ^2.0.0
   checksum: eaf62f6c02f2edb1042f1ab04fc23a5918a2cb8f54bec84c6e1033624d8a462c10ae9518af55a3ba84f1793960450d58094eda308e7ef93c17edd4e3c8ef31d5
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "js-cookie@npm:3.0.1"
+  checksum: bb48de67e2a6bd1ae3dfd6b2d5a167c33dd0c5a37e909206161eb0358c98f17cb55acd55827a58e9eea3630d89444e7479f7938ef4420dda443218b8c434a4c3
   languageName: node
   linkType: hard
 
