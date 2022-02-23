@@ -163,8 +163,8 @@ export class MessagingClient extends ProtectedEmitter<{
 
   /**
    * Lists the conversations that a user participates in
-   * @param userId id of the user that owns the conversations
-   * @param limit max amount of conversations to list
+   * @param userId id of the user that participates in the conversations
+   * @param limit max amount of conversations to list (default 20)
    * @returns an array of conversations
    */
   async listConversations(userId: uuid, limit?: number): Promise<Conversation[]> {
@@ -200,7 +200,7 @@ export class MessagingClient extends ProtectedEmitter<{
   /**
    * Lists the messages of a conversation
    * @param conversationId id of the conversation that owns the messages
-   * @param limit max amount of messages to list
+   * @param limit max amount of messages to list (default 20)
    * @returns an array of conversations
    */
   async listMessages(conversationId: uuid, limit?: number) {

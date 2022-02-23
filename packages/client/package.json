@@ -9,7 +9,7 @@
     "type": "git",
     "url": "git+ssh://git@github.com:botpress/messaging.git"
   },
-  "description": "An http client to interact with the botpress messaging server",
+  "description": "An http client to interact with the botpress Messaging Server",
   "keywords": [
     "botpress",
     "messaging",

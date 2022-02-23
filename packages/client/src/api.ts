@@ -23,6 +23,7 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
 
   /**
    * For internal usage. Assures that a client with the provided name and token exists
+   * @access private
    */
   async syncClient(config: { name: string; id?: uuid; token?: string }): Promise<{ id: uuid; token: string }> {
     return (await this.http.post('/admin/clients/sync', config, { headers: this.adminHeader })).data
@@ -99,8 +100,8 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
   /**
    * Lists the conversations that a user participates in
    * @param clientId id of the client that owns the user
-   * @param userId id of the user that owns the conversations
-   * @param limit max amount of conversations to list
+   * @param userId id of the user that participates in the conversations
+   * @param limit max amount of conversations to list (default 20)
    * @returns an array of conversations
    */
   async listConversations(clientId: uuid, userId: uuid, limit?: number): Promise<Conversation[]> {
@@ -118,7 +119,7 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
    * @param conversationId id of the conversation to post the message to
    * @param authorId id of the message autor. `undefined` if bot
    * @param payload content of the message
-   * @param flags message flags
+   * @param flags message flags for converse
    * @returns info of the created message
    */
   async createMessage(
@@ -157,7 +158,7 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
    * Lists the messages of a conversation
    * @param clientId id of the client that owns the conversation
    * @param conversationId id of the conversation that owns the messages
-   * @param limit max amount of messages to list
+   * @param limit max amount of messages to list (default 20)
    * @returns an array of conversations
    */
   async listMessages(clientId: uuid, conversationId: uuid, limit?: number) {
