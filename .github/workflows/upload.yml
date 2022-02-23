@@ -1,8 +1,8 @@
 name: Upload
 on:
-  push
-  #branches:
-  #  - master
+  push:
+    branches:
+      - master
   # TODO: Uncomment this once we know the action is working as expected
   #paths:
   #  - 'packages/inject/**'
