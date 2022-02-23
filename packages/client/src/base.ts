@@ -82,7 +82,7 @@ export abstract class MessagingChannelBase extends Emitter<{
   }
 
   /**
-   * Indicates if credentials for a specific client id are currently know (start was called)
+   * Indicates if credentials for a specific client id are currently known (start was called)
    */
   has(clientId: uuid) {
     return this.auths[clientId] !== undefined
