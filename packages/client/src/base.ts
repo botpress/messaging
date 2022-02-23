@@ -89,7 +89,7 @@ export abstract class MessagingChannelBase extends Emitter<{
   }
 
   /**
-   * Add credentials of a client to allow making requests using that client id
+   * Configures credentials of a client to allow making requests using that client id
    * Credentials are stored in memory
    */
   start(clientId: uuid, auth: MessagingClientAuth) {
