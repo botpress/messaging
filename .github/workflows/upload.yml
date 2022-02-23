@@ -1,4 +1,4 @@
-name: Upload Webchat
+name: Upload
 on:
   push
   #branches:
@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   upload_webchat:
-    name: Upload Webchat to S3
+    name: Upload Webchat
     runs-on: ubuntu-latest
     defaults:
       run:
