@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Button } from '../base/button'
 import { ChoiceOption } from '../content-typings'
 import { MessageTypeHandlerProps } from '../typings'
-import { Keyboard, Prepend } from './keyboard'
+import { Prepend } from './keyboard'
 import { Text } from './text'
 
 /**
@@ -53,11 +53,7 @@ export class SingleChoice extends Component<MessageTypeHandlerProps<'single-choi
     return (
       <div>
         {this.props.text}
-        {Keyboard.isReady() && (
-          <Prepend keyboard={keyboard} visible={shouldDisplay}>
-            {this.props.children}
-          </Prepend>
-        )}
+        {shouldDisplay && <Prepend keyboard={keyboard}>{this.props.children}</Prepend>}
       </div>
     )
   }

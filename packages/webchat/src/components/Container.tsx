@@ -15,14 +15,6 @@ import MessageList from './messages/MessageList'
 import OverridableComponent from './OverridableComponent'
 
 class Container extends React.Component<ContainerProps, ContainerState> {
-  state: ContainerState = {
-    isKeyboardRendered: false
-  }
-
-  onKeyboardRendered() {
-    this.setState({ isKeyboardRendered: true })
-  }
-
   renderBody() {
     if (!this.props.isInitialized) {
       return (
@@ -43,8 +35,8 @@ class Container extends React.Component<ContainerProps, ContainerState> {
             'bpw-rtl': this.props.rtl
           })}
         >
-          {this.state.isKeyboardRendered && <MessageList />}
-          <Keyboard onRendered={this.onKeyboardRendered.bind(this)}>
+          <MessageList />
+          <Keyboard>
             <OverridableComponent name={'composer'} original={Composer} />
           </Keyboard>
         </div>

@@ -1,89 +1,41 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-class KeyboardElements extends React.Component<KeyboardElementsProps> {
-  private container: HTMLElement
-
-  constructor(props: KeyboardElementsProps) {
-    super(props)
-    this.container = document.createElement('div')
-  }
-
-  insertChildAt(child: HTMLElement, index = 0, parent: HTMLElement | null) {
-    if (index >= (parent?.children.length || -1)) {
-      parent?.appendChild(child)
-    } else {
-      parent?.insertBefore(child, parent.children[index])
-    }
-  }
+const KEYBOARD_PREPEND_ID = 'bpw-keyboard-prepend'
+export class Prepend extends React.Component<KeyboardElementsProps, KeyboardElementsState> {
+  state: KeyboardElementsState = { container: null }
 
   componentDidMount() {
-    if (this.props.append) {
-      this.insertChildAt(this.container, this.props.index, Keyboard.appendRef.current)
-    } else {
-      this.insertChildAt(this.container, this.props.index, Keyboard.prependRef.current)
+    const container = document.getElementById(KEYBOARD_PREPEND_ID)
+    this.setState({ container })
+  }
+
+  render() {
+    const { container } = this.state
+    if (!container) {
+      return null
     }
-  }
 
-  componentWillUnmount() {
-    if (this.props.append && Keyboard.appendRef.current?.hasChildNodes()) {
-      Keyboard.appendRef.current?.removeChild(this.container)
-    } else if (!this.props.append && Keyboard.prependRef.current?.hasChildNodes()) {
-      Keyboard.prependRef.current?.removeChild(this.container)
-    }
-  }
-
-  render() {
-    return ReactDOM.createPortal(this.props.children, this.container)
+    return ReactDOM.createPortal(this.props.keyboard, container)
   }
 }
 
-export class Prepend extends React.Component<Partial<KeyboardElementsProps>> {
-  render() {
-    return (
-      <div>
-        {this.props.visible && <KeyboardElements index={this.props.index}>{this.props.keyboard}</KeyboardElements>}
-        {this.props.children}
-      </div>
-    )
-  }
-}
-
-export class Append extends React.Component<Partial<KeyboardElementsProps>> {
-  render() {
-    return (
-      <div>
-        {this.props.visible && <KeyboardElements append>{this.props.keyboard}</KeyboardElements>}
-        {this.props.children}
-      </div>
-    )
-  }
-}
-
-export class Keyboard extends React.Component<Partial<KeyboardElementsProps> & { onRendered?: () => void }> {
-  static prependRef: React.RefObject<HTMLDivElement> = React.createRef()
-  static appendRef: React.RefObject<HTMLDivElement> = React.createRef()
-  static isReady = () => Keyboard.appendRef.current !== null
-
-  componentDidMount(): void {
-    this.props.onRendered?.()
-  }
-
+export class Keyboard extends React.Component {
   render() {
     return (
       <div className={'bpw-keyboard'}>
-        <div ref={Keyboard.prependRef} />
-        <div ref={Keyboard.appendRef} />
+        <div id={KEYBOARD_PREPEND_ID} />
+        {this.props.children}
       </div>
     )
   }
 }
 
 interface KeyboardElementsProps {
-  /** When true, the keyboard is appended at the end. Otherwise, it is prepended */
-  append?: boolean
-  index?: number
-  visible?: boolean
   /** A keyboard can be any kind of element */
-  keyboard?: JSX.Element
+  keyboard: JSX.Element
+}
+
+interface KeyboardElementsState {
+  container: HTMLElement | null
 }
