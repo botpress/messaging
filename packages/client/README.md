@@ -1,6 +1,6 @@
 # Botpress Messaging Client
 
-An http client to make requests to the botpress messaging server and receive webhook events using express
+An HTTP client to make requests to the Botpress Messaging Server and receive webhook events using [Express](https://expressjs.com/)
 
 ## Installation
 
