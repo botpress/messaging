@@ -21,6 +21,7 @@ misc
 .gitignore
 .prettierrc
 .nvmrc
+Dockerfile
 
 # Yarn 3 files
 .pnp.*
