@@ -1,5 +1,16 @@
 name: Docker
-on: [push]
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   messaging:
     name: Publish Messaging Docker Image
@@ -7,11 +18,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - uses: botpress/gh-actions/build/docker@v1
+      - uses: botpress/gh-actions/build/docker@v2
         with:
           repository: messaging
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   webchat:
     name: Publish Webchat Docker Image
