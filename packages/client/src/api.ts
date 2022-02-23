@@ -200,7 +200,7 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
 
   /**
    * When using converse, ends the answering turn of a message, terminating
-   * the waiting and returning all payloads that were collected
+   * the waiting period and returning all payloads that were collected
    * @param clientId id of the client that owns the message
    * @param id id of the incoming message that has finished being answered
    */
@@ -209,7 +209,8 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
   }
 
   /**
-   * Maps an endpoint to a conversation id. Calling this function with the same endpoint will always return the same conversation id
+   * Maps an endpoint to a conversation id. Calling this function with the
+   * same endpoint always returns the same conversation id
    * @param clientId id of the client on which to do the mapping
    * @param endpoint endpoint to be mapped
    * @returns a conversation id associated to the endpoint
