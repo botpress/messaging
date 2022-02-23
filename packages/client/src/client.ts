@@ -40,7 +40,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
-  /** Client token of the to authenticate requests made with the client id */
+  /** Client token of to authenticate requests made with the client id */
   public get clientToken() {
     return this._options.clientToken
   }
