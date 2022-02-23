@@ -48,7 +48,7 @@ export interface MessageNewEvent extends ChannelEvent {
 }
 
 /**
- * Webhook event that is triggered when a new conversation is started (proactive trigger)
+ * Webhook event that is triggered when a new conversation is started (e.g. proactive trigger)
  */
 export interface ConversationStartedEvent extends ChannelEvent {}
 
