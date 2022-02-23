@@ -48,7 +48,7 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
-  /** Optional logger interface that can be used to get better debugging */
+  /** logger interface that can be used to get better debugging. Optional */
   public get logger() {
     return this._options.logger
   }
