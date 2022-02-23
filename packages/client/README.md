@@ -35,7 +35,7 @@ client.on('message', async (e) => {
 
 ## More Events
 
-The messaging server also produces these webhook events
+The Messaging Server also produces these webhook events
 
 ```ts
 client.on('user', async ({ userId }) => {
