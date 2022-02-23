@@ -1,0 +1,43 @@
+name: Upload Webchat
+on:
+  push:
+    branches:
+      - master
+    # TODO: Uncomment this once we know the action is working as expected
+    #paths:
+    #  - 'packages/inject/**'
+    #  - 'packages/components/**'
+    #  - 'packages/webchat/**'
+
+permissions:
+  id-token: write
+  contents: read # This is required for actions/checkout@v2
+
+jobs:
+  upload_webchat:
+    name: Upload Webchat to S3
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/inject
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Fetch Node Packages
+        run: |
+          yarn --immutable
+      - name: Build Webchat
+        run: |
+          yarn build
+          yarn write:version
+      - uses: aws-actions/configure-aws-credentials@v1
+        name: Configure AWS credentials
+        with:
+          role-to-assume: ${{ secrets.AWS_WEBCHAT_BUCKET_ROLE }}
+          role-session-name: messaging_ci_upload_webchat
+          aws-region: us-east-1
+      - name: Upload Webchat to S3 bucket
+        run: aws s3 sync ./dist s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}/v0 # TODO: Change the version (for test purpose)
