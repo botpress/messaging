@@ -80,14 +80,6 @@ export default class WebchatApi {
     }
   }
 
-  // TODO: Fix this
-  async downloadConversation(conversationId: uuid): Promise<any> {
-    try {
-    } catch (err) {
-      console.error('Error downloading conversation', err)
-    }
-  }
-
   async sendMessage(payload: any, conversationId: uuid): Promise<Message | undefined> {
     try {
       return this.socket.sendPayload(payload)

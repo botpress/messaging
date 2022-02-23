@@ -1,6 +1,7 @@
 import isBefore from 'date-fns/is_before'
 import isValid from 'date-fns/is_valid'
 import merge from 'lodash/merge'
+import orderBy from 'lodash/orderBy'
 import { action, computed, observable, runInAction } from 'mobx'
 import { IntlShape } from 'react-intl'
 
@@ -345,12 +346,26 @@ class RootStore {
   @action.bound
   async downloadConversation(): Promise<void> {
     try {
-      const { txt, name } = await this.api.downloadConversation(this.currentConversationId)
-      const blobFile = new Blob([txt])
+      const formatDate = (date: Date) => {
+        return new Date(date).toLocaleString()
+      }
 
-      downloadFile(name, blobFile)
+      const conversation = this.currentConversation
+
+      let info = `Conversation Id: ${conversation.id}\nCreated on: ${formatDate(conversation.createdOn)}\nUser: ${
+        conversation.userId
+      }\n-----------------`
+      for (const message of orderBy(conversation.messages, 'sentOn', 'desc')) {
+        info += `\n[${formatDate(message.sentOn)}] ${message.authorId ? 'User' : this.config.botId || 'Bot'}: ${
+          message.payload.text
+        }`
+      }
+
+      const blobFile = new Blob([info])
+
+      downloadFile(`conversation-${conversation.id}`, blobFile)
     } catch (err) {
-      console.error('Error trying to download conversation')
+      console.error('Error trying to download conversation', err)
     }
   }
 
