@@ -1,6 +1,3 @@
-// Makes sure storage is always available
-import './utils/storage'
-
 import { configure } from 'mobx'
 import { observer, Provider } from 'mobx-react'
 import React from 'react'
@@ -10,6 +7,8 @@ import Chat from './main'
 import { RootStore } from './store'
 import { defaultLocale, translations } from './translations'
 import { Config } from './typings'
+import BPStorage from './utils/storage'
+
 configure({ enforceActions: 'observed' })
 
 export const Embedded = (props: any) => new Wrapper({ ...props, fullscreen: false })
@@ -20,13 +19,20 @@ interface State {
 }
 
 interface Props {
-  config?: Config
+  config: Config
   fullscreen?: boolean
 }
 
 export class ExposedWebChat extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
+
+    const { clientId, encryptionKey, useSessionStorage } = props.config
+    window.BP_STORAGE = new BPStorage({
+      clientId,
+      encryptionKey,
+      useSessionStorage
+    })
 
     this.state = {
       store: new RootStore({ fullscreen: props.fullscreen! }, props.config)

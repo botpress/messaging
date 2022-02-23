@@ -1,103 +1,126 @@
+import AES from 'crypto-js/aes'
+import utf8 from 'crypto-js/enc-utf8'
+import SHA256 from 'crypto-js/sha256'
 import Cookie from 'js-cookie'
+import { Config } from '../typings'
 
-export interface BPStorage {
-  setKeyPrefix: (prefix: string) => void
-  set: <T>(key: string, value: T) => void
-  get: <T = string>(key: string) => T | undefined
-  del: (key: string) => void
-}
+export type StorageConfig = Pick<Config, 'clientId' | 'encryptionKey' | 'useSessionStorage'>
 
-let keyPrefix = ''
-const setKeyPrefix = (prefix: string) => {
-  keyPrefix = prefix
-}
+export class BPStorage {
+  private _config: StorageConfig
+  private _storage!: Storage | 'cookie'
 
-const formatKey = (key: string) => {
-  return `${keyPrefix}-${key}`
-}
-
-let useSessionStorage = new Boolean(window.USE_SESSION_STORAGE)
-let storageDriver: 'cookie' | Storage
-const getDriver = (): 'cookie' | Storage => {
-  if (storageDriver && window.USE_SESSION_STORAGE === useSessionStorage) {
-    return storageDriver
+  constructor(config: StorageConfig) {
+    this._config = config
   }
 
-  try {
-    useSessionStorage = new Boolean(window.USE_SESSION_STORAGE)
-
-    const storage =
-      window.USE_SESSION_STORAGE === true && typeof sessionStorage !== 'undefined' ? sessionStorage : localStorage
-
-    const tempKey = '__storage_test__'
-    storage.setItem(tempKey, tempKey)
-    storage.removeItem(tempKey)
-
-    return (storageDriver = storage)
-  } catch (e) {
-    return (storageDriver = 'cookie')
-  }
-}
-
-const serialize = <T>(value: T): string => {
-  if (value === null || value === undefined) {
-    throw new Error('[Storage] Cannot store null or undefined values')
+  public get config() {
+    return this._config
   }
 
-  if (typeof value === 'string') {
-    return value
+  public set config(config: Partial<StorageConfig>) {
+    this._config = { ...this._config, ...config }
   }
 
-  try {
-    return JSON.stringify(value)
-  } catch {
-    console.error('[Storage] Error parsing value', value)
-    return ''
-  }
-}
+  private serialize = <T>(value: T): string => {
+    if (value === null || value === undefined) {
+      throw new Error('[Storage] Cannot store null or undefined values')
+    }
 
-const deserialize = <T>(strValue: string | null | undefined): T | undefined => {
-  if (strValue === null || strValue === undefined) {
-    return undefined
-  }
-
-  try {
-    return JSON.parse(strValue)
-  } catch {
-    return strValue as any
-  }
-}
-
-const storage: BPStorage = {
-  setKeyPrefix,
-  set: <T>(key: string, value: T) => {
     try {
-      const driver = getDriver()
+      let str = ''
+      if (typeof value === 'string') {
+        str = value
+      } else {
+        str = JSON.stringify(value)
+      }
+
+      if (this.config.encryptionKey?.length) {
+        str = AES.encrypt(str, this.config.encryptionKey).toString()
+      }
+
+      return str
+    } catch {
+      console.error('[Storage] Error parsing value', value)
+      return ''
+    }
+  }
+
+  private deserialize = <T>(strValue: string | null | undefined): T | undefined => {
+    if (strValue === null || strValue === undefined) {
+      return undefined
+    }
+
+    try {
+      if (this.config.encryptionKey?.length) {
+        strValue = AES.decrypt(strValue, this.config.encryptionKey).toString(utf8)
+      }
+
+      return JSON.parse(strValue)
+    } catch {
+      return undefined
+    }
+  }
+
+  private getStorageKey = (key: string) => {
+    const rawKey = `bp-chat-${key}`
+
+    if (this.config?.encryptionKey?.length) {
+      return `${rawKey}-${SHA256(`${this.config.clientId}-${this.config.encryptionKey}`).toString()}`
+    } else {
+      return `${rawKey}-${this.config.clientId}`
+    }
+  }
+
+  private getDriver = (): 'cookie' | Storage => {
+    if (this._storage) {
+      return this._storage
+    }
+
+    try {
+      const storage =
+        this.config.useSessionStorage === true && typeof sessionStorage !== 'undefined' ? sessionStorage : localStorage
+
+      const tempKey = '__storage_test__'
+      storage.setItem(tempKey, tempKey)
+      storage.removeItem(tempKey)
+
+      return (this._storage = storage)
+    } catch (e) {
+      return (this._storage = 'cookie')
+    }
+  }
+
+  public set<T>(key: string, value: T) {
+    try {
+      const driver = this.getDriver()
       driver !== 'cookie'
-        ? driver.setItem(formatKey(key), serialize(value))
-        : Cookie.set(formatKey(key), serialize(value))
+        ? driver.setItem(this.getStorageKey(key), this.serialize(value))
+        : Cookie.set(this.getStorageKey(key), this.serialize(value))
     } catch (err) {
       console.error('Error while setting data into storage.', (err as Error).message)
     }
-  },
-  get: <T = string>(key: string): T | undefined => {
+  }
+
+  public get<T = string>(key: string): T | undefined {
     try {
-      const driver = getDriver()
-      return driver !== 'cookie' ? deserialize(driver.getItem(formatKey(key))) : deserialize(Cookie.get(formatKey(key)))
+      const driver = this.getDriver()
+      return driver !== 'cookie'
+        ? this.deserialize(driver.getItem(this.getStorageKey(key)))
+        : this.deserialize(Cookie.get(this.getStorageKey(key)))
     } catch (err) {
       console.error('Error while getting data from storage.', (err as Error).message)
     }
-  },
-  del: (key: string) => {
+  }
+
+  public del(key: string) {
     try {
-      const driver = getDriver()
-      driver !== 'cookie' ? driver.removeItem(formatKey(key)) : Cookie.remove(formatKey(key))
+      const driver = this.getDriver()
+      driver !== 'cookie' ? driver.removeItem(this.getStorageKey(key)) : Cookie.remove(this.getStorageKey(key))
     } catch (err) {
       console.error('Error while deleting data from storage.', (err as Error).message)
     }
   }
 }
 
-window.BP_STORAGE = storage
-
-export default storage
+export default BPStorage

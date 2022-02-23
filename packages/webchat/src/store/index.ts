@@ -64,14 +64,12 @@ class RootStore {
 
   public delayedMessages: QueuedMessage[] = []
 
-  constructor(options: { fullscreen: boolean }, config?: Config) {
+  constructor(options: { fullscreen: boolean }, config: Config) {
     this.composer = new ComposerStore(this)
     this.view = new ViewStore(this, options.fullscreen)
 
-    if (config) {
-      this.updateConfig(config)
-      this.botUILanguage = getUserLocale()
-    }
+    this.updateConfig(config)
+    this.botUILanguage = getUserLocale()
   }
 
   @action.bound
@@ -91,7 +89,7 @@ class RootStore {
 
   @computed
   get botName(): string {
-    return this.config?.botName || this.botInfo?.name || 'Bot'
+    return this.config.botName || this.botInfo?.name || 'Bot'
   }
 
   @computed
@@ -436,7 +434,7 @@ class RootStore {
   }
 
   private _applyConfig() {
-    window.BP_STORAGE.setKeyPrefix(`bp-chat-${this.config.clientId}`)
+    window.BP_STORAGE.config = this.config
 
     this.config.layoutWidth && this.view.setLayoutWidth(this.config.layoutWidth)
     this.config.containerWidth && this.view.setContainerWidth(this.config.containerWidth)
