@@ -1,21 +1,19 @@
 import { Message } from '@botpress/messaging-socket'
-import { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { RecentConversation } from '..'
-import { uuid } from '../typings'
+import { BotInfo, uuid } from '../typings'
 import BpSocket from './socket'
 
 export default class WebchatApi {
   private axios!: AxiosInstance
   private axiosConfig!: AxiosRequestConfig
-  private userId!: string
 
   constructor(private socket: BpSocket) {}
 
-  // TODO: Fix this
-  async fetchBotInfo() {
+  async fetchBotInfo(mediaFileServiceUrl: string) {
     try {
-      const { data } = await this.axios.get('/botInfo', this.axiosConfig)
+      const { data } = await axios.get<BotInfo>(mediaFileServiceUrl)
       return data
     } catch (err) {
       console.error('Error while loading bot info', err)

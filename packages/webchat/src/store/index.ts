@@ -218,7 +218,7 @@ class RootStore {
         this.postMessage('webchatReady')
       })
     } catch (err) {
-      console.error('Error while fetching data, creating new convo...', err)
+      console.error('Error while fetching data, creating new conversation...', err)
       await this.createConversation()
     }
 
@@ -227,7 +227,15 @@ class RootStore {
 
   @action.bound
   async fetchBotInfo(): Promise<void> {
-    const botInfo = await this.api.fetchBotInfo()
+    if (!this.config.mediaFileServiceUrl) {
+      return
+    }
+
+    const botInfo = await this.api.fetchBotInfo(this.config.mediaFileServiceUrl)
+    if (!botInfo) {
+      return
+    }
+
     runInAction('-> setBotInfo', () => {
       this.botInfo = botInfo
     })
