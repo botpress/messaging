@@ -29,7 +29,7 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
   }
 
   /**
-   * Configures a client with channel and webhook configs
+   * Synchronize a client with channel and webhook configs
    * @param clientId id of the client to configure
    * @param config channel and webhook configs
    * @returns a list of webhook tokens
