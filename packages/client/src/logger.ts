@@ -1,3 +1,4 @@
+/** Interface for a logger that can be used to get better debugging */
 export interface Logger {
   info(message: string, data?: any): void
   debug(message: string, data?: any): void

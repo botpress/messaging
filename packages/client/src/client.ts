@@ -22,6 +22,7 @@ export class MessagingClient extends ProtectedEmitter<{
   message: MessageNewEvent
   feedback: MessageFeedbackEvent
 }> {
+  /** Options that are currently applied */
   public get options() {
     return this._options
   }
@@ -30,6 +31,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Client id configured for this instance */
   public get clientId() {
     return this._options.clientId
   }
@@ -38,6 +40,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Client token of the to authenticate requests made with the client id */
   public get clientToken() {
     return this._options.clientToken
   }
@@ -46,6 +49,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Webhook token to validate webhook events that are received */
   public get webhookToken() {
     return this._options.webhookToken
   }
@@ -54,6 +58,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Base url of the messaging server */
   public get url() {
     return this._options.url
   }
@@ -62,6 +67,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** A custom axios config giving more control over the HTTP client used internally. Optional */
   public get axios() {
     return this._options.axios
   }
@@ -94,6 +100,11 @@ export class MessagingClient extends ProtectedEmitter<{
     this.channel.start(this.clientId, creds)
   }
 
+  /**
+   * Sets up an express router to receive webhook events
+   * @param router an express router
+   * @param route optional route to receive events at
+   */
   setup(router: Router, route?: string) {
     this.channel.setup(router, route)
   }
