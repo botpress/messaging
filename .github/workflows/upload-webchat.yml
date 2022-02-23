@@ -1,13 +1,13 @@
 name: Upload Webchat
 on:
-  push:
-    branches:
-      - master
-    # TODO: Uncomment this once we know the action is working as expected
-    #paths:
-    #  - 'packages/inject/**'
-    #  - 'packages/components/**'
-    #  - 'packages/webchat/**'
+  push
+  #branches:
+  #  - master
+  # TODO: Uncomment this once we know the action is working as expected
+  #paths:
+  #  - 'packages/inject/**'
+  #  - 'packages/components/**'
+  #  - 'packages/webchat/**'
 
 permissions:
   id-token: write
