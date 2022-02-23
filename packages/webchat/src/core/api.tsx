@@ -41,6 +41,8 @@ export default class WebchatApi {
       return conversations
     } catch (err) {
       console.error('Error while fetching users conversations', err)
+
+      return []
     }
   }
 
@@ -88,8 +90,13 @@ export default class WebchatApi {
     }
   }
 
-  // TODO: Fix this
-  async deleteMessages(conversationId: uuid) {}
+  async deleteConversation(conversationId: uuid) {
+    try {
+      await this.socket.socket.deleteConversation(conversationId)
+    } catch (err) {
+      console.error('Error deleting conversation', err)
+    }
+  }
 
   async sendFeedback(feedback: number, messageId: uuid): Promise<void> {
     return this.socket.socket.sendFeedback(messageId, feedback)

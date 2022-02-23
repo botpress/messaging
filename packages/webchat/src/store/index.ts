@@ -38,7 +38,7 @@ class RootStore {
   public conversations: RecentConversation[] = []
 
   @observable
-  public currentConversation!: CurrentConversation
+  public currentConversation?: CurrentConversation
 
   @observable
   public botInfo!: BotInfo
@@ -116,11 +116,11 @@ class RootStore {
 
   @computed
   get currentMessages(): Message[] {
-    return this.currentConversation?.messages
+    return this.currentConversation?.messages || []
   }
 
   @computed
-  get currentConversationId(): uuid {
+  get currentConversationId(): uuid | undefined {
     return this.currentConversation?.id
   }
 
@@ -132,7 +132,9 @@ class RootStore {
 
   @action.bound
   updateMessages(messages: Message[]) {
-    this.currentConversation.messages = messages
+    if (this.currentConversation) {
+      this.currentConversation.messages = messages
+    }
   }
 
   @action.bound
@@ -147,22 +149,23 @@ class RootStore {
   }
 
   @action.bound
-  clearMessages() {
-    this.currentConversation.messages = []
-  }
-
-  @action.bound
   async deleteConversation(): Promise<void> {
-    if (this.currentConversation !== undefined && this.currentConversation.messages.length > 0) {
-      await this.api.deleteMessages(this.currentConversationId)
+    if (this.currentConversationId) {
+      await this.api.deleteConversation(this.currentConversationId)
 
-      this.clearMessages()
+      const index = this.conversations.findIndex((c) => c.id === this.currentConversationId)
+      if (index > -1) {
+        this.conversations.splice(index, 1)
+      }
+
+      this.resetConversation()
+      await this.fetchConversation()
     }
   }
 
   @action.bound
   async addEventToConversation(event: Message): Promise<void> {
-    if (this.isInitialized && this.currentConversationId !== event.conversationId) {
+    if (!this.currentConversation || (this.isInitialized && this.currentConversationId !== event.conversationId)) {
       await this.fetchConversations()
       await this.fetchConversation(event.conversationId)
       return
@@ -183,7 +186,7 @@ class RootStore {
 
   @action.bound
   async updateTyping(event: Message): Promise<void> {
-    if (this.isInitialized && this.currentConversationId !== event.conversationId) {
+    if (!this.currentConversation || (this.isInitialized && this.currentConversationId !== event.conversationId)) {
       await this.fetchConversations()
       await this.fetchConversation(event.conversationId)
       return
@@ -246,7 +249,7 @@ class RootStore {
         this.view.showBotInfo()
       }
 
-      this.conversations = conversations!
+      this.conversations = conversations
     })
   }
 
@@ -322,9 +325,11 @@ class RootStore {
 
   @action.bound
   async resetSession(): Promise<void> {
-    this.composer.setLocked(false)
+    if (this.currentConversationId) {
+      this.composer.setLocked(false)
 
-    return this.api.resetSession(this.currentConversationId)
+      return this.api.resetSession(this.currentConversationId)
+    }
   }
 
   @action.bound
@@ -351,6 +356,10 @@ class RootStore {
       }
 
       const conversation = this.currentConversation
+      if (!conversation) {
+        console.warn('Cannot download the current conversation as it is undefined.')
+        return
+      }
 
       let info = `Conversation Id: ${conversation.id}\nCreated on: ${formatDate(conversation.createdOn)}\nUser: ${
         conversation.userId
@@ -372,7 +381,7 @@ class RootStore {
   /** Sends an event or a message, depending on how the backend manages those types */
   @action.bound
   async sendData(data: any): Promise<void> {
-    if (!this.isInitialized) {
+    if (!this.isInitialized || !this.currentConversationId) {
       console.warn('[webchat] Cannot send data until the webchat is ready')
       return
     }
@@ -384,13 +393,17 @@ class RootStore {
 
   @action.bound
   async uploadFile(title: string, payload: string, file: File): Promise<void> {
-    await this.api.uploadFile(file, payload, this.currentConversationId)
+    if (this.currentConversationId) {
+      await this.api.uploadFile(file, payload, this.currentConversationId)
+    }
   }
 
   /** Sends a message of type voice */
   @action.bound
   async sendVoiceMessage(voice: Buffer, ext: string): Promise<void> {
-    return this.api.sendVoiceMessage(voice, ext, this.currentConversationId)
+    if (this.currentConversationId) {
+      return this.api.sendVoiceMessage(voice, ext, this.currentConversationId)
+    }
   }
 
   /** Use this method to replace a value or add a new config */
@@ -462,7 +475,7 @@ class RootStore {
     this.isBotTyping.set(true)
 
     this._typingInterval = setInterval(() => {
-      const typeUntil = new Date(this.currentConversation && this.currentConversation.typingUntil)
+      const typeUntil = new Date(this.currentConversation?.typingUntil)
       if (!typeUntil || !isValid(typeUntil) || isBefore(typeUntil, new Date())) {
         this._expireTyping()
       } else {
@@ -475,7 +488,9 @@ class RootStore {
   private _expireTyping() {
     this.emptyDelayedMessagesQueue(true)
     this.isBotTyping.set(false)
-    this.currentConversation.typingUntil = undefined
+    if (this.currentConversation) {
+      this.currentConversation.typingUntil = undefined
+    }
 
     clearInterval(this._typingInterval!)
     this._typingInterval = undefined
@@ -493,6 +508,10 @@ class RootStore {
 
   @action.bound
   private emptyDelayedMessagesQueue(removeAll: boolean) {
+    if (!this.currentConversation) {
+      return
+    }
+
     while (this.delayedMessages.length) {
       const message = this.delayedMessages[0]
       if (removeAll || isBefore(message.showAt, new Date())) {
