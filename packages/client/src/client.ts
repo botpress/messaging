@@ -22,6 +22,7 @@ export class MessagingClient extends ProtectedEmitter<{
   message: MessageNewEvent
   feedback: MessageFeedbackEvent
 }> {
+  /** Options that are currently applied */
   public get options() {
     return this._options
   }
@@ -30,6 +31,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Client id configured for this instance */
   public get clientId() {
     return this._options.clientId
   }
@@ -38,6 +40,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Client token of to authenticate requests made with the client id */
   public get clientToken() {
     return this._options.clientToken
   }
@@ -46,6 +49,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Webhook token to validate webhook events that are received */
   public get webhookToken() {
     return this._options.webhookToken
   }
@@ -54,6 +58,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Base url of the messaging server */
   public get url() {
     return this._options.url
   }
@@ -62,6 +67,7 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** A custom axios config giving more control over the HTTP client used internally. Optional */
   public get axios() {
     return this._options.axios
   }
@@ -94,38 +100,85 @@ export class MessagingClient extends ProtectedEmitter<{
     this.channel.start(this.clientId, creds)
   }
 
+  /**
+   * Sets up an express router to receive webhook events
+   * @param router an express router
+   * @param route optional route to receive events at
+   */
   setup(router: Router, route?: string) {
     this.channel.setup(router, route)
   }
 
+  /**
+   * Configures channels and webhooks
+   * @param config channel and webhook configs
+   * @returns a list of webhook tokens
+   */
   async sync(config: SyncRequest): Promise<SyncResult> {
     return this.channel.sync(this.clientId, config)
   }
 
+  /**
+   * Polls health events
+   * @returns a list of health events per channel
+   */
   async getHealth(): Promise<HealthReport> {
     return this.channel.getHealth(this.clientId)
   }
 
+  /**
+   * Creates a new messaging user
+   * @returns info of the newly created user
+   */
   async createUser(): Promise<User> {
     return this.channel.createUser(this.clientId)
   }
 
+  /**
+   * Fetches a messaging user
+   * @param id id of the user to fetch
+   * @returns info of the user or `undefined` if not found
+   */
   async getUser(id: uuid): Promise<User | undefined> {
     return this.channel.getUser(this.clientId, id)
   }
 
+  /**
+   * Creates a new messaging conversation
+   * @param userId id of the user that starts this conversation
+   * @returns info of the newly created conversation
+   */
   async createConversation(userId: uuid): Promise<Conversation> {
     return this.channel.createConversation(this.clientId, userId)
   }
 
+  /**
+   * Fetches a messaging conversation
+   * @param id id of the conversation to fetch
+   * @returns info of the conversation or `undefined` if not found
+   */
   async getConversation(id: uuid): Promise<Conversation | undefined> {
     return this.channel.getConversation(this.clientId, id)
   }
 
+  /**
+   * Lists the conversations that a user participates in
+   * @param userId id of the user that participates in the conversations
+   * @param limit max amount of conversations to list (default 20)
+   * @returns an array of conversations
+   */
   async listConversations(userId: uuid, limit?: number): Promise<Conversation[]> {
     return this.channel.listConversations(this.clientId, userId, limit)
   }
 
+  /**
+   * Sends a message to the messaging server
+   * @param conversationId id of the conversation to post the message to
+   * @param authorId id of the message autor. `undefined` if bot
+   * @param payload content of the message
+   * @param flags message flags
+   * @returns info of the created message
+   */
   async createMessage(
     conversationId: uuid,
     authorId: uuid | undefined,
@@ -135,30 +188,67 @@ export class MessagingClient extends ProtectedEmitter<{
     return this.channel.createMessage(this.clientId, conversationId, authorId, payload, flags)
   }
 
+  /**
+   * Fetches a message
+   * @param id id of the message to fetch
+   * @returns info of the message or `undefined` if not found
+   */
   async getMessage(id: uuid): Promise<Message | undefined> {
     return this.channel.getMessage(this.clientId, id)
   }
 
+  /**
+   * Lists the messages of a conversation
+   * @param conversationId id of the conversation that owns the messages
+   * @param limit max amount of messages to list (default 20)
+   * @returns an array of conversations
+   */
   async listMessages(conversationId: uuid, limit?: number) {
     return this.channel.listMessages(this.clientId, conversationId, limit)
   }
 
+  /**
+   * Deletes a message
+   * @param id id of the message to delete
+   * @returns `true` if a message was deleted
+   */
   async deleteMessage(id: uuid): Promise<boolean> {
     return this.channel.deleteMessage(this.clientId, id)
   }
 
+  /**
+   * Deletes all messages of a conversation
+   * @param conversationId id of the conversation that owns the messages
+   * @returns amount of messages deleted
+   */
   async deleteMessagesByConversation(conversationId: uuid): Promise<number> {
     return this.channel.deleteMessagesByConversation(this.clientId, conversationId)
   }
 
+  /**
+   * When using converse, ends the answering turn of a message, terminating
+   * the waiting period and returning all payloads that were collected
+   * @param id id of the incoming message that has finished being answered
+   */
   async endTurn(id: uuid) {
     return this.channel.endTurn(this.clientId, id)
   }
 
+  /**
+   * Maps an endpoint to a conversation id. Calling this function with the
+   * same endpoint always returns the same conversation id
+   * @param endpoint endpoint to be mapped
+   * @returns a conversation id associated to the endpoint
+   */
   async mapEndpoint(endpoint: Endpoint): Promise<uuid> {
     return this.channel.mapEndpoint(this.clientId, endpoint)
   }
 
+  /**
+   * Lists the endpoints associated to a conversation
+   * @param conversationId id of the conversation that is associated with the endpoints
+   * @returns an array of endpoints that are linked to the provided conversation
+   */
   async listEndpoints(conversationId: uuid): Promise<Endpoint[]> {
     return this.channel.listEndpoints(this.clientId, conversationId)
   }

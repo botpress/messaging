@@ -1,10 +1,29 @@
 {
   "name": "@botpress/messaging-client",
-  "version": "1.1.1",
+  "version": "1.1.4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
   "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:botpress/messaging.git"
+  },
+  "description": "An http client to interact with the botpress Messaging Server",
+  "keywords": [
+    "botpress",
+    "messaging",
+    "api",
+    "channel",
+    "messenger",
+    "slack",
+    "smooch",
+    "teams",
+    "telegram",
+    "twilio",
+    "vonage"
+  ],
+  "homepage": "https://botpress.com/docs",
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
