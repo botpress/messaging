@@ -12,6 +12,7 @@ export abstract class MessagingChannelBase extends Emitter<{
   message: MessageNewEvent
   feedback: MessageFeedbackEvent
 }> {
+  /** Options that are currently applied */
   public get options() {
     return this._options
   }
@@ -20,6 +21,7 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
+  /** Base url of the messaging server */
   public get url() {
     return this._options.url
   }
@@ -28,6 +30,7 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
+  /** Key to access admin routes. Optional */
   public get adminKey() {
     return this._options.adminKey
   }
@@ -36,6 +39,7 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
+  /** A custom axios config giving more control over the HTTP client used internally. Optional */
   public get axios() {
     return this._options.axios
   }
@@ -44,6 +48,7 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
+  /** logger interface that can be used to get better debugging. Optional */
   public get logger() {
     return this._options.logger
   }
@@ -76,10 +81,17 @@ export abstract class MessagingChannelBase extends Emitter<{
     return { ...axios, ...defaultConfig }
   }
 
+  /**
+   * Indicates if credentials for a specific client id are currently known (start was called)
+   */
   has(clientId: uuid) {
     return this.auths[clientId] !== undefined
   }
 
+  /**
+   * Configures credentials of a client to allow making requests using that client id
+   * Credentials are stored in memory
+   */
   start(clientId: uuid, auth: MessagingClientAuth) {
     this.auths[clientId] = auth
     this.headers[clientId] = {
@@ -88,6 +100,10 @@ export abstract class MessagingChannelBase extends Emitter<{
     }
   }
 
+  /**
+   * Removed credentials of a client id. It's not possible to make request to this
+   * client id after stop was called (start needs to be called again)
+   */
   stop(clientId: uuid) {
     delete this.auths[clientId]
     delete this.headers[clientId]
