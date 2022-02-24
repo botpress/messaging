@@ -64,11 +64,14 @@ class RootStore {
 
   public delayedMessages: QueuedMessage[] = []
 
-  constructor(options: { fullscreen: boolean }, config: Config) {
+  constructor(options: { fullscreen: boolean }, config?: Config) {
     this.composer = new ComposerStore(this)
     this.view = new ViewStore(this, options.fullscreen)
 
-    this.updateConfig(config)
+    if (config) {
+      this.updateConfig(config)
+    }
+
     this.botUILanguage = getUserLocale()
   }
 
@@ -89,7 +92,7 @@ class RootStore {
 
   @computed
   get botName(): string {
-    return this.config.botName || this.botInfo?.name || 'Bot'
+    return this.config?.botName || this.botInfo?.name || 'Bot'
   }
 
   @computed
@@ -377,9 +380,25 @@ class RootStore {
       let info = `Conversation Id: ${conversation.id}\nCreated on: ${formatDate(conversation.createdOn)}\nUser: ${
         conversation.userId
       }\n-----------------`
-      for (const message of orderBy(conversation.messages, 'sentOn', 'desc')) {
-        info += `\n[${formatDate(message.sentOn)}] ${message.authorId ? 'User' : this.config.botId || 'Bot'}: ${
-          message.payload.text
+
+      const messages = await this.api.listCurrentConversationMessages(500)
+      for (const message of orderBy(messages, 'sentOn', 'desc')) {
+        const payload = message.payload
+        if (payload.type === 'session_reset') {
+          continue
+        }
+
+        info += `\n[${formatDate(message.sentOn)}] ${message.authorId ? 'User' : this.config.botId || 'Bot'}: Event (${
+          payload.type
+        }): ${
+          payload.text ||
+          payload.audio ||
+          payload.image ||
+          payload.video ||
+          payload.file ||
+          payload.message ||
+          payload.title ||
+          ''
         }`
       }
 

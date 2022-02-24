@@ -4,22 +4,22 @@ import SHA256 from 'crypto-js/sha256'
 import Cookie from 'js-cookie'
 import { Config } from '../typings'
 
-export type StorageConfig = Pick<Config, 'clientId' | 'encryptionKey' | 'useSessionStorage'>
-
 export class BPStorage {
-  private _config: StorageConfig
+  private _config?: Config
   private _storage!: Storage | 'cookie'
 
-  constructor(config: StorageConfig) {
-    this._config = config
+  constructor(config?: Config) {
+    if (config) {
+      this._config = config
+    }
   }
 
   public get config() {
     return this._config
   }
 
-  public set config(config: Partial<StorageConfig>) {
-    this._config = { ...this._config, ...config }
+  public set config(config: Config | undefined) {
+    this._config = config
   }
 
   private serialize = <T>(value: T): string => {
@@ -35,7 +35,7 @@ export class BPStorage {
         str = JSON.stringify(value)
       }
 
-      if (this.config.encryptionKey?.length) {
+      if (this.config?.encryptionKey?.length) {
         str = AES.encrypt(str, this.config.encryptionKey).toString()
       }
 
@@ -52,7 +52,7 @@ export class BPStorage {
     }
 
     try {
-      if (this.config.encryptionKey?.length) {
+      if (this.config?.encryptionKey?.length) {
         strValue = AES.decrypt(strValue, this.config.encryptionKey).toString(utf8)
       }
 
@@ -68,7 +68,7 @@ export class BPStorage {
     if (this.config?.encryptionKey?.length) {
       return `${rawKey}-${SHA256(`${this.config.clientId}-${this.config.encryptionKey}`).toString()}`
     } else {
-      return `${rawKey}-${this.config.clientId}`
+      return `${rawKey}-${this.config?.clientId}`
     }
   }
 
@@ -79,7 +79,7 @@ export class BPStorage {
 
     try {
       const storage =
-        this.config.useSessionStorage === true && typeof sessionStorage !== 'undefined' ? sessionStorage : localStorage
+        this.config?.useSessionStorage === true && typeof sessionStorage !== 'undefined' ? sessionStorage : localStorage
 
       const tempKey = '__storage_test__'
       storage.setItem(tempKey, tempKey)
@@ -92,6 +92,10 @@ export class BPStorage {
   }
 
   public set<T>(key: string, value: T) {
+    if (!this.config) {
+      return
+    }
+
     try {
       const driver = this.getDriver()
       driver !== 'cookie'
@@ -103,6 +107,10 @@ export class BPStorage {
   }
 
   public get<T = string>(key: string): T | undefined {
+    if (!this.config) {
+      return
+    }
+
     try {
       const driver = this.getDriver()
       return driver !== 'cookie'
@@ -114,6 +122,10 @@ export class BPStorage {
   }
 
   public del(key: string) {
+    if (!this.config) {
+      return
+    }
+
     try {
       const driver = this.getDriver()
       driver !== 'cookie' ? driver.removeItem(this.getStorageKey(key)) : Cookie.remove(this.getStorageKey(key))

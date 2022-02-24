@@ -26,7 +26,7 @@ const Socket = {
   }).required(),
 
   List: Joi.object({
-    limit: Joi.number().required()
+    limit: Joi.number().min(0).required()
   }).required(),
 
   Delete: Joi.object({

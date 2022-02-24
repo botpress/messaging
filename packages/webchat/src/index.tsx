@@ -19,7 +19,7 @@ interface State {
 }
 
 interface Props {
-  config: Config
+  config?: Config
   fullscreen?: boolean
 }
 
@@ -27,12 +27,7 @@ export class ExposedWebChat extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
 
-    const { clientId, encryptionKey, useSessionStorage } = props.config
-    window.BP_STORAGE = new BPStorage({
-      clientId,
-      encryptionKey,
-      useSessionStorage
-    })
+    window.BP_STORAGE = new BPStorage(props.config)
 
     this.state = {
       store: new RootStore({ fullscreen: props.fullscreen! }, props.config)
@@ -45,10 +40,8 @@ export class ExposedWebChat extends React.Component<Props, State> {
 
     return (
       <Provider store={store}>
-        <IntlProvider locale={locale} messages={translations[locale]} defaultLocale={defaultLocale}>
-          <React.Fragment>
-            <Chat store={store} {...this.props} />
-          </React.Fragment>
+        <IntlProvider locale={locale} messages={translations[locale || defaultLocale]} defaultLocale={defaultLocale}>
+          <Chat store={store} {...this.props} />
         </IntlProvider>
       </Provider>
     )

@@ -1,0 +1,4 @@
+undecided:
+  - "@botpress/messaging"
+  - "@botpress/messaging-components"
+  - "@botpress/webchat"

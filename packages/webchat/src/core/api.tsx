@@ -1,14 +1,11 @@
 import { Message } from '@botpress/messaging-socket'
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { RecentConversation } from '..'
 import { BotInfo, uuid } from '../typings'
 import BpSocket from './socket'
 
 export default class WebchatApi {
-  private axios!: AxiosInstance
-  private axiosConfig!: AxiosRequestConfig
-
   constructor(private socket: BpSocket) {}
 
   async fetchBotInfo(mediaFileServiceUrl: string) {
@@ -20,6 +17,10 @@ export default class WebchatApi {
     }
   }
 
+  async listCurrentConversationMessages(limit?: number) {
+    return this.socket.socket.listMessages(limit)
+  }
+
   async fetchConversations() {
     try {
       const conversations = (await this.socket.socket.listConversations()) as RecentConversation[]
@@ -29,7 +30,7 @@ export default class WebchatApi {
         const limit = 1
 
         await this.socket.socket.switchConversation(conversation.id)
-        const lastMessages = await this.socket.socket.listMessages(limit)
+        const lastMessages = await this.listCurrentConversationMessages(limit)
 
         if (lastMessages.length >= limit) {
           conversation.lastMessage = lastMessages[0]
@@ -105,8 +106,6 @@ export default class WebchatApi {
     data.append('file', file)
     data.append('conversationId', conversationId)
     data.append('payload', payload)
-
-    return this.axios.post('/messages/files', data, this.axiosConfig)
   }
 
   // TODO: Fix this
