@@ -12,8 +12,17 @@ module.exports = {
     sourceType: 'module'
   },
   ignorePatterns: ['*.js', '**/dist/**'],
-  plugins: ['eslint-plugin-import', 'eslint-plugin-jsdoc', '@typescript-eslint'],
+  plugins: [
+    'eslint-plugin-import',
+    'eslint-plugin-jsdoc',
+    '@typescript-eslint',
+    'eslint-plugin-react',
+    'unused-imports'
+  ],
   rules: {
+    'react/jsx-uses-react': 'error',
+    'react/jsx-uses-vars': 'error',
+    'unused-imports/no-unused-imports': 'error',
     '@typescript-eslint/consistent-type-definitions': 'error',
     '@typescript-eslint/member-delimiter-style': [
       'error',
