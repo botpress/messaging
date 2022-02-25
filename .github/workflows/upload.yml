@@ -3,12 +3,11 @@ on:
   push:
     branches:
       - master
-  # TODO: Uncomment this once we know the action is working as expected
-  #paths:
-  #  - 'packages/inject/**'
-  #  - 'packages/components/**'
-  #  - 'packages/webchat/**'
-  #  - 'packages/socket/**'
+    paths:
+      - 'packages/inject/**'
+      - 'packages/components/**'
+      - 'packages/webchat/**'
+      - 'packages/socket/**'
 
 permissions:
   id-token: write
@@ -41,4 +40,7 @@ jobs:
           role-session-name: messaging_ci_upload_webchat
           aws-region: us-east-1
       - name: Upload Webchat to S3 bucket
-        run: aws s3 sync ./dist s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}/v0 # TODO: Change the version (for test purpose)
+        run: |
+          # TODO: Change the version (for test purpose)
+          aws s3 sync --delete ./dist s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}/v0
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
