@@ -1,54 +1,47 @@
 import { Message } from '@botpress/messaging-socket'
-import { AxiosInstance, AxiosRequestConfig } from 'axios'
-import get from 'lodash/get'
+import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
 import { RecentConversation } from '..'
-import { uuid } from '../typings'
+import { BotInfo, uuid } from '../typings'
 import BpSocket from './socket'
 
 export default class WebchatApi {
-  private axios!: AxiosInstance
-  private axiosConfig!: AxiosRequestConfig
-  private userId!: string
-
   constructor(private socket: BpSocket) {}
 
-  // TODO: Do we still need this?
-  private get baseUserPayload() {
-    return {
-      webSessionId: window.__BP_VISITOR_SOCKET_ID
-    }
-  }
-
-  // TODO: Fix this
-  async fetchBotInfo() {
+  async fetchBotInfo(mediaFileServiceUrl: string) {
     try {
-      const { data } = await this.axios.get('/botInfo', this.axiosConfig)
+      const { data } = await axios.get<BotInfo>(mediaFileServiceUrl)
       return data
     } catch (err) {
       console.error('Error while loading bot info', err)
     }
   }
 
+  async listCurrentConversationMessages(limit?: number) {
+    return this.socket.socket.listMessages(limit)
+  }
+
   async fetchConversations() {
     try {
-      const convos = (await this.socket.socket.listConversations()) as RecentConversation[]
+      const conversations = (await this.socket.socket.listConversations()) as RecentConversation[]
 
       // Add the last message of each conversation
-      for (const convo of convos) {
+      for (const conversation of conversations) {
         const limit = 1
 
-        await this.socket.socket.switchConversation(convo.id)
-        const lastMessages = await this.socket.socket.listMessages(limit)
+        await this.socket.socket.switchConversation(conversation.id)
+        const lastMessages = await this.listCurrentConversationMessages(limit)
 
         if (lastMessages.length >= limit) {
-          convo.lastMessage = lastMessages[0]
+          conversation.lastMessage = lastMessages[0]
         }
       }
 
-      return convos
+      return conversations
     } catch (err) {
-      console.error('Error while fetching convos', err)
+      console.error('Error while fetching users conversations', err)
+
+      return []
     }
   }
 
@@ -59,14 +52,13 @@ export default class WebchatApi {
       const messages = (await this.socket.socket.listMessages()).filter((x) => x.payload.type !== 'visit')
       return { ...conversation, messages }
     } catch (err) {
-      await this.handleApiError(err)
+      console.error('Error fetching a conversation', err)
     }
   }
 
   // TODO: Fis this
   async resetSession(conversationId: uuid): Promise<void> {
     try {
-      await this.axios.post('/conversations/reset', { ...this.baseUserPayload, conversationId }, this.axiosConfig)
     } catch (err) {
       console.error('Error while resetting conversation', err)
     }
@@ -77,7 +69,7 @@ export default class WebchatApi {
       const conversation = await this.socket.socket.createConversation()
       return conversation.id
     } catch (err) {
-      console.error('Error in create conversation', err)
+      console.error('Error creating conversation', err)
     }
   }
 
@@ -85,21 +77,7 @@ export default class WebchatApi {
     try {
       await this.socket.socket.startConversation()
     } catch (err) {
-      console.error('Error in start conversation', err)
-    }
-  }
-
-  // TODO: Fix this
-  async downloadConversation(conversationId: uuid): Promise<any> {
-    try {
-      const { data } = await this.axios.post(
-        '/conversations/download/txt',
-        { ...this.baseUserPayload, conversationId },
-        this.axiosConfig
-      )
-      return { name: data.name, txt: data.txt }
-    } catch (err) {
-      console.error('Error in download conversation', err)
+      console.error('Error starting conversation', err)
     }
   }
 
@@ -107,65 +85,34 @@ export default class WebchatApi {
     try {
       return this.socket.sendPayload(payload)
     } catch (err) {
-      await this.handleApiError(err)
+      console.error('Error sending message', err)
     }
   }
 
-  // TODO: Fix this
-  async deleteMessages(conversationId: uuid) {
+  async deleteConversation(conversationId: uuid) {
     try {
-      await this.axios.post(
-        '/conversations/messages/delete',
-        { ...this.baseUserPayload, conversationId },
-        this.axiosConfig
-      )
+      await this.socket.socket.deleteConversation(conversationId)
     } catch (err) {
-      await this.handleApiError(err)
+      console.error('Error deleting conversation', err)
     }
   }
 
   async sendFeedback(feedback: number, messageId: uuid): Promise<void> {
-    try {
-      return this.socket.socket.sendFeedback(messageId, feedback)
-    } catch (err) {
-      await this.handleApiError(err)
-    }
+    return this.socket.socket.sendFeedback(messageId, feedback)
   }
 
   async uploadFile(file: File, payload: string, conversationId: uuid): Promise<void> {
-    try {
-      const data = new FormData()
-      data.append('file', file)
-      data.append('webSessionId', this.baseUserPayload.webSessionId)
-      data.append('conversationId', conversationId)
-      data.append('payload', payload)
-
-      return this.axios.post('/messages/files', data, this.axiosConfig)
-    } catch (err) {
-      await this.handleApiError(err)
-    }
+    const data = new FormData()
+    data.append('file', file)
+    data.append('conversationId', conversationId)
+    data.append('payload', payload)
   }
 
+  // TODO: Fix this
   async sendVoiceMessage(voice: Buffer, ext: string, conversationId: uuid): Promise<void> {
-    try {
-      const audio = {
-        buffer: voice.toString('base64'),
-        title: `${uuidv4()}.${ext}`
-      }
-      return this.axios.post('/messages/voice', { ...this.baseUserPayload, conversationId, audio }, this.axiosConfig)
-    } catch (err) {
-      await this.handleApiError(err)
-    }
-  }
-
-  // TODO: Remove this once we stop making HTTP calls
-  handleApiError = async (error: any) => {
-    // @deprecated 11.9 (replace with proper error management)
-    const data = get(error, 'response.data', {})
-    if (data && typeof data === 'string' && data.includes('BP_CONV_NOT_FOUND')) {
-      console.error('Conversation not found, starting a new one...')
-      await this.createConversation()
-      await this.startConversation()
+    const audio = {
+      buffer: voice.toString('base64'),
+      title: `${uuidv4()}.${ext}`
     }
   }
 }

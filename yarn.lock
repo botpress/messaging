@@ -2189,7 +2189,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-components@0.2.0, @botpress/messaging-components@workspace:packages/components":
+"@botpress/messaging-components@0.2.1, @botpress/messaging-components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-components@workspace:packages/components"
   dependencies:
@@ -2394,7 +2394,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
-    "@botpress/webchat": 0.2.3
+    "@botpress/webchat": 0.2.5
     "@parcel/config-default": ^2.2.1
     "@parcel/reporter-bundle-analyzer": 2.2.1
     "@parcel/transformer-typescript-tsc": ^2.2.1
@@ -2405,12 +2405,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat@*, @botpress/webchat@0.2.3, @botpress/webchat@workspace:packages/webchat":
+"@botpress/webchat@*, @botpress/webchat@0.2.5, @botpress/webchat@workspace:packages/webchat":
   version: 0.0.0-use.local
   resolution: "@botpress/webchat@workspace:packages/webchat"
   dependencies:
     "@blueprintjs/core": ^3.23.1
-    "@botpress/messaging-components": 0.2.0
+    "@botpress/messaging-components": 0.2.1
     "@botpress/messaging-socket": 1.1.0
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4

@@ -47,7 +47,7 @@ export const Image: React.FC<MessageTypeHandlerProps<'image'>> = ({ image, title
   return (
     <div>
       <span>{title}</span>
-      <img src={image} alt={title} />
+      <img src={image} alt="" />
     </div>
   )
 }

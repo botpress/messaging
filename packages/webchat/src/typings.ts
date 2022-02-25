@@ -160,6 +160,8 @@ export interface StudioConnector {
 export interface Config {
   /** Url of the messaging server */
   messagingUrl: string
+  /** Url of the Media File Service where we fetch the bot info */
+  mediaFileServiceUrl?: string
   /** Id of your messaging client */
   clientId: string
   botId?: string
@@ -252,6 +254,8 @@ export interface BotInfo {
     escapeHTML: boolean
   }
   lazySocket: boolean
+  extraStylesheet?: string
+  disableNotificationSound?: boolean
 }
 
 export type uuid = string

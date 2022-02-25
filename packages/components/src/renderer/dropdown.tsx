@@ -85,12 +85,8 @@ export const Dropdown = ({
     text = <p>{message}</p>
   }
 
-  if (displayInKeyboard && Keyboard.isReady()) {
-    return (
-      <Prepend keyboard={renderSelect(true)} visible={shouldDisplay}>
-        {text}
-      </Prepend>
-    )
+  if (displayInKeyboard) {
+    return <Prepend keyboard={renderSelect(true)}>{text}</Prepend>
   }
 
   return (

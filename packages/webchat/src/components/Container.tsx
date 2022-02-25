@@ -14,7 +14,7 @@ import Header from './Header'
 import MessageList from './messages/MessageList'
 import OverridableComponent from './OverridableComponent'
 
-class Container extends React.Component<ContainerProps> {
+class Container extends React.Component<ContainerProps, ContainerState> {
   renderBody() {
     if (!this.props.isInitialized) {
       return (
@@ -92,3 +92,7 @@ type ContainerProps = { store?: RootStore } & WrappedComponentProps &
     | 'isPoweredByDisplayed'
     | 'rtl'
   >
+
+interface ContainerState {
+  isKeyboardRendered: boolean
+}

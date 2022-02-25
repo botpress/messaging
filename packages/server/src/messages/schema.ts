@@ -62,7 +62,7 @@ const Socket = {
 
   List: Joi.object({
     conversationId: Joi.string().guid().required(),
-    limit: Joi.number().required()
+    limit: Joi.number().min(0).required()
   }).required(),
 
   Feedback: Joi.object({
