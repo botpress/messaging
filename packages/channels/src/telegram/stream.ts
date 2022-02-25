@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'

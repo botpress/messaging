@@ -1,5 +1,4 @@
 import {
-  AckFn,
   ButtonAction,
   ReceiverEvent,
   RespondFn,

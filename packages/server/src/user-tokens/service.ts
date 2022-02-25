@@ -10,7 +10,6 @@ import {
 } from '@botpress/messaging-engine'
 import crypto from 'crypto'
 import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
-import yn from 'yn'
 import { UserService } from '../users/service'
 import { UserTokenTable } from './table'
 import { UserToken } from './types'

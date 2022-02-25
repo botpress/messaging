@@ -1,5 +1,5 @@
 import { v4 as uuid, validate as validateUuid } from 'uuid'
-import { Conversation, Message, MessagingChannel, MessagingClient, SyncRequest, SyncWebhook, User } from '../../src'
+import { Conversation, Message, MessagingChannel, MessagingClient, SyncWebhook, User } from '../../src'
 
 const FAKE_UUID = uuid()
 const FAKE_CLIENT_ID = uuid()

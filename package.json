@@ -68,6 +68,8 @@
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-jsdoc": "37.7.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "jest": "^27.4.7",
     "jest-dev-server": "^6.0.3",
     "mkdirp": "^1.0.4",

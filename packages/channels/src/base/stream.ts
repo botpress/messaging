@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { ChannelContext, IndexChoiceOption } from './context'
+import { ChannelContext } from './context'
 import { ChannelRenderer } from './renderer'
 import { ChannelSender } from './sender'
 import { ChannelSendEvent, ChannelService } from './service'

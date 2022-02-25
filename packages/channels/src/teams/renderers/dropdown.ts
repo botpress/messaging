@@ -1,4 +1,4 @@
-import { ActivityTypes, CardFactory } from 'botbuilder'
+import { CardFactory } from 'botbuilder'
 import { ChannelRenderer } from '../../base/renderer'
 import { TeamsContext } from '../context'
 import { QUICK_REPLY_PREFIX } from './choices'

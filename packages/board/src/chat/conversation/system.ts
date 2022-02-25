@@ -26,7 +26,7 @@ export class WebchatConversation extends WebchatSystem {
     if (!conversation) {
       conversation = await this.socket.createConversation()
     } else {
-      this.socket.switchConversation(conversation.id)
+      await this.socket.switchConversation(conversation.id)
     }
 
     this.storage.set(STORAGE_ID, conversation.id)

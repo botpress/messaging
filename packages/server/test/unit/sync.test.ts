@@ -1,6 +1,3 @@
-import { DatabaseService } from '@botpress/messaging-engine'
-import cloneDeep from 'lodash/cloneDeep'
-
 import { ChannelService } from '../../src/channels/service'
 import { SyncApi } from '../../src/sync/api'
 

@@ -35,6 +35,6 @@ export class Webchat {
   }
 
   public async destroy() {
-    this.socket.disconnect()
+    await this.socket.disconnect()
   }
 }
