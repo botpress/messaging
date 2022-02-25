@@ -1,6 +1,6 @@
 {
   "name": "@botpress/webchat-inject",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn && yarn run -T parcel build src/index.html src/inject.js --public-url ./",
