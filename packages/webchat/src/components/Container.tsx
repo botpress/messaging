@@ -12,7 +12,6 @@ import ConversationList from './ConversationList'
 import Footer from './Footer'
 import Header from './Header'
 import MessageList from './messages/MessageList'
-import OverridableComponent from './OverridableComponent'
 
 class Container extends React.Component<ContainerProps, ContainerState> {
   renderBody() {
@@ -37,7 +36,7 @@ class Container extends React.Component<ContainerProps, ContainerState> {
         >
           <MessageList />
           <Keyboard>
-            <OverridableComponent name={'composer'} original={Composer} />
+            <Composer />
           </Keyboard>
         </div>
       )
@@ -52,11 +51,9 @@ class Container extends React.Component<ContainerProps, ContainerState> {
 
     return (
       <React.Fragment>
-        <OverridableComponent name={'before_container'} original={null} />
         <div className={classNames} style={{ width: this.props.dimensions!.layout }}>
           <Header />
           {this.renderBody()}
-          <OverridableComponent name={'below_conversation'} original={null} />
           {this.props.isPoweredByDisplayed && <Footer />}
         </div>
       </React.Fragment>

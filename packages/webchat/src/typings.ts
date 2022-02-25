@@ -1,4 +1,3 @@
-// import { BPStorage } from '../../../../../packages/ui-shared-lite/utils/storage'
 import { RootStore } from './store'
 import { BPStorage } from './utils/storage'
 
@@ -10,7 +9,6 @@ declare global {
     store: RootStore
     BOT_ID: string
     SEND_USAGE_STATS: boolean
-    SHOW_POWERED_BY: boolean
     USE_SESSION_STORAGE: boolean
     BP_STORAGE: BPStorage
     botpress: {
@@ -160,79 +158,139 @@ export interface StudioConnector {
 export interface Config {
   /** Url of the messaging server */
   messagingUrl: string
-  /** Url of the Media File Service where we fetch the bot info */
-  mediaFileServiceUrl?: string
   /** Id of your messaging client */
   clientId: string
-  botId?: string
-  externalAuthToken?: string
-  userId?: string
-  conversationId?: uuid
-  /** Allows to set a different user id for different windows (eg: studio, specific bot, etc) */
-  userIdScope?: string
-  enableReset: boolean
+  /**
+   * Url of the Media File Service where we fetch the bot info
+   * @default ''
+   */
+  mediaFileServiceUrl?: string
+  /**
+   * Key used to encrypt data in the localStorage
+   * @default '''
+   */
+  encryptionKey?: string
+  /**
+   * Provide a path to a stylesheet to customize the webchat
+   * @default '''
+   */
   stylesheet?: string
-  extraStylesheet?: string
-  showConversationsButton: boolean
-  showUserName: boolean
-  showUserAvatar: boolean
-  showTimestamp: boolean
-  enableTranscriptDownload: boolean
-  enableConversationDeletion: boolean
-  enableArrowNavigation: boolean
-  closeOnEscape: boolean
+  /**
+   * If false, will hide the conversation list pane
+   * @default true
+   */
+  showConversationsButton?: boolean
+  /**
+   * If true, will display a timestamp under each messages
+   * @default false
+   */
+  showTimestamp?: boolean
+  /**
+   * Allows the user to download the conversation history
+   * @default true
+   */
+  enableTranscriptDownload?: boolean
+  /**
+   * Allows the user to delete its conversation history
+   * @default false
+   */
+  enableConversationDeletion?: boolean
+  /**
+   * Close the webchat when pressing the Esc key
+   * @default true
+   */
+  closeOnEscape?: boolean
+  /**
+   * Displays the bot name to the right of its avatar
+   * @default ''
+   */
   botName?: string
+  /**
+   * Allows to set a custom composer placeholder
+   * @default 'Reply to {name}'
+   */
   composerPlaceholder?: string
+  /**
+   * Allow to specify a custom URL for the bot's avatar
+   * @default '''
+   */
   avatarUrl?: string
   /** Force the display language of the webchat (en, fr, ar, ru, etc..)
    * Defaults to the user's browser language if not set
    * Set to 'browser' to force use the browser's language
+   * @default 'browser'
    */
   locale?: 'browser' | string
-  /** Small description written under the bot's name */
-  botConvoDescription?: string
-  /** Replace or insert components at specific locations */
-  overrides?: Overrides
-  /** When true, the widget button is hidden */
-  hideWidget: boolean
-  /** Disable the slide in / out animations of the webchat */
-  disableAnimations: boolean
-  /** When true, sets ctrl+Enter as shortcut for reset session then send */
-  enableResetSessionShortcut: boolean
-  /** When true, webchat tries to use native webspeech api (uses hosted mozilla and google voice services) */
-  enableVoiceComposer: boolean
-  recentConversationLifetime: string
-  startNewConvoOnTimeout: boolean
-  /** Use sessionStorage instead of localStorage, which means the session expires when tab is closed */
-  useSessionStorage: boolean
+  /**
+   * Small description written under the bot's name
+   * @default ''
+   */
+  botConversationDescription?: string
+  /**
+   * When true, the widget button to open the chat is hidden
+   * @default false
+   */
+  hideWidget?: boolean
+  /**
+   * Disable the slide in / out animations of the webchat
+   * @default false
+   */
+  disableAnimations?: boolean
+  /**
+   * When true, webchat displays a voice icon in the composer to send voice messages (must use Google Speech integration)
+   * @default false
+   */
+  enableVoiceComposer?: boolean
+  /**
+   * Use sessionStorage instead of localStorage, which means the session expires when tab is closed
+   * @default false
+   */
+  useSessionStorage?: boolean
+  /**
+   * Sends an event to the parent container with the width provided
+   * @default 360
+   */
   containerWidth?: string | number
+  /**
+   * Sets the width of the webchat
+   * @default 360
+   */
   layoutWidth?: string | number
-  showPoweredBy: boolean
-  /** When enabled, sent messages are persisted to local storage (recall previous messages)  */
-  enablePersistHistory: boolean
-  /** Experimental: expose the store to the parent frame for more control on the webchat's behavior */
-  exposeStore: boolean
-  /** If true, Websocket is created when the Webchat is opened. Bot cannot be proactive. */
+  /**
+   * Show Powered By Botpress in the footer
+   * @default false
+   */
+  showPoweredBy?: boolean
+  /**
+   * When enabled, sent messages are persisted to local storage (recall previous messages)
+   * @default true
+   */
+  enablePersistHistory?: boolean
+  /**
+   * Experimental: expose the store to the parent frame for more control on the webchat's behavior
+   * @default false
+   */
+  exposeStore?: boolean
+  /**
+   * If true, Websocket is created when the Webchat is opened. Bot cannot be proactive.
+   * @default false
+   */
   lazySocket?: boolean
-  /** If true, chat will no longer play the notification sound for new messages. */
+  /**
+   * If true, chat will no longer play the notification sound for new messages.
+   * @default false
+   */
   disableNotificationSound?: boolean
-  /** Refers to a specific webchat reference in parent window. Useful when using multiple chat window */
+  /**
+   * Refers to a specific webchat reference in parent window. Useful when using multiple chat window
+   * @default ''
+   */
   chatId?: string
-  /** CSS class to be applied to iframe */
+  /**
+   * CSS class to be applied to iframe
+   * @default '''
+   */
   className?: string
-  /** Key used to encrypt data in the localStorage */
-  encryptionKey?: string
-}
-
-export type OverridableComponents = 'below_conversation' | 'before_container' | 'composer'
-
-export interface Overrides {
-  [componentToOverride: string]: [
-    {
-      module: string
-      component: string
-    }
-  ]
 }
 
 export interface BotDetails {
@@ -242,6 +300,7 @@ export interface BotDetails {
   privacyPolicy?: string
   emailAddress?: string
   avatarUrl?: string
+  coverPictureUrl?: string
 }
 
 export interface BotInfo {

@@ -2,6 +2,7 @@ import classnames from 'classnames'
 import { inject, observer } from 'mobx-react'
 import React, { Fragment } from 'react'
 import { FormattedMessage, WrappedComponentProps, injectIntl } from 'react-intl'
+import { BotInfo } from '../../..'
 
 import EmailIcon from '../../../icons/Email'
 import PhoneIcon from '../../../icons/Phone'
@@ -11,14 +12,11 @@ import { renderUnsafeHTML } from '../../../utils'
 
 import Avatar from '../Avatar'
 
-const CoverPicture = ({ botInfo }: { botInfo: any }) => (
+const CoverPicture = ({ botInfo }: { botInfo?: BotInfo }) => (
   <div className={'bpw-botinfo-cover-picture-wrapper'}>
     <img
       className={'bpw-botinfo-cover-picture'}
-      src={
-        (botInfo.details && botInfo.details.coverPictureUrl) ||
-        `https://via.placeholder.com/400x175?text=${botInfo.name}`
-      }
+      src={botInfo?.details.coverPictureUrl || `https://via.placeholder.com/400x175?text=${botInfo?.name || ''}`}
     />
   </div>
 )
@@ -36,9 +34,9 @@ class BotInfoPage extends React.Component<BotInfoProps> {
     return <div className={'bpw-botinfo-description'} dangerouslySetInnerHTML={{ __html: html }} />
   }
 
-  changeLanguage = async (e: any) => {
+  changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const lang = e.target.value
-    await this.props.updatePreferredLanguage!(lang)
+    this.props.updatePreferredLanguage!(lang)
   }
 
   render() {
@@ -161,7 +159,6 @@ type BotInfoProps = WrappedComponentProps &
     | 'toggleBotInfo'
     | 'startConversation'
     | 'isConversationStarted'
-    | 'enableArrowNavigation'
     | 'updatePreferredLanguage'
     | 'preferredLanguage'
     | 'escapeHTML'

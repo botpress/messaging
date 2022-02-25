@@ -11,9 +11,6 @@ import BPStorage from './utils/storage'
 
 configure({ enforceActions: 'observed' })
 
-export const Embedded = (props: any) => new Wrapper({ ...props, fullscreen: false })
-export const Fullscreen = (props: any) => new Wrapper({ ...props, fullscreen: true })
-
 interface State {
   store: RootStore
 }
@@ -41,34 +38,16 @@ export class ExposedWebChat extends React.Component<Props, State> {
     return (
       <Provider store={store}>
         <IntlProvider locale={locale} messages={translations[locale || defaultLocale]} defaultLocale={defaultLocale}>
-          <Chat store={store} {...this.props} />
+          <Chat {...this.props} />
         </IntlProvider>
       </Provider>
     )
   }
 }
 
-// TODO: what does this observer do?
 const Wrapper = observer(ExposedWebChat)
 
-/**
- * @deprecated Since the way views are handled has changed, we're also exporting views in lowercase.
- * https://botpress.com/docs/developers/migrate/
- */
-export { Embedded as embedded } from '.'
-export { Fullscreen as fullscreen } from '.'
+export const Embedded = (props: Props) => new Wrapper({ ...props, fullscreen: false })
+export const Fullscreen = (props: Props) => new Wrapper({ ...props, fullscreen: true })
 
 export * from './typings'
-
-// TODO: export this
-/*
-export {
-  Carousel,
-  QuickReplies,
-  LoginPrompt,
-  Text,
-  FileMessage,
-  FileInput,
-  Button
-} from './components/messages/renderer'
-*/

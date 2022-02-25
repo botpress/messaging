@@ -17,15 +17,17 @@ import {
   Message,
   QueuedMessage,
   RecentConversation,
-  StudioConnector,
   uuid
 } from '../typings'
-import { downloadFile, isRTLLocale, trackMessage } from '../utils'
+import { downloadFile } from '../utils'
+import { trackMessage } from '../utils/analytics'
+import { isRTLLocale } from '../translations'
 
 import ComposerStore from './composer'
 import ViewStore from './view'
+import axios from 'axios'
 
-/** Includes the partial definitions of all classes */
+/** Includes the definitions of all store classes */
 export type StoreDef = Partial<RootStore> & Partial<ViewStore> & Partial<ComposerStore> & Partial<Config>
 class RootStore {
   public composer: ComposerStore
@@ -97,7 +99,7 @@ class RootStore {
 
   @computed
   get hasBotInfoDescription(): boolean {
-    return !!this.config.botConvoDescription?.length
+    return !!this.config.botConversationDescription?.length
   }
 
   @computed
@@ -213,7 +215,7 @@ class RootStore {
   async initializeChat(): Promise<void> {
     try {
       await this.fetchConversations()
-      await this.fetchConversation(this.config.conversationId)
+      await this.fetchConversation()
       runInAction('-> setInitialized', () => {
         this.isInitialized = true
         this.postMessage('webchatReady')
@@ -232,18 +234,21 @@ class RootStore {
       return
     }
 
-    const botInfo = await this.api.fetchBotInfo(this.config.mediaFileServiceUrl)
-    if (!botInfo) {
-      return
-    }
+    try {
+      const { data } = await axios.get<BotInfo>(this.config.mediaFileServiceUrl)
+      if (!data) {
+        return
+      }
 
-    runInAction('-> setBotInfo', () => {
-      this.botInfo = botInfo
-    })
-    this.mergeConfig({
-      extraStylesheet: botInfo.extraStylesheet,
-      disableNotificationSound: botInfo.disableNotificationSound
-    })
+      runInAction('-> setBotInfo', () => {
+        this.botInfo = data
+      })
+      this.mergeConfig({
+        disableNotificationSound: data.disableNotificationSound
+      })
+    } catch (err) {
+      console.error('Error while loading bot info', err)
+    }
   }
 
   @action.bound
@@ -340,19 +345,9 @@ class RootStore {
   }
 
   @action.bound
-  async resetSession(): Promise<void> {
-    if (this.currentConversationId) {
-      this.composer.setLocked(false)
-
-      return this.api.resetSession(this.currentConversationId)
-    }
-  }
-
-  @action.bound
   async extractFeedback(messages: Message[]): Promise<void> {
     const feedbackMessageIds = messages.filter((x) => x.payload && x.payload.collectFeedback).map((x) => x.id)
 
-    // TODO: store feedback somewhere
     const feedbackInfo = feedbackMessageIds.map((x) => ({ messageId: x, feedback: 1 }))
     runInAction('-> setFeedbackInfo', () => {
       this.messageFeedbacks = feedbackInfo!
@@ -388,9 +383,9 @@ class RootStore {
           continue
         }
 
-        info += `\n[${formatDate(message.sentOn)}] ${message.authorId ? 'User' : this.config.botId || 'Bot'}: Event (${
-          payload.type
-        }): ${
+        info += `\n[${formatDate(message.sentOn)}] ${
+          message.authorId ? 'User' : this.config.botName || 'Bot'
+        }: Event (${payload.type}): ${
           payload.text ||
           payload.audio ||
           payload.image ||
@@ -423,13 +418,6 @@ class RootStore {
     this.updateLastMessage(this.currentConversationId, message)
   }
 
-  @action.bound
-  async uploadFile(title: string, payload: string, file: File): Promise<void> {
-    if (this.currentConversationId) {
-      await this.api.uploadFile(file, payload, this.currentConversationId)
-    }
-  }
-
   /** Sends a message of type voice */
   @action.bound
   async sendVoiceMessage(voice: Buffer, ext: string): Promise<void> {
@@ -447,7 +435,7 @@ class RootStore {
 
   /** This replaces all the configurations by this object */
   @action.bound
-  updateConfig(config: Config, bp?: StudioConnector) {
+  updateConfig(config: Config) {
     this.config = config
     this._applyConfig()
   }
@@ -457,16 +445,13 @@ class RootStore {
 
     this.config.layoutWidth && this.view.setLayoutWidth(this.config.layoutWidth)
     this.config.containerWidth && this.view.setContainerWidth(this.config.containerWidth)
-    this.view.disableAnimations = this.config.disableAnimations
+    this.view.disableAnimations = !!this.config.disableAnimations
     this.config.showPoweredBy ? this.view.showPoweredBy() : this.view.hidePoweredBy()
 
     document.title = this.config.botName || 'Botpress Webchat'
 
-    // TODO: can't work at the moment
-    // this.api.updateUserId(this.config.userId!)
-
     if (!this.isInitialized) {
-      window.USE_SESSION_STORAGE = this.config.useSessionStorage
+      window.USE_SESSION_STORAGE = !!this.config.useSessionStorage
     } else if (window.USE_SESSION_STORAGE !== this.config.useSessionStorage) {
       console.warn('[WebChat] "useSessionStorage" value cannot be altered once the webchat is initialized')
     }
@@ -475,15 +460,6 @@ class RootStore {
     this.updateBotUILanguage(locale)
     document.documentElement.setAttribute('lang', locale)
 
-    this.publishConfigChanged()
-  }
-
-  /** When this method is used, the user ID is changed in the configuration, then the socket is updated */
-  @action.bound
-  setUserId(userId: string): void {
-    this.config.userId = userId
-    this.resetConversation()
-    // this.api.updateUserId(userId)
     this.publishConfigChanged()
   }
 
@@ -555,7 +531,7 @@ class RootStore {
     }
   }
 
-  /** Returns the current conversation ID, or the last one if it didn't expired. Otherwise, returns nothing. */
+  /** Returns the current conversation ID, or the last one. */
   private _getCurrentConvoId(): uuid | undefined {
     if (this.currentConversationId) {
       return this.currentConversationId
@@ -564,16 +540,6 @@ class RootStore {
     if (!this.conversations.length) {
       return
     }
-
-    // TODO: these settings need to be set in the frontend
-    /*
-    const lifeTimeMargin = Date.now() - ms(this.config.recentConversationLifetime)
-    const isConversationExpired =
-      new Date(this.conversations[0].lastMessage?.sentOn || this.conversations[0].createdOn).getTime() < lifeTimeMargin
-    if (isConversationExpired && this.config.startNewConvoOnTimeout) {
-      return
-    }
-    */
 
     return this.conversations[0].id
   }

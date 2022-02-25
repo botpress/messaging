@@ -7,7 +7,7 @@ import Add from '../icons/Add'
 import { RootStore, StoreDef } from '../store'
 import { RecentConversation } from '../typings'
 
-const ConversationListItem = injectIntl(({ conversation, onClick, hasFocus, intl }: ConversationListItemProps) => {
+const ConversationListItem = injectIntl(({ conversation, onClick, intl }: ConversationListItemProps) => {
   const title = intl.formatMessage({ id: 'conversationList.title' }, { id: conversation.id })
 
   const { value, unit } = selectUnit(new Date(conversation.lastMessage?.sentOn || conversation.createdOn))
@@ -32,77 +32,29 @@ const ConversationListItem = injectIntl(({ conversation, onClick, hasFocus, intl
 
 type ConversationListItemProps = {
   conversation: RecentConversation
-  hasFocus: boolean
   onClick: (event: React.MouseEvent) => void
 } & WrappedComponentProps &
   Pick<StoreDef, 'conversations' | 'fetchConversation' | 'createConversation'>
 
 class ConversationList extends React.Component<ConversationListProps> {
   private main!: HTMLElement
-  private btn!: HTMLElement
-
-  state: { focusIdx?: number } = {
-    focusIdx: undefined
-  }
 
   componentDidMount() {
     this.main.focus()
   }
 
-  componentDidUpdate(_: any, prevState: { focusIdx: number }) {
-    if (this.state.focusIdx === this.props.conversations!.length) {
-      this.btn.focus()
-    } else if (prevState.focusIdx === this.props.conversations!.length) {
-      this.main.focus()
-    }
-  }
-
-  changeFocus = (step: any) => {
-    let focusIdx = this.state.focusIdx || 0
-    focusIdx += step
-
-    if (focusIdx > this.props.conversations!.length) {
-      focusIdx = 0
-    } else if (focusIdx < 0) {
-      focusIdx = this.props.conversations!.length
-    }
-
-    this.setState({ focusIdx })
-  }
-
-  handleKeyDown = (e: any) => {
-    if (!this.props.enableArrowNavigation) {
-      return
-    }
-
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-      this.changeFocus(1)
-    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      this.changeFocus(-1)
-    } else if (e.key === 'Enter' && this.state.focusIdx && this.state.focusIdx < this.props.conversations!.length) {
-      const convoId = this.props.conversations![this.state.focusIdx].id
-      this.props.fetchConversation!.bind(this, convoId)
-    }
-  }
-
   render() {
     const { conversations, createConversation, fetchConversation } = this.props
     return (
-      <div tabIndex={0} ref={(el) => (this.main = el!)} className={'bpw-convo-list'} onKeyDown={this.handleKeyDown}>
-        {conversations!.map((convo, idx) => (
+      <div tabIndex={0} ref={(el) => (this.main = el!)} className={'bpw-convo-list'}>
+        {conversations!.map((conversation, idx) => (
           <ConversationListItem
-            key={convo.id}
-            hasFocus={this.state.focusIdx === idx}
-            conversation={convo}
-            onClick={fetchConversation!.bind(this, convo.id)}
+            key={conversation.id}
+            conversation={conversation}
+            onClick={fetchConversation!.bind(this, conversation.id)}
           />
         ))}
-        <button
-          ref={(el) => (this.btn = el!)}
-          id="btn-convo-add"
-          className={'bpw-convo-add-btn'}
-          onClick={createConversation!.bind(this, undefined)}
-        >
+        <button id="btn-convo-add" className={'bpw-convo-add-btn'} onClick={createConversation!.bind(this, undefined)}>
           <Add width={15} height={15} />
         </button>
       </div>
@@ -113,9 +65,8 @@ class ConversationList extends React.Component<ConversationListProps> {
 export default inject(({ store }: { store: RootStore }) => ({
   conversations: store.conversations,
   createConversation: store.createConversation,
-  fetchConversation: store.fetchConversation,
-  enableArrowNavigation: store.config.enableArrowNavigation
+  fetchConversation: store.fetchConversation
 }))(injectIntl(observer(ConversationList)))
 
 type ConversationListProps = WrappedComponentProps &
-  Pick<StoreDef, 'conversations' | 'fetchConversation' | 'createConversation' | 'enableArrowNavigation'>
+  Pick<StoreDef, 'conversations' | 'fetchConversation' | 'createConversation'>
