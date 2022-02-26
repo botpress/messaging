@@ -1,3 +1,4 @@
+import axios from 'axios'
 import isBefore from 'date-fns/is_before'
 import isValid from 'date-fns/is_valid'
 import merge from 'lodash/merge'
@@ -8,7 +9,7 @@ import { IntlShape } from 'react-intl'
 import WebchatApi from '../core/api'
 import BpSocket from '../core/socket'
 import { DEFAULT_TYPING_DELAY } from '../main'
-import { getUserLocale, setUserLocale } from '../translations'
+import { getUserLocale, setUserLocale, isRTLLocale } from '../translations'
 import {
   BotInfo,
   Config,
@@ -21,11 +22,9 @@ import {
 } from '../typings'
 import { downloadFile } from '../utils'
 import { trackMessage } from '../utils/analytics'
-import { isRTLLocale } from '../translations'
 
 import ComposerStore from './composer'
 import ViewStore from './view'
-import axios from 'axios'
 
 /** Includes the definitions of all store classes */
 export type StoreDef = Partial<RootStore> & Partial<ViewStore> & Partial<ComposerStore> & Partial<Config>
