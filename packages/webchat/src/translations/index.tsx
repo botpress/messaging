@@ -47,7 +47,7 @@ const rtlLocales = [
   'yi' /* 'ייִדיש', Yiddish */
 ]
 // 'en-US' becomes ['en', '-us'] 'en' becomes ['en']
-const localeRegex = /^([a-zA-Z]*)([_\-a-zA-Z]*)$/
+const localeRegex = /^([a-zA-Z]{2,3})([_\-a-zA-Z]{3,5})$/
 
 const cleanLanguageCode = (str: string) => str.split('-')[0]
 const getNavigatorLanguage = () => cleanLanguageCode(navigator.language || (navigator as any)['userLanguage'] || '')
