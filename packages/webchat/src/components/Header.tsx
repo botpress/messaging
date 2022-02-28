@@ -272,7 +272,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   botName: store.botName,
   botAvatarUrl: store.botAvatarUrl,
   hasBotInfoDescription: store.hasBotInfoDescription,
-  botConvoDescription: store.config.botConversationDescription
+  botConversationDescription: store.config.botConversationDescription
 }))(observer(Header))
 
 type HeaderProps = Pick<
