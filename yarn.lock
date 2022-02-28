@@ -2434,7 +2434,6 @@ __metadata:
     mime: ^3.0.0
     mobx: 5.15.7
     mobx-react: ^6.2.1
-    mobx-react-lite: 2.0.0
     prop-types: ^15.8.1
     query-string: ^7.1.0
     react: ^17.0.2

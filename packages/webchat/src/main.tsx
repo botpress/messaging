@@ -8,15 +8,32 @@ import React from 'react'
 import { injectIntl, WrappedComponentProps } from 'react-intl'
 
 import Container from './components/Container'
-import Stylesheet from './components/Stylesheet'
 import constants from './core/constants'
 import BpSocket from './core/socket'
 import ChatIcon from './icons/Chat'
 import { RootStore, StoreDef } from './store'
-import { Config, Message, Overrides, uuid } from './typings'
-import { checkLocationOrigin, initializeAnalytics, isIE, trackMessage, trackWebchatState } from './utils'
+import { Config, Message } from './typings'
+import { isIE } from './utils'
+import { initializeAnalytics, trackMessage, trackWebchatState } from './utils/analytics'
 
 export const DEFAULT_TYPING_DELAY = 1000
+
+interface IframeAPIPayload {
+  text: string
+  type: 'show' | 'hide' | 'toggle' | 'message' | 'loadConversation' | 'toggleBotInfo' | string
+  conversationId?: string
+}
+interface IframeAPIData {
+  data:
+    | {
+        action: 'event'
+        payload: IframeAPIPayload
+      }
+    | {
+        action: 'configure' | 'mergeConfig' | 'sendPayload'
+        payload: Config
+      }
+}
 
 class Web extends React.Component<MainProps> {
   private config!: Config
@@ -28,19 +45,19 @@ class Web extends React.Component<MainProps> {
   constructor(props: MainProps) {
     super(props)
 
-    checkLocationOrigin()
     initializeAnalytics()
   }
 
   async componentDidMount() {
     this.audio = new Audio(require('url:../assets/notification.mp3'))
-    this.props.store.setIntlProvider(this.props.intl)
-    window.store = this.props.store
+    this.props.setIntlProvider!(this.props.intl)
+
+    window.store = this.props.store!
 
     window.addEventListener('message', this.handleIframeApi)
     window.addEventListener('keydown', this.handleKeyDown)
 
-    await this.load()
+    await this.loadConfig()
     await this.initializeIfChatDisplayed()
 
     this.props.setLoadingCompleted!()
@@ -69,30 +86,26 @@ class Web extends React.Component<MainProps> {
         await this.initializeSocket()
       }
 
-      await this.socket.waitForUserId()
-      this.props.store.setSocket(this.socket)
+      await this.socket.connect()
+      this.props.setSocket!(this.socket)
       await this.props.initializeChat!()
     }
   }
 
-  async load() {
+  async loadConfig() {
     this.config = this.extractConfig()
+    this.props.updateConfig!(this.config)
 
     if (this.config.exposeStore) {
       const storePath = this.config.chatId ? `${this.config.chatId}.webchat_store` : 'webchat_store'
       set(window.parent, storePath, this.props.store)
     }
 
-    if (this.config.overrides) {
-      this.loadOverrides(this.config.overrides)
-    }
-
     if (this.config.containerWidth) {
       this.postMessageToParent('setWidth', this.config.containerWidth)
     }
 
-    // TODO: replace this by frontend configuration
-    // await this.props.fetchBotInfo!()
+    await this.props.fetchBotInfo!()
 
     if (!this.isLazySocket()) {
       await this.initializeSocket()
@@ -102,82 +115,48 @@ class Web extends React.Component<MainProps> {
   }
 
   postMessageToParent(type: string, value: any) {
-    window.parent?.postMessage({ type, value, chatId: this.config?.chatId }, '*')
+    window.parent?.postMessage({ type, value, chatId: this.config.chatId }, '*')
   }
 
   extractConfig(): Config {
-    const decodeIfRequired = (options: string) => {
-      try {
-        return decodeURIComponent(options)
-      } catch {
-        return options
-      }
-    }
+    let userConfig = Object.assign({}, constants.DEFAULT_CONFIG, this.props.config)
     const { options } = queryString.parse(location.search)
-    const { config } = JSON.parse(decodeIfRequired((options as string) || '{}'))
+    if (!options || typeof options !== 'string') {
+      console.warn(`Cannot decode option. Invalid format: ${typeof options}, expecting 'string'.`)
 
-    const userConfig: Config = Object.assign({}, constants.DEFAULT_CONFIG, this.props.config, config)
+      return userConfig
+    }
 
-    this.props.updateConfig!(userConfig)
+    try {
+      const parsedOptions: { config: Config } = JSON.parse(decodeURIComponent(options))
+      userConfig = Object.assign(userConfig, parsedOptions.config)
 
-    return userConfig
+      return userConfig
+    } catch (err) {
+      // TODO: Handle those errors so they don't directly bubble up to the users
+      throw new Error(`An error occurred while extracting the configurations ${err}`)
+    }
   }
 
   async initializeSocket() {
     this.socket = new BpSocket(this.config)
-    this.socket.onClear = this.handleClearMessages
     this.socket.onMessage = this.handleNewMessage
-    this.socket.onTyping = this.handleTyping
-    this.socket.onData = this.handleDataMessage
-    this.socket.onUserIdChanged = this.props.setUserId!
-
-    // TODO: Can't do that
-    // this.config.userId && this.socket.changeUserId(this.config.userId)
 
     this.socket.setup()
-    await this.socket.waitForUserId()
-    this.props.store.setSocket(this.socket)
-  }
-
-  loadOverrides(overrides: Overrides) {
-    try {
-      for (const override of Object.values(overrides)) {
-        // TODO: load module view this can't work
-        // override.map(({ module }) => this.props.bp!.loadModuleView(module, true))
-      }
-    } catch (err: any) {
-      console.error('Error while loading overrides', err.message)
-    }
+    await this.socket.connect()
+    this.props.setSocket!(this.socket)
   }
 
   setupObserver() {
-    observe(this.props.config!, 'userId', async (data: any) => {
-      if (!data.oldValue || data.oldValue === data.newValue) {
-        return
-      }
-
-      // TODO: Can't work right now
-      // this.socket.changeUserId(data.newValue)
-      this.socket.setup()
-      await this.socket.waitForUserId()
-      await this.props.initializeChat!()
-    })
-
-    observe(this.props.config!, 'overrides', (data: any) => {
-      if (data.newValue && window.parent) {
-        this.loadOverrides(data.newValue)
-      }
-    })
-
-    observe(this.props.dimensions!, 'container', (data: any) => {
-      if (data.newValue && window.parent) {
+    observe(this.props.dimensions!, 'container', (data) => {
+      if (data.newValue) {
         this.postMessageToParent('setWidth', data.newValue)
       }
     })
   }
 
   isCurrentConversation = (event: Message) => {
-    return !this.props.config?.conversationId || this.props.config?.conversationId === event.conversationId
+    return this.props.currentConversationId === event.conversationId
   }
 
   handleKeyDown = async (e: KeyboardEvent) => {
@@ -190,45 +169,47 @@ class Web extends React.Component<MainProps> {
     }
   }
 
-  handleIframeApi = async ({ data: { action, payload } }: { data: { action: any; payload: any } }) => {
-    if (action === 'configure') {
-      this.props.updateConfig!(Object.assign({}, constants.DEFAULT_CONFIG, payload))
-    } else if (action === 'mergeConfig') {
-      this.props.mergeConfig!(payload)
-    } else if (action === 'sendPayload') {
-      await this.props.sendData!(payload)
-    } else if (action === 'event') {
-      const { type, text } = payload
+  handleIframeApi = async ({ data }: IframeAPIData) => {
+    switch (data.action) {
+      case 'configure':
+        return this.props.updateConfig!(Object.assign({}, constants.DEFAULT_CONFIG, data.payload))
+      case 'mergeConfig':
+        return this.props.mergeConfig!(data.payload)
+      case 'sendPayload':
+        return this.props.sendData!(data.payload)
+      case 'event':
+        const { type, text, conversationId } = data.payload
 
-      if (type === 'show') {
-        this.props.showChat!()
-        trackWebchatState('show')
-      } else if (type === 'hide') {
-        this.props.hideChat!()
-        trackWebchatState('hide')
-      } else if (type === 'toggle') {
-        this.props.displayWidgetView ? this.props.showChat!() : this.props.hideChat!()
-        trackWebchatState('toggle')
-      } else if (type === 'message') {
-        trackMessage('sent')
-        await this.props.sendMessage!(text)
-      } else if (type === 'loadConversation') {
-        await this.props.store.fetchConversation(payload.conversationId)
-      } else if (type === 'toggleBotInfo') {
-        this.props.toggleBotInfo!()
-      } else {
-        await this.props.sendData!({ type, payload })
-      }
-    }
-  }
-
-  handleClearMessages = (event: Message) => {
-    if (this.isCurrentConversation(event)) {
-      this.props.clearMessages!()
+        if (type === 'show') {
+          this.props.showChat!()
+          trackWebchatState('show')
+        } else if (type === 'hide') {
+          this.props.hideChat!()
+          trackWebchatState('hide')
+        } else if (type === 'toggle') {
+          this.props.displayWidgetView ? this.props.showChat!() : this.props.hideChat!()
+          trackWebchatState('toggle')
+        } else if (type === 'message') {
+          trackMessage('sent')
+          await this.props.sendMessage!(text)
+        } else if (type === 'loadConversation') {
+          await this.props.fetchConversation!(conversationId)
+        } else if (type === 'toggleBotInfo') {
+          this.props.toggleBotInfo!()
+        } else {
+          await this.props.sendData!({ type, payload: data.payload })
+        }
+      default:
+        break
     }
   }
 
   handleNewMessage = async (event: Message) => {
+    if (!this.isCurrentConversation(event)) {
+      // don't do anything, it's a message from another conversation
+      return
+    }
+
     if (event.authorId === undefined) {
       const value = (event.payload.type === 'typing' ? event.payload.value : undefined) || DEFAULT_TYPING_DELAY
       await this.handleTyping({ ...event, timeInMs: value })
@@ -236,11 +217,6 @@ class Web extends React.Component<MainProps> {
 
     if (event.payload?.type === 'visit') {
       // don't do anything, it's the system message
-      return
-    }
-
-    if (!this.isCurrentConversation(event)) {
-      // don't do anything, it's a message from another conversation
       return
     }
 
@@ -259,34 +235,11 @@ class Web extends React.Component<MainProps> {
   }
 
   handleTyping = async (event: Message) => {
-    if (!this.isCurrentConversation(event)) {
-      // don't do anything, it's a message from another conversation
-      return
-    }
-
     await this.props.updateTyping!(event)
   }
 
-  handleDataMessage = (event: Message) => {
-    if (!event || !event.payload) {
-      return
-    }
-
-    const { language } = event.payload
-    if (!language) {
-      return
-    }
-
-    this.props.updateBotUILanguage!(language)
-  }
-
   playSound = debounce(async () => {
-    // Preference for config object
-    const disableNotificationSound =
-      this.config.disableNotificationSound === undefined
-        ? this.props.config!.disableNotificationSound
-        : this.config.disableNotificationSound
-
+    const disableNotificationSound = this.config.disableNotificationSound || this.props.config?.disableNotificationSound
     if (disableNotificationSound || this.audio.readyState < 2) {
       return
     }
@@ -329,7 +282,7 @@ class Web extends React.Component<MainProps> {
   applyAndRenderStyle() {
     const parentClass = classnames(`bp-widget-web bp-widget-${this.props.activeView}`, {
       'bp-widget-hidden': !this.props.showWidgetButton && this.props.displayWidgetView,
-      [this.props.config!.className!]: !!this.props.config!.className
+      [this.props.config?.className!]: !!this.props.config?.className
     })
 
     if (this.parentClass !== parentClass) {
@@ -337,14 +290,15 @@ class Web extends React.Component<MainProps> {
       this.parentClass = parentClass
     }
 
-    const { stylesheet, extraStylesheet } = this.props.config!
+    const stylesheet = this.props.config!.stylesheet
+    const extraStylesheet = this.props.botInfo?.extraStylesheet
     const RobotoFont = React.lazy(() => import('./fonts/roboto'))
 
     return (
       <React.Fragment>
-        {!!stylesheet?.length && <Stylesheet href={stylesheet} />}
+        {!!stylesheet?.length && <link rel="stylesheet" type="text/css" href={stylesheet} />}
         <React.Suspense fallback={<></>}>{!isIE && <RobotoFont />}</React.Suspense>
-        {!!extraStylesheet?.length && <Stylesheet href={extraStylesheet} />}
+        {!!extraStylesheet?.length && <link rel="stylesheet" type="text/css" href={extraStylesheet} />}
       </React.Fragment>
     )
   }
@@ -380,7 +334,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   mergeConfig: store.mergeConfig,
   addEventToConversation: store.addEventToConversation,
   clearMessages: store.clearMessages,
-  setUserId: store.setUserId,
   updateTyping: store.updateTyping,
   sendMessage: store.sendMessage,
   updateBotUILanguage: store.updateBotUILanguage,
@@ -400,10 +353,14 @@ export default inject(({ store }: { store: RootStore }) => ({
   displayWidgetView: store.view.displayWidgetView,
   setLoadingCompleted: store.view.setLoadingCompleted,
   sendFeedback: store.sendFeedback,
-  updateLastMessage: store.updateLastMessage
+  updateLastMessage: store.updateLastMessage,
+  fetchConversation: store.fetchConversation,
+  setIntlProvider: store.setIntlProvider,
+  setSocket: store.setSocket,
+  currentConversationId: store.currentConversationId
 }))(injectIntl(observer(Web)))
 
-type MainProps = { store: RootStore } & WrappedComponentProps &
+type MainProps = { store?: RootStore } & WrappedComponentProps &
   Pick<
     StoreDef,
     | 'config'
@@ -411,7 +368,6 @@ type MainProps = { store: RootStore } & WrappedComponentProps &
     | 'botInfo'
     | 'fetchBotInfo'
     | 'sendMessage'
-    | 'setUserId'
     | 'sendData'
     | 'intl'
     | 'updateTyping'
@@ -436,4 +392,8 @@ type MainProps = { store: RootStore } & WrappedComponentProps &
     | 'setLoadingCompleted'
     | 'dimensions'
     | 'updateLastMessage'
+    | 'fetchConversation'
+    | 'setIntlProvider'
+    | 'setSocket'
+    | 'currentConversationId'
   >

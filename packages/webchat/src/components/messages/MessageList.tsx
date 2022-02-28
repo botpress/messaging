@@ -45,7 +45,7 @@ class MessageList extends React.Component<MessageListProps, State> {
     // this should account for keyboard rendering as it triggers a resize of the messagesDiv
     this.divSizeObserver = new ResizeObserver(
       debounce(
-        ([divResizeEntry]) => {
+        (_divResizeEntry) => {
           // we don't need to do anything with the resize entry
           this.tryScrollToBottom()
         },
@@ -80,28 +80,7 @@ class MessageList extends React.Component<MessageListProps, State> {
     )
   }
 
-  handleKeyDown = (e: any) => {
-    if (!this.props.enableArrowNavigation) {
-      return
-    }
-
-    const maxScroll = this.messagesDiv.scrollHeight - this.messagesDiv.clientHeight
-    const shouldFocusNext =
-      e.key === 'ArrowRight' || (e.key === 'ArrowDown' && this.messagesDiv.scrollTop === maxScroll)
-    const shouldFocusPrevious = e.key === 'ArrowLeft' || (e.key === 'ArrowUp' && this.messagesDiv.scrollTop === 0)
-
-    if (shouldFocusNext) {
-      this.messagesDiv.blur()
-      this.props.focusNext!()
-    }
-
-    if (shouldFocusPrevious) {
-      this.messagesDiv.blur()
-      this.props.focusPrevious!()
-    }
-  }
-
-  renderDate(date: any) {
+  renderDate(date: Date) {
     return (
       <div className={'bpw-date-container'}>
         {new Intl.DateTimeFormat(this.props.intl.locale || 'en', {
@@ -129,7 +108,7 @@ class MessageList extends React.Component<MessageListProps, State> {
     let currentGroup: Message[] | undefined = undefined
 
     messages.forEach((m) => {
-      const speaker = m.payload.channel?.web?.userName || m.authorId
+      const speaker = m.authorId
       const date = m.sentOn
 
       // Create a new group if messages are separated by more than X minutes or if different speaker
@@ -173,20 +152,16 @@ class MessageList extends React.Component<MessageListProps, State> {
             !groups[i - 1] ||
             differenceInMinutes(new Date(groupDate), new Date(lastDate)) > constants.TIME_BETWEEN_DATES
 
-          const [{ authorId, payload }] = group
+          const [{ authorId }] = group
 
-          const avatar = authorId
-            ? this.props.showUserAvatar &&
-              this.renderAvatar(payload.channel?.web?.userName, payload.channel?.web?.avatarUrl)
-            : this.renderAvatar(this.props.botName!, payload.channel?.web?.avatarUrl || this.props.botAvatarUrl)
+          const avatar = !authorId && this.renderAvatar(this.props.botName!, this.props.botAvatarUrl!)
 
           return (
             <div key={i}>
               {isDateNeeded && this.renderDate(group[0].sentOn)}
               <MessageGroup
                 isBot={!authorId}
-                avatar={avatar as any}
-                userName={payload.channel?.web?.userName}
+                avatar={avatar as JSX.Element}
                 key={`msg-group-${i}`}
                 isLastGroup={i >= groups.length - 1}
                 messages={group}
@@ -214,7 +189,6 @@ class MessageList extends React.Component<MessageListProps, State> {
     return (
       <div
         tabIndex={0}
-        onKeyDown={this.handleKeyDown}
         className={'bpw-msg-list'}
         ref={(m) => {
           this.messagesDiv = m!
@@ -245,8 +219,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   focusPrevious: store.view.focusPrevious,
   focusNext: store.view.focusNext,
   focusedArea: store.view.focusedArea,
-  showUserAvatar: store.config.showUserAvatar,
-  enableArrowNavigation: store.config.enableArrowNavigation,
   preferredLanguage: store.preferredLanguage
 }))(injectIntl(observer(MessageList)))
 
@@ -260,8 +232,6 @@ type MessageListProps = WrappedComponentProps &
     | 'focusNext'
     | 'botAvatarUrl'
     | 'botName'
-    | 'enableArrowNavigation'
-    | 'showUserAvatar'
     | 'currentMessages'
     | 'preferredLanguage'
   >

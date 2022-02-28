@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
+import { IntlShape } from 'react-intl'
 
 import ThumbsDown from '../../icons/ThumbsDown'
 import ThumbsUp from '../../icons/ThumbsUp'
@@ -8,7 +9,7 @@ interface Props {
   onFeedback: (feedback: number, eventId: string) => void
   messageId: string
   messageFeedbacks: MessageFeedback[]
-  intl: any
+  intl: IntlShape
 }
 
 export const InlineFeedback: FC<Props> = ({ messageFeedbacks, messageId, onFeedback, intl }) => {
@@ -20,7 +21,7 @@ export const InlineFeedback: FC<Props> = ({ messageFeedbacks, messageId, onFeedb
     }
   }, [messageFeedbacks])
 
-  const handleSendFeedback = (feedback: any) => {
+  const handleSendFeedback = (feedback: 1 | -1) => {
     onFeedback(feedback, messageId)
     setFeedbackSent(true)
   }

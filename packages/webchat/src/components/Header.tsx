@@ -7,12 +7,10 @@ import Delete from '../icons/Delete'
 import Download from '../icons/Download'
 import Information from '../icons/Information'
 import List from '../icons/List'
-import Reload from '../icons/Reload'
 import { RootStore, StoreDef } from '../store'
 
 import Avatar from './common/Avatar'
 import confirmDialog from './common/ConfirmDialog'
-import MoreOptions from './common/MoreOptions'
 
 class Header extends React.Component<HeaderProps> {
   private btnEls: { [index: number]: HTMLElement } = {}
@@ -70,7 +68,7 @@ class Header extends React.Component<HeaderProps> {
           {this.props.hasUnreadMessages && <span className={'bpw-header-unread'}>{this.props.unreadCount}</span>}
         </div>
         {this.props.hasBotInfoDescription && (
-          <div className={'bpw-header-subtitle'}>{this.props.botConvoDescription}</div>
+          <div className={'bpw-header-subtitle'}>{this.props.botConversationDescription}</div>
         )}
       </div>
     )
@@ -105,27 +103,9 @@ class Header extends React.Component<HeaderProps> {
         ref={(el) => (this.btnEls[0] = el!)}
         className={'bpw-header-icon bpw-header-icon-delete'}
         onClick={this.handleDeleteConversation}
-        onKeyDown={this.handleKeyDown.bind(this, this.handleDeleteConversation)}
         onBlur={this.onBlur}
       >
         <Delete />
-      </button>
-    )
-  }
-
-  renderResetButton() {
-    return (
-      <button
-        type="button"
-        tabIndex={-1}
-        id="btn-reset"
-        ref={(el) => (this.btnEls[1] = el!)}
-        className={'bpw-header-icon bpw-header-icon-reset'}
-        onClick={this.props.resetSession}
-        onKeyDown={this.handleKeyDown.bind(this, this.props.resetSession)}
-        onBlur={this.onBlur}
-      >
-        <Reload />
       </button>
     )
   }
@@ -139,7 +119,6 @@ class Header extends React.Component<HeaderProps> {
         ref={(el) => (this.btnEls[2] = el!)}
         className={'bpw-header-icon bpw-header-icon-download'}
         onClick={this.props.downloadConversation}
-        onKeyDown={this.handleKeyDown.bind(this, this.props.downloadConversation)}
         onBlur={this.onBlur}
       >
         <Download />
@@ -156,7 +135,6 @@ class Header extends React.Component<HeaderProps> {
         ref={(el) => (this.btnEls[3] = el!)}
         className={'bpw-header-icon bpw-header-icon-convo'}
         onClick={this.props.toggleConversations}
-        onKeyDown={this.handleKeyDown.bind(this, this.props.toggleConversations)}
         onBlur={this.onBlur}
       >
         <List />
@@ -173,7 +151,6 @@ class Header extends React.Component<HeaderProps> {
         ref={(el) => (this.btnEls[4] = el!)}
         className={'bpw-header-icon bpw-header-icon-botinfo'}
         onClick={this.props.toggleBotInfo}
-        onKeyDown={this.handleKeyDown.bind(this, this.props.toggleBotInfo)}
         onBlur={this.onBlur}
       >
         <Information />
@@ -193,7 +170,6 @@ class Header extends React.Component<HeaderProps> {
         ref={(el) => (this.btnEls[5] = el!)}
         className={'bpw-header-icon bpw-header-icon-close'}
         onClick={this.props.hideChat}
-        onKeyDown={this.handleKeyDown.bind(this, this.props.hideChat)}
         onBlur={this.onBlur}
       >
         <Close />
@@ -218,25 +194,6 @@ class Header extends React.Component<HeaderProps> {
         </button>
       )
     })
-  }
-
-  handleKeyDown = (action: any, e: any) => {
-    if (!this.props.enableArrowNavigation) {
-      return
-    }
-
-    if (e.key === 'ArrowUp') {
-      this.props.focusPrevious!()
-    } else if (e.key === 'ArrowDown') {
-      this.props.focusNext!()
-    } else if (e.key === 'ArrowLeft') {
-      this.changeButtonFocus(-1)
-    } else if (e.key === 'ArrowRight') {
-      this.changeButtonFocus(1)
-    } else if (e.key === 'Enter') {
-      e.preventDefault()
-      action()
-    }
   }
 
   setShowingOption = (val: any) => {
@@ -284,7 +241,6 @@ class Header extends React.Component<HeaderProps> {
         </div>
         {!!this.props.customButtons!.length && this.renderCustomButtons()}
         {this.props.showDeleteConversationButton && this.renderDeleteConversationButton()}
-        {this.props.showResetButton && this.renderResetButton()}
         {this.props.showDownloadButton && this.renderDownloadButton()}
         {this.props.showConversationsButton && this.renderConvoButton()}
         {this.props.showBotInfoButton && this.renderBotInfoButton()}
@@ -301,7 +257,6 @@ export default inject(({ store }: { store: RootStore }) => ({
   showDownloadButton: store.view.showDownloadButton,
   showBotInfoButton: store.view.showBotInfoButton,
   showConversationsButton: store.view.showConversationsButton,
-  showResetButton: store.view.showResetButton,
   showCloseButton: store.view.showCloseButton,
   hasUnreadMessages: store.view.hasUnreadMessages,
   unreadCount: store.view.unreadCount,
@@ -312,15 +267,12 @@ export default inject(({ store }: { store: RootStore }) => ({
   toggleConversations: store.view.toggleConversations,
   toggleBotInfo: store.view.toggleBotInfo,
   customButtons: store.view.customButtons,
-
   deleteConversation: store.deleteConversation,
-  resetSession: store.resetSession,
   downloadConversation: store.downloadConversation,
   botName: store.botName,
   botAvatarUrl: store.botAvatarUrl,
   hasBotInfoDescription: store.hasBotInfoDescription,
-  botConvoDescription: store.config.botConvoDescription,
-  enableArrowNavigation: store.config.enableArrowNavigation
+  botConversationDescription: store.config.botConversationDescription
 }))(observer(Header))
 
 type HeaderProps = Pick<
@@ -336,19 +288,16 @@ type HeaderProps = Pick<
   | 'unreadCount'
   | 'hasBotInfoDescription'
   | 'deleteConversation'
-  | 'resetSession'
   | 'downloadConversation'
   | 'toggleConversations'
   | 'hideChat'
   | 'toggleBotInfo'
   | 'botAvatarUrl'
-  | 'showResetButton'
   | 'showDeleteConversationButton'
   | 'showDownloadButton'
   | 'showConversationsButton'
   | 'showBotInfoButton'
   | 'showCloseButton'
-  | 'enableArrowNavigation'
-  | 'botConvoDescription'
+  | 'botConversationDescription'
   | 'customButtons'
 >

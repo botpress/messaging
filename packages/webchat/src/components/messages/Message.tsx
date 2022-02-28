@@ -6,7 +6,6 @@ import { WrappedComponentProps, injectIntl } from 'react-intl'
 
 import { RootStore, StoreDef } from '../../store'
 import { Renderer } from '../../typings'
-import { showContextMenu } from '../ContextMenu'
 
 class Message extends Component<MessageProps> {
   state = {
@@ -16,10 +15,6 @@ class Message extends Component<MessageProps> {
 
   static getDerivedStateFromError(_error: Error) {
     return { hasError: true }
-  }
-
-  handleContextMenu = (e: any) => {
-    showContextMenu(e, this.props)
   }
 
   renderTimestamp() {
@@ -57,7 +52,7 @@ class Message extends Component<MessageProps> {
           shouldPlay: this.props.shouldPlay,
           intl: this.props.store!.intl,
           escapeHTML: true,
-          showTimestamp: this.props.store!.config.showTimestamp
+          showTimestamp: this.props.store!.config.showTimestamp!
         }}
       />
     )
@@ -83,11 +78,7 @@ class Message extends Component<MessageProps> {
         tabIndex={-1}
         style={additionalStyle}
       >
-        <div
-          tabIndex={-1}
-          className="bpw-chat-bubble-content"
-          onContextMenu={type !== 'session_reset' ? this.handleContextMenu : () => {}}
-        >
+        <div tabIndex={-1} className="bpw-chat-bubble-content">
           <span className="sr-only">
             {this.props.store!.intl.formatMessage({
               id: this.props.isBotMessage ? 'message.botSaid' : 'message.iSaid',

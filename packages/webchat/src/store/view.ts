@@ -63,7 +63,7 @@ class ViewStore {
 
   @computed
   get showConversationsButton() {
-    return !this.rootStore.config?.conversationId && this.rootStore.config?.showConversationsButton
+    return this.rootStore.config?.showConversationsButton
   }
 
   @computed
@@ -81,11 +81,6 @@ class ViewStore {
     return (
       !this.isConversationsDisplayed && !this.isBotInfoDisplayed && this.rootStore.config.enableConversationDeletion
     )
-  }
-
-  @computed
-  get showResetButton() {
-    return !this.isConversationsDisplayed && !this.isBotInfoDisplayed && this.rootStore.config?.enableReset
   }
 
   @computed
@@ -260,7 +255,7 @@ class ViewStore {
 
     setTimeout(() => {
       this._updateTransitions({ sideTransition: 'fadeIn' })
-    }, constants.ANIM_DURATION + 10)
+    }, constants.ANIMATION_DURATION + 10)
 
     this._endAnimation('side')
 
@@ -284,7 +279,7 @@ class ViewStore {
     if (!this.activeView || this.activeView === 'side') {
       setTimeout(() => {
         this._updateTransitions({ widgetTransition: 'fadeIn' })
-      }, constants.ANIM_DURATION + 10)
+      }, constants.ANIMATION_DURATION + 10)
     }
 
     this._endAnimation('widget')
@@ -298,14 +293,14 @@ class ViewStore {
       runInAction(() => {
         this.activeView = finalView
       })
-    }, constants.ANIM_DURATION)
+    }, constants.ANIMATION_DURATION)
 
     setTimeout(() => {
       this._updateTransitions({
         widgetTransition: undefined,
         sideTransition: this.transitions.sideTransition === 'fadeIn' ? 'fadeIn' : undefined
       })
-    }, constants.ANIM_DURATION * 2.1)
+    }, constants.ANIMATION_DURATION * 2.1)
   }
 
   @action.bound

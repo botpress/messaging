@@ -171,22 +171,6 @@ body {
   display: flex;
 }
 
-.bpw-message-username {
-  margin: 0 12px;
-  -webkit-box-flex: 0;
-  -ms-flex: 0 1 auto;
-  flex: 0 1 auto;
-  padding: 0.3125rem 0;
-  font-size: 12px;
-  color: #9a9a9a;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .bpw-message-group {
   display: -webkit-box;
   display: -ms-flexbox;

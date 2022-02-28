@@ -25,6 +25,30 @@ const DEFAULT_LOCALE = 'en'
 const USER_LANG_STORAGE_KEY = 'user-lang'
 const translations: { [lang: string]: any } = { en, fr, pt, es, ar, ru, uk, de, it }
 
+const rtlLocales = [
+  'ae' /* Avestan */,
+  'ar' /* 'العربية', Arabic */,
+  'arc' /* Aramaic */,
+  'bcc' /* 'بلوچی مکرانی', Southern Balochi */,
+  'bqi' /* 'بختياري', Bakthiari */,
+  'ckb' /* 'Soranî / کوردی', Sorani */,
+  'dv' /* Dhivehi */,
+  'fa' /* 'فارسی', Persian */,
+  'glk' /* 'گیلکی', Gilaki */,
+  'he' /* 'עברית', Hebrew */,
+  'ku' /* 'Kurdî / كوردی', Kurdish */,
+  'mzn' /* 'مازِرونی', Mazanderani */,
+  'nqo' /* N'Ko */,
+  'pnb' /* 'پنجابی', Western Punjabi */,
+  'ps' /* 'پښتو', Pashto, */,
+  'sd' /* 'سنڌي', Sindhi */,
+  'ug' /* 'Uyghurche / ئۇيغۇرچە', Uyghur */,
+  'ur' /* 'اردو', Urdu */,
+  'yi' /* 'ייִדיש', Yiddish */
+]
+// 'en-US' becomes ['en', '-us'] 'en' becomes ['en']
+const localeRegex = /^([a-zA-Z]{2,3})([_\-a-zA-Z]{3,5})$/
+
 const cleanLanguageCode = (str: string) => str.split('-')[0]
 const getNavigatorLanguage = () => cleanLanguageCode(navigator.language || (navigator as any)['userLanguage'] || '')
 const getStorageLanguage = () => cleanLanguageCode(window.BP_STORAGE.get(USER_LANG_STORAGE_KEY) || '')
@@ -59,4 +83,18 @@ const setUserLocale = (locale: Locale) => {
   setStorageLanguage(locale)
 }
 
-export { translations, DEFAULT_LOCALE as defaultLocale, getUserLocale, setUserLocale }
+const isRTLLocale = (locale?: string): boolean => {
+  if (!locale) {
+    return false
+  }
+  locale = locale.toLowerCase()
+  const matches = localeRegex.exec(locale)
+
+  if (!matches || matches.length < 2) {
+    return false
+  }
+
+  return rtlLocales.includes(matches[1])
+}
+
+export { translations, DEFAULT_LOCALE as defaultLocale, getUserLocale, setUserLocale, isRTLLocale }

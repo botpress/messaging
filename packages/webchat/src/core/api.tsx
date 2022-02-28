@@ -1,24 +1,17 @@
 import { Message } from '@botpress/messaging-socket'
-import axios from 'axios'
 import { v4 as uuidv4 } from 'uuid'
-import { RecentConversation } from '..'
-import { BotInfo, uuid } from '../typings'
+import { uuid, RecentConversation } from '../typings'
 import BpSocket from './socket'
 
 export default class WebchatApi {
   constructor(private socket: BpSocket) {}
 
-  async fetchBotInfo(mediaFileServiceUrl: string) {
-    try {
-      const { data } = await axios.get<BotInfo>(mediaFileServiceUrl)
-      return data
-    } catch (err) {
-      console.error('Error while loading bot info', err)
-    }
-  }
-
   async listCurrentConversationMessages(limit?: number) {
-    return this.socket.socket.listMessages(limit)
+    try {
+      return this.socket.socket.listMessages(limit)
+    } catch (err) {
+      console.error('An error occurred while listing the messages of the current conversation', err)
+    }
   }
 
   async fetchConversations() {
@@ -32,7 +25,7 @@ export default class WebchatApi {
         await this.socket.socket.switchConversation(conversation.id)
         const lastMessages = await this.listCurrentConversationMessages(limit)
 
-        if (lastMessages.length >= limit) {
+        if (lastMessages && lastMessages.length >= limit) {
           conversation.lastMessage = lastMessages[0]
         }
       }
@@ -53,14 +46,6 @@ export default class WebchatApi {
       return { ...conversation, messages }
     } catch (err) {
       console.error('Error fetching a conversation', err)
-    }
-  }
-
-  // TODO: Fis this
-  async resetSession(conversationId: uuid): Promise<void> {
-    try {
-    } catch (err) {
-      console.error('Error while resetting conversation', err)
     }
   }
 
@@ -99,13 +84,6 @@ export default class WebchatApi {
 
   async sendFeedback(feedback: number, messageId: uuid): Promise<void> {
     return this.socket.socket.sendFeedback(messageId, feedback)
-  }
-
-  async uploadFile(file: File, payload: string, conversationId: uuid): Promise<void> {
-    const data = new FormData()
-    data.append('file', file)
-    data.append('conversationId', conversationId)
-    data.append('payload', payload)
   }
 
   // TODO: Fix this

@@ -28,7 +28,7 @@ class MessageGroup extends React.Component<Props> {
   }
 
   render() {
-    const { messages, avatar, isBot, showUserName, userName } = this.props
+    const { messages, avatar, isBot } = this.props
 
     const fromLabel = this.props.store!.intl.formatMessage({
       id: this.props.isBot ? 'message.fromBotLabel' : 'message.fromMeLabel',
@@ -49,7 +49,6 @@ class MessageGroup extends React.Component<Props> {
       >
         {avatar}
         <div role="region" className={'bpw-message-container'}>
-          {showUserName && <div className={'bpw-message-username'}>{userName}</div>}
           <div aria-live="assertive" role="log" className={'bpw-message-group'}>
             <span data-from={fromLabel} className="from hidden" aria-hidden="true">
               {fromLabel}
@@ -67,7 +66,7 @@ class MessageGroup extends React.Component<Props> {
                       <InlineFeedback
                         intl={this.props.store!.intl}
                         messageId={message.id}
-                        onFeedback={this.props.onFeedback}
+                        onFeedback={this.props.sendFeedback!}
                         messageFeedbacks={this.props.store!.messageFeedbacks}
                       />
                     )
@@ -80,8 +79,7 @@ class MessageGroup extends React.Component<Props> {
                   isBotMessage={!message.authorId}
                   payload={payload}
                   sentOn={message.sentOn}
-                  onSendData={this.props.onSendData}
-                  onFileUpload={this.props.onFileUpload}
+                  onSendData={this.props.sendData!}
                   store={this.props.store}
                   onAudioEnded={this.onAudioEnded}
                   shouldPlay={this.state.audioPlayingIndex === i}
@@ -97,20 +95,14 @@ class MessageGroup extends React.Component<Props> {
 
 export default inject(({ store }: { store: RootStore }) => ({
   store,
-  onFeedback: store.sendFeedback,
-  onSendData: store.sendData,
-  onFileUpload: store.uploadFile,
-  showUserName: store.config.showUserName
+  sendFeedback: store.sendFeedback,
+  sendData: store.sendData
 }))(MessageGroup)
 
 type Props = {
   isBot: boolean
   avatar: JSX.Element
-  userName: string
   messages: MessageDetails[]
   isLastGroup: boolean
-  onFileUpload?: any
-  onSendData?: any
-  onFeedback?: any
   store?: RootStore
-} & Pick<StoreDef, 'showUserName'>
+} & Pick<StoreDef, 'sendFeedback' | 'sendData'>

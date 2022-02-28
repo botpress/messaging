@@ -26,38 +26,20 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
     })
   }
 
-  handleKeyPress = async (e: any) => {
-    if (this.props.enableResetSessionShortcut && e.ctrlKey && e.key === 'Enter') {
-      e.preventDefault()
-      await this.props.resetSession!()
-      await this.props.sendMessage!()
-      return
-    }
+  handleKeyPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault()
       await this.props.sendMessage!()
     }
   }
 
-  handleKeyDown = (e: any) => {
-    if (this.props.enableArrowNavigation) {
-      const shouldFocusPrevious = e.target.selectionStart === 0 && (e.key === 'ArrowUp' || e.key === 'ArrowLeft')
-      if (shouldFocusPrevious) {
-        this.props.focusPrevious!()
-      }
-
-      const shouldFocusNext =
-        e.target.selectionStart === this.textInput.current!.value.length &&
-        (e.key === 'ArrowDown' || e.key === 'ArrowRight')
-      if (shouldFocusNext) {
-        this.props.focusNext!()
-      }
-    } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+  handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       this.props.recallHistory!(e.key)
     }
   }
 
-  handleMessageChanged = (e: any) => this.props.updateMessage!(e.target.value)
+  handleMessageChanged = (e: React.ChangeEvent<HTMLTextAreaElement>) => this.props.updateMessage!(e.target.value)
 
   isLastMessageFromBot = (): boolean => {
     return this.props.currentConversation?.messages?.slice(-1)?.pop()?.authorId === undefined
@@ -165,18 +147,14 @@ export default inject(({ store }: { store: RootStore }) => ({
   focusedArea: store.view.focusedArea,
   focusPrevious: store.view.focusPrevious,
   focusNext: store.view.focusNext,
-  enableArrowNavigation: store.config.enableArrowNavigation,
-  enableResetSessionShortcut: store.config.enableResetSessionShortcut,
-  resetSession: store.resetSession,
   currentConversation: store.currentConversation,
   preferredLanguage: store.preferredLanguage
 }))(injectIntl(observer(Composer)))
 
 type ComposerProps = {
-  focused: boolean
-  composerPlaceholder: string
-  composerLocked: boolean
-  composerHidden: boolean
+  composerPlaceholder?: string
+  composerLocked?: boolean
+  composerHidden?: boolean
 } & WrappedComponentProps &
   Pick<
     StoreDef,
@@ -192,9 +170,6 @@ type ComposerProps = {
     | 'setFocus'
     | 'updateMessage'
     | 'message'
-    | 'enableArrowNavigation'
-    | 'resetSession'
-    | 'enableResetSessionShortcut'
     | 'enableVoiceComposer'
     | 'currentConversation'
     | 'preferredLanguage'
