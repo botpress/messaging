@@ -28,4 +28,6 @@ export class Framework extends Engine {
     await this.distributed?.destroy()
     await this.database?.destroy()
   }
+
+  async monitor() {}
 }

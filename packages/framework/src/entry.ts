@@ -1,5 +1,6 @@
 import { Migration } from '@botpress/messaging-engine'
 import express, { Express } from 'express'
+import { Server } from 'http'
 import { AdminApiManager, ApiManager } from './base/api-manager'
 import { Auth } from './base/auth/auth'
 import { ClientApi } from './clients/api'
@@ -8,6 +9,7 @@ import { Routes } from './routes'
 
 export abstract class Entry {
   abstract get name(): string
+  abstract get port(): number
   abstract get package(): any
   abstract get migrations(): { new (): Migration }[]
 
@@ -54,10 +56,17 @@ export abstract class Entry {
     await this.socket.setup()
   }
 
+  async start(server: Server) {
+    await this.socket.start(server)
+  }
+
+  async monitor() {
+    await this.app.monitor()
+  }
+
   async destroy() {
     await this.stream?.destroy()
-    // TODO
-    // await this.socket.manager.destroy()
+    await this.socket?.destroy()
   }
 
   async postDestroy() {

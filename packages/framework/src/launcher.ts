@@ -1,6 +1,7 @@
 import { Logger, ShutDownSignal } from '@botpress/messaging-engine'
 import clc from 'cli-color'
 import { Express } from 'express'
+import { Server } from 'http'
 import { createHttpTerminator, HttpTerminator } from 'http-terminator'
 import ms from 'ms'
 import portfinder from 'portfinder'
@@ -15,8 +16,11 @@ export class Launcher {
   constructor(
     private pkg: any,
     private name: string,
+    private basePort: number,
     private express: Express,
     private setupCallback: () => Promise<void>,
+    private serverCreatedCallback: (server: Server) => Promise<void>,
+    private serverReadyCallback: () => Promise<void>,
     private preDestroyCallback: () => Promise<void>,
     private postDestroyCallback: () => Promise<void>
   ) {
@@ -56,13 +60,12 @@ export class Launcher {
 
       let port = process.env.PORT
       if (!port) {
-        portfinder.basePort = 3444
+        portfinder.basePort = this.basePort
         port = (await portfinder.getPortPromise()).toString()
       }
 
       const server = this.express.listen(port)
-      // TODO
-      // await this.socket.manager.setup(server)
+      await this.serverCreatedCallback(server)
       this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
 
       this.logger.info(`Server is listening at: http://localhost:${port}`)
@@ -76,8 +79,7 @@ export class Launcher {
         )
       }
 
-      // TODO
-      // await this.app.monitor()
+      await this.serverReadyCallback()
     } catch (e) {
       if (e instanceof ShutDownSignal) {
         await this.shutDown(e.code)

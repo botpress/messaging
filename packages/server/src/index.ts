@@ -11,6 +11,10 @@ export class Root extends Entry {
     return 'Botpress Messaging'
   }
 
+  get port() {
+    return 3100
+  }
+
   get package() {
     return require('../package.json')
   }

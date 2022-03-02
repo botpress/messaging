@@ -11,6 +11,10 @@ export class Root extends Entry {
     return 'Botpress Extension Example'
   }
 
+  get port() {
+    return 3444
+  }
+
   get package() {
     return require('../package.json')
   }
