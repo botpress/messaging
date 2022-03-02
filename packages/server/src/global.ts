@@ -1,6 +1,6 @@
-import { EngineEnv } from '@botpress/messaging-engine'
+import { FrameworkEnv } from '@botpress/framework'
 
-export type MessagingEnv = EngineEnv & {
+export type MessagingEnv = FrameworkEnv & {
   PORT?: string
   EXTERNAL_URL?: string
   INTERNAL_PASSWORD?: string

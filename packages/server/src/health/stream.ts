@@ -1,6 +1,6 @@
+import { ClientService } from '@botpress/framework'
 import { Streamer } from '../base/streamer'
 import { ChannelService } from '../channels/service'
-import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { HealthCreatedEvent, HealthEvents } from './events'
 import { HealthService } from './service'

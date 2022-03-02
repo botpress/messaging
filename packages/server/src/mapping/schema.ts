@@ -1,6 +1,6 @@
+import { ReqSchema } from '@botpress/framework'
 import { Channel } from '@botpress/messaging-channels'
 import Joi from 'joi'
-import { ReqSchema } from '../base/schema'
 
 export const makeMapRequestSchema = (channels: Channel[]) => {
   return ReqSchema({

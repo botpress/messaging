@@ -1,5 +1,5 @@
+import { ReqSchema } from '@botpress/framework'
 import Joi from 'joi'
-import { ReqSchema } from '../base/schema'
 
 const Api = {
   Create: ReqSchema({

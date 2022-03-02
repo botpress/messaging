@@ -1,8 +1,6 @@
-import { Engine } from '@botpress/messaging-engine'
+import { Framework } from '@botpress/framework'
 import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
-import { ClientTokenService } from './client-tokens/service'
-import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
 import { ConverseService } from './converse/service'
@@ -10,7 +8,6 @@ import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
-import { Migrations } from './migrations'
 import { ProviderService } from './providers/service'
 import { SocketService } from './socket/service'
 import { StatusService } from './status/service'
@@ -19,11 +16,9 @@ import { UserTokenService } from './user-tokens/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
-export class App extends Engine {
+export class App extends Framework {
   channels: ChannelService
   providers: ProviderService
-  clients: ClientService
-  clientTokens: ClientTokenService
   webhooks: WebhookService
   conduits: ConduitService
   users: UserService
@@ -41,13 +36,8 @@ export class App extends Engine {
 
   constructor() {
     super()
-    this.meta.setPkg(require('../package.json'))
-    this.migration.setMigrations(Migrations)
-
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
-    this.clients = new ClientService(this.database, this.caching, this.providers)
-    this.clientTokens = new ClientTokenService(this.database, this.crypto, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
@@ -103,8 +93,6 @@ export class App extends Engine {
     await super.setup()
     await this.channels.setup()
     await this.providers.setup()
-    await this.clients.setup()
-    await this.clientTokens.setup()
     await this.webhooks.setup()
     await this.conduits.setup()
     await this.users.setup()
@@ -131,6 +119,8 @@ export class App extends Engine {
   }
 
   async destroy() {
+    // TODO: this is pretty much copy pasted. Should divide into preDestroy, destroy, postDestroy
+
     await this.batching?.destroy()
     await this.billing?.destroy()
     await this.instances?.destroy()

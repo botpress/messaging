@@ -24,7 +24,7 @@ export abstract class Entry {
 
   constructor(
     tapp: { new (): Framework },
-    tapi: { new (app: any, manager: ApiManager): IApp },
+    tapi: { new (app: any, manager: ApiManager, express: Express): IApp },
     tstream: { new (app: any): IApp },
     tsocket: { new (app: any): IApp }
   ) {
@@ -33,7 +33,7 @@ export abstract class Entry {
     this.routes = new Routes(this.router)
 
     this.app = new tapp()
-    this.api = new tapi(this.app, new ApiManager(this.routes.router, new Auth(this.app.clientTokens)))
+    this.api = new tapi(this.app, new ApiManager(this.routes.router, new Auth(this.app.clientTokens)), this.router)
     this.stream = new tstream(this.app)
     this.socket = new tsocket(this.app)
 
