@@ -8,6 +8,9 @@
       "path": "../engine"
     },
     {
+      "path": "../framework"
+    },
+    {
       "path": "../channels"
     }
   ],
