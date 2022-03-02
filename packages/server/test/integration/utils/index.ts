@@ -2,10 +2,11 @@ import crypto from 'crypto'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { App } from '../../../src/app'
+import { Seed } from './seed'
 
 export let app: App
 
-export const setupApp = async () => {
+export const setupApp = async ({ seed }: { seed: boolean } = { seed: false }) => {
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.SUPPRESS_LOGGING = 'true'
   process.env.DATABASE_URL =
@@ -19,6 +20,13 @@ export const setupApp = async () => {
   app = new App()
   await app.setup()
   await app.postSetup()
+
+  if (seed) {
+    const seed = new Seed(app.database)
+
+    await seed.run()
+  }
+
   return app
 }
 

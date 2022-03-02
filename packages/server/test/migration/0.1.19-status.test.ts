@@ -81,7 +81,7 @@ describe('0.1.19 - Status', () => {
       const conduit: any = {
         id: uuid(),
         providerId,
-        config: { token: uuid() },
+        config: database.setJson({ token: uuid() }),
         channelId: TELEGRAM_CHANNEL_ID
       }
 
