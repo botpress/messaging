@@ -1,7 +1,7 @@
 import { Conversation, Endpoint, Message, SyncResult, User } from '@botpress/messaging-base'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { v4 as uuid } from 'uuid'
-import { randStr } from '../integration/utils'
+import { randStr } from '../utils'
 import froth from './mocha-froth'
 
 const UUID_LENGTH = uuid().length

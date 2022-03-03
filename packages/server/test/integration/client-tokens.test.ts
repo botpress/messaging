@@ -3,7 +3,7 @@ import { ClientTokenService } from '../../src/client-tokens/service'
 import { ClientToken } from '../../src/client-tokens/types'
 import { Client } from '../../src/clients/types'
 import { Provider } from '../../src/providers/types'
-import { app, randStr, setupApp } from './utils'
+import { app, randStr, setupApp } from '../utils'
 
 describe('ClientTokens', () => {
   let clientTokens: ClientTokenService

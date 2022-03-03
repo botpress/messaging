@@ -4,7 +4,7 @@ import { Client } from '../../src/clients/types'
 import { Provider } from '../../src/providers/types'
 import { UserTokenService } from '../../src/user-tokens/service'
 import { UserToken } from '../../src/user-tokens/types'
-import { app, randStr, setupApp } from './utils'
+import { app, randStr, setupApp } from '../utils'
 
 describe('UserTokens', () => {
   let userTokens: UserTokenService
