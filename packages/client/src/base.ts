@@ -1,5 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import cookie from 'cookie'
 import { ConversationStartedEvent, MessageFeedbackEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
 import { Emitter } from './emitter'
@@ -72,8 +73,32 @@ export abstract class MessagingChannelBase extends Emitter<{
 
   private applyOptions() {
     const config = this.getAxiosConfig(this._options)
-    this.http = axios.create(config)
     this.adminHeader = this._options.adminKey?.length ? { 'x-bp-messaging-admin-key': this._options.adminKey } : {}
+
+    this.http = axios.create(config)
+    this.http.interceptors.response.use(
+      (e) => {
+        this.saveCookie(e.headers['set-cookie'])
+        return e
+      },
+      (e) => {
+        this.saveCookie(e?.response?.headers?.['set-cookie'])
+        return {}
+      }
+    )
+  }
+
+  private saveCookie(cookieHeader: string[] | undefined) {
+    if (!cookieHeader) {
+      return
+    }
+
+    for (const strCookie of cookieHeader) {
+      const resCookie = cookie.parse(strCookie)
+      if (resCookie.bp_messaging) {
+        this.http.defaults.headers.common['cookie'] = `bp_messaging=${resCookie.bp_messaging};`
+      }
+    }
   }
 
   private getAxiosConfig({ url, axios }: MessagingChannelOptions): AxiosRequestConfig {

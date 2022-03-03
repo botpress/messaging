@@ -41,7 +41,9 @@
   },
   "dependencies": {
     "@botpress/messaging-base": "1.1.0",
+    "@types/cookie": "^0.4.1",
     "axios": "^0.21.4",
+    "cookie": "^0.4.2",
     "joi": "^17.6.0"
   }
 }
