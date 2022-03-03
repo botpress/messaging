@@ -49,12 +49,21 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
-  /** logger interface that can be used to get better debugging. Optional */
+  /** Logger interface that can be used to get better debugging. Optional */
   public get logger() {
     return this._options.logger
   }
   public set logger(val: Logger | undefined) {
     this._options.logger = val
+    this.applyOptions()
+  }
+
+  /** Name of the cookie for sticky sessions */
+  public get sessionCookieName() {
+    return this._options.sessionCookieName
+  }
+  public set sessionCookieName(val: string | undefined) {
+    this._options.sessionCookieName = val
     this.applyOptions()
   }
 
@@ -89,14 +98,14 @@ export abstract class MessagingChannelBase extends Emitter<{
   }
 
   private saveCookie(cookieHeader: string[] | undefined) {
-    if (!cookieHeader) {
+    if (!this.sessionCookieName || !cookieHeader) {
       return
     }
 
     for (const strCookie of cookieHeader) {
       const resCookie = cookie.parse(strCookie)
-      if (resCookie.bp_messaging) {
-        this.http.defaults.headers.common['cookie'] = `bp_messaging=${resCookie.bp_messaging};`
+      if (resCookie[this.sessionCookieName]) {
+        this.http.defaults.headers.common['cookie'] = `${this.sessionCookieName}=${resCookie.bp_messaging};`
       }
     }
   }
