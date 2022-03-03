@@ -83,7 +83,7 @@ export abstract class MessagingChannelBase extends Emitter<{
       },
       (e) => {
         this.saveCookie(e?.response?.headers?.['set-cookie'])
-        return {}
+        return Promise.reject(e)
       }
     )
   }
