@@ -105,7 +105,7 @@ export abstract class MessagingChannelBase extends Emitter<{
     for (const strCookie of cookieHeader) {
       const resCookie = cookie.parse(strCookie)
       if (resCookie[this.sessionCookieName]) {
-        this.http.defaults.headers.common['cookie'] = `${this.sessionCookieName}=${resCookie.bp_messaging};`
+        this.http.defaults.headers.common['cookie'] = `${this.sessionCookieName}=${resCookie[this.sessionCookieName]};`
       }
     }
   }
