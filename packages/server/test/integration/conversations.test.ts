@@ -1,6 +1,6 @@
+import { Client } from '@botpress/framework'
 import { Conversation, User } from '@botpress/messaging-base/src'
 import { validate as validateUuid } from 'uuid'
-import { Client } from '../../src/clients/types'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
 import { UserService } from '../../src/users/service'

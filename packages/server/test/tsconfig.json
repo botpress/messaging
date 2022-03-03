@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "..",
     "paths": {
+      "@botpress/framework": ["../../framework/src/index.ts"],
       "@botpress/messaging-base": ["../../base/src/index.ts"],
       "@botpress/messaging-engine": ["../../engine/src/index.ts"],
       "@botpress/messaging-channels": ["../../channels/src/index.ts"]
