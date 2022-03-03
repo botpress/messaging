@@ -1,10 +1,10 @@
-import { ClientService } from '@botpress/framework'
 import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent, uuid } from '@botpress/messaging-base'
 import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
 import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
 import { InstanceService } from '../instances/service'
+import { ProvisionService } from '../provisions/service'
 import { HealthEmitter, HealthEvents, HealthWatcher } from './events'
 import { HealthListener } from './listener'
 import { HealthTable } from './table'
@@ -23,7 +23,7 @@ export class HealthService extends Service {
     private db: DatabaseService,
     private cachingService: CachingService,
     private channelService: ChannelService,
-    private clientService: ClientService,
+    private provisionService: ProvisionService,
     private conduitService: ConduitService,
     private instanceService: InstanceService
   ) {
@@ -51,9 +51,9 @@ export class HealthService extends Service {
     }
 
     const conduit = await this.conduitService.get(conduitId)
-    const client = await this.clientService.fetchByProviderId(conduit.providerId)
-    if (client) {
-      this.cache.del(client.id, true)
+    const provision = await this.provisionService.fetchByProviderId(conduit.providerId)
+    if (provision) {
+      this.cache.del(provision.clientId, true)
     }
 
     await this.query().insert(this.serialize(event))
@@ -66,8 +66,8 @@ export class HealthService extends Service {
       return cached
     }
 
-    const client = await this.clientService.getById(clientId)
-    const conduits = await this.conduitService.listByProvider(client.providerId)
+    const provision = await this.provisionService.getByClientId(clientId)
+    const conduits = await this.conduitService.listByProvider(provision.providerId)
 
     const report: HealthReport = { channels: {} }
 

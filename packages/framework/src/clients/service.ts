@@ -1,22 +1,15 @@
 import { uuid } from '@botpress/messaging-base'
 import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import { v4 as uuidv4 } from 'uuid'
-import { ClientEmitter, ClientWatcher } from './events'
 import { ClientTable } from './table'
 import { Client } from './types'
 
 export class ClientService extends Service {
-  get events(): ClientWatcher {
-    return this.emitter
-  }
-
-  private emitter: ClientEmitter
   private table: ClientTable
   private cacheById!: ServerCache<uuid, Client>
 
   constructor(private db: DatabaseService, private cachingService: CachingService) {
     super()
-    this.emitter = new ClientEmitter()
     this.table = new ClientTable()
   }
 

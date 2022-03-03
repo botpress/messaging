@@ -1,4 +1,3 @@
-import { ClientService } from '@botpress/framework'
 import { Message, uuid } from '@botpress/messaging-base'
 import { Endpoint } from '@botpress/messaging-channels'
 import { CachingService, Logger, ServerCache, Service } from '@botpress/messaging-engine'
@@ -9,6 +8,7 @@ import { MappingService } from '../../mapping/service'
 import { MessageCreatedEvent, MessageEvents } from '../../messages/events'
 import { MessageService } from '../../messages/service'
 import { ProviderService } from '../../providers/service'
+import { ProvisionService } from '../../provisions/service'
 import { LinkedQueue } from './queue'
 
 export class InstanceMessagingService extends Service {
@@ -18,10 +18,10 @@ export class InstanceMessagingService extends Service {
     private caching: CachingService,
     private channels: ChannelService,
     private providers: ProviderService,
+    private provisions: ProvisionService,
     private conduits: ConduitService,
     private conversations: ConversationService,
     private messages: MessageService,
-    private clients: ClientService,
     private mapping: MappingService,
     private logger: Logger
   ) {
@@ -43,7 +43,7 @@ export class InstanceMessagingService extends Service {
 
   private async handleMessageCreated({ message, source }: MessageCreatedEvent) {
     const conversation = await this.conversations.get(message.conversationId)
-    const client = await this.clients.getById(conversation.clientId)
+    const provision = await this.provisions.getByClientId(conversation.clientId)
     const convmaps = await this.mapping.convmap.listByConversationId(message.conversationId)
 
     // small optimization. If the message comes from a channel, and we are only linked to one channel,
@@ -57,7 +57,7 @@ export class InstanceMessagingService extends Service {
       const tunnel = await this.mapping.tunnels.get(tunnelId)
 
       if (!source?.endpoint || !this.endpointEqual(source.endpoint, endpoint)) {
-        const conduit = await this.conduits.fetchByProviderAndChannel(client.providerId, tunnel!.channelId)
+        const conduit = await this.conduits.fetchByProviderAndChannel(provision.providerId, tunnel!.channelId)
         if (!conduit) {
           return
         }

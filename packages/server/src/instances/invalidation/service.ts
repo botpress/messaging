@@ -1,4 +1,4 @@
-import { ClientEvents, ClientService, ClientUpdatedEvent } from '@botpress/framework'
+import { ClientService } from '@botpress/framework'
 import { uuid } from '@botpress/messaging-base'
 import { Service } from '@botpress/messaging-engine'
 import yn from 'yn'
@@ -30,7 +30,6 @@ export class InstanceInvalidationService extends Service {
     this.conduits.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
     this.conduits.events.on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
     this.conduits.events.on(ConduitEvents.Updated, this.onConduitUpdated.bind(this))
-    this.clients.events.on(ClientEvents.Updated, this.onClientUpdated.bind(this))
     this.providers.events.on(ProviderEvents.Updated, this.onProviderUpdated.bind(this))
   }
 
@@ -68,7 +67,9 @@ export class InstanceInvalidationService extends Service {
     }
   }
 
-  private async onClientUpdated({ clientId, oldClient }: ClientUpdatedEvent) {
+  private async onClientUpdated({ clientId, oldClient }: any) {
+    // TODO: this code is likely not necessary
+    /*
     const client = await this.clients.getById(clientId)
 
     if (client.providerId === oldClient.providerId) {
@@ -84,6 +85,7 @@ export class InstanceInvalidationService extends Service {
     for (const conduit of conduits) {
       await this.lifetimes.stop(conduit.id)
     }
+    */
   }
 
   private async onProviderUpdated({ providerId, oldProvider }: ProviderUpdatedEvent) {

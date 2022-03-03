@@ -1,7 +1,7 @@
-import { ClientService } from '@botpress/framework'
 import { Streamer } from '../base/streamer'
 import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
+import { ProvisionService } from '../provisions/service'
 import { HealthCreatedEvent, HealthEvents } from './events'
 import { HealthService } from './service'
 
@@ -9,7 +9,7 @@ export class HealthStream {
   constructor(
     private streamer: Streamer,
     private channels: ChannelService,
-    private clients: ClientService,
+    private provisions: ProvisionService,
     private conduits: ConduitService,
     private health: HealthService
   ) {}
@@ -20,8 +20,8 @@ export class HealthStream {
 
   private async handleHealthRegisted({ event }: HealthCreatedEvent) {
     const conduit = await this.conduits.get(event.conduitId)
-    const client = await this.clients.fetchByProviderId(conduit.providerId)
-    if (!client) {
+    const provision = await this.provisions.fetchByProviderId(conduit.providerId)
+    if (!provision) {
       return
     }
 
@@ -29,7 +29,7 @@ export class HealthStream {
     await this.streamer.stream(
       'health.new',
       { channel: channel.meta.name, event: { ...this.health.makeReadable(event) } },
-      client.id
+      provision.clientId
     )
   }
 }
