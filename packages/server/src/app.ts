@@ -40,7 +40,7 @@ export class App extends Framework {
     super()
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
-    this.provisions = new ProvisionService(this.database, this.caching, this.clients, this.providers)
+    this.provisions = new ProvisionService(this.database, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
