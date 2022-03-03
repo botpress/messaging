@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-client",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
@@ -33,6 +33,7 @@
     "dist"
   ],
   "devDependencies": {
+    "@types/cookie": "^0.4.1",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.13",
@@ -42,6 +43,7 @@
   "dependencies": {
     "@botpress/messaging-base": "1.1.0",
     "axios": "^0.21.4",
+    "cookie": "^0.4.2",
     "joi": "^17.6.0"
   }
 }

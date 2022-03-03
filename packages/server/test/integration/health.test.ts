@@ -2,7 +2,7 @@ import { Client } from '@botpress/framework'
 import { HealthEventType, HealthReport } from '@botpress/messaging-base'
 import { Conduit } from '../../src/conduits/types'
 import { HealthService } from '../../src/health/service'
-import { app, randStr, setupApp } from './utils'
+import { app, randStr, setupApp } from '../utils'
 
 const TEST_CHANNEL = 'messenger'
 

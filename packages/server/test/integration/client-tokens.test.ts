@@ -1,7 +1,7 @@
 import { Client, ClientToken, ClientTokenService } from '@botpress/framework'
 import { validate as validateUuid } from 'uuid'
 import { Provider } from '../../src/providers/types'
-import { app, randStr, setupApp } from './utils'
+import { app, randStr, setupApp } from '../utils'
 
 describe('ClientTokens', () => {
   let clientTokens: ClientTokenService

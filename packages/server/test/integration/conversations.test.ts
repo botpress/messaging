@@ -4,7 +4,7 @@ import { validate as validateUuid } from 'uuid'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
 import { UserService } from '../../src/users/service'
-import { app, randStr, setupApp, sleep } from './utils'
+import { app, randStr, setupApp, sleep } from '../utils'
 
 describe('Conversations', () => {
   let conversations: ConversationService

@@ -2,7 +2,7 @@ import { Client, ClientService } from '@botpress/framework'
 import crypto from 'crypto'
 import { validate as validateUuid } from 'uuid'
 import { Provider } from '../../src/providers/types'
-import { app, setupApp } from './utils'
+import { app, setupApp } from '../utils'
 
 describe('Clients', () => {
   let clients: ClientService

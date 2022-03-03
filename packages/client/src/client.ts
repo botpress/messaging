@@ -14,6 +14,7 @@ import { MessageFeedbackEvent } from '.'
 import { MessagingChannel } from './channel'
 import { ProtectedEmitter } from './emitter'
 import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from './events'
+import { Logger } from './logger'
 import { MessagingOptions } from './options'
 
 export class MessagingClient extends ProtectedEmitter<{
@@ -22,15 +23,6 @@ export class MessagingClient extends ProtectedEmitter<{
   message: MessageNewEvent
   feedback: MessageFeedbackEvent
 }> {
-  /** Options that are currently applied */
-  public get options() {
-    return this._options
-  }
-  public set options(val: MessagingOptions) {
-    this._options = val
-    this.applyOptions()
-  }
-
   /** Client id configured for this instance */
   public get clientId() {
     return this._options.clientId
@@ -58,22 +50,45 @@ export class MessagingClient extends ProtectedEmitter<{
     this.applyOptions()
   }
 
+  /** Options that are currently applied */
+  public get options() {
+    return this._options
+  }
+  public set options(val: MessagingOptions) {
+    this.channel.options = val
+    this.applyOptions()
+  }
+
   /** Base url of the messaging server */
   public get url() {
-    return this._options.url
+    return this.channel.url
   }
   public set url(val: string) {
-    this._options.url = val
-    this.applyOptions()
+    this.channel.url = val
   }
 
   /** A custom axios config giving more control over the HTTP client used internally. Optional */
   public get axios() {
-    return this._options.axios
+    return this.channel.axios
   }
   public set axios(val: Omit<AxiosRequestConfig, 'baseURL'> | undefined) {
-    this._options.axios = val
-    this.applyOptions()
+    this.channel.axios = val
+  }
+
+  /** Logger interface that can be used to get better debugging. Optional */
+  public get logger() {
+    return this.channel.logger
+  }
+  public set logger(val: Logger | undefined) {
+    this.channel.logger = val
+  }
+
+  /** Name of the cookie for sticky sessions */
+  public get sessionCookieName() {
+    return this.channel.sessionCookieName
+  }
+  public set sessionCookieName(val: string | undefined) {
+    this.channel.sessionCookieName = val
   }
 
   protected readonly channel: MessagingChannel
