@@ -1,10 +1,12 @@
 import { uuid } from '@botpress/messaging-base'
-import { CachingService, DatabaseService, Service } from '@botpress/messaging-engine'
+import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
 import { ProvisionTable } from './table'
 import { Provision } from './types'
 
 export class ProvisionService extends Service {
   private table: ProvisionTable
+  private cacheByClientId!: ServerCache<uuid, Provision>
+  private cacheByProviderId!: ServerCache<uuid, Provision>
 
   constructor(private db: DatabaseService, private caching: CachingService) {
     super()
@@ -12,6 +14,9 @@ export class ProvisionService extends Service {
   }
 
   async setup() {
+    this.cacheByClientId = await this.caching.newServerCache('cache_provision_by_client_id')
+    this.cacheByProviderId = await this.caching.newServerCache('cache_provision_by_provider_id')
+
     await this.db.registerTable(this.table)
   }
 
@@ -26,8 +31,22 @@ export class ProvisionService extends Service {
   }
 
   async fetchByClientId(clientId: uuid): Promise<Provision | undefined> {
-    const [row] = await this.query().where({ clientId })
-    return row
+    const cached = this.cacheByClientId.get(clientId)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ clientId })
+    if (rows?.length) {
+      const provision = rows[0] as Provision
+
+      this.cacheByClientId.set(clientId, provision)
+      this.cacheByProviderId.set(provision.providerId, provision)
+
+      return provision
+    } else {
+      return undefined
+    }
   }
 
   async getByClientId(clientId: uuid): Promise<Provision> {
@@ -39,8 +58,22 @@ export class ProvisionService extends Service {
   }
 
   async fetchByProviderId(providerId: uuid): Promise<Provision | undefined> {
-    const [row] = await this.query().where({ providerId })
-    return row
+    const cached = this.cacheByProviderId.get(providerId)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ providerId })
+    if (rows?.length) {
+      const provision = rows[0] as Provision
+
+      this.cacheByProviderId.set(providerId, provision)
+      this.cacheByClientId.set(provision.clientId, provision)
+
+      return provision
+    } else {
+      return undefined
+    }
   }
 
   async getByProviderId(providerId: uuid): Promise<Provision> {
