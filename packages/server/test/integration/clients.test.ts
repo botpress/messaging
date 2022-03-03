@@ -3,7 +3,7 @@ import { validate as validateUuid } from 'uuid'
 import { ClientService } from '../../src/clients/service'
 import { Client } from '../../src/clients/types'
 import { Provider } from '../../src/providers/types'
-import { app, setupApp } from './utils'
+import { app, setupApp } from '../utils'
 
 describe('Clients', () => {
   let clients: ClientService

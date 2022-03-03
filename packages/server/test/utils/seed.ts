@@ -4,14 +4,14 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid'
 
-import { ChannelMeta } from '../../../../channels/src/base/meta'
-import { ClientToken } from '../../../src/client-tokens/types'
-import { Client } from '../../../src/clients/types'
-import { Conduit } from '../../../src/conduits/types'
-import { Provider } from '../../../src/providers/types'
-import { ConduitStatus } from '../../../src/status/types'
-import { UserToken } from '../../../src/user-tokens/types'
-import { Webhook } from '../../../src/webhooks/types'
+import { ChannelMeta } from '../../../channels/src/base/meta'
+import { ClientToken } from '../../src/client-tokens/types'
+import { Client } from '../../src/clients/types'
+import { Conduit } from '../../src/conduits/types'
+import { Provider } from '../../src/providers/types'
+import { ConduitStatus } from '../../src/status/types'
+import { UserToken } from '../../src/user-tokens/types'
+import { Webhook } from '../../src/webhooks/types'
 
 const entities = {
   providers: {

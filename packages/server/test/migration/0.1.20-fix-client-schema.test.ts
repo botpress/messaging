@@ -2,7 +2,7 @@ import { MigrationService, DatabaseService, ShutDownSignal, getTableId } from '@
 import schemaInspector from 'knex-schema-inspector'
 import { v4 as uuid } from 'uuid'
 import { FixClientSchemaMigration } from '../../src/migrations/0.1.20-fix-client-schema'
-import { app, setupApp } from '../integration/utils'
+import { app, setupApp } from '../utils'
 
 const MIGRATION_VERSION = '0.1.20'
 const PREVIOUS_VERSION = '0.1.19'

@@ -1,7 +1,7 @@
 import { MigrationService, DatabaseService, ShutDownSignal, getTableId } from '@botpress/messaging-engine'
 import { v4 as uuid } from 'uuid'
 import { StatusMigration } from '../../src/migrations/0.1.19-status'
-import { app, setupApp } from '../integration/utils'
+import { app, setupApp } from '../utils'
 
 const MIGRATION_VERSION = '0.1.19'
 const PREVIOUS_VERSION = '0.1.18'

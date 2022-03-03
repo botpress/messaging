@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { App } from '../../../src/app'
+import { App } from '../../src/app'
 import { Seed } from './seed'
 
 export let app: App
