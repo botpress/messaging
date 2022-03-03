@@ -22,11 +22,19 @@ export class ProvisionService extends Service {
     await this.db.registerTable(this.table)
   }
 
+  async create(clientId: uuid, providerId: uuid): Promise<Provision> {
+    throw new Error('impl')
+  }
+
+  async fetchByClientId(clientId: uuid): Promise<Provision | undefined> {
+    throw new Error('impl')
+  }
+
   async getByClientId(clientId: uuid): Promise<Provision> {
     throw new Error('impl')
   }
 
-  async fetchByProviderId(providerId: uuid): Promise<Provision> {
+  async fetchByProviderId(providerId: uuid): Promise<Provision | undefined> {
     throw new Error('impl')
   }
 

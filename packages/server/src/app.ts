@@ -78,6 +78,8 @@ export class App extends Framework {
       this.channels,
       this.conduits,
       this.clients,
+      this.providers,
+      this.provisions,
       this.webhooks,
       this.status
     )
