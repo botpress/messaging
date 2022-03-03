@@ -1,5 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import cookie from 'cookie'
 import { ConversationStartedEvent, MessageFeedbackEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
 import { Emitter } from './emitter'
@@ -48,12 +49,21 @@ export abstract class MessagingChannelBase extends Emitter<{
     this.applyOptions()
   }
 
-  /** logger interface that can be used to get better debugging. Optional */
+  /** Logger interface that can be used to get better debugging. Optional */
   public get logger() {
     return this._options.logger
   }
   public set logger(val: Logger | undefined) {
     this._options.logger = val
+    this.applyOptions()
+  }
+
+  /** Name of the cookie for sticky sessions */
+  public get sessionCookieName() {
+    return this._options.sessionCookieName
+  }
+  public set sessionCookieName(val: string | undefined) {
+    this._options.sessionCookieName = val
     this.applyOptions()
   }
 
@@ -72,8 +82,32 @@ export abstract class MessagingChannelBase extends Emitter<{
 
   private applyOptions() {
     const config = this.getAxiosConfig(this._options)
-    this.http = axios.create(config)
     this.adminHeader = this._options.adminKey?.length ? { 'x-bp-messaging-admin-key': this._options.adminKey } : {}
+
+    this.http = axios.create(config)
+    this.http.interceptors.response.use(
+      (e) => {
+        this.saveCookie(e.headers['set-cookie'])
+        return e
+      },
+      (e) => {
+        this.saveCookie(e?.response?.headers?.['set-cookie'])
+        return Promise.reject(e)
+      }
+    )
+  }
+
+  private saveCookie(cookieHeader: string[] | undefined) {
+    if (!this.sessionCookieName || !cookieHeader) {
+      return
+    }
+
+    for (const strCookie of cookieHeader) {
+      const resCookie = cookie.parse(strCookie)
+      if (resCookie[this.sessionCookieName]) {
+        this.http.defaults.headers.common['cookie'] = `${this.sessionCookieName}=${resCookie[this.sessionCookieName]};`
+      }
+    }
   }
 
   private getAxiosConfig({ url, axios }: MessagingChannelOptions): AxiosRequestConfig {

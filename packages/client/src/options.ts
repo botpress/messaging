@@ -12,6 +12,8 @@ export interface MessagingChannelOptions {
   axios?: Omit<AxiosRequestConfig, 'baseURL'>
   /** Optional logger interface that can be used to get better debugging */
   logger?: Logger
+  /** Name of the cookie for sticky sessions */
+  sessionCookieName?: string
 }
 
 export interface MessagingOptions extends Omit<MessagingChannelOptions, 'adminKey'>, MessagingClientAuth {
