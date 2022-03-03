@@ -1,3 +1,4 @@
+import { Client, ClientToken } from '@botpress/framework'
 import { User } from '@botpress/messaging-base'
 import { DatabaseService } from '@botpress/messaging-engine/src/database/service'
 import bcrypt from 'bcryptjs'
@@ -5,8 +6,6 @@ import crypto from 'crypto'
 import { v4 as uuid } from 'uuid'
 
 import { ChannelMeta } from '../../../channels/src/base/meta'
-import { ClientToken } from '../../src/client-tokens/types'
-import { Client } from '../../src/clients/types'
 import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
 import { ConduitStatus } from '../../src/status/types'
@@ -91,7 +90,7 @@ export class Seed {
   private clients(providers: Provider[]): Client[] {
     const clients: Client[] = []
     for (const provider of providers) {
-      clients.push({ id: uuid(), providerId: provider.id })
+      clients.push({ id: uuid() })
     }
 
     return clients

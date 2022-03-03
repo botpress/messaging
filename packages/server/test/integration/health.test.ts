@@ -17,7 +17,9 @@ describe('Health', () => {
     querySpy = jest.spyOn(health as any, 'query')
 
     const provider = await app.providers.create(randStr(), false)
-    const client = await app.clients.create(provider.id)
+    const client = await app.clients.create()
+    await app.provisions.create(client.id, provider.id)
+
     const conduit = await app.conduits.create(
       provider.id,
       app.channels.getByNameAndVersion(TEST_CHANNEL, '1.0.0').meta.id,
