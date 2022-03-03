@@ -19,10 +19,10 @@ export class Launcher {
     private basePort: number,
     private express: Express,
     private setupCallback: () => Promise<void>,
-    private serverCreatedCallback: (server: Server) => Promise<void>,
-    private serverReadyCallback: () => Promise<void>,
-    private preDestroyCallback: () => Promise<void>,
-    private postDestroyCallback: () => Promise<void>
+    private startCallback: (server: Server) => Promise<void>,
+    private monitorCallback: () => Promise<void>,
+    private terminateCallback: () => Promise<void>,
+    private destroyCallback: () => Promise<void>
   ) {
     this.logger = new Logger('Launcher')
 
@@ -65,7 +65,7 @@ export class Launcher {
       }
 
       const server = this.express.listen(port)
-      await this.serverCreatedCallback(server)
+      await this.startCallback(server)
       this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
 
       this.logger.info(`Server is listening at: http://localhost:${port}`)
@@ -79,7 +79,7 @@ export class Launcher {
         )
       }
 
-      await this.serverReadyCallback()
+      await this.monitorCallback()
     } catch (e) {
       if (e instanceof ShutDownSignal) {
         await this.shutDown(e.code)
@@ -99,9 +99,9 @@ export class Launcher {
       try {
         this.logger.info('Server gracefully closing down...')
 
-        await this.preDestroyCallback()
+        await this.terminateCallback()
         await this.httpTerminator?.terminate()
-        await this.postDestroyCallback()
+        await this.destroyCallback()
 
         this.logger.info('Server shutdown complete')
       } catch (e) {

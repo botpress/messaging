@@ -113,18 +113,15 @@ export class App extends Framework {
   }
 
   async monitor() {
+    await super.monitor()
     await this.syncs.setup()
     await this.instances.monitor()
     await this.billing.setup()
   }
 
   async destroy() {
-    // TODO: this is pretty much copy pasted. Should divide into preDestroy, destroy, postDestroy
-
-    await this.batching?.destroy()
+    await super.destroy()
     await this.billing?.destroy()
     await this.instances?.destroy()
-    await this.distributed?.destroy()
-    await this.database?.destroy()
   }
 }

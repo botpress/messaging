@@ -24,10 +24,10 @@ export const start = (tentry: { new (): Entry }) => {
           await entry.monitor()
         },
         async () => {
-          await entry.destroy()
+          await entry.terminate()
         },
         async () => {
-          await entry.postDestroy()
+          await entry.destroy()
         }
       )
 

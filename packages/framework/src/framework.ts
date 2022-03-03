@@ -1,4 +1,5 @@
-import { Engine } from '@botpress/messaging-engine'
+import { Engine, Migration } from '@botpress/messaging-engine'
+import { ServerMetadata } from '@botpress/messaging-engine/src/meta/types'
 import { ClientTokenService } from './client-tokens/service'
 import { ClientService } from './clients/service'
 
@@ -12,21 +13,15 @@ export class Framework extends Engine {
     this.clientTokens = new ClientTokenService(this.database, this.crypto, this.caching)
   }
 
-  async prepare(pkg: any, migs: any) {
-    this.meta.setPkg(pkg)
-    this.migration.setMigrations(migs)
-  }
-
   async setup() {
     await super.setup()
     await this.clients.setup()
     await this.clientTokens.setup()
   }
 
-  async destroy() {
-    await this.batching?.destroy()
-    await this.distributed?.destroy()
-    await this.database?.destroy()
+  async prepare(pkg: ServerMetadata, migs: { new (): Migration }[]) {
+    this.meta.prepare(pkg)
+    this.migration.prepare(migs)
   }
 
   async monitor() {}

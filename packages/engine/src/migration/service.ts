@@ -24,7 +24,7 @@ export class MigrationService extends Service {
     super()
   }
 
-  setMigrations(migs: { new (): Migration }[]) {
+  prepare(migs: { new (): Migration }[]) {
     this.migs = migs
   }
 

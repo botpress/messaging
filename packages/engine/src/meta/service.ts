@@ -15,7 +15,7 @@ export class MetaService extends Service {
     this.table = new MetaTable()
   }
 
-  setPkg(pkg: ServerMetadata) {
+  prepare(pkg: ServerMetadata) {
     this.pkg = pkg
   }
 

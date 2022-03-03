@@ -26,9 +26,9 @@ export abstract class Entry {
 
   constructor(
     tapp: { new (): Framework },
-    tapi: { new (app: any, manager: ApiManager, express: Express): IApp },
-    tstream: { new (app: any): IApp },
-    tsocket: { new (app: any): IApp }
+    tapi: { new (app: any, manager: ApiManager, express: Express): any },
+    tstream: { new (app: any): any },
+    tsocket: { new (app: any): any }
   ) {
     this.router = express()
     this.router.disable('x-powered-by')
@@ -64,14 +64,14 @@ export abstract class Entry {
     await this.app.monitor()
   }
 
-  async destroy() {
+  async terminate() {
     await this.stream?.destroy()
     await this.socket?.destroy()
   }
 
-  async postDestroy() {
+  async destroy() {
+    await this.app?.preDestroy()
     await this.app?.destroy()
+    await this.app?.postDestroy()
   }
 }
-
-export interface IApp {}
