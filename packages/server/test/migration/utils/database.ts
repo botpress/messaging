@@ -37,6 +37,10 @@ export class Inspector {
   }
 
   private addSuffix(info: string): string {
+    if (this.isLite) {
+      return info
+    }
+
     return `${info}${this.suffix}`
   }
 
