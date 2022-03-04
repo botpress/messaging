@@ -28,6 +28,18 @@ describe('Provisions', () => {
     app.caching.resetAll()
   })
 
+  test('Get provision that does not exist by client id', async () => {
+    const provision = await provisions.fetchByClientId(state.client.id)
+    expect(provision).toEqual(undefined)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Get provision that does not exist by provider id', async () => {
+    const provision = await provisions.fetchByProviderId(state.provider.id)
+    expect(provision).toEqual(undefined)
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
   test('Create provision', async () => {
     const provision = await provisions.create(state.client.id, state.provider.id)
 
