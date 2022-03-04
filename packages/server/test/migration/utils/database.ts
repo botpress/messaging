@@ -5,63 +5,63 @@ import { Table } from 'knex-schema-inspector/dist/types/table'
 import path from 'path'
 
 export class Inspector {
-  private _knex: Knex
-  private _url: string
-  private _isLite: boolean = false
-  private _inspector: SchemaInspector
+  private knex: Knex
+  private url: string
+  private isLite: boolean = false
+  private inspector: SchemaInspector
 
-  constructor(private _suffix: string) {
-    this._url =
-      process.env.DATABASE_URL || path.join(__dirname, './../../../../../test/.test-data', `${this._suffix}.sqlite`)
+  constructor(private suffix: string) {
+    this.url =
+      process.env.DATABASE_URL || path.join(__dirname, './../../../../../test/.test-data', `${this.suffix}.sqlite`)
 
-    if (this._url.startsWith('postgres')) {
-      this._knex = knex({
+    if (this.url.startsWith('postgres')) {
+      this.knex = knex({
         client: 'postgres',
-        connection: this._url,
+        connection: this.url,
         useNullAsDefault: true
       })
     } else {
-      this._isLite = true
-      this._knex = knex({
+      this.isLite = true
+      this.knex = knex({
         client: 'sqlite3',
-        connection: { filename: this._url },
+        connection: { filename: this.url },
         useNullAsDefault: true
       })
     }
 
-    this._inspector = schemaInspector(this._knex)
+    this.inspector = schemaInspector(this.knex)
   }
 
-  private _removeSuffix(info: string): string {
-    return info.replace(this._suffix, '')
+  private removeSuffix(info: string): string {
+    return info.replace(this.suffix, '')
   }
 
-  private _addSuffix(info: string): string {
-    return `${info}${this._suffix}`
+  private addSuffix(info: string): string {
+    return `${info}${this.suffix}`
   }
 
   public async tables(): Promise<Table[]> {
-    const tables = await this._inspector.tableInfo()
+    const tables = await this.inspector.tableInfo()
 
-    if (this._isLite) {
+    if (this.isLite) {
       return tables
     }
 
-    return tables.filter((t) => t.name.includes(this._suffix)).map((t) => ({ ...t, name: this._removeSuffix(t.name) }))
+    return tables.filter((t) => t.name.includes(this.suffix)).map((t) => ({ ...t, name: this.removeSuffix(t.name) }))
   }
 
   public async columns(table: string) {
-    const columns = await this._inspector.columns(this._addSuffix(table))
+    const columns = await this.inspector.columns(this.addSuffix(table))
 
     if (!columns) {
       return undefined
     }
 
-    return columns.map((c) => ({ ...c, table: this._removeSuffix(c.table) }))
+    return columns.map((c) => ({ ...c, table: this.removeSuffix(c.table) }))
   }
 
   public async columnInfo(table: string, column: string) {
-    const columnInfo = await this._inspector.columnInfo(this._addSuffix(table), column)
+    const columnInfo = await this.inspector.columnInfo(this.addSuffix(table), column)
 
     if (!columnInfo) {
       return undefined
@@ -69,12 +69,12 @@ export class Inspector {
 
     return {
       ...columnInfo,
-      table: this._removeSuffix(columnInfo.table),
-      foreign_key_table: columnInfo.foreign_key_table && this._removeSuffix(columnInfo.foreign_key_table)
+      table: this.removeSuffix(columnInfo.table),
+      foreign_key_table: columnInfo.foreign_key_table && this.removeSuffix(columnInfo.foreign_key_table)
     }
   }
 
   public async destroy() {
-    return this._knex.destroy()
+    return this.knex.destroy()
   }
 }
