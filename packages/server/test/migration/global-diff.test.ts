@@ -53,16 +53,23 @@ describe('Global Diff', () => {
       const allMigrationsTables = await allMigrationsInspector.tableInfo()
 
       for (const table of noMigrationTables) {
+        // We have to replace the no_mig suffix from the table name to all_migs when using PostgreSQL
+        const allMigrationsTableName = table.name.replace(NO_MIGRATION, ALL_MIGRATIONS)
+
         const noMigrationTableColumns = await noMigrationInspector.columns(table.name)
-        const allMigrationsTableColumns = await allMigrationsInspector.columns(
-          table.name.replace(NO_MIGRATION, ALL_MIGRATIONS)
-        )
+        const allMigrationsTableColumns = await allMigrationsInspector.columns(allMigrationsTableName)
 
-        for (const { table, column } of noMigrationTableColumns) {
-          const noMigrationTableColumnInfo = await noMigrationInspector.columnInfo(table, column)
-          const allMigrationsTableColumnInfo = await allMigrationsInspector.columnInfo(table, column)
+        for (const { column } of noMigrationTableColumns) {
+          const noMigrationTableColumnInfo = await noMigrationInspector.columnInfo(table.name, column)
+          const allMigrationsTableColumnInfo = await allMigrationsInspector.columnInfo(allMigrationsTableName, column)
 
-          expect(noMigrationTableColumnInfo).toEqual(allMigrationsTableColumnInfo)
+          expect({
+            ...noMigrationTableColumnInfo,
+            table: noMigrationTableColumnInfo.table.replace(NO_MIGRATION, '') // We remove the table suffix if present
+          }).toEqual({
+            ...allMigrationsTableColumnInfo,
+            table: allMigrationsTableColumnInfo.table.replace(ALL_MIGRATIONS, '') // We remove the table suffix if present
+          })
         }
 
         expect(noMigrationTableColumns.length).toEqual(allMigrationsTableColumns.length)
