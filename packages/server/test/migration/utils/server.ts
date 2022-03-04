@@ -11,7 +11,6 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
 
   if (process.env.DATABASE_URL!.startsWith('postgres')) {
     process.env.DATABASE_SUFFIX = prefix
-    process.env.DATABASE_TRANSIENT = 'true'
   }
 
   process.env.PORT = options.port?.toString() || '3100'
