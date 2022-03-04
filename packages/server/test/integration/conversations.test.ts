@@ -4,7 +4,7 @@ import { validate as validateUuid } from 'uuid'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
 import { UserService } from '../../src/users/service'
-import { app, setupApp, sleep } from '../utils'
+import { app, destroyApp, setupApp, sleep } from '../utils'
 
 describe('Conversations', () => {
   let conversations: ConversationService
@@ -30,7 +30,7 @@ describe('Conversations', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {

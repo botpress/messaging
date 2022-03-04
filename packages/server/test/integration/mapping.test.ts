@@ -3,7 +3,7 @@ import { Endpoint } from '@botpress/messaging-channels'
 import { validate as validateUuid } from 'uuid'
 import { MappingService } from '../../src/mapping/service'
 import { Provider } from '../../src/providers/types'
-import { app, randStr, setupApp } from '../utils'
+import { app, destroyApp, randStr, setupApp } from '../utils'
 
 export interface Mapping {
   tunnelId: uuid
@@ -38,7 +38,7 @@ describe('Mapping', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {

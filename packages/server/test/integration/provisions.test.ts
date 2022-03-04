@@ -2,7 +2,7 @@ import { Client } from '@botpress/framework'
 import { Provider } from '../../src/providers/types'
 import { ProvisionService } from '../../src/provisions/service'
 import { Provision } from '../../src/provisions/types'
-import { app, randStr, setupApp } from '../utils'
+import { app, destroyApp, randStr, setupApp } from '../utils'
 
 describe('Provisions', () => {
   let provisions: ProvisionService
@@ -21,7 +21,7 @@ describe('Provisions', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {

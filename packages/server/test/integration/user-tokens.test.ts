@@ -3,7 +3,7 @@ import { User } from '@botpress/messaging-base'
 import { validate as validateUuid } from 'uuid'
 import { UserTokenService } from '../../src/user-tokens/service'
 import { UserToken } from '../../src/user-tokens/types'
-import { app, randStr, setupApp } from '../utils'
+import { app, destroyApp, randStr, setupApp } from '../utils'
 
 describe('UserTokens', () => {
   let userTokens: UserTokenService
@@ -25,7 +25,7 @@ describe('UserTokens', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {

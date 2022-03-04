@@ -1,6 +1,6 @@
 import { Client, ClientService } from '@botpress/framework'
 import { validate as validateUuid } from 'uuid'
-import { app, setupApp } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 describe('Clients', () => {
   let clients: ClientService
@@ -16,7 +16,7 @@ describe('Clients', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {
