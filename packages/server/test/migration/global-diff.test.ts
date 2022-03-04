@@ -48,20 +48,48 @@ describe('Global Diff', () => {
       const allMigrationsTables = await allMigrationsInspector.tables()
 
       for (const table of noMigrationTables) {
-        const noMigrationTableColumns = await noMigrationInspector.columns(table.name)
+        const noMigrationTableColumns = (await noMigrationInspector.columns(table.name))!
         const allMigrationsTableColumns = await allMigrationsInspector.columns(table.name)
+
+        if (!allMigrationsTableColumns) {
+          throw new Error(`Table '${table.name}' is missing in the database where we ran all migrations.`)
+        }
 
         for (const { table, column } of noMigrationTableColumns) {
           const noMigrationTableColumnInfo = await noMigrationInspector.columnInfo(table, column)
           const allMigrationsTableColumnInfo = await allMigrationsInspector.columnInfo(table, column)
 
+          if (!allMigrationsTableColumnInfo) {
+            throw new Error(
+              `Column '${column}' of table '${table}' is missing in the database where we ran all migrations.`
+            )
+          }
+
           expect(noMigrationTableColumnInfo).toEqual(allMigrationsTableColumnInfo)
         }
 
-        expect(noMigrationTableColumns.length).toEqual(allMigrationsTableColumns.length)
+        if (noMigrationTableColumns.length !== allMigrationsTableColumns.length) {
+          const difference = allMigrationsTableColumns.filter(
+            (x) => !noMigrationTableColumns.some((c) => c.column.includes(x.column))
+          )
+
+          throw new Error(
+            `The DB on which we ran the migrations contains more columns than the other DB. ${difference
+              .map((c) => `Table: ${c.table}; Column ${c.column}`)
+              .join(', ')}.`
+          )
+        }
       }
 
-      expect(noMigrationTables.length).toEqual(allMigrationsTables.length)
+      if (noMigrationTables.length !== allMigrationsTables.length) {
+        const difference = allMigrationsTables.filter((x) => !noMigrationTables.some((t) => t.name.includes(x.name)))
+
+        throw new Error(
+          `The DB on which we ran the migrations contains more tables than the other DB. Tables: ${difference
+            .map((t) => t.name)
+            .join(', ')}.`
+        )
+      }
     } finally {
       await noMigrationInspector.destroy()
       await allMigrationsInspector.destroy()

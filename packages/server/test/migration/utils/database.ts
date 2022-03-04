@@ -51,14 +51,21 @@ export class Inspector {
   }
 
   public async columns(table: string) {
-    return (await this._inspector.columns(this._addSuffix(table))).map((c) => ({
-      ...c,
-      table: this._removeSuffix(c.table)
-    }))
+    const columns = await this._inspector.columns(this._addSuffix(table))
+
+    if (!columns) {
+      return undefined
+    }
+
+    return columns.map((c) => ({ ...c, table: this._removeSuffix(c.table) }))
   }
 
   public async columnInfo(table: string, column: string) {
     const columnInfo = await this._inspector.columnInfo(this._addSuffix(table), column)
+
+    if (!columnInfo) {
+      return undefined
+    }
 
     return {
       ...columnInfo,
