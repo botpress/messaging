@@ -136,11 +136,11 @@ export class SocketManager {
   }
 
   async setupSocket(socket: Socket.Socket) {
-    socket.on('message', async (data) => {
-      await this.handleSocketMessage(socket, data)
+    socket.on('message', (data) => {
+      void this.handleSocketMessage(socket, data)
     })
-    socket.on('disconnect', async () => {
-      await this.handleSocketDisconnect(socket)
+    socket.on('disconnect', () => {
+      void this.handleSocketDisconnect(socket)
     })
   }
 
@@ -156,7 +156,11 @@ export class SocketManager {
     } catch (e) {
       this.logger.error(e, 'An error occured receiving a socket message', message)
 
-      return this.reply(socket, message, { error: true, message: 'an error occurred' })
+      try {
+        return this.reply(socket, message, { error: true, message: 'an error occurred' })
+      } catch (e) {
+        this.logger.error(e, 'An error occured sending an error message to the socket')
+      }
     }
   }
 
