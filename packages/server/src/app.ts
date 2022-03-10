@@ -48,7 +48,7 @@ export class App extends Engine {
 
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
-    this.clients = new ClientService(this.database, this.caching, this.providers)
+    this.clients = new ClientService(this.database, this.caching)
     this.clientTokens = new ClientTokenService(this.database, this.crypto, this.caching)
     this.provisions = new ProvisionService(this.database, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
