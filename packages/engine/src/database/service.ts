@@ -71,7 +71,6 @@ export class DatabaseService extends Service {
         afterCreate: (conn: any, cb: any) => {
           conn.pragma('foreign_keys = ON')
           cb()
-          console.log('YOYOYOY')
         },
         ...this.pool
       }
