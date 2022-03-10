@@ -12,6 +12,7 @@ import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
 import { Migrations } from './migrations'
 import { ProviderService } from './providers/service'
+import { ProvisionService } from './provisions/service'
 import { SocketService } from './socket/service'
 import { StatusService } from './status/service'
 import { SyncService } from './sync/service'
@@ -24,6 +25,7 @@ export class App extends Engine {
   providers: ProviderService
   clients: ClientService
   clientTokens: ClientTokenService
+  provisions: ProvisionService
   webhooks: WebhookService
   conduits: ConduitService
   users: UserService
@@ -48,6 +50,7 @@ export class App extends Engine {
     this.providers = new ProviderService(this.database, this.caching)
     this.clients = new ClientService(this.database, this.caching, this.providers)
     this.clientTokens = new ClientTokenService(this.database, this.crypto, this.caching)
+    this.provisions = new ProvisionService(this.database, this.caching)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
     this.users = new UserService(this.database, this.caching, this.batching)
@@ -105,6 +108,7 @@ export class App extends Engine {
     await this.providers.setup()
     await this.clients.setup()
     await this.clientTokens.setup()
+    await this.provisions.setup()
     await this.webhooks.setup()
     await this.conduits.setup()
     await this.users.setup()
