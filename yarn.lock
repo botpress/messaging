@@ -711,17 +711,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/helper-validator-identifier@npm:^7.12.11, @babel/helper-validator-identifier@npm:^7.16.7":
+  version: 7.16.7
+  resolution: "@babel/helper-validator-identifier@npm:7.16.7"
+  checksum: dbb3db9d184343152520a209b5684f5e0ed416109cde82b428ca9c759c29b10c7450657785a8b5c5256aa74acc6da491c1f0cf6b784939f7931ef82982051b69
+  languageName: node
+  linkType: hard
+
 "@babel/helper-validator-identifier@npm:^7.15.7":
   version: 7.15.7
   resolution: "@babel/helper-validator-identifier@npm:7.15.7"
   checksum: f041c28c531d1add5cc345b25d5df3c29c62bce3205b4d4a93dcd164ccf630350acba252d374fad8f5d8ea526995a215829f27183ba7ce7ce141843bf23068a6
-  languageName: node
-  linkType: hard
-
-"@babel/helper-validator-identifier@npm:^7.16.7":
-  version: 7.16.7
-  resolution: "@babel/helper-validator-identifier@npm:7.16.7"
-  checksum: dbb3db9d184343152520a209b5684f5e0ed416109cde82b428ca9c759c29b10c7450657785a8b5c5256aa74acc6da491c1f0cf6b784939f7931ef82982051b69
   languageName: node
   linkType: hard
 
@@ -795,12 +795,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:7.16.2":
-  version: 7.16.2
-  resolution: "@babel/parser@npm:7.16.2"
+"@babel/parser@npm:7.13.13":
+  version: 7.13.13
+  resolution: "@babel/parser@npm:7.13.13"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: e8ceef8214adf55beaae80fff1647ae6535e17af592749a6f3fd3ed1081bbb1474fd88bf4d3470ec8bc0082843a6d23445e9e08b03e91831458acc6fd37d7bc9
+  checksum: 30deada9f98add95e6dc5c15b6792fda208d4169d967015fe23423ee93a94baf4e0c67b2b6069de15b5054b61e60410db218daa84939c57bd787469906dff927
   languageName: node
   linkType: hard
 
@@ -2015,7 +2015,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:7.16.0, @babel/types@npm:^7.0.0, @babel/types@npm:^7.12.11, @babel/types@npm:^7.12.13, @babel/types@npm:^7.12.7, @babel/types@npm:^7.16.0, @babel/types@npm:^7.2.0, @babel/types@npm:^7.3.0, @babel/types@npm:^7.3.3, @babel/types@npm:^7.4.4, @babel/types@npm:^7.8.3":
+"@babel/types@npm:7.13.12":
+  version: 7.13.12
+  resolution: "@babel/types@npm:7.13.12"
+  dependencies:
+    "@babel/helper-validator-identifier": ^7.12.11
+    lodash: ^4.17.19
+    to-fast-properties: ^2.0.0
+  checksum: 4ffe8178e262ba6fdc179075bcaab642a41efc4e0cfcbc48dc26bcf1a8bd46470b1a135467c637c60a5a3ff7c36a402b765b5c33ea5286ea07de79b81329f799
+  languageName: node
+  linkType: hard
+
+"@babel/types@npm:^7.0.0, @babel/types@npm:^7.12.11, @babel/types@npm:^7.12.13, @babel/types@npm:^7.12.7, @babel/types@npm:^7.16.0, @babel/types@npm:^7.2.0, @babel/types@npm:^7.3.0, @babel/types@npm:^7.3.3, @babel/types@npm:^7.4.4, @babel/types@npm:^7.8.3":
   version: 7.16.0
   resolution: "@babel/types@npm:7.16.0"
   dependencies:
@@ -2375,7 +2386,7 @@ __metadata:
     jest-dev-server: ^6.0.3
     mkdirp: ^1.0.4
     parcel: ^2.2.1
-    pkg: ^5.5.2
+    pkg: 5.2.0
     prettier: ^2.5.1
     rimraf: ^3.0.2
     ts-jest: 27.1.2
@@ -16953,7 +16964,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-abi@npm:^2.21.0":
+"node-abi@npm:^2.7.0":
   version: 2.30.1
   resolution: "node-abi@npm:2.30.1"
   dependencies:
@@ -17126,6 +17137,13 @@ __metadata:
   version: 2.0.1
   resolution: "node-releases@npm:2.0.1"
   checksum: b20dd8d4bced11f75060f0387e05e76b9dc4a0451f7bb3516eade6f50499ea7768ba95d8a60d520c193402df1e58cb3fe301510cc1c1ad68949c3d57b5149866
+  languageName: node
+  linkType: hard
+
+"noop-logger@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "noop-logger@npm:0.1.1"
+  checksum: 9f99da270d074a2f268de2eae3ebcb44f12cc2f7241417c7be9f1e206f614afa632a27b91febab86163f88bb54466d638e49c9f62d899105f18d5ed5bcd51ed1
   languageName: node
   linkType: hard
 
@@ -18255,43 +18273,42 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pkg-fetch@npm:3.2.6":
-  version: 3.2.6
-  resolution: "pkg-fetch@npm:3.2.6"
+"pkg-fetch@npm:3.1.0":
+  version: 3.1.0
+  resolution: "pkg-fetch@npm:3.1.0"
   dependencies:
-    chalk: ^4.1.2
+    chalk: ^4.1.0
     fs-extra: ^9.1.0
     https-proxy-agent: ^5.0.0
-    node-fetch: ^2.6.6
+    node-fetch: ^2.6.1
     progress: ^2.0.3
     semver: ^7.3.5
-    tar-fs: ^2.1.1
     yargs: ^16.2.0
   bin:
     pkg-fetch: lib-es5/bin.js
-  checksum: ca62a39fbcf7dd7f096f425e9e24e685d6831104fae034ce6ec8445402253443d74f3f70c5192631ccccd86d09edb4fae8a3ed2eb5c03a8d1d2be67c6229004f
+  checksum: bd93423c4a007d60fa5f7bf20149c6b7bff81aa43664dbbaa49e4ea60fccab0f29cf6b153a68bdeb31f5e68c59c0c113b19c3976755762a7f7d675b70d737723
   languageName: node
   linkType: hard
 
-"pkg@npm:^5.5.2":
-  version: 5.5.2
-  resolution: "pkg@npm:5.5.2"
+"pkg@npm:5.2.0":
+  version: 5.2.0
+  resolution: "pkg@npm:5.2.0"
   dependencies:
-    "@babel/parser": 7.16.2
-    "@babel/types": 7.16.0
-    chalk: ^4.1.2
+    "@babel/parser": 7.13.13
+    "@babel/types": 7.13.12
+    chalk: ^4.1.0
     escodegen: ^2.0.0
     fs-extra: ^9.1.0
-    globby: ^11.0.4
+    globby: ^11.0.3
     into-stream: ^6.0.0
     minimist: ^1.2.5
     multistream: ^4.1.0
-    pkg-fetch: 3.2.6
-    prebuild-install: 6.1.4
+    pkg-fetch: 3.1.0
+    prebuild-install: 6.0.1
     progress: ^2.0.3
     resolve: ^1.20.0
     stream-meter: ^1.0.4
-    tslib: 2.3.1
+    tslib: 2.1.0
   peerDependencies:
     node-notifier: ">=9.0.1"
   peerDependenciesMeta:
@@ -18299,7 +18316,7 @@ __metadata:
       optional: true
   bin:
     pkg: lib-es5/bin.js
-  checksum: 8f3309cef1080b45d7abaa3b95dd7cfb00ae6867bfb4a30e52c078b781482040f24a7e65e90618e5d33339d788ad3aeda4d89bffeee7042e2f868799ca6d182f
+  checksum: adb787c776deeb5fc24c5b326c1f34e3da0c95b3185619c0b45370fa73990426954247bdbf5d6e48ea825ff9b46ff972436d19e45fe3425c858cf9ca7500988c
   languageName: node
   linkType: hard
 
@@ -18912,9 +18929,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prebuild-install@npm:6.1.4":
-  version: 6.1.4
-  resolution: "prebuild-install@npm:6.1.4"
+"prebuild-install@npm:6.0.1":
+  version: 6.0.1
+  resolution: "prebuild-install@npm:6.0.1"
   dependencies:
     detect-libc: ^1.0.3
     expand-template: ^2.0.3
@@ -18922,16 +18939,18 @@ __metadata:
     minimist: ^1.2.3
     mkdirp-classic: ^0.5.3
     napi-build-utils: ^1.0.1
-    node-abi: ^2.21.0
+    node-abi: ^2.7.0
+    noop-logger: ^0.1.1
     npmlog: ^4.0.1
     pump: ^3.0.0
     rc: ^1.2.7
     simple-get: ^3.0.3
     tar-fs: ^2.0.0
     tunnel-agent: ^0.6.0
+    which-pm-runs: ^1.0.0
   bin:
     prebuild-install: bin.js
-  checksum: de4313eda821305912af922700a2db04bb8e77fe8aa9c2788550f1000c026cbefc82da468ec0c0a37764c5417bd8169dbd540928535fb38d00bb9bbd673dd217
+  checksum: d5877ea37612b08b85e1878fae138c7c41015f580cbdee7c70c85cf4ba1d9419cb23b53320edad5525702b09d78e22f744c1df72343976de8ae4df77e195f66f
   languageName: node
   linkType: hard
 
@@ -21911,7 +21930,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar-fs@npm:^2.0.0, tar-fs@npm:^2.1.1":
+"tar-fs@npm:^2.0.0":
   version: 2.1.1
   resolution: "tar-fs@npm:2.1.1"
   dependencies:
@@ -22558,10 +22577,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.3.1, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.2.0, tslib@npm:^2.3.0":
-  version: 2.3.1
-  resolution: "tslib@npm:2.3.1"
-  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+"tslib@npm:2.1.0, tslib@npm:~2.1.0":
+  version: 2.1.0
+  resolution: "tslib@npm:2.1.0"
+  checksum: aa189c8179de0427b0906da30926fd53c59d96ec239dff87d6e6bc831f608df0cbd6f77c61dabc074408bd0aa0b9ae4ec35cb2c15f729e32f37274db5730cb78
   languageName: node
   linkType: hard
 
@@ -22572,17 +22591,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.2.0, tslib@npm:^2.3.0":
+  version: 2.3.1
+  resolution: "tslib@npm:2.3.1"
+  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  languageName: node
+  linkType: hard
+
 "tslib@npm:~1.13.0":
   version: 1.13.0
   resolution: "tslib@npm:1.13.0"
   checksum: 50e9327361f94f328c0715582a7f725f69838ab3c2559d143643c5367262fe14552768ba8cfc65bc7dc924a619aea599b3a28b6653458cdca77bbebaf9bc8df4
-  languageName: node
-  linkType: hard
-
-"tslib@npm:~2.1.0":
-  version: 2.1.0
-  resolution: "tslib@npm:2.1.0"
-  checksum: aa189c8179de0427b0906da30926fd53c59d96ec239dff87d6e6bc831f608df0cbd6f77c61dabc074408bd0aa0b9ae4ec35cb2c15f729e32f37274db5730cb78
   languageName: node
   linkType: hard
 
@@ -23638,6 +23657,13 @@ __metadata:
   version: 2.0.0
   resolution: "which-module@npm:2.0.0"
   checksum: 809f7fd3dfcb2cdbe0180b60d68100c88785084f8f9492b0998c051d7a8efe56784492609d3f09ac161635b78ea29219eb1418a98c15ce87d085bce905705c9c
+  languageName: node
+  linkType: hard
+
+"which-pm-runs@npm:^1.0.0":
+  version: 1.1.0
+  resolution: "which-pm-runs@npm:1.1.0"
+  checksum: 39a56ee50886fb33ec710e3b36dc9fe3d0096cac44850d9ca0c6186c4cb824d6c8125f013e0562e7c94744e1e8e4a6ab695592cdb12555777c7a4368143d822c
   languageName: node
   linkType: hard
 
