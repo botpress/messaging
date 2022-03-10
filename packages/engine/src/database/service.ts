@@ -75,8 +75,6 @@ export class DatabaseService extends Service {
         ...this.pool
       }
     })
-
-    console.log(await this.knex.raw('PRAGMA foreign_keys;'))
   }
 
   async destroy() {
