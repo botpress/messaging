@@ -1,3 +1,13 @@
+## [1.1.4](https://github.com/botpress/messaging/compare/v1.1.3...v1.1.4) (2022-03-10)
+
+
+### Bug Fixes
+
+* **pkg:** revert to 5.2.0 ([#404](https://github.com/botpress/messaging/issues/404)) ([58cdf9a](https://github.com/botpress/messaging/commit/58cdf9a4776e69eea9d1044f2a90313bc5c8de94))
+* **sockets:** fix socket unable to send error message crashing server ([#402](https://github.com/botpress/messaging/issues/402)) ([b18c779](https://github.com/botpress/messaging/commit/b18c779df73a2a7905e6503de2342b27443c7380))
+
+
+
 ## [1.1.3](https://github.com/botpress/messaging/compare/v1.1.2...v1.1.3) (2022-02-18)
 
 
