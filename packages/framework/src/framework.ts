@@ -25,4 +25,15 @@ export class Framework extends Engine {
   }
 
   async monitor() {}
+
+  async preDestroy() {
+    await this.batching?.destroy()
+  }
+
+  async destroy() {}
+
+  async postDestroy() {
+    await this.distributed?.destroy()
+    await this.database?.destroy()
+  }
 }
