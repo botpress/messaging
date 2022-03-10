@@ -5,6 +5,8 @@ import yn from 'yn'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
+import { ProviderService } from '../providers/service'
+import { ProvisionService } from '../provisions/service'
 import { StatusService } from '../status/service'
 import { WebhookService } from '../webhooks/service'
 
@@ -17,6 +19,8 @@ export class SyncService extends Service {
     private channels: ChannelService,
     private conduits: ConduitService,
     private clients: ClientService,
+    private providers: ProviderService,
+    private provisions: ProvisionService,
     private webhooks: WebhookService,
     private status: StatusService
   ) {
@@ -37,13 +41,26 @@ export class SyncService extends Service {
       }
 
       const client = await this.clients.getById(clientId)
-      await this.syncConduits(client.providerId, req.channels || {})
+      const providerId = await this.syncProvider(clientId)
+      await this.syncConduits(providerId, req.channels || {})
       const webhooks = await this.syncWebhooks(client.id, req.webhooks || [])
 
       result = { webhooks }
     })
 
     return result!
+  }
+
+  private async syncProvider(clientId: uuid) {
+    const provision = await this.provisions.fetchByClientId(clientId)
+    if (provision) {
+      return provision.providerId
+    }
+
+    const provider = await this.providers.create(clientId, false)
+    await this.provisions.create(clientId, provider.id)
+
+    return provider.id
   }
 
   private async syncConduits(providerId: uuid, conduits: SyncChannels) {

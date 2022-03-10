@@ -4,7 +4,7 @@ import { Client } from '../../src/clients/types'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
 import { UserService } from '../../src/users/service'
-import { app, randStr, setupApp, sleep } from '../utils'
+import { app, setupApp, sleep } from '../utils'
 
 describe('Conversations', () => {
   let conversations: ConversationService
@@ -20,8 +20,7 @@ describe('Conversations', () => {
     messages = app.messages
     querySpy = jest.spyOn(conversations as any, 'query')
 
-    const provider = await app.providers.create(randStr(), false)
-    const client = await app.clients.create(provider.id)
+    const client = await app.clients.create()
     const user = await app.users.create(client.id)
 
     state = {

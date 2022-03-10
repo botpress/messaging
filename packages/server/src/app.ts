@@ -74,6 +74,7 @@ export class App extends Engine {
       this.caching,
       this.channels,
       this.providers,
+      this.provisions,
       this.conduits,
       this.conversations,
       this.messages,
@@ -87,6 +88,8 @@ export class App extends Engine {
       this.channels,
       this.conduits,
       this.clients,
+      this.providers,
+      this.provisions,
       this.webhooks,
       this.status
     )
@@ -94,7 +97,7 @@ export class App extends Engine {
       this.database,
       this.caching,
       this.channels,
-      this.clients,
+      this.provisions,
       this.conduits,
       this.instances
     )
