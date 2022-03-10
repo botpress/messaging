@@ -20,8 +20,8 @@ export class Framework extends Engine {
   }
 
   async prepare(pkg: ServerMetadata, migs: { new (): Migration }[]) {
-    this.meta.prepare(pkg)
-    this.migration.prepare(migs)
+    this.meta.setPkg(pkg)
+    this.migration.setMigrations(migs)
   }
 
   async monitor() {}
