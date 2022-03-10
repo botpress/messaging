@@ -43,4 +43,3 @@ jobs:
         run: |
           # TODO: Change the version (for test purpose)
           aws s3 sync --delete ./dist s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}/v0
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
