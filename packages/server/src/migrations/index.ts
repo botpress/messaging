@@ -5,6 +5,8 @@ import { FixClientSchemaMigration } from './0.1.20-fix-client-schema'
 import { ClientTokensMigration } from './0.1.21-client-tokens'
 import { ChannelVersionsMigration } from './1.0.2-channel-versions'
 import { UserTokensMigration } from './1.1.0-user-tokens'
+import { ProvisionsMigration } from './1.1.5-a-provisions'
+import { MoveProviderIdMigration } from './1.1.5-b-move-provider-id'
 
 export const Migrations: { new (): Migration }[] = [
   InitMigration,
@@ -12,5 +14,7 @@ export const Migrations: { new (): Migration }[] = [
   FixClientSchemaMigration,
   ClientTokensMigration,
   ChannelVersionsMigration,
-  UserTokensMigration
+  UserTokensMigration,
+  ProvisionsMigration,
+  MoveProviderIdMigration
 ]
