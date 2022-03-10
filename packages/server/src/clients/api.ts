@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { AdminApiManager } from '../base/api-manager'
 import { ClientTokenService } from '../client-tokens/service'
 import { ProviderService } from '../providers/service'
+import { ProvisionService } from '../provisions/service'
 import { Schema } from './schema'
 import { ClientService } from './service'
 
@@ -13,6 +14,7 @@ export class ClientApi {
   constructor(
     private distributed: DistributedService,
     private providers: ProviderService,
+    private provisions: ProvisionService,
     private clients: ClientService,
     private clientTokens: ClientTokenService
   ) {}
@@ -54,7 +56,7 @@ export class ClientApi {
     })
   }
 
-  async syncClient(req: Request, res: Response) {
+  async syncClientOld(req: Request, res: Response) {
     /*
     const sync = { id: req.body.id, token: req.body.token, name: req.body.name } as {
       id?: uuid
@@ -76,16 +78,17 @@ export class ClientApi {
     if (!client) {
       const exisingProvider = await this.providers.fetchByName(sync.name)
       if (exisingProvider) {
-        const existingClient = await this.clients.fetchByProviderId(exisingProvider.id)
-        if (existingClient) {
-          client = await this.clients.getById(existingClient.id)
+        const existingClientId = (await this.provisions.fetchByProviderId(exisingProvider.id))?.clientId
+        if (existingClientId) {
+          client = await this.clients.getById(existingClientId)
         }
       }
     }
 
     if (!client) {
       provider = await this.providers.create(sync.name, false)
-      client = await this.clients.create(provider.id)
+      client = await this.clients.create()
+      await this.provisions.create(client.id, provider.id)
     } else {
       provider = await this.providers.fetchById(client.providerId)
 
@@ -115,4 +118,28 @@ export class ClientApi {
     res.status(200).send({ id: client.id, token })
     */
   }
+
+  async syncClient(req: Request, res: Response) {
+    const creds = await this.processSync(
+      req.body.name,
+      req.body.id ? { id: req.body.id, token: req.body.token } : undefined
+    )
+
+    res.status(200).send(creds)
+  }
+
+  private async processSync(name: string, creds: ClientCredentials | undefined): Promise<ClientCredentials> {
+    const provider = await this.providers.create(name, false)
+    const client = await this.clients.create()
+    await this.provisions.create(client.id, provider.id)
+
+    const rawToken = await this.clientTokens.generateToken()
+    const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
+    return { id: client.id, token: `${clientToken.id}.${rawToken}` }
+  }
+}
+
+interface ClientCredentials {
+  id: string
+  token: string
 }

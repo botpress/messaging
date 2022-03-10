@@ -35,7 +35,13 @@ export class Api {
     this.adminManager = new AdminApiManager(this.router, this.auth)
     this.manager = new ApiManager(this.router, this.auth)
 
-    this.clients = new ClientApi(this.app.distributed, this.app.providers, this.app.clients, this.app.clientTokens)
+    this.clients = new ClientApi(
+      this.app.distributed,
+      this.app.providers,
+      this.app.provisions,
+      this.app.clients,
+      this.app.clientTokens
+    )
     this.syncs = new SyncApi(this.app.syncs, this.app.channels)
     this.health = new HealthApi(this.app.health)
     this.users = new UserApi(this.app.users)
