@@ -6,10 +6,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { AdminApiManager } from '../base/api-manager'
 import { ClientTokenService } from '../client-tokens/service'
 import { ProviderService } from '../providers/service'
-import { Provider } from '../providers/types'
 import { Schema } from './schema'
 import { ClientService } from './service'
-import { Client } from './types'
 
 export class ClientApi {
   constructor(
@@ -43,9 +41,7 @@ export class ClientApi {
       clientId = uuidv4()
     }
 
-    const provider = await this.providers.create(clientId, false)
-    const client = await this.clients.create(provider.id, clientId)
-
+    const client = await this.clients.create(clientId)
     const rawToken = await this.clientTokens.generateToken()
     const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
 
@@ -59,6 +55,7 @@ export class ClientApi {
   }
 
   async syncClient(req: Request, res: Response) {
+    /*
     const sync = { id: req.body.id, token: req.body.token, name: req.body.name } as {
       id?: uuid
       token?: string
@@ -116,5 +113,6 @@ export class ClientApi {
     }
 
     res.status(200).send({ id: client.id, token })
+    */
   }
 }
