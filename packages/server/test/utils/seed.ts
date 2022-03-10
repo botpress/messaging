@@ -9,6 +9,7 @@ import { ClientToken } from '../../src/client-tokens/types'
 import { Client } from '../../src/clients/types'
 import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
+import { Provision } from '../../src/provisions/types'
 import { ConduitStatus } from '../../src/status/types'
 import { UserToken } from '../../src/user-tokens/types'
 import { Webhook } from '../../src/webhooks/types'
@@ -20,6 +21,9 @@ const entities = {
   },
   clients: {
     table: 'msg_clients'
+  },
+  provisions: {
+    table: 'msg_provisions'
   },
   clientTokens: {
     table: 'msg_client_tokens'
@@ -57,8 +61,11 @@ export class Seed {
     const providers = this.providers()
     await this.database.knex(entities.providers.table).insert(providers)
 
-    const clients = this.clients(providers)
+    const clients = this.clients()
     await this.database.knex(entities.clients.table).insert(clients)
+
+    const provisions = this.provisions(providers, clients)
+    await this.database.knex(entities.provisions.table).insert(provisions)
 
     const clientTokens = await this.clientTokens(clients)
     await this.database.knex(entities.clientTokens.table).insert(clientTokens)
@@ -88,13 +95,22 @@ export class Seed {
     return providers
   }
 
-  private clients(providers: Provider[]): Client[] {
+  private clients(): Client[] {
     const clients: Client[] = []
-    for (const provider of providers) {
-      clients.push({ id: uuid(), providerId: provider.id })
+    for (let i = 0; i < entities.providers.quantity; i++) {
+      clients.push({ id: uuid() })
     }
 
     return clients
+  }
+
+  private provisions(providers: Provider[], clients: Client[]): Provision[] {
+    const provisions: Provision[] = []
+    for (let i = 0; i < entities.providers.quantity; i++) {
+      provisions.push({ providerId: providers[i].id, clientId: clients[i].id })
+    }
+
+    return provisions
   }
 
   private async clientTokens(clients: Client[]): Promise<ClientToken[]> {
