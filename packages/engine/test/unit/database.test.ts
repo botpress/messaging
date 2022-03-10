@@ -12,6 +12,12 @@ jest.mock('fs')
 jest.mock('knex', () => {
   const mKnexSchema = { hasTable: jest.fn(), createTable: jest.fn() }
   const mKnex = { destroy: jest.fn(), schema: mKnexSchema }
+
+  return jest.fn(({ pool }) => {
+    pool.afterCreate?.({ pragma: jest.fn() }, jest.fn())
+
+    return mKnex
+  })
 })
 
 export class TestTable extends Table {
