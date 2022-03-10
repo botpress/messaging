@@ -66,9 +66,11 @@ export class DatabaseService extends Service {
     this.knex = knex({
       client: 'better-sqlite3',
       connection: { filename },
-      useNullAsDefault: true
-      // TODO: put back pool params
+      useNullAsDefault: true,
+      pool: this.pool
     })
+
+    await this.knex.raw('PRAGMA foreign_keys = ON;')
   }
 
   async destroy() {
