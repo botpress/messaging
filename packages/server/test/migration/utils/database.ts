@@ -23,7 +23,7 @@ export class Inspector {
     } else {
       this.isLite = true
       this.knex = knex({
-        client: 'sqlite3',
+        client: 'better-sqlite3',
         connection: { filename: this.url },
         useNullAsDefault: true
       })

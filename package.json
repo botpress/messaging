@@ -28,7 +28,7 @@
   "pkg": {
     "scripts": "./packages/server/dist/**/*.js",
     "assets": [
-      "./node_modules/sqlite3/lib/binding/**/*",
+      "./node_modules/better-sqlite3/lib/binding/**/*",
       "./node_modules/es-get-iterator/node.js"
     ],
     "targets": [

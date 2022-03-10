@@ -64,15 +64,10 @@ export class DatabaseService extends Service {
 
     this.isLite = true
     this.knex = knex({
-      client: 'sqlite3',
+      client: 'better-sqlite3',
       connection: { filename },
-      useNullAsDefault: true,
-      pool: {
-        afterCreate: (conn: any, cb: any) => {
-          conn.run('PRAGMA foreign_keys = ON', cb)
-        },
-        ...this.pool
-      }
+      useNullAsDefault: true
+      // TODO: put back pool params
     })
   }
 

@@ -9,13 +9,30 @@ const outputPath = './bin'
 const installBindings = async () => {
   const platforms = ['darwin', 'win32', 'linux']
 
+  const sqliteDir = './node_modules/better-sqlite3'
+  const sqliteNodeFileName = 'better_sqlite3.node'
+  const sqliteNodeFilePath = `${sqliteDir}/build/Release/${sqliteNodeFileName}`
+  const sqliteTempNodeFilePath = `${sqliteNodeFilePath}.old`
+
+  // since it's not possible to tell prebuild-install to download the .node file to a specific version,
+  // we keep a backup of the one that was currently install for development
+  fs.renameSync(sqliteNodeFilePath, sqliteTempNodeFilePath)
+
   for (const platform of platforms) {
     await execute(
-      `./node_modules/.bin/node-pre-gyp install --directory=./node_modules/sqlite3 --target_platform=${platform} --target_arch=x64`,
-      undefined,
+      `./node_modules/.bin/prebuild-install --verbose --platform ${platform}`,
+      { cwd: sqliteDir },
       { silent: true }
     )
+
+    const dir = `${sqliteDir}/lib/binding/node-v93-${platform}-x64`
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true })
+    }
+    fs.renameSync(sqliteNodeFilePath, `${dir}/${sqliteNodeFileName}`)
   }
+
+  fs.renameSync(sqliteTempNodeFilePath, sqliteNodeFilePath)
 }
 
 const renameBinaries = async () => {
