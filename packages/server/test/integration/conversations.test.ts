@@ -1,5 +1,5 @@
 import { Conversation, User } from '@botpress/messaging-base/src'
-import { validate as validateUuid } from 'uuid'
+import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
 import { Client } from '../../src/clients/types'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
@@ -48,6 +48,10 @@ describe('Conversations', () => {
     expect(conversation.createdOn instanceof Date).toBeTruthy()
 
     state.conversation = conversation
+  })
+
+  test('Create conversation with wrong foreign keys should throw', async () => {
+    await expect(conversations.create(uuidv4(), uuidv4())).rejects.toThrow()
   })
 
   test('Get conversation by id', async () => {
