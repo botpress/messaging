@@ -1,0 +1,40 @@
+@baseUrl = http://localhost:3444
+@adminKey = ADMIN_KEY
+@clientId = YOUR_CLIENT_ID
+@clientToken = YOUR_TOKEN
+@houseId = YOUR_HOUSE_ID
+
+### Status
+GET {{baseUrl}}/status
+
+### Version
+GET {{baseUrl}}/version
+
+### Create client
+POST {{baseUrl}}/api/v1/admin/clients
+Content-Type: application/json
+x-bp-messaging-admin-key: {{adminKey}}
+
+{
+  // "id": "customid"
+}
+
+### Api Test
+GET {{baseUrl}}/api/v1/test
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+
+### Api Create House
+POST {{baseUrl}}/api/v1/houses
+Content-Type: application/json
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+
+{
+  "address": "123, fake road"
+}
+
+### Api Get House
+GET {{baseUrl}}/api/v1/houses/{{houseId}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
