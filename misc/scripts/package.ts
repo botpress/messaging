@@ -19,11 +19,7 @@ const installBindings = async () => {
   fs.renameSync(sqliteNodeFilePath, sqliteTempNodeFilePath)
 
   for (const platform of platforms) {
-    await execute(
-      `./node_modules/.bin/prebuild-install --verbose --platform ${platform}`,
-      { cwd: sqliteDir },
-      { silent: true }
-    )
+    await execute(`./node_modules/.bin/prebuild-install --platform ${platform}`, { cwd: sqliteDir }, { silent: true })
 
     const dir = `${sqliteDir}/lib/binding/node-v93-${platform}-x64`
     if (!fs.existsSync(dir)) {
