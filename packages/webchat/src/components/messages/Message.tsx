@@ -52,7 +52,8 @@ class Message extends Component<MessageProps> {
           shouldPlay: this.props.shouldPlay,
           intl: this.props.store!.intl,
           escapeHTML: true,
-          showTimestamp: this.props.store!.config.showTimestamp!
+          showTimestamp: this.props.store!.config.showTimestamp!,
+          googleMapsAPIKey: this.props.store!.config.googleMapsAPIKey
         }}
       />
     )

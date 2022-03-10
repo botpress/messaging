@@ -405,6 +405,11 @@ body {
   border-bottom-left-radius: inherit;
 }
 
+.bpw-bubble-location #map {
+  width: 300px;
+  height: 300px;
+}
+
 .bpw-chat-bubble p {
   margin: 0;
 }

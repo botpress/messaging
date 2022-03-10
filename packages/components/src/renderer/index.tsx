@@ -6,6 +6,7 @@ import { QuickReply, SingleChoice } from './choice'
 import { Custom } from './custom'
 import { Dropdown } from './dropdown'
 import { Video, Audio, Image, File } from './file'
+import { Location } from './location'
 import { LoginPrompt } from './login'
 import { Text } from './text'
 import { TypingIndicator } from './typing'
@@ -19,7 +20,7 @@ export const defaultTypesRenderers = {
   carousel: Carousel,
   card: Card,
   // Currently unsupported
-  // location: () => null,
+  location: Location,
   file: File,
   video: Video,
   audio: Audio,
@@ -91,6 +92,7 @@ export {
   defaultRenderer as default,
   Carousel,
   Card,
+  Location,
   Image,
   File,
   Video,
