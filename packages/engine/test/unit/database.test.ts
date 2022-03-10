@@ -14,7 +14,8 @@ jest.mock('knex', () => {
   const mKnex = { destroy: jest.fn(), schema: mKnexSchema }
 
   return jest.fn(({ pool }) => {
-    pool.afterCreate?.({ run: jest.fn() }, jest.fn())
+    // TODO: possibly need to add this back
+    // pool.afterCreate?.({ run: jest.fn() }, jest.fn())
 
     return mKnex
   })

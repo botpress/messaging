@@ -2308,7 +2308,7 @@ __metadata:
     http-terminator: ^3.0.4
     joi: ^17.6.0
     knex: ^1.0.3
-    knex-schema-inspector: ^1.7.3
+    knex-schema-inspector: ^1.7.5
     lodash: ^4.17.21
     moment: ^2.29.1
     ms: ^2.1.3
@@ -15586,13 +15586,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"knex-schema-inspector@npm:^1.7.3":
-  version: 1.7.3
-  resolution: "knex-schema-inspector@npm:1.7.3"
+"knex-schema-inspector@npm:^1.7.5":
+  version: 1.7.5
+  resolution: "knex-schema-inspector@npm:1.7.5"
   dependencies:
     lodash.flatten: ^4.4.0
     lodash.isnil: ^4.0.0
-  checksum: ba68c0b0349861008b405e4abe976ea3e4ccd5e114e705762d651cfdd66def92e5935558d3691c172eb6033a918b9afa634f33f9fe64ab0b9d1e2b93caf95143
+  checksum: c4cbdeb097f68db20566de00b4badd58ae0f74559c301fee98e360af8580abeae4ebec6f8749ff0c693bddc6cd2d521d635999c66ff874c7bbe06e04a6be2ae0
   languageName: node
   linkType: hard
 
