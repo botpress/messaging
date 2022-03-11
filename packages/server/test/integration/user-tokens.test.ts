@@ -1,7 +1,6 @@
 import { User } from '@botpress/messaging-base'
 import { validate as validateUuid } from 'uuid'
 import { Client } from '../../src/clients/types'
-import { Provider } from '../../src/providers/types'
 import { UserTokenService } from '../../src/user-tokens/service'
 import { UserToken } from '../../src/user-tokens/types'
 import { app, randStr, setupApp } from '../utils'
@@ -9,19 +8,17 @@ import { app, randStr, setupApp } from '../utils'
 describe('UserTokens', () => {
   let userTokens: UserTokenService
   let querySpy: jest.SpyInstance
-  let state: { provider: Provider; client: Client; user: User; rawToken?: string; userToken?: UserToken }
+  let state: { client: Client; user: User; rawToken?: string; userToken?: UserToken }
 
   beforeAll(async () => {
     await setupApp()
     userTokens = app.userTokens
     querySpy = jest.spyOn(userTokens as any, 'query')
 
-    const provider = await app.providers.create(randStr(), false)
-    const client = await app.clients.create(provider.id)
+    const client = await app.clients.create()
     const user = await app.users.create(client.id)
 
     state = {
-      provider,
       client,
       user
     }

@@ -91,7 +91,7 @@ export class ClientApi {
 
     if (!client) {
       provider = await this.providers.create(sync.name, false)
-      client = await this.clients.create(provider.id)
+      client = await this.clients.create()
       await this.provisions.create(client.id, provider.id)
     } else {
       const provision = await this.provisions.fetchByClientId(client.id)
