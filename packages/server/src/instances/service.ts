@@ -13,6 +13,7 @@ import { ConversationService } from '../conversations/service'
 import { MappingService } from '../mapping/service'
 import { MessageService } from '../messages/service'
 import { ProviderService } from '../providers/service'
+import { ProvisionService } from '../provisions/service'
 import { StatusService } from '../status/service'
 import { InstanceClearingService } from './clearing/service'
 import { InstanceInvalidationService } from './invalidation/service'
@@ -38,6 +39,7 @@ export class InstanceService extends Service {
     private caching: CachingService,
     private channels: ChannelService,
     private providers: ProviderService,
+    private provisions: ProvisionService,
     private conduits: ConduitService,
     private conversations: ConversationService,
     private messages: MessageService,
@@ -52,10 +54,10 @@ export class InstanceService extends Service {
       this.caching,
       this.channels,
       this.providers,
+      this.provisions,
       this.conduits,
       this.conversations,
       this.messages,
-      this.clients,
       this.mapping,
       this.logger
     )

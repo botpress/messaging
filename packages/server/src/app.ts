@@ -74,6 +74,7 @@ export class App extends Engine {
       this.caching,
       this.channels,
       this.providers,
+      this.provisions,
       this.conduits,
       this.conversations,
       this.messages,
