@@ -7,6 +7,7 @@ import { ChannelVersionsMigration } from './1.0.2-channel-versions'
 import { UserTokensMigration } from './1.1.0-user-tokens'
 import { ProvisionsMigration } from './1.1.5-a-provisions'
 import { MoveProviderIdMigration } from './1.1.5-b-move-provider-id'
+import { CleanProviderNamesMigration } from './1.1.5-c-clean-provider-names'
 
 export const Migrations: { new (): Migration }[] = [
   InitMigration,
@@ -16,5 +17,6 @@ export const Migrations: { new (): Migration }[] = [
   ChannelVersionsMigration,
   UserTokensMigration,
   ProvisionsMigration,
-  MoveProviderIdMigration
+  MoveProviderIdMigration,
+  CleanProviderNamesMigration
 ]
