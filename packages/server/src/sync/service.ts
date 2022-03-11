@@ -5,6 +5,7 @@ import yn from 'yn'
 import { ChannelService } from '../channels/service'
 import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
+import { ProvisionService } from '../provisions/service'
 import { StatusService } from '../status/service'
 import { WebhookService } from '../webhooks/service'
 
@@ -17,6 +18,7 @@ export class SyncService extends Service {
     private channels: ChannelService,
     private conduits: ConduitService,
     private clients: ClientService,
+    private provisions: ProvisionService,
     private webhooks: WebhookService,
     private status: StatusService
   ) {
@@ -37,7 +39,8 @@ export class SyncService extends Service {
       }
 
       const client = await this.clients.getById(clientId)
-      await this.syncConduits(client.providerId, req.channels || {})
+      const provision = await this.provisions.getByClientId(clientId)
+      await this.syncConduits(provision.providerId, req.channels || {})
       const webhooks = await this.syncWebhooks(client.id, req.webhooks || [])
 
       result = { webhooks }

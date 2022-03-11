@@ -88,6 +88,7 @@ export class App extends Engine {
       this.channels,
       this.conduits,
       this.clients,
+      this.provisions,
       this.webhooks,
       this.status
     )
