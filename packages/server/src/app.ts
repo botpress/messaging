@@ -95,7 +95,7 @@ export class App extends Engine {
       this.database,
       this.caching,
       this.channels,
-      this.clients,
+      this.provisions,
       this.conduits,
       this.instances
     )
