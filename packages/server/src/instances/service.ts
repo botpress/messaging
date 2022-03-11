@@ -74,7 +74,6 @@ export class InstanceService extends Service {
       this.channels,
       this.providers,
       this.conduits,
-      this.clients,
       this.status,
       this.lifetimes
     )

@@ -2,7 +2,6 @@ import { uuid } from '@botpress/messaging-base'
 import { Service } from '@botpress/messaging-engine'
 import yn from 'yn'
 import { ChannelService } from '../../channels/service'
-import { ClientService } from '../../clients/service'
 import { ConduitEvents } from '../../conduits/events'
 import { ConduitService } from '../../conduits/service'
 import { ProviderEvents, ProviderUpdatedEvent } from '../../providers/events'
@@ -17,7 +16,6 @@ export class InstanceInvalidationService extends Service {
     private channels: ChannelService,
     private providers: ProviderService,
     private conduits: ConduitService,
-    private clients: ClientService,
     private status: StatusService,
     private lifetimes: InstanceLifetimeService
   ) {
@@ -67,28 +65,7 @@ export class InstanceInvalidationService extends Service {
     }
   }
 
-  private async onClientUpdated({ clientId, oldClient }: any) {
-    // TODO: replace by onProvisionDeleted
-    /*
-    const client = await this.clients.getById(clientId)
-
-    if (client.providerId === oldClient.providerId) {
-      return
-    }
-
-    const oldProvider = await this.providers.fetchById(oldClient.providerId)
-    if (!oldProvider || oldProvider?.sandbox) {
-      return
-    }
-
-    const conduits = await this.conduits.listByProvider(oldClient.providerId)
-    for (const conduit of conduits) {
-      await this.lifetimes.stop(conduit.id)
-    }
-    */
-  }
-
-  private async onProviderUpdated({ providerId, oldProvider }: ProviderUpdatedEvent) {
+  private async onProviderUpdated({ providerId }: ProviderUpdatedEvent) {
     const conduits = await this.conduits.listByProvider(providerId)
 
     for (const conduit of conduits) {

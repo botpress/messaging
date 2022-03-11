@@ -113,7 +113,6 @@ export class ClientApi {
     if (provider.name !== sync.name) {
       const providerWithSameName = await this.providers.fetchByName(sync.name)
       if (providerWithSameName && providerWithSameName.id !== provider.id) {
-        // TODO: provisions need to react to this
         await this.providers.delete(providerWithSameName.id)
       }
 

@@ -1,5 +1,7 @@
 import { uuid } from '@botpress/messaging-base'
 import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
+import { ProviderDeletingEvent, ProviderEvents } from '../providers/events'
+import { ProviderService } from '../providers/service'
 import { ProvisionTable } from './table'
 import { Provision } from './types'
 
@@ -8,7 +10,7 @@ export class ProvisionService extends Service {
   private cacheByClientId!: ServerCache<uuid, Provision>
   private cacheByProviderId!: ServerCache<uuid, Provision>
 
-  constructor(private db: DatabaseService, private caching: CachingService) {
+  constructor(private db: DatabaseService, private caching: CachingService, private providers: ProviderService) {
     super()
     this.table = new ProvisionTable()
   }
@@ -18,6 +20,8 @@ export class ProvisionService extends Service {
     this.cacheByProviderId = await this.caching.newServerCache('cache_provision_by_provider_id')
 
     await this.db.registerTable(this.table)
+
+    this.providers.events.on(ProviderEvents.Deleting, this.onProviderDeleting.bind(this))
   }
 
   async create(clientId: uuid, providerId: uuid): Promise<Provision> {
@@ -28,6 +32,15 @@ export class ProvisionService extends Service {
 
     await this.query().insert(provision)
     return provision
+  }
+
+  async delete(clientId: uuid): Promise<boolean> {
+    const provision = await this.getByClientId(clientId)
+
+    this.cacheByClientId.del(clientId, true)
+    this.cacheByProviderId.del(provision.providerId, true)
+
+    return !!this.query().where({ clientId, providerId: provision.providerId }).del()
   }
 
   async fetchByClientId(clientId: uuid): Promise<Provision | undefined> {
@@ -82,6 +95,13 @@ export class ProvisionService extends Service {
       throw new Error(`Provision with providerId ${providerId} not found`)
     }
     return val
+  }
+
+  private async onProviderDeleting({ providerId }: ProviderDeletingEvent) {
+    const provision = await this.fetchByProviderId(providerId)
+    if (provision) {
+      await this.delete(provision.clientId)
+    }
   }
 
   private query() {
