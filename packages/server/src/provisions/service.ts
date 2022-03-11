@@ -40,7 +40,8 @@ export class ProvisionService extends Service {
     this.cacheByClientId.del(clientId, true)
     this.cacheByProviderId.del(provision.providerId, true)
 
-    return !!this.query().where({ clientId, providerId: provision.providerId }).del()
+    const count = await this.query().where({ clientId, providerId: provision.providerId }).del()
+    return !!count
   }
 
   async fetchByClientId(clientId: uuid): Promise<Provision | undefined> {

@@ -87,4 +87,13 @@ describe('Provisions', () => {
 
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
+
+  test('Delete provision', async () => {
+    const result = await provisions.delete(state.client.id)
+    expect(result).toEqual(true)
+  })
+
+  test('Delete provision that does not exist throws', async () => {
+    await expect(provisions.delete(state.client.id)).rejects.toThrow()
+  })
 })
