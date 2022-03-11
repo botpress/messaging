@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class ClientTable extends Table {
@@ -8,6 +8,5 @@ export class ClientTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('providerId').references('id').inTable(getTableId('msg_providers')).unique().nullable()
   }
 }
