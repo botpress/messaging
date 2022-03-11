@@ -68,6 +68,7 @@ export class InstanceInvalidationService extends Service {
   }
 
   private async onClientUpdated({ clientId, oldClient }: any) {
+    // TODO: replace by onProvisionDeleted
     /*
     const client = await this.clients.getById(clientId)
 
