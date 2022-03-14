@@ -1,6 +1,6 @@
 # Twilio
 
-## Prerequisite
+## Requirements
 
 Create a Twilio account and purchase a Twilio phone number
 
