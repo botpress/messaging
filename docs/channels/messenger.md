@@ -10,9 +10,9 @@ To create a Facebook App, log in to your Facebook account and go to the [Faceboo
 
 ### Create a Facebook Page
 
-If you do not already have a Facebook page you will need to create one. [You can find details on how to create a new Facebook page here](https://www.facebook.com/pages/creation/).
+If you do not already have a Facebook page you will need to create one. [You can find details on how to create a new Facebook page here](https://www.facebook.com/pages/creation/)
 
-To link your chatbot to a pre-existing page, you must have an administrator or developer role.
+To link your chatbot to a pre-existing page, you must have an administrator or developer role
 
 ## Channel Configuration
 
@@ -20,7 +20,7 @@ To link your chatbot to a pre-existing page, you must have an administrator or d
 
 The messenger channel is made to interact with version 12.0 of the Messenger API. It is not the default version so it must be changed in your app's settings
 
-1. Go to your Facebook App.
+1. Go to your Facebook App
 1. In the left sidebar, expand the **Settings** menu and select **Advanced**
 1. In the **Upgrade API version** section, select v12.0 as the API version
 
@@ -35,7 +35,7 @@ Messenger is not added by default in your Facebhook App, so it must be added man
 
 The app id and secret are used to validate webhook requests
 
-1. In the left sidebar, expand the **Settings** menu and select **Basic**. Here you can find the App ID and App Secret.
+1. In the left sidebar, expand the **Settings** menu and select **Basic**. Here you can find the App ID and App Secret
 1. Click on the **Show** button in the **App Secret** text box. Copy the App Id and App Secret to your channel configuration
 
 ### Page Id and Access Token
@@ -49,13 +49,13 @@ The page id and access token are used to send messages to the Messenger API
 
 ### Verify Token
 
-The verify token is used by facebook to verify that you are the real owner of the provided webhook.
+The verify token is used by facebook to verify that you are the real owner of the provided webhook
 
 You can generate any random alphanumerical string for this configuration. Paste it in your **Verify Token** channel configuration
 
 ### Save Configuration
 
-Channel configuration is complete, you can now click **Save**
+Channel configuration is complete, you can now click **Save**. It is important you save your configuration before configuring the webhook, otherwise Messenger will be unable to validate the webhook url
 
 ## Webhook Configuration
 
