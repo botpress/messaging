@@ -67,3 +67,4 @@ To receive messages from Messenger, you will need to setup a webhook
 1. Copy paste the webhook url provided in the channel configuration UI
 1. Copy paste the verify token you generated earlier
 1. Click on **Verify and save**. Make sure your channel configuration was saved before doing this step, otherwise the webhook validation will fail
+1. Click on **Add subscriptions** and add `messages` and `messaging_postbacks` to your webhook
