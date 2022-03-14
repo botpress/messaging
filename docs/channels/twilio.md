@@ -22,6 +22,7 @@ To receive messages from Twilio, you will need to setup a webhook
 1. Click on **Explore Products** in the left pannel
 1. Click on **Messaging**
 1. Click on **Services** in the left pannel
+1. If you haven't already created your service, create a messaging service and add your phone as a sender
 1. Click on your service
 1. Click on **Sender Pool** in the left pannel
 1. Click on your phone number
