@@ -4,7 +4,7 @@
 
 ### Configure Microsoft Account
 
-Your Microsoft Account should have access to Azure and Teams. You can check out the [Azure](https://docs.microsoft.com/en-us/azure/devops/?view=azure-devops) and [Teams](https://docs.microsoft.com/en-us/microsoftteams/) documentation for information on how to make these connections.
+Your Microsoft Account should have access to Azure and Teams. You can check out the [Azure](https://docs.microsoft.com/en-us/azure/devops/?view=azure-devops) and [Teams](https://docs.microsoft.com/en-us/microsoftteams/) documentation for information on how to make these connections
 
 ## Channel Configuration
 
@@ -18,7 +18,7 @@ Your Microsoft Account should have access to Azure and Teams. You can check out 
 ## App Password
 
 1. Click **Certificates & secrets**, then click **New client secret**, then fill in the required fields
-2. Copy paste the the value in the **Value** column to the **App Secret** channel configuration
+1. Copy paste the the value in the **Value** column to the **App Secret** channel configuration
 
 ### Save Configuration
 
