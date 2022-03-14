@@ -2,7 +2,7 @@
 
 ## Requirements
 
-You will need a Facebook App and a Facebook page to connect you bot to messenger
+You will need a Facebook app and a Facebook page to connect you bot to messenger
 
 ### Create a Facebook App
 
