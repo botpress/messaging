@@ -6,7 +6,6 @@
 **/.cache
 **/test
 **/dist
-**/example
 **/story
 
 .git
