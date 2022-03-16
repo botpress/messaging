@@ -182,6 +182,24 @@ Content-Type: application/json
   }
 }
 
+### Send Location
+POST {{baseUrl}}/api/v1/messages
+Authorization: Bearer {{authToken}}
+x-bp-messaging-client-id: {{clientId}}
+x-bp-messaging-client-token: {{clientToken}}
+Content-Type: application/json
+
+{
+  "conversationId": "{{convoId}}",
+  "payload": {
+    "type": "location",
+    "latitude": -25.363,
+    "longitude": 130.044,
+    "title": "Rocks",
+    "address": "Uluru (Ayers Rock)"
+  }
+}
+
 ### Send Choices
 POST {{baseUrl}}/api/v1/messages
 Authorization: Bearer {{authToken}}
@@ -218,7 +236,7 @@ Content-Type: application/json
       { "label": "Yay", "value": "YES" },
       { "label": "Nay", "value": "NO" }
     ],
-    "displayInKeyboard": false
+    "displayInKeyboard": true
   }
 }
 

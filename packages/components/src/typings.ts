@@ -26,6 +26,7 @@ export interface MessageConfig {
   bp?: StudioConnector
   store?: LiteStore
   shouldPlay?: boolean // used for voice message only
+  googleMapsAPIKey?: string
   onSendData: (data: any) => Promise<void>
   onFileUpload: FileUploadHandler
   onAudioEnded?: (this: HTMLMediaElement, ev: HTMLMediaElementEventMap['ended']) => void

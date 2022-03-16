@@ -288,9 +288,15 @@ export interface Config {
   chatId?: string
   /**
    * CSS class to be applied to iframe
-   * @default '''
+   * @default ''
    */
   className?: string
+  /**
+   * Google Maps API Key required to display the map.
+   * Will display a link to Google Maps otherwise
+   * @default ''
+   */
+  googleMapsAPIKey?: string
 }
 
 export interface BotDetails {
