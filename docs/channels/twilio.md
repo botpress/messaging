@@ -8,7 +8,7 @@ Create a Twilio account and purchase a Twilio phone number
 
 ### Account SID and Auth Token
 
-1. Go to you Twilio console dashboard
+1. Go to you Twilio [console dashboard](https://console.twilio.com/?frameUrl=/console)
 1. Scroll down and copy your Account SID and Auth Token from the **Project Info** section and paste them in the **Account SID** and **Auth Token** channel configurations
 
 ### Save Configuration
