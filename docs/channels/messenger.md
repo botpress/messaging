@@ -23,6 +23,7 @@ The messenger channel is made to interact with version 12.0 of the Messenger API
 1. Go to your Facebook App
 1. In the left sidebar, expand the **Settings** menu and select **Advanced**
 1. In the **Upgrade API version** section, select v12.0 as the API version
+1. Click on **Save changes**
 
 ### Add Messenger Product
 

@@ -6,7 +6,7 @@ You will need a Smooch app with a channel configured before connecting Smooch to
 
 ### Smooch App
 
-1. On the `app.smooch.io` home page, click on **Create new app.**
+1. On the Smooch [home page](https://app.smooch.io/), click on **Create new app.**
 1. Enter a name for your app and click **Create App**
 1. Connect a channel to your app (Telegram, Whatsapp, or any other listed channel)
 1. You should see a channel in the **Overview** section of your app
@@ -36,6 +36,7 @@ The webhook secret is needed to validate webhooks requests. You get a webhook se
 1. In the **API & Webhooks** section, click on **Webhooks**
 1. Click **Connect**, then **Create a webhook**
 1. Copy paste the webhook url provided in the UI
+1. Select `v2` as your webhook version
 1. Select **Conversation message** and **Postbacks** in the basic triggers
 1. Click **Create Webhook**. You will see the webhook you created in the table, and the secret in the last column
 1. Copy paste the webhook secret in the **Webhook Secret** channel configuration
