@@ -2,7 +2,12 @@ import { Status, Wrapper } from '@googlemaps/react-wrapper'
 import React, { useEffect, useRef } from 'react'
 import { MessageTypeHandlerProps } from '../typings'
 
-export const MapContainer: React.FC<MessageTypeHandlerProps<'location'>> = ({ latitude, longitude, address }) => {
+export const MapContainer: React.FC<MessageTypeHandlerProps<'location'>> = ({
+  latitude,
+  longitude,
+  address,
+  title
+}) => {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -28,28 +33,44 @@ export const MapContainer: React.FC<MessageTypeHandlerProps<'location'>> = ({ la
     }
   })
 
-  return <div ref={ref} id="map" />
+  return (
+    <>
+      <p>{title}</p>
+      <p>{address}</p>
+      <div ref={ref} id="map" />
+    </>
+  )
 }
 
-const Fallback = ({ latitude, longitude }: { latitude: number; longitude: number }): React.ReactElement => {
+const Fallback = ({
+  latitude,
+  longitude,
+  address,
+  title
+}: Pick<MessageTypeHandlerProps<'location'>, 'latitude' | 'longitude' | 'address' | 'title'>): React.ReactElement => {
   const link = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`
   return (
-    <p>
-      Location:&nbsp;
-      <a href={link} target="_blank">
-        {link}
+    <div>
+      <p>{title}</p>
+      <a href={link} target="_blank" rel="noopener">
+        {address}
       </a>
-    </p>
+    </div>
   )
 }
 
 const render =
-  (latitude: number, longitude: number) =>
+  ({
+    latitude,
+    longitude,
+    address,
+    title
+  }: Pick<MessageTypeHandlerProps<'location'>, 'latitude' | 'longitude' | 'address' | 'title'>) =>
   (status: Status): React.ReactElement => {
     if (status === Status.LOADING) {
       return <div>Loading...</div>
     } else if (status === Status.FAILURE) {
-      return <Fallback latitude={latitude} longitude={longitude} />
+      return <Fallback latitude={latitude} longitude={longitude} address={address} title={title} />
     } else {
       return <></>
     }
@@ -65,7 +86,7 @@ export const Location: React.FC<MessageTypeHandlerProps<'location'>> = ({
 }) => {
   if (config.googleMapsAPIKey) {
     return (
-      <Wrapper apiKey={config.googleMapsAPIKey} render={render(latitude, longitude)}>
+      <Wrapper apiKey={config.googleMapsAPIKey} render={render({ latitude, longitude, address, title })}>
         <MapContainer
           latitude={latitude}
           longitude={longitude}
@@ -77,6 +98,6 @@ export const Location: React.FC<MessageTypeHandlerProps<'location'>> = ({
       </Wrapper>
     )
   } else {
-    return <Fallback latitude={latitude} longitude={longitude} />
+    return <Fallback latitude={latitude} longitude={longitude} address={address} title={title} />
   }
 }
