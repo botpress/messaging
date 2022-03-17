@@ -5,6 +5,7 @@ on:
       - master
 jobs:
   release_bin:
+    if: "${{ startsWith(github.event.head_commit.message, 'chore(server): release v') == true }}"
     name: Release Binaries
     runs-on: ubuntu-latest
     steps:
@@ -16,16 +17,13 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
 
-      - name: Git Unshallow
-        run: git fetch --prune --unshallow
-
       - name: Fetch Node Packages
         run: |
           yarn --immutable
 
       - name: Get Release Details
         id: release_details
-        uses: botpress/gh-actions/get_release_details@v1
+        uses: botpress/gh-actions/get_release_details@next
 
       - name: Display Release Details
         id: changelog
@@ -36,13 +34,11 @@ jobs:
           echo "Latest Tag: ${{ steps.release_details.outputs.latest_tag }}"
 
       - name: Build and Package
-        if: ${{ steps.release_details.outputs.is_new_release == 'true' }}
         run: |
           yarn build
           yarn package
 
       - name: Release
-        if: ${{ steps.release_details.outputs.is_new_release == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           files: ./bin/messaging-v*
