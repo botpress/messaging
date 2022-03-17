@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   release_bin:
-    if: startsWith(github.event.head_commit.message, 'release/v') == true
+    if: "${{ startsWith(github.event.head_commit.message, 'chore(server): release v') == true }}"
     name: Release Binaries
     runs-on: ubuntu-latest
     steps:
