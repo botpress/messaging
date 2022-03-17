@@ -1,3 +1,12 @@
+## [1.1.5](https://github.com/botpress/messaging/compare/v1.1.4...v1.1.5) (2022-03-17)
+
+
+### Features
+
+* **components:** added location component ([#409](https://github.com/botpress/messaging/issues/409)) ([89ea074](https://github.com/botpress/messaging/commit/89ea074bd5f45a6bfdeeb735a25956617c48c111))
+
+
+
 ## [1.1.4](https://github.com/botpress/messaging/compare/v1.1.3...v1.1.4) (2022-03-10)
 
 
