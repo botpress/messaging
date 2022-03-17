@@ -7,6 +7,7 @@ import { AdminApiManager } from '../base/api-manager'
 import { ClientTokenService } from '../client-tokens/service'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
+import { ProvisionService } from '../provisions/service'
 import { Schema } from './schema'
 import { ClientService } from './service'
 import { Client } from './types'
@@ -16,7 +17,8 @@ export class ClientApi {
     private distributed: DistributedService,
     private providers: ProviderService,
     private clients: ClientService,
-    private clientTokens: ClientTokenService
+    private clientTokens: ClientTokenService,
+    private provisions: ProvisionService
   ) {}
 
   setup(router: AdminApiManager) {
@@ -44,7 +46,8 @@ export class ClientApi {
     }
 
     const provider = await this.providers.create(clientId, false)
-    const client = await this.clients.create(provider.id, clientId)
+    const client = await this.clients.create(clientId)
+    await this.provisions.create(client.id, provider.id)
 
     const rawToken = await this.clientTokens.generateToken()
     const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
@@ -79,24 +82,25 @@ export class ClientApi {
     if (!client) {
       const exisingProvider = await this.providers.fetchByName(sync.name)
       if (exisingProvider) {
-        const existingClient = await this.clients.fetchByProviderId(exisingProvider.id)
-        if (existingClient) {
-          client = await this.clients.getById(existingClient.id)
+        const existingClientId = (await this.provisions.fetchByProviderId(exisingProvider.id))?.clientId
+        if (existingClientId) {
+          client = await this.clients.getById(existingClientId)
         }
       }
     }
 
     if (!client) {
       provider = await this.providers.create(sync.name, false)
-      client = await this.clients.create(provider.id)
+      client = await this.clients.create()
+      await this.provisions.create(client.id, provider.id)
     } else {
-      provider = await this.providers.fetchById(client.providerId)
+      const provision = await this.provisions.fetchByClientId(client.id)
 
-      if (!provider) {
+      if (provision) {
+        provider = await this.providers.getById(provision.providerId)
+      } else {
         provider = await this.providers.create(sync.name, false)
-
-        await this.clients.updateProvider(client.id, provider.id)
-        client = await this.clients.getById(client.id)
+        await this.provisions.create(client.id, provider.id)
       }
     }
 

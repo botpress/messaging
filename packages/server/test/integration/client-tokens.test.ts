@@ -2,14 +2,12 @@ import { validate as validateUuid } from 'uuid'
 import { ClientTokenService } from '../../src/client-tokens/service'
 import { ClientToken } from '../../src/client-tokens/types'
 import { Client } from '../../src/clients/types'
-import { Provider } from '../../src/providers/types'
 import { app, randStr, setupApp } from '../utils'
 
 describe('ClientTokens', () => {
   let clientTokens: ClientTokenService
   let querySpy: jest.SpyInstance
   let state: {
-    provider: Provider
     client: Client
     rawToken?: string
     clientToken?: ClientToken
@@ -21,12 +19,8 @@ describe('ClientTokens', () => {
     clientTokens = app.clientTokens
     querySpy = jest.spyOn(clientTokens as any, 'query')
 
-    const provider = await app.providers.create(randStr(), false)
-    const client = await app.clients.create(provider.id)
-
     state = {
-      provider,
-      client
+      client: await app.clients.create()
     }
   })
 
