@@ -1,3 +1,6 @@
+import { Inspector } from './utils/database'
+import { startMessagingServer } from './utils/server'
+
 const NO_MIGRATION = 'no_mig'
 const ALL_MIGRATIONS = 'all_migs'
 const TIMEOUT = 30000
