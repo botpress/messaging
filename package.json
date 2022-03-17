@@ -10,7 +10,6 @@
     "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin test/.test-data",
     "reset": "yarn clean && mkdirp packages/base/node_modules && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
     "package": "yarn clean && yarn build && ts-node -T misc/scripts/package",
-    "release": "ts-node -T misc/scripts/release",
     "build": "yarn workspace @botpress/messaging-server build",
     "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
