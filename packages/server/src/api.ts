@@ -70,7 +70,7 @@ export class Api {
     this.router.use(express.json({ limit: '100kb' }))
     this.router.use(express.urlencoded({ extended: true }))
 
-    this.clients.setup(this.adminManager)
+    this.clients.setup(this.manager, this.adminManager)
     this.syncs.setup(this.manager)
     this.health.setup(this.manager)
     this.users.setup(this.manager)

@@ -3,7 +3,7 @@ import { DistributedService, Logger, LoggerLevel } from '@botpress/messaging-eng
 import clc from 'cli-color'
 import { Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
-import { AdminApiManager } from '../base/api-manager'
+import { AdminApiManager, ApiManager } from '../base/api-manager'
 import { ClientTokenService } from '../client-tokens/service'
 import { ProviderService } from '../providers/service'
 import { Provider } from '../providers/types'
@@ -21,7 +21,7 @@ export class ClientApi {
     private provisions: ProvisionService
   ) {}
 
-  setup(router: AdminApiManager) {
+  setup(pub: ApiManager, router: AdminApiManager) {
     if (!process.env.ADMIN_KEY) {
       new Logger('Admin').window(
         [clc.redBright('ADMIN_KEY IS NOT SET'), 'ADMIN ROUTES ARE UNPROTECTED'],
@@ -30,8 +30,13 @@ export class ClientApi {
       )
     }
 
+    pub.get('/clients', Schema.Api.Get, this.get.bind(this))
     router.post('/admin/clients', Schema.Api.Create, this.create.bind(this))
     router.post('/admin/clients/sync', Schema.Api.Sync, this.sync.bind(this))
+  }
+
+  async get(req: Request, res: Response) {
+    res.sendStatus(200)
   }
 
   async create(req: Request, res: Response) {

@@ -2,6 +2,8 @@ import Joi from 'joi'
 import { ReqSchema } from '../base/schema'
 
 const Api = {
+  Get: ReqSchema(),
+
   Create: ReqSchema({ body: { id: Joi.string().uuid().optional() } }),
 
   Sync: ReqSchema({
