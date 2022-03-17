@@ -3,9 +3,6 @@ const ALL_MIGRATIONS = 'all_migs'
 const TIMEOUT = 30000
 
 describe('Global Diff', () => {
-  test('TODO reimplement this', () => {})
-
-  /*
   test(
     'Starts Messaging with the latest database schema',
     async () => {
@@ -95,5 +92,4 @@ describe('Global Diff', () => {
       await allMigrationsInspector.destroy()
     }
   })
-  */
 })
