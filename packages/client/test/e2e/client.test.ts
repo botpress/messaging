@@ -61,7 +61,7 @@ describe('Http Client', () => {
   describe('Syncs', () => {
     describe('Sync', () => {
       test('Should return a clientId/clientToken when sync is called with an empty config', async () => {
-        const res = await adminClient.syncClient({ name: 'yoyo' })
+        const res = await adminClient.createClient()
 
         expect(res.id).toBeDefined()
         expect(res.token).toBeDefined()
