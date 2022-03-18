@@ -26,10 +26,9 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
    * Renames a client
    * @param id Id of the client
    * @param name Name of the client
-   * @returns Id and token of the created client
    */
-  async renameClient(clientId: uuid, name: string): Promise<{ id: uuid; token: string }> {
-    return (await this.http.put('/admin/clients/name', { id: clientId, name }, { headers: this.adminHeader })).data
+  async renameClient(clientId: uuid, name: string): Promise<void> {
+    await this.http.put('/admin/clients/name', { id: clientId, name }, { headers: this.adminHeader })
   }
 
   /**
