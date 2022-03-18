@@ -24,7 +24,6 @@ export const Webchat: React.FC = () => {
     return null
   }
 
-  console.log(config)
   return (
     <div>
       <ExposedWebChat config={config} fullscreen={true} />
