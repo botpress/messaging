@@ -6,9 +6,7 @@ const Api = {
 
   Create: ReqSchema({ body: { id: Joi.string().uuid().optional() } }),
 
-  Sync: ReqSchema({
-    body: { id: Joi.string().optional(), token: Joi.string().optional(), name: Joi.string().required() }
-  })
+  Name: ReqSchema({ body: { id: Joi.string().uuid().required(), name: Joi.string().required() } })
 }
 
 export const Schema = { Api }
