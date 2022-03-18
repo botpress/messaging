@@ -13,13 +13,6 @@ export class VonageApi extends ChannelApi<VonageService> {
 
     router.post('/vonage/inbound', this.handleInboundRequest.bind(this))
     router.post('/vonage/status', this.handleStatusRequest.bind(this))
-
-    this.service.on('start', this.handleStart.bind(this))
-  }
-
-  private async handleStart({ scope }: { scope: string }) {
-    await this.printWebhook(scope, 'vonage', 'inbound')
-    await this.printWebhook(scope, 'vonage', 'status')
   }
 
   private async handleInboundRequest(req: ChannelApiRequest, res: Response) {

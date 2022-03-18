@@ -37,9 +37,6 @@ export class SlackApi extends ChannelApi<SlackService> {
     })
     events.on('error', (e) => this.service.logger?.error(e, 'An error occurred'))
     this.service.get(scope).handleEventRequest = events.requestListener()
-
-    await this.printWebhook(scope, 'slack', 'interactive')
-    await this.printWebhook(scope, 'slack', 'events')
   }
 
   private async handleButtonInteractiveAction(scope: string, payload: any) {

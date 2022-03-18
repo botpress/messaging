@@ -24,8 +24,6 @@ export class SmoochApi extends ChannelApi<SmoochService> {
     const webhook = webhooks.find((x: any) => x.target === target)
 
     state.webhookSecret = webhook?.secret
-
-    await this.printWebhook(scope, 'smooch')
   }
 
   protected async handleInitialize({ scope }: ChannelInitializeEvent) {

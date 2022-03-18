@@ -73,7 +73,6 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     } else {
       const callback = telegraf.webhookCallback(`/${config.botToken}`)
       this.service.get(scope).callback = callback
-      await this.printWebhook(scope, 'telegram')
     }
   }
 
