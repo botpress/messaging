@@ -158,3 +158,38 @@ jobs:
           yarn test:mig --verbose
         env:
           DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/postgres' || '' }}
+
+  webchat:
+    name: Webchat
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: ['chrome', 'firefox']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Fetch Node Packages
+        run: |
+          yarn --frozen-lockfile
+
+      - name: Start Messaging
+        timeout-minutes: 1
+        run: |
+          yarn dev &
+          # Wait for Messaging server to be ready
+          bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:3100/status)" != "200" ]]; do sleep 1; done'
+      - name: Start  Webchat
+        timeout-minutes: 1
+        run: |
+          yarn workspace @botpress/webchat dev &
+          # Wait for webchat to be ready
+          bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:1234)" != "200" ]]; do sleep 1; done'
+
+      - name: Run tests
+        run: |
+          yarn cypress:run --browser ${{ matrix.browser }}
