@@ -11,7 +11,7 @@ describe('Global Diff', () => {
     async () => {
       await startMessagingServer(
         {
-          command: 'yarn dev',
+          command: 'yarn start',
           launchTimeout: TIMEOUT,
           protocol: 'http',
           host: '127.0.0.1',
@@ -30,7 +30,7 @@ describe('Global Diff', () => {
     async () => {
       await startMessagingServer(
         {
-          command: 'yarn dev migrate up',
+          command: 'yarn start migrate up',
           launchTimeout: TIMEOUT
         },
         ALL_MIGRATIONS
