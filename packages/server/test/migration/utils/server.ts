@@ -1,6 +1,15 @@
 import { spawn } from 'child_process'
+import clc from 'cli-color'
 import { JestDevServerOptions, setup, teardown } from 'jest-dev-server'
 import path from 'path'
+
+const errorDelimiters = clc.red('red').split('red')
+const isError = (str: string) => str.includes(errorDelimiters[0]) && str.includes(errorDelimiters[1])
+const extractError = (str: string) => {
+  const info = str.split(errorDelimiters[1])
+
+  return info[info.length - 1].trim()
+}
 
 export const startMessagingServer = async (options: JestDevServerOptions, prefix: string) => {
   const defaultEnv = { ...process.env }
@@ -35,7 +44,19 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
       if (options.debug) {
         server.stdout.pipe(process.stdout)
       }
-      server.stderr.pipe(process.stderr)
+
+      // Since we don't write to stderr when logging,
+      // we have to manually extract the error so we
+      // can accelerate debugging if something does wrong
+      // with the subprocess.
+      const errors: string[] = []
+      server.stdout.on('data', (data) => {
+        const str: string = data.toString()
+
+        if (isError(str)) {
+          errors.push(extractError(str))
+        }
+      })
 
       server.on('close', (code) => {
         process.env = defaultEnv
@@ -43,7 +64,7 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
         if (code === 0) {
           resolve(undefined)
         } else {
-          reject()
+          reject(errors.join('\n'))
         }
       })
     })
