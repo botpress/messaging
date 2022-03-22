@@ -10,7 +10,6 @@
     "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin test/.test-data",
     "reset": "yarn clean && mkdirp packages/base/node_modules && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
     "package": "yarn clean && yarn build && ts-node -T misc/scripts/package",
-    "release": "ts-node -T misc/scripts/release",
     "build": "yarn workspace @botpress/messaging-server build",
     "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
@@ -22,7 +21,9 @@
     "test:int": "jest -c ./test/jest.integration.config.ts",
     "test:e2e": "jest -c ./test/jest.e2e.config.ts",
     "test:sec": "jest -c ./test/jest.security.config.ts",
-    "test:mig": "jest -c ./test/jest.migration.config.ts"
+    "test:mig": "jest -c ./test/jest.migration.config.ts",
+    "test:chat": "cross-env HEIGHT=1080 WIDTH=1920 cypress run",
+    "cypress:open": "cypress open"
   },
   "bin": "./packages/server/dist/index.js",
   "pkg": {
@@ -63,6 +64,7 @@
     "@typescript-eslint/parser": "^5.10.2",
     "conventional-changelog": "^3.1.25",
     "cross-env": "^7.0.3",
+    "cypress": "^9.5.2",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-node": "^0.3.6",

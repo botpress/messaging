@@ -58,7 +58,7 @@ export class Api {
       cors({
         origin: '*',
         methods: ['GET', 'POST', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Content-Length']
+        allowedHeaders: '*'
       })
     )
     this.router.use(express.json({ limit: '100kb' }))

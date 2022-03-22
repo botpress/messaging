@@ -1,0 +1,16 @@
+{
+  "$schema": "https://on.cypress.io/cypress.schema.json",
+
+  "baseUrl": "http://localhost:1234",
+
+  "downloadsFolder": "test/cypress/downloads",
+  "fixturesFolder": "test/cypress/fixtures",
+  "screenshotsFolder": "test/cypress/screenshots",
+  "videosFolder": "test/cypress/videos",
+  "integrationFolder": "packages/webchat/test/e2e/",
+
+  "pluginsFile": "test/cypress/plugins/index.ts",
+  "supportFile": "test/cypress/support/index.ts",
+
+  "testFiles": "**/*.test.ts"
+}
