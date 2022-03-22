@@ -215,4 +215,22 @@ describe('Migration CLI', () => {
     },
     TIMEOUT
   )
+
+  test(
+    'Should throw an error if target is invalid',
+    async () => {
+      const target = 'invalid_target'
+
+      await expect(
+        startMessagingServer(
+          {
+            command: `yarn dev migrate up --target ${target}`,
+            launchTimeout: TIMEOUT
+          },
+          CLI_MIGRATIONS
+        )
+      ).rejects.toThrow(` Error occurred starting server. TypeError: Invalid Version: ${target}`)
+    },
+    TIMEOUT
+  )
 })
