@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.packages.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "..",
+
+    // Because original webchat was written with decorators
+    "experimentalDecorators": true,
+
+    "jsx": "react",
+    "lib": ["dom", "es2021"],
+
+    // be explicit about types included
+    // to avoid clashing with Jest types
+    "types": ["cypress"]
+  },
+  "include": ["../../../node_modules/cypress", "../test/**/*", "../src"]
+}
