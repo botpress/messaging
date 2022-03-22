@@ -74,6 +74,16 @@ router.post('/mycallbackroute', (req, req) => {})
 
 As you can see from the example, you need to provide your entire configuration every time you call `api/sync`. The sync api will then do a diff of the new configuration and the old one, and apply changes automatically to fit the new configuration.
 
+## Clients
+
+GET `/api/v1/clients`
+
+x-bp-messaging-client-id: `clientId`
+
+x-bp-messaging-client-token: `clientToken`
+
+Checks if client exists
+
 ## Health
 
 GET `/api/v1/health`
