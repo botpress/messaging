@@ -27,7 +27,7 @@ describe('Migrations diff tests', () => {
       async () => {
         await startMessagingServer(
           {
-            command: `yarn start migrate up --target ${previousVersion}`,
+            command: `yarn dev migrate up --target ${previousVersion}`,
             launchTimeout: TIMEOUT
           },
           beforeMigrationDatabase
@@ -41,7 +41,7 @@ describe('Migrations diff tests', () => {
       async () => {
         await startMessagingServer(
           {
-            command: `yarn start migrate up --target ${migrationVersion}`,
+            command: `yarn dev migrate up --target ${migrationVersion}`,
             launchTimeout: TIMEOUT
           },
           afterMigrationDatabase
@@ -55,7 +55,7 @@ describe('Migrations diff tests', () => {
       async () => {
         await startMessagingServer(
           {
-            command: `yarn start migrate down --target ${previousVersion}`,
+            command: `yarn dev migrate down --target ${previousVersion}`,
             launchTimeout: TIMEOUT
           },
           afterMigrationDatabase
