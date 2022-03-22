@@ -1,5 +1,4 @@
-import fs from 'fs'
-import path from 'path'
+import { Migrations } from '../../src/migrations'
 
 import { compareDatabases } from './utils/diff'
 import { decrement } from './utils/semver-decrement'
@@ -14,14 +13,10 @@ const sanitize = (str: string) => {
 }
 
 describe('Migrations diff tests', () => {
-  const migrationFolder = path.join(__dirname, '../../src/migrations')
-  const migrationFiles = fs.readdirSync(migrationFolder)
-  const migrations = migrationFiles
-    .filter((f) => !isNaN(Number(f.charAt(0)))) // Only keep migration files
-    .map((f) => {
-      const version = f.split('-')[0]
-      return [f.replace('.ts', ''), version, decrement(version)]
-    })
+  const migrations = Migrations.map((m) => {
+    const { name, version } = new m().meta
+    return [name, version, decrement(version)]
+  })
 
   describe.each(migrations)('%s', (migrationName, migrationVersion, previousVersion) => {
     const afterMigrationDatabase = sanitize(`after_mig_${migrationName}`)
