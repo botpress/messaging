@@ -1,7 +1,7 @@
 import { Migrations } from '../../src/migrations'
 
 import { compareDatabases } from './utils/diff'
-import { decrement } from './utils/semver-decrement'
+import { decrement } from './utils/semver'
 import { startMessagingServer } from './utils/server'
 
 const TIMEOUT = 30000

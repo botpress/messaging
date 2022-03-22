@@ -1,3 +1,5 @@
+import portfinder from 'portfinder'
+
 import { compareDatabases } from './utils/diff'
 import { startMessagingServer } from './utils/server'
 
@@ -9,13 +11,14 @@ describe('Global Diff', () => {
   test(
     'Starts Messaging with the latest database schema',
     async () => {
+      const port = await portfinder.getPortPromise()
       await startMessagingServer(
         {
           command: 'yarn dev',
           launchTimeout: TIMEOUT,
           protocol: 'http',
           host: '127.0.0.1',
-          port: 3100,
+          port,
           path: 'status',
           usedPortAction: 'error'
         },

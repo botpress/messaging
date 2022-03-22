@@ -4,30 +4,38 @@ import { SchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspect
 import { Table } from 'knex-schema-inspector/dist/types/table'
 import path from 'path'
 
+export const setupConnection = (suffix: string) => {
+  const url = process.env.DATABASE_URL || path.join(__dirname, './../../../../../test/.test-data', `${suffix}.sqlite`)
+  let isLite = false
+  let conn: Knex
+
+  if (url.startsWith('postgres')) {
+    conn = knex({
+      client: 'postgres',
+      connection: url,
+      useNullAsDefault: true
+    })
+  } else {
+    isLite = true
+    conn = knex({
+      client: 'sqlite3',
+      connection: { filename: url },
+      useNullAsDefault: true
+    })
+  }
+
+  return { url, isLite, conn }
+}
+
 export class Inspector {
   private knex: Knex
-  private url: string
   private isLite: boolean = false
   private inspector: SchemaInspector
 
   constructor(private suffix: string) {
-    this.url =
-      process.env.DATABASE_URL || path.join(__dirname, './../../../../../test/.test-data', `${this.suffix}.sqlite`)
-
-    if (this.url.startsWith('postgres')) {
-      this.knex = knex({
-        client: 'postgres',
-        connection: this.url,
-        useNullAsDefault: true
-      })
-    } else {
-      this.isLite = true
-      this.knex = knex({
-        client: 'sqlite3',
-        connection: { filename: this.url },
-        useNullAsDefault: true
-      })
-    }
+    const { isLite, conn } = setupConnection(suffix)
+    this.isLite = isLite
+    this.knex = conn
 
     this.inspector = schemaInspector(this.knex)
   }

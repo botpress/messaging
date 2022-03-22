@@ -61,10 +61,10 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
       server.on('close', (code) => {
         process.env = defaultEnv
 
-        if (code === 0) {
+        if (code === 0 && errors.length === 0) {
           resolve(undefined)
         } else {
-          reject(errors.join('\n'))
+          reject(new Error(errors.join('\n')))
         }
       })
     })
