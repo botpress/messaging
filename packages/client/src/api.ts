@@ -8,6 +8,7 @@ import {
   User,
   uuid
 } from '@botpress/messaging-base'
+import { handleUnauthorized } from '.'
 import { MessagingChannelBase } from './base'
 import { handleNotFound } from './errors'
 
@@ -22,11 +23,24 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
   }
 
   /**
-   * For internal usage. Assures that a client with the provided name and token exists
-   * @access private
+   * Renames a client
+   * @param id Id of the client
+   * @param name Name of the client
    */
-  async syncClient(config: { name: string; id?: uuid; token?: string }): Promise<{ id: uuid; token: string }> {
-    return (await this.http.post('/admin/clients/sync', config, { headers: this.adminHeader })).data
+  async renameClient(clientId: uuid, name: string): Promise<void> {
+    await this.http.put('/admin/clients/name', { id: clientId, name }, { headers: this.adminHeader })
+  }
+
+  /**
+   * Tests a client's credentials
+   * @param clientId id of the client to test
+   * @returns true if the client's credentials are valid
+   */
+  async getClient(clientId: uuid): Promise<boolean> {
+    return handleUnauthorized(async () => {
+      await this.http.get<User>('/clients', { headers: this.headers[clientId] })
+      return true
+    }, false)
   }
 
   /**

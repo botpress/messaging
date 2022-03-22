@@ -35,13 +35,7 @@ export class Api {
     this.adminManager = new AdminApiManager(this.router, this.auth)
     this.manager = new ApiManager(this.router, this.auth)
 
-    this.clients = new ClientApi(
-      this.app.distributed,
-      this.app.providers,
-      this.app.clients,
-      this.app.clientTokens,
-      this.app.provisions
-    )
+    this.clients = new ClientApi(this.app.providers, this.app.clients, this.app.clientTokens, this.app.provisions)
     this.syncs = new SyncApi(this.app.syncs, this.app.channels)
     this.health = new HealthApi(this.app.health)
     this.users = new UserApi(this.app.users)
@@ -70,7 +64,7 @@ export class Api {
     this.router.use(express.json({ limit: '100kb' }))
     this.router.use(express.urlencoded({ extended: true }))
 
-    this.clients.setup(this.adminManager)
+    this.clients.setup(this.manager, this.adminManager)
     this.syncs.setup(this.manager)
     this.health.setup(this.manager)
     this.users.setup(this.manager)

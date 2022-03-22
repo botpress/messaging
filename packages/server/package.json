@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-server",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "main": "index.ts",
   "license": "AGPL-3.0",
   "scripts": {
@@ -24,7 +24,7 @@
   "dependencies": {
     "@botpress/messaging-base": "*",
     "@botpress/messaging-channels": "*",
-    "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.4",
+    "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.5",
     "@botpress/messaging-engine": "*",
     "@sentry/node": "^6.17.3",
     "axios": "^0.25.0",
