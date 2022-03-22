@@ -192,4 +192,4 @@ jobs:
 
       - name: Run tests
         run: |
-          yarn cypress:run --browser ${{ matrix.browser }}
+          yarn test:chat --browser ${{ matrix.browser }}
