@@ -30,6 +30,7 @@ jobs:
         run: |
           yarn build
           yarn write:version
+          ls ./dist
       - uses: botpress/gh-actions/deploy/s3@v2
         with:
           bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
