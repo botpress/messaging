@@ -12,6 +12,7 @@ permissions:
 jobs:
   upload_webchat:
     name: Upload Webchat
+    environment: staging
     runs-on: ubuntu-latest
     defaults:
       run:
