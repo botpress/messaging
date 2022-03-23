@@ -1,0 +1,36 @@
+name: Upload Webchat Production
+on:
+  workflow_dispatch: {}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  upload_webchat:
+    name: Upload Webchat
+    environment: environment
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./packages/inject
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: actions/setup-node@v2
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+      - name: Fetch Node Packages
+        run: |
+          yarn --immutable
+      - name: Build Webchat
+        run: |
+          yarn build
+          yarn write:version
+      - uses: botpress/gh-actions/deploy/s3@v2
+        with:
+          source: ./packages/inject/dist
+          bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
+          aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
+          cloudfront-distribution: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}
+          prefix: webchat/v0 # TODO: Change the version (for test purpose)

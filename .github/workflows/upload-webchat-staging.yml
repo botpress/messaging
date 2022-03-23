@@ -1,9 +1,13 @@
-name: Upload
+name: Upload Webchat Staging
 on:
   push:
     branches:
       - master
-      - mm-webchat-upload
+    paths:
+      - 'packages/inject/**'
+      - 'packages/components/**'
+      - 'packages/webchat/**'
+      - 'packages/socket/**'
 
 permissions:
   id-token: write
