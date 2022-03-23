@@ -1,3 +1,4 @@
+import { getTableId } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 import portfinder from 'portfinder'
 
@@ -12,9 +13,13 @@ const TIMEOUT = 30000
 
 describe('Migration CLI', () => {
   let conn: Knex
+  let isLite: boolean
 
   beforeAll(() => {
-    conn = setupConnection(CLI_MIGRATIONS).conn
+    const connectionInfo = setupConnection(CLI_MIGRATIONS)
+
+    conn = connectionInfo.conn
+    isLite = connectionInfo.isLite
   })
 
   afterAll(async () => {
@@ -23,10 +28,14 @@ describe('Migration CLI', () => {
 
   const getLatestMetaVersion = async (): Promise<string | undefined> => {
     try {
-      const meta = await conn('msg_meta').orderBy('time', 'desc').first()
+      const meta = await conn(getTableId('msg_meta')).orderBy('time', 'desc').first()
 
       if (meta) {
-        const data = JSON.parse(meta.data)
+        let data = meta.data
+
+        if (isLite) {
+          data = JSON.parse(meta.data)
+        }
 
         return data.version
       }
