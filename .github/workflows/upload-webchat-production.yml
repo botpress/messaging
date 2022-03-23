@@ -9,7 +9,7 @@ permissions:
 jobs:
   upload_webchat:
     name: Upload Webchat
-    environment: environment
+    environment: production
     runs-on: ubuntu-latest
     defaults:
       run:
