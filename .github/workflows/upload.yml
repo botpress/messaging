@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - mm-webchat-upload
     paths:
       - 'packages/inject/**'
       - 'packages/components/**'
@@ -11,7 +12,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read # This is required for actions/checkout@v2
+  contents: read
 
 jobs:
   upload_webchat:
@@ -33,13 +34,9 @@ jobs:
         run: |
           yarn build
           yarn write:version
-      - uses: aws-actions/configure-aws-credentials@v1
-        name: Configure AWS credentials
+      - uses: botpress/gh-actions/deploy/s3@v2
         with:
-          role-to-assume: ${{ secrets.AWS_WEBCHAT_BUCKET_ROLE }}
-          role-session-name: messaging_ci_upload_webchat
-          aws-region: us-east-1
-      - name: Upload Webchat to S3 bucket
-        run: |
-          # TODO: Change the version (for test purpose)
-          aws s3 sync --delete ./dist s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}/v0
+          bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
+          aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
+          cloudfront-distribution: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}
+          prefix: webchat/v0 # TODO: Change the version (for test purpose)
