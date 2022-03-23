@@ -40,4 +40,5 @@ jobs:
           bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
           aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
           cloudfront-distribution: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}
+          invalidate-cloudfront: 'true'
           prefix: webchat/v0 # TODO: Change the version (for test purpose)
