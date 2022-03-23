@@ -30,9 +30,9 @@ jobs:
         run: |
           yarn build
           yarn write:version
-          ls ./dist
       - uses: botpress/gh-actions/deploy/s3@v2
         with:
+          source: ./packages/inject/dist
           bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
           aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
           cloudfront-distribution: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}
