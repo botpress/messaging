@@ -59,9 +59,12 @@ export class InstanceMessagingService extends Service {
     for (const { threadId, tunnelId } of convmaps) {
       const endpoint = await this.mapping.getEndpoint(threadId)
       const tunnel = await this.mapping.tunnels.get(tunnelId)
+      if (!tunnel?.channelId) {
+        continue
+      }
 
       if (!source?.endpoint || !this.endpointEqual(source.endpoint, endpoint)) {
-        const conduit = await this.conduits.fetchByProviderAndChannel(provision.providerId, tunnel!.channelId)
+        const conduit = await this.conduits.fetchByProviderAndChannel(provision.providerId, tunnel.channelId)
         if (!conduit) {
           return
         }

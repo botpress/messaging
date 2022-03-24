@@ -16,6 +16,7 @@ export class TunnelService extends Service {
   private table: TunnelTable
   private cacheById!: ServerCache<uuid, Tunnel>
   private cacheByClientAndChannel!: ServerCache2D<Tunnel>
+  private cacheByClientAndCustomChannel!: ServerCache2D<Tunnel>
   private barrier!: Barrier2D<Tunnel>
 
   constructor(private db: DatabaseService, private caching: CachingService, private barriers: BarrierService) {
@@ -26,6 +27,9 @@ export class TunnelService extends Service {
   async setup() {
     this.cacheById = await this.caching.newServerCache('cache_tunnel_by_id')
     this.cacheByClientAndChannel = await this.caching.newServerCache2D('cache_tunnel_by_client_and_channel')
+    this.cacheByClientAndCustomChannel = await this.caching.newServerCache2D(
+      'cache_tunnel_by_client_and_custom_channel'
+    )
     this.barrier = await this.barriers.newBarrier2D('barrier_tunnel')
 
     await this.db.registerTable(this.table)
@@ -55,19 +59,42 @@ export class TunnelService extends Service {
     }
 
     return this.barrier.once(clientId, channelId, async () => {
-      return this.create(clientId, channelId)
+      return this.create(clientId, channelId, undefined)
     })
   }
 
-  private async create(clientId: uuid, channelId: uuid): Promise<Tunnel> {
+  async mapCustom(clientId: uuid, customChannelName: string): Promise<Tunnel> {
+    const tunnel = await this.getByClientAndCustomChannel(clientId, customChannelName)
+    if (tunnel) {
+      return tunnel
+    }
+
+    return this.barrier.once(clientId, customChannelName, async () => {
+      return this.create(clientId, undefined, customChannelName)
+    })
+  }
+
+  private async create(
+    clientId: uuid,
+    channelId: uuid | undefined,
+    customChannelName: string | undefined
+  ): Promise<Tunnel> {
     const tunnel = {
       id: uuidv4(),
       clientId,
-      channelId
+      channelId,
+      customChannelName
     }
 
     await this.query().insert(tunnel)
-    this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
+
+    if (channelId) {
+      this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
+    }
+    if (customChannelName) {
+      this.cacheByClientAndCustomChannel.set(clientId, customChannelName, tunnel)
+    }
+
     this.cacheById.set(tunnel.id, tunnel)
 
     return tunnel
@@ -84,6 +111,23 @@ export class TunnelService extends Service {
     if (rows?.length) {
       const tunnel = rows[0] as Tunnel
       this.cacheByClientAndChannel.set(clientId, channelId, tunnel)
+      return tunnel
+    } else {
+      return undefined
+    }
+  }
+
+  private async getByClientAndCustomChannel(clientId: uuid, customChannelName: string): Promise<Tunnel | undefined> {
+    const cached = this.cacheByClientAndCustomChannel.get(clientId, customChannelName)
+    if (cached) {
+      return cached
+    }
+
+    const rows = await this.query().where({ clientId, customChannelName })
+
+    if (rows?.length) {
+      const tunnel = rows[0] as Tunnel
+      this.cacheByClientAndCustomChannel.set(clientId, customChannelName, tunnel)
       return tunnel
     } else {
       return undefined

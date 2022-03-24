@@ -67,15 +67,13 @@ export class Streamer {
       await this.dispatcher.publish(StreamerDispatches.Message, userId, { source: source?.socket?.id, payload })
     }
 
-    if (source?.client?.id !== clientId) {
-      const webhooks = await this.webhooks.list(clientId)
+    const webhooks = await this.webhooks.list(clientId)
 
-      for (const webhook of webhooks) {
-        void this.send(process.env.SPINNED_URL || webhook.url, payload, {
-          'x-bp-messaging-client-id': clientId,
-          'x-bp-messaging-webhook-token': webhook.token
-        })
-      }
+    for (const webhook of webhooks) {
+      void this.send(process.env.SPINNED_URL || webhook.url, payload, {
+        'x-bp-messaging-client-id': clientId,
+        'x-bp-messaging-webhook-token': webhook.token
+      })
     }
   }
 
