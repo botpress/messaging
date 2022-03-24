@@ -19,6 +19,7 @@ export class CustomChannelsMigration extends Migration {
     await this.trx.schema.alterTable(getTableId('msg_tunnels'), (table) => {
       table.uuid('channelId').nullable().alter()
       table.string('customChannelName').nullable()
+      table.unique(['clientId', 'customChannelName'])
     })
   }
 
@@ -27,6 +28,7 @@ export class CustomChannelsMigration extends Migration {
 
     await this.trx.schema.alterTable(getTableId('msg_tunnels'), (table) => {
       table.uuid('channelId').notNullable().alter()
+      table.dropUnique(['clientId', 'customChannelName'])
       table.dropColumn('customChannelName')
     })
   }
