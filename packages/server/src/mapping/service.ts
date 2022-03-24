@@ -68,14 +68,23 @@ export class MappingService extends Service {
 
   async getMapping(clientId: uuid, channelId: uuid, endpoint: Endpoint): Promise<Mapping> {
     const tunnel = await this.tunnels.map(clientId, channelId)
-    const identity = await this.identities.map(tunnel.id, endpoint.identity)
+    return this.getMappingFromTunnel(tunnel.id, endpoint)
+  }
+
+  async getCustomMapping(clientId: uuid, customChannelName: string, endpoint: Endpoint): Promise<Mapping> {
+    const tunnel = await this.tunnels.mapCustom(clientId, customChannelName)
+    return this.getMappingFromTunnel(tunnel.id, endpoint)
+  }
+
+  private async getMappingFromTunnel(tunnelId: uuid, endpoint: Endpoint) {
+    const identity = await this.identities.map(tunnelId, endpoint.identity)
     const sender = await this.senders.map(identity.id, endpoint.sender)
     const thread = await this.threads.map(sender.id, endpoint.thread)
-    const usermap = await this.usermap.map(tunnel.id, sender.id)
-    const convmap = await this.convmap.map(tunnel.id, thread.id, usermap.userId)
+    const usermap = await this.usermap.map(tunnelId, sender.id)
+    const convmap = await this.convmap.map(tunnelId, thread.id, usermap.userId)
 
     return {
-      tunnelId: tunnel.id,
+      tunnelId,
       identityId: identity.id,
       senderId: sender.id,
       threadId: thread.id,

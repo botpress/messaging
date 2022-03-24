@@ -21,9 +21,14 @@ export class MappingApi {
 
   async map(req: ClientApiRequest, res: Response) {
     const endpoint = req.body as Endpoint
+    let conversationId
 
-    const channel = this.channels.getByNameAndVersion(endpoint.channel.name, endpoint.channel.version)
-    const { conversationId } = await this.mapping.getMapping(req.clientId, channel.meta.id, endpoint)
+    if (typeof endpoint.channel === 'string') {
+      conversationId = (await this.mapping.getCustomMapping(req.clientId, endpoint.channel, endpoint)).conversationId
+    } else {
+      const channel = this.channels.getByNameAndVersion(endpoint.channel.name, endpoint.channel.version)
+      conversationId = (await this.mapping.getMapping(req.clientId, channel.meta.id, endpoint)).conversationId
+    }
 
     res.send({ conversationId })
   }
@@ -37,14 +42,21 @@ export class MappingApi {
     }
 
     const convmaps = await this.mapping.convmap.listByConversationId(conversationId)
-    const endpoints = []
+    const endpoints: Endpoint[] = []
 
     for (const convmap of convmaps) {
       const endpoint = await this.mapping.getEndpoint(convmap.threadId)
-      const tunnel = await this.mapping.tunnels.get(convmap.tunnelId)
-      const channel = this.channels.getById(tunnel!.channelId)
+      const tunnel = (await this.mapping.tunnels.get(convmap.tunnelId))!
+      let channel
 
-      endpoints.push({ channel: { name: channel.meta.name, version: channel.meta.version }, ...endpoint })
+      if (tunnel.customChannelName) {
+        channel = tunnel.customChannelName
+      } else {
+        const channelMeta = this.channels.getById(tunnel.channelId!).meta
+        channel = { name: channelMeta.name, version: channelMeta.version }
+      }
+
+      endpoints.push({ channel, ...endpoint })
     }
 
     res.send(endpoints)
