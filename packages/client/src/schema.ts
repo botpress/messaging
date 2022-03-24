@@ -33,7 +33,7 @@ export const Schemas = {
         .object({
           id: joi.string().uuid().required(),
           conversationId: joi.string().uuid().required(),
-          authorId: joi.string().uuid().required(),
+          authorId: joi.string().uuid().optional(),
           sentOn: joi.date().required(),
           payload: joi.object().required()
         })

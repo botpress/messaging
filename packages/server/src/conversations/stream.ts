@@ -40,7 +40,7 @@ export class ConversationStream {
     const convmaps = await this.mapping.convmap.listByConversationId(conversationId)
     if (convmaps.length === 1) {
       const tunnel = await this.mapping.tunnels.get(convmaps[0].tunnelId)
-      return this.channels.getById(tunnel!.channelId).meta.name
+      return tunnel!.customChannelName ? tunnel!.customChannelName : this.channels.getById(tunnel!.channelId!).meta.name
     } else {
       return 'messaging'
     }
