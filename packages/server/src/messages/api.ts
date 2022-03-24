@@ -56,13 +56,7 @@ export class MessageApi {
       this.converse.setIncomingId(messageId, incomingId)
     }
 
-    const source = authorId
-      ? undefined
-      : {
-          client: { id: req.clientId }
-        }
-    const message = await this.messages.create(conversationId, authorId, payload, source, messageId)
-
+    const message = await this.messages.create(conversationId, authorId, payload, undefined, messageId)
     res.status(201).send(message)
   }
 
