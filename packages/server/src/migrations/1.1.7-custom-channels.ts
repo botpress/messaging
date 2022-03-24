@@ -4,7 +4,7 @@ export class CustomChannelsMigration extends Migration {
   meta = {
     name: CustomChannelsMigration.name,
     description: 'Modifies the msg_tunnels table to support custom channels',
-    version: '1.1.5'
+    version: '1.1.7'
   }
 
   async valid() {
