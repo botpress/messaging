@@ -5,9 +5,28 @@ interface Versions {
 }
 type VersionType = 'patch' | 'minor' | 'major'
 
-const nextTypes: { [type: string]: VersionType } = {
-  patch: 'minor',
-  minor: 'major'
+export const increment = (version: string, type: VersionType = 'patch'): string => {
+  const versions = deconstruct(version)
+
+  up(versions, type)
+
+  return construct(versions)
+}
+
+const up = (v: Versions, type: VersionType): void => {
+  v[type] = String(Number(v[type]) + 1)
+
+  switch (type) {
+    case 'minor':
+      v.patch = '0'
+      break
+    case 'major':
+      v.patch = '0'
+      v.minor = '0'
+      break
+    default:
+      break
+  }
 }
 
 export const decrement = (version: string, type: VersionType = 'patch'): string => {
@@ -19,6 +38,11 @@ export const decrement = (version: string, type: VersionType = 'patch'): string 
 }
 
 const down = (v: Versions, type: VersionType): void => {
+  const nextTypes: { [type: string]: VersionType } = {
+    patch: 'minor',
+    minor: 'major'
+  }
+
   if (v[type] === '0') {
     v[type] = '99'
 

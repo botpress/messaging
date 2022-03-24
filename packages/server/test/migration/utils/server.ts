@@ -12,8 +12,6 @@ const extractError = (str: string) => {
 }
 
 export const startMessagingServer = async (options: JestDevServerOptions, prefix: string) => {
-  const defaultEnv = { ...process.env }
-
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.DATABASE_URL =
     process.env.DATABASE_URL || path.join(__dirname, './../../../../../test/.test-data', `${prefix}.sqlite`)
@@ -26,8 +24,6 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
 
   if (options.path) {
     await setup(options)
-
-    process.env = defaultEnv
 
     return teardown()
   } else {
@@ -59,12 +55,10 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
       })
 
       server.on('close', (code) => {
-        process.env = defaultEnv
-
-        if (code === 0) {
+        if (code === 0 && errors.length === 0) {
           resolve(undefined)
         } else {
-          reject(errors.join('\n'))
+          reject(new Error(errors.join('\n')))
         }
       })
     })
