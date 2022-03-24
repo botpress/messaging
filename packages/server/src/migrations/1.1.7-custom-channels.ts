@@ -22,5 +22,12 @@ export class CustomChannelsMigration extends Migration {
     })
   }
 
-  async down() {}
+  async down() {
+    await this.trx(getTableId('msg_tunnels')).whereNull('channelId').del()
+
+    await this.trx.schema.alterTable(getTableId('msg_tunnels'), (table) => {
+      table.uuid('channelId').notNullable().alter()
+      table.dropColumn('customChannelName')
+    })
+  }
 }
