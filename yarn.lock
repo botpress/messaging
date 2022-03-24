@@ -2176,7 +2176,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-base@*, @botpress/messaging-base@1.1.0, @botpress/messaging-base@workspace:packages/base":
+"@botpress/messaging-base@*, @botpress/messaging-base@1.1.1, @botpress/messaging-base@workspace:packages/base":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-base@workspace:packages/base"
   languageName: unknown
@@ -2262,7 +2262,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-client@workspace:packages/client"
   dependencies:
-    "@botpress/messaging-base": 1.1.0
+    "@botpress/messaging-base": 1.1.1
     "@types/cookie": ^0.4.1
     "@types/express": ^4.17.13
     "@types/jest": ^27.4.0
@@ -2407,11 +2407,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-socket@*, @botpress/messaging-socket@1.1.0, @botpress/messaging-socket@workspace:packages/socket":
+"@botpress/messaging-socket@*, @botpress/messaging-socket@1.1.1, @botpress/messaging-socket@workspace:packages/socket":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-socket@workspace:packages/socket"
   dependencies:
-    "@botpress/messaging-base": 1.1.0
+    "@botpress/messaging-base": 1.1.1
     "@types/jest": ^27.4.0
     "@types/lodash": ^4.14.178
     "@types/node": ^16.11.13
@@ -2486,7 +2486,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
-    "@botpress/webchat": 0.3.0
+    "@botpress/webchat": 0.3.1
     "@parcel/config-default": ^2.2.1
     "@parcel/reporter-bundle-analyzer": 2.2.1
     "@parcel/transformer-typescript-tsc": ^2.2.1
@@ -2497,13 +2497,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat@*, @botpress/webchat@0.3.0, @botpress/webchat@workspace:packages/webchat":
+"@botpress/webchat@*, @botpress/webchat@0.3.1, @botpress/webchat@workspace:packages/webchat":
   version: 0.0.0-use.local
   resolution: "@botpress/webchat@workspace:packages/webchat"
   dependencies:
     "@blueprintjs/core": ^3.23.1
     "@botpress/messaging-components": 0.3.0
-    "@botpress/messaging-socket": 1.1.0
+    "@botpress/messaging-socket": 1.1.1
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.0.2
