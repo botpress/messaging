@@ -67,7 +67,6 @@ export class Streamer {
       await this.dispatcher.publish(StreamerDispatches.Message, userId, { source: source?.socket?.id, payload })
     }
 
-    // TODO: this might break stuff on botpress's side
     const webhooks = await this.webhooks.list(clientId)
 
     for (const webhook of webhooks) {
