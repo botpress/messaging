@@ -1,3 +1,17 @@
+## [1.1.7](https://github.com/botpress/messaging/compare/v1.1.6...v1.1.7) (2022-03-25)
+
+
+### Bug Fixes
+
+* **messenger:** remove flaky typing off event ([#422](https://github.com/botpress/messaging/issues/422)) ([80549c7](https://github.com/botpress/messaging/commit/80549c772b4f6f01da13f55db0d79ab113fd15a4))
+
+
+### Features
+
+* **channels:** custom channels ([#425](https://github.com/botpress/messaging/issues/425)) ([a818301](https://github.com/botpress/messaging/commit/a818301604041592364842fb054f620ed6bee2c6))
+
+
+
 ## [1.1.6](https://github.com/botpress/messaging/compare/v1.1.5...v1.1.6) (2022-03-22)
 
 
