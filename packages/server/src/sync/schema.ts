@@ -1,5 +1,6 @@
 import { Channel } from '@botpress/messaging-channels'
 import Joi from 'joi'
+import yn from 'yn'
 import { ReqSchema } from '../base/schema'
 
 export const makeSyncRequestSchema = (channels: Channel[]) => {
@@ -14,10 +15,11 @@ export const makeSyncRequestSchema = (channels: Channel[]) => {
   }
 
   for (const [name, channels] of Object.entries(channelsByName)) {
+    const versionSchema = Joi.string().valid(...new Set(channels.map((x) => x.meta.version)))
+
     channelsSchema[name] = Joi.object({
-      version: Joi.string()
-        .valid(...channels.map((x) => x.meta.version))
-        .optional()
+      // when legacy channels are enable, not supplying the version defaults to 0.1.0
+      version: yn(process.env.ENABLE_LEGACY_CHANNELS) ? versionSchema.optional() : versionSchema.required()
     })
       .options({
         allowUnknown: true
