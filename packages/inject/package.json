@@ -5,7 +5,7 @@
   "scripts": {
     "build": "yarn && yarn run -T parcel build src/index.html src/inject.js --public-url ./",
     "write:version": "node -p \"require('../webchat/package.json').version\" > ./dist/version.txt",
-    "watch": "yarn && yarn run -T parcel watch src/index.html src/inject.js",
+    "watch": "yarn && yarn run -T parcel watch src/index.html src/inject.js  --public-url ./",
     "dev": "yarn && yarn run -T parcel src/index.html src/inject.js",
     "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T parcel build src/index.html src/inject.js --public-url ./ && yarn write:version",
     "analyze": "yarn run -T parcel build src/index.html --public-url ./ --reporter @parcel/reporter-bundle-analyzer"
