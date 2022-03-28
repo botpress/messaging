@@ -12,6 +12,7 @@ import { HealthApi } from './health/api'
 import { MappingApi } from './mapping/api'
 import { MessageApi } from './messages/api'
 import { SyncApi } from './sync/api'
+import { UserTokenApi } from './user-tokens/api'
 import { UserApi } from './users/api'
 
 export class Api {
@@ -24,6 +25,7 @@ export class Api {
   private syncs: SyncApi
   private health: HealthApi
   private users: UserApi
+  private userTokens: UserTokenApi
   private conversations: ConversationApi
   private messages: MessageApi
   private mapping: MappingApi
@@ -39,6 +41,7 @@ export class Api {
     this.syncs = new SyncApi(this.app.syncs, this.app.channels)
     this.health = new HealthApi(this.app.health)
     this.users = new UserApi(this.app.users)
+    this.userTokens = new UserTokenApi(this.app.users, this.app.userTokens)
     this.conversations = new ConversationApi(this.app.users, this.app.conversations)
     this.messages = new MessageApi(this.app.users, this.app.conversations, this.app.messages, this.app.converse)
     this.mapping = new MappingApi(this.app.channels, this.app.conversations, this.app.mapping)
@@ -68,6 +71,7 @@ export class Api {
     this.syncs.setup(this.manager)
     this.health.setup(this.manager)
     this.users.setup(this.manager)
+    this.userTokens.setup(this.manager)
     this.conversations.setup(this.manager)
     this.messages.setup(this.manager)
     this.mapping.setup(this.manager)

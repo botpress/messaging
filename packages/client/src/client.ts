@@ -159,6 +159,15 @@ export class MessagingClient extends ProtectedEmitter<{
   }
 
   /**
+   * Creates a new user token
+   * @param userId id of the user
+   * @returns token that can be used to make user-level requests
+   */
+  async createUserToken(userId: uuid): Promise<string> {
+    return this.channel.createUserToken(this.clientId, userId)
+  }
+
+  /**
    * Creates a new messaging conversation
    * @param userId id of the user that starts this conversation
    * @returns info of the newly created conversation
