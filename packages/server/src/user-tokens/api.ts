@@ -24,6 +24,6 @@ export class UserTokenApi {
     const tokenRaw = await this.userTokens.generateToken()
     const userToken = await this.userTokens.create(user.id, tokenRaw, undefined)
 
-    res.status(201).send({ token: `${userToken.id}.${tokenRaw}` })
+    res.status(201).send({ id: userToken.id, token: `${userToken.id}.${tokenRaw}` })
   }
 }

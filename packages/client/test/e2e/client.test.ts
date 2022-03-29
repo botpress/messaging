@@ -210,6 +210,16 @@ describe('Http Client', () => {
     })
   })
 
+  describe('User Tokens', () => {
+    test('Should create a user token without throwing any error', async () => {
+      const userToken = await client.createUserToken(state.user!.id)
+
+      expect(userToken.id).toBeDefined()
+      expect(userToken.token).toBeDefined()
+      expect(userToken.token.startsWith(userToken.id)).toBeTruthy()
+    })
+  })
+
   describe('Message', () => {
     const payload = {
       type: 'text',

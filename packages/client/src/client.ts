@@ -163,7 +163,7 @@ export class MessagingClient extends ProtectedEmitter<{
    * @param userId id of the user
    * @returns token that can be used to make user-level requests
    */
-  async createUserToken(userId: uuid): Promise<string> {
+  async createUserToken(userId: uuid): Promise<{ id: string; token: string }> {
     return this.channel.createUserToken(this.clientId, userId)
   }
 

@@ -91,8 +91,8 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
    * @param userId id of the user
    * @returns token that can be used to make user-level requests
    */
-  async createUserToken(clientId: uuid, userId: uuid): Promise<string> {
-    return (await this.http.post('/users/tokens', { userId }, { headers: this.headers[clientId] })).data.token
+  async createUserToken(clientId: uuid, userId: uuid): Promise<{ id: string; token: string }> {
+    return (await this.http.post('/users/tokens', { userId }, { headers: this.headers[clientId] })).data
   }
 
   /**
