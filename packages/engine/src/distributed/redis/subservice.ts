@@ -4,9 +4,10 @@ import _ from 'lodash'
 import Redlock from 'redlock'
 import { Logger } from '../../logger/types'
 import { DistributedSubservice } from '../base/subservice'
+import { Lock } from '../types'
 import { PingPong } from './ping'
 
-const DEFAULT_LOCK_TTL = 2000
+const DEFAULT_LOCK_TTL = 3000
 
 export class RedisSubservice implements DistributedSubservice {
   // TODO: Remove evil static keyword here when we refactor the logging
@@ -144,16 +145,37 @@ export class RedisSubservice implements DistributedSubservice {
 
   async lock(ressource: string) {
     const ttl = DEFAULT_LOCK_TTL
-    const lock = {
+    const lock: RedisLock = {
       lock: await this.redlock.acquire(ressource, ttl),
       ressource,
       expiry: new Date(new Date().getTime() + ttl)
     }
     this.locks[ressource] = lock
+
+    lock.timeout = setTimeout(() => {
+      void this.refresh(ressource)
+    }, DEFAULT_LOCK_TTL / 2)
+
     return lock
   }
 
+  async refresh(ressource: string) {
+    try {
+      await this.locks[ressource].lock.extend(DEFAULT_LOCK_TTL / 3)
+
+      this.locks[ressource].timeout = setTimeout(() => {
+        void this.refresh(ressource)
+      }, DEFAULT_LOCK_TTL / 6)
+    } catch (e) {
+      this.logger.error(e, `Failed to extend lock ${ressource}`)
+    }
+  }
+
   async release(lock: RedisLock) {
+    if (lock.timeout) {
+      clearTimeout(lock.timeout)
+    }
+
     await this.redlock.release(lock.lock)
     delete this.locks[lock.ressource]
   }
@@ -163,8 +185,8 @@ export class RedisSubservice implements DistributedSubservice {
   }
 }
 
-interface RedisLock {
-  ressource: string
+interface RedisLock extends Lock {
   expiry: Date
   lock: Redlock.Lock
+  timeout?: NodeJS.Timeout
 }
