@@ -297,6 +297,13 @@ export interface Config {
    * @default ''
    */
   googleMapsAPIKey?: string
+  /**
+   * Allows setting a custom user id
+   */
+  customUser?: {
+    userId: string
+    userToken: string
+  }
 }
 
 export interface BotDetails {

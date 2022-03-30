@@ -54,6 +54,7 @@ describe('Http Client', () => {
     conversation?: Conversation
     message?: Message
     webhooks?: SyncWebhook[]
+    userToken?: { id: string; token: string }
   } = {}
   let client: MessagingClient
   const webhooks = [{ url: 'http://un.known.url' }, { url: 'http://second.un.known.url' }]
@@ -207,6 +208,30 @@ describe('Http Client', () => {
           new Error('Request failed with status code 404')
         )
       })
+    })
+  })
+
+  describe('User Tokens', () => {
+    test('Should create a user token without throwing any error', async () => {
+      const userToken = await client.createUserToken(state.user!.id)
+
+      expect(userToken.id).toBeDefined()
+      expect(userToken.token).toBeDefined()
+      expect(userToken.token.startsWith(userToken.id)).toBeTruthy()
+
+      state.userToken = userToken
+    })
+
+    test('Should create a second user token for the same user', async () => {
+      const userToken = await client.createUserToken(state.user!.id)
+
+      expect(userToken.id).toBeDefined()
+      expect(userToken.token).toBeDefined()
+      expect(userToken.token.startsWith(userToken.id)).toBeTruthy()
+
+      // should be a different token
+      expect(userToken.id).not.toEqual(state.userToken?.id)
+      expect(userToken.token).not.toEqual(state.userToken?.token)
     })
   })
 

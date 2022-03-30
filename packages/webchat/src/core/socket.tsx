@@ -7,7 +7,7 @@ export default class BpSocket {
 
   public onMessage!: (event: any) => void
 
-  constructor(config: Config) {
+  constructor(private config: Config) {
     this.chatId = config.chatId
     this.socket = new MessagingSocket({ url: config.messagingUrl, clientId: config.clientId })
 
@@ -29,7 +29,7 @@ export default class BpSocket {
   }
 
   public async connect(): Promise<void> {
-    const creds = window.BP_STORAGE.get<UserCredentials>('creds')
+    const creds = this.getCreds()
     await this.socket.connect(creds)
 
     if (this.socket.userId) {
@@ -38,5 +38,19 @@ export default class BpSocket {
 
       this.postToParent('', { userId })
     }
+  }
+
+  public async reload(config: Config) {
+    this.config = config
+    const creds = this.getCreds()
+
+    if (creds?.userId !== this.socket.userId || creds?.userToken !== this.socket.creds?.userToken) {
+      await this.socket.disconnect()
+      await this.connect()
+    }
+  }
+
+  private getCreds() {
+    return this.config.customUser || window.BP_STORAGE.get<UserCredentials>('creds')
   }
 }

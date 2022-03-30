@@ -174,7 +174,16 @@ class Web extends React.Component<MainProps> {
       case 'configure':
         return this.props.updateConfig!(Object.assign({}, constants.DEFAULT_CONFIG, data.payload))
       case 'mergeConfig':
-        return this.props.mergeConfig!(data.payload)
+        this.props.mergeConfig!(data.payload)
+
+        const oldUserId = this.socket.socket.userId
+        await this.socket.reload(data.payload)
+
+        if (this.socket.socket.userId !== oldUserId) {
+          this.props.resetConversation!()
+          await this.props.initializeChat!()
+        }
+        return
       case 'sendPayload':
         return this.props.sendData!(data.payload)
       case 'event':
@@ -357,7 +366,8 @@ export default inject(({ store }: { store: RootStore }) => ({
   fetchConversation: store.fetchConversation,
   setIntlProvider: store.setIntlProvider,
   setSocket: store.setSocket,
-  currentConversationId: store.currentConversationId
+  currentConversationId: store.currentConversationId,
+  resetConversation: store.resetConversation
 }))(injectIntl(observer(Web)))
 
 type MainProps = { store?: RootStore } & WrappedComponentProps &
@@ -396,4 +406,5 @@ type MainProps = { store?: RootStore } & WrappedComponentProps &
     | 'setIntlProvider'
     | 'setSocket'
     | 'currentConversationId'
+    | 'resetConversation'
   >
