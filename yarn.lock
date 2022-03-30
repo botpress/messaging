@@ -2487,7 +2487,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
-    "@botpress/webchat": 0.3.3
+    "@botpress/webchat": 0.3.4
     "@parcel/config-default": ^2.2.1
     "@parcel/reporter-bundle-analyzer": 2.2.1
     "@parcel/transformer-typescript-tsc": ^2.2.1
@@ -2498,7 +2498,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat@*, @botpress/webchat@0.3.3, @botpress/webchat@workspace:packages/webchat":
+"@botpress/webchat@*, @botpress/webchat@0.3.4, @botpress/webchat@workspace:packages/webchat":
   version: 0.0.0-use.local
   resolution: "@botpress/webchat@workspace:packages/webchat"
   dependencies:
