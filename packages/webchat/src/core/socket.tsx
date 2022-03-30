@@ -44,7 +44,7 @@ export default class BpSocket {
     this.config = config
     const creds = this.getCreds()
 
-    if (creds?.userId !== this.socket.userId) {
+    if (creds?.userId !== this.socket.userId || creds?.userToken !== this.socket.creds?.userToken) {
       await this.socket.disconnect()
       await this.connect()
     }
