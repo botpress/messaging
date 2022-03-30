@@ -29,7 +29,7 @@ export default class BpSocket {
   }
 
   public async connect(): Promise<void> {
-    const creds = this.config.customUser || window.BP_STORAGE.get<UserCredentials>('creds')
+    const creds = this.getCreds()
     await this.socket.connect(creds)
 
     if (this.socket.userId) {
@@ -42,7 +42,15 @@ export default class BpSocket {
 
   public async reload(config: Config) {
     this.config = config
-    await this.socket.disconnect()
-    await this.connect()
+    const creds = this.getCreds()
+
+    if (creds?.userId !== this.socket.userId) {
+      await this.socket.disconnect()
+      await this.connect()
+    }
+  }
+
+  private getCreds() {
+    return this.config.customUser || window.BP_STORAGE.get<UserCredentials>('creds')
   }
 }
