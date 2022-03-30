@@ -1,3 +1,17 @@
+## [1.1.8](https://github.com/botpress/messaging/compare/v1.1.7...v1.1.8) (2022-03-30)
+
+
+### Bug Fixes
+
+* **distributed:** fix locks failing to release ([#429](https://github.com/botpress/messaging/issues/429)) ([dc1f159](https://github.com/botpress/messaging/commit/dc1f1592b7a8376932d79b36919b80fc77e72cc2))
+
+
+### Features
+
+* **user-tokens:** user tokens api ([#428](https://github.com/botpress/messaging/issues/428)) ([52028f8](https://github.com/botpress/messaging/commit/52028f8a0173fe434d9ba9ddb614dbd2ff2d62a5))
+
+
+
 ## [1.1.7](https://github.com/botpress/messaging/compare/v1.1.6...v1.1.7) (2022-03-25)
 
 
