@@ -1,3 +1,4 @@
+export * from './base/auth/auth'
 export * from './base/auth/client'
 export * from './base/api-manager'
 export * from './base/schema'

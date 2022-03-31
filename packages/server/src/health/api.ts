@@ -1,7 +1,5 @@
+import { ApiManager, ClientApiRequest, ReqSchema } from '@botpress/messaging-framework'
 import { Response } from 'express'
-import { ApiManager } from '../base/api-manager'
-import { ClientApiRequest } from '../base/auth/client'
-import { ReqSchema } from '../base/schema'
 import { HealthService } from './service'
 
 export class HealthApi {

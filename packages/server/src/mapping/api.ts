@@ -1,7 +1,6 @@
 import { Endpoint } from '@botpress/messaging-base'
+import { ApiManager, ClientApiRequest } from '@botpress/messaging-framework'
 import { Response } from 'express'
-import { ApiManager } from '../base/api-manager'
-import { ClientApiRequest } from '../base/auth/client'
 import { ChannelService } from '../channels/service'
 import { ConversationService } from '../conversations/service'
 import { makeMapRequestSchema, Schema } from './schema'
