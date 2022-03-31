@@ -26,6 +26,7 @@
     "@botpress/messaging-channels": "*",
     "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.5",
     "@botpress/messaging-engine": "*",
+    "@botpress/messaging-framework": "*",
     "@sentry/node": "^6.17.3",
     "axios": "^0.25.0",
     "cli-color": "^2.0.1",

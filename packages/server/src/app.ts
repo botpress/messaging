@@ -1,7 +1,7 @@
 import { Engine } from '@botpress/messaging-engine'
+import { ClientTokenService } from '@botpress/messaging-framework'
 import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
-import { ClientTokenService } from './client-tokens/service'
 import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
