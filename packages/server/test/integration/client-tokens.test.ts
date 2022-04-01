@@ -1,7 +1,6 @@
-import { ClientToken, ClientTokenService } from '@botpress/messaging-framework'
+import { Client, ClientToken, ClientTokenService } from '@botpress/messaging-framework'
 import { validate as validateUuid } from 'uuid'
-import { Client } from '../../src/clients/types'
-import { app, randStr, setupApp } from '../utils'
+import { app, destroyApp, randStr, setupApp } from '../utils'
 
 describe('ClientTokens', () => {
   let clientTokens: ClientTokenService

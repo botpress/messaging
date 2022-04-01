@@ -1,12 +1,11 @@
 import { User } from '@botpress/messaging-base'
 import { DatabaseService } from '@botpress/messaging-engine/src/database/service'
-import { ClientToken } from '@botpress/messaging-framework'
+import { Client, ClientToken } from '@botpress/messaging-framework'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid'
 
 import { ChannelMeta } from '../../../channels/src/base/meta'
-import { Client } from '../../src/clients/types'
 import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
 import { Provision } from '../../src/provisions/types'
