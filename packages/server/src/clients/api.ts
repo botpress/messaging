@@ -1,4 +1,4 @@
-import { AdminApiManager, ApiManager } from '@botpress/messaging-framework'
+import { AdminApiManager, ApiManager, ClientService } from '@botpress/messaging-framework'
 import { Request, Response } from 'express'
 import { ProviderService } from '../providers/service'
 import { ProvisionService } from '../provisions/service'
