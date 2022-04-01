@@ -16,21 +16,20 @@ export abstract class Entry {
   router: Express
   routes: Routes
 
-  // TODO: typings for this
-  app: Framework
-  api: any
-  stream: any
-  socket: any
+  app: IApp
+  api: IApi
+  stream: IStream
+  socket: ISocket
 
   manager: ApiManager
   adminManager: AdminApiManager
   clients: ClientApi
 
   constructor(
-    tapp: { new (): Framework },
-    tapi: { new (app: any, manager: ApiManager, adminManager: AdminApiManager, express: Express): any },
-    tstream: { new (app: any): any },
-    tsocket: { new (app: any): any }
+    tapp: { new (): IApp },
+    tapi: { new (app: IApp & any, manager: ApiManager, adminManager: AdminApiManager, express: Express): IApi },
+    tstream: { new (app: IApp & any): IStream },
+    tsocket: { new (app: IApp & any): ISocket }
   ) {
     this.router = express()
     this.router.disable('x-powered-by')
@@ -41,8 +40,8 @@ export abstract class Entry {
     const auth = new Auth(this.app.clientTokens)
     this.manager = new ApiManager(this.routes.router, auth)
     this.adminManager = new AdminApiManager(this.routes.router, auth)
-
     this.api = new tapi(this.app, this.manager, this.adminManager, this.router)
+
     this.stream = new tstream(this.app)
     this.socket = new tsocket(this.app)
 
@@ -81,4 +80,21 @@ export abstract class Entry {
     await this.app?.destroy()
     await this.app?.postDestroy()
   }
+}
+
+interface IApp extends Framework {}
+
+interface IApi {
+  setup(): Promise<void>
+}
+
+interface IStream {
+  setup(): Promise<void>
+  destroy(): Promise<void>
+}
+
+interface ISocket {
+  setup(): Promise<void>
+  start(server: Server): Promise<void>
+  destroy(): Promise<void>
 }
