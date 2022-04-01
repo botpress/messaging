@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging-server",
-  "version": "1.1.8",
+  "version": "1.2.0",
   "main": "index.ts",
   "license": "AGPL-3.0",
   "scripts": {
@@ -21,11 +21,11 @@
     "knex-schema-inspector": "^1.7.3"
   },
   "dependencies": {
-    "@botpress/messaging-base": "*",
-    "@botpress/messaging-channels": "*",
+    "@botpress/messaging-base": "1.2.0",
+    "@botpress/messaging-channels": "1.2.0",
     "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.5",
-    "@botpress/messaging-engine": "*",
-    "@botpress/messaging-framework": "*",
+    "@botpress/messaging-engine": "1.2.0",
+    "@botpress/messaging-framework": "1.2.0",
     "@sentry/node": "^6.17.3",
     "axios": "^0.25.0",
     "cli-color": "^2.0.1",
