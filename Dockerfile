@@ -17,6 +17,9 @@ COPY --from=build /messaging/packages/server/package.json packages/server/packag
 COPY --from=build /messaging/packages/channels/dist packages/channels/dist
 COPY --from=build /messaging/packages/channels/package.json packages/channels/package.json
 
+COPY --from=build /messaging/packages/framework/dist packages/framework/dist
+COPY --from=build /messaging/packages/framework/package.json packages/framework/package.json
+
 COPY --from=build /messaging/packages/engine/dist packages/engine/dist
 COPY --from=build /messaging/packages/engine/package.json packages/engine/package.json
  
