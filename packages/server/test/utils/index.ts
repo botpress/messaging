@@ -32,6 +32,12 @@ export const setupApp = async ({ seed }: { seed: boolean } = { seed: false }) =>
   return app
 }
 
+export const destroyApp = async () => {
+  await app.preDestroy()
+  await app.destroy()
+  await app.postDestroy()
+}
+
 const randomLetters = (length: number) => {
   const chars = 'abcdefghijklmnopqrstuvwxyz'
   let str = ''
