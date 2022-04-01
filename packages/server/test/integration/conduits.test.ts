@@ -4,7 +4,7 @@ import { validate as validateUuid } from 'uuid'
 import { ConduitService } from '../../src/conduits/service'
 import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
-import { app, randStr, setupApp } from '../utils'
+import { app, destroyApp, randStr, setupApp } from '../utils'
 
 describe('Conduits', () => {
   let conduits: ConduitService
@@ -24,7 +24,7 @@ describe('Conduits', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {

@@ -7,21 +7,22 @@ export class Starter {
   private launchCallback!: () => Promise<void>
 
   start(launchCallback: () => Promise<void>, yargsCallback: (x: yargs.Argv) => void) {
-    this.launchCallback = launchCallback
     // Set NODE_ENV to production when starting server using the binary version
     process.env.NODE_ENV = process.pkg ? 'production' : process.env.NODE_ENV
+
+    this.launchCallback = launchCallback
 
     const yargs = this.createMigArgs()
     yargsCallback(yargs)
     void yargs.argv
   }
 
-  async launch() {
+  private async launch() {
     await this.setupEnv()
     await this.launchCallback()
   }
 
-  async setupEnv() {
+  private async setupEnv() {
     if (yn(process.env.SKIP_LOAD_ENV)) {
       return
     }
@@ -33,7 +34,7 @@ export class Starter {
     }
   }
 
-  createMigArgs() {
+  private createMigArgs() {
     return yargs
       .scriptName('')
       .command(

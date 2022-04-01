@@ -32,7 +32,7 @@ export class Launcher {
     })
 
     process.on('unhandledRejection', async (e) => {
-      this.logger.error(e as Error, 'Unhandled Rejection')
+      this.logger.error(e, 'Unhandled Rejection')
       await this.shutDown(1)
     })
 
@@ -68,15 +68,20 @@ export class Launcher {
       await this.startCallback(server)
       this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
 
-      this.logger.info(`Server is listening at: http://localhost:${port}`)
+      // TODO: remove mentions of messaging here
+      if (!yn(process.env.SPINNED)) {
+        this.logger.info(`Server is listening at: http://localhost:${port}`)
 
-      const externalUrl = process.env.EXTERNAL_URL
-      if (externalUrl?.length) {
-        this.logger.info(`Server is exposed at: ${externalUrl}`)
+        const externalUrl = process.env.EXTERNAL_URL
+        if (externalUrl?.length) {
+          this.logger.info(`Server is exposed at: ${externalUrl}`)
+        } else {
+          this.logger.warn(
+            "No external URL configured. Messaging Server might not behave as expected. Set the value for 'EXTERNAL_URL' to suppress this warning"
+          )
+        }
       } else {
-        this.logger.warn(
-          "No external URL configured. Server might not behave as expected. Set the value for 'EXTERNAL_URL' to suppress this warning"
-        )
+        this.logger.info(clc.blackBright(`Messaging is listening at: http://localhost:${port}`))
       }
 
       await this.monitorCallback()

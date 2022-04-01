@@ -2,6 +2,7 @@ import crypto from 'crypto'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { App } from '../../src/app'
+import { Migrations } from '../../src/migrations'
 import { Seed } from './seed'
 
 export let app: App
@@ -18,6 +19,7 @@ export const setupApp = async ({ seed }: { seed: boolean } = { seed: false }) =>
   }
 
   app = new App()
+  await app.prepare(require('../../package.json'), Migrations)
   await app.setup()
   await app.postSetup()
 
@@ -28,6 +30,12 @@ export const setupApp = async ({ seed }: { seed: boolean } = { seed: false }) =>
   }
 
   return app
+}
+
+export const destroyApp = async () => {
+  await app.preDestroy()
+  await app.destroy()
+  await app.postDestroy()
 }
 
 const randomLetters = (length: number) => {

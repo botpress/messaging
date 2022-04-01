@@ -1,17 +1,10 @@
-import { EngineEnv } from '@botpress/messaging-engine'
+import { FrameworkEnv } from '@botpress/messaging-framework'
 
-export type MessagingEnv = EngineEnv & {
-  PORT?: string
-  EXTERNAL_URL?: string
-  INTERNAL_PASSWORD?: string
-  ADMIN_KEY?: string
+export type MessagingEnv = FrameworkEnv & {
   SYNC?: string
-  SKIP_LOAD_ENV?: string
   SPINNED?: string
   SPINNED_URL?: string
   NO_LAZY_LOADING?: string
-  NO_LOGO?: string
-  APM_ENABLED?: string
   TWILIO_TESTING?: string
   BILLING_ENDPOINT?: string
   DISABLE_SOCKETS?: string

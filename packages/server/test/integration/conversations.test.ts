@@ -1,10 +1,10 @@
 import { Conversation, User } from '@botpress/messaging-base/src'
+import { Client } from '@botpress/messaging-framework'
 import { validate as validateUuid } from 'uuid'
-import { Client } from '../../src/clients/types'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
 import { UserService } from '../../src/users/service'
-import { app, setupApp, sleep } from '../utils'
+import { app, destroyApp, setupApp, sleep } from '../utils'
 
 describe('Conversations', () => {
   let conversations: ConversationService
@@ -30,7 +30,7 @@ describe('Conversations', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {

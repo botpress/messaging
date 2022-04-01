@@ -1,7 +1,7 @@
 import { validate as validateUuid } from 'uuid'
 import { ProviderService } from '../../src/providers/service'
 import { Provider } from '../../src/providers/types'
-import { app, randStr, setupApp } from '../utils'
+import { app, destroyApp, randStr, setupApp } from '../utils'
 
 describe('Providers', () => {
   let providers: ProviderService
@@ -15,7 +15,7 @@ describe('Providers', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {

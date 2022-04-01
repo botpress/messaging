@@ -1,8 +1,8 @@
 import { HealthEventType, HealthReport } from '@botpress/messaging-base'
-import { Client } from '../../src/clients/types'
+import { Client } from '@botpress/messaging-framework'
 import { Conduit } from '../../src/conduits/types'
 import { HealthService } from '../../src/health/service'
-import { app, randStr, setupApp } from '../utils'
+import { app, destroyApp, randStr, setupApp } from '../utils'
 
 const TEST_CHANNEL = 'messenger'
 
@@ -40,7 +40,7 @@ describe('Health', () => {
   })
 
   afterAll(async () => {
-    await app.destroy()
+    await destroyApp()
   })
 
   beforeEach(async () => {
