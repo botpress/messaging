@@ -1,6 +1,5 @@
+import { Client, ClientService } from '@botpress/messaging-framework'
 import { validate as validateUuid } from 'uuid'
-import { ClientService } from '../../src/clients/service'
-import { Client } from '../../src/clients/types'
 import { app, setupApp } from '../utils'
 
 describe('Clients', () => {
