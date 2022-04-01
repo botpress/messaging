@@ -5,7 +5,6 @@
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
-    "postbuild": "node ./dist/build",
     "watch": "yarn && yarn run -T tsc --build --watch",
     "start": "node ./dist/index.js",
     "dev": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts"

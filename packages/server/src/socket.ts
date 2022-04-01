@@ -1,3 +1,4 @@
+import { Server } from 'http'
 import { App } from './app'
 import { ConversationSocket } from './conversations/socket'
 import { MessageSocket } from './messages/socket'
@@ -5,7 +6,7 @@ import { SocketManager } from './socket/manager'
 import { UserSocket } from './users/socket'
 
 export class Socket {
-  public readonly manager: SocketManager
+  private manager: SocketManager
 
   private users: UserSocket
   private conversations: ConversationSocket
@@ -22,5 +23,13 @@ export class Socket {
     this.users.setup()
     this.conversations.setup()
     this.messages.setup()
+  }
+
+  async start(server: Server) {
+    await this.manager.setup(server)
+  }
+
+  async destroy() {
+    await this.manager.destroy()
   }
 }

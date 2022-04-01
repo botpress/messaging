@@ -1,59 +1,23 @@
-import { uuid } from '@botpress/messaging-base'
-import { Logger, LoggerLevel } from '@botpress/messaging-engine'
-import { AdminApiManager, ApiManager, ClientTokenService } from '@botpress/messaging-framework'
-import clc from 'cli-color'
+import { AdminApiManager, ApiManager, ClientService } from '@botpress/messaging-framework'
 import { Request, Response } from 'express'
-import { v4 as uuidv4 } from 'uuid'
 import { ProviderService } from '../providers/service'
 import { ProvisionService } from '../provisions/service'
 import { Schema } from './schema'
-import { ClientService } from './service'
 
 export class ClientApi {
   constructor(
     private providers: ProviderService,
     private clients: ClientService,
-    private clientTokens: ClientTokenService,
     private provisions: ProvisionService
   ) {}
 
   setup(pub: ApiManager, router: AdminApiManager) {
-    if (!process.env.ADMIN_KEY) {
-      new Logger('Admin').window(
-        [clc.redBright('ADMIN_KEY IS NOT SET'), 'ADMIN ROUTES ARE UNPROTECTED'],
-        LoggerLevel.Critical,
-        75
-      )
-    }
-
     pub.get('/clients', Schema.Api.Get, this.get.bind(this))
-    router.post('/admin/clients', Schema.Api.Create, this.create.bind(this))
     router.put('/admin/clients/name', Schema.Api.Name, this.rename.bind(this))
   }
 
   async get(req: Request, res: Response) {
     res.sendStatus(200)
-  }
-
-  async create(req: Request, res: Response) {
-    let clientId: uuid | undefined = req.body.id
-
-    if (clientId && (await this.clients.fetchById(clientId))) {
-      return res.status(403).send(`client with id "${clientId}" already exists`)
-    }
-
-    if (!clientId) {
-      clientId = uuidv4()
-    }
-
-    const provider = await this.providers.create(clientId, false)
-    const client = await this.clients.create(clientId)
-    await this.provisions.create(client.id, provider.id)
-
-    const rawToken = await this.clientTokens.generateToken()
-    const clientToken = await this.clientTokens.create(client.id, rawToken, undefined)
-
-    res.status(201).send({ id: client.id, token: `${clientToken.id}.${rawToken}` })
   }
 
   async rename(req: Request, res: Response) {
@@ -65,7 +29,12 @@ export class ClientApi {
       return res.status(404).send(`client "${clientId}" does not exist`)
     }
 
-    const provision = await this.provisions.getByClientId(clientId)
+    let provision = await this.provisions.fetchByClientId(clientId)
+    if (!provision) {
+      const provider = await this.providers.create(clientId, false)
+      provision = await this.provisions.create(clientId, provider.id)
+    }
+
     const provider = await this.providers.getById(provision.providerId)
     if (provider.name === name) {
       return res.sendStatus(204)

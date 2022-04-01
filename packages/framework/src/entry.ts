@@ -22,11 +22,13 @@ export abstract class Entry {
   stream: any
   socket: any
 
+  manager: ApiManager
+  adminManager: AdminApiManager
   clients: ClientApi
 
   constructor(
     tapp: { new (): Framework },
-    tapi: { new (app: any, manager: ApiManager, express: Express): any },
+    tapi: { new (app: any, manager: ApiManager, adminManager: AdminApiManager, express: Express): any },
     tstream: { new (app: any): any },
     tsocket: { new (app: any): any }
   ) {
@@ -35,7 +37,12 @@ export abstract class Entry {
     this.routes = new Routes(this.router)
 
     this.app = new tapp()
-    this.api = new tapi(this.app, new ApiManager(this.routes.router, new Auth(this.app.clientTokens)), this.router)
+
+    const auth = new Auth(this.app.clientTokens)
+    this.manager = new ApiManager(this.routes.router, auth)
+    this.adminManager = new AdminApiManager(this.routes.router, auth)
+
+    this.api = new tapi(this.app, this.manager, this.adminManager, this.router)
     this.stream = new tstream(this.app)
     this.socket = new tsocket(this.app)
 
@@ -48,7 +55,7 @@ export abstract class Entry {
     await this.app.postSetup()
 
     this.routes.setup(this.package)
-    this.clients.setup(new AdminApiManager(this.routes.router, new Auth(this.app.clientTokens)))
+    this.clients.setup(this.adminManager)
     await this.api.setup()
     this.routes.postSetup()
 

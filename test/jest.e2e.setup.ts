@@ -17,6 +17,7 @@ const setup = async () => {
 
   await setupDevServer({
     command: 'yarn dev',
+    debug: true,
     launchTimeout: 30000,
     protocol: 'http',
     host: '127.0.0.1',

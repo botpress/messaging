@@ -1,4 +1,4 @@
-import { Client } from '../../src/clients/types'
+import { Client } from '@botpress/messaging-framework'
 import { Provider } from '../../src/providers/types'
 import { ProvisionService } from '../../src/provisions/service'
 import { Provision } from '../../src/provisions/types'

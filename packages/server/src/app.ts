@@ -1,8 +1,6 @@
-import { Engine } from '@botpress/messaging-engine'
-import { ClientTokenService } from '@botpress/messaging-framework'
+import { Framework } from '@botpress/messaging-framework'
 import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
-import { ClientService } from './clients/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
 import { ConverseService } from './converse/service'
@@ -10,7 +8,6 @@ import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
-import { Migrations } from './migrations'
 import { ProviderService } from './providers/service'
 import { ProvisionService } from './provisions/service'
 import { SocketService } from './socket/service'
@@ -20,11 +17,9 @@ import { UserTokenService } from './user-tokens/service'
 import { UserService } from './users/service'
 import { WebhookService } from './webhooks/service'
 
-export class App extends Engine {
+export class App extends Framework {
   channels: ChannelService
   providers: ProviderService
-  clients: ClientService
-  clientTokens: ClientTokenService
   provisions: ProvisionService
   webhooks: WebhookService
   conduits: ConduitService
@@ -43,13 +38,8 @@ export class App extends Engine {
 
   constructor() {
     super()
-    this.meta.setPkg(require('../package.json'))
-    this.migration.setMigrations(Migrations)
-
     this.channels = new ChannelService(this.database)
     this.providers = new ProviderService(this.database, this.caching)
-    this.clients = new ClientService(this.database, this.caching)
-    this.clientTokens = new ClientTokenService(this.database, this.crypto, this.caching)
     this.provisions = new ProvisionService(this.database, this.caching, this.providers)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)
     this.conduits = new ConduitService(this.database, this.crypto, this.caching, this.channels, this.providers)
@@ -88,6 +78,7 @@ export class App extends Engine {
       this.channels,
       this.conduits,
       this.clients,
+      this.providers,
       this.provisions,
       this.webhooks,
       this.status
@@ -108,8 +99,6 @@ export class App extends Engine {
     await super.setup()
     await this.channels.setup()
     await this.providers.setup()
-    await this.clients.setup()
-    await this.clientTokens.setup()
     await this.provisions.setup()
     await this.webhooks.setup()
     await this.conduits.setup()
@@ -131,16 +120,15 @@ export class App extends Engine {
   }
 
   async monitor() {
+    await super.monitor()
     await this.syncs.setup()
     await this.instances.monitor()
     await this.billing.setup()
   }
 
   async destroy() {
-    await this.batching?.destroy()
+    await super.destroy()
     await this.billing?.destroy()
     await this.instances?.destroy()
-    await this.distributed?.destroy()
-    await this.database?.destroy()
   }
 }

@@ -6,8 +6,8 @@ import {
   LoggerService,
   Service
 } from '@botpress/messaging-engine'
+import { ClientService } from '@botpress/messaging-framework'
 import { ChannelService } from '../channels/service'
-import { ClientService } from '../clients/service'
 import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
 import { MappingService } from '../mapping/service'

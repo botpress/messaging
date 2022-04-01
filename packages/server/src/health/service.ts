@@ -66,10 +66,13 @@ export class HealthService extends Service {
       return cached
     }
 
-    const provision = await this.provisionService.getByClientId(clientId)
-    const conduits = await this.conduitService.listByProvider(provision.providerId)
-
     const report: HealthReport = { channels: {} }
+    const provision = await this.provisionService.fetchByClientId(clientId)
+    if (!provision) {
+      return report
+    }
+
+    const conduits = await this.conduitService.listByProvider(provision.providerId)
 
     for (const conduit of conduits) {
       const channel = this.channelService.getById(conduit.channelId)
