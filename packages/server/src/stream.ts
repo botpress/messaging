@@ -7,7 +7,6 @@ import { UserStream } from './users/stream'
 
 export class Stream {
   private streamer: Streamer
-
   private health: HealthStream
   private users: UserStream
   private conversations: ConversationStream

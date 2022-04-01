@@ -7,7 +7,6 @@ import { UserSocket } from './users/socket'
 
 export class Socket {
   private manager: SocketManager
-
   private users: UserSocket
   private conversations: ConversationSocket
   private messages: MessageSocket
