@@ -1,4 +1,4 @@
-import { FrameworkEnv } from '@botpress/framework'
+import { FrameworkEnv } from '@botpress/messaging-framework'
 
 export type ServerEnv = FrameworkEnv & {}
 

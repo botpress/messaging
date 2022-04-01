@@ -41,6 +41,10 @@ export class AdminApiManager {
     this.use('post', path, schema, fn)
   }
 
+  put(path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
+    this.use('put', path, schema, fn)
+  }
+
   get(path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
     this.use('get', path, schema, fn)
   }
@@ -49,7 +53,7 @@ export class AdminApiManager {
     this.use('delete', path, schema, fn)
   }
 
-  use(type: 'post' | 'get' | 'delete', path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
+  use(type: 'post' | 'put' | 'get' | 'delete', path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
     this.router[type](
       path,
       this.auth.admin.auth(async (req, res) => {

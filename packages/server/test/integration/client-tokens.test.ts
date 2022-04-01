@@ -1,6 +1,5 @@
+import { ClientToken, ClientTokenService } from '@botpress/messaging-framework'
 import { validate as validateUuid } from 'uuid'
-import { ClientTokenService } from '../../src/client-tokens/service'
-import { ClientToken } from '../../src/client-tokens/types'
 import { Client } from '../../src/clients/types'
 import { app, randStr, setupApp } from '../utils'
 

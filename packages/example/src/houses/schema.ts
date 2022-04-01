@@ -1,4 +1,4 @@
-import { ReqSchema } from '@botpress/framework'
+import { ReqSchema } from '@botpress/messaging-framework'
 import Joi from 'joi'
 
 const Api = {

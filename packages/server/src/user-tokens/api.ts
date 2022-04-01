@@ -1,7 +1,6 @@
 import { uuid } from '@botpress/messaging-base'
+import { ApiManager, ClientApiRequest } from '@botpress/messaging-framework'
 import { Response } from 'express'
-import { ApiManager } from '../base/api-manager'
-import { ClientApiRequest } from '../base/auth/client'
 import { UserService } from '../users/service'
 import { Schema } from './schema'
 import { UserTokenService } from './service'
