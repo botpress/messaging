@@ -22,7 +22,7 @@ describe('Global Diff', () => {
   test(
     'Starts Messaging with the latest database schema',
     async () => {
-      await setupApp({ prefix: NO_MIGRATION, seed: false })
+      await setupApp({ prefix: NO_MIGRATION, seed: false, transient: false })
     },
     TIMEOUT
   )
@@ -33,7 +33,7 @@ describe('Global Diff', () => {
       process.env.MIGRATE_CMD = 'up'
       process.env.TESTMIG_DB_VERSION = '0.0.0'
 
-      await handleShutDownSignal(() => setupApp({ prefix: ALL_MIGRATIONS, seed: false }))
+      await handleShutDownSignal(() => setupApp({ prefix: ALL_MIGRATIONS, seed: false, transient: false }))
     },
     TIMEOUT
   )

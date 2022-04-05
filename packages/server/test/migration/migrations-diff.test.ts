@@ -42,7 +42,7 @@ describe('Migrations diff tests', () => {
         process.env.TESTMIG_DB_VERSION = '0.0.0'
         process.env.MIGRATE_TARGET = previousVersion
 
-        await handleShutDownSignal(() => setupApp({ prefix: beforeMigrationDatabase, seed: false }))
+        await handleShutDownSignal(() => setupApp({ prefix: beforeMigrationDatabase, seed: false, transient: false }))
       },
       TIMEOUT
     )
@@ -53,7 +53,7 @@ describe('Migrations diff tests', () => {
         process.env.MIGRATE_CMD = 'up'
         process.env.MIGRATE_TARGET = migrationVersion
 
-        await handleShutDownSignal(() => setupApp({ prefix: afterMigrationDatabase, seed: false }))
+        await handleShutDownSignal(() => setupApp({ prefix: afterMigrationDatabase, seed: false, transient: false }))
       },
       TIMEOUT
     )
@@ -64,7 +64,7 @@ describe('Migrations diff tests', () => {
         process.env.MIGRATE_CMD = 'down'
         process.env.MIGRATE_TARGET = previousVersion
 
-        await handleShutDownSignal(() => setupApp({ prefix: afterMigrationDatabase, seed: false }))
+        await handleShutDownSignal(() => setupApp({ prefix: afterMigrationDatabase, seed: false, transient: false }))
       },
       TIMEOUT
     )

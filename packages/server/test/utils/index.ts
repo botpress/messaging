@@ -7,7 +7,9 @@ import { Seed } from './seed'
 
 export let app: App
 
-export const setupApp = async ({ seed, prefix }: { seed: boolean; prefix?: string } = { seed: false }) => {
+export const setupApp = async (
+  { seed, prefix, transient }: { seed: boolean; transient: boolean; prefix?: string } = { seed: false, transient: true }
+) => {
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.SUPPRESS_LOGGING = 'true'
   process.env.DATABASE_URL =
@@ -15,7 +17,7 @@ export const setupApp = async ({ seed, prefix }: { seed: boolean; prefix?: strin
 
   if (process.env.DATABASE_URL.startsWith('postgres')) {
     process.env.DATABASE_SUFFIX = `__${prefix || randomLetters(8)}`
-    process.env.DATABASE_TRANSIENT = 'true'
+    transient && (process.env.DATABASE_TRANSIENT = 'true')
   }
 
   app = new App()
