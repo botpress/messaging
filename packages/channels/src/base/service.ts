@@ -17,6 +17,7 @@ export abstract class ChannelService<
   TState extends ChannelState<TConfig>
 > extends Emitter<{
   start: ChannelStartEvent
+  test: ChannelTestEvent
   initialize: ChannelInitializeEvent
   send: ChannelSendEvent
   proactive: ChannelProactiveEvent
@@ -47,6 +48,10 @@ export abstract class ChannelService<
     }
 
     await this.emit('start', { scope })
+  }
+
+  async test(scope: string) {
+    await this.emit('test', { scope })
   }
 
   async initialize(scope: string) {
@@ -136,6 +141,10 @@ export abstract class ChannelService<
 }
 
 export interface ChannelStartEvent {
+  scope: string
+}
+
+export interface ChannelTestEvent {
   scope: string
 }
 

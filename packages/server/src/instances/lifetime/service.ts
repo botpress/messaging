@@ -42,6 +42,7 @@ export class InstanceLifetimeService extends Service {
 
   async destroy() {
     for (const channel of this.channels.list()) {
+      // TODO: channel.scopes doesn't work
       for (const scope of channel.scopes) {
         const provider = await this.providers.getByName(scope)
         const conduit = await this.conduits.getByProviderAndChannel(provider.id, channel.meta.id)

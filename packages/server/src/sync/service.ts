@@ -100,7 +100,10 @@ export class SyncService extends Service {
   }
 
   private async testChannel(providerId: uuid, channelId: uuid, config: any) {
-    throw new Error('NO')
+    const channel = this.channels.getById(channelId)
+    const provider = await this.providers.getById(providerId)
+
+    await channel.test(provider.name, config)
   }
 
   private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]): Promise<SyncWebhook[]> {

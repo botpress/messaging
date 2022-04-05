@@ -1,4 +1,5 @@
 import { SyncChannels, SyncRequest, SyncWebhook } from '@botpress/messaging-base'
+import { ChannelTestError } from '@botpress/messaging-channels'
 import { ApiManager, ClientApiRequest } from '@botpress/messaging-framework'
 import { Response } from 'express'
 import Joi from 'joi'
@@ -22,8 +23,16 @@ export class SyncApi {
       return res.status(400).send(error.message)
     }
 
-    const result = await this.syncs.sync(req.clientId, value!)
-    res.send(result)
+    try {
+      const result = await this.syncs.sync(req.clientId, value!)
+      res.send(result)
+    } catch (e) {
+      if (e instanceof ChannelTestError) {
+        res.status(400).send(`"body.channels.${e.channel}.${e.props[0]}" ${e.message}`)
+      } else {
+        throw e
+      }
+    }
   }
 
   validate(req: SyncRequest): { value?: SyncRequest; error?: Joi.ValidationError } {
