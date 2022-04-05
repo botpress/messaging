@@ -73,11 +73,13 @@ export class SyncService extends Service {
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (oldConduitIndex < 0) {
+        await this.testChannel(providerId, channelId, config)
         await this.conduits.create(providerId, channelId, config)
       } else {
         const oldConduit = await this.conduits.getByProviderAndChannel(providerId, channelId)
 
         if (!_.isEqual(config, oldConduit.config)) {
+          await this.testChannel(providerId, channelId, config)
           await this.conduits.updateConfig(oldConduit.id, config)
         } else {
           // updating the config will clear the number of errors.
@@ -95,6 +97,10 @@ export class SyncService extends Service {
     for (const unusedConduit of oldConduits) {
       await this.conduits.delete(unusedConduit.id)
     }
+  }
+
+  private async testChannel(providerId: uuid, channelId: uuid, config: any) {
+    throw new Error('NO')
   }
 
   private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]): Promise<SyncWebhook[]> {
