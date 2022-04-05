@@ -64,3 +64,7 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
     })
   }
 }
+
+export const buildMessagingServer = async (options: Pick<JestDevServerOptions, 'command' | 'launchTimeout'>) => {
+  await startMessagingServer(options, '')
+}
