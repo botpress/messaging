@@ -7,6 +7,6 @@ export interface TwilioConfig extends ChannelConfig {
 }
 
 export const TwilioConfigSchema = {
-  accountSID: Joi.string().required(),
+  accountSID: Joi.string().regex(/AC.*/).required(),
   authToken: Joi.string().required()
 }
