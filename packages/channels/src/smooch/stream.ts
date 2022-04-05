@@ -30,7 +30,7 @@ export class SmoochStream extends ChannelStream<SmoochService, SmoochContext> {
       await smooch.apps.getApp(config.appId)
     } catch {
       throw new ChannelTestError(
-        'unable to reach smooch with the provided key id, key secret and app id combination',
+        'unable to reach smooch with the provided key secret, key id and app id combination',
         'smooch',
         'keySecret'
       )
