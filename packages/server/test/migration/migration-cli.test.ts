@@ -19,14 +19,14 @@ describe('Migration CLI', () => {
     // Speeds up tests
     await buildMessagingServer({
       command: 'yarn build',
-      launchTimeout: TIMEOUT
+      launchTimeout: TIMEOUT * 2
     })
 
     const connectionInfo = setupConnection(CLI_MIGRATIONS)
 
     conn = connectionInfo.conn
     isLite = connectionInfo.isLite
-  }, TIMEOUT)
+  }, TIMEOUT * 2)
 
   afterAll(async () => {
     await conn.destroy()
