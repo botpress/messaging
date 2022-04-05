@@ -1,14 +1,16 @@
 import axios from 'axios'
-import { Endpoint } from '..'
+import { ChannelTestError, Endpoint } from '..'
 import { ChannelContext } from '../base/context'
 import { CardToCarouselRenderer } from '../base/renderers/card'
 import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
-import { ChannelReceiveEvent } from '../base/service'
+import { ChannelReceiveEvent, ChannelTestEvent } from '../base/service'
 import { ChannelStream } from '../base/stream'
 import { MessengerContext } from './context'
 import { MessengerRenderers } from './renderers'
 import { MessengerSenders } from './senders'
 import { MessengerService } from './service'
+
+const GRAPH_URL = 'https://graph.facebook.com/v12.0'
 
 export class MessengerStream extends ChannelStream<MessengerService, MessengerContext> {
   get renderers() {
@@ -23,6 +25,28 @@ export class MessengerStream extends ChannelStream<MessengerService, MessengerCo
     await super.setup()
 
     this.service.on('receive', this.handleReceive.bind(this))
+    this.service.on('test', this.handleTest.bind(this))
+  }
+
+  private async handleTest({ scope }: ChannelTestEvent) {
+    const { config } = this.service.get(scope)
+
+    let info
+    try {
+      info = await this.fetchPageInfo(scope)
+    } catch {
+      throw new ChannelTestError('unable to reach messenger with the provided access token', 'messenger', 'accessToken')
+    }
+
+    if (info.id !== config.pageId) {
+      throw new ChannelTestError('page id does not match provided access token', 'messenger', 'pageId')
+    }
+
+    try {
+      await this.fetchAppInfo(scope)
+    } catch {
+      throw new ChannelTestError('app id does not match provided access token', 'messenger', 'appId')
+    }
   }
 
   protected async handleReceive({ scope, endpoint }: ChannelReceiveEvent) {
@@ -41,7 +65,7 @@ export class MessengerStream extends ChannelStream<MessengerService, MessengerCo
     const { config } = this.service.get(scope)
 
     await axios.post(
-      'https://graph.facebook.com/v12.0/me/messages',
+      `${GRAPH_URL}/me/messages`,
       {
         ...data,
         recipient: {
@@ -50,6 +74,18 @@ export class MessengerStream extends ChannelStream<MessengerService, MessengerCo
       },
       { params: { access_token: config.accessToken } }
     )
+  }
+
+  private async fetchPageInfo(scope: string): Promise<{ name: string; id: string }> {
+    const { config } = this.service.get(scope)
+
+    return (await axios.get(`${GRAPH_URL}/me`, { params: { access_token: config.accessToken } })).data
+  }
+
+  private async fetchAppInfo(scope: string): Promise<any> {
+    const { config } = this.service.get(scope)
+
+    return (await axios.get(`${GRAPH_URL}/${config.appId}`, { params: { access_token: config.accessToken } })).data
   }
 
   protected async getContext(base: ChannelContext<any>): Promise<MessengerContext> {

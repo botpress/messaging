@@ -133,7 +133,7 @@ export abstract class ChannelTemplate<
 }
 
 export class ChannelTestError extends Error {
-  constructor(message: string, public readonly channel: string, public readonly props: string[] = []) {
+  constructor(message: string, public readonly channel: string, public readonly field: string) {
     super(message)
   }
 }

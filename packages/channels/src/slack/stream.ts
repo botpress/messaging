@@ -30,9 +30,11 @@ export class SlackStream extends ChannelStream<SlackService, SlackContext> {
     try {
       await app.client.auth.test()
     } catch {
-      throw new ChannelTestError('unable to authenticate slack request with the provided bot token', 'slack', [
+      throw new ChannelTestError(
+        'unable to authenticate slack request with the provided bot token',
+        'slack',
         'botToken'
-      ])
+      )
     }
   }
 

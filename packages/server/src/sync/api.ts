@@ -28,7 +28,7 @@ export class SyncApi {
       res.send(result)
     } catch (e) {
       if (e instanceof ChannelTestError) {
-        res.status(400).send(`"body.channels.${e.channel}.${e.props[0]}" ${e.message}`)
+        res.status(400).send(`"body.channels.${e.channel}.${e.field}" ${e.message}`)
       } else {
         throw e
       }

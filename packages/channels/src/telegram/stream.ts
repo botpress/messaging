@@ -29,7 +29,7 @@ export class TelegramStream extends ChannelStream<TelegramService, TelegramConte
     try {
       await telegraf.telegram.getWebhookInfo()
     } catch {
-      throw new ChannelTestError('unable to reach telegram with the provided bot token', 'telegram', ['botToken'])
+      throw new ChannelTestError('unable to reach telegram with the provided bot token', 'telegram', 'botToken')
     }
   }
 
