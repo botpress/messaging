@@ -7,14 +7,14 @@ import { Seed } from './seed'
 
 export let app: App
 
-export const setupApp = async ({ seed }: { seed: boolean } = { seed: false }) => {
+export const setupApp = async ({ seed, prefix }: { seed: boolean; prefix?: string } = { seed: false }) => {
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.SUPPRESS_LOGGING = 'true'
   process.env.DATABASE_URL =
-    process.env.DATABASE_URL || path.join(__dirname, '../../../../../test/.test-data', `${uuidv4()}.sqlite`)
+    process.env.DATABASE_URL || path.join(__dirname, '../../../../test/.test-data', `${prefix || uuidv4()}.sqlite`)
 
   if (process.env.DATABASE_URL.startsWith('postgres')) {
-    process.env.DATABASE_SUFFIX = `__${randomLetters(8)}`
+    process.env.DATABASE_SUFFIX = `__${prefix || randomLetters(8)}`
     process.env.DATABASE_TRANSIENT = 'true'
   }
 

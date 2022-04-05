@@ -4,7 +4,7 @@ import portfinder from 'portfinder'
 
 import { setupConnection } from './utils/database'
 import { decrement, increment } from './utils/semver'
-import { startMessagingServer } from './utils/server'
+import { buildMessagingServer, startMessagingServer } from './utils/server'
 
 const pkg = require('../../package.json')
 
@@ -15,12 +15,18 @@ describe('Migration CLI', () => {
   let conn: Knex
   let isLite: boolean
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    // Speeds up tests
+    await buildMessagingServer({
+      command: 'yarn build',
+      launchTimeout: TIMEOUT
+    })
+
     const connectionInfo = setupConnection(CLI_MIGRATIONS)
 
     conn = connectionInfo.conn
     isLite = connectionInfo.isLite
-  })
+  }, TIMEOUT)
 
   afterAll(async () => {
     await conn.destroy()
@@ -47,7 +53,7 @@ describe('Migration CLI', () => {
     async () => {
       await startMessagingServer(
         {
-          command: 'yarn dev migrate up --dry',
+          command: 'yarn start migrate up --dry',
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -66,7 +72,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: 'yarn dev --auto-migrate',
+          command: 'yarn start --auto-migrate',
           launchTimeout: TIMEOUT,
           protocol: 'http',
           host: '127.0.0.1',
@@ -89,7 +95,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: `yarn dev migrate down --target ${target}`,
+          command: `yarn start migrate down --target ${target}`,
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -99,7 +105,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: 'yarn dev migrate up',
+          command: 'yarn start migrate up',
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -117,7 +123,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: `yarn dev migrate down --target ${target}`,
+          command: `yarn start migrate down --target ${target}`,
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -135,7 +141,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: `yarn dev migrate up --target ${target}`,
+          command: `yarn start migrate up --target ${target}`,
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -151,7 +157,7 @@ describe('Migration CLI', () => {
     async () => {
       await startMessagingServer(
         {
-          command: 'yarn dev migrate down',
+          command: 'yarn start migrate down',
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -171,7 +177,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn dev migrate down --target ${target}`,
+            command: `yarn start migrate down --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS
@@ -192,7 +198,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn dev migrate up --target ${target}`,
+            command: `yarn start migrate up --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS
@@ -213,7 +219,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn dev migrate up --target ${target}`,
+            command: `yarn start migrate up --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS
@@ -233,7 +239,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn dev migrate up --target ${target}`,
+            command: `yarn start migrate up --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS

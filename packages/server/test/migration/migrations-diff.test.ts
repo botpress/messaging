@@ -1,8 +1,9 @@
 import { Migrations } from '../../src/migrations'
 
+import { destroyApp, setupApp } from '../utils'
 import { compareDatabases } from './utils/diff'
+import { handleShutDownSignal } from './utils/error'
 import { decrement } from './utils/semver'
-import { startMessagingServer } from './utils/server'
 
 const TIMEOUT = 30000
 
@@ -22,16 +23,26 @@ describe('Migrations diff tests', () => {
     const afterMigrationDatabase = sanitize(`after_mig_${migrationName}`)
     const beforeMigrationDatabase = sanitize(`before_mig_${migrationName}`)
 
+    let envCopy: NodeJS.ProcessEnv
+
+    beforeEach(() => {
+      envCopy = { ...process.env }
+    })
+
+    afterEach(async () => {
+      await destroyApp()
+
+      process.env = envCopy
+    })
+
     test(
       'Should run each migrations up to the migration we are testing',
       async () => {
-        await startMessagingServer(
-          {
-            command: `yarn dev migrate up --target ${previousVersion}`,
-            launchTimeout: TIMEOUT
-          },
-          beforeMigrationDatabase
-        )
+        process.env.MIGRATE_CMD = 'up'
+        process.env.TESTMIG_DB_VERSION = '0.0.0'
+        process.env.MIGRATE_TARGET = previousVersion
+
+        await handleShutDownSignal(() => setupApp({ prefix: beforeMigrationDatabase, seed: false }))
       },
       TIMEOUT
     )
@@ -39,13 +50,10 @@ describe('Migrations diff tests', () => {
     test(
       'Should run the migration without error',
       async () => {
-        await startMessagingServer(
-          {
-            command: `yarn dev migrate up --target ${migrationVersion}`,
-            launchTimeout: TIMEOUT
-          },
-          afterMigrationDatabase
-        )
+        process.env.MIGRATE_CMD = 'up'
+        process.env.MIGRATE_TARGET = migrationVersion
+
+        await handleShutDownSignal(() => setupApp({ prefix: afterMigrationDatabase, seed: false }))
       },
       TIMEOUT
     )
@@ -53,13 +61,10 @@ describe('Migrations diff tests', () => {
     test(
       'Should be able to revert the migration',
       async () => {
-        await startMessagingServer(
-          {
-            command: `yarn dev migrate down --target ${previousVersion}`,
-            launchTimeout: TIMEOUT
-          },
-          afterMigrationDatabase
-        )
+        process.env.MIGRATE_CMD = 'down'
+        process.env.MIGRATE_TARGET = previousVersion
+
+        await handleShutDownSignal(() => setupApp({ prefix: afterMigrationDatabase, seed: false }))
       },
       TIMEOUT
     )
