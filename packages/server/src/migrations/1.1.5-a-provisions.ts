@@ -1,4 +1,4 @@
-import { getTableId, Migration } from '@botpress/messaging-engine'
+import { Migration } from '@botpress/messaging-engine'
 
 export class ProvisionsMigration extends Migration {
   meta = {
@@ -12,11 +12,11 @@ export class ProvisionsMigration extends Migration {
   }
 
   async applied() {
-    return this.trx.schema.hasTable(getTableId('msg_provisions'))
+    return this.trx.schema.hasTable('msg_provisions')
   }
 
   async up() {
-    await this.trx.schema.createTable(getTableId('msg_provisions'), (table) => {
+    await this.trx.schema.createTable('msg_provisions', (table) => {
       table.uuid('clientId').unique()
       table.uuid('providerId').unique()
       table.primary(['clientId', 'providerId'])
@@ -24,6 +24,6 @@ export class ProvisionsMigration extends Migration {
   }
 
   async down() {
-    await this.trx.schema.dropTable(getTableId('msg_provisions'))
+    await this.trx.schema.dropTable('msg_provisions')
   }
 }

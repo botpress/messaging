@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class HealthTable extends Table {
@@ -8,7 +8,7 @@ export class HealthTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('conduitId').references('id').inTable(getTableId('msg_conduits')).notNullable().onDelete('cascade')
+    table.uuid('conduitId').references('id').inTable('msg_conduits').notNullable().onDelete('cascade')
     table.timestamp('time').notNullable()
     table.string('type').notNullable()
     table.jsonb('data').nullable()

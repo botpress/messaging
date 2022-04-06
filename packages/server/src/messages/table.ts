@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class MessageTable extends Table {
@@ -8,13 +8,8 @@ export class MessageTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table
-      .uuid('conversationId')
-      .references('id')
-      .inTable(getTableId('msg_conversations'))
-      .notNullable()
-      .onDelete('cascade')
-    table.uuid('authorId').references('id').inTable(getTableId('msg_users')).nullable()
+    table.uuid('conversationId').references('id').inTable('msg_conversations').notNullable().onDelete('cascade')
+    table.uuid('authorId').references('id').inTable('msg_users').nullable()
     table.timestamp('sentOn').notNullable()
     table.jsonb('payload').notNullable()
     table.index(['conversationId', 'sentOn'])

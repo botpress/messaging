@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class WebhookTable extends Table {
@@ -8,7 +8,7 @@ export class WebhookTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('clientId').references('id').inTable(getTableId('msg_clients')).notNullable()
+    table.uuid('clientId').references('id').inTable('msg_clients').notNullable()
     table.string('url').notNullable()
     table.string('token').notNullable()
   }

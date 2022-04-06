@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class ConduitTable extends Table {
@@ -8,8 +8,8 @@ export class ConduitTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('providerId').references('id').inTable(getTableId('msg_providers')).notNullable()
-    table.uuid('channelId').references('id').inTable(getTableId('msg_channels')).notNullable()
+    table.uuid('providerId').references('id').inTable('msg_providers').notNullable()
+    table.uuid('channelId').references('id').inTable('msg_channels').notNullable()
     table.text('config').notNullable()
     table.unique(['providerId', 'channelId'])
     table.index(['channelId'])
