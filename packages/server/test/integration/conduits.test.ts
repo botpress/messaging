@@ -111,7 +111,7 @@ describe('Conduits', () => {
       state.provider.id,
       app.channels.getByNameAndVersion('twilio', '1.0.0').meta.id,
       {
-        accountSID: randStr(),
+        accountSID: `AC${randStr()}`,
         authToken: randStr()
       }
     )

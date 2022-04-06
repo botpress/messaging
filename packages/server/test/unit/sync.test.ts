@@ -35,7 +35,7 @@ const channels = {
   },
   twilio: {
     version: '1.0.0',
-    accountSID: 'accountSID',
+    accountSID: 'ACaccountSID',
     authToken: 'authToken'
   },
   vonage: {
