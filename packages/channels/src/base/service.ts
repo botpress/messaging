@@ -39,19 +39,20 @@ export abstract class ChannelService<
   async setup() {}
 
   async start(scope: string, config: TConfig) {
-    const state = await this.create(scope, config)
-
-    if (this.manager) {
-      this.manager.set(scope, state)
-    } else {
-      this.states[scope] = state
-    }
-
+    await this.addState(scope, config)
     await this.emit('start', { scope })
   }
 
-  async test(scope: string) {
-    await this.emit('test', { scope })
+  async test(scope: string, config: TConfig) {
+    try {
+      await this.addState(scope, config)
+      await this.emit('test', { scope })
+      return true
+    } catch (e) {
+      throw e
+    } finally {
+      await this.clearState(scope)
+    }
   }
 
   async initialize(scope: string) {
@@ -90,13 +91,7 @@ export abstract class ChannelService<
 
   async stop(scope: string) {
     await this.emit('stop', { scope })
-    await this.destroy(scope, this.get(scope))
-
-    if (this.manager) {
-      this.manager.del(scope)
-    } else {
-      delete this.states[scope]
-    }
+    await this.clearState(scope)
   }
 
   async destroy(scope: string, state: TState): Promise<void> {}
@@ -132,6 +127,26 @@ export abstract class ChannelService<
       }
 
       return undefined
+    }
+  }
+
+  protected async addState(scope: string, config: TConfig) {
+    const state = await this.create(scope, config)
+
+    if (this.manager) {
+      this.manager.set(scope, state)
+    } else {
+      this.states[scope] = state
+    }
+  }
+
+  protected async clearState(scope: string) {
+    await this.destroy(scope, this.get(scope))
+
+    if (this.manager) {
+      this.manager.del(scope)
+    } else {
+      delete this.states[scope]
     }
   }
 
