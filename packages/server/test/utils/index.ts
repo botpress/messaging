@@ -51,6 +51,10 @@ export const destroyApp = async () => {
 }
 
 export const createDatabaseIfNotExists = async (url: string, name: string) => {
+  if (!name.trim()) {
+    return
+  }
+
   const conn = knex({
     client: 'postgres',
     connection: url,
