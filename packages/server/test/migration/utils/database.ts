@@ -1,11 +1,36 @@
+import fs from 'fs'
 import knex, { Knex } from 'knex'
 import schemaInspector from 'knex-schema-inspector'
 import { SchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspector'
 import { Table } from 'knex-schema-inspector/dist/types/table'
 import path from 'path'
 
+const sqlitePath = (suffix: string) => path.join(__dirname, './../../../../../test/.test-data', `${suffix}.sqlite`)
+
+export const copyDatabase = async (from: string, to: string) => {
+  const url = process.env.DATABASE_URL || sqlitePath(from)
+
+  if (url.startsWith('postgres')) {
+    const conn = knex({
+      client: 'postgres',
+      connection: url,
+      useNullAsDefault: true
+    })
+
+    await conn.raw(`CREATE DATABASE ${to} WITH TEMPLATE ${from};`)
+    return conn.destroy()
+  } else {
+    const source = sqlitePath(from)
+    const destination = sqlitePath(to)
+
+    return new Promise((resolve, reject) =>
+      fs.copyFile(source, destination, (err) => (err ? reject(err) : resolve(undefined)))
+    )
+  }
+}
+
 export const setupConnection = (suffix: string) => {
-  const url = process.env.DATABASE_URL || path.join(__dirname, './../../../../../test/.test-data', `${suffix}.sqlite`)
+  const url = process.env.DATABASE_URL || sqlitePath(suffix)
   let isLite = false
   let conn: Knex
 
