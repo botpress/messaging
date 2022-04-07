@@ -11,7 +11,6 @@ const setup = async () => {
   process.env.DATABASE_URL = process.env.DATABASE_URL || path.join(__dirname, '.test-data', `${uuidv4()}.sqlite`)
 
   if (process.env.DATABASE_URL.startsWith('postgres')) {
-    process.env.DATABASE_SUFFIX = `__${randomLetters(8)}`
     process.env.DATABASE_TRANSIENT = 'true'
   }
 

@@ -1,4 +1,4 @@
-import { getTableId, Migration } from '@botpress/messaging-engine'
+import { Migration } from '@botpress/messaging-engine'
 
 export class UserTokensMigration extends Migration {
   meta = {
@@ -12,22 +12,22 @@ export class UserTokensMigration extends Migration {
   }
 
   async applied() {
-    return this.trx.schema.hasTable(getTableId('msg_user_tokens'))
+    return this.trx.schema.hasTable('msg_user_tokens')
   }
 
   async up() {
     // since it was possible to have this table created in the past with an experimental option, we delete it here
-    await this.trx.schema.dropTableIfExists(getTableId('msg_user_tokens'))
+    await this.trx.schema.dropTableIfExists('msg_user_tokens')
 
-    await this.trx.schema.createTable(getTableId('msg_user_tokens'), (table) => {
+    await this.trx.schema.createTable('msg_user_tokens', (table) => {
       table.uuid('id').primary()
-      table.uuid('userId').references('id').inTable(getTableId('msg_users'))
+      table.uuid('userId').references('id').inTable('msg_users')
       table.string('token').notNullable()
       table.timestamp('expiry').nullable()
     })
   }
 
   async down() {
-    await this.trx.schema.dropTable(getTableId('msg_user_tokens'))
+    await this.trx.schema.dropTable('msg_user_tokens')
   }
 }

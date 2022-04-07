@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class SandboxmapTable extends Table {
@@ -7,11 +7,11 @@ export class SandboxmapTable extends Table {
   }
 
   create(table: Knex.CreateTableBuilder) {
-    table.uuid('conduitId').references('id').inTable(getTableId('msg_conduits')).notNullable()
+    table.uuid('conduitId').references('id').inTable('msg_conduits').notNullable()
     table.string('identity').notNullable()
     table.string('sender').notNullable()
     table.string('thread').notNullable()
-    table.uuid('clientId').references('id').inTable(getTableId('msg_clients')).notNullable()
+    table.uuid('clientId').references('id').inTable('msg_clients').notNullable()
     table.primary(['conduitId', 'identity', 'sender', 'thread'])
   }
 }

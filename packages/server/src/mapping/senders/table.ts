@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class SenderTable extends Table {
@@ -8,7 +8,7 @@ export class SenderTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('identityId').references('id').inTable(getTableId('msg_identities')).notNullable()
+    table.uuid('identityId').references('id').inTable('msg_identities').notNullable()
     table.string('name').notNullable()
     table.unique(['identityId', 'name'])
   }

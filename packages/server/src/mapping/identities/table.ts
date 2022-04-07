@@ -1,4 +1,4 @@
-import { getTableId, Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 
 export class IdentityTable extends Table {
@@ -8,7 +8,7 @@ export class IdentityTable extends Table {
 
   create(table: Knex.CreateTableBuilder) {
     table.uuid('id').primary()
-    table.uuid('tunnelId').references('id').inTable(getTableId('msg_tunnels')).notNullable()
+    table.uuid('tunnelId').references('id').inTable('msg_tunnels').notNullable()
     table.string('name').notNullable()
     table.unique(['tunnelId', 'name'])
   }
