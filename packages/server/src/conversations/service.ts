@@ -129,16 +129,16 @@ export class ConversationService extends Service {
   private queryRecents(clientId: string, userId: string) {
     return this.query()
       .select(
-        `${'msg_conversations'}.id`,
-        `${'msg_conversations'}.userId`,
-        `${'msg_conversations'}.clientId`,
-        `${'msg_conversations'}.createdOn`,
-        `${'msg_messages'}.id as messageId`,
-        `${'msg_messages'}.authorId`,
-        `${'msg_messages'}.payload`,
-        `${'msg_messages'}.sentOn`
+        'msg_conversations.id',
+        'msg_conversations.userId',
+        'msg_conversations.clientId',
+        'msg_conversations.createdOn',
+        'msg_messages.id as messageId',
+        'msg_messages.authorId',
+        'msg_messages.payload',
+        'msg_messages.sentOn'
       )
-      .leftJoin(`${'msg_messages'}`, `${'msg_messages'}.conversationId`, `${'msg_conversations'}.id`)
+      .leftJoin('msg_messages', 'msg_messages.conversationId', 'msg_conversations.id')
       .where({
         clientId,
         userId
@@ -148,12 +148,12 @@ export class ConversationService extends Service {
           .where({
             sentOn: this.db.knex
               .max('sentOn')
-              .from(`${'msg_messages'}`)
-              .where(`${'msg_messages'}.conversationId`, this.db.knex.ref(`${'msg_conversations'}.id`))
+              .from('msg_messages')
+              .where('msg_messages.conversationId', this.db.knex.ref('msg_conversations.id'))
           })
           .orWhereNull('sentOn')
       })
-      .groupBy(`${'msg_conversations'}.id`, `${'msg_messages'}.id`)
+      .groupBy('msg_conversations.id', 'msg_messages.id')
       .orderBy('sentOn', 'desc', 'first')
       .orderBy('createdOn', 'desc')
   }
