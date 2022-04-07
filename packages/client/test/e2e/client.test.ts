@@ -19,7 +19,7 @@ describe('Http Client', () => {
     expect((client as any).channel.http.defaults.baseURL).toContain(url)
   })
 
-  const url = 'http://localhost:3100'
+  const url = `http://localhost:${process.env.PORT}`
   const adminClient = new MessagingChannel({ url, adminKey: process.env.ADMIN_KEY })
 
   describe('Clients', () => {
