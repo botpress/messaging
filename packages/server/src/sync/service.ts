@@ -103,7 +103,7 @@ export class SyncService extends Service {
     const channel = this.channels.getById(channelId)
     const provider = await this.providers.getById(providerId)
 
-    await channel.test(provider.name, config)
+    await channel.test(`test-${provider.name}`, config)
   }
 
   private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]): Promise<SyncWebhook[]> {
