@@ -1,4 +1,4 @@
-import { LoggerService } from '@botpress/messaging-engine'
+import { Logger, LoggerService } from '@botpress/messaging-engine'
 import { ChannelService } from '../../src/channels/service'
 import { SyncApi } from '../../src/sync/api'
 
@@ -53,6 +53,7 @@ describe('Sync', () => {
 
   beforeEach(() => {
     const loggers = new LoggerService()
+    loggers.root = new Logger('app')
     const channelService = new ChannelService(loggers, undefined as any, undefined as any)
     syncApi = new SyncApi(undefined as any, channelService)
   })
