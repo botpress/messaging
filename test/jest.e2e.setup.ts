@@ -3,6 +3,7 @@ require('ts-node/register')
 
 import { setup as setupDevServer } from 'jest-dev-server'
 import path from 'path'
+import portfinder from 'portfinder'
 import { v4 as uuidv4 } from 'uuid'
 
 const setup = async () => {
@@ -14,24 +15,18 @@ const setup = async () => {
     process.env.DATABASE_TRANSIENT = 'true'
   }
 
+  const port = await portfinder.getPortPromise()
+  process.env.PORT = port.toString()
+
   await setupDevServer({
     command: 'yarn dev',
     launchTimeout: 30000,
     protocol: 'http',
     host: '127.0.0.1',
-    port: 3100,
+    port,
     path: 'status',
     usedPortAction: 'error'
   })
-}
-
-const randomLetters = (length: number) => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz'
-  let str = ''
-  for (let i = 0; i < length; i++) {
-    str += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return str
 }
 
 export default setup
