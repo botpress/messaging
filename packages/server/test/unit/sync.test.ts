@@ -51,7 +51,7 @@ describe('Sync', () => {
   let syncApi: SyncApi
 
   beforeEach(() => {
-    const channelService = new ChannelService(undefined as any)
+    const channelService = new ChannelService(undefined as any, undefined as any, undefined as any)
     syncApi = new SyncApi(undefined as any, channelService)
   })
 
