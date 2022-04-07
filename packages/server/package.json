@@ -23,7 +23,7 @@
   "dependencies": {
     "@botpress/messaging-base": "1.2.0",
     "@botpress/messaging-channels": "1.2.0",
-    "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.5",
+    "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.6",
     "@botpress/messaging-engine": "1.2.0",
     "@botpress/messaging-framework": "1.2.0",
     "@sentry/node": "^6.17.3",

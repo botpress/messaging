@@ -49,16 +49,13 @@ export class ChannelService extends Service {
     if (yn(process.env.ENABLE_LEGACY_CHANNELS)) {
       this.channels = [
         ...this.channels,
-        // TODO fix typings here
-        ...([
-          new MessengerChannelLegacy(),
-          new SlackChannelLegacy(),
-          new TeamsChannelLegacy(),
-          new TelegramChannelLegacy(),
-          new TwilioChannelLegacy(),
-          new SmoochChannelLegacy(),
-          new VonageChannelLegacy()
-        ] as any[])
+        new MessengerChannelLegacy(),
+        new SlackChannelLegacy(),
+        new TeamsChannelLegacy(),
+        new TelegramChannelLegacy(),
+        new TwilioChannelLegacy(),
+        new SmoochChannelLegacy(),
+        new VonageChannelLegacy()
       ]
     }
 
