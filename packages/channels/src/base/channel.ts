@@ -18,6 +18,7 @@ export interface Channel {
   get kvs(): Kvs | undefined
   set kvs(kvs: Kvs | undefined)
   setup(router: Router, logger?: Logger): Promise<void>
+  test(scope: string, config: any): Promise<boolean>
   start(scope: string, config: any): Promise<void>
   initialize(scope: string): Promise<void>
   send(scope: string, endpoint: any, content: any): Promise<void>
@@ -77,6 +78,11 @@ export abstract class ChannelTemplate<
 
   async start(scope: string, config: TConfig) {
     return this.service.start(scope, config)
+  }
+
+  async test(scope: string, config: TConfig) {
+    // dummy function. this is a channel v1 feature
+    return true
   }
 
   async initialize(scope: string) {
