@@ -37,7 +37,7 @@ export const setupConnection = (suffix: string) => {
   if (url.startsWith('postgres')) {
     conn = knex({
       client: 'postgres',
-      connection: url,
+      connection: `${url}/${suffix}`,
       useNullAsDefault: true
     })
   } else {

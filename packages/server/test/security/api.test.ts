@@ -18,7 +18,7 @@ const FAKE_CLIENT_TOKEN = froth(TOKEN_LENGTH, TOKEN_LENGTH, {
 })
 
 const http = (clientId?: string, clientToken?: string) => {
-  const config: AxiosRequestConfig = { baseURL: 'http://localhost:3100' }
+  const config: AxiosRequestConfig = { baseURL: `http://localhost:${process.env.PORT}` }
 
   if (clientId && clientToken) {
     config.headers = {}

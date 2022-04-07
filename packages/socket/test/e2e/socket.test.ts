@@ -3,7 +3,7 @@ import _ from 'lodash'
 import { v4 as uuid } from 'uuid'
 import { Conversation, Message, MessagingSocket } from '../../src'
 
-const MESSAGING_SERVER_URL = 'http://localhost:3100'
+const MESSAGING_SERVER_URL = `http://localhost:${process.env.PORT}`
 
 const createClient = async () => {
   const url = new URL(MESSAGING_SERVER_URL)
