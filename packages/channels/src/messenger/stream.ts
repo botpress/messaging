@@ -6,6 +6,7 @@ import { DropdownToChoicesRenderer } from '../base/renderers/dropdown'
 import { ChannelReceiveEvent, ChannelTestEvent } from '../base/service'
 import { ChannelStream } from '../base/stream'
 import { MessengerContext } from './context'
+import { MessengerPageInfo } from './messenger'
 import { MessengerRenderers } from './renderers'
 import { MessengerSenders } from './senders'
 import { MessengerService } from './service'
@@ -31,7 +32,7 @@ export class MessengerStream extends ChannelStream<MessengerService, MessengerCo
   private async handleTest({ scope }: ChannelTestEvent) {
     const { config } = this.service.get(scope)
 
-    let info
+    let info: MessengerPageInfo
     try {
       info = await this.fetchPageInfo(scope)
     } catch {
