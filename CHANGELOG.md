@@ -1,3 +1,12 @@
+## [1.2.1](https://github.com/botpress/messaging/compare/v1.2.0...v1.2.1) (2022-04-12)
+
+
+### Features
+
+* **channels:** channel validation ([#437](https://github.com/botpress/messaging/issues/437)) ([23a6990](https://github.com/botpress/messaging/commit/23a69901f1ad7e1f128bc97cb4466d1c0a4993c4))
+
+
+
 # [1.2.0](https://github.com/botpress/messaging/compare/v1.1.8...v1.2.0) (2022-04-01)
 
 

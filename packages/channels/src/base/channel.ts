@@ -18,6 +18,7 @@ export interface Channel {
   get kvs(): Kvs | undefined
   set kvs(kvs: Kvs | undefined)
   setup(router: Router, logger?: Logger): Promise<void>
+  test(scope: string, config: any): Promise<boolean>
   start(scope: string, config: any): Promise<void>
   initialize(scope: string): Promise<void>
   send(scope: string, endpoint: any, content: any): Promise<void>
@@ -80,6 +81,10 @@ export abstract class ChannelTemplate<
     return this.service.start(scope, config)
   }
 
+  async test(scope: string, config: TConfig) {
+    return this.service.test(scope, config)
+  }
+
   async initialize(scope: string) {
     return this.service.initialize(scope)
   }
@@ -117,6 +122,12 @@ export abstract class ChannelTemplate<
 
   makeUrl(callback: (scope: string) => Promise<string>): void {
     return this.api.makeUrl(callback)
+  }
+}
+
+export class ChannelTestError extends Error {
+  constructor(message: string, public readonly channel: string, public readonly field: string) {
+    super(message)
   }
 }
 

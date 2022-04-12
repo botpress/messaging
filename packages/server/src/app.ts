@@ -38,7 +38,7 @@ export class App extends Framework {
 
   constructor() {
     super()
-    this.channels = new ChannelService(this.database)
+    this.channels = new ChannelService(this.logger, this.database, this.kvs)
     this.providers = new ProviderService(this.database, this.caching)
     this.provisions = new ProvisionService(this.database, this.caching, this.providers)
     this.webhooks = new WebhookService(this.database, this.caching, this.crypto)

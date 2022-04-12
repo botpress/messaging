@@ -2164,9 +2164,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-channels-legacy@npm:@botpress/messaging-channels@0.1.5":
-  version: 0.1.5
-  resolution: "@botpress/messaging-channels@npm:0.1.5"
+"@botpress/messaging-channels-legacy@npm:@botpress/messaging-channels@0.1.6":
+  version: 0.1.6
+  resolution: "@botpress/messaging-channels@npm:0.1.6"
   dependencies:
     "@slack/events-api": ^2.3.2
     "@slack/interactive-messages": ^1.5.0
@@ -2187,7 +2187,7 @@ __metadata:
     twilio: ^3.67.0
     uuid: ^8.3.2
     yn: ^4.0.0
-  checksum: 3a10a214d760520a71c082fb5ea4ea5938b3d5f63e44bfc0aa77df878306722848ac6ca746d70c1f25b66caf21dee0874695f6485e936ae36e5446c7cd18c6ef
+  checksum: fc6a4752a6f24fb09891d6a9881e9f36316d4a34f172bcf6dab49b67744864eb3739fdd6bfc6c9971d33f4b067cffe448b5eb4ca01c81536a96eceda0b49cbca
   languageName: node
   linkType: hard
 
@@ -2375,7 +2375,7 @@ __metadata:
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-channels": 1.2.0
-    "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.5"
+    "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.6"
     "@botpress/messaging-engine": 1.2.0
     "@botpress/messaging-framework": 1.2.0
     "@sentry/node": ^6.17.3

@@ -6,6 +6,7 @@ export interface SmoochState extends ChannelState<SmoochConfig> {
   smooch: {
     messages: any
     activity: any
+    apps: any
   }
 }
 
@@ -20,7 +21,8 @@ export class SmoochService extends ChannelService<SmoochConfig, SmoochState> {
       config,
       smooch: {
         messages: new SunshineConversationsClient.MessagesApi(client),
-        activity: new SunshineConversationsClient.ActivitiesApi(client)
+        activity: new SunshineConversationsClient.ActivitiesApi(client),
+        apps: new SunshineConversationsClient.AppsApi(client)
       }
     }
   }
