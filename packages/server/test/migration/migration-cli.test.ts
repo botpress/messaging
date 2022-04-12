@@ -1,4 +1,3 @@
-import { getTableId } from '@botpress/messaging-engine'
 import { Knex } from 'knex'
 import portfinder from 'portfinder'
 
@@ -34,7 +33,7 @@ describe('Migration CLI', () => {
 
   const getLatestMetaVersion = async (): Promise<string | undefined> => {
     try {
-      const meta = await conn(getTableId('msg_meta')).orderBy('time', 'desc').first()
+      const meta = await conn('msg_meta').orderBy('time', 'desc').first()
 
       if (meta) {
         let data = meta.data

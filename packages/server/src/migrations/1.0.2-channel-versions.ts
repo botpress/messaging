@@ -1,4 +1,4 @@
-import { getTableId, Migration } from '@botpress/messaging-engine'
+import { Migration } from '@botpress/messaging-engine'
 
 export class ChannelVersionsMigration extends Migration {
   meta = {
@@ -8,50 +8,48 @@ export class ChannelVersionsMigration extends Migration {
   }
 
   async valid() {
-    return this.trx.schema.hasTable(getTableId('msg_channels'))
+    return this.trx.schema.hasTable('msg_channels')
   }
 
   async applied() {
-    return this.trx.schema.hasColumn(getTableId('msg_channels'), 'version')
+    return this.trx.schema.hasColumn('msg_channels', 'version')
   }
 
   async up() {
-    await this.trx.schema.alterTable(getTableId('msg_channels'), (table) => {
+    await this.trx.schema.alterTable('msg_channels', (table) => {
       table.dropUnique(['name'])
       table.string('version').nullable()
       table.unique(['name', 'version'])
     })
 
-    const channels: { id: string; name: string }[] = await this.trx(getTableId('msg_channels'))
+    const channels: { id: string; name: string }[] = await this.trx('msg_channels')
 
     for (const channel of channels) {
       if (channel.name.includes('@')) {
         const [name, version] = channel.name.split('@')
-        await this.trx(getTableId('msg_channels')).update({ name, version }).where({ id: channel.id })
+        await this.trx('msg_channels').update({ name, version }).where({ id: channel.id })
       } else {
-        await this.trx(getTableId('msg_channels')).update({ version: '0.1.0' }).where({ id: channel.id })
+        await this.trx('msg_channels').update({ version: '0.1.0' }).where({ id: channel.id })
       }
     }
 
-    await this.trx.schema.alterTable(getTableId('msg_channels'), (table) => {
+    await this.trx.schema.alterTable('msg_channels', (table) => {
       table.string('version').notNullable().alter()
     })
   }
 
   async down() {
-    const newChannels: { id: string; name: string; version: string }[] = await this.trx(
-      getTableId('msg_channels')
-    ).whereNot({
+    const newChannels: { id: string; name: string; version: string }[] = await this.trx('msg_channels').whereNot({
       version: '0.1.0'
     })
 
     for (const newChannel of newChannels) {
-      await this.trx(getTableId('msg_channels'))
+      await this.trx('msg_channels')
         .update({ name: `${newChannel.name}@${newChannel.version}` })
         .where({ id: newChannel.id })
     }
 
-    await this.trx.schema.alterTable(getTableId('msg_channels'), (table) => {
+    await this.trx.schema.alterTable('msg_channels', (table) => {
       table.dropUnique(['name', 'version'])
       table.dropColumn('version')
       table.unique(['name'])
