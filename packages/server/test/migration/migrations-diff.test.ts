@@ -11,7 +11,7 @@ const TIMEOUT = 30000
 const FIRST_VERSION = '0.0.0'
 
 const sanitize = (str: string) => {
-  // Removes invalid characters for PostgreSQL table name
+  // Removes invalid characters for PostgreSQL database name
   // (see: https://www.postgresql.org/docs/7/syntax525.htm)
   return str.replace(/\./g, '_').replace(/\-/g, '_').slice(0, 32).toLowerCase()
 }
