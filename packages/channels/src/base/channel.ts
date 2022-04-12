@@ -34,6 +34,7 @@ export interface Channel {
 }
 
 export interface ChannelStateManager {
+  scopes(): string[]
   set(scope: string, val: any): boolean
   get(scope: string): any
   del(scope: string): void

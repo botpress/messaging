@@ -34,6 +34,11 @@ export class InstanceClearingService extends Service {
 
     for (const channel of this.channels.list()) {
       channel.stateManager({
+        scopes: () =>
+          this.statesCache
+            .keys()
+            .filter((x) => x.startsWith(channel.meta.id))
+            .map((x) => this.statesCache.getValues(x)[1]),
         set: (providerName, val) => this.statesCache.set(channel.meta.id, providerName, val),
         get: (providerName) => {
           return (

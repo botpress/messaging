@@ -33,7 +33,11 @@ export abstract class ChannelService<
   protected manager?: ChannelStateManager
 
   get scopes() {
-    return Object.keys(this.states)
+    if (this.manager) {
+      return this.manager.scopes()
+    } else {
+      return Object.keys(this.states)
+    }
   }
 
   async setup() {}
