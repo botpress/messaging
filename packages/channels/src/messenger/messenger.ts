@@ -38,3 +38,7 @@ export interface MessengerButton {
   payload?: string
   url?: string
 }
+
+export interface MessengerPageInfo {
+  id: string
+}

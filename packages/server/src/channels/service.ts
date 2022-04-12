@@ -18,7 +18,7 @@ import {
   TwilioChannel as TwilioChannelLegacy,
   VonageChannel as VonageChannelLegacy
 } from '@botpress/messaging-channels-legacy'
-import { Service, DatabaseService } from '@botpress/messaging-engine'
+import { Service, DatabaseService, LoggerService, KvsService } from '@botpress/messaging-engine'
 import semver from 'semver'
 import yn from 'yn'
 import { ChannelTable } from './table'
@@ -31,7 +31,7 @@ export class ChannelService extends Service {
   private channelsByName: { [name: string]: Channel[] }
   private channelsById: { [id: string]: Channel }
 
-  constructor(private db: DatabaseService) {
+  constructor(private loggers: LoggerService, private db: DatabaseService, private kvs: KvsService) {
     super()
 
     this.table = new ChannelTable()
@@ -71,6 +71,9 @@ export class ChannelService extends Service {
         this.channelsByName[channel.meta.name] = []
       }
       this.channelsByName[channel.meta.name].push(channel)
+
+      channel.logger = this.loggers.root.sub(channel.meta.name)
+      channel.kvs = this.kvs
     }
 
     for (const [name, channels] of Object.entries(this.channelsByName)) {

@@ -66,6 +66,8 @@ export class SyncService extends Service {
 
   private async syncConduits(providerId: uuid, conduits: SyncChannels) {
     const oldConduits = [...(await this.conduits.listByProvider(providerId))]
+    const newConduits: { channelId: uuid; config: any }[] = []
+    const updatedConduits: { conduitId: uuid; config?: any }[] = []
 
     for (const [channel, configWithVersion] of Object.entries(conduits)) {
       const channelId = this.channels.getByNameAndVersion(channel, configWithVersion.version).meta.id
@@ -73,28 +75,49 @@ export class SyncService extends Service {
       const oldConduitIndex = oldConduits.findIndex((x) => x.channelId === channelId)
 
       if (oldConduitIndex < 0) {
-        await this.conduits.create(providerId, channelId, config)
+        await this.testChannel(providerId, channelId, config)
+        newConduits.push({ channelId, config })
       } else {
         const oldConduit = await this.conduits.getByProviderAndChannel(providerId, channelId)
 
         if (!_.isEqual(config, oldConduit.config)) {
-          await this.conduits.updateConfig(oldConduit.id, config)
+          await this.testChannel(providerId, channelId, config)
+          updatedConduits.push({ conduitId: oldConduit.id, config })
         } else {
-          // updating the config will clear the number of errors.
-          // But if the config is identical we still want to clear it
-          const status = await this.status.fetch(oldConduit.id)
-          if (status?.numberOfErrors) {
-            await this.status.clearErrors(oldConduit.id)
-          }
+          updatedConduits.push({ conduitId: oldConduit.id })
         }
 
         oldConduits.splice(oldConduitIndex, 1)
       }
     }
 
+    for (const newConduit of newConduits) {
+      await this.conduits.create(providerId, newConduit.channelId, newConduit.config)
+    }
+
+    for (const updatedConduit of updatedConduits) {
+      if (updatedConduit.config) {
+        await this.conduits.updateConfig(updatedConduit.conduitId, updatedConduit.config)
+      } else {
+        // updating the config will clear the number of errors.
+        // But if the config is identical we still want to clear it
+        const status = await this.status.fetch(updatedConduit.conduitId)
+        if (status?.numberOfErrors) {
+          await this.status.clearErrors(updatedConduit.conduitId)
+        }
+      }
+    }
+
     for (const unusedConduit of oldConduits) {
       await this.conduits.delete(unusedConduit.id)
     }
+  }
+
+  private async testChannel(providerId: uuid, channelId: uuid, config: any) {
+    const channel = this.channels.getById(channelId)
+    const provider = await this.providers.getById(providerId)
+
+    await channel.test(`test-${provider.name}`, config)
   }
 
   private async syncWebhooks(clientId: uuid, webhooks: SyncWebhook[]): Promise<SyncWebhook[]> {
