@@ -4,13 +4,12 @@ import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { App } from '../../src/app'
 import { Migrations } from '../../src/migrations'
-import { Seed } from './seed'
 
 export let app: App
 let env: NodeJS.ProcessEnv
 
 export const setupApp = async (
-  { seed, prefix, transient }: { seed: boolean; transient: boolean; prefix?: string } = { seed: false, transient: true }
+  { prefix, transient }: { transient: boolean; prefix?: string } = { transient: true }
 ) => {
   env = { ...process.env }
 
@@ -33,16 +32,14 @@ export const setupApp = async (
   await app.setup()
   await app.postSetup()
 
-  if (seed) {
-    const seed = new Seed(app.database)
-
-    await seed.run()
-  }
-
   return app
 }
 
 export const destroyApp = async () => {
+  if (!app) {
+    return
+  }
+
   await app.preDestroy()
   await app.destroy()
   await app.postDestroy()
