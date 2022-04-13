@@ -73,7 +73,6 @@ describe('Migrations diff tests', () => {
       'Should run the migration without error',
       async () => {
         process.env.MIGRATE_CMD = 'up'
-        process.env.TESTMIG_DB_VERSION = previousVersion
         process.env.MIGRATE_TARGET = migrationVersion
 
         // We use the same database since we want to be reusing the data it contains.
