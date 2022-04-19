@@ -121,7 +121,9 @@ export class SocketManager {
 
   private async handleSocketConnection(socket: Socket.Socket) {
     try {
-      this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
+      if (yn(process.env.LOGGING_ENABLED)) {
+        this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlue(clc.magentaBright('connection'))}`)
+      }
 
       const { creds } = socket.data
       delete socket.data.creds
@@ -146,7 +148,9 @@ export class SocketManager {
 
   private async handleSocketMessage(socket: Socket.Socket, message: SocketMessage) {
     try {
-      this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, message)
+      if (yn(process.env.LOGGING_ENABLED)) {
+        this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.magenta('message')}`, message)
+      }
 
       if (!this.handlers[message.type]) {
         return this.reply(socket, message, { error: true, message: `route ${message.type} does not exist` })
@@ -166,7 +170,10 @@ export class SocketManager {
 
   private async handleSocketDisconnect(socket: Socket.Socket) {
     try {
-      this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
+      if (yn(process.env.LOGGING_ENABLED)) {
+        this.logger.debug(`${clc.blackBright(`[${socket.id}]`)} ${clc.bgBlack(clc.magenta('disconnect'))}`)
+      }
+
       await this.sockets.delete(socket)
     } catch (e) {
       this.logger.error(e, 'An error occured during a socket disconnect')
