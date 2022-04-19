@@ -7,6 +7,7 @@ export type MessagingEnv = FrameworkEnv & {
   NO_LAZY_LOADING?: string
   TWILIO_TESTING?: string
   BILLING_ENDPOINT?: string
+  ENABLE_BILLING_STATS?: string
   DISABLE_SOCKETS?: string
   ENABLE_LEGACY_CHANNELS?: string
 }
