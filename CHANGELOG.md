@@ -1,3 +1,12 @@
+## [1.2.2](https://github.com/botpress/messaging/compare/v1.2.1...v1.2.2) (2022-04-19)
+
+
+### Bug Fixes
+
+* **shutdown:** fix channels not being cleared correctly ([#444](https://github.com/botpress/messaging/issues/444)) ([95fde0f](https://github.com/botpress/messaging/commit/95fde0ff690a0b47f1f0cde3721c1ff44da320f0))
+
+
+
 ## [1.2.1](https://github.com/botpress/messaging/compare/v1.2.0...v1.2.1) (2022-04-12)
 
 
