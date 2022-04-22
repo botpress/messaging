@@ -1,14 +1,10 @@
-import fs from 'fs'
 import { teardown as teardownDevServer } from 'jest-dev-server'
-import path from 'path'
+
+import { teardownDatabase } from './setup/database'
 
 const teardown = async () => {
-  const dir = path.join(__dirname, '.test-data')
-  if (fs.existsSync(dir)) {
-    fs.rmSync(dir, { recursive: true })
-  }
-
   await teardownDevServer()
+  await teardownDatabase()
 }
 
 export default teardown

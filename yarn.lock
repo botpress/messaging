@@ -2454,6 +2454,7 @@ __metadata:
     copyfiles: ^2.4.1
     cross-env: ^7.0.3
     cypress: ^9.5.2
+    docker-compose: ~0.23.17
     eslint: ^8.8.0
     eslint-config-prettier: ^8.3.0
     eslint-import-resolver-node: ^0.3.6
@@ -10829,6 +10830,15 @@ __metadata:
   dependencies:
     path-type: ^4.0.0
   checksum: fa05e18324510d7283f55862f3161c6759a3f2f8dbce491a2fc14c8324c498286c54282c1f0e933cb930da8419b30679389499b919122952a4f8592362ef4615
+  languageName: node
+  linkType: hard
+
+"docker-compose@npm:~0.23.17":
+  version: 0.23.17
+  resolution: "docker-compose@npm:0.23.17"
+  dependencies:
+    yaml: ^1.10.2
+  checksum: c308bf067cabe178d245b3e499119937b1d2a5effdc9fac6227e04be4308a0250ca7bb1471789b3d0492ea2ce83f74e40b7517a9a5cb540a21355a64e4ad5d3c
   languageName: node
   linkType: hard
 
