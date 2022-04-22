@@ -7,7 +7,7 @@ interface Client {
 }
 
 const DEFAULT_CONFIG: Config = {
-  messagingUrl: 'http://localhost:3100',
+  messagingUrl: Cypress.env('MESSAGING_ENDPOINT') || 'http://localhost:3100',
   clientId: ''
 }
 

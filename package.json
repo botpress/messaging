@@ -27,7 +27,7 @@
     "test:e2e:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.e2e.config.ts",
     "test:sec:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.security.config.ts",
     "test:mig:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.migration.config.ts",
-    "test:chat": "cross-env HEIGHT=1080 WIDTH=1920 cypress run",
+    "test:chat": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"esnext\",\"target\":\"es2017\",\"moduleResolution\":\"node\"}' node -r esm -r ts-node/register test/cypress/start.ts",
     "cypress:open": "cypress open"
   },
   "bin": "./packages/server/dist/index.js",
