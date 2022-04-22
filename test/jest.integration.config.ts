@@ -4,6 +4,7 @@ import ServerConfig from '../packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
+  globalSetup: './jest.integration.setup.ts',
   globalTeardown: './jest.integration.teardown.ts',
   projects: [
     {
