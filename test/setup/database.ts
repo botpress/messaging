@@ -4,7 +4,7 @@ import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
 export const setupDatabase = async ({ postgresOnly }: { postgresOnly: boolean } = { postgresOnly: false }) => {
-  if (Boolean(process.env.POSTGRESQL) === true) {
+  if (process.env.POSTGRESQL === 'true') {
     try {
       await compose.upAll({ cwd: path.join(__dirname), log: true })
       process.env.DATABASE_URL = 'postgres://postgres:postgres@localhost:2345'
@@ -17,7 +17,7 @@ export const setupDatabase = async ({ postgresOnly }: { postgresOnly: boolean } 
 }
 
 export const teardownDatabase = async () => {
-  if (process.env.DATABASE === 'postgresql') {
+  if (process.env.POSTGRESQL === 'true') {
     try {
       await compose.down({ cwd: path.join(__dirname), log: true })
     } catch (e) {
