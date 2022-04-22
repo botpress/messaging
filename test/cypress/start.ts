@@ -41,7 +41,7 @@ const setup = async () => {
     {
       debug,
       command: 'yarn workspace @botpress/webchat dev',
-      launchTimeout: 30000,
+      launchTimeout: 60000,
       protocol: 'http',
       host: '127.0.0.1',
       port: 1234, // We use the default port for the webchat
@@ -50,7 +50,7 @@ const setup = async () => {
     {
       debug,
       command: `PORT=${port} yarn dev`,
-      launchTimeout: 30000,
+      launchTimeout: 60000,
       protocol: 'http',
       host: '127.0.0.1',
       port,
