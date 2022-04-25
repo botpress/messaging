@@ -1,5 +1,4 @@
 dist/
-bin/
 *.log
 .parcel-cache
 parcel-bundle-reports
