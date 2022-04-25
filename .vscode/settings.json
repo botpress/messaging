@@ -12,7 +12,7 @@
     "**/.pnp.*": true,
     "**/.yarn": true
   },
-  "typescript.enablePromptUseWorkspaceTsdk": false,
+  "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "files.associations": {
     ".parcelrc": "json"
