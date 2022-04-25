@@ -2430,6 +2430,7 @@ __metadata:
     prettier: ^2.5.1
     pretty-format: ^28.0.0
     rimraf: ^3.0.2
+    source-map-support: ^0.5.21
     ts-jest: 27.1.2
     ts-node: ^10.4.0
     ts-node-dev: ^1.1.8
@@ -21557,7 +21558,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map-support@npm:^0.5.12, source-map-support@npm:^0.5.16, source-map-support@npm:^0.5.17, source-map-support@npm:^0.5.6, source-map-support@npm:~0.5.12, source-map-support@npm:~0.5.20":
+"source-map-support@npm:^0.5.12, source-map-support@npm:^0.5.16, source-map-support@npm:^0.5.17, source-map-support@npm:^0.5.21, source-map-support@npm:^0.5.6, source-map-support@npm:~0.5.12, source-map-support@npm:~0.5.20":
   version: 0.5.21
   resolution: "source-map-support@npm:0.5.21"
   dependencies:
