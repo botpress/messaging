@@ -9,7 +9,6 @@
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
     "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin test/.test-data",
     "reset": "yarn clean && mkdirp packages/base/node_modules && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
-    "package": "yarn clean && yarn build && ts-node -T misc/scripts/package",
     "build": "yarn workspace @botpress/messaging-server build",
     "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
@@ -27,21 +26,8 @@
     "test:e2e:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.e2e.config.ts",
     "test:sec:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.security.config.ts",
     "test:mig:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.migration.config.ts",
-    "test:chat": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"esnext\",\"target\":\"es2017\",\"moduleResolution\":\"node\"}' node -r esm -r ts-node/register test/cypress/start.ts",
+    "test:chat": "ts-node test/cypress/start.ts",
     "cypress:open": "cypress open"
-  },
-  "bin": "./packages/server/dist/index.js",
-  "pkg": {
-    "scripts": "./packages/server/dist/**/*.js",
-    "assets": [
-      "./node_modules/sqlite3/lib/binding/**/*",
-      "./node_modules/es-get-iterator/node.js"
-    ],
-    "targets": [
-      "node16-win32-x64",
-      "node16-linux-x64",
-      "node16-macos-x64"
-    ]
   },
   "devDependencies": {
     "@jest/types": "^27.4.2",
@@ -79,13 +65,18 @@
     "eslint-plugin-jsdoc": "37.7.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "esm": "^3.2.25",
     "jest": "^27.4.7",
     "jest-dev-server": "^6.0.3",
     "mkdirp": "^1.0.4",
     "parcel": "^2.2.1",
     "pkg": "5.2.0",
+    "portfinder": "^1.0.28",
+    "postcss": "^8.2.1",
     "prettier": "^2.5.1",
+    "pretty-format": "^28.0.0",
     "rimraf": "^3.0.2",
+    "source-map-support": "^0.5.21",
     "ts-jest": "27.1.2",
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",

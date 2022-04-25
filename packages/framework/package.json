@@ -17,11 +17,13 @@
     "@types/lodash": "^4.14.178",
     "@types/lru-cache": "^5.1.1",
     "@types/ms": "^0.7.31",
+    "@types/node": "^16.11.13",
     "@types/uuid": "^8.3.4",
     "@types/yargs": "^17.0.8",
     "knex-schema-inspector": "^1.7.3"
   },
   "dependencies": {
+    "@botpress/messaging-base": "1.2.0",
     "@botpress/messaging-engine": "1.2.0",
     "@sentry/node": "^6.17.3",
     "axios": "^0.25.0",

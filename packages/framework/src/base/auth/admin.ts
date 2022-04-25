@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { AuthHandler, Middleware } from './base'
 
 export class AdminAuthHandler extends AuthHandler {
-  public auth(fn: Middleware<Request>) {
+  public auth(fn: Middleware<Request>): (req: Request, res: Response) => void {
     return this.asyncMiddleware(async (req: Request, res: Response) => {
       const key = req.headers['x-bp-messaging-admin-key'] as string
 

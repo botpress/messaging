@@ -14,5 +14,5 @@
     // to avoid clashing with Jest types
     "types": ["cypress"]
   },
-  "include": ["../../../node_modules/cypress", "../test/**/*", "../src"]
+  "include": ["../test/**/*", "../src"]
 }

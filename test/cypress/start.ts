@@ -1,6 +1,6 @@
 import { spawn } from 'child_process'
-import { setup as setupDevServer, teardown as teardownDevServer } from 'jest-dev-server'
 import path from 'path'
+import { setup as setupDevServer, teardown as teardownDevServer } from 'jest-dev-server'
 import portfinder from 'portfinder'
 
 // TODO: Extract this in a util as it is mostly copied from the migration test utils

@@ -17,6 +17,8 @@
     "assets"
   ],
   "devDependencies": {
+    "@parcel/config-default": "^2.2.1",
+    "@parcel/transformer-typescript-tsc": "^2.2.1",
     "@types/crypto-js": "^4.1.1",
     "@types/js-cookie": "^3.0.1",
     "@types/lodash": "^4.14.178",
@@ -25,6 +27,8 @@
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/uuid": "^8.3.4",
+    "cypress": "^9.5.2",
+    "postcss": "^8.2.1",
     "prop-types": "^15.8.1"
   },
   "dependencies": {

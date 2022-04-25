@@ -22,6 +22,7 @@
     "knex-schema-inspector": "^1.7.3"
   },
   "dependencies": {
+    "@botpress/messaging-base": "1.2.0",
     "@botpress/messaging-engine": "1.2.0",
     "@botpress/messaging-framework": "1.2.0",
     "@sentry/node": "^6.17.3",
