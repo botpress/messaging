@@ -17,7 +17,7 @@ export const startMessagingServer = async (options: JestDevServerOptions, prefix
 
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.DATABASE_URL =
-    process.env.DATABASE_URL || path.join(__dirname, './../../../../../test/.test-data', `${prefix}.sqlite`)
+    process.env.DATABASE_URL || path.join(__dirname, './../../../../../../test/.test-data', `${prefix}.sqlite`)
 
   if (process.env.DATABASE_URL!.startsWith('postgres') && prefix.length) {
     await createDatabaseIfNotExists(process.env.DATABASE_URL, prefix)

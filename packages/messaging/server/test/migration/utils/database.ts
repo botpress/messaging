@@ -5,7 +5,7 @@ import { SchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspect
 import { Table } from 'knex-schema-inspector/dist/types/table'
 import path from 'path'
 
-const sqlitePath = (suffix: string) => path.join(__dirname, './../../../../../test/.test-data', `${suffix}.sqlite`)
+const sqlitePath = (suffix: string) => path.join(__dirname, './../../../../../../test/.test-data', `${suffix}.sqlite`)
 
 export const copyDatabase = async (from: string, to: string) => {
   const url = process.env.DATABASE_URL || sqlitePath(from)
