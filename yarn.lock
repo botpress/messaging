@@ -2361,6 +2361,7 @@ __metadata:
     portfinder: ^1.0.28
     semver: ^7.3.5
     socket.io: ^4.4.1
+    socket.io-client: ^4.4.1
     sqlite3: ^5.0.2
     uuid: ^8.3.2
     yargs: ^17.3.1
