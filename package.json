@@ -9,7 +9,6 @@
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
     "clean": "mkdirp packages/base/dist && rimraf packages/*/dist bin test/.test-data",
     "reset": "yarn clean && mkdirp packages/base/node_modules && rimraf .parcel-cache packages/*/node_modules node_modules .yarn/cache .yarn/install-state.gz .yarn/unplugged .pnp.cjs .pnp.loader.mjs",
-    "package": "yarn clean && yarn build && ts-node -T misc/scripts/package",
     "build": "yarn workspace @botpress/messaging-server build",
     "watch": "yarn workspace @botpress/messaging-server watch",
     "start": "yarn workspace @botpress/messaging-server start",
@@ -29,19 +28,6 @@
     "test:mig:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.migration.config.ts",
     "test:chat": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"esnext\",\"target\":\"es2017\",\"moduleResolution\":\"node\"}' node -r esm -r ts-node/register test/cypress/start.ts",
     "cypress:open": "cypress open"
-  },
-  "bin": "./packages/server/dist/index.js",
-  "pkg": {
-    "scripts": "./packages/server/dist/**/*.js",
-    "assets": [
-      "./node_modules/sqlite3/lib/binding/**/*",
-      "./node_modules/es-get-iterator/node.js"
-    ],
-    "targets": [
-      "node16-win32-x64",
-      "node16-linux-x64",
-      "node16-macos-x64"
-    ]
   },
   "devDependencies": {
     "@jest/types": "^27.4.2",
