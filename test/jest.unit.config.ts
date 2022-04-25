@@ -1,6 +1,6 @@
+import ServerConfig from '../packages/messaging/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import ServerConfig from '../packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -15,7 +15,7 @@ const config: Config.InitialOptions = {
   }*/
   projects: [
     {
-      rootDir: 'packages/engine',
+      rootDir: 'packages/base/engine',
       testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
       displayName: { name: 'Engine', color: 'green' },
       testEnvironment: 'node',
@@ -25,7 +25,7 @@ const config: Config.InitialOptions = {
       clearMocks: true
     },
     {
-      rootDir: 'packages/server',
+      rootDir: 'packages/messaging/server',
       testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
       displayName: { name: 'Server', color: 'blue' },
       testEnvironment: 'node',
@@ -41,7 +41,7 @@ const config: Config.InitialOptions = {
       moduleNameMapper: pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     },
     {
-      rootDir: 'packages/components',
+      rootDir: 'packages/messaging/components',
       testMatch: ['<rootDir>/test/unit/**/*.test.tsx'],
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],

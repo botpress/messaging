@@ -1,7 +1,7 @@
 {
   "references": [
     {
-      "path": "./packages/server"
+      "path": "./packages/messaging/server"
     }
   ],
   "files": [],

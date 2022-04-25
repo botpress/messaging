@@ -1,7 +1,7 @@
+import ClientConfig from '../packages/messaging/client/test/tsconfig.json'
+import SocketConfig from '../packages/messaging/socket/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import ClientConfig from '../packages/client/test/tsconfig.json'
-import SocketConfig from '../packages/socket/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -9,7 +9,7 @@ const config: Config.InitialOptions = {
   globalTeardown: './jest.e2e.teardown.ts',
   projects: [
     {
-      rootDir: 'packages/client',
+      rootDir: 'packages/messaging/client',
       testMatch: ['<rootDir>/test/e2e/**/*.test.ts'],
       displayName: { name: 'Client', color: 'blue' },
       testEnvironment: 'node',
@@ -25,7 +25,7 @@ const config: Config.InitialOptions = {
       moduleNameMapper: pathsToModuleNameMapper(ClientConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     },
     {
-      rootDir: 'packages/socket',
+      rootDir: 'packages/messaging/socket',
       testMatch: ['<rootDir>/test/e2e/**/*.test.ts'],
       displayName: { name: 'Socket', color: 'red' },
       testEnvironment: 'node',

@@ -2077,9 +2077,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@botpress/extensions-example@workspace:packages/example":
+"@botpress/extensions-example@workspace:packages/base/example":
   version: 0.0.0-use.local
-  resolution: "@botpress/extensions-example@workspace:packages/example"
+  resolution: "@botpress/extensions-example@workspace:packages/base/example"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-engine": 1.2.0
@@ -2115,15 +2115,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-base@1.2.0, @botpress/messaging-base@workspace:packages/base":
+"@botpress/messaging-base@1.2.0, @botpress/messaging-base@workspace:packages/messaging/base":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-base@workspace:packages/base"
+  resolution: "@botpress/messaging-base@workspace:packages/messaging/base"
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-board@workspace:packages/board":
+"@botpress/messaging-board@workspace:packages/messaging/board":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-board@workspace:packages/board"
+  resolution: "@botpress/messaging-board@workspace:packages/messaging/board"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-client": 1.2.0
@@ -2139,9 +2139,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-channels@1.2.0, @botpress/messaging-channels@workspace:packages/channels":
+"@botpress/messaging-channels@1.2.0, @botpress/messaging-channels@workspace:packages/messaging/channels":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-channels@workspace:packages/channels"
+  resolution: "@botpress/messaging-channels@workspace:packages/messaging/channels"
   dependencies:
     "@slack/bolt": ^3.9.0
     "@slack/web-api": ^6.6.0
@@ -2173,9 +2173,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-client@1.2.0, @botpress/messaging-client@workspace:packages/client":
+"@botpress/messaging-client@1.2.0, @botpress/messaging-client@workspace:packages/messaging/client":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-client@workspace:packages/client"
+  resolution: "@botpress/messaging-client@workspace:packages/messaging/client"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@types/cookie": ^0.4.1
@@ -2190,9 +2190,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-components@0.4.0, @botpress/messaging-components@workspace:packages/components":
+"@botpress/messaging-components@0.4.0, @botpress/messaging-components@workspace:packages/messaging/components":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-components@workspace:packages/components"
+  resolution: "@botpress/messaging-components@workspace:packages/messaging/components"
   dependencies:
     "@babel/core": ^7.16.12
     "@googlemaps/react-wrapper": ^1.1.26
@@ -2247,9 +2247,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-engine@1.2.0, @botpress/messaging-engine@workspace:packages/engine":
+"@botpress/messaging-engine@1.2.0, @botpress/messaging-engine@workspace:packages/base/engine":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-engine@workspace:packages/engine"
+  resolution: "@botpress/messaging-engine@workspace:packages/base/engine"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@types/bcryptjs": ^2.4.2
@@ -2284,9 +2284,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-framework@1.2.0, @botpress/messaging-framework@workspace:packages/framework":
+"@botpress/messaging-framework@1.2.0, @botpress/messaging-framework@workspace:packages/base/framework":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-framework@workspace:packages/framework"
+  resolution: "@botpress/messaging-framework@workspace:packages/base/framework"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-engine": 1.2.0
@@ -2322,9 +2322,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-server@workspace:packages/server":
+"@botpress/messaging-server@workspace:packages/messaging/server":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-server@workspace:packages/server"
+  resolution: "@botpress/messaging-server@workspace:packages/messaging/server"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-channels": 1.2.0
@@ -2370,9 +2370,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-socket@1.2.0, @botpress/messaging-socket@workspace:packages/socket":
+"@botpress/messaging-socket@1.2.0, @botpress/messaging-socket@workspace:packages/messaging/socket":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-socket@workspace:packages/socket"
+  resolution: "@botpress/messaging-socket@workspace:packages/messaging/socket"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@types/jest": ^27.4.0
@@ -2450,9 +2450,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat-inject@workspace:packages/inject":
+"@botpress/webchat-inject@workspace:packages/messaging/inject":
   version: 0.0.0-use.local
-  resolution: "@botpress/webchat-inject@workspace:packages/inject"
+  resolution: "@botpress/webchat-inject@workspace:packages/messaging/inject"
   dependencies:
     "@botpress/webchat": 0.4.0
     "@parcel/config-default": ^2.2.1
@@ -2465,9 +2465,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat@0.4.0, @botpress/webchat@workspace:packages/webchat":
+"@botpress/webchat@0.4.0, @botpress/webchat@workspace:packages/messaging/webchat":
   version: 0.0.0-use.local
-  resolution: "@botpress/webchat@workspace:packages/webchat"
+  resolution: "@botpress/webchat@workspace:packages/messaging/webchat"
   dependencies:
     "@blueprintjs/core": ^3.23.1
     "@botpress/messaging-components": 0.4.0
