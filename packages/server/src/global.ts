@@ -9,7 +9,6 @@ export type MessagingEnv = FrameworkEnv & {
   BILLING_ENDPOINT?: string
   ENABLE_BILLING_STATS?: string
   DISABLE_SOCKETS?: string
-  ENABLE_LEGACY_CHANNELS?: string
 }
 
 declare global {

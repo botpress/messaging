@@ -9,18 +9,8 @@ import {
   TwilioChannel,
   VonageChannel
 } from '@botpress/messaging-channels'
-import {
-  MessengerChannel as MessengerChannelLegacy,
-  SlackChannel as SlackChannelLegacy,
-  SmoochChannel as SmoochChannelLegacy,
-  TeamsChannel as TeamsChannelLegacy,
-  TelegramChannel as TelegramChannelLegacy,
-  TwilioChannel as TwilioChannelLegacy,
-  VonageChannel as VonageChannelLegacy
-} from '@botpress/messaging-channels-legacy'
 import { Service, DatabaseService, LoggerService, KvsService } from '@botpress/messaging-engine'
 import semver from 'semver'
-import yn from 'yn'
 import { ChannelTable } from './table'
 
 export class ChannelService extends Service {
@@ -45,19 +35,6 @@ export class ChannelService extends Service {
       new SmoochChannel(),
       new VonageChannel()
     ]
-
-    if (yn(process.env.ENABLE_LEGACY_CHANNELS)) {
-      this.channels = [
-        ...this.channels,
-        new MessengerChannelLegacy(),
-        new SlackChannelLegacy(),
-        new TeamsChannelLegacy(),
-        new TelegramChannelLegacy(),
-        new TwilioChannelLegacy(),
-        new SmoochChannelLegacy(),
-        new VonageChannelLegacy()
-      ]
-    }
 
     this.channelsByNameAndVersion = {}
     this.channelsByName = {}

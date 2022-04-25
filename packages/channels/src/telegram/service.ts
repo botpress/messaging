@@ -9,7 +9,7 @@ export interface TelegramState extends ChannelState<TelegramConfig> {
 }
 
 export class TelegramService extends ChannelService<TelegramConfig, TelegramState> {
-  async create(scope: string, config: TelegramConfig) {
+  async create(scope: string, config: TelegramConfig): Promise<TelegramState> {
     const telegraf = new Telegraf(config.botToken)
 
     return {
