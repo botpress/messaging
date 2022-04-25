@@ -26,7 +26,7 @@
     "test:e2e:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.e2e.config.ts",
     "test:sec:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.security.config.ts",
     "test:mig:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.migration.config.ts",
-    "test:chat": "TS_NODE_COMPILER_OPTIONS='{\"module\":\"esnext\",\"target\":\"es2017\",\"moduleResolution\":\"node\"}' node -r esm -r ts-node/register test/cypress/start.ts",
+    "test:chat": "ts-node test/cypress/start.ts",
     "cypress:open": "cypress open"
   },
   "devDependencies": {
@@ -65,6 +65,7 @@
     "eslint-plugin-jsdoc": "37.7.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "esm": "^3.2.25",
     "jest": "^27.4.7",
     "jest-dev-server": "^6.0.3",
     "mkdirp": "^1.0.4",
