@@ -48,7 +48,7 @@ const shouldFail = async (func: Function, onError: (err: AxiosError) => void) =>
   }
 }
 
-describe('API', () => {
+describe('HTTP', () => {
   describe('Admin', () => {
     const createClient = async (override?: { adminKey?: string }) => {
       let options: any = {
