@@ -25,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "jest-dev-server": "^6.0.3",
     "knex-schema-inspector": "^1.7.3",
+    "pg": "^8.7.1",
     "socket.io-client": "^4.4.1",
     "sqlite3": "^5.0.2"
   },
