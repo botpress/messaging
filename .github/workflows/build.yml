@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./packages/webchat
+        working-directory: ./packages/messaging/webchat
     steps:
       - name: Checkout code
         uses: actions/checkout@master
