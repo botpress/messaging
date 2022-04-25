@@ -50,7 +50,7 @@ const config: Config.InitialOptions = {
         '.+\\.(css|styl|less|sass|scss)$': 'jest-css-modules-transform'
       },
       setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'],
-      moduleDirectories: ['node_modules', 'src'],
+      moduleDirectories: ['src'],
       testEnvironment: 'jsdom'
     }
   ]

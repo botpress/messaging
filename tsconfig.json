@@ -6,7 +6,7 @@
   ],
   "files": [],
   "include": [],
-  "exclude": ["node_modules", "**/node_modules"],
+  "exclude": [],
   "compilerOptions": {
     "esModuleInterop": true,
     "resolveJsonModule": true,
