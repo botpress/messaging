@@ -2330,10 +2330,12 @@ __metadata:
     "@botpress/messaging-engine": 1.2.0
     "@botpress/messaging-framework": 1.2.0
     "@sentry/node": ^6.17.3
+    "@types/bcryptjs": ^2.4.2
     "@types/cli-color": ^2.0.2
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/jest": ^27.4.0
+    "@types/jest-dev-server": ^5.0.0
     "@types/lodash": ^4.14.178
     "@types/ms": ^0.7.31
     "@types/node": ^16.11.13
@@ -2341,12 +2343,14 @@ __metadata:
     "@types/uuid": ^8.3.4
     "@types/yargs": ^17.0.8
     axios: ^0.25.0
+    bcryptjs: ^2.4.3
     cli-color: ^2.0.1
     cors: ^2.8.5
     dotenv: ^15.0.0
     exponential-backoff: ^3.1.0
     express: ^4.17.2
     http-terminator: ^3.0.4
+    jest-dev-server: ^6.0.3
     joi: ^17.6.0
     knex: ^0.95.15
     knex-schema-inspector: ^1.7.3
@@ -2356,6 +2360,7 @@ __metadata:
     portfinder: ^1.0.28
     semver: ^7.3.5
     socket.io: ^4.4.1
+    sqlite3: ^5.0.2
     uuid: ^8.3.2
     yargs: ^17.3.1
     yn: ^4.0.0
@@ -2421,7 +2426,9 @@ __metadata:
     mkdirp: ^1.0.4
     parcel: ^2.2.1
     pkg: 5.2.0
+    portfinder: ^1.0.28
     prettier: ^2.5.1
+    pretty-format: ^28.0.0
     rimraf: ^3.0.2
     ts-jest: 27.1.2
     ts-node: ^10.4.0
@@ -3116,6 +3123,15 @@ __metadata:
     node-notifier:
       optional: true
   checksum: 4c14b2cf6c9b624977f9ad519e9ce2f5ead4a3c9a3fa0b9c68097b7bc78b598ceb5402566417d81e16489dbd6bb6e97e58f04c22099013897dd6010c0549b169
+  languageName: node
+  linkType: hard
+
+"@jest/schemas@npm:^28.0.0":
+  version: 28.0.0
+  resolution: "@jest/schemas@npm:28.0.0"
+  dependencies:
+    "@sinclair/typebox": ^0.23.3
+  checksum: 4133d84a7fbb428b9d847aeb218fbaf75c6c4096659b8514868dcc31b510ecba13748309f9453bbd600e542b21f323a8e53a6caec9e491ce5bbdfced0ad088ae
   languageName: node
   linkType: hard
 
@@ -4369,6 +4385,13 @@ __metadata:
   version: 2.0.0
   resolution: "@sideway/pinpoint@npm:2.0.0"
   checksum: 0f4491e5897fcf5bf02c46f5c359c56a314e90ba243f42f0c100437935daa2488f20482f0f77186bd6bf43345095a95d8143ecf8b1f4d876a7bc0806aba9c3d2
+  languageName: node
+  linkType: hard
+
+"@sinclair/typebox@npm:^0.23.3":
+  version: 0.23.4
+  resolution: "@sinclair/typebox@npm:0.23.4"
+  checksum: 98af5b70bf23a36061886966038058c22238d68bcd1bb2528b4470506f8a08ec5190f5f4190de17ce5fa54ebcaf7e150efbe96db6acab2696911391e4358ab39
   languageName: node
   linkType: hard
 
@@ -19279,6 +19302,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pretty-format@npm:^28.0.0":
+  version: 28.0.0
+  resolution: "pretty-format@npm:28.0.0"
+  dependencies:
+    "@jest/schemas": ^28.0.0
+    ansi-regex: ^5.0.1
+    ansi-styles: ^5.0.0
+    react-is: ^18.0.0
+  checksum: 37c68f483033c5e1f4640444b944253a275909d3a611c571f74422158a70031d5427d1399c848a62d949fb18cb7b38ad7235ff6d2ec726df4e6277f9481b67cd
+  languageName: node
+  linkType: hard
+
 "pretty-hrtime@npm:^1.0.3":
   version: 1.0.3
   resolution: "pretty-hrtime@npm:1.0.3"
@@ -19844,6 +19879,13 @@ __metadata:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
+  languageName: node
+  linkType: hard
+
+"react-is@npm:^18.0.0":
+  version: 18.0.0
+  resolution: "react-is@npm:18.0.0"
+  checksum: d38f6afee4d8d791cdd69c715841c01a503c9b06da6158e0893447cea6ba50cd262dca9bde84127720cf44fd05c58185eafc32accace4bb2deb03b3cdbeb6b6b
   languageName: node
   linkType: hard
 
