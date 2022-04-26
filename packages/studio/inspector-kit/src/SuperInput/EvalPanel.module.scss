@@ -1,0 +1,35 @@
+$pt-border-radius: 3px;
+@import './colors.scss';
+
+.bpEvalPanel {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  z-index: 1;
+  left: 0;
+  height: auto;
+  padding: 0.5rem;
+  color: $black;
+  border-radius: $pt-border-radius;
+  overflow-wrap: normal;
+
+  &:global {
+    &.valid {
+      background: mix($success, white, 20%);
+      color: $green1;
+      border: 1px solid $success;
+    }
+
+    &.invalid {
+      background: mix($red5, white, 20%);
+      color: $red1;
+      border: 1px solid $red5;
+    }
+
+    &.no-eventState {
+      background: mix($lighthouse, white, 20%);
+      color: $lighthouse;
+      border: 1px solid $lighthouse;
+    }
+  }
+}

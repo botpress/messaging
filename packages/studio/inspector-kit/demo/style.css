@@ -1,0 +1,35 @@
+@import '../../../node_modules/@blueprintjs/core/lib/css/blueprint.css';
+@import '../../../node_modules/@blueprintjs/icons/lib/css/blueprint-icons.css';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+}
+
+h1,
+h2 {
+  margin: 0;
+}
+
+.appContainer {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  padding: 1rem;
+}
+
+.wrapper {
+  display: grid;
+  gap: 2rem;
+  max-width: 100%;
+  width: 700px;
+}
+
+section {
+  display: grid;
+  gap: 0.5rem;
+}
