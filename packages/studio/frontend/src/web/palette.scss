@@ -1,0 +1,133 @@
+$background-color: #eee;
+$light-background: #f4f4f4;
+$sidebar-color: #181818;
+$sidebar-hover-color: #111111;
+$content-color: #ffffff;
+$boxes-color: #ffffff;
+$header-color: #ffffff;
+$icons-color: #535353;
+$header-border-color: #ffffff;
+
+$content-color-darker: #2f2f2f;
+$content-color-dark: #434343;
+$content-color-normal: #434343;
+$content-color-primary-title: #2e948f;
+$content-color-light: #999;
+$content-color-lighter: #bfbfbf;
+
+$text-color: #ffffff;
+$warning-color: #eaa600;
+$danger-color: #d14319;
+$primary-color: #58d1b0;
+$success-color: #56b149;
+
+$btn-text-color: #ffffff;
+
+$btn-bg-color: #46cba0;
+$btn-bg-color-hover: #40bd94;
+
+$btn-default-bg-color: #b1b1b1;
+$btn-default-bg-color-hover: #a5a5a5;
+
+$btn-danger-bg-color: #af4f4b;
+$btn-danger-bg-color-hover: #b13434;
+
+$sidebar-text-color: #aaa;
+$sidebar-primary-color: #58d1b0;
+
+$fontFamily: Roboto;
+
+:root {
+  --font-family: Roboto;
+
+  --white: #ffffff;
+  --bg: #f5f6f8;
+  --seashell: #e2e2e2;
+  --gray: #bec5c9;
+  --reef: #5c7080;
+  --shark: #1a1e22;
+  --overlay: rgba(26, 30, 34, 0.8);
+  --success: #019d90;
+  --say: #a4ded0;
+  --trigger: #ffe5b4;
+  --execute: #b0c4de;
+  --listen: #ffe699;
+  --prompt: #e2c7e0;
+  --standard: #000000;
+  --skill-call: #0000ff;
+  --if-else: #febbad;
+  --lighthouse: #f66f48;
+  --focus-lighthouse: #e06542;
+  --hover-lighthouse: #f39c82;
+  --hover-lighthouse-30: #f9ddd5;
+  --ocean: #3276ea;
+  --hover-ocean: #cad7f5;
+
+  --spacing-x-small: 2px;
+  --spacing-small: 4px;
+  --spacing-medium: 8px;
+  --spacing-large: 12px;
+  --spacing-x-large: 16px;
+  --spacing-xx-large: 20px;
+  --spacing-xxx-large: 24px;
+  --spacing-xxxx-large: 28px;
+
+  --right-sidebar-width: 240px;
+  --emulator-width: 300px;
+  --c-brand--light-2: #66aee2;
+  --c-brand--light-1: #3393d8;
+  --c-brand: #0078cf;
+  --c-brand--dark-1: #0060a5;
+  --c-brand--dark-2: #00487c;
+
+  --c-secondary--dark-2: #ffe666;
+  --c-secondary--dark-1: #ffde33;
+  --c-secondary: #ffd600;
+  --c-secondary--light-1: #ccab00;
+  --c-secondary--light-2: #998000;
+
+  --c-tertiary--dark-2: #f66cb1;
+  --c-tertiary--dark-1: #f33b97;
+  --c-tertiary: #f10a7e;
+  --c-tertiary--light-1: #c00864;
+  --c-tertiary--light-2: #90064b;
+
+  --c-neutral--dark-2: #000;
+  --c-neutral--dark-1: #4a4a4a;
+  --c-neutral: #9b9b9b;
+  --c-neutral--light-1: #ddd;
+  --c-neutral--light-2: #f2f1f1;
+  --c-neutral--light-3: #fff;
+
+  --c-background--light-3: #dddddd;
+  --c-background--light-2: #9b9b9b;
+  --c-background--light-1: #626262;
+  --c-background: #555556;
+  --c-background--dark-1: #353535;
+  --c-background--dark-2: #1a1e22;
+  --c-background--dark-3: #000;
+
+  --c-content-color-darker: #2f2f2f;
+  --c-text: var(--c-neutral--dark-1);
+  --c-text--light-gray: #5c7080;
+  --c-text--light: #fff;
+  --c-text--brand: var(--c-brand);
+  --c-text--disabled: #ddd;
+  --c-text--error: #f00;
+
+  --c-disabled: #eee;
+  --c-positive: #80c18d;
+  --c-negative: #d1495a;
+}
+
+// Section New colors from design
+$node-bg: #fcfcfc;
+$border: #d1d3d4;
+$border-active: #5bb3ec;
+$main-dark-color: #030303;
+$main-text-dark-color: #182026;
+$main-warning: #de4343;
+$node-say-something: #d1e5f2;
+$node-execute: #d5a5bc;
+$node-listen: #ffe699;
+$node-router: #a1c4c9;

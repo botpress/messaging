@@ -1,0 +1,25 @@
+{
+  "references": [],
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false,
+    "allowJs": true,
+    "target": "es5",
+    "lib": ["es7", "dom"],
+    "jsx": "react",
+    "typeRoots": ["./node_modules/@types", "src/web/typings.d.ts"],
+    "types": ["bluebird-global"],
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["src/web/*"],
+      "common/*": ["../studio-be/src/common/*"],
+      "botpress/sdk": ["../studio-be/src/sdk/botpress.d.ts"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": []
+}

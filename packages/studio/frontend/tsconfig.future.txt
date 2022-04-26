@@ -1,0 +1,36 @@
+{
+  // Manage references here
+  "references": [],
+
+  // Defaults (don't change this)
+  "extends": "../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // Specific settings for npm package
+    "target": "es6",
+    "declaration": true,
+    "sourceMap": false,
+
+    // Because studio was written with decorators
+    "experimentalDecorators": true,
+    // We use react
+    "jsx": "react",
+    "lib": ["dom", "es2021", "es2021.intl"],
+    "resolveJsonModule": true,
+
+    "allowJs": true,
+    "typeRoots": ["./node_modules/@types", "src/web/typings.d.ts"],
+    "types": ["bluebird-global"],
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["src/web/*"],
+      "common/*": ["../studio-be/src/common/*"],
+      "botpress/sdk": ["../studio-be/src/sdk/botpress.d.ts"]
+    }
+  },
+  "include": ["src", "src/**/*.json"],
+  "exclude": ["public", "node_modules"]
+}
