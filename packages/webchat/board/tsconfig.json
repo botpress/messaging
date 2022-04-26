@@ -2,10 +2,13 @@
   // Manage references here
   "references": [
     {
-      "path": "../socket"
+      "path": "../../messaging/socket"
     },
     {
-      "path": "../components"
+      "path": "../../messaging/client"
+    },
+    {
+      "path": "../webchat"
     }
   ],
 
@@ -16,16 +19,10 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // Specific settings for npm package
+    // Specific settings for frontend
     "target": "es6",
-    "declaration": true,
-    "sourceMap": false,
-
-    // Because original webchat was written with decorators
-    "experimentalDecorators": true,
-    // We use react
+    "lib": ["dom", "es2021"],
     "jsx": "react",
-    "lib": ["dom", "es2021", "es2021.intl"],
     "resolveJsonModule": true
   },
   "include": ["src", "src/**/*.json"],
