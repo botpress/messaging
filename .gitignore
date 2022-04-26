@@ -18,3 +18,5 @@ test/cypress/videos
 test/cypress/fixtures
 test/cypress/screenshots
 test/cypress/downloads
+.rollup.cache
+lib
