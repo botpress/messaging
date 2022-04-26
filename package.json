@@ -107,6 +107,9 @@
     },
     "core-js-pure@3.20.0": {
       "built": false
+    },
+    "open@7.4.2": {
+      "unplugged": true
     }
   }
 }

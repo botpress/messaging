@@ -2629,6 +2629,7 @@ __metadata:
     jest-css-modules-transform: ^4.3.0
     mime: ^2.5.2
     ncp: ^2.0.0
+    open: ^7.4.2
     prop-types: ^15.8.1
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -2855,6 +2856,8 @@ __metadata:
       built: false
     core-js@3.20.0:
       built: false
+    open@7.4.2:
+      unplugged: true
   languageName: unknown
   linkType: soft
 
@@ -25586,7 +25589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"open@npm:^7.0.0, open@npm:^7.0.3":
+"open@npm:^7.0.0, open@npm:^7.0.3, open@npm:^7.4.2":
   version: 7.4.2
   resolution: "open@npm:7.4.2"
   dependencies:
