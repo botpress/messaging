@@ -31,8 +31,8 @@ export const setDebugScopes = (scopes: string) => {
 debug.log = function (...args: any[]) {
   const botId = (args[0] && args[0].botId) || (args[1] && args[1].botId) || (args[2] && args[2].botId)
   if (botId) {
-    global.printBotLog(botId, args)
+    printBotLog(botId, args)
   } else {
-    global.printLog(args)
+    printLog(args)
   }
 }

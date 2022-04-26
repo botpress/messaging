@@ -1,72 +1,4 @@
-declare namespace NodeJS {
-  export interface ExtraRequire {
-    addToNodePath(path: string): void
-    getPaths(): string[]
-    overwritePaths(paths: string[]): any
-  }
-
-  export interface Global {
-    printErrorDefault(err: Error): void
-    DEBUG: IDebug
-    require: ExtraRequire
-    rewire: (name: string) => string
-    printBotLog(botId: string, args: any[]): void
-    printLog(args: any[]): void
-  }
-
-  export interface Process {
-    VERBOSITY_LEVEL: number
-    IS_PRODUCTION: boolean // TODO: look to remove this
-    BPFS_STORAGE: 'database' | 'disk'
-    APP_SECRET: string
-    IS_STANDALONE: boolean
-    /**
-     * Path to the global APP DATA folder, shared across all installations of Botpress Server
-     * Use this folder to store stuff you'd like to cache, like NLU language models etc
-     */
-    APP_DATA_PATH: string
-    HOST: string
-    PORT: number
-    PROXY?: string
-    EXTERNAL_URL: string
-    LOCAL_URL: string
-    /** This is the subfolder where Botpress is located (ex: /botpress/). It is extracted from the external URL */
-    ROOT_PATH: string
-    /** Path to the studio executable */
-    STUDIO_LOCATION: string
-    /** Location of the bots/, global/ and storage/ folders à */
-    DATA_LOCATION: string
-    LOADED_MODULES: { [module: string]: string }
-    pkg: any
-    IS_LICENSED?: boolean
-    IS_PRO_AVAILABLE: boolean
-    IS_PRO_ENABLED: boolean
-    CLUSTER_ENABLED: boolean
-    STUDIO_VERSION: string
-    BOTPRESS_VERSION: string
-    TELEMETRY_URL: string
-    core_env: BotpressEnvironmentVariables
-    distro: OSDistribution
-    IS_FAILSAFE: boolean
-    DISABLE_CONTENT_SANDBOX: boolean
-    USE_JWT_COOKIES: boolean
-    /** This property is set when the binary is built in a branch other than master */
-    DEV_BRANCH?: string
-    NLU_ENDPOINT?: string
-    CLOUD_OAUTH_ENDPOINT: string
-    CLOUD_CONTROLLER_ENDPOINT: string
-    CLOUD_NLU_ENDPOINT: string
-  }
-}
-
-declare let process: NodeJS.Process
-declare let global: NodeJS.Global & typeof globalThis
-declare type PRO_FEATURES = 'seats'
-
-/**
- * This is a copy of process.env to add typing and documentation to variables
- */
-declare interface BotpressEnvironmentVariables {
+export interface BotpressEnvironmentVariables {
   readonly STUDIO_PORT?: number
   readonly CORE_PORT?: number
   readonly ROOT_PATH?: string
@@ -221,11 +153,21 @@ declare interface BotpressEnvironmentVariables {
   readonly CORE_DISABLE_FILE_LISTENERS?: boolean
 }
 
-interface IDebug {
+export interface OSDistribution {
+  os: NodeJS.Platform
+  /** The distribution, e.g. "centos", "ubuntu" */
+  dist: string
+  /** If a codename is available, for example "final" or "alpine" */
+  codename: string
+  /** The release number, for example 18.04 */
+  release: string
+}
+
+export interface IDebug {
   (module: string, botId?: string): IDebugInstance
 }
 
-interface IDebugInstance {
+export interface IDebugInstance {
   readonly enabled: boolean
 
   (msg: string, extra?: any): void
@@ -238,18 +180,56 @@ interface IDebugInstance {
   sub(namespace: string): IDebugInstance
 }
 
-declare let DEBUG: IDebug
+declare global {
+  let printErrorDefault: (err: Error) => void
+  let DEBUG: IDebug
+  let rewire: (name: string) => string
+  let printBotLog: (botId: string, args: any[]) => void
+  let printLog: (args: any[]) => void
 
-declare interface OSDistribution {
-  os: NodeJS.Platform
-  /** The distribution, e.g. "centos", "ubuntu" */
-  dist: string
-  /** If a codename is available, for example "final" or "alpine" */
-  codename: string
-  /** The release number, for example 18.04 */
-  release: string
-}
-
-declare interface Dic<T> {
-  [Key: string]: T
+  namespace NodeJS {
+    export interface Process {
+      VERBOSITY_LEVEL: number
+      IS_PRODUCTION: boolean // TODO: look to remove this
+      BPFS_STORAGE: 'database' | 'disk'
+      APP_SECRET: string
+      IS_STANDALONE: boolean
+      /**
+       * Path to the global APP DATA folder, shared across all installations of Botpress Server
+       * Use this folder to store stuff you'd like to cache, like NLU language models etc
+       */
+      APP_DATA_PATH: string
+      HOST: string
+      PORT: number
+      PROXY?: string
+      EXTERNAL_URL: string
+      LOCAL_URL: string
+      /** This is the subfolder where Botpress is located (ex: /botpress/). It is extracted from the external URL */
+      ROOT_PATH: string
+      /** Path to the studio executable */
+      STUDIO_LOCATION: string
+      /** Location of the bots/, global/ and storage/ folders à */
+      DATA_LOCATION: string
+      LOADED_MODULES: { [module: string]: string }
+      pkg: any
+      IS_LICENSED?: boolean
+      IS_PRO_AVAILABLE: boolean
+      IS_PRO_ENABLED: boolean
+      CLUSTER_ENABLED: boolean
+      STUDIO_VERSION: string
+      BOTPRESS_VERSION: string
+      TELEMETRY_URL: string
+      core_env: BotpressEnvironmentVariables
+      distro: OSDistribution
+      IS_FAILSAFE: boolean
+      DISABLE_CONTENT_SANDBOX: boolean
+      USE_JWT_COOKIES: boolean
+      /** This property is set when the binary is built in a branch other than master */
+      DEV_BRANCH?: string
+      NLU_ENDPOINT?: string
+      CLOUD_OAUTH_ENDPOINT: string
+      CLOUD_CONTROLLER_ENDPOINT: string
+      CLOUD_NLU_ENDPOINT: string
+    }
+  }
 }

@@ -5,7 +5,7 @@ import './sdk/rewire'
 import { makeLogger, ConsoleTransport, FormattedLogEntry, LoggerConfig, LogTransporter } from '@botpress/logger'
 
 import sdk, { Logger, LogLevel } from 'botpress/sdk'
-import chalk from 'chalk'
+import clc from 'cli-color'
 import fs from 'fs'
 
 import { Botpress } from './botpress'
@@ -90,11 +90,11 @@ This is a fatal error, process will exit.`
   try {
     await studio.start()
     // await runtime.start()
-    logger.info(chalk.gray(`Studio is listening at: ${process.LOCAL_URL}`))
+    logger.info(clc.blackBright(`Studio is listening at: ${process.LOCAL_URL}`))
   } catch (err: any) {
     logger.error(`Could not start Botpress: ${err.message}`, err)
     process.exit(1)
   }
 }
 
-start().catch(global.printErrorDefault)
+start().catch(printErrorDefault)

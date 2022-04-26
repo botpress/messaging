@@ -2134,7 +2134,6 @@ __metadata:
     "@types/cli-color": ^2.0.2
     "@types/lodash": ^4.14.178
     "@types/node": ^16.11.13
-    chalk: ^5.0.1
     cli-color: ^2.0.1
     lodash: ^4.17.21
     moment: ^2.29.1
@@ -2496,8 +2495,11 @@ __metadata:
     "@botpress/nlu-client": 1.0.2-rc.6
     "@types/bluebird-global": ^3.5.13
     "@types/bluebird-retry": ^0.11.5
+    "@types/body-parser": ^1.19.2
+    "@types/cli-color": ^2.0.2
     "@types/compression": ^1.7.2
     "@types/cookie-parser": ^1.4.2
+    "@types/cors": ^2.8.12
     "@types/doctrine": ^0.0.5
     "@types/errorhandler": ^1.5.0
     "@types/express": ^4.17.13
@@ -2507,6 +2509,7 @@ __metadata:
     "@types/joi": ^13.4.5
     "@types/lodash": 4.14.178
     "@types/mime-types": ^2.1.1
+    "@types/minimatch": ^3.0.5
     "@types/ms": ^0.7.31
     "@types/multer": ^1.4.7
     "@types/node": ^16.11.13
@@ -2519,13 +2522,14 @@ __metadata:
     bluebird-global: ^1.0.1
     body-parser: ^1.19.1
     cerialize: ^0.1.18
-    chalk: ^4.1.2
+    cli-color: ^2.0.1
     compression: ^1.7.4
     cookie-parser: ^1.4.6
     cookie-session: ^1.4.0
     cors: ^2.8.5
     cross-env: ^7.0.3
     debug: ^4.3.3
+    doctrine: ^3.0.0
     dotenv: ^16.0.0
     errorhandler: ^1.5.1
     eventemitter2: ^5.0.1
@@ -2535,6 +2539,7 @@ __metadata:
     form-data: ^4.0.0
     fs-extra: ^9.1.0
     getos: ^3.2.1
+    glob: ^8.0.1
     globrex: ^0.1.2
     http-proxy-middleware: ^2.0.2
     inversify: ^5.1.1
@@ -2546,11 +2551,15 @@ __metadata:
     lock: ^1.1.0
     lodash: ^4.17.21
     lodash-decorators: ^6.0.1
+    mime-types: ^2.1.35
+    minimatch: ^5.0.1
     moment: ^2.29.1
+    ms: ^2.1.3
     multer: ^1.4.4
     nanoid: ^3.2.0
     ncp: ^2.0.0
     node-machine-id: ^1.1.12
+    on-headers: ^1.0.2
     pg: ^7.8.0
     plur: ^4.0.0
     portfinder: ^1.0.28
@@ -5991,7 +6000,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/body-parser@npm:*":
+"@types/body-parser@npm:*, @types/body-parser@npm:^1.19.2":
   version: 1.19.2
   resolution: "@types/body-parser@npm:1.19.2"
   dependencies:
@@ -6458,7 +6467,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/minimatch@npm:*":
+"@types/minimatch@npm:*, @types/minimatch@npm:^3.0.5":
   version: 3.0.5
   resolution: "@types/minimatch@npm:3.0.5"
   checksum: c41d136f67231c3131cf1d4ca0b06687f4a322918a3a5adddc87ce90ed9dbd175a3610adee36b106ae68c0b92c637c35e02b58c8a56c424f71d30993ea220b92
@@ -8686,6 +8695,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"brace-expansion@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "brace-expansion@npm:2.0.1"
+  dependencies:
+    balanced-match: ^1.0.0
+  checksum: a61e7cd2e8a8505e9f0036b3b6108ba5e926b4b55089eeb5550cd04a471fe216c96d4fe7e4c7f995c728c554ae20ddfc4244cad10aef255e72b62930afd233d1
+  languageName: node
+  linkType: hard
+
 "braces@npm:^2.3.1, braces@npm:^2.3.2":
   version: 2.3.2
   resolution: "braces@npm:2.3.2"
@@ -9228,13 +9246,6 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: fe75c9d5c76a7a98d45495b91b2172fa3b7a09e0cc9370e5c8feb1c567b85c4288e2b3fded7cfdd7359ac28d6b3844feb8b82b8686842e93d23c827c417e83fc
-  languageName: node
-  linkType: hard
-
-"chalk@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "chalk@npm:5.0.1"
-  checksum: 7b45300372b908f0471fbf7389ce2f5de8d85bb949026fd51a1b95b10d0ed32c7ed5aab36dd5e9d2bf3191867909b4404cef75c5f4d2d1daeeacd301dd280b76
   languageName: node
   linkType: hard
 
@@ -13635,6 +13646,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"glob@npm:^8.0.1":
+  version: 8.0.1
+  resolution: "glob@npm:8.0.1"
+  dependencies:
+    fs.realpath: ^1.0.0
+    inflight: ^1.0.4
+    inherits: 2
+    minimatch: ^5.0.1
+    once: ^1.3.0
+    path-is-absolute: ^1.0.0
+  checksum: 7ac782f3ef1c08005884447479e68ceb0ad56997eb2003e1e9aefae71bad3cb48eb7c49190d3d6736f2ffcd8af4985d53a46831b3d5e0052cc5756822a38b61a
+  languageName: node
+  linkType: hard
+
 "global-dirs@npm:^3.0.0":
   version: 3.0.0
   resolution: "global-dirs@npm:3.0.0"
@@ -17603,6 +17628,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime-db@npm:1.52.0":
+  version: 1.52.0
+  resolution: "mime-db@npm:1.52.0"
+  checksum: 0d99a03585f8b39d68182803b12ac601d9c01abfa28ec56204fa330bc9f3d1c5e14beb049bafadb3dbdf646dfb94b87e24d4ec7b31b7279ef906a8ea9b6a513f
+  languageName: node
+  linkType: hard
+
 "mime-db@npm:~1.33.0":
   version: 1.33.0
   resolution: "mime-db@npm:1.33.0"
@@ -17625,6 +17657,15 @@ __metadata:
   dependencies:
     mime-db: 1.51.0
   checksum: 67013de9e9d6799bde6d669d18785b7e18bcd212e710d3e04a4727f92f67a8ad4e74aee24be28b685adb794944814bde649119b58ee3282ffdbee58f9278d9f3
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:^2.1.35":
+  version: 2.1.35
+  resolution: "mime-types@npm:2.1.35"
+  dependencies:
+    mime-db: 1.52.0
+  checksum: 89a5b7f1def9f3af5dad6496c5ed50191ae4331cc5389d7c521c8ad28d5fdad2d06fd81baf38fed813dc4e46bb55c8145bb0ff406330818c9cf712fb2e9b3836
   languageName: node
   linkType: hard
 
@@ -17714,6 +17755,15 @@ __metadata:
   dependencies:
     brace-expansion: ^1.1.7
   checksum: c154e566406683e7bcb746e000b84d74465b3a832c45d59912b9b55cd50dee66e5c4b1e5566dba26154040e51672f9aa450a9aef0c97cfc7336b78b7afb9540a
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "minimatch@npm:5.0.1"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: b34b98463da4754bc526b244d680c69d4d6089451ebe512edaf6dd9eeed0279399cfa3edb19233513b8f830bf4bfcad911dddcdf125e75074100d52f724774f0
   languageName: node
   linkType: hard
 
@@ -18755,7 +18805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"on-headers@npm:~1.0.2":
+"on-headers@npm:^1.0.2, on-headers@npm:~1.0.2":
   version: 1.0.2
   resolution: "on-headers@npm:1.0.2"
   checksum: 2bf13467215d1e540a62a75021e8b318a6cfc5d4fc53af8e8f84ad98dbcea02d506c6d24180cd62e1d769c44721ba542f3154effc1f7579a8288c9f7873ed8e5

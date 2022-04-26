@@ -33,7 +33,8 @@ export async function copyDir(src: string, dest: string, filter: CopyFilter = de
         fs.readFile(path.join(src, f), cb)
       })
 
-      fs.writeFile(fileDest, buffer, cb)
+      // TODO: wtf
+      fs.writeFile(fileDest, buffer as any, cb)
     })
   )
 }

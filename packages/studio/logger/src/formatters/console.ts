@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import clc from 'cli-color'
 import _ from 'lodash'
 import moment from 'moment'
 import os from 'os'
@@ -36,20 +36,20 @@ export class ConsoleFormatter implements LogEntryFormatter {
       ? entry.namespace.substr(0, 15).padEnd(15, ' ')
       : `${prefix}${entry.namespace}`
     // eslint-disable-next-line prefer-template
-    const newLineIndent = chalk.dim(' '.repeat(`${config.timeFormat} ${displayName}`.length)) + ' '
+    const newLineIndent = clc.blackBright(' '.repeat(`${config.timeFormat} ${displayName}`.length)) + ' '
     let indentedMessage =
       entry.level === LoggerLevel.Error ? entry.message : entry.message.replace(/\r\n|\n/g, os.EOL + newLineIndent)
 
     if (entry.type === 'stacktrace' && entry.stack) {
-      indentedMessage += chalk.grey(os.EOL + 'STACK TRACE')
-      indentedMessage += chalk.grey(os.EOL + entry.stack)
+      indentedMessage += clc.blackBright(os.EOL + 'STACK TRACE')
+      indentedMessage += clc.blackBright(os.EOL + entry.stack)
     }
 
     return {
       ...entry,
-      formatted: chalk`{grey ${time}} {${
-        config.colors[entry.level]
-      }.bold ${displayName}} ${indentedMessage}${serializedMetadata}`
+      formatted: `${clc.blackBright(time)} ${clc.bold(
+        (clc as any)[config.colors[entry.level]](displayName)
+      )}${indentedMessage}${serializedMetadata}`
     }
   }
 }

@@ -1,5 +1,5 @@
 import sdk from 'botpress/sdk'
-import chalk from 'chalk'
+import clc from 'cli-color'
 import _ from 'lodash'
 import moment from 'moment'
 
@@ -38,7 +38,7 @@ export const showBanner = (config: BannerConfig) => {
   const border = _.repeat('=', bannerWidth)
 
   logger.info(`${border}
-${chalk.bold(centerText(title, bannerWidth, logScopeLength))}
-${chalk.gray(centerText(infos.join(' - '), bannerWidth, logScopeLength))}
+${clc.bold(centerText(title, bannerWidth, logScopeLength))}
+${clc.blackBright(centerText(infos.join(' - '), bannerWidth, logScopeLength))}
 ${_.repeat(' ', logScopeLength)}${border}`)
 }

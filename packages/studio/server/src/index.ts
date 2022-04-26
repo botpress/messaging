@@ -1,10 +1,11 @@
 ;(global as any)['NativePromise'] = global.Promise
 
-import chalk from 'chalk'
+import clc from 'cli-color'
 import path from 'path'
 import yn from 'yn'
 import { Debug } from './debug'
 import getos from './getos'
+import { BotpressEnvironmentVariables } from './global'
 
 export function getAppDataPath() {
   const homeDir = process.env.HOME || process.env.APPDATA
@@ -17,7 +18,7 @@ export function getAppDataPath() {
   }
 
   console.error(
-    chalk.red(`Could not determine your HOME directory.
+    clc.red(`Could not determine your HOME directory.
 Please set the environment variable "APP_DATA_PATH", then start Botpress`)
   )
   process.exit()
@@ -35,23 +36,6 @@ const printPlainError = (err: any) => {
 global.DEBUG = Debug
 global.printErrorDefault = printPlainError
 
-const originalWrite = process.stdout.write
-
-const shouldDiscardError = (message: any) =>
-  !![
-    '[DEP0005]' // Buffer() deprecation warning
-  ].find((e) => message.indexOf(e) >= 0)
-
-function stripDeprecationWrite(buffer: string, encoding: string, cb?: Function | undefined): boolean
-function stripDeprecationWrite(buffer: string | Buffer, cb?: Function | undefined): boolean
-function stripDeprecationWrite(this: Function): boolean {
-  if (typeof arguments[0] === 'string' && shouldDiscardError(arguments[0])) {
-    return (arguments[2] || arguments[1])()
-  }
-
-  return originalWrite.apply(this, arguments as never as [string])
-}
-
 if (process.env.APP_DATA_PATH) {
   process.APP_DATA_PATH = process.env.APP_DATA_PATH
 } else {
@@ -67,11 +51,9 @@ process.STUDIO_LOCATION = process.pkg
 
 // process.DATA_LOCATION = path.resolve(process.PROJECT_LOCATION, './data')
 
-process.stderr.write = stripDeprecationWrite
-
 process.on('unhandledRejection', (err: any) => {
   console.trace(err)
-  global.printErrorDefault(err)
+  printErrorDefault(err)
 
   if (!process.IS_FAILSAFE) {
     process.exit(1)
@@ -79,7 +61,7 @@ process.on('unhandledRejection', (err: any) => {
 })
 
 process.on('uncaughtException', (err) => {
-  global.printErrorDefault(err)
+  printErrorDefault(err)
   if (!process.IS_FAILSAFE) {
     process.exit(1)
   }
@@ -150,5 +132,5 @@ try {
     )
     .help().argv
 } catch (err: any) {
-  global.printErrorDefault(err)
+  printErrorDefault(err)
 }

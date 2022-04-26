@@ -1,4 +1,4 @@
-import { Request } from 'express-serve-static-core'
+import { Request } from 'express'
 import fs from 'fs'
 import path from 'path'
 
