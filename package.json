@@ -102,6 +102,9 @@
     "@botpress/chat-skin": "@botpress/chat-skin/src"
   },
   "dependenciesMeta": {
+    "babel-runtime@6.26.0": {
+      "unplugged": true
+    },
     "core-js@3.20.0": {
       "built": false
     },
