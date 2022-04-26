@@ -1,0 +1,50 @@
+// select
+
+.createItem {
+  border-left: 3px solid #58d1b0;
+}
+
+// widget
+
+.editButton {
+  border-radius: 0;
+  margin-left: -1px;
+}
+
+.actionBtn {
+  display: inline-block;
+  padding: 5px 5px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--c-neutral--light-1);
+  }
+
+  svg {
+    color: var(--c-brand);
+  }
+}
+
+.body {
+  padding: 20px 20px 0;
+
+  :global(.list-group) {
+    margin-bottom: 0;
+  }
+}
+
+.contentInput {
+  input {
+    color: #000 !important;
+  }
+  flex: 1;
+}
+
+.imagePreview {
+  height: 16px;
+}
+
+.clickableInput {
+  display: flex; 
+  flex-direction: row;
+}

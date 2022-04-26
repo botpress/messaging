@@ -1,0 +1,25 @@
+:global(.bp3-dialog-container) {
+  height: 100%;
+}
+
+.dialog {
+  max-height: 90%;
+  background-color: white !important;
+  overflow-y: scroll;
+
+  :global(.bp3-dialog-body) {
+    overflow: auto;
+  }
+
+  :global {
+    .bp3-button {
+      transition: color 0.3s, background 0.3s;
+    }
+  }
+}
+
+.dialogBody {
+  position: relative;
+  margin: 0 !important;
+  padding: 20px !important;
+}
