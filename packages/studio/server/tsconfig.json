@@ -1,0 +1,17 @@
+{
+  // Manage references here
+  "references": [{ "path": "../logger" }],
+
+  // Defaults (don't change this)
+  "extends": "../../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // TODO: remove this
+    "typeRoots": ["./src/typings"]
+  },
+  "include": ["src"],
+  "exclude": ["dist", "**/*.test.ts"]
+}

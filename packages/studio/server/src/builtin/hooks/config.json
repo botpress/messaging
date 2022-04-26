@@ -1,0 +1,4 @@
+{
+  "after_bot_mount/builtin/00_create_shortlink.js": { "ignoreCloud": true },
+  "after_bot_unmount/builtin/00_delete_shortlink.js": { "ignoreCloud": true }
+}
