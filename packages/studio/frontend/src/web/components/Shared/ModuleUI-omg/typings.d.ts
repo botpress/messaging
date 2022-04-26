@@ -1,4 +1,4 @@
-import { IconName, MaybeElement, Position, IDialogProps } from '@blueprintjs/core'
+import { IconName, MaybeElement, Position } from '@blueprintjs/core'
 import React from 'react'
 
 export const ModuleUI: {

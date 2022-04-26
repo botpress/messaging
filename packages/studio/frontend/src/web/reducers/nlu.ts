@@ -1,6 +1,5 @@
 import sdk from 'botpress/sdk'
 import { Training } from 'common/nlu-training'
-import _ from 'lodash'
 import { handleActions } from 'redux-actions'
 import { trainSessionReceived } from '~/actions'
 

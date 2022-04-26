@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { customAlphabet } from 'nanoid'
 
 export const hashCode = (str) => {

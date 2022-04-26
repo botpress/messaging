@@ -1,6 +1,6 @@
 import { javascriptLanguage, javascript } from '@codemirror/lang-javascript'
 import { LRLanguage, LanguageSupport } from '@codemirror/language'
-import { parseMixed, Parser } from '@lezer/common'
+import { parseMixed } from '@lezer/common'
 import { parser } from '@lezer/markdown'
 
 import { DELIM_START, DELIM_END } from '../config'

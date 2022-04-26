@@ -11,7 +11,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: 'module'
   },
-  ignorePatterns: ['*.js', '**/dist/**'],
+  ignorePatterns: ['*.js', '**/dist/**', '**/*.scss.d.ts'],
   plugins: [
     'eslint-plugin-import',
     'eslint-plugin-jsdoc',

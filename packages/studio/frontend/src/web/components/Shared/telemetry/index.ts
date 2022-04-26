@@ -1,6 +1,5 @@
 import axios, { AxiosInstance } from 'axios'
 import { TelemetryEvent } from 'common/telemetry'
-import _ from 'lodash'
 import ms from 'ms'
 
 export const sendTelemetry = async (events: TelemetryEvent[]) => {

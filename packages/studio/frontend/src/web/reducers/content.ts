@@ -1,5 +1,4 @@
 import { Categories, LibraryElement } from 'common/typings'
-import _ from 'lodash'
 import { handleActions } from 'redux-actions'
 import {
   receiveContentCategories,

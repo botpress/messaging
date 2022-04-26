@@ -1,4 +1,4 @@
-import { Flow, FlowNode } from 'botpress/sdk'
+import { FlowNode } from 'botpress/sdk'
 import { FlowView } from 'common/typings'
 import _ from 'lodash'
 import { createSelector } from 'reselect'

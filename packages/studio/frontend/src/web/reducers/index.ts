@@ -1,4 +1,4 @@
-import { BotConfig, ModuleDefinition } from 'botpress/sdk'
+import { ModuleDefinition } from 'botpress/sdk'
 import { combineReducers } from 'redux'
 
 import bot, { BotReducer } from './bot'

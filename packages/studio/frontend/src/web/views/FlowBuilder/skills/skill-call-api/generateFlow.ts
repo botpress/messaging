@@ -1,5 +1,4 @@
 import * as sdk from 'botpress/sdk'
-import _ from 'lodash'
 import { NodeActionType } from '../typings'
 
 export const generateFlow = async (

@@ -1,5 +1,4 @@
 import * as sdk from 'botpress/sdk'
-import _ from 'lodash'
 import yn from 'yn'
 import { NodeActionType } from '../typings'
 
