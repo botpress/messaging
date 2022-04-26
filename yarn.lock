@@ -2503,6 +2503,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/fs-extra": ^9.0.13
     "@types/glob": ^7.1.0
+    "@types/jest": ^27.4.0
     "@types/joi": ^13.4.5
     "@types/lodash": 4.14.178
     "@types/mime-types": ^2.1.1

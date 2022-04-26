@@ -7,11 +7,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "tsBuildInfoFile": "dist/.tsbuildinfo",
-
-    // TODO: remove this
-    "typeRoots": ["./src/typings"]
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
   "include": ["src"],
-  "exclude": ["dist", "**/*.test.ts"]
+  "exclude": ["dist"]
 }

@@ -1,4 +1,4 @@
-import { trimUtterances } from './intent-repo'
+import { trimUtterances } from '../../src/studio/nlu/intent-repo'
 
 describe('trimUtterances', () => {
   const testcases: any[] = [

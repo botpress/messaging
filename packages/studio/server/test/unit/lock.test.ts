@@ -1,4 +1,4 @@
-import { Locker } from './lock'
+import { Locker } from '../../src/studio/nlu/nlu-client/cloud/lock'
 
 describe('getLock', () => {
   it('should never release a lock', async () => {

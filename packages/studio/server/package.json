@@ -2,9 +2,7 @@
   "name": "@botpress/studio-be",
   "version": "0.0.1",
   "main": "index.js",
-  "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
-  "private": true,
   "scripts": {
     "build": "yarn && yarn run -T tsc --build && node ./scripts/copy_builtin.js",
     "watch": "yarn && yarn run -T tsc --build --watch",
@@ -21,6 +19,7 @@
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.1.0",
+    "@types/jest": "^27.4.0",
     "@types/joi": "^13.4.5",
     "@types/lodash": "4.14.178",
     "@types/mime-types": "^2.1.1",

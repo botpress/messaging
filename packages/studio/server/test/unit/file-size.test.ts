@@ -1,4 +1,4 @@
-import { asBytes } from './file-size'
+import { asBytes } from '../../src/studio/utils/file-size'
 
 test('asBytes', () => {
   expect(asBytes('5mb')).toEqual(5 * 1024 * 1024)
