@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { ListenHandle, Logger } from 'botpress/sdk'
 import { Training as BpTraining } from '../../../common/nlu-training'
 import { DefinitionsRepository } from '../definitions-repository'

@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import _ from 'lodash'
 import minimatch from 'minimatch'
 import { Instance } from '../../studio/utils/bpfs'

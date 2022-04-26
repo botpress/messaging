@@ -1,4 +1,4 @@
-import 'bluebird-global'
+import { Promise } from 'bluebird'
 import os from 'os'
 import { OSDistribution } from './global'
 

@@ -1,4 +1,4 @@
-import 'bluebird-global'
+import { Promise } from 'bluebird'
 import * as sdk from 'botpress/sdk'
 
 import fs from 'fs'

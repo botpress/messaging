@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { DirectoryListingOptions } from 'botpress/sdk'
 import fse from 'fs-extra'
 import glob from 'glob'

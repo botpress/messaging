@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Promise as Bluebird } from 'bluebird'
 import { DirectoryListingOptions, NLU, ContentElement } from 'botpress/sdk'
 import { validate } from 'joi'
 import _ from 'lodash'
@@ -100,7 +101,7 @@ export class QNARouter extends CustomStudioRouter {
 
           const options: DirectoryListingOptions = { sortOrder: { column: 'filePath', desc: true } }
           const qnas = await Instance.directoryListing(QNA_DIR, options).then((filePaths) => {
-            return Promise.map(filePaths, (filePath) =>
+            return Bluebird.map(filePaths, (filePath) =>
               Instance.readFile(path.join(QNA_DIR, filePath)).then((buf) => JSON.parse(buf.toString()) as QnaItem)
             )
           })
@@ -200,7 +201,7 @@ export class QNARouter extends CustomStudioRouter {
         intent.name = intent.name.replace('__qna__', '')
         const newIntentPath = initialIntentPath.replace('__qna__', '')
 
-        await Promise.all([
+        await Bluebird.all([
           Instance.upsertFile(newIntentPath, JSON.stringify(intent, undefined, 2)),
           Instance.deleteFile(initialIntentPath),
           Instance.deleteFile(path.join(QNA_DIR, req.params.id + '.json'))
@@ -216,7 +217,7 @@ export class QNARouter extends CustomStudioRouter {
       this.asyncMiddleware(async (req, res) => {
         const options: DirectoryListingOptions = { sortOrder: { column: 'filePath', desc: true } }
         const qnas = await Instance.directoryListing(QNA_DIR, options).then((filePaths) => {
-          return Promise.map(filePaths, (filePath) =>
+          return Bluebird.map(filePaths, (filePath) =>
             Instance.readFile(path.join(QNA_DIR, filePath)).then((buf) => JSON.parse(buf.toString()) as QnaItem)
           )
         })
@@ -228,7 +229,7 @@ export class QNARouter extends CustomStudioRouter {
           .uniq()
           .value()
 
-        const contentElements = await Promise.map(contentElementIds, (id) => {
+        const contentElements = await Bluebird.map(contentElementIds, (id) => {
           return axios
             .get(`http://${process.HOST}:${process.PORT}/api/v1/studio/${req.params.botId}/cms/element/${id}`)
             .then((res) => _.pick(res.data, ['id', 'contentType', 'formData']))
@@ -279,7 +280,7 @@ export class QNARouter extends CustomStudioRouter {
       this.needPermissions('read', 'module.qna'),
       this.asyncMiddleware(async (req, res) => {
         const qnas = await Instance.directoryListing(QNA_DIR, {}).then((filePaths) => {
-          return Promise.map(filePaths, (filePath) =>
+          return Bluebird.map(filePaths, (filePath) =>
             Instance.readFile(path.join(QNA_DIR, filePath)).then((buf) => JSON.parse(buf.toString()) as QnaItem)
           )
         })
@@ -307,7 +308,7 @@ export class QNARouter extends CustomStudioRouter {
         const importData = await this._prepareImport(parsed)
 
         const qnas = await Instance.directoryListing(QNA_DIR, {}).then((filePaths) => {
-          return Promise.map(filePaths, (filePath) =>
+          return Bluebird.map(filePaths, (filePath) =>
             Instance.readFile(path.join(QNA_DIR, filePath)).then((buf) => JSON.parse(buf.toString()) as QnaItem)
           )
         })

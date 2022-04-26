@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { Serialize } from 'cerialize' // TODO: we don't use this lib
 import doctrine from 'doctrine'
 import _ from 'lodash'

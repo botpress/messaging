@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import fs from 'fs'
 import { ensureDirSync } from 'fs-extra'
 import glob from 'glob'

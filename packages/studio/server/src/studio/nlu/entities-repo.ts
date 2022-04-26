@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import * as sdk from 'botpress/sdk'
 import path from 'path'
 import { getEntityId } from '../../common/entity-id'
