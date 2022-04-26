@@ -1,12 +1,12 @@
 {
   "references": [
     {
-      "path": "./packages/server"
+      "path": "./packages/messaging/server"
     }
   ],
   "files": [],
   "include": [],
-  "exclude": ["node_modules", "**/node_modules"],
+  "exclude": [],
   "compilerOptions": {
     "esModuleInterop": true,
     "resolveJsonModule": true,

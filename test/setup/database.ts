@@ -1,6 +1,6 @@
-import compose from 'docker-compose'
 import fs from 'fs'
 import path from 'path'
+import compose from 'docker-compose'
 import { v4 as uuidv4 } from 'uuid'
 
 const log = process.env.DEBUG === 'true'

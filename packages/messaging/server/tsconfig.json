@@ -1,0 +1,27 @@
+{
+  // Manage references here
+  "references": [
+    {
+      "path": "../base"
+    },
+    {
+      "path": "../../base/engine"
+    },
+    {
+      "path": "../../base/framework"
+    },
+    {
+      "path": "../channels"
+    }
+  ],
+
+  // Defaults (don't change this)
+  "extends": "../../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo"
+  },
+  "include": ["src"],
+  "exclude": ["dist"]
+}

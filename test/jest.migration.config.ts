@@ -1,6 +1,6 @@
+import ServerConfig from '../packages/messaging/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
 import { pathsToModuleNameMapper } from 'ts-jest'
-import ServerConfig from '../packages/server/test/tsconfig.json'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
@@ -8,7 +8,7 @@ const config: Config.InitialOptions = {
   globalTeardown: './jest.integration.teardown.ts',
   projects: [
     {
-      rootDir: 'packages/server',
+      rootDir: 'packages/messaging/server',
       testMatch: ['<rootDir>/test/migration/**/(*.)test.ts'],
       displayName: { name: 'Server', color: 'white' },
       testEnvironment: 'node',

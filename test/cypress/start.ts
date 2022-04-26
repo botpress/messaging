@@ -49,7 +49,7 @@ const setup = async () => {
     },
     {
       debug,
-      command: `PORT=${port} yarn dev`,
+      command: `PORT=${port} yarn workspace @botpress/messaging-server dev`,
       launchTimeout: 60000,
       protocol: 'http',
       host: '127.0.0.1',
