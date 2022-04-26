@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
-import SuperInput from './SuperInput'
+import SuperInput from '../../src/SuperInput/SuperInput'
 
 describe('SuperInput', () => {
   test('renders', () => {

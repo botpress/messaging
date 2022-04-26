@@ -20,3 +20,4 @@ test/cypress/screenshots
 test/cypress/downloads
 .rollup.cache
 lib
+node_modules
