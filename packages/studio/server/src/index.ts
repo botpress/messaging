@@ -33,8 +33,8 @@ const printPlainError = (err: any) => {
   console.log(err.stack)
 }
 
-global.DEBUG = Debug
-global.printErrorDefault = printPlainError
+;(global as any).DEBUG = Debug
+;(global as any).printErrorDefault = printPlainError
 
 if (process.env.APP_DATA_PATH) {
   process.APP_DATA_PATH = process.env.APP_DATA_PATH

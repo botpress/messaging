@@ -40,14 +40,13 @@ export class StudioUITransport implements LogTransporter {
 }
 
 async function setupDebugLogger(logger: Logger) {
-  global.printBotLog = (botId, args) => {
+  ;(global as any).printBotLog = (botId: string, args: any[]) => {
     const message = args[0]
     const rest = args.slice(1)
 
     logger.level(LogLevel.DEBUG).persist(false).forBot(botId).debug(message.trim(), rest)
   }
-
-  global.printLog = (args) => {
+  ;(global as any).printLog = (args: any[]) => {
     const message = args[0]
     const rest = args.slice(1)
 
