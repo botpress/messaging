@@ -7,7 +7,7 @@
   "fixturesFolder": "test/cypress/fixtures",
   "screenshotsFolder": "test/cypress/screenshots",
   "videosFolder": "test/cypress/videos",
-  "integrationFolder": "packages/messaging/webchat/test/e2e/",
+  "integrationFolder": "packages/webchat/webchat/test/e2e/",
 
   "pluginsFile": "test/cypress/plugins/index.ts",
   "supportFile": "test/cypress/support/index.ts",

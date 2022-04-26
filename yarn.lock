@@ -2121,9 +2121,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-board@workspace:packages/messaging/board":
+"@botpress/messaging-board@workspace:packages/webchat/board":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-board@workspace:packages/messaging/board"
+  resolution: "@botpress/messaging-board@workspace:packages/webchat/board"
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-client": 1.2.0
@@ -2190,9 +2190,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-components@0.4.0, @botpress/messaging-components@workspace:packages/messaging/components":
+"@botpress/messaging-components@0.4.0, @botpress/messaging-components@workspace:packages/webchat/components":
   version: 0.0.0-use.local
-  resolution: "@botpress/messaging-components@workspace:packages/messaging/components"
+  resolution: "@botpress/messaging-components@workspace:packages/webchat/components"
   dependencies:
     "@babel/core": ^7.16.12
     "@googlemaps/react-wrapper": ^1.1.26
@@ -2450,9 +2450,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat-inject@workspace:packages/messaging/inject":
+"@botpress/webchat-inject@workspace:packages/webchat/inject":
   version: 0.0.0-use.local
-  resolution: "@botpress/webchat-inject@workspace:packages/messaging/inject"
+  resolution: "@botpress/webchat-inject@workspace:packages/webchat/inject"
   dependencies:
     "@botpress/webchat": 0.4.0
     "@parcel/config-default": ^2.2.1
@@ -2465,9 +2465,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat@0.4.0, @botpress/webchat@workspace:packages/messaging/webchat":
+"@botpress/webchat@0.4.0, @botpress/webchat@workspace:packages/webchat/webchat":
   version: 0.0.0-use.local
-  resolution: "@botpress/webchat@workspace:packages/messaging/webchat"
+  resolution: "@botpress/webchat@workspace:packages/webchat/webchat"
   dependencies:
     "@blueprintjs/core": ^3.23.1
     "@botpress/messaging-components": 0.4.0

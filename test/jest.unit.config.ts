@@ -41,7 +41,7 @@ const config: Config.InitialOptions = {
       moduleNameMapper: pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     },
     {
-      rootDir: 'packages/messaging/components',
+      rootDir: 'packages/webchat/components',
       testMatch: ['<rootDir>/test/unit/**/*.test.tsx'],
       displayName: { name: 'Components', color: 'red' },
       roots: ['.'],
