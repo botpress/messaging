@@ -1,20 +1,27 @@
 import cx from 'classnames'
-import { Training } from 'common/nlu-training'
 import React, { FC, Fragment, useEffect, useRef, useState } from 'react'
 import { HotKeys } from 'react-hotkeys'
 import { connect } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
-import { setEmulatorOpen, toggleBottomPanel, toggleInspector, trainSessionReceived, viewModeChanged } from 'src/actions'
-import SelectContentManager from '~/components/Content/Select/Manager'
-import PluginInjectionSite from '~/components/PluginInjectionSite'
-import CodeEditor from '~/views/CodeEditor'
-import Config from '~/views/Config'
-import Content from '~/views/Content'
-import FlowBuilder from '~/views/FlowBuilder'
-import Module from '~/views/Module'
-import NLU from '~/views/Nlu'
-import QNA from '~/views/Qna'
+
+import {
+  setEmulatorOpen,
+  toggleBottomPanel,
+  toggleInspector,
+  trainSessionReceived,
+  viewModeChanged
+} from '../../actions'
+import { Training } from '../../common/nlu-training'
+import SelectContentManager from '../../components/Content/Select/Manager'
+import PluginInjectionSite from '../../components/PluginInjectionSite'
+import CodeEditor from '../../views/CodeEditor'
+import Config from '../../views/Config'
+import Content from '../../views/Content'
+import FlowBuilder from '../../views/FlowBuilder'
+import Module from '../../views/Module'
+import NLU from '../../views/Nlu'
+import QNA from '../../views/Qna'
 import storage from '../Shared/lite-utils/storage'
 import { lang } from '../Shared/translations'
 import { isInputFocused } from '../Shared/utilities/inputs'

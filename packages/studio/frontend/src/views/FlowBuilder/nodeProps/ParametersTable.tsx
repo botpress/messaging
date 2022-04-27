@@ -1,11 +1,11 @@
 import classnames from 'classnames'
-import { ActionParameterDefinition } from 'common/typings'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { OverlayTrigger, Tooltip, Table } from 'react-bootstrap'
-import { lang } from '~/components/Shared/translations'
 
-import SmartInput from '~/components/SmartInput'
+import { ActionParameterDefinition } from '../../../common/typings'
+import { lang } from '../../../components/Shared/translations'
+import SmartInput from '../../../components/SmartInput'
 
 import style from './parameters.scss'
 

@@ -1,13 +1,14 @@
 import { Icon, Tooltip, Spinner } from '@blueprintjs/core'
 import axios from 'axios'
 import classNames from 'classnames'
-import { Training } from 'common/nlu-training'
 import moment from 'moment'
 import React, { useCallback, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { toast } from '~/components/Shared/Toaster'
-import { lang } from '~/components/Shared/translations'
-import { RootReducer } from '~/reducers'
+
+import { Training } from '../../../common/nlu-training'
+import { toast } from '../../../components/Shared/Toaster'
+import { lang } from '../../../components/Shared/translations'
+import { RootReducer } from '../../../reducers'
 
 import style from './style.scss'
 

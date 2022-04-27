@@ -1,7 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { RootReducer } from '~/reducers'
-import store from '~/store'
+
+import { RootReducer } from '../../../reducers'
+import store from '../../../store'
 
 import { AccessControlProps, PermissionAllowedProps } from './typings'
 

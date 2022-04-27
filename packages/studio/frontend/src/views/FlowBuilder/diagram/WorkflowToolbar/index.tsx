@@ -1,11 +1,11 @@
-import _ from 'lodash'
 import React from 'react'
 import { connect } from 'react-redux'
-import { flowEditorRedo, flowEditorUndo } from 'src/actions'
-import { SearchBar } from '~/components/Shared/Interface'
-import MainLayout from '~/components/Shared/MainLayout'
-import { lang } from '~/components/Shared/translations'
-import { canFlowRedo, canFlowUndo } from '~/reducers'
+
+import { flowEditorRedo, flowEditorUndo } from '../../../../actions'
+import { SearchBar } from '../../../../components/Shared/Interface'
+import MainLayout from '../../../../components/Shared/MainLayout'
+import { lang } from '../../../../components/Shared/translations'
+import { canFlowRedo, canFlowUndo } from '../../../../reducers'
 
 import style from './style.scss'
 

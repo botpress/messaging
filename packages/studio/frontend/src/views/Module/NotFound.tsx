@@ -1,5 +1,5 @@
 import React from 'react'
-import { lang } from '~/components/Shared/translations'
+import { lang } from '../../components/Shared/translations'
 
 export default ({ err }: { err?: Error }) => (
   <div className="panel panel-warning">

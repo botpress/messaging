@@ -4,9 +4,10 @@ import cx from 'classnames'
 import _ from 'lodash'
 import moment from 'moment'
 import React, { FC, Fragment, useState } from 'react'
-import ContentSection from '~/components/Shared/ContentSection'
-import ToolTip from '~/components/Shared/ToolTip'
-import { lang } from '~/components/Shared/translations'
+
+import ContentSection from '../../../../../components/Shared/ContentSection'
+import ToolTip from '../../../../../components/Shared/ToolTip'
+import { lang } from '../../../../../components/Shared/translations'
 
 import bpStyle from '../../style.scss'
 import style from '../style.scss'

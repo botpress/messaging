@@ -1,10 +1,11 @@
 import { NLU } from 'botpress/sdk'
 import React, { FC, useState } from 'react'
-import confirmDialog from '~/components/Shared/ConfirmDialog'
-import { ItemList, SearchBar } from '~/components/Shared/Interface'
-import { lang } from '~/components/Shared/translations'
 
 import { NluItem } from '..'
+import confirmDialog from '../../../components/Shared/ConfirmDialog'
+import { ItemList, SearchBar } from '../../../components/Shared/Interface'
+import { lang } from '../../../components/Shared/translations'
+
 import { NluClient } from '../client'
 
 import { EntityModalAction, EntityNameModal } from './EntityNameModal'

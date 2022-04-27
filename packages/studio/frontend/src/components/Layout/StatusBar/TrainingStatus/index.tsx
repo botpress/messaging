@@ -1,7 +1,8 @@
-import { Training } from 'common/nlu-training'
 import React, { FC } from 'react'
 import { connect } from 'react-redux'
-import { RootReducer } from '~/reducers'
+
+import { Training } from '../../../../common/nlu-training'
+import { RootReducer } from '../../../../reducers'
 
 import MultiLang from './MultiLang'
 import SingleLang from './SingleLang'

@@ -3,8 +3,9 @@ import cx from 'classnames'
 import React, { FC, SyntheticEvent, useState } from 'react'
 
 import { connect } from 'react-redux'
-import { RootReducer } from '~/reducers'
-import { isRTLLocale } from '~/translations'
+
+import { RootReducer } from '../../../../../reducers'
+import { isRTLLocale } from '../../../../../translations'
 import { NodeDebugInfo } from '../../debugger'
 
 import { DebugInfo } from './DebugInfo'

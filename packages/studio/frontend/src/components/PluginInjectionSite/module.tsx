@@ -1,7 +1,8 @@
 import axios from 'axios'
 import React from 'react'
-import InjectedComponent from '~/components/Injected'
-import EventBus from '~/util/EventBus'
+
+import InjectedComponent from '../../components/Injected'
+import EventBus from '../../util/EventBus'
 
 interface Props {
   moduleName: string

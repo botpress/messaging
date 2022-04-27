@@ -2,14 +2,14 @@ import { Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/c
 import classnames from 'classnames'
 import _ from 'lodash'
 import React, { Component, Fragment } from 'react'
-
 import { Button } from 'react-bootstrap'
-import { lang } from '~/components/Shared/translations'
+
+import { lang } from '../../../components/Shared/translations'
 
 import ActionItem from '../common/action'
 import ActionModalForm from './ActionModalForm'
 
-const style = require('./style.scss')
+import style from './style.scss'
 
 interface Props {
   items: any[]

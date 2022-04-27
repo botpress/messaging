@@ -1,10 +1,11 @@
 import { Button, Icon, Intent, Popover, Position, Tag, Tooltip } from '@blueprintjs/core'
-import { FlowMutex } from 'common/typings'
 import _ from 'lodash'
 import React, { FC, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { lang } from '~/components/Shared/translations'
-import { getCurrentFlow } from '~/reducers'
+
+import { FlowMutex } from '../../../../common/typings'
+import { lang } from '../../../../components/Shared/translations'
+import { getCurrentFlow } from '../../../../reducers'
 
 import style from './style.scss'
 

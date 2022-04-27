@@ -2990,6 +2990,7 @@ __metadata:
     "@types/bluebird-global": ^3.5.13
     "@types/classnames": ^2.3.1
     "@types/lodash": ^4.14.178
+    "@types/mime-types": ^2.1.1
     "@types/node": ^12.18.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
@@ -3032,6 +3033,7 @@ __metadata:
     js-cookie: ^2.2.0
     jsonlint-mod: ^1.7.6
     lodash: ^4.17.21
+    mime-types: ^2.1.35
     mobx: ^5.10.1
     mobx-react: ^6.1.1
     moment: ^2.29.1

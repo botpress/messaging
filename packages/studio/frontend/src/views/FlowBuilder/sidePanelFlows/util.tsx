@@ -1,9 +1,9 @@
 import { Position, Tooltip } from '@blueprintjs/core'
-import _ from 'lodash'
 import find from 'lodash/find'
 import React from 'react'
-import { lang } from '~/components/Shared/translations'
-import { getFlowLabel, reorderFlows } from '~/components/Shared/Utils'
+
+import { lang } from '../../../components/Shared/translations'
+import { getFlowLabel, reorderFlows } from '../../../components/Shared/Utils'
 
 import {
   ERROR_FLOW_ICON,

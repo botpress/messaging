@@ -1,8 +1,8 @@
 import { Colors, Icon, MenuItem, Position, Tooltip } from '@blueprintjs/core'
 import { ItemRenderer, MultiSelect } from '@blueprintjs/select'
 import React, { FC, useEffect, useState } from 'react'
-import { lang } from '~/components/Shared/translations'
 
+import { lang } from '../../../components/Shared/translations'
 import { NluClient } from '../client'
 
 import style from './style.scss'

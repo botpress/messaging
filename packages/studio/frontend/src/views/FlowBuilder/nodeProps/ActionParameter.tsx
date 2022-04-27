@@ -1,7 +1,7 @@
 import { FormGroup, InputGroup } from '@blueprintjs/core'
-import _ from 'lodash'
 import React, { FC } from 'react'
-import { lang } from '~/components/Shared/translations'
+
+import { lang } from '../../../components/Shared/translations'
 
 import { ParameterValue } from './ActionDialog'
 

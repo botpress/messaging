@@ -3,6 +3,7 @@ import cx from 'classnames'
 import _ from 'lodash'
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
+
 import {
   closeFlowNodeProps,
   copyFlowNodeElement,
@@ -11,9 +12,9 @@ import {
   requestEditSkill,
   updateFlow,
   updateFlowNode
-} from 'src/actions'
-import { lang } from '~/components/Shared/translations'
-import { getCurrentFlow, getCurrentFlowNode } from '~/reducers'
+} from '../../../actions'
+import { lang } from '../../../components/Shared/translations'
+import { getCurrentFlow, getCurrentFlowNode } from '../../../reducers'
 
 import { nodeTypes } from '../diagram/manager'
 import FlowInformation from '../nodeProps/FlowInformation'

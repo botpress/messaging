@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import React, { FC, Fragment, useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
+
 import {
   closeFlowNodeProps,
   copyFlowNodes,
@@ -9,18 +10,18 @@ import {
   refreshFlowsLinks,
   requestEditSkill,
   updateFlow
-} from 'src/actions'
-import ContentForm from '~/components/ContentForm/index'
-import style from '~/components/ContentForm/style.scss'
-import Dropdown from '~/components/Shared/Dropdown'
-import MoreOptions from '~/components/Shared/MoreOptions'
-import { MoreOptionsItems } from '~/components/Shared/MoreOptions/typings'
-import { toast } from '~/components/Shared/Toaster'
-import { lang } from '~/components/Shared/translations'
-import { toastInfo } from '~/components/Shared/Utils'
-import withLanguage from '~/components/Util/withLanguage'
-import { getCurrentFlow, getCurrentFlowNode, RootReducer } from '~/reducers'
-import EditableInput from '~/views/FlowBuilder/common/EditableInput'
+} from '../../../actions'
+import ContentForm from '../../../components/ContentForm/index'
+import style from '../../../components/ContentForm/style.scss'
+import Dropdown from '../../../components/Shared/Dropdown'
+import MoreOptions from '../../../components/Shared/MoreOptions'
+import { MoreOptionsItems } from '../../../components/Shared/MoreOptions/typings'
+import { toast } from '../../../components/Shared/Toaster'
+import { lang } from '../../../components/Shared/translations'
+import { toastInfo } from '../../../components/Shared/Utils'
+import withLanguage from '../../../components/Util/withLanguage'
+import { getCurrentFlow, getCurrentFlowNode, RootReducer } from '../../../reducers'
+import EditableInput from '../../../views/FlowBuilder/common/EditableInput'
 
 interface OwnProps {
   onDeleteSelectedElements: () => void

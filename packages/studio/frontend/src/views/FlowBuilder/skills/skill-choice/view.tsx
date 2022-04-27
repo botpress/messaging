@@ -11,13 +11,12 @@ import {
   Tabs,
   TagInput
 } from '@blueprintjs/core'
-
 import axios from 'axios'
 import _ from 'lodash'
 import { customAlphabet } from 'nanoid'
 import React from 'react'
-import ContentPickerWidget from '~/components/Content/Select/Widget'
 
+import ContentPickerWidget from '../../../../components/Content/Select/Widget'
 import style from '../style.scss'
 import { SkillProps } from '../typings'
 

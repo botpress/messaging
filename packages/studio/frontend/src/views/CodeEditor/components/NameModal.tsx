@@ -1,8 +1,8 @@
 import { Button, Callout, Classes, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
-import { EditableFile, FilesDS } from 'common/code-editor'
-import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
-import { lang } from '~/components/Shared/translations'
+
+import { EditableFile, FilesDS } from '../../../common/code-editor'
+import { lang } from '../../../components/Shared/translations'
 
 interface Props {
   isOpen: boolean

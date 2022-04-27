@@ -1,6 +1,7 @@
 import React from 'react'
-import ToolTip from '~/components/Shared/ToolTip'
-import { lang } from '~/components/Shared/translations'
+
+import ToolTip from '../../../components/Shared/ToolTip'
+import { lang } from '../../../components/Shared/translations'
 import style from './style.scss'
 
 export default () => {

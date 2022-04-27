@@ -3,11 +3,11 @@ import React, { Fragment } from 'react'
 
 import { Tabs, Tab, Badge } from 'react-bootstrap'
 
-import { lang } from '~/components/Shared/translations'
+import { lang } from '../../../components/Shared/translations'
 import ActionSection from './ActionSection'
+import style from './style.scss'
 import TransitionSection from './TransitionSection'
 
-const style = require('./style.scss')
 export default (props) => {
   const { readOnly } = props
 

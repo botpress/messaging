@@ -1,8 +1,9 @@
 import { Tag } from '@blueprintjs/core'
 import { NLU } from 'botpress/sdk'
 import React from 'react'
-import confirmDialog from '~/components/Shared/ConfirmDialog'
-import { lang } from '~/components/Shared/translations'
+
+import confirmDialog from '../../../../components/Shared/ConfirmDialog'
+import { lang } from '../../../../components/Shared/translations'
 
 import style from '../style.scss'
 

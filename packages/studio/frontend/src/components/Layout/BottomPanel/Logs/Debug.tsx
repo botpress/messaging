@@ -15,8 +15,8 @@ import {
   FaPlusSquare,
   FaSquare
 } from 'react-icons/fa'
-import { toast } from '~/components/Shared/Toaster'
-import { lang } from '~/components/Shared/translations'
+import { toast } from '../../../../components/Shared/Toaster'
+import { lang } from '../../../../components/Shared/translations'
 
 import style from '../style.scss'
 

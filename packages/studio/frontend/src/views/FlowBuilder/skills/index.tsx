@@ -4,12 +4,13 @@ import includes from 'lodash/includes'
 import React, { useState, useEffect } from 'react'
 import Loader from 'react-loaders'
 import { connect } from 'react-redux'
-import { cancelNewSkill, insertNewSkill, updateSkill } from 'src/actions'
-import InjectedModuleView from '~/components/PluginInjectionSite/module'
-import { Dialog } from '~/components/Shared/Dialog'
-import { lang } from '~/components/Shared/translations'
-import { RootReducer } from '~/reducers'
+
+import { cancelNewSkill, insertNewSkill, updateSkill } from '../../../actions'
+import InjectedModuleView from '../../../components/PluginInjectionSite/module'
+import { Dialog } from '../../../components/Shared/Dialog'
+import { lang } from '../../../components/Shared/translations'
 import withLanguage from '../../../components/Util/withLanguage'
+import { RootReducer } from '../../../reducers'
 
 import { doGenerateFlow } from './flowGenerator'
 import { CallAPI } from './skill-call-api'
@@ -17,7 +18,7 @@ import { Choice } from './skill-choice'
 import { SendEmail } from './skill-send-email'
 import { Slot } from './skill-slot'
 
-const style = require('./style.scss')
+import style from './style.scss'
 
 const VALID_WINDOW_SIZES = ['normal', 'large', 'small']
 

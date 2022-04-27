@@ -1,7 +1,8 @@
 import { Button, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import React, { useEffect, useState } from 'react'
-import { toast } from '~/components/Shared/Toaster'
-import { lang } from '~/components/Shared/translations'
+
+import { toast } from '../../../../../components/Shared/Toaster'
+import { lang } from '../../../../../components/Shared/translations'
 
 import ConfigEditor from './ConfigEditor'
 import RawPayloadSender from './RawPayloadSender'

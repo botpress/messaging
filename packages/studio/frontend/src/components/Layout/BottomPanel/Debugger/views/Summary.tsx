@@ -1,8 +1,9 @@
 import sdk from 'botpress/sdk'
 
 import React from 'react'
-import ContentSection from '~/components/Shared/ContentSection'
-import { lang } from '~/components/Shared/translations'
+
+import ContentSection from '../../../../../components/Shared/ContentSection'
+import { lang } from '../../../../../components/Shared/translations'
 
 import style from '../style.scss'
 

@@ -4,9 +4,9 @@ import { FlowPoint, FlowView, NodeProblem } from 'common/typings'
 import _ from 'lodash'
 import { nanoid } from 'nanoid'
 import { createAction } from 'redux-actions'
+
 import { getDeletedFlows, getDirtyFlows, getModifiedFlows, getNewFlows } from '../reducers/selectors'
 import { copyName } from '../util/flows'
-// import { doGenerateFlow } from '~/views/FlowBuilder/skills/flowGenerator'
 import { FlowsAPI } from './api'
 
 export const receiveFlowsModification = createAction('FLOWS/MODIFICATIONS/RECEIVE')

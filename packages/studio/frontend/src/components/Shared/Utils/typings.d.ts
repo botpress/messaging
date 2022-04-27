@@ -1,5 +1,6 @@
 import React from 'react'
-import { UserReducer } from '~/reducers/user'
+
+import { UserReducer } from '../../../reducers/user'
 
 declare module 'botpress/utils' {
   export function ElementPreview(props: ElementPreviewProps): JSX.Element

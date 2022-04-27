@@ -1,14 +1,14 @@
 import { Button, Icon, Position, Tooltip } from '@blueprintjs/core'
 import cx from 'classnames'
 import _uniqueId from 'lodash/uniqueId'
-import React, { FC, Fragment, useEffect, useRef, useState, KeyboardEvent } from 'react'
+import React, { FC, Fragment, useEffect, useRef, useState } from 'react'
 
-import BotpressContentTypePicker from '~/components/Content/Select'
-import BotpressContentPicker from '~/components/Content/Select/Widget'
-import ShortcutLabel from '~/components/Shared/ShortcutLabel'
-import Textarea from '~/components/Shared/Textarea'
-import { lang } from '~/components/Shared/translations'
-import { controlKey } from '~/components/Shared/utilities/keyboardShortcuts'
+import BotpressContentTypePicker from '../../../components/Content/Select'
+import BotpressContentPicker from '../../../components/Content/Select/Widget'
+import ShortcutLabel from '../../../components/Shared/ShortcutLabel'
+import Textarea from '../../../components/Shared/Textarea'
+import { lang } from '../../../components/Shared/translations'
+import { controlKey } from '../../../components/Shared/utilities/keyboardShortcuts'
 import style from '../style.scss'
 
 interface Props {

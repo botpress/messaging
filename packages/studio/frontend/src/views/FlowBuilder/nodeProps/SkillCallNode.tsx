@@ -1,13 +1,12 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment } from 'react'
 
 import { Panel, Tabs, Tab, Badge, Button } from 'react-bootstrap'
-import { lang } from '~/components/Shared/translations'
 
-import { AccessControl } from '~/components/Shared/Utils'
+import { lang } from '../../../components/Shared/translations'
+import { AccessControl } from '../../../components/Shared/Utils'
 import EditableInput from '../common/EditableInput'
+import style from './style.scss'
 import TransitionSection from './TransitionSection'
-
-const style = require('./style.scss')
 
 function transformText(text) {
   return text.replace(/[^a-z0-9-_\.]/gi, '_')

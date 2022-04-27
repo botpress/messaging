@@ -1,9 +1,9 @@
 import { Button } from '@blueprintjs/core'
 import cx from 'classnames'
-import _ from 'lodash'
 import React, { FC, Fragment } from 'react'
-import { history } from '~/components/Routes'
-import { lang } from '~/components/Shared/translations'
+
+import { history } from '../../../../../components/Routes'
+import { lang } from '../../../../../components/Shared/translations'
 
 import { NodeDebugInfo } from '../../debugger'
 

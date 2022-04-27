@@ -22,8 +22,8 @@ import {
 } from 'slate'
 import { Editor, EditorProps, RenderBlockProps, RenderMarkProps } from 'slate-react'
 import PlaceholderPlugin from 'slate-react-placeholder'
-import { lang } from '~/components/Shared/translations'
 
+import { lang } from '../../../components/Shared/translations'
 import { TagSlotPopover } from './slots/SlotPopover'
 import style from './style.scss'
 import { makeSlotMark, utterancesToValue, valueToUtterances } from './utterances-state-utils'

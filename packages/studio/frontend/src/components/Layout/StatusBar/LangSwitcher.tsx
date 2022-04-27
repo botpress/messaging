@@ -1,10 +1,8 @@
 import { Button } from '@blueprintjs/core'
-import _ from 'lodash'
 import React, { useEffect } from 'react'
-import Dropdown from '~/components/Shared/Dropdown'
 
+import Dropdown from '../../../components/Shared/Dropdown'
 import withLanguage from '../../Util/withLanguage'
-
 import { Flag } from './Flag'
 
 interface Props {

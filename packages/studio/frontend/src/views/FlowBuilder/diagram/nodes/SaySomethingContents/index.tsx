@@ -1,12 +1,13 @@
 import _ from 'lodash'
 import React, { FC, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { fetchContentCategories } from 'src/actions'
-import { MarkdownContent } from '~/components/Shared/MarkdownContent'
-import withLanguage from '~/components/Util/withLanguage'
-import { RootReducer } from '~/reducers'
-import { getFormData } from '~/util/NodeFormData'
-import commonStyle from '~/views/FlowBuilder/common/style.scss'
+
+import { fetchContentCategories } from '../../../../../actions'
+import { MarkdownContent } from '../../../../../components/Shared/MarkdownContent'
+import withLanguage from '../../../../../components/Util/withLanguage'
+import { RootReducer } from '../../../../../reducers'
+import { getFormData } from '../../../../../util/NodeFormData'
+import commonStyle from '../../../../../views/FlowBuilder/common/style.scss'
 
 import style from '../Components/style.scss'
 

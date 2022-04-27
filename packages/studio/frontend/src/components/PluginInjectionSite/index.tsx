@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { connect } from 'react-redux'
-import InjectedModuleView from '~/components/PluginInjectionSite/module'
-import { moduleViewNames } from '~/util/Modules'
+
+import InjectedModuleView from '../../components/PluginInjectionSite/module'
+import { moduleViewNames } from '../../util/Modules'
 
 interface Props {
   site: string

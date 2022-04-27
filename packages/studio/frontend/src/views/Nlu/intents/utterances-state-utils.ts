@@ -1,7 +1,8 @@
 import { NLU } from 'botpress/sdk'
-import { parseUtterance } from 'common/utterance-parser'
 import _ from 'lodash'
 import { MarkJSON, NodeJSON, TextJSON, Value, ValueJSON } from 'slate'
+
+import { parseUtterance } from '../../../common/utterance-parser'
 
 export const SLOT_MARK = 'slotName'
 

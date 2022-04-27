@@ -1,11 +1,12 @@
 import axios from 'axios'
 import cn from 'classnames'
-import { isBpUrl } from 'common/url'
 import React, { FC, Fragment, useState } from 'react'
-import FormFields from '~/components/Shared/Form/FormFields'
-import { SupportedFileType } from '~/components/Shared/Form/FormFields/typings'
-import { lang } from '~/components/Shared/translations'
-import { AccessControl } from '~/components/Shared/Utils'
+
+import { isBpUrl } from '../../../common/url'
+import FormFields from '../../../components/Shared/Form/FormFields'
+import { SupportedFileType } from '../../../components/Shared/Form/FormFields/typings'
+import { lang } from '../../../components/Shared/translations'
+import { AccessControl } from '../../../components/Shared/Utils'
 
 import { Schema } from '../typings'
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import ContentPickerWidget from '~/components/Content/Select/Widget'
+import ContentPickerWidget from '../../components/Content/Select/Widget'
 
 const decorateRef = (id) => `##ref(${id})`
 

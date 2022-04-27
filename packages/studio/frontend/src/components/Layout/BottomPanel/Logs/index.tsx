@@ -8,11 +8,12 @@ import { nanoid } from 'nanoid'
 import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { toggleBottomPanel } from 'src/actions'
-import ToolTip from '~/components/Shared/ToolTip'
-import { lang } from '~/components/Shared/translations'
-import { downloadBlob } from '~/util'
-import EventBus from '~/util/EventBus'
+
+import { toggleBottomPanel } from '../../../../actions'
+import ToolTip from '../../../../components/Shared/ToolTip'
+import { lang } from '../../../../components/Shared/translations'
+import { downloadBlob } from '../../../../util'
+import EventBus from '../../../../util/EventBus'
 
 import style from '../style.scss'
 

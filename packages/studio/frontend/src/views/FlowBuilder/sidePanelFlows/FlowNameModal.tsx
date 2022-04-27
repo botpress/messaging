@@ -1,7 +1,8 @@
 import { Button, Callout, Classes, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
-import { lang } from '~/components/Shared/translations'
+
+import { lang } from '../../../components/Shared/translations'
 
 interface Props {
   // Used for actions rename and duplicate

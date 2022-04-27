@@ -3,9 +3,9 @@ import { IconNames } from '@blueprintjs/icons'
 import React from 'react'
 
 import { Panel, Label, Button } from 'react-bootstrap'
-import confirmDialog from '~/components/Shared/ConfirmDialog'
 
-import { Status, Scenario } from '../../../../../../studio-be/src/studio/testing/typings'
+import { Status, Scenario } from '../../../../../server/src/studio/testing/typings'
+import confirmDialog from '../../../components/Shared/ConfirmDialog'
 import style from '../style.scss'
 import FailureReport from './FailureReport'
 import Interaction from './Interaction'

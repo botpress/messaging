@@ -6,7 +6,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { DefaultPortModel, PortWidget } from 'storm-react-diagrams'
-import { getFlowNames, getFlowNamesList } from '~/reducers'
+
+import { getFlowNames } from '../../../../reducers'
 
 import style from './style.scss'
 

@@ -1,8 +1,9 @@
 import _ from 'lodash'
 import React from 'react'
 import { Row, Col, Label, Input } from 'reactstrap'
-import ContentPickerWidget from '~/components/Content/Select/Widget'
-import { BotpressTooltip } from '~/components/Shared/BotpressTooltip'
+
+import ContentPickerWidget from '../../../../components/Content/Select/Widget'
+import { BotpressTooltip } from '../../../../components/Shared/BotpressTooltip'
 
 export class SendEmail extends React.Component<any, any> {
   state = {

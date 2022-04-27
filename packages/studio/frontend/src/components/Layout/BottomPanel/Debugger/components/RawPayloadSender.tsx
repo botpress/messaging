@@ -1,8 +1,9 @@
 import { Button, FormGroup, Intent, TextArea } from '@blueprintjs/core'
 import jsonlintMod from 'jsonlint-mod'
 import React, { useState } from 'react'
-import { toast } from '~/components/Shared/Toaster'
-import { lang } from '~/components/Shared/translations'
+
+import { toast } from '../../../../../components/Shared/Toaster'
+import { lang } from '../../../../../components/Shared/translations'
 
 import style from './style.scss'
 

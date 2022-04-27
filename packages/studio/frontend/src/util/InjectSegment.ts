@@ -1,7 +1,8 @@
 import segmentPlugin from '@analytics/segment'
 import Analytics, { AnalyticsInstance, PageData } from 'analytics'
 import hash from 'hash.js'
-import { UserReducer } from '~/reducers/user'
+
+import { UserReducer } from '../reducers/user'
 
 const APP_NAME = 'STUDIO_ANALYTICS' // for reference, in case of second account
 

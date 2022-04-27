@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { EditableFile, FilePermissions, FilesDS } from 'common/code-editor'
 import _ from 'lodash'
-import { toast } from '~/components/Shared/Toaster'
-import { lang } from '~/components/Shared/translations'
+
+import { EditableFile, FilePermissions, FilesDS } from '../../../common/code-editor'
+import { toast } from '../../../components/Shared/Toaster'
+import { lang } from '../../../components/Shared/translations'
 
 export default class CodeEditorApi {
   constructor() {}

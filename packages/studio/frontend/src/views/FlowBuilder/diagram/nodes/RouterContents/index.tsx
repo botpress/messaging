@@ -1,7 +1,8 @@
 import cx from 'classnames'
 import React, { FC } from 'react'
-import RoutingItem from '~/views/FlowBuilder/common/routing'
-import { StandardPortWidget } from '~/views/FlowBuilder/diagram/nodes/Ports'
+
+import RoutingItem from '../../../../../views/FlowBuilder/common/routing'
+import { StandardPortWidget } from '../../../../../views/FlowBuilder/diagram/nodes/Ports'
 
 import { BlockProps } from '../Block'
 import NodeContentItem from '../Components/NodeContentItem'

@@ -13,12 +13,7 @@
     "jsx": "react",
     "typeRoots": ["./node_modules/@types", "src/web/typings.d.ts"],
     "types": ["bluebird-global"],
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["src/web/*"],
-      "common/*": ["../studio-be/src/common/*"],
-      "botpress/sdk": ["../studio-be/src/sdk/botpress.d.ts"]
-    }
+    "baseUrl": "./"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": []

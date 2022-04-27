@@ -3,13 +3,12 @@ import _ from 'lodash'
 import React, { Component, Fragment } from 'react'
 
 import { Button, Label } from 'react-bootstrap'
-import { lang } from '~/components/Shared/translations'
 
+import { lang } from '../../../components/Shared/translations'
 import ConditionItem from '../common/condition'
-
 import ConditionModalForm from './ConditionModalForm'
 
-const style = require('./style.scss')
+import style from './style.scss'
 
 export default class TransitionSection extends Component<any, any> {
   state: any = {

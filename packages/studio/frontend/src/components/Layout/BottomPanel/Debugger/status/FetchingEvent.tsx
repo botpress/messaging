@@ -1,7 +1,8 @@
 import { Spinner } from '@blueprintjs/core'
 import classnames from 'classnames'
 import React from 'react'
-import { lang } from '~/components/Shared/translations'
+
+import { lang } from '../../../../../components/Shared/translations'
 
 import style from '../style.scss'
 
