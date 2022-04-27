@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn run -T parcel build src/index.html",
-    "watch": "yarn run -T parcel watch src/index.html",
+    "build": "yarn && yarn run -T parcel build src/index.html",
+    "watch": "yarn && yarn run -T parcel watch src/index.html",
+    "dev": "yarn && yarn run -T parcel src/index.html",
     "build:scss-types": "typed-scss-modules src --logLevel error --nameFormat none --exportType default",
     "build:tsc": "yarn run -T tsc --build"
   },

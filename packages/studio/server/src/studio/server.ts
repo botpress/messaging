@@ -240,11 +240,6 @@ export class HTTPServer {
 
     await this.setupCoreProxy()
 
-    this.app.use('/', (req, res) => {
-      res.sendStatus(200)
-      // res.redirect(`${process.EXTERNAL_URL}`)
-    })
-
     return this.app
   }
 
