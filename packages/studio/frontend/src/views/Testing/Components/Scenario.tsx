@@ -1,10 +1,10 @@
 import { Icon } from '@blueprintjs/core'
 import { IconNames } from '@blueprintjs/icons'
+import { Scenario, Status } from '@botpress/common'
 import React from 'react'
 
 import { Panel, Label, Button } from 'react-bootstrap'
 
-import { Status, Scenario } from '../../../../../server/src/studio/testing/typings'
 import confirmDialog from '../../../components/Shared/ConfirmDialog'
 import style from '../style.scss'
 import FailureReport from './FailureReport'

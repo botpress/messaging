@@ -1,7 +1,6 @@
 import { EditableFile, HOOK_SIGNATURES } from '@botpress/common'
 import path from 'path'
 
-
 const START_COMMENT = '/** Your code starts below */'
 const END_COMMENT = '/** Your code ends here */'
 

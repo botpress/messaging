@@ -1,8 +1,7 @@
-import ActionItem from '@botpress/common'
 import _ from 'lodash'
 import React from 'react'
 
-
+import ActionItem from '../../../components/Layout/StatusBar/ActionItem'
 import ActionModalForm from './ActionModalForm'
 
 export default class ActionModalSmall extends React.Component<any> {

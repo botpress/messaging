@@ -1,8 +1,8 @@
 import { IconName } from '@blueprintjs/core'
-import ActionItem from '@botpress/common'
 import cx from 'classnames'
 import React, { FC } from 'react'
 
+import ActionItem from '../../../../../components/Layout/StatusBar/ActionItem'
 import ConditionItem from '../../../../../views/FlowBuilder/common/condition'
 import { StandardPortWidget } from '../../nodes/Ports'
 import { BlockProps } from '../Block'

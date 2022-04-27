@@ -3,7 +3,6 @@ import { NLU } from '@botpress/sdk'
 import _ from 'lodash'
 import { MarkJSON, NodeJSON, TextJSON, Value, ValueJSON } from 'slate'
 
-
 export const SLOT_MARK = 'slotName'
 
 interface ParsedSlot {

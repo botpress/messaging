@@ -1,9 +1,9 @@
+import { BotReply } from '@botpress/common'
 import classnames from 'classnames'
 import _ from 'lodash'
 import React from 'react'
 
 import { MdCheck, MdClose, MdRemove } from 'react-icons/md'
-import { BotReply } from '../../../../../../studio-be/src/studio/testing/typings'
 import style from '../style.scss'
 
 interface Props {

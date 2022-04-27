@@ -3,7 +3,6 @@ import { FlowNode } from '@botpress/sdk'
 import _ from 'lodash'
 import { createSelector } from 'reselect'
 
-
 const _getFlowsByName = (state) => state.flows?.flowsByName
 const _getCurrentFlow = (state) => state.flows?.currentFlow
 const _getCurrentFlowNode = (state) => state.flows?.currentFlowNode

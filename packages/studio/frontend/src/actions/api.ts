@@ -2,7 +2,6 @@ import { encodeFolderPath } from '@botpress/common'
 import axios from 'axios'
 import _ from 'lodash'
 
-
 type DebounceUpdateFunc = ((flow: any, callback: any) => Promise<void>) & { cancel: Function }
 
 const DELAY = 1000

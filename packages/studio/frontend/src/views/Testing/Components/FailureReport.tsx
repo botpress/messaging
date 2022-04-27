@@ -1,7 +1,7 @@
+import { ScenarioMismatch } from '@botpress/common'
 import React from 'react'
 
 import { Row, Col, Grid } from 'react-bootstrap'
-import { ScenarioMismatch } from '../../../../../../studio-be/src/studio/testing/typings'
 
 import style from '../style.scss'
 import Interaction from './Interaction'

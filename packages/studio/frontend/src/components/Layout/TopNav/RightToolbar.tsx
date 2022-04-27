@@ -72,7 +72,7 @@ const RightToolBar = (props: Props) => {
 const mapStateToProps = (state: RootReducer) => ({
   docHints: state.ui.docHints,
   emulatorOpen: state.ui.emulatorOpen,
-  isCloudBot: state.bot.isCloudBot
+  isCloudBot: state.bot.bot.isCloudBot
 })
 
 export default connect(mapStateToProps)(RightToolBar)

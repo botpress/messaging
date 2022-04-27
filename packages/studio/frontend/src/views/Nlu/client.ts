@@ -1,7 +1,6 @@
 import { NLU } from '@botpress/sdk'
 import axios from 'axios'
 
-
 export type NluClient = ReturnType<typeof makeNLUClient>
 
 export const makeNLUClient = () => {

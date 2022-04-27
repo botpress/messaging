@@ -1,9 +1,9 @@
 import { Popover, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
-import ActionItem from '@botpress/common'
 import classnames from 'classnames'
 import _ from 'lodash'
 import React, { Component, Fragment } from 'react'
 import { Button } from 'react-bootstrap'
+import ActionItem from '../../../components/Layout/StatusBar/ActionItem'
 
 import { lang } from '../../../components/Shared/translations'
 

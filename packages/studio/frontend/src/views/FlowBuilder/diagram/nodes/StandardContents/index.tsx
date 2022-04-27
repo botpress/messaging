@@ -1,7 +1,7 @@
-import ActionItem from '@botpress/common'
 import cx from 'classnames'
 import React, { FC } from 'react'
 
+import ActionItem from '../../../../../components/Layout/StatusBar/ActionItem'
 import store from '../../../../../store'
 import { isRTLLocale } from '../../../../../translations'
 import ConditionItem from '../../../../../views/FlowBuilder/common/condition'

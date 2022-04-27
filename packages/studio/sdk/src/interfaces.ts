@@ -271,7 +271,7 @@ export namespace IO {
     setFlag(flag: symbol, value: boolean): void
   }
 
-  interface ProcessingEntry {
+  export interface ProcessingEntry {
     logs?: string[]
     errors?: EventError[]
     date?: Date
@@ -656,6 +656,7 @@ export interface BotConfig {
   }
 
   cloud?: CloudConfig
+  isCloudBot?: boolean
 }
 
 export interface CloudConfig {
@@ -903,6 +904,12 @@ export interface MultiLangText {
 }
 
 export type FormDataField = any
+
+export interface FormData {
+  id?: string
+  contentType?: string
+  [key: string]: FormDataField
+}
 
 /**
  * A Node Action represent all the possible actions that will be executed when the user is on the node. When the user
