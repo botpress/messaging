@@ -1,7 +1,7 @@
 import { Button, Callout, Classes, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { NLU } from '@botpress/sdk'
 import React, { FC, useEffect, useState } from 'react'
 
-import { NLU } from '@botpress/sdk'
 import { lang } from '../../../components/Shared/translations'
 
 interface Props {

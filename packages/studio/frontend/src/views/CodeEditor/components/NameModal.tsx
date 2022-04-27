@@ -1,7 +1,7 @@
 import { Button, Callout, Classes, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { EditableFile, FilesDS } from '@botpress/common'
 import React, { FC, useEffect, useState } from 'react'
 
-import { EditableFile, FilesDS } from '../../../common/code-editor'
 import { lang } from '../../../components/Shared/translations'
 
 interface Props {

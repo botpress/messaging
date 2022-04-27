@@ -1,3 +1,4 @@
+import { Categories, LibraryElement } from '@botpress/common'
 import { handleActions } from 'redux-actions'
 
 import {
@@ -9,7 +10,6 @@ import {
   receiveLibrary,
   receiveQNAContentElement
 } from '../actions'
-import { Categories, LibraryElement } from '../common/typings'
 const defaultState = {
   categories: { enabled: [], disabled: [] },
   currentItems: [],

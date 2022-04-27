@@ -1,11 +1,11 @@
+import { ActionParameterDefinition, LocalActionDefinition } from '@botpress/common'
+import { ContentElement } from '@botpress/sdk'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { Button, Radio } from 'react-bootstrap'
 import Markdown from 'react-markdown'
 import { connect } from 'react-redux'
 
-import { ContentElement } from '@botpress/sdk'
-import { ActionParameterDefinition, LocalActionDefinition } from '../../../common/typings'
 import ContentPickerWidget from '../../../components/Content/Select/Widget'
 import confirmDialog from '../../../components/Shared/ConfirmDialog'
 import { Dialog } from '../../../components/Shared/Dialog'

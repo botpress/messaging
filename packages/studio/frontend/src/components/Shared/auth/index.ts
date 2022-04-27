@@ -1,9 +1,9 @@
+import { StoredToken, TokenUser, TokenResponse } from '@botpress/common'
 import { AxiosInstance } from 'axios'
 import moment from 'moment'
 import ms from 'ms'
 import { nanoid } from 'nanoid'
 
-import { StoredToken, TokenUser, TokenResponse } from '../../../common/typings'
 import storage from '../lite-utils/storage'
 
 export const TOKEN_KEY = 'bp/token'

@@ -1,7 +1,7 @@
+import { FlowView } from '@botpress/common'
+import * as sdk from '@botpress/sdk'
 import _ from 'lodash'
 
-import * as sdk from '@botpress/sdk'
-import { FlowView } from '../../../common/typings'
 export interface NodeDebugInfo {
   workflow: string
   node: string

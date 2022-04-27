@@ -1,4 +1,5 @@
 import { Tag } from '@blueprintjs/core'
+import { NLU } from '@botpress/sdk'
 import classnames from 'classnames'
 import * as Immutable from 'immutable'
 import _ from 'lodash'
@@ -22,7 +23,6 @@ import {
 import { Editor, EditorProps, RenderBlockProps, RenderMarkProps } from 'slate-react'
 import PlaceholderPlugin from 'slate-react-placeholder'
 
-import { NLU } from '@botpress/sdk'
 import { lang } from '../../../components/Shared/translations'
 import { TagSlotPopover } from './slots/SlotPopover'
 import style from './style.scss'

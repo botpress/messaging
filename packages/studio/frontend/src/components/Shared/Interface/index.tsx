@@ -12,7 +12,6 @@ import {
   Tooltip
 } from '@blueprintjs/core'
 import cx from 'classnames'
-import _ from 'lodash'
 import React, { useState } from 'react'
 
 import Container from './Container'

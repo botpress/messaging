@@ -1,6 +1,6 @@
+import * as sdk from '@botpress/sdk'
 import yn from 'yn'
 
-import * as sdk from '@botpress/sdk'
 import { NodeActionType } from '../typings'
 
 export const MAX_LABEL_LENGTH = 8

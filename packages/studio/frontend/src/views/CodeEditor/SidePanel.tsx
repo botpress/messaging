@@ -1,9 +1,9 @@
 import { Icon } from '@blueprintjs/core'
+import { FileType, HOOK_SIGNATURES } from '@botpress/common'
 import _ from 'lodash'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 
-import { FileType, HOOK_SIGNATURES } from '../../common/code-editor'
 import { SearchBar, SidePanel, SidePanelSection } from '../../components/Shared/Interface'
 import MainLayout from '../../components/Shared/MainLayout'
 import { lang } from '../../components/Shared/translations'

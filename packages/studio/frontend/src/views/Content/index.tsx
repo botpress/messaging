@@ -1,3 +1,5 @@
+import { Categories, FlowView, NodeView } from '@botpress/common'
+import { ActionBuilderProps, ContentElement } from '@botpress/sdk'
 import classnames from 'classnames'
 import _ from 'lodash'
 import React, { Component } from 'react'
@@ -14,8 +16,6 @@ import {
   getQNAContentElementUsage,
   upsertContentItem
 } from '../../actions'
-import { ActionBuilderProps, ContentElement } from '@botpress/sdk'
-import { Categories, FlowView, NodeView } from '../../common/typings'
 import CreateOrEditModal from '../../components/Content/CreateOrEditModal'
 import { Container } from '../../components/Shared/Interface'
 import { lang } from '../../components/Shared/translations'

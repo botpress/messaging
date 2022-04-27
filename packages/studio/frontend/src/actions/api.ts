@@ -1,7 +1,7 @@
+import { encodeFolderPath } from '@botpress/common'
 import axios from 'axios'
 import _ from 'lodash'
 
-import { encodeFolderPath } from '../common/http'
 
 type DebounceUpdateFunc = ((flow: any, callback: any) => Promise<void>) & { cancel: Function }
 

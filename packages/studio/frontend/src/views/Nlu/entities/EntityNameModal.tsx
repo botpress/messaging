@@ -1,9 +1,9 @@
 import { Button, Callout, Classes, Dialog, FormGroup, HTMLSelect, Intent } from '@blueprintjs/core'
+import { getEntityId } from '@botpress/common'
+import { NLU } from '@botpress/sdk'
 import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
 
-import { getEntityId } from '../../../common/entity-id'
-import { NLU } from '@botpress/sdk'
 import { lang } from '../../../components/Shared/translations'
 
 import { NluClient } from '../client'

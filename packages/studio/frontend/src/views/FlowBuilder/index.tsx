@@ -1,3 +1,4 @@
+import { FlowView } from '@botpress/common'
 import _ from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
@@ -13,7 +14,6 @@ import {
   setDiagramAction,
   switchFlow
 } from '../../actions'
-import { FlowView } from '../../common/typings'
 import { Container } from '../../components/Shared/Interface'
 import { lang } from '../../components/Shared/translations'
 import { isInputFocused } from '../../components/Shared/utilities/inputs'

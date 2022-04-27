@@ -1,8 +1,8 @@
 import { Button, Callout, Checkbox, Classes, Dialog, FileInput, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
 
+import { FilesDS } from '@botpress/common'
 import React, { FC } from 'react'
 
-import { FilesDS } from '../../../common/code-editor'
 import { toast } from '../../../components/Shared/Toaster'
 import { lang } from '../../../components/Shared/translations'
 

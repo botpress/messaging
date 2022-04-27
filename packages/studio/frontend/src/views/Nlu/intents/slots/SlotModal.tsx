@@ -1,10 +1,10 @@
 import { Button, Classes, Dialog, FormGroup, Intent } from '@blueprintjs/core'
+import { NLU } from '@botpress/sdk'
 import _ from 'lodash'
 import random from 'lodash/random'
 import { nanoid } from 'nanoid'
 import React from 'react'
 
-import { NLU } from '@botpress/sdk'
 import { lang } from '../../../../components/Shared/translations'
 
 import { NluClient } from '../../client'

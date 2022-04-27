@@ -1,7 +1,7 @@
+import { TelemetryEvent } from '@botpress/common'
 import axios, { AxiosInstance } from 'axios'
 import ms from 'ms'
 
-import { TelemetryEvent } from '../../../common/telemetry'
 
 export const sendTelemetry = async (events: TelemetryEvent[]) => {
   try {

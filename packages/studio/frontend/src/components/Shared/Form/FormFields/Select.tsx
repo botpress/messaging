@@ -1,7 +1,7 @@
+import { FormOption } from '@botpress/sdk'
 import _ from 'lodash'
 import React, { FC, Fragment, useEffect, useState } from 'react'
 
-import { FormOption } from '@botpress/sdk'
 import sharedStyle from '../../../Shared/style.scss'
 import Dropdown from '../../Dropdown'
 import { lang } from '../../translations'

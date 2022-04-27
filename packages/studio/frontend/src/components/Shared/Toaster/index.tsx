@@ -1,5 +1,4 @@
 import { IconName, Intent, IToasterProps, Position, Toaster } from '@blueprintjs/core'
-import _ from 'lodash'
 
 import { lang } from '../translations'
 

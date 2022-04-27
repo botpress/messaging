@@ -1,8 +1,8 @@
+import { QnaItem } from '@botpress/common'
 import axios from 'axios'
 import _ from 'lodash'
 import _uniqueId from 'lodash/uniqueId'
 
-import { QnaItem } from '../../../common/typings'
 import { lang } from '../../../components/Shared/translations'
 
 export const ITEMS_PER_PAGE = 50

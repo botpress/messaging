@@ -1,7 +1,7 @@
+import { EditableFile, FilePermissions, FilesDS } from '@botpress/common'
 import axios from 'axios'
 import _ from 'lodash'
 
-import { EditableFile, FilePermissions, FilesDS } from '../../../common/code-editor'
 import { toast } from '../../../components/Shared/Toaster'
 import { lang } from '../../../components/Shared/translations'
 

@@ -1,9 +1,9 @@
 import { Button, Colors, FormGroup, Icon, InputGroup, Position, Radio, RadioGroup, Tooltip } from '@blueprintjs/core'
+import { getEntityId } from '@botpress/common'
+import { NLU } from '@botpress/sdk'
 import _ from 'lodash'
 import React, { useEffect, useState, useReducer } from 'react'
 
-import { getEntityId } from '../../../common/entity-id'
-import { NLU } from '@botpress/sdk'
 import { toast } from '../../../components/Shared/Toaster'
 import { lang } from '../../../components/Shared/translations'
 import { inspect } from '../../../components/Shared/utilities/inspect'

@@ -10,12 +10,12 @@ import {
   Tooltip,
   Tree
 } from '@blueprintjs/core'
+import { EditableFile, BOT_SCOPED_HOOKS } from '@botpress/common'
 import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { EditableFile, BOT_SCOPED_HOOKS } from '../../common/code-editor'
 import { lang } from '../../components/Shared/translations'
 
 import { RootStore, StoreDef } from './store'

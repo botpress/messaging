@@ -1,9 +1,9 @@
+import { ActionParameterDefinition } from '@botpress/common'
 import classnames from 'classnames'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { OverlayTrigger, Tooltip, Table } from 'react-bootstrap'
 
-import { ActionParameterDefinition } from '../../../common/typings'
 import { lang } from '../../../components/Shared/translations'
 import SmartInput from '../../../components/SmartInput'
 

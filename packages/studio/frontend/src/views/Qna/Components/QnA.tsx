@@ -1,11 +1,11 @@
 import { Button, Icon, Position } from '@blueprintjs/core'
+import { QnaItem } from '@botpress/common'
+import { Flow, FlowNode } from '@botpress/sdk'
 import cx from 'classnames'
 import React, { FC, Fragment, useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import Select from 'react-select'
 
-import { Flow, FlowNode } from '@botpress/sdk'
-import { QnaItem } from '../../../common/typings'
 import confirmDialog from '../../../components/Shared/ConfirmDialog'
 import MoreOptions from '../../../components/Shared/MoreOptions'
 import { MoreOptionsItems } from '../../../components/Shared/MoreOptions/typings'

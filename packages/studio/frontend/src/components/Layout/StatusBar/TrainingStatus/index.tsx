@@ -1,7 +1,7 @@
+import { Training } from '@botpress/common'
 import React, { FC } from 'react'
 import { connect } from 'react-redux'
 
-import { Training } from '../../../../common/nlu-training'
 import { RootReducer } from '../../../../reducers'
 
 import MultiLang from './MultiLang'

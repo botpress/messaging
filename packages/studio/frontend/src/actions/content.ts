@@ -1,7 +1,7 @@
+import * as sdk from '@botpress/sdk'
 import axios from 'axios'
 import { createAction } from 'redux-actions'
 
-import * as sdk from '@botpress/sdk'
 import BatchRunner from './BatchRunner'
 
 export const receiveContentCategories = createAction('CONTENT/CATEGORIES/RECEIVE')

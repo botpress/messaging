@@ -1,6 +1,5 @@
 import { Classes, H5, Intent, Position, Toaster } from '@blueprintjs/core'
 import axios from 'axios'
-import _ from 'lodash'
 import React, { useEffect } from 'react'
 
 export default () => {

@@ -1,10 +1,10 @@
+import EditableInput from '@botpress/common'
 import React, { Fragment } from 'react'
 
 import { Tabs, Tab, Badge, Panel } from 'react-bootstrap'
 
 import { toast } from '../../../components/Shared/Toaster'
 import { lang } from '../../../components/Shared/translations'
-import EditableInput from '../common/EditableInput'
 
 import ActionSection from './ActionSection'
 import style from './style.scss'

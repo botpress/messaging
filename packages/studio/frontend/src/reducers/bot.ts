@@ -1,7 +1,7 @@
+import { BotConfig } from '@botpress/sdk'
 import { handleActions } from 'redux-actions'
 
 import { botInfoReceived, botLicenseReceived } from '../actions'
-import { BotConfig } from '@botpress/sdk'
 
 const defaultState = {
   bot: {},

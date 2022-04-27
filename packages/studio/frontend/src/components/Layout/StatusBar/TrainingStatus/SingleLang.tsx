@@ -1,9 +1,9 @@
 import { Button, Spinner } from '@blueprintjs/core'
+import { Training, TrainError } from '@botpress/common'
 import axios from 'axios'
 import cx from 'classnames'
 import React, { FC, useEffect, useRef, useState } from 'react'
 
-import { Training, TrainError } from '../../../../common/nlu-training'
 import { lang } from '../../../../components/Shared/translations'
 import { AccessControl, Timeout, toastFailure } from '../../../../components/Shared/Utils'
 

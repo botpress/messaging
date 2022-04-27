@@ -1,17 +1,13 @@
 {
   "name": "@botpress/inspector-kit",
-  "version": "0.1.0",
-  "private": true,
-  "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
-  "types": "lib/index.d.ts",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "source": "src/index.ts",
-  "files": [
-    "lib"
-  ],
+  "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn doctree && rollup -c",
-    "build:tsc": "yarn run -T tsc --build",
+    "bundle": "yarn doctree && rollup -c",
+    "build": "yarn run -T tsc --build",
     "watch": "yarn doctree && rollup -c -w",
     "demo": "parcel demo/index.html",
     "doctree": "ts-node --skip-project ./scripts/genDocTree.ts",

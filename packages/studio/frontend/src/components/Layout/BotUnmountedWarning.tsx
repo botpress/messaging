@@ -1,5 +1,5 @@
 import { Classes, H5, Intent, Position, Toaster } from '@blueprintjs/core'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 export default () => {
   if (window.IS_BOT_MOUNTED) {

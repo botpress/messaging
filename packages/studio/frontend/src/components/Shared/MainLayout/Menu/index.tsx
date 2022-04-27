@@ -1,6 +1,5 @@
 import { Icon, Position, Tooltip } from '@blueprintjs/core'
 import cx from 'classnames'
-import _ from 'lodash'
 import React, { FC } from 'react'
 import { NavLink } from 'react-router-dom'
 

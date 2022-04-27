@@ -1,7 +1,7 @@
 import { Button, Classes, Dialog, FormGroup, InputGroup, Intent } from '@blueprintjs/core'
+import { FileTypes, FilesDS } from '@botpress/common'
 import React, { FC, useEffect, useState } from 'react'
 
-import { FileTypes, FilesDS } from '../../../common/code-editor'
 import { lang } from '../../../components/Shared/translations'
 
 import { httpAction, legacyAction } from '../utils/templates'

@@ -1,5 +1,4 @@
 import { Classes, ContextMenu, Tree } from '@blueprintjs/core'
-import { node } from 'prop-types'
 import React, { useEffect, useReducer, useState } from 'react'
 
 import { TreeNode, TreeViewProps } from './typings'

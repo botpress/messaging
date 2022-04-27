@@ -15,7 +15,7 @@
     "@blueprintjs/icons": "^3.23.1",
     "@blueprintjs/select": "^3.12.0",
     "@botpress/common": "0.0.1",
-    "@botpress/inspector-kit": "0.1.0",
+    "@botpress/inspector-kit": "0.0.1",
     "@botpress/nlu-client": "1.0.0-rc.2",
     "@botpress/sdk": "0.0.1",
     "@lezer/common": "^0.15.12",

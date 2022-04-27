@@ -1,4 +1,3 @@
-import classnames from 'classnames'
 import _ from 'lodash'
 import Mustache from 'mustache'
 import React, { Component } from 'react'

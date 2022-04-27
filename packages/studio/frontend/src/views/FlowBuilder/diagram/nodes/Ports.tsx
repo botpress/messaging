@@ -1,4 +1,5 @@
 import { Tooltip } from '@blueprintjs/core'
+import * as sdk from '@botpress/sdk'
 import cx from 'classnames'
 import _ from 'lodash'
 import React from 'react'
@@ -6,7 +7,6 @@ import { connect } from 'react-redux'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { DefaultPortModel, PortWidget } from 'storm-react-diagrams'
 
-import * as sdk from '@botpress/sdk'
 import { getFlowNames } from '../../../../reducers'
 
 import style from './style.scss'

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, { FC } from 'react'
 
 import { ParameterValue } from './ActionDialog'

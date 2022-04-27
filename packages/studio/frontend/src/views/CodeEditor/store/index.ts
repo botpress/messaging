@@ -1,7 +1,7 @@
+import { EditableFile, FilePermissions, FilesDS, FileType } from '@botpress/common'
 import { action, observable, runInAction } from 'mobx'
 import path from 'path'
 
-import { EditableFile, FilePermissions, FilesDS, FileType } from '../../../common/code-editor'
 import confirmDialog from '../../../components/Shared/ConfirmDialog'
 import { toast } from '../../../components/Shared/Toaster'
 import { lang } from '../../../components/Shared/translations'

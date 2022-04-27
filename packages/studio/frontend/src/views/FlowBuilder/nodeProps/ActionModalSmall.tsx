@@ -1,7 +1,7 @@
+import ActionItem from '@botpress/common'
 import _ from 'lodash'
 import React from 'react'
 
-import ActionItem from '../common/action'
 
 import ActionModalForm from './ActionModalForm'
 

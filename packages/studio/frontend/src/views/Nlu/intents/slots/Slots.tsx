@@ -1,7 +1,7 @@
 import { Button, NonIdealState } from '@blueprintjs/core'
+import { NLU } from '@botpress/sdk'
 import React from 'react'
 
-import { NLU } from '@botpress/sdk'
 import { lang } from '../../../../components/Shared/translations'
 
 import { NluClient } from '../../client'

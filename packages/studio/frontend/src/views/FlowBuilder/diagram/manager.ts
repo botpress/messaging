@@ -1,7 +1,7 @@
+import { FlowView, NodeView } from '@botpress/common'
 import _ from 'lodash'
 import { DefaultLinkModel, DiagramEngine, DiagramModel, DiagramWidget, PointModel } from 'storm-react-diagrams'
 
-import { FlowView, NodeView } from '../../../common/typings'
 import { hashCode } from '../../../util'
 import { ZOOM_MIN, ZOOM_MAX, ZOOM_SPEED_SCALAR, ZOOM_IN_OUT_AMT, DIAGRAM_PADDING } from './constants'
 

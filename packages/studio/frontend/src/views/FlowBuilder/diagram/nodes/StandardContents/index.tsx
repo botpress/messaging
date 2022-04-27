@@ -1,10 +1,10 @@
+import ActionItem from '@botpress/common'
 import cx from 'classnames'
 import React, { FC } from 'react'
 
 import store from '../../../../../store'
 import { isRTLLocale } from '../../../../../translations'
 import ConditionItem from '../../../../../views/FlowBuilder/common/condition'
-import ActionItem from '../../../common/action'
 import { StandardPortWidget } from '../../nodes/Ports'
 import { BlockProps } from '../Block'
 import style from '../Components/style.scss'

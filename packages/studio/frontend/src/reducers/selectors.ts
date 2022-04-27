@@ -1,8 +1,8 @@
+import { FlowView } from '@botpress/common'
+import { FlowNode } from '@botpress/sdk'
 import _ from 'lodash'
 import { createSelector } from 'reselect'
 
-import { FlowNode } from '@botpress/sdk'
-import { FlowView } from '../common/typings'
 
 const _getFlowsByName = (state) => state.flows?.flowsByName
 const _getCurrentFlow = (state) => state.flows?.currentFlow

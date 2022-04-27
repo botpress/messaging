@@ -1,8 +1,8 @@
+import { Training } from '@botpress/common'
+import * as sdk from '@botpress/sdk'
 import { handleActions } from 'redux-actions'
 
 import { trainSessionReceived } from '../actions'
-import { Training } from '../common/nlu-training'
-import * as sdk from '@botpress/sdk'
 
 export interface NLUReducer {
   entities?: sdk.NLU.EntityDefinition[]

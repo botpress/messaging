@@ -1,4 +1,5 @@
 import { Icon, Position, Tooltip, AnchorButton } from '@blueprintjs/core'
+import { EditableFile } from '@botpress/common'
 import cx from 'classnames'
 import _ from 'lodash'
 import { observe } from 'mobx'
@@ -8,7 +9,6 @@ import babylon from 'prettier/parser-babylon'
 import prettier from 'prettier/standalone'
 import React from 'react'
 
-import { EditableFile } from '../../common/code-editor'
 import confirmDialog from '../../components/Shared/ConfirmDialog'
 import { toast } from '../../components/Shared/Toaster'
 import { lang } from '../../components/Shared/translations'

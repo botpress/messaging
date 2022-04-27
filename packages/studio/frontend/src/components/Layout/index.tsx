@@ -1,3 +1,4 @@
+import { Training } from '@botpress/common'
 import cx from 'classnames'
 import React, { FC, Fragment, useEffect, useRef, useState } from 'react'
 import { HotKeys } from 'react-hotkeys'
@@ -12,7 +13,6 @@ import {
   trainSessionReceived,
   viewModeChanged
 } from '../../actions'
-import { Training } from '../../common/nlu-training'
 import SelectContentManager from '../../components/Content/Select/Manager'
 import PluginInjectionSite from '../../components/PluginInjectionSite'
 import CodeEditor from '../../views/CodeEditor'

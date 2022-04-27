@@ -1,8 +1,8 @@
 import { Icon } from '@blueprintjs/core'
+import { NLU } from '@botpress/sdk'
 import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
 
-import { NLU } from '@botpress/sdk'
 import EmptyState from '../../components/Shared/EmptyState'
 import { Container } from '../../components/Shared/Interface'
 import { lang } from '../../components/Shared/translations'

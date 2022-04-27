@@ -1,4 +1,4 @@
-import { dates } from '../../../common/dates'
+import { dates } from '@botpress/common'
 
 import { lang } from '../translations'
 

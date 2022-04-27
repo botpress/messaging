@@ -1,6 +1,6 @@
+import { StoredToken, TokenResponse } from '@botpress/common'
 import { AxiosInstance } from 'axios'
 
-import { StoredToken, TokenResponse } from '../../../common/typings'
 
 export interface UserAuth {
   getToken: (onlyToken?: boolean) => StoredToken | string | undefined

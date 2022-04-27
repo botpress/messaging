@@ -1,8 +1,8 @@
+import { EditableFile, FilePermissions, FileDefinition, FileTypes } from '@botpress/common'
 import { action, computed, observable, runInAction } from 'mobx'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 import path from 'path'
 
-import { EditableFile, FilePermissions, FileDefinition, FileTypes } from '../../../common/code-editor'
 import { toast } from '../../../components/Shared/Toaster'
 import { lang } from '../../../components/Shared/translations'
 import { FileWithMetadata } from '../Editor'

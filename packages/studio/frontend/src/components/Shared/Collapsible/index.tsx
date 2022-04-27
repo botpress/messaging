@@ -1,5 +1,4 @@
 import { Alignment, Button, Collapse } from '@blueprintjs/core'
-import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
 
 import style from './style.scss'

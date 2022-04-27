@@ -1,3 +1,5 @@
+import { FlowView } from '@botpress/common'
+import { FlowNode, IO } from '@botpress/sdk'
 import _ from 'lodash'
 import reduceReducers from 'reduce-reducers'
 import { handleActions } from 'redux-actions'
@@ -36,8 +38,6 @@ import {
   switchFlowNode,
   updateFlowProblems
 } from '../actions'
-import { FlowNode, IO } from '@botpress/sdk'
-import { FlowView } from '../common/typings'
 import { hashCode, prettyId } from '../util'
 import { copyName } from '../util/flows'
 

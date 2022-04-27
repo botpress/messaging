@@ -1,10 +1,10 @@
+import { FlowPoint, FlowView, NodeProblem } from '@botpress/common'
+import * as sdk from '@botpress/sdk'
 import axios from 'axios'
 import _ from 'lodash'
 import { nanoid } from 'nanoid'
 import { createAction } from 'redux-actions'
 
-import * as sdk from '@botpress/sdk'
-import { FlowPoint, FlowView, NodeProblem } from '../common/typings'
 import { getDeletedFlows, getDirtyFlows, getModifiedFlows, getNewFlows } from '../reducers/selectors'
 import { copyName } from '../util/flows'
 import { FlowsAPI } from './api'

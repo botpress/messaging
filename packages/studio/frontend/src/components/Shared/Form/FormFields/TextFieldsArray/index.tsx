@@ -1,7 +1,6 @@
 import { Icon, Position, Tooltip } from '@blueprintjs/core'
 import cx from 'classnames'
 import _isEqual from 'lodash/isEqual'
-import _uniqueId from 'lodash/uniqueId'
 import React, { FC, useEffect, useRef, useState } from 'react'
 
 import sharedStyle from '../../../../Shared/style.scss'
