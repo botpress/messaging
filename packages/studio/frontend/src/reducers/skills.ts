@@ -1,6 +1,5 @@
-import { NLU, Skill } from 'botpress/sdk'
-import { LocalActionDefinition } from 'common/typings'
 import { handleActions } from 'redux-actions'
+
 import {
   actionsReceived,
   buildNewSkill,
@@ -11,6 +10,8 @@ import {
   requestUpdateSkill,
   skillsReceived
 } from '../actions'
+import { NLU, Skill } from '../common/sdk'
+import { LocalActionDefinition } from '../common/typings'
 
 const defaultSkills = [
   {

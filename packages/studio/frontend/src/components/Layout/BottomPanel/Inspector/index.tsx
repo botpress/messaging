@@ -48,6 +48,7 @@ const InspectorTab: FC<Props> = (props) => {
                   </div>
                 ))}
               </div>
+              {/* @ts-ignore */}
               <JSONTree
                 data={current || {}}
                 shouldExpandNode={() => expand}

@@ -1,4 +1,4 @@
-import { dates } from 'common/dates'
+import { dates } from '../../../common/dates'
 
 import { lang } from '../translations'
 

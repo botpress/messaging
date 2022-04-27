@@ -1,8 +1,7 @@
 import { H1 } from '@blueprintjs/core'
-import { NLU } from 'botpress/sdk'
-import _ from 'lodash'
 import React, { Fragment } from 'react'
 
+import { NLU } from '../../../common/sdk'
 import { ListEntityEditor } from './ListEntity'
 import { PatternEntityEditor } from './PatternEntity'
 

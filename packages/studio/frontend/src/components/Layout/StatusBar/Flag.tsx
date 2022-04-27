@@ -4,6 +4,7 @@ import style from './style.scss'
 
 const requireFlag = (code: string) => {
   try {
+    // @ts-ignore
     return require(`../../../img/flags/${code}.svg`)
   } catch (err) {
     return requireFlag('missing')

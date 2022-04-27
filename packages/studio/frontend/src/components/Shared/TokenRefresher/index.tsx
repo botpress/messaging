@@ -1,8 +1,7 @@
-import { StoredToken } from 'common/typings'
-
 import ms from 'ms'
 import { FC, useEffect, useState } from 'react'
 
+import { StoredToken } from '../../../common/typings'
 import { tokenNeedsRefresh, getToken, setToken } from '../../../components/Shared/auth'
 import { TokenRefresherProps } from './typings'
 

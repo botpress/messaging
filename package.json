@@ -111,7 +111,8 @@
     "@botpress/messaging-components": "@botpress/messaging-components/src",
     "@botpress/webchat": "@botpress/webchat/src",
     "@botpress/chat": "@botpress/chat/src",
-    "@botpress/chat-skin": "@botpress/chat-skin/src"
+    "@botpress/chat-skin": "@botpress/chat-skin/src",
+    "@botpress/inspector-kit": "@botpress/inspector-kit/src"
   },
   "dependenciesMeta": {
     "core-js@2.6.12": {

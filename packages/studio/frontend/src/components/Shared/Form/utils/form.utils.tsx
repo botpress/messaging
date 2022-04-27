@@ -1,8 +1,8 @@
-import { FormMoreInfo } from 'botpress/sdk'
 import cx from 'classnames'
 import _ from 'lodash'
-import React, { Fragment } from 'react'
+import React from 'react'
 
+import { FormMoreInfo } from '../../../../common/sdk'
 import { lang } from '../../translations'
 import style from '../style.scss'
 

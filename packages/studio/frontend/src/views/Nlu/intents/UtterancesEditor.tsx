@@ -1,5 +1,4 @@
 import { Tag } from '@blueprintjs/core'
-import { NLU } from 'botpress/sdk'
 import classnames from 'classnames'
 import * as Immutable from 'immutable'
 import _ from 'lodash'
@@ -23,6 +22,7 @@ import {
 import { Editor, EditorProps, RenderBlockProps, RenderMarkProps } from 'slate-react'
 import PlaceholderPlugin from 'slate-react-placeholder'
 
+import { NLU } from '../../../common/sdk'
 import { lang } from '../../../components/Shared/translations'
 import { TagSlotPopover } from './slots/SlotPopover'
 import style from './style.scss'
@@ -145,6 +145,7 @@ export class UtterancesEditor extends React.Component<Props, State> {
 
   render() {
     return (
+      // @ts-ignore
       <Editor
         value={this.state.value}
         plugins={plugins}
@@ -342,7 +343,7 @@ export class UtterancesEditor extends React.Component<Props, State> {
         const slotMark = props.mark.data.toJS()
         const color = this.props.slots.find((s) => s.name === slotMark.slotName).color
         const cn = classnames(style.slotMark, style[`label-colors-${color}`])
-        const remove = () => editor.moveToRangeOfNode(props.node).removeMark(props.mark)
+        const remove = () => editor.moveToRangeOfNode(props.node as any).removeMark(props.mark)
 
         return (
           <Tag large={slotMark.utteranceIdx === 0} className={cn} round onClick={remove}>

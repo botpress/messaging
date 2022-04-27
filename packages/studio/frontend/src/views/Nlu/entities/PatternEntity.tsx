@@ -10,11 +10,11 @@ import {
   TextArea,
   Tooltip
 } from '@blueprintjs/core'
-import { NLU } from 'botpress/sdk'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 
 import { getEntityId } from '../../../common/entity-id'
+import { NLU } from '../../../common/sdk'
 import { lang } from '../../../components/Shared/translations'
 
 import style from './style.scss'

@@ -1,23 +1,37 @@
 {
+  // Manage references here
   "references": [
     {
       "path": "../inspector-kit"
     }
   ],
+
+  // Defaults (don't change this)
+  "extends": "../../../tsconfig.packages.json",
   "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // TODO: Remove this, this is evil
+    "strict": false,
+
+    // Specific settings for npm package
+    "target": "es6",
+    "declaration": true,
+    "sourceMap": false,
+
+    // Because studio was written with decorators
     "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false,
-    "allowJs": true,
-    "target": "es5",
-    "lib": ["es7", "dom"],
+    // We use react
     "jsx": "react",
-    "typeRoots": ["src/web/typings.d.ts"],
-    "baseUrl": "./"
+    "lib": ["dom", "es2021", "es2021.intl"],
+    "resolveJsonModule": true,
+
+    "allowJs": true,
+    "typeRoots": ["src/typings.d.ts"],
+    "types": ["node"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
-  "exclude": []
+  "include": ["src", "src/**/*.json"],
+  "exclude": ["public", "node_modules"]
 }

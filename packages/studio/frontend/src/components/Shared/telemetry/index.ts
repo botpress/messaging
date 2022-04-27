@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios'
-import { TelemetryEvent } from 'common/telemetry'
 import ms from 'ms'
+
+import { TelemetryEvent } from '../../../common/telemetry'
 
 export const sendTelemetry = async (events: TelemetryEvent[]) => {
   try {

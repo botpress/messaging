@@ -1,5 +1,4 @@
 import cx from 'classnames'
-import { Training } from 'common/nlu-training'
 import React, { FC, Fragment, useEffect, useRef, useState } from 'react'
 import { HotKeys } from 'react-hotkeys'
 import { connect } from 'react-redux'
@@ -13,6 +12,7 @@ import {
   trainSessionReceived,
   viewModeChanged
 } from '../../actions'
+import { Training } from '../../common/nlu-training'
 import SelectContentManager from '../../components/Content/Select/Manager'
 import PluginInjectionSite from '../../components/PluginInjectionSite'
 import CodeEditor from '../../views/CodeEditor'
@@ -65,7 +65,7 @@ const Layout: FC<Props> = (props: Props) => {
   useEffect(() => {
     const viewMode = props.location.query && props.location.query.viewMode
 
-    setImmediate(() => {
+    ;(window as any).setImmediate(() => {
       props.viewModeChanged(Number(viewMode) || 0)
     })
 

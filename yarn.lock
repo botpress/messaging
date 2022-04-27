@@ -2996,13 +2996,15 @@ __metadata:
     "@blueprintjs/select": ^3.12.0
     "@botpress/inspector-kit": 0.1.0
     "@botpress/nlu-client": 1.0.0-rc.2
+    "@lezer/common": ^0.15.12
     "@parcel/config-default": 2.2.1
     "@parcel/transformer-sass": 2.2.1
     "@parcel/transformer-typescript-tsc": 2.2.1
     "@types/classnames": ^2.3.1
+    "@types/json-schema": ^7.0.11
     "@types/lodash": ^4.14.178
     "@types/mime-types": ^2.1.1
-    "@types/node": ^12.18.1
+    "@types/node": ^16.11.13
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     "@types/react-jsonschema-form": ^1.7.8
@@ -3011,17 +3013,18 @@ __metadata:
     "@types/redux-actions": ^2.2.1
     "@types/slate": 0.47.1
     "@types/slate-react": 0.22.5
+    "@types/uuid": ^8.3.4
     analytics: ^0.7.17
     anser: ^1.4.8
     autoprefixer: ^6.5.3
     axios: ^0.25.0
-    babel-runtime: ^6.26.0
     bootstrap: 3.4.1
     chalk: ^4.0.0
     classnames: ^2.3.1
     clean-webpack-plugin: ^0.1.19
     concurrently: ^3.5.1
     cross-env: ^7.0.3
+    crypto: ^1.0.1
     css-loader: ^0.28.11
     css-modules-typescript-loader: ^2.0.3
     decorate-component-with-props: ^1.1.0
@@ -3040,6 +3043,7 @@ __metadata:
     immutable: ^4.0.0
     joi: 13.7.0
     js-cookie: ^2.2.0
+    json-schema: ^0.4.0
     jsonlint-mod: ^1.7.6
     lodash: ^4.17.21
     mime-types: ^2.1.35
@@ -3105,6 +3109,7 @@ __metadata:
     thread-loader: ^1.1.5
     ts-loader: ^6.0.2
     typed-scss-modules: ^6.2.1
+    uuid: ^8.3.2
     webpack: 4.46
     webpack-bundle-analyzer: ^3.5.2
     webpack-node-externals: ^1.7.2
@@ -4366,7 +4371,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lezer/common@npm:^0.15.0, @lezer/common@npm:^0.15.5, @lezer/common@npm:^0.15.7, @lezer/common@npm:^0.15.9":
+"@lezer/common@npm:^0.15.0, @lezer/common@npm:^0.15.12, @lezer/common@npm:^0.15.5, @lezer/common@npm:^0.15.7, @lezer/common@npm:^0.15.9":
   version: 0.15.12
   resolution: "@lezer/common@npm:0.15.12"
   checksum: dae65816187bd690bf446bec116313d3b5328e70e3e1f7c806273d9356ca2017cf82aa650ea53b95260fb98898ea73d44f33319f9dbbd48d473e2f20771b2377
@@ -7956,7 +7961,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.6":
+"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.11, @types/json-schema@npm:^7.0.6":
   version: 7.0.11
   resolution: "@types/json-schema@npm:7.0.11"
   checksum: 527bddfe62db9012fccd7627794bd4c71beb77601861055d87e3ee464f2217c85fca7a4b56ae677478367bbd248dbde13553312b7d4dbc702a2f2bbf60c4018d
@@ -8104,13 +8109,6 @@ __metadata:
   version: 10.17.60
   resolution: "@types/node@npm:10.17.60"
   checksum: 2cdb3a77d071ba8513e5e8306fa64bf50e3c3302390feeaeff1fd325dd25c8441369715dfc8e3701011a72fed5958c7dfa94eb9239a81b3c286caa4d97db6eef
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^12.18.1":
-  version: 12.20.49
-  resolution: "@types/node@npm:12.20.49"
-  checksum: 08d77520d1bb35a4adee97e753134f9671fada882717b4f0511de37259b379cdd6982fdef89104316c191fee758e4f50922b0136f114159a22ef9e3bcac32fda
   languageName: node
   linkType: hard
 
@@ -10274,16 +10272,6 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0
   checksum: 251bcea11c18fd9672fec104eadb45b43f117ceeb326fa7345ced778d4c1feab29343cd7a87a1dcfae4997d6c851a8b386d7f7213792da6e23b74f4443a8976d
-  languageName: node
-  linkType: hard
-
-"babel-runtime@npm:^6.26.0":
-  version: 6.26.0
-  resolution: "babel-runtime@npm:6.26.0"
-  dependencies:
-    core-js: ^2.4.0
-    regenerator-runtime: ^0.11.0
-  checksum: 8aeade94665e67a73c1ccc10f6fd42ba0c689b980032b70929de7a6d9a12eb87ef51902733f8fefede35afea7a5c3ef7e916a64d503446c1eedc9e3284bd3d50
   languageName: node
   linkType: hard
 
@@ -12556,7 +12544,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^2.4.0, core-js@npm:^2.5.7, core-js@npm:^2.6.5":
+"core-js@npm:^2.5.7, core-js@npm:^2.6.5":
   version: 2.6.12
   resolution: "core-js@npm:2.6.12"
   checksum: 44fa9934a85f8c78d61e0c8b7b22436330471ffe59ec5076fe7f324d6e8cf7f824b14b1c81ca73608b13bdb0fef035bd820989bf059767ad6fa13123bb8bd016
@@ -12813,6 +12801,13 @@ __metadata:
   version: 4.1.1
   resolution: "crypto-js@npm:4.1.1"
   checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
+  languageName: node
+  linkType: hard
+
+"crypto@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "crypto@npm:1.0.1"
+  checksum: 087fe3165bd94c333a49e6ed66a0193911f63eac38a24f379b3001a5fe260a59c413646e53a0f67875ba13902b2686d81dc703cb2c147a4ec727dcdc04e5645e
   languageName: node
   linkType: hard
 
@@ -20586,7 +20581,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-schema@npm:0.4.0":
+"json-schema@npm:0.4.0, json-schema@npm:^0.4.0":
   version: 0.4.0
   resolution: "json-schema@npm:0.4.0"
   checksum: 66389434c3469e698da0df2e7ac5a3281bcff75e797a5c127db7c5b56270e01ae13d9afa3c03344f76e32e81678337a8c912bdbb75101c62e487dc3778461d72
@@ -27724,13 +27719,6 @@ __metadata:
   version: 1.4.2
   resolution: "regenerate@npm:1.4.2"
   checksum: 3317a09b2f802da8db09aa276e469b57a6c0dd818347e05b8862959c6193408242f150db5de83c12c3fa99091ad95fb42a6db2c3329bfaa12a0ea4cbbeb30cb0
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.11.0":
-  version: 0.11.1
-  resolution: "regenerator-runtime@npm:0.11.1"
-  checksum: 3c97bd2c7b2b3247e6f8e2147a002eb78c995323732dad5dc70fac8d8d0b758d0295e7015b90d3d444446ae77cbd24b9f9123ec3a77018e81d8999818301b4f4
   languageName: node
   linkType: hard
 

@@ -64,7 +64,7 @@ const Layout: FC<Props> = (props: Props) => {
   useEffect(() => {
     const viewMode = props.location.query && props.location.query.viewMode
 
-    setImmediate(() => {
+    ;(window as any).setImmediate(() => {
       props.viewModeChanged(Number(viewMode) || 0)
     })
 

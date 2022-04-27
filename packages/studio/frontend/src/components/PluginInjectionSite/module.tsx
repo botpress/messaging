@@ -53,7 +53,7 @@ export default class InjectedModuleView extends React.Component<Props, State> {
       script.type = 'text/javascript'
       script.onload = () => {
         script.onload = null
-        setImmediate(() => {
+        ;(window as any).setImmediate(() => {
           this.setViewInState(moduleName, componentName)
         })
       }
@@ -62,7 +62,7 @@ export default class InjectedModuleView extends React.Component<Props, State> {
       document.getElementsByTagName('head')[0].appendChild(script)
     } else {
       this.setState({ moduleComponent: null })
-      setImmediate(() => {
+      ;(window as any).setImmediate(() => {
         this.setViewInState(moduleName, componentName)
       })
     }

@@ -1,7 +1,8 @@
-import { MultiLangText } from 'botpress/sdk'
 import { isEmpty, merge } from 'lodash'
 
 import { createIntl, createIntlCache } from 'react-intl'
+
+import { MultiLangText } from '../../../common/sdk'
 
 import en from './en.json'
 import es from './es.json'

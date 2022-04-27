@@ -49,6 +49,7 @@ if (!window.BOT_ID) {
   initializeTranslations()
 
   // Do not use "import App from ..." as hoisting will screw up styling
+  // @ts-ignore
   const App = require('./components/App').default
 
   ReactDOM.render(

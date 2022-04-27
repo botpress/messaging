@@ -1,6 +1,6 @@
-import { ActionServer } from 'common/typings'
 import React, { FC, Fragment } from 'react'
 
+import { ActionServer } from '../../../../../common/typings'
 import { parseActionInstruction } from '../../../../../views/FlowBuilder/common/parse'
 
 import { BlockProps } from '../Block'

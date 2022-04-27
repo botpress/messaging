@@ -1,8 +1,9 @@
 import { AxiosInstance } from 'axios'
-import { StoredToken, TokenUser, TokenResponse } from 'common/typings'
 import moment from 'moment'
 import ms from 'ms'
 import { nanoid } from 'nanoid'
+
+import { StoredToken, TokenUser, TokenResponse } from '../../../common/typings'
 import storage from '../lite-utils/storage'
 
 export const TOKEN_KEY = 'bp/token'

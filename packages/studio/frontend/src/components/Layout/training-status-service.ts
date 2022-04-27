@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { NLUProgressEvent, Training } from 'common/nlu-training'
 
+import { NLUProgressEvent, Training } from '../../common/nlu-training'
 import EventBus from '../../util/EventBus'
 
 export class TrainingStatusService {

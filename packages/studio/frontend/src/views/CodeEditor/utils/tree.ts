@@ -1,7 +1,7 @@
 import { ITreeNode } from '@blueprintjs/core'
-import { EditableFile } from 'common/code-editor'
 import find from 'lodash/find'
 
+import { EditableFile } from '../../../common/code-editor'
 import { FileWithMetadata } from '../Editor'
 
 export const EXAMPLE_FOLDER_LABEL = 'Examples'

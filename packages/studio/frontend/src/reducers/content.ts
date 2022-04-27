@@ -1,5 +1,5 @@
-import { Categories, LibraryElement } from 'common/typings'
 import { handleActions } from 'redux-actions'
+
 import {
   receiveContentCategories,
   receiveContentItem,
@@ -9,6 +9,7 @@ import {
   receiveLibrary,
   receiveQNAContentElement
 } from '../actions'
+import { Categories, LibraryElement } from '../common/typings'
 const defaultState = {
   categories: { enabled: [], disabled: [] },
   currentItems: [],

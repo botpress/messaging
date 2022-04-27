@@ -1,5 +1,4 @@
-import { FlowNode } from 'botpress/sdk'
-
+import { FlowNode } from '../../../common/sdk'
 export { default as ElementPreview } from './ElementPreview'
 export { toastSuccess, toastFailure, toastInfo, Timeout } from './Toaster'
 export { Downloader } from './Downloader'

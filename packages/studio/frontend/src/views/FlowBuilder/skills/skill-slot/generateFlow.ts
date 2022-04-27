@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/sdk'
+import * as sdk from '../../../../common/sdk'
 import { NodeActionType } from '../typings'
 
 export const generateFlow = async (

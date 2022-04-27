@@ -86,7 +86,7 @@ class Inspector extends Component<Props> {
 
     const updateNodeAndRefresh = (...args) => {
       updateFlowNode(...args)
-      setImmediate(() => {
+      ;(window as any).setImmediate(() => {
         refreshFlowsLinks()
       })
     }

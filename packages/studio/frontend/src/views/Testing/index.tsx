@@ -31,7 +31,7 @@ interface State {
 }
 
 export default class Testing extends React.Component<Props, State> {
-  private interval: NodeJS.Timeout
+  private interval: NodeJS.Timer
   private axios: AxiosInstance = axios.create({ baseURL: window.STUDIO_API_PATH })
 
   state: State = {
@@ -64,7 +64,7 @@ export default class Testing extends React.Component<Props, State> {
       const wait = new Promise((resolve) => {
         window.addEventListener('message', (event) => {
           if (event.data && event.data.name === 'webchatReady') {
-            resolve()
+            resolve(undefined)
           }
         })
       })

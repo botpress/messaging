@@ -1,7 +1,7 @@
-import { NLU } from 'botpress/sdk'
 import _ from 'lodash'
 import React, { FC, useEffect, useRef, useState } from 'react'
 
+import { NLU } from '../../../common/sdk'
 import { inspect } from '../../../components/Shared/utilities/inspect'
 
 import { NluClient } from '../client'

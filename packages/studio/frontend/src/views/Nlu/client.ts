@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { NLU } from 'botpress/sdk'
+
+import { NLU } from '../../common/sdk'
 
 export type NluClient = ReturnType<typeof makeNLUClient>
 

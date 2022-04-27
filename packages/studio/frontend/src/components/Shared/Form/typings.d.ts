@@ -1,4 +1,4 @@
-import { FormData, FormField } from 'botpress/sdk'
+import { FormData, FormField } from '../../../common/sdk'
 
 export interface InvalidField {
   field: string

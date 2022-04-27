@@ -1,5 +1,4 @@
 import { Intent, Menu, MenuDivider, MenuItem, Position, Toaster } from '@blueprintjs/core'
-import { IO } from 'botpress/sdk'
 import _ from 'lodash'
 import React, { Component, Fragment } from 'react'
 import ReactDOM from 'react-dom'
@@ -34,6 +33,7 @@ import {
   updateFlowProblems,
   zoomToLevel
 } from '../../../actions'
+import { IO } from '../../../common/sdk'
 import contextMenu from '../../../components/Shared/ContextMenu'
 import Say from '../../../components/Shared/Icons/Say'
 import storage from '../../../components/Shared/lite-utils/storage'
@@ -217,7 +217,7 @@ class Diagram extends Component<Props> {
   componentDidMount() {
     this.props.fetchFlows()
     this.setState({ expandedNodes: getExpandedNodes() })
-    const diagramWidgetEl = ReactDOM.findDOMNode(this.diagramWidget) as HTMLDivElement
+    const diagramWidgetEl = ReactDOM.findDOMNode(this.diagramWidget as any) as HTMLDivElement
     diagramWidgetEl.addEventListener('click', this.onDiagramClick)
     diagramWidgetEl.addEventListener('mousedown', this.onMouseDown)
     diagramWidgetEl.addEventListener('dblclick', this.onDiagramDoubleClick)
@@ -228,7 +228,7 @@ class Diagram extends Component<Props> {
   }
 
   componentWillUnmount() {
-    const diagramWidgetEl = ReactDOM.findDOMNode(this.diagramWidget) as HTMLDivElement
+    const diagramWidgetEl = ReactDOM.findDOMNode(this.diagramWidget as any) as HTMLDivElement
     diagramWidgetEl.removeEventListener('click', this.onDiagramClick)
     diagramWidgetEl.removeEventListener('mousedown', this.onMouseDown)
     diagramWidgetEl.removeEventListener('dblclick', this.onDiagramDoubleClick)
@@ -289,7 +289,7 @@ class Diagram extends Component<Props> {
     }
 
     this.checkForLinksUpdate()
-    this.diagramWidget.forceUpdate()
+    ;(this.diagramWidget as any).forceUpdate()
   }
 
   linkCreatedNode = async () => {
@@ -510,8 +510,8 @@ class Diagram extends Component<Props> {
       this.diagramEngine.clearRepaintEntities()
       const relative = this.diagramEngine.getRelativePoint(event.clientX, event.clientY)
       this.diagramWidget.startFiringAction(new SelectingAction(relative.x, relative.y))
-      this.diagramWidget.state.document.addEventListener('mousemove', this.diagramWidget.onMouseMove)
-      this.diagramWidget.state.document.addEventListener('mouseup', this.diagramWidget.onMouseUp)
+      ;(this.diagramWidget as any).state.document.addEventListener('mousemove', this.diagramWidget.onMouseMove)
+      ;(this.diagramWidget as any).state.document.addEventListener('mouseup', this.diagramWidget.onMouseUp)
       event.stopPropagation()
     }
   }
@@ -604,7 +604,7 @@ class Diagram extends Component<Props> {
     }
 
     this.props.closeFlowNodeProps()
-    this.diagramWidget.forceUpdate()
+    ;(this.diagramWidget as any).forceUpdate()
     this.checkForProblems()
   }
 
@@ -711,6 +711,7 @@ class Diagram extends Component<Props> {
             />
           </div>
 
+          {/* @ts-ignore */}
           <DiagramWidget
             ref={(w) => (this.diagramWidget = w)}
             deleteKeys={[]}

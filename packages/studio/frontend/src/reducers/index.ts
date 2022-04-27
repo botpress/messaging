@@ -1,6 +1,6 @@
-import { ModuleDefinition } from 'botpress/sdk'
 import { combineReducers } from 'redux'
 
+import { ModuleDefinition } from '../common/sdk'
 import bot, { BotReducer } from './bot'
 import bots, { BotsReducer } from './bots'
 import content, { ContentReducer } from './content'

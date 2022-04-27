@@ -1,6 +1,6 @@
-import { NLU } from 'botpress/sdk'
 import React, { FC, useState } from 'react'
 
+import { NLU } from '../../common/sdk'
 import { SidePanel } from '../../components/Shared/Interface'
 import MainLayout from '../../components/Shared/MainLayout'
 import { ToolbarButtonProps } from '../../components/Shared/MainLayout/Toolbar/typings'

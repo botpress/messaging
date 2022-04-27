@@ -1,6 +1,5 @@
 import { Button, ButtonGroup, Divider, Icon, Tab, Tabs } from '@blueprintjs/core'
 import axios from 'axios'
-import * as sdk from 'botpress/sdk'
 import cx from 'classnames'
 import _ from 'lodash'
 import ms from 'ms'
@@ -8,6 +7,7 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import { setDebuggerEvent } from '../../../../actions'
+import * as sdk from '../../../../common/sdk'
 import ToolTip from '../../../../components/Shared/ToolTip'
 import { lang } from '../../../../components/Shared/translations'
 import btStyle from '../style.scss'
@@ -108,7 +108,7 @@ export class Debugger extends React.Component<Props, State> {
       if (this.currentRetryCount < this.allowedRetryCount) {
         this.currentRetryCount++
 
-        await Promise.delay(DELAY_BETWEEN_CALLS)
+        await new Promise((resolve) => setTimeout(resolve, DELAY_BETWEEN_CALLS))
         await this.loadEvent(messageId)
       } else {
         this.currentRetryCount = 0

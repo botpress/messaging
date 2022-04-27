@@ -1,4 +1,4 @@
-import { Colors, Icon, Position, Pre, Tooltip } from '@blueprintjs/core'
+import { Colors, Icon, Position, Tooltip } from '@blueprintjs/core'
 import _ from 'lodash'
 import React, { useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
@@ -55,6 +55,7 @@ export const Inspector = (props) => {
   return (
     <div className={bpStyle.tabContainer}>
       <div className={style.inspector}>
+        {/* @ts-ignore */}
         <JSONTree
           data={props.data || {}}
           theme={inspectorTheme}

@@ -1,5 +1,4 @@
-import { FormData, FormField } from 'botpress/sdk'
-
+import { FormData, FormField } from '../../../../common/sdk'
 import { lang as langTr } from '../../translations'
 
 export const createEmptyDataFromSchema = (fields: FormField[], lang?: string): FormData => {
