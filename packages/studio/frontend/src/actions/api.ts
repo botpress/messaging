@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { Promise as BbPromise } from 'bluebird'
 import _ from 'lodash'
 
 import { encodeFolderPath } from '../common/http'
@@ -48,12 +47,12 @@ export namespace FlowsAPI {
 
     const debounced = currentUpdates[name]
     if (debounced) {
-      return BbPromise.fromCallback((cb) => debounced(flowDto, cb))
+      return new Promise((resolve) => debounced(flowDto, resolve))
     }
 
     const newDebounce = _.debounce(buildUpdateDebounced(name), DELAY, { leading: true })
     currentUpdates[name] = newDebounce
-    return BbPromise.fromCallback((cb) => newDebounce(flowDto, cb))
+    return new Promise((resolve) => newDebounce(flowDto, resolve))
   }
 
   const apiDeleteFlow = async (flowName: string) => {

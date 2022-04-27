@@ -2433,7 +2433,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/inspector-kit@workspace:^, @botpress/inspector-kit@workspace:packages/studio/inspector-kit":
+"@botpress/inspector-kit@0.1.0, @botpress/inspector-kit@workspace:packages/studio/inspector-kit":
   version: 0.0.0-use.local
   resolution: "@botpress/inspector-kit@workspace:packages/studio/inspector-kit"
   dependencies:
@@ -2982,12 +2982,11 @@ __metadata:
     "@blueprintjs/core": ^3.23.1
     "@blueprintjs/icons": ^3.23.1
     "@blueprintjs/select": ^3.12.0
-    "@botpress/inspector-kit": "workspace:^"
+    "@botpress/inspector-kit": 0.1.0
     "@botpress/nlu-client": 1.0.0-rc.2
     "@parcel/config-default": 2.2.1
     "@parcel/transformer-sass": 2.2.1
     "@parcel/transformer-typescript-tsc": 2.2.1
-    "@types/bluebird-global": ^3.5.13
     "@types/classnames": ^2.3.1
     "@types/lodash": ^4.14.178
     "@types/mime-types": ^2.1.1
@@ -3005,8 +3004,6 @@ __metadata:
     autoprefixer: ^6.5.3
     axios: ^0.25.0
     babel-runtime: ^6.26.0
-    bluebird: ^3.7.2
-    bluebird-global: ^1.0.1
     bootstrap: 3.4.1
     chalk: ^4.0.0
     classnames: ^2.3.1
@@ -8608,15 +8605,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bluebird-global@npm:^3.5.13":
-  version: 3.5.13
-  resolution: "@types/bluebird-global@npm:3.5.13"
-  dependencies:
-    "@types/bluebird": "*"
-  checksum: 6532a122e3455282102b4e1015a75af261ac58b6133f5e8fe9372abc0c000aa422e3c6e8915edb2fadd5f8494a3646c9750d8a5931435102fc35dc7468fa0d8d
-  languageName: node
-  linkType: hard
-
 "@types/bluebird@npm:*, @types/bluebird@npm:^3.5.36":
   version: 3.5.36
   resolution: "@types/bluebird@npm:3.5.36"
@@ -11690,15 +11678,6 @@ __metadata:
   dependencies:
     inherits: ~2.0.0
   checksum: 72733cbb816181b7c92449e7b650247c02122f743526ce9d948ff68afc27d8709106cd62f2c876c6d8cd3977e0204a014f38d22805974008039bd3bed35f2cbd
-  languageName: node
-  linkType: hard
-
-"bluebird-global@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "bluebird-global@npm:1.0.1"
-  peerDependencies:
-    bluebird: "*"
-  checksum: fa0448ba6f33e0e970fe2e26cc437c1aa706438112d2ddc00c24fcbf0b73b745a7cbca94fa62248309d774e775ab96a44d038abc5e82eb0b7201068eb3d1c779
   languageName: node
   linkType: hard
 

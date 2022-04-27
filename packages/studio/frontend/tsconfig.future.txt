@@ -22,8 +22,7 @@
     "resolveJsonModule": true,
 
     "allowJs": true,
-    "typeRoots": ["./node_modules/@types", "src/web/typings.d.ts"],
-    "types": ["bluebird-global"],
+    "typeRoots": ["src/web/typings.d.ts"],
     "baseUrl": "./",
     "paths": {
       "~/*": ["src/web/*"],

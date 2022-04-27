@@ -1,6 +1,5 @@
 import { Button, ButtonGroup, Divider, Icon, Tab, Tabs } from '@blueprintjs/core'
 import axios from 'axios'
-import 'bluebird-global'
 import * as sdk from 'botpress/sdk'
 import cx from 'classnames'
 import _ from 'lodash'

@@ -1,6 +1,5 @@
 import { Button, Callout, Classes, Dialog, FileInput, FormGroup, Intent, Radio, RadioGroup } from '@blueprintjs/core'
 import axios from 'axios'
-import 'bluebird-global'
 import _ from 'lodash'
 import React, { FC, Fragment, useState } from 'react'
 

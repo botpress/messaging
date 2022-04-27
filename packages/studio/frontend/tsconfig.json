@@ -1,5 +1,9 @@
 {
-  "references": [],
+  "references": [
+    {
+      "path": "../inspector-kit"
+    }
+  ],
   "compilerOptions": {
     "experimentalDecorators": true,
     "esModuleInterop": true,
@@ -11,8 +15,7 @@
     "target": "es5",
     "lib": ["es7", "dom"],
     "jsx": "react",
-    "typeRoots": ["./node_modules/@types", "src/web/typings.d.ts"],
-    "types": ["bluebird-global"],
+    "typeRoots": ["src/web/typings.d.ts"],
     "baseUrl": "./"
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

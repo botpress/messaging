@@ -1,4 +1,3 @@
-import Promise from 'bluebird'
 import { receiveContentItemsBatched } from './index'
 // `execute` must be a function accepting an array of resource IDs
 // and returning a promise resolving to an object mapping
