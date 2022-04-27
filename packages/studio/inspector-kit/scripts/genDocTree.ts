@@ -28,7 +28,7 @@ const ARGS: TJS.PartialArgs = {
 const ROOT_NAME = 'event'
 const ROOT_TYPE = 'IO.IncomingEvent'
 
-const files = glob.sync('../studio-be/src/sdk/*.ts')
+const files = glob.sync('../server/src/sdk/*.ts')
 const program = TJS.getProgramFromFiles(files)
 const generator = TJS.buildGenerator(program, ARGS) as TJS.JsonSchemaGenerator
 const schema = TJS.generateSchema(program, ROOT_TYPE, ARGS, [], generator)

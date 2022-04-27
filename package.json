@@ -30,7 +30,9 @@
     "cypress:open": "cypress open"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.9",
     "@jest/types": "^27.4.2",
+    "@lezer/common": "^0.15.9",
     "@parcel/config-default": "^2.2.1",
     "@parcel/core": "^2.2.1",
     "@parcel/packager-ts": "^2.2.1",
@@ -45,6 +47,11 @@
     "@parcel/transformer-sass": "2.2.1",
     "@parcel/transformer-typescript-tsc": "^2.2.1",
     "@parcel/transformer-typescript-types": "^2.2.1",
+    "@storybook/components": "^6.4.22",
+    "@storybook/core-events": "^6.4.22",
+    "@storybook/react": "^6.4.22",
+    "@storybook/testing-library": "^0.0.11",
+    "@storybook/theming": "^6.4.22",
     "@types/conventional-changelog": "^3.1.1",
     "@types/jest": "^27.4.0",
     "@types/jest-dev-server": "^5.0.0",
@@ -55,6 +62,7 @@
     "@typescript-eslint/parser": "^5.10.2",
     "conventional-changelog": "^3.1.25",
     "copyfiles": "^2.4.1",
+    "core-js": "^3.0.1",
     "cross-env": "^7.0.3",
     "cypress": "^9.5.2",
     "docker-compose": "~0.23.17",
@@ -69,13 +77,17 @@
     "jest": "^27.4.7",
     "jest-dev-server": "^6.0.3",
     "mkdirp": "^1.0.4",
+    "node-sass": "^7.0.0",
     "parcel": "^2.2.1",
     "pkg": "5.2.0",
     "portfinder": "^1.0.28",
     "postcss": "^8.2.1",
     "prettier": "^2.5.1",
     "pretty-format": "^28.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "rimraf": "^3.0.2",
+    "sass-loader": "^6.0.6",
     "source-map-support": "^0.5.21",
     "ts-jest": "27.1.2",
     "ts-node": "^10.4.0",
@@ -102,11 +114,20 @@
     "@botpress/chat-skin": "@botpress/chat-skin/src"
   },
   "dependenciesMeta": {
+    "core-js@2.6.12": {
+      "built": false
+    },
     "core-js@3.20.0": {
+      "built": false
+    },
+    "core-js@3.22.2": {
       "built": false
     },
     "core-js-pure@3.20.0": {
       "built": false
+    },
+    "open@7.4.2": {
+      "unplugged": true
     }
   }
 }
