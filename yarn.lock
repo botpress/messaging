@@ -3051,6 +3051,7 @@ __metadata:
     axios: ^0.25.0
     bootstrap: 3.4.1
     classnames: ^2.3.1
+    closest: ^0.0.1
     crypto: ^1.0.1
     decorate-component-with-props: ^1.1.0
     draft-js: ^0.11.7
@@ -3076,6 +3077,8 @@ __metadata:
     mustache: ^2.3.0
     nanoid: ^3.2.0
     parcel: 2.2.1
+    pathfinding: ^0.4.18
+    paths-js: ^0.4.9
     postcss: ^8.4.12
     prettier: ^1.19.1
     progressbar.js: ^1.0.1
@@ -11505,6 +11508,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"closest@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "closest@npm:0.0.1"
+  dependencies:
+    matches-selector: 0.0.1
+  checksum: 438e81c151cd8ed1066794d349eec1d76d3a08b1eaf2b85b9f43e49d5234a4e1c4de085f0af2c5787d23a73038a47ef38c3e333c81045696aca908642f27a3f2
+  languageName: node
+  linkType: hard
+
 "clsx@npm:^1.1.1":
   version: 1.1.1
   resolution: "clsx@npm:1.1.1"
@@ -16790,6 +16802,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"heap@npm:0.2.5":
+  version: 0.2.5
+  resolution: "heap@npm:0.2.5"
+  checksum: 1f178a62cef3a29c1dc19783b2a478f4b8f1b85bd2ceb70fa535cf368fdd8fee141f08af0af5c55cd32e1b8a6b1ed200d8d18cd33fa4700ba97476d9c27162d3
+  languageName: node
+  linkType: hard
+
 "highlight-words-core@npm:^1.2.0":
   version: 1.2.2
   resolution: "highlight-words-core@npm:1.2.2"
@@ -20883,6 +20902,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"matches-selector@npm:0.0.1":
+  version: 0.0.1
+  resolution: "matches-selector@npm:0.0.1"
+  checksum: 672b2921d9d87266955f93d99799c57edd1e796a48a01267b79b0290c7355b7058b61b5784ef46c91241f42fd4341705ffc9f73bc6ed25bfe07f17c28a2f89be
+  languageName: node
+  linkType: hard
+
 "md5.js@npm:^1.3.4":
   version: 1.3.5
   resolution: "md5.js@npm:1.3.5"
@@ -23184,6 +23210,22 @@ __metadata:
   version: 4.0.0
   resolution: "path-type@npm:4.0.0"
   checksum: 5b1e2daa247062061325b8fdbfd1fb56dde0a448fb1455453276ea18c60685bdad23a445dc148cf87bc216be1573357509b7d4060494a6fd768c7efad833ee45
+  languageName: node
+  linkType: hard
+
+"pathfinding@npm:^0.4.18":
+  version: 0.4.18
+  resolution: "pathfinding@npm:0.4.18"
+  dependencies:
+    heap: 0.2.5
+  checksum: 2d08ee0b28a337d7daa4c5b4fafb2add203d868372a928dd7b81db1ce69de427267bdb12863c9285ac0c92b901350cd407b4dfa943784fe6a0f28279c1aefb43
+  languageName: node
+  linkType: hard
+
+"paths-js@npm:^0.4.9":
+  version: 0.4.11
+  resolution: "paths-js@npm:0.4.11"
+  checksum: a2e968450d4c02a3aed2866c28766e6d386afd9a4ed5f8fe9c4f87e6867ef57d94d0e7a184f8987dfa7c59fed2519e10052320505b5bd1fd7a28dea7bb94995d
   languageName: node
   linkType: hard
 
