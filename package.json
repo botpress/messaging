@@ -30,6 +30,7 @@
     "cypress:open": "cypress open"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.9",
     "@jest/types": "^27.4.2",
     "@lezer/common": "^0.15.9",
     "@parcel/config-default": "^2.2.1",
@@ -46,6 +47,11 @@
     "@parcel/transformer-sass": "2.2.1",
     "@parcel/transformer-typescript-tsc": "^2.2.1",
     "@parcel/transformer-typescript-types": "^2.2.1",
+    "@storybook/components": "^6.4.22",
+    "@storybook/core-events": "^6.4.22",
+    "@storybook/react": "^6.4.22",
+    "@storybook/testing-library": "^0.0.11",
+    "@storybook/theming": "^6.4.22",
     "@types/conventional-changelog": "^3.1.1",
     "@types/jest": "^27.4.0",
     "@types/jest-dev-server": "^5.0.0",
@@ -78,6 +84,8 @@
     "postcss": "^8.2.1",
     "prettier": "^2.5.1",
     "pretty-format": "^28.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "rimraf": "^3.0.2",
     "sass-loader": "^6.0.6",
     "source-map-support": "^0.5.21",

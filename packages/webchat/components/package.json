@@ -8,8 +8,8 @@
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
-    "storybook": "start-storybook -p 6006 -c story/config",
-    "build-storybook": "build-storybook -c story/config",
+    "storybook": "yarn run -T start-storybook -p 6006 -c story/config",
+    "build-storybook": "yarn run -T build-storybook -c story/config",
     "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T tsc --build && yarn run -T rimraf dist/.tsbuildinfo && yarn run ncp ./src/css ./dist/css"
   },
   "files": [
@@ -28,13 +28,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.16.12",
-    "@storybook/addon-essentials": "^6.4.17",
-    "@storybook/addon-links": "^6.4.17",
-    "@storybook/addon-measure": "^6.4.17",
-    "@storybook/components": "^6.4.17",
-    "@storybook/core-events": "^6.4.17",
-    "@storybook/react": "^6.4.17",
-    "@storybook/theming": "^6.4.17",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/react": "^6.4.22",
     "@testing-library/dom": "^8.11.3",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
