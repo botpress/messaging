@@ -4,7 +4,7 @@ import {
   TrainingState as StanTrainingState,
   TrainInput as StanTrainInput
 } from '@botpress/nlu-client'
-import { CloudConfig } from 'botpress/sdk'
+import { CloudConfig } from '@botpress/sdk'
 import _ from 'lodash'
 import { CloudClient } from './cloud/client'
 

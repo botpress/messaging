@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn && yarn run -T tsc --build && node ./scripts/copy_builtin.js",
+    "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
     "start": "node ./dist/index.js",
     "dev": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts"
@@ -38,8 +38,10 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.9",
-    "@botpress/logger": "*",
+    "@botpress/common": "0.0.1",
+    "@botpress/logger": "0.0.1",
     "@botpress/nlu-client": "1.0.2-rc.6",
+    "@botpress/sdk": "0.0.1",
     "axios": "^0.25.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.1",

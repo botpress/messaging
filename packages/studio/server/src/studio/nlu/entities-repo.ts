@@ -1,8 +1,7 @@
+import { getEntityId, sanitizeFileName } from '@botpress/common'
+import * as sdk from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/sdk'
 import path from 'path'
-import { getEntityId } from '../../common/entity-id'
-import { sanitizeFileName } from '../../common/utils'
 import { Instance } from '../../studio/utils/bpfs'
 
 import { NLUService } from './nlu-service'

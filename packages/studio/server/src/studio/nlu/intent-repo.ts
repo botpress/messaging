@@ -1,10 +1,10 @@
+import { sanitizeFileName } from '@botpress/common'
+import * as sdk from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/sdk'
 
 import _ from 'lodash'
 import path from 'path'
 
-import { sanitizeFileName } from '../../common/utils'
 import { Instance } from '../../studio/utils/bpfs'
 import { NLUService } from './nlu-service'
 

@@ -1,5 +1,5 @@
+import { ContentElement, ContentType, SearchParams } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { ContentElement, ContentType, SearchParams } from 'botpress/sdk'
 
 import _ from 'lodash'
 import { nanoid } from 'nanoid'

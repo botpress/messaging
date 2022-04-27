@@ -1,4 +1,4 @@
-import { Logger, StrategyUser } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import { NextFunction, Request, Response } from 'express'
 
 import { TokenUser } from './typings'
@@ -24,7 +24,6 @@ export const decodeFolderPath = (urlPath: string): string => {
 }
 
 export type BPRequest = Request & {
-  authUser: StrategyUser | undefined
   tokenUser: TokenUser | undefined
   credentials: any | undefined
   workspace?: string
@@ -47,7 +46,7 @@ export const asyncMiddleware =
       }
 
       err.router = routerName
-      if (!err.skipLogging && !process.IS_PRODUCTION) {
+      if (!err.skipLogging && !(process as any).IS_PRODUCTION) {
         const botId = err.botId || req.params.botId
 
         if (!botId) {
