@@ -5,7 +5,7 @@ import * as dialogEnums from './dialog/enums'
 import * as logEnums from './logger/enums'
 
 const impl = <typeof sdk>{
-  version: process.BOTPRESS_VERSION,
+  version: '13.0.0',
   LoggerLevel: logEnums.LoggerLevel,
   LogLevel: logEnums.LogLevel,
   NodeActionType: dialogEnums.NodeActionType,

@@ -2897,6 +2897,10 @@ __metadata:
 "@botpress/sdk@0.0.1, @botpress/sdk@workspace:packages/studio/sdk":
   version: 0.0.0-use.local
   resolution: "@botpress/sdk@workspace:packages/studio/sdk"
+  dependencies:
+    "@types/express": ^4.17.13
+    "@types/node": ^16.11.13
+    knex: 0.20.1
   languageName: unknown
   linkType: soft
 

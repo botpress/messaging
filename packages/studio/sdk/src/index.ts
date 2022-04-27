@@ -1,1 +1,3 @@
-export class SdkBob {}
+import * as sdk from 'botpress/sdk'
+
+export { sdk }
