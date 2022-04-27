@@ -19,9 +19,6 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // TODO: Remove this, this is evil
-    "strict": false,
-
     // Specific settings for npm package
     "target": "es6",
     "declaration": true,
@@ -29,14 +26,13 @@
 
     // Because studio was written with decorators
     "experimentalDecorators": true,
-
     // We use react
     "jsx": "react",
     "lib": ["dom", "es2021", "es2021.intl"],
     "resolveJsonModule": true,
 
-    "allowJs": true,
-    "types": ["node"]
+    // TODO: Remove this, this is evil
+    "strict": false
   },
   "include": ["src", "src/**/*.json"],
   "exclude": ["dist"]
