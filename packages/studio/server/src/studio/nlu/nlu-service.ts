@@ -1,9 +1,9 @@
+import { NLUProgressEvent, Training as BpTraining } from '@botpress/common'
 import { Specifications as StanSpecifications } from '@botpress/nlu-client'
 import { Logger } from '@botpress/sdk'
 
 import _ from 'lodash'
 import yn from 'yn'
-import { NLUProgressEvent, Training as BpTraining } from '../../common/nlu-training'
 import { AppLifecycle, AppLifecycleEvents } from '../../lifecycle'
 import { GlobalEvents, StudioEvents } from '../../studio/events'
 import { Instance } from '../../studio/utils/bpfs'

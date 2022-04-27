@@ -1,5 +1,5 @@
+import { Training as BpTraining } from '@botpress/common'
 import { CloudConfig } from '@botpress/sdk'
-import { Training as BpTraining } from '../../common/nlu-training'
 
 export interface BotConfig {
   id: string

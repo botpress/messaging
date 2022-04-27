@@ -46,7 +46,7 @@ export const asyncMiddleware =
       }
 
       err.router = routerName
-      if (!err.skipLogging && !process.IS_PRODUCTION) {
+      if (!err.skipLogging && !(process as any).IS_PRODUCTION) {
         const botId = err.botId || req.params.botId
 
         if (!botId) {

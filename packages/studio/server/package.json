@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@apidevtools/json-schema-ref-parser": "^9.0.9",
+    "@botpress/common": "0.0.1",
     "@botpress/logger": "0.0.1",
     "@botpress/nlu-client": "1.0.2-rc.6",
     "@botpress/sdk": "0.0.1",

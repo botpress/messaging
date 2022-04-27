@@ -2396,6 +2396,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@botpress/common@0.0.1, @botpress/common@workspace:packages/studio/common":
+  version: 0.0.0-use.local
+  resolution: "@botpress/common@workspace:packages/studio/common"
+  dependencies:
+    "@botpress/sdk": 0.0.1
+    "@types/express": ^4.17.13
+    "@types/joi": ^13.4.5
+    "@types/node": ^16.11.13
+    "@types/uuid": ^8.3.4
+    express: ^4.17.2
+    joi: ^13.6.0
+    moment: ^2.29.1
+    node-machine-id: ^1.1.12
+    uuid: ^8.3.2
+  languageName: unknown
+  linkType: soft
+
 "@botpress/extensions-example@workspace:packages/base/example":
   version: 0.0.0-use.local
   resolution: "@botpress/extensions-example@workspace:packages/base/example"
@@ -2909,6 +2926,7 @@ __metadata:
   resolution: "@botpress/studio-be@workspace:packages/studio/server"
   dependencies:
     "@apidevtools/json-schema-ref-parser": ^9.0.9
+    "@botpress/common": 0.0.1
     "@botpress/logger": 0.0.1
     "@botpress/nlu-client": 1.0.2-rc.6
     "@botpress/sdk": 0.0.1

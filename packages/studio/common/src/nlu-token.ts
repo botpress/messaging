@@ -5,6 +5,6 @@ import crypto from 'crypto'
  * @returns the token
  */
 export const makeNLUPassword = () => {
-  const text = `nlu-${process.APP_SECRET}`
+  const text = `nlu-${(process as any).APP_SECRET}`
   return crypto.createHash('sha512').update(text).digest('hex')
 }

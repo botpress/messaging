@@ -1,6 +1,6 @@
+import { asyncMiddleware, AsyncMiddleware } from '@botpress/common'
 import { Logger } from '@botpress/sdk'
 import { RequestHandler, Router } from 'express'
-import { asyncMiddleware, AsyncMiddleware } from '../../common/http'
 
 // TODO: delete this ..
 export abstract class CustomStudioRouter {

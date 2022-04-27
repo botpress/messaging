@@ -1,6 +1,6 @@
+import { Training as BpTraining } from '@botpress/common'
 import { ListenHandle, Logger } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { Training as BpTraining } from '../../../common/nlu-training'
 import { DefinitionsRepository } from '../definitions-repository'
 import { ModelEntryService, TrainingEntryService } from '../model-entry'
 import { NLUClient } from '../nlu-client'
