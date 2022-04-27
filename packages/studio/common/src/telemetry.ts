@@ -1,4 +1,4 @@
-import uuid from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 export type TelemetryEvent = Schema & {
   event_type: string
@@ -43,7 +43,7 @@ export interface Schema {
 export const buildSchema = (server: ServerStats, source: string): Schema => {
   return {
     timestamp: new Date(),
-    uuid: uuid.v4(),
+    uuid: uuidv4(),
     schema: '1.0.0',
     source,
     server

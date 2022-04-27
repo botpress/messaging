@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, Intent, Tab, Tabs } from '@blueprintjs/core'
 import cx from 'classnames'
 import React, { FC, useEffect, useState } from 'react'
-import JSONTree from 'react-json-tree'
+import { JSONTree } from 'react-json-tree'
 
 import ToolTip from '../../../../components/Shared/ToolTip'
 import { lang } from '../../../../components/Shared/translations'
@@ -48,7 +48,6 @@ const InspectorTab: FC<Props> = (props) => {
                   </div>
                 ))}
               </div>
-              {/* @ts-ignore */}
               <JSONTree
                 data={current || {}}
                 shouldExpandNode={() => expand}

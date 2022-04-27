@@ -105,14 +105,16 @@
   },
   "packageManager": "yarn@3.1.1",
   "alias": {
-    "@botpress/messaging-base": "@botpress/messaging-base/src",
-    "@botpress/messaging-client": "@botpress/messaging-client/src",
-    "@botpress/messaging-socket": "@botpress/messaging-socket/src",
-    "@botpress/messaging-components": "@botpress/messaging-components/src",
-    "@botpress/webchat": "@botpress/webchat/src",
     "@botpress/chat": "@botpress/chat/src",
     "@botpress/chat-skin": "@botpress/chat-skin/src",
-    "@botpress/inspector-kit": "@botpress/inspector-kit/src"
+    "@botpress/common": "@botpress/common/src",
+    "@botpress/inspector-kit": "@botpress/inspector-kit/src",
+    "@botpress/messaging-base": "@botpress/messaging-base/src",
+    "@botpress/messaging-client": "@botpress/messaging-client/src",
+    "@botpress/messaging-components": "@botpress/messaging-components/src",
+    "@botpress/messaging-socket": "@botpress/messaging-socket/src",
+    "@botpress/sdk": "@botpress/sdk/src",
+    "@botpress/webchat": "@botpress/webchat/src"
   },
   "dependenciesMeta": {
     "core-js@2.6.12": {
