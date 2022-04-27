@@ -1,4 +1,4 @@
-import { Flow, FlowNode, IO, StageRequestApprovers } from '@botpress/sdk'
+import { Flow, FlowNode, IO, ParsedContentType, StageRequestApprovers } from '@botpress/sdk'
 import { Request } from 'express'
 
 export interface IDisposeOnExit {
@@ -96,6 +96,11 @@ export interface LibraryElement {
   type: 'say_something' | 'execute'
   preview: string
   path: string
+}
+
+export interface Categories {
+  registered: ParsedContentType[]
+  unregistered: Pick<ParsedContentType, 'id' | 'title'>[]
 }
 
 export interface OutgoingEventCommonArgs {

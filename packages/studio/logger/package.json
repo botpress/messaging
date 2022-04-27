@@ -1,8 +1,12 @@
 {
   "name": "@botpress/logger",
   "version": "0.0.1",
-  "main": "./dist/index.js",
-  "types": "./src/typings.d.ts",
+  "main": "dist/index.js",
+  "types": "src/typings.d.ts",
+  "scripts": {
+    "build": "yarn && yarn run -T tsc --build",
+    "watch": "yarn && yarn run -T tsc --build --watch"
+  },
   "devDependencies": {
     "@types/cli-color": "^2.0.2",
     "@types/lodash": "^4.14.178",
@@ -12,9 +16,5 @@
     "cli-color": "^2.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1"
-  },
-  "scripts": {
-    "build": "yarn && yarn run -T tsc --build",
-    "watch": "yarn && yarn run -T tsc --build --watch"
   }
 }
