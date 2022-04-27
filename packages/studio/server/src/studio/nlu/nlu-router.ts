@@ -1,5 +1,5 @@
+import * as sdk from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/sdk'
 import { Response as ExpressResponse } from 'express'
 import { validate } from 'joi'
 import _ from 'lodash'

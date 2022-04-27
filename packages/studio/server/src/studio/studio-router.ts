@@ -1,4 +1,4 @@
-import { Logger } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import express, { RequestHandler, Router } from 'express'
 import rewrite from 'express-urlrewrite'
 import fs from 'fs'

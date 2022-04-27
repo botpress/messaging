@@ -1,4 +1,4 @@
-import { Logger, StrategyUser } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import { NextFunction, Request, Response } from 'express'
 
 import { TokenUser } from './typings'
@@ -24,7 +24,6 @@ export const decodeFolderPath = (urlPath: string): string => {
 }
 
 export type BPRequest = Request & {
-  authUser: StrategyUser | undefined
   tokenUser: TokenUser | undefined
   credentials: any | undefined
   workspace?: string

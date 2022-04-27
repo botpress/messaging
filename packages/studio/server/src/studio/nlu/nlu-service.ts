@@ -1,5 +1,5 @@
 import { Specifications as StanSpecifications } from '@botpress/nlu-client'
-import { Logger } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 
 import _ from 'lodash'
 import yn from 'yn'

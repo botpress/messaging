@@ -1,4 +1,4 @@
-import { BotConfig } from 'botpress/sdk'
+import { BotConfig } from '@botpress/sdk'
 import { StudioServices } from '../studio-router'
 import { Instance } from '../utils/bpfs'
 import { CustomStudioRouter } from '../utils/custom-studio-router'

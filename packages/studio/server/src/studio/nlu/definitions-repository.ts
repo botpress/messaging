@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/sdk'
+import * as sdk from '@botpress/sdk'
 
 import { EntityRepository } from './entities-repo'
 import { IntentRepository } from './intent-repo'

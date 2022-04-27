@@ -1,4 +1,4 @@
-import { ContentType } from 'botpress/sdk'
+import { ContentType } from '@botpress/sdk'
 
 const contentType: ContentType = {
   id: 'builtin_action-button',

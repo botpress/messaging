@@ -1,4 +1,4 @@
-import { Logger } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import { RequestHandler, Router } from 'express'
 import { asyncMiddleware, AsyncMiddleware } from '../../common/http'
 

@@ -1,4 +1,4 @@
-import sdk from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import clc from 'cli-color'
 import _ from 'lodash'
 import moment from 'moment'
@@ -13,7 +13,7 @@ interface BannerConfig {
   version: string
   bannerWidth: number
   logScopeLength: number
-  logger: sdk.Logger
+  logger: Logger
 }
 
 interface BuildMetadata {

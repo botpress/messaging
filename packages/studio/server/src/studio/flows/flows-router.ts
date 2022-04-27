@@ -1,5 +1,5 @@
+import { DirectoryListingOptions, Flow } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { DirectoryListingOptions, Flow } from 'botpress/sdk'
 import _ from 'lodash'
 import path from 'path'
 import { decodeFolderPath } from '../../common/http'

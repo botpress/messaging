@@ -1,12 +1,4 @@
-import {
-  Flow,
-  FlowNode,
-  IO,
-  ParsedContentType,
-  RolloutStrategy,
-  StageRequestApprovers,
-  StrategyUser
-} from 'botpress/sdk'
+import { Flow, FlowNode, IO, StageRequestApprovers } from '@botpress/sdk'
 import { Request } from 'express'
 
 export interface IDisposeOnExit {
@@ -16,21 +8,6 @@ export interface IDisposeOnExit {
 export interface UniqueUser {
   email: string
   strategy: string
-}
-
-export interface Workspace {
-  id: string
-  name: string
-  description?: string
-  /** An optional string of characters which must precede the ID of each bots in this workspace */
-  botPrefix?: string
-  audience: 'internal' | 'external'
-  roles: AuthRole[]
-  defaultRole: string
-  adminRole: string
-  bots: string[]
-  pipeline: Pipeline
-  rolloutStrategy: RolloutStrategy
 }
 
 export interface AuthRule {
@@ -73,7 +50,6 @@ export interface TokenResponse {
 
 export type RequestWithUser = Request & {
   tokenUser?: TokenUser
-  authUser?: StrategyUser
   workspace?: string
 }
 
@@ -120,11 +96,6 @@ export interface LibraryElement {
   type: 'say_something' | 'execute'
   preview: string
   path: string
-}
-
-export interface Categories {
-  registered: ParsedContentType[]
-  unregistered: Pick<ParsedContentType, 'id' | 'title'>[]
 }
 
 export interface OutgoingEventCommonArgs {

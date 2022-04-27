@@ -1,3 +1,3 @@
-import * as sdk from 'botpress/sdk'
-
-export { sdk }
+export * from './interfaces'
+export * from './sdk'
+export * from './knex'

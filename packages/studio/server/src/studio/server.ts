@@ -1,6 +1,6 @@
+import { Logger } from '@botpress/sdk'
 import { Promise } from 'bluebird'
 import bodyParser from 'body-parser'
-import { Logger } from 'botpress/sdk'
 
 import compression from 'compression'
 import cookieParser from 'cookie-parser'

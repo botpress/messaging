@@ -1,4 +1,4 @@
-import { CloudConfig } from 'botpress/sdk'
+import { CloudConfig } from '@botpress/sdk'
 import { Training as BpTraining } from '../../common/nlu-training'
 
 export interface BotConfig {

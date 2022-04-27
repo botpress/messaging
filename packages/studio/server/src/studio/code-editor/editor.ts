@@ -1,5 +1,5 @@
+import * as sdk from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/sdk'
 
 import fs from 'fs'
 import _ from 'lodash'

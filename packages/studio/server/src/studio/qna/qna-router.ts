@@ -1,6 +1,6 @@
+import { DirectoryListingOptions, NLU, ContentElement } from '@botpress/sdk'
 import axios from 'axios'
 import { Promise as Bluebird } from 'bluebird'
-import { DirectoryListingOptions, NLU, ContentElement } from 'botpress/sdk'
 import { validate } from 'joi'
 import _ from 'lodash'
 import moment from 'moment'

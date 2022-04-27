@@ -1,4 +1,4 @@
-import { Logger } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import _ from 'lodash'
 import { Bot } from './bot'
 import { DefinitionsRepository } from './definitions-repository'

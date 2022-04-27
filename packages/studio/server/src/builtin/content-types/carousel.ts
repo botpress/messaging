@@ -1,4 +1,4 @@
-import { ContentType } from 'botpress/sdk'
+import { ContentType } from '@botpress/sdk'
 import base from './_base'
 import utils from './_utils'
 import { cardSchema } from './card'

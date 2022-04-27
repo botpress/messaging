@@ -1,14 +1,14 @@
-import * as sdk from 'botpress/sdk'
+import { IO } from '@botpress/sdk'
 
 export interface Scenario {
   name?: string
-  initialState?: sdk.IO.EventState
-  finalState?: sdk.IO.EventState
+  initialState?: IO.EventState
+  finalState?: IO.EventState
   steps?: DialogStep[]
 }
 
 export type RunningScenario = {
-  eventDestination: sdk.IO.EventDestination
+  eventDestination: IO.EventDestination
   lastEventTs?: number
   completedSteps: DialogStep[]
 } & Required<Scenario>
