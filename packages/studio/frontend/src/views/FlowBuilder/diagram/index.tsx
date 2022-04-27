@@ -33,7 +33,7 @@ import {
   updateFlowProblems,
   zoomToLevel
 } from '../../../actions'
-import { IO } from '../../../common/sdk'
+import { IO } from '@botpress/sdk'
 import contextMenu from '../../../components/Shared/ContextMenu'
 import Say from '../../../components/Shared/Icons/Say'
 import storage from '../../../components/Shared/lite-utils/storage'

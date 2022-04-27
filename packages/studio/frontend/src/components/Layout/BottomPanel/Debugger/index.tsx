@@ -1,4 +1,5 @@
 import { Button, ButtonGroup, Divider, Icon, Tab, Tabs } from '@blueprintjs/core'
+import * as sdk from '@botpress/sdk'
 import axios from 'axios'
 import cx from 'classnames'
 import _ from 'lodash'
@@ -7,7 +8,6 @@ import React, { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import { setDebuggerEvent } from '../../../../actions'
-import * as sdk from '../../../../common/sdk'
 import ToolTip from '../../../../components/Shared/ToolTip'
 import { lang } from '../../../../components/Shared/translations'
 import btStyle from '../style.scss'

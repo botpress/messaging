@@ -1,6 +1,6 @@
 import React from 'react'
 
-import * as sdk from '../../../../../common/sdk'
+import * as sdk from '@botpress/sdk'
 import ContentSection from '../../../../../components/Shared/ContentSection'
 import { lang } from '../../../../../components/Shared/translations'
 

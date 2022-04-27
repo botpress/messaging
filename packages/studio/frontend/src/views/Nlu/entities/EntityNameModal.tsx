@@ -3,7 +3,7 @@ import _ from 'lodash'
 import React, { FC, useEffect, useState } from 'react'
 
 import { getEntityId } from '../../../common/entity-id'
-import { NLU } from '../../../common/sdk'
+import { NLU } from '@botpress/sdk'
 import { lang } from '../../../components/Shared/translations'
 
 import { NluClient } from '../client'

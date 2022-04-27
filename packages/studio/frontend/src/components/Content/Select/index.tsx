@@ -1,3 +1,4 @@
+import { ContentElement, FormData, ParsedContentType, SearchParams } from '@botpress/sdk'
 import axios, { AxiosResponse } from 'axios'
 import classnames from 'classnames'
 import React, { Component } from 'react'
@@ -6,7 +7,6 @@ import Markdown from 'react-markdown'
 import { connect } from 'react-redux'
 
 import { deleteMedia, fetchContentCategories, fetchContentItems, upsertContentItem } from '../../../actions'
-import { ContentElement, FormData, ParsedContentType, SearchParams } from '../../../common/sdk'
 import { Dialog } from '../../../components/Shared/Dialog'
 import { lang } from '../../../components/Shared/translations'
 import Loading from '../../../components/Util/Loading'

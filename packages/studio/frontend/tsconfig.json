@@ -2,7 +2,13 @@
   // Manage references here
   "references": [
     {
+      "path": "../common"
+    },
+    {
       "path": "../inspector-kit"
+    },
+    {
+      "path": "../sdk"
     }
   ],
 
@@ -23,15 +29,15 @@
 
     // Because studio was written with decorators
     "experimentalDecorators": true,
+
     // We use react
     "jsx": "react",
     "lib": ["dom", "es2021", "es2021.intl"],
     "resolveJsonModule": true,
 
     "allowJs": true,
-    "typeRoots": ["src/typings.d.ts"],
     "types": ["node"]
   },
   "include": ["src", "src/**/*.json"],
-  "exclude": ["public", "node_modules"]
+  "exclude": ["dist"]
 }

@@ -1,10 +1,10 @@
 import { Button, Classes, ControlGroup, InputGroup } from '@blueprintjs/core'
+import { ContentElement, FormData } from '@botpress/sdk'
 import isEqual from 'lodash/isEqual'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { deleteMedia, fetchContentItem, upsertContentItem } from '../../../actions'
-import { ContentElement, FormData } from '../../../common/sdk'
 import { lang } from '../../../components/Shared/translations'
 import store from '../../../store'
 import { CONTENT_TYPES_MEDIA } from '../../../util/ContentDeletion'

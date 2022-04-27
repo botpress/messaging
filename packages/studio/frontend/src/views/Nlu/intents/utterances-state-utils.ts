@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import { MarkJSON, NodeJSON, TextJSON, Value, ValueJSON } from 'slate'
-import { NLU } from '../../../common/sdk'
+import { NLU } from '@botpress/sdk'
 
 import { parseUtterance } from '../../../common/utterance-parser'
 

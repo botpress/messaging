@@ -2,7 +2,7 @@ import { Button, Classes, MenuItem } from '@blueprintjs/core'
 import { ItemPredicate, ItemRenderer, Select } from '@blueprintjs/select'
 import React, { FC, useEffect, useState } from 'react'
 
-import { NLU } from '../../../common/sdk'
+import { NLU } from '@botpress/sdk'
 import { lang } from '../../../components/Shared/translations'
 
 interface Props {

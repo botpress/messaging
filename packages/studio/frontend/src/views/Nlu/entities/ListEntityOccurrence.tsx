@@ -1,7 +1,7 @@
 import { Button, Intent, Tag, TagInput } from '@blueprintjs/core'
 import React, { FC } from 'react'
 
-import { NLU } from '../../../common/sdk'
+import { NLU } from '@botpress/sdk'
 import { lang } from '../../../components/Shared/translations'
 
 import style from './style.scss'

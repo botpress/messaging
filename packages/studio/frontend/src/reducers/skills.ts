@@ -10,7 +10,7 @@ import {
   requestUpdateSkill,
   skillsReceived
 } from '../actions'
-import { NLU, Skill } from '../common/sdk'
+import { NLU, Skill } from '@botpress/sdk'
 import { LocalActionDefinition } from '../common/typings'
 
 const defaultSkills = [

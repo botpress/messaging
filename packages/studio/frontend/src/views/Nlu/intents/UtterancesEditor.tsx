@@ -22,7 +22,7 @@ import {
 import { Editor, EditorProps, RenderBlockProps, RenderMarkProps } from 'slate-react'
 import PlaceholderPlugin from 'slate-react-placeholder'
 
-import { NLU } from '../../../common/sdk'
+import { NLU } from '@botpress/sdk'
 import { lang } from '../../../components/Shared/translations'
 import { TagSlotPopover } from './slots/SlotPopover'
 import style from './style.scss'

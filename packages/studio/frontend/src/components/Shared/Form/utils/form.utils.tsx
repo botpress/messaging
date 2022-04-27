@@ -2,7 +2,7 @@ import cx from 'classnames'
 import _ from 'lodash'
 import React from 'react'
 
-import { FormMoreInfo } from '../../../../common/sdk'
+import { FormMoreInfo } from '@botpress/sdk'
 import { lang } from '../../translations'
 import style from '../style.scss'
 

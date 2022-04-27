@@ -1,10 +1,10 @@
 import { Icon } from '@blueprintjs/core'
+import * as sdk from '@botpress/sdk'
 import cx from 'classnames'
 import _ from 'lodash'
 import moment from 'moment'
 import React, { FC, Fragment, useState } from 'react'
 
-import * as sdk from '../../../../../common/sdk'
 import ContentSection from '../../../../../components/Shared/ContentSection'
 import ToolTip from '../../../../../components/Shared/ToolTip'
 import { lang } from '../../../../../components/Shared/translations'

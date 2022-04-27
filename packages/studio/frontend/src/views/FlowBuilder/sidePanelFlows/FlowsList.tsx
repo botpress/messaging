@@ -2,7 +2,7 @@ import { Classes, ContextMenu, ITreeNode, Menu, MenuItem, Tree } from '@blueprin
 import { isEqual } from 'lodash'
 import React, { Component } from 'react'
 
-import { FlowNode } from '../../../common/sdk'
+import { FlowNode } from '@botpress/sdk'
 import confirmDialog from '../../../components/Shared/ConfirmDialog'
 import { lang } from '../../../components/Shared/translations'
 

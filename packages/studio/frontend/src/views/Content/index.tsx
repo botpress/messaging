@@ -14,7 +14,7 @@ import {
   getQNAContentElementUsage,
   upsertContentItem
 } from '../../actions'
-import { ActionBuilderProps, ContentElement } from '../../common/sdk'
+import { ActionBuilderProps, ContentElement } from '@botpress/sdk'
 import { Categories, FlowView, NodeView } from '../../common/typings'
 import CreateOrEditModal from '../../components/Content/CreateOrEditModal'
 import { Container } from '../../components/Shared/Interface'

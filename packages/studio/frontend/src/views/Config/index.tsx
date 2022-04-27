@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import Select from 'react-select'
 
 import { fetchBotInformation, fetchBotLicense } from '../../actions'
-import { BotConfig } from '../../common/sdk'
+import { BotConfig } from '@botpress/sdk'
 import { BotEditSchema } from '../../common/validation'
 import confirmDialog from '../../components/Shared/ConfirmDialog'
 import { Container, SidePanel, SidePanelSection, ItemList } from '../../components/Shared/Interface'

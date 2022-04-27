@@ -36,7 +36,7 @@ import {
   switchFlowNode,
   updateFlowProblems
 } from '../actions'
-import { FlowNode, IO } from '../common/sdk'
+import { FlowNode, IO } from '@botpress/sdk'
 import { FlowView } from '../common/typings'
 import { hashCode, prettyId } from '../util'
 import { copyName } from '../util/flows'

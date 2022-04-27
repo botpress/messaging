@@ -4,7 +4,7 @@ import { Button, Radio } from 'react-bootstrap'
 import Markdown from 'react-markdown'
 import { connect } from 'react-redux'
 
-import { ContentElement } from '../../../common/sdk'
+import { ContentElement } from '@botpress/sdk'
 import { ActionParameterDefinition, LocalActionDefinition } from '../../../common/typings'
 import ContentPickerWidget from '../../../components/Content/Select/Widget'
 import confirmDialog from '../../../components/Shared/ConfirmDialog'

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import { customAlphabet } from 'nanoid'
 
-import { ActionBuilderProps, Flow, FlowGenerationResult, SkillFlow } from '../../../common/sdk'
+import { ActionBuilderProps, Flow, FlowGenerationResult, SkillFlow } from '@botpress/sdk'
 import { generateFlow as callApi } from './skill-call-api'
 import { generateFlow as choice } from './skill-choice'
 import { generateFlow as email } from './skill-send-email'

@@ -1,8 +1,5 @@
 import { BPStorage } from './components/Shared/lite-utils/typings'
 
-// TODO: remove when at least one typing is exported from this file
-export interface test {}
-
 declare global {
   interface Window {
     __BP_VISITOR_ID: string
