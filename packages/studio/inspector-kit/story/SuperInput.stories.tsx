@@ -1,8 +1,8 @@
 import { Button } from '@blueprintjs/core'
 import { ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { data } from '../../demo/data'
-import { SiTypes, SuperInput } from '.'
+import { data } from '../demo/data'
+import { SiTypes, SuperInput } from '../src/SuperInput'
 
 export default {
   title: 'SuperInput',

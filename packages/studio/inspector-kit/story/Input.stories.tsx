@@ -1,7 +1,7 @@
 import { Button } from '@blueprintjs/core'
 import { ComponentMeta } from '@storybook/react'
 import React from 'react'
-import { Input } from '.'
+import { Input } from '../src/Input'
 
 export default {
   title: 'Input',
