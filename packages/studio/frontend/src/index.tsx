@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 
 import './style.scss'
 import 'bootstrap/dist/css/bootstrap.css'
-import 'storm-react-diagrams/dist/style.min.css'
+import '@projectstorm/react-diagrams/dist/style.min.css'
 import './theme.scss'
 import { getToken } from './components/Shared/auth'
 import { keyMap } from './components/Shared/utilities/keyboardShortcuts'

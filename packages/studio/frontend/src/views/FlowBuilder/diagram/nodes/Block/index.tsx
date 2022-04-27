@@ -1,8 +1,8 @@
 import { Intent, Menu, MenuDivider, MenuItem } from '@blueprintjs/core'
 import { FlowView } from '@botpress/common'
 import { Flow, FormData } from '@botpress/sdk'
+import { AbstractNodeFactory, DiagramEngine } from '@projectstorm/react-diagrams'
 import React, { FC } from 'react'
-import { AbstractNodeFactory, DiagramEngine } from 'storm-react-diagrams'
 
 import contextMenu from '../../../../../components/Shared/ContextMenu'
 import ShortcutLabel from '../../../../../components/Shared/ShortcutLabel'

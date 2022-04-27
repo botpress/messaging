@@ -1,6 +1,12 @@
+import {
+  AbstractLinkFactory,
+  DefaultLinkModel,
+  DefaultLinkWidget,
+  DiagramEngine,
+  Toolkit
+} from '@projectstorm/react-diagrams'
 import _ from 'lodash'
 import React from 'react'
-import { AbstractLinkFactory, DefaultLinkModel, DefaultLinkWidget, DiagramEngine, Toolkit } from 'storm-react-diagrams'
 
 import { ExtendedDiagramEngine } from '..'
 

@@ -19,6 +19,7 @@
     "@botpress/nlu-client": "1.0.0-rc.2",
     "@botpress/sdk": "0.0.1",
     "@lezer/common": "^0.15.12",
+    "@projectstorm/react-diagrams": "^5.3.2",
     "analytics": "^0.7.17",
     "anser": "^1.4.8",
     "axios": "^0.25.0",
@@ -84,7 +85,6 @@
     "slate-react-placeholder": "0.2.4",
     "snarkdown": "^1.2.2",
     "socket.io-client": "^4.4.1",
-    "storm-react-diagrams": "^5.2.1",
     "styled-components": "^5.3.0",
     "uuid": "^8.3.2",
     "yn": "^4.0.0"
@@ -98,7 +98,6 @@
     "@types/lodash": "^4.14.178",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^16.11.13",
-    "@types/popper.js": "^1.11.0",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/react-jsonschema-form": "^1.7.8",

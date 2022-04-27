@@ -1,5 +1,5 @@
+import { DiagramEngine, NodeModel } from '@projectstorm/react-diagrams'
 import _ from 'lodash'
-import { DiagramEngine, NodeModel } from 'storm-react-diagrams'
 
 import { StandardIncomingPortModel, StandardOutgoingPortModel } from '../nodes/Ports'
 

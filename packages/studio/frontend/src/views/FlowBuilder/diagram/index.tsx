@@ -1,9 +1,5 @@
 import { Intent, Menu, MenuDivider, MenuItem, Position, Toaster } from '@blueprintjs/core'
 import { IO } from '@botpress/sdk'
-import _ from 'lodash'
-import React, { Component, Fragment } from 'react'
-import ReactDOM from 'react-dom'
-import { connect } from 'react-redux'
 import {
   DefaultLinkModel,
   DefaultPortModel,
@@ -12,7 +8,11 @@ import {
   NodeModel,
   PointModel,
   SelectingAction
-} from 'storm-react-diagrams'
+} from '@projectstorm/react-diagrams'
+import _ from 'lodash'
+import React, { Component, Fragment } from 'react'
+import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
 
 import {
   buildNewSkill,
