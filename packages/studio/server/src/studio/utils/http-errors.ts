@@ -1,4 +1,4 @@
-import { ResponseError } from '../../common/http'
+import { ResponseError } from '@botpress/common'
 
 export class InvalidOperationError extends ResponseError {
   constructor(message: string) {

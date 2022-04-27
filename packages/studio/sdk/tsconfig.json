@@ -1,6 +1,6 @@
 {
   // Manage references here
-  "references": [{ "path": "../logger" }, { "path": "../sdk" }, { "path": "../common" }],
+  "references": [],
 
   // Defaults (don't change this)
   "extends": "../../../tsconfig.packages.json",

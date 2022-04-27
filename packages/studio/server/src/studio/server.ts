@@ -1,6 +1,7 @@
+import { machineUUID } from '@botpress/common'
+import { Logger } from '@botpress/sdk'
 import { Promise } from 'bluebird'
 import bodyParser from 'body-parser'
-import { Logger } from 'botpress/sdk'
 
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
@@ -15,7 +16,6 @@ import path from 'path'
 import portFinder from 'portfinder'
 import { URL } from 'url'
 import yn from 'yn'
-import { machineUUID } from '../common/stats'
 import { AppLifecycle, AppLifecycleEvents } from '../lifecycle'
 import { StudioRouter } from './studio-router'
 

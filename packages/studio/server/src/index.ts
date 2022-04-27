@@ -1,3 +1,4 @@
+import './rewire'
 ;(global as any)['NativePromise'] = global.Promise
 
 import clc from 'cli-color'

@@ -7,7 +7,7 @@ import {
   IntentDefinition as StanIntentDefinition
 } from '@botpress/nlu-client'
 
-import { NLU } from 'botpress/sdk'
+import { NLU } from '@botpress/sdk'
 import _ from 'lodash'
 
 type BpSlotDefinition = NLU.SlotDefinition

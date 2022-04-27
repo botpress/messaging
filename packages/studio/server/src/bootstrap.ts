@@ -1,11 +1,7 @@
-import './sdk/rewire'
-
 import { makeLogger, ConsoleTransport, FormattedLogEntry, LoggerConfig, LogTransporter } from '@botpress/logger'
-
-import sdk, { Logger, LogLevel } from 'botpress/sdk'
+import { Logger, LogLevel } from '@botpress/sdk'
 import clc from 'cli-color'
 import fs from 'fs'
-
 import { Botpress } from './botpress'
 import { showBanner } from './misc/banner'
 import { GlobalEvents, StudioEvents } from './studio/events'
@@ -57,7 +53,7 @@ async function start() {
   const logger = makeLogger({
     prefix: 'Studio',
     transports: [new (ConsoleTransport as any)(), stream]
-  }) as never as sdk.Logger
+  }) as never as Logger
   await setupDebugLogger(logger)
 
   showBanner({ title: 'Botpress Studio', version: process.STUDIO_VERSION, logScopeLength: 9, bannerWidth: 75, logger })

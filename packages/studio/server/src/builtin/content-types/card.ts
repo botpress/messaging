@@ -1,4 +1,4 @@
-import { ContentType } from 'botpress/sdk'
+import { ContentType } from '@botpress/sdk'
 import utils from './_utils'
 import actionButton from './action_button'
 

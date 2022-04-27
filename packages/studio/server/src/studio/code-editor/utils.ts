@@ -1,6 +1,5 @@
+import { BUILTIN_MODULES, EditableFile, FileDefinition, FilePermissions, FileTypes } from '@botpress/common'
 import _ from 'lodash'
-import { EditableFile, FileDefinition, FilePermissions, FileTypes } from '../../common/code-editor'
-import { BUILTIN_MODULES } from '../../common/defaults'
 
 import { FILENAME_REGEX } from './editor'
 const jsonlintMod = require('jsonlint-mod')
