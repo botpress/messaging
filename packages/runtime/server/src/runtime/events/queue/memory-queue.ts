@@ -1,7 +1,6 @@
 import { IO, Logger } from 'botpress/runtime-sdk'
 
 import { inject, injectable, optional, tagged } from 'inversify'
-import _ from 'lodash'
 import { nanoid } from 'nanoid'
 
 import { getErrorMessage } from '../../misc/utils'
@@ -52,7 +51,7 @@ export class MemoryQueue<E extends IO.Event> implements Queue<E> {
 
   isEmptyForJob(job: E) {
     const jobQueueId = this.getQueueId(job)
-    const subqueueLength = this._queue.filter(item => this.getQueueId(item.job) === jobQueueId).length
+    const subqueueLength = this._queue.filter((item) => this.getQueueId(item.job) === jobQueueId).length
     return !subqueueLength
   }
 
@@ -97,17 +96,17 @@ export class MemoryQueue<E extends IO.Event> implements Queue<E> {
 
   async cancelAll(job: E) {
     const jobQueueId = this.getQueueId(job)
-    this._queue = this._queue.filter(item => this.getQueueId(item.job) !== jobQueueId)
+    this._queue = this._queue.filter((item) => this.getQueueId(item.job) !== jobQueueId)
     this.checkEmptyQueue(job)
   }
 
   async peek(job: E) {
     const jobQueueId = this.getQueueId(job)
-    return this._queue.find(item => this.getQueueId(item.job) === jobQueueId)
+    return this._queue.find((item) => this.getQueueId(item.job) === jobQueueId)
   }
 
   async tick() {
-    const toDequeueIdx = this._queue.findIndex(el => !this._lock[this.getQueueId(el.job)])
+    const toDequeueIdx = this._queue.findIndex((el) => !this._lock[this.getQueueId(el.job)])
 
     if (toDequeueIdx === -1) {
       return
@@ -118,7 +117,7 @@ export class MemoryQueue<E extends IO.Event> implements Queue<E> {
     this._lock[queueId] = true
 
     try {
-      await Promise.mapSeries(this._subscribers, fn => fn(job))
+      await Promise.mapSeries(this._subscribers, (fn) => fn(job))
     } catch (err) {
       this.logger.attachError(err).warn(`${this.name} queue failed to process job: ${getErrorMessage(err)}`)
 

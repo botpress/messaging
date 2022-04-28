@@ -52,7 +52,7 @@ export class DecisionEngine {
     this._amendSuggestionsWithDecision(event.suggestions!, _.get(event, 'state.session.lastMessages', []))
 
     if (isInMiddleOfFlow) {
-      event.suggestions!.forEach(suggestion => {
+      event.suggestions!.forEach((suggestion) => {
         if (suggestion.decision.status === 'elected') {
           suggestion.decision.status = 'dropped'
           suggestion.decision.reason = 'would have been elected, but already in the middle of a flow'
@@ -64,7 +64,7 @@ export class DecisionEngine {
       await this.onBeforeSuggestionsElection(sessionId, event, event.suggestions!)
     }
 
-    const elected = event.suggestions!.find(x => x.decision.status === 'elected')
+    const elected = event.suggestions!.find((x) => x.decision.status === 'elected')
     let sendSuggestionResult: SendSuggestionResult | undefined
 
     if (elected) {
@@ -94,16 +94,15 @@ export class DecisionEngine {
         })
         const processedEvent = await this.dialogEngine.processEvent(sessionId, event)
         // In case there are no unknown errors, remove skills/ flow from the stacktrace
-        processedEvent.state.__stacktrace = processedEvent.state.__stacktrace.filter(x => !x.flow.startsWith('skills/'))
+        processedEvent.state.__stacktrace = processedEvent.state.__stacktrace.filter(
+          (x) => !x.flow.startsWith('skills/')
+        )
         this.onAfterEventProcessed && (await this.onAfterEventProcessed(processedEvent))
 
         await this.stateManager.persist(processedEvent, false)
         return
       } catch (err) {
-        this.logger
-          .forBot(event.botId)
-          .attachError(err)
-          .error('An unexpected error occurred.')
+        this.logger.forBot(event.botId).attachError(err).error('An unexpected error occurred.')
 
         await this._processErrorFlow(sessionId, event)
       }
@@ -121,10 +120,7 @@ export class DecisionEngine {
       const processedEvent = await this.dialogEngine.processEvent(sessionId, event)
       await this.stateManager.persist(processedEvent, false)
     } catch (err) {
-      this.logger
-        .forBot(event.botId)
-        .attachError(err)
-        .error('An error occurred in the error handler. Abandoning.')
+      this.logger.forBot(event.botId).attachError(err).error('An error occurred in the error handler. Abandoning.')
     }
   }
 
@@ -141,10 +137,7 @@ export class DecisionEngine {
       const replySource = replies[i].source + ' ' + replies[i].sourceDetails || Date.now()
 
       const violatesRepeatPolicy =
-        replySource === lastMessageSource &&
-        moment(lastMsg!.replyDate)
-          .add(this.MIN_NO_REPEAT, 'ms')
-          .isAfter(moment())
+        replySource === lastMessageSource && moment(lastMsg!.replyDate).add(this.MIN_NO_REPEAT, 'ms').isAfter(moment())
 
       if (replies[i].confidence < this.MIN_CONFIDENCE) {
         replies[i].decision = { status: 'dropped', reason: `confidence lower than ${this.MIN_CONFIDENCE}` }
@@ -168,7 +161,7 @@ export class DecisionEngine {
       replySource: source + ' ' + sourceDetails,
       incomingPreview: event.preview,
       replyConfidence: confidence,
-      replyPreview: _.find(payloads, p => p.text !== undefined)
+      replyPreview: _.find(payloads, (p) => p.text !== undefined)
     }
 
     event.state.session.lastMessages.push(message)
@@ -181,7 +174,7 @@ export class DecisionEngine {
     sessionId,
     event: IO.IncomingEvent
   ): Promise<SendSuggestionResult> {
-    const payloads = _.filter(reply.payloads, p => p.type !== 'redirect')
+    const payloads = _.filter(reply.payloads, (p) => p.type !== 'redirect')
     const result: SendSuggestionResult = { executeFlows: true }
 
     if (payloads) {
@@ -189,7 +182,7 @@ export class DecisionEngine {
       result.executeFlows = false
     }
 
-    const redirect = _.find(reply.payloads, p => p.type === 'redirect')
+    const redirect = _.find(reply.payloads, (p) => p.type === 'redirect')
     if (redirect && redirect.flow && redirect.node) {
       await this.dialogEngine.jumpTo(sessionId, event, redirect.flow, redirect.node)
       result.executeFlows = true

@@ -24,11 +24,7 @@ export function createExpiry(botConfig: BotConfig, runtimeConfig: RuntimeConfig)
   )
 
   return {
-    context: moment()
-      .add(contextTimeout, 'ms')
-      .toDate(),
-    session: moment()
-      .add(sessionTimeout, 'ms')
-      .toDate()
+    context: moment().add(contextTimeout, 'ms').toDate(),
+    session: moment().add(sessionTimeout, 'ms').toDate()
   }
 }

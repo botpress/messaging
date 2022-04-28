@@ -29,8 +29,8 @@ export class ManageRouter extends CustomRouter {
         }
 
         const buffers: any[] = []
-        req.on('data', chunk => buffers.push(chunk))
-        await Promise.fromCallback(cb => req.on('end', cb))
+        req.on('data', (chunk) => buffers.push(chunk))
+        await Promise.fromCallback((cb) => req.on('end', cb))
 
         await this.botService.importBot(req.params.botId, Buffer.concat(buffers), true)
         res.sendStatus(200)

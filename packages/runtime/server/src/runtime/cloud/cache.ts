@@ -11,7 +11,7 @@ const isTokenActive = (token: string | null, expiration: number | null) =>
   token && expiration && expiration > Date.now()
 
 export const cache = <T>(authenticate: () => Promise<T>, options?: Options<T>) => {
-  const getToken: (res: any) => string = options?.getToken ?? (res => res)
+  const getToken: (res: any) => string = options?.getToken ?? ((res) => res)
   const getExpiry: (res: any) => number = options?.getExpiryInMs ?? (() => defaultExpiry)
 
   const lock = Locker()

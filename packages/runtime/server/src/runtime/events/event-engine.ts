@@ -23,14 +23,8 @@ const eventSchema = {
   channel: joi.string().required(),
   target: joi.string().required(),
   id: joi.number().required(),
-  messageId: joi
-    .string()
-    .guid()
-    .optional(),
-  direction: joi
-    .string()
-    .regex(directionRegex)
-    .required(),
+  messageId: joi.string().guid().optional(),
+  direction: joi.string().regex(directionRegex).required(),
   preview: joi.string().optional(),
   payload: joi.object().required(),
   botId: joi.string().required(),
@@ -47,23 +41,14 @@ const eventSchema = {
   nlu: joi
     .object({
       intent: joi.object().optional(),
-      intents: joi
-        .array()
-        .items(joi.object())
-        .optional(),
+      intents: joi.array().items(joi.object()).optional(),
       ambiguous: joi.boolean(),
       language: joi.string().optional(),
       detectedLanguage: joi.string().optional(),
-      entities: joi
-        .array()
-        .items(joi.object())
-        .optional(),
+      entities: joi.array().items(joi.object()).optional(),
       slots: joi.any(),
       errored: joi.bool().optional(),
-      includedContexts: joi
-        .array()
-        .items(joi.string())
-        .optional(),
+      includedContexts: joi.array().items(joi.string()).optional(),
       ms: joi.number().optional(),
       spellChecked: joi.string().optional(),
       modelId: joi.string().optional()
@@ -76,10 +61,7 @@ const mwSchema = {
   name: joi.string().required(),
   handler: joi.func().required(),
   description: joi.string().required(),
-  direction: joi
-    .string()
-    .regex(directionRegex)
-    .required(),
+  direction: joi.string().regex(directionRegex).required(),
   order: joi.number().default(0),
   enabled: joi.boolean().default(true),
   timeout: joi.string().optional()
@@ -143,12 +125,12 @@ export class EventEngine {
     let totalIn = 0
     let totalOut = 0
 
-    this._incomingPerf.subscribe(metric => {
+    this._incomingPerf.subscribe((metric) => {
       totalIn += metric
       this.logger.level(LogLevel.PRODUCTION).debug(`(perf) IN <- ${metric}/s | total = ${totalIn}`)
     })
 
-    this._outgoingPerf.subscribe(metric => {
+    this._outgoingPerf.subscribe((metric) => {
       totalOut += metric
       this.logger.level(LogLevel.PRODUCTION).debug(`(perf) OUT -> ${metric}/s | total = ${totalOut}`)
     })
@@ -159,26 +141,26 @@ export class EventEngine {
     if (middleware.direction === 'incoming') {
       debugIncoming('register %o', middleware)
       this.incomingMiddleware.push(middleware)
-      this.incomingMiddleware = _.sortBy(this.incomingMiddleware, mw => mw.order)
+      this.incomingMiddleware = _.sortBy(this.incomingMiddleware, (mw) => mw.order)
     } else {
       debugOutgoing('register %o', middleware)
       this.outgoingMiddleware.push(middleware)
-      this.outgoingMiddleware = _.sortBy(this.outgoingMiddleware, mw => mw.order)
+      this.outgoingMiddleware = _.sortBy(this.outgoingMiddleware, (mw) => mw.order)
     }
   }
 
   removeMiddleware(middlewareName: string): void {
-    const mw = [...this.incomingMiddleware, ...this.outgoingMiddleware].find(x => x.name === middlewareName)
+    const mw = [...this.incomingMiddleware, ...this.outgoingMiddleware].find((x) => x.name === middlewareName)
     if (!mw) {
       return
     }
 
     if (mw.direction === 'incoming') {
       debugIncoming('unregister %o', middlewareName)
-      this.incomingMiddleware = this.incomingMiddleware.filter(x => x.name !== middlewareName)
+      this.incomingMiddleware = this.incomingMiddleware.filter((x) => x.name !== middlewareName)
     } else {
       debugOutgoing('unregister %o', middlewareName)
-      this.outgoingMiddleware = this.outgoingMiddleware.filter(x => x.name !== middlewareName)
+      this.outgoingMiddleware = this.outgoingMiddleware.filter((x) => x.name !== middlewareName)
     }
   }
 
@@ -271,7 +253,7 @@ export class EventEngine {
   }
 
   private async _infoMiddleware(event: sdk.IO.Event) {
-    const sendText = async text => {
+    const sendText = async (text) => {
       await this.replyToEvent(event, [{ text, markdown: true }])
       event.setFlag(WellKnownFlags.SKIP_DIALOG_ENGINE, true)
     }

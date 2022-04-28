@@ -1,6 +1,5 @@
 import * as sdk from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
-import _ from 'lodash'
 
 import Database from '../database'
 import { TYPES } from '../types'
@@ -33,7 +32,7 @@ export class EventRepository {
     query = query.where(fields)
 
     sortOrder &&
-      sortOrder.forEach(sort => {
+      sortOrder.forEach((sort) => {
         query = query.orderBy(sort.column, sort.desc ? 'desc' : 'asc')
       })
 
@@ -45,8 +44,8 @@ export class EventRepository {
       query = query.offset(from)
     }
 
-    return query.then(rows =>
-      rows.map(storedEvent => ({
+    return query.then((rows) =>
+      rows.map((storedEvent) => ({
         ...storedEvent,
         event: this.database.knex.json.get(storedEvent.event)
       }))
@@ -54,18 +53,11 @@ export class EventRepository {
   }
 
   async updateEvent(id: string, fields: Partial<sdk.IO.StoredEvent>): Promise<void> {
-    await this.database
-      .knex(this.TABLE_NAME)
-      .where({ id })
-      .update(fields)
+    await this.database.knex(this.TABLE_NAME).where({ id }).update(fields)
   }
 
   async pruneUntil(date: Date): Promise<void> {
-    await this.database
-      .knex(this.TABLE_NAME)
-      .where(this.database.knex.date.isBefore('createdOn', date))
-      .del()
-      .then()
+    await this.database.knex(this.TABLE_NAME).where(this.database.knex.date.isBefore('createdOn', date)).del().then()
   }
 
   async saveUserFeedback(incomingEventId: string, target: string, feedback: number, type?: string): Promise<boolean> {

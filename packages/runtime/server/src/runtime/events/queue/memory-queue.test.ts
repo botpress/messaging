@@ -2,11 +2,10 @@
 
 import 'bluebird-global'
 import { IO } from 'botpress/runtime-sdk'
-import _ from 'lodash'
 import 'reflect-metadata'
 
-import { Event } from '../event-sdk-impl'
 import { createMockLogger } from '../../misc/utils'
+import { Event } from '../event-sdk-impl'
 
 import { MemoryQueue } from './memory-queue'
 
@@ -35,7 +34,7 @@ describe('Lite Queues', () => {
   it('Respects order (sync)', async () => {
     const order: string[] = []
 
-    queue.subscribe(async event => {
+    queue.subscribe(async (event) => {
       order.push(event.id) // Sync processing
     })
 
@@ -49,13 +48,13 @@ describe('Lite Queues', () => {
 
     await Promise.delay(10) // Give time for subscription to be consumed
     expect(order.length).toEqual(10)
-    expect(order).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => n.toString()))
+    expect(order).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => n.toString()))
   })
 
   it('Respects order (async)', async () => {
     const order: string[] = []
 
-    queue.subscribe(async event => {
+    queue.subscribe(async (event) => {
       await Promise.delay(Math.random() * 5) // Async processing
       order.push(event.id.toString())
     })
@@ -70,7 +69,7 @@ describe('Lite Queues', () => {
 
     await Promise.delay(20) // Give time for subscription to be consumed
     expect(order).toHaveLength(10)
-    expect(order).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(x => x.toString()))
+    expect(order).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((x) => x.toString()))
   })
 
   it('Retries failed jobs once', async () => {
@@ -141,13 +140,13 @@ describe('Lite Queues', () => {
 
     await Promise.delay(20)
     expect(order).toHaveLength(3)
-    expect(order).toEqual([1, 2, 3].map(x => x.toString()))
+    expect(order).toEqual([1, 2, 3].map((x) => x.toString()))
   })
 
   it('Cancels all only for requested user', async () => {
     const userListA: string[] = []
     const userListB: string[] = []
-    queue.subscribe(async event => {
+    queue.subscribe(async (event) => {
       await Promise.delay(1)
       if (event.target === 'a') {
         userListA.push(event.id)
@@ -177,6 +176,6 @@ describe('Lite Queues', () => {
     await Promise.delay(200)
     expect(userListA.length).toBeLessThan(10)
     expect(userListB.length).toEqual(10)
-    expect(userListB).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map(x => x.toString()))
+    expect(userListB).toEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19].map((x) => x.toString()))
   })
 })

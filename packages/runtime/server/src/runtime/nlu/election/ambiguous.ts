@@ -1,5 +1,4 @@
 import * as sdk from 'botpress/runtime-sdk'
-import _ from 'lodash'
 import { allInRange, scaleConfidences } from './math'
 import { NONE_INTENT } from './typings'
 
@@ -13,7 +12,7 @@ export function detectAmbiguity(input: sdk.IO.EventUnderstanding): sdk.IO.EventU
   const perfectConfusion = 1 / preds.length
   const low = perfectConfusion - 0.1
   const up = perfectConfusion + 0.1
-  const confidenceVec = preds.map(p => p.confidence)
+  const confidenceVec = preds.map((p) => p.confidence)
 
   const ambiguous =
     preds.length > 1 &&

@@ -71,9 +71,6 @@ export class LogsRepository {
       query = query.where({ level })
     }
 
-    return query
-      .offset(start)
-      .limit(count)
-      .orderBy('timestamp', 'desc')
+    return query.offset(start).limit(count).orderBy('timestamp', 'desc')
   }
 }

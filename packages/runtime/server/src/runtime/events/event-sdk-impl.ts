@@ -65,9 +65,7 @@ export class IOEvent implements sdk.IO.Event {
 
   private makeId(): string {
     // nanosecond temporal + 3 rand digits
-    return `${process.hrtime.bigint()}${Math.random()
-      .toString()
-      .slice(-3)}`
+    return `${process.hrtime.bigint()}${Math.random().toString().slice(-3)}`
   }
 
   public hasFlag(flag: symbol): boolean {

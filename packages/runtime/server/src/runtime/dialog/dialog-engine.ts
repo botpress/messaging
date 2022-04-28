@@ -92,7 +92,7 @@ export class DialogEngine {
         // This way the queue will be rebuilt from the next node.
         context.queue = undefined
 
-        return this._transition(sessionId, event, destination).catch(err => {
+        return this._transition(sessionId, event, destination).catch((err) => {
           addErrorToEvent(
             {
               type: 'dialog-transition',
@@ -335,7 +335,7 @@ export class DialogEngine {
       this._detectInfiniteLoop(event.state.__stacktrace, event.botId)
     }
 
-    context.jumpPoints = context.jumpPoints?.filter(x => !x.used)
+    context.jumpPoints = context.jumpPoints?.filter((x) => !x.used)
 
     if (transitionTo.includes('.flow.json')) {
       BOTPRESS_CORE_EVENT('bp_core_enter_flow', { botId: event.botId, channel: event.channel, flowName: transitionTo })
@@ -377,7 +377,7 @@ export class DialogEngine {
     } else if (transitionTo.indexOf('#') === 0) {
       // Return to the parent node (coming from a flow)
       const jumpPoints = context.jumpPoints
-      const prevJumpPoint = _.findLast(jumpPoints, j => !j.used)
+      const prevJumpPoint = _.findLast(jumpPoints, (j) => !j.used)
 
       if (!jumpPoints || !prevJumpPoint) {
         this._debug(event.botId, event.target, `no previous flow found, current node is ${context.currentNode}`)
@@ -478,9 +478,9 @@ export class DialogEngine {
   private _detectInfiniteLoop(stacktrace: IO.JumpPoint[], botId: string) {
     // find the first node that gets repeated at least 3 times
     const loop = _.chain(stacktrace)
-      .groupBy(x => `${x.flow}|${x.node}`)
+      .groupBy((x) => `${x.flow}|${x.node}`)
       .values()
-      .filter(x => x.length >= 3)
+      .filter((x) => x.length >= 3)
       .first()
       .value()
 
@@ -511,7 +511,7 @@ export class DialogEngine {
 
     flowName = flowName.endsWith('.flow.json') ? flowName : `${flowName.toLowerCase()}.flow.json`
 
-    const flow = flows.find(x => x.name === flowName)
+    const flow = flows.find((x) => x.name === flowName)
     if (!flow) {
       throw new FlowError(`Flow not found: ${flowName}`, botId, flowName)
     }
@@ -519,7 +519,7 @@ export class DialogEngine {
   }
 
   private _findNode(botId: string, flow: FlowView, nodeName: string) {
-    const node = flow.nodes && flow.nodes.find(x => x.name === nodeName)
+    const node = flow.nodes && flow.nodes.find((x) => x.name === nodeName)
     if (!node) {
       throw new FlowError(`Node not found: ${nodeName}`, botId, flow.name, nodeName)
     }
@@ -533,10 +533,7 @@ export class DialogEngine {
     const message = `Error processing '${instr}'\nErr: ${err.message}\nBotId: ${botId}\nFlow: ${flowName}\nNode: ${nodeName}`
 
     if (!err.hideStack) {
-      this.logger
-        .forBot(botId)
-        .attachError(err)
-        .warn(message)
+      this.logger.forBot(botId).attachError(err).warn(message)
     } else {
       this.logger.forBot(botId).warn(message)
     }
@@ -552,7 +549,7 @@ export class DialogEngine {
 
   private _exitingSubflow(event: IO.IncomingEvent) {
     const { currentFlow, currentNode, jumpPoints } = event.state.context || {}
-    const lastJump = jumpPoints?.find(j => j.used)
+    const lastJump = jumpPoints?.find((j) => j.used)
     const isExiting = lastJump?.flow === currentFlow && lastJump?.node === currentNode
 
     // When we want to re-process the node, we need to return false so the dialog engine processes the node from the start

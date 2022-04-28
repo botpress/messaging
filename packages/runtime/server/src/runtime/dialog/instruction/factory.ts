@@ -35,7 +35,7 @@ export class InstructionFactory {
     let flowNext = _.get(flow, 'catchAll.next', []) || []
 
     // Skip transitions that contains the current node to prevent infinite looping
-    flowNext = flowNext.filter(n => n.node !== ((node && node.name) || undefined))
+    flowNext = flowNext.filter((n) => n.node !== ((node && node.name) || undefined))
 
     return [...flowNext, ...nodeNext].map(
       (x): Instruction => ({

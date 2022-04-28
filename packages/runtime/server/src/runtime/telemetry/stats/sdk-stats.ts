@@ -79,13 +79,13 @@ export class SDKStats extends TelemetryStats {
   private async getActionUsages(bots: string[]): Promise<SDKUsage> {
     const rootFolder = 'actions'
     const globalActionsNames = (await this.ghostService.global().directoryListing('/', `${rootFolder}/*.js`)).map(
-      path => path?.split('/').pop() || ''
+      (path) => path?.split('/').pop() || ''
     )
 
     const reducer = async (parsedFilesAcc, botId) => {
       try {
         const botActionsNames = await this.ghostService.forBot(botId).directoryListing(`/${rootFolder}`, '*.js')
-        const parsedFiles = await Promise.map(botActionsNames, name =>
+        const parsedFiles = await Promise.map(botActionsNames, (name) =>
           this.parseFile(name, `/${rootFolder}`, { botId })
         )
         return [...parsedFilesAcc, ...parsedFiles]
@@ -94,7 +94,7 @@ export class SDKStats extends TelemetryStats {
       }
     }
 
-    const global = await Promise.map(globalActionsNames, name => this.parseFile(name, `/${rootFolder}`))
+    const global = await Promise.map(globalActionsNames, (name) => this.parseFile(name, `/${rootFolder}`))
     const perBots = await Promise.reduce(bots, reducer, [] as ParsedFile[])
 
     return { global, perBots }
@@ -106,7 +106,7 @@ export class SDKStats extends TelemetryStats {
 
       try {
         const parsedFiles = await this.parseHooks(
-          hooks.filter(hook => hook.type === 'custom'),
+          hooks.filter((hook) => hook.type === 'custom'),
           botId
         )
         return [...parsedFilesAcc, ...parsedFiles]
@@ -116,14 +116,14 @@ export class SDKStats extends TelemetryStats {
     }
 
     const hooksPayload = await getHooksLifecycle(this.ghostService, false)
-    const global = await this.parseHooks(hooksPayload.global.filter(hook => hook.type === 'custom'))
+    const global = await this.parseHooks(hooksPayload.global.filter((hook) => hook.type === 'custom'))
     const perBots = await Promise.reduce(hooksPayload.perBots, reducer, [] as ParsedFile[])
 
     return { global, perBots }
   }
 
   private async parseHooks(hooks: Hook[], botId?: string): Promise<ParsedFile[]> {
-    return Promise.map(hooks, async hook => {
+    return Promise.map(hooks, async (hook) => {
       const { lifecycle, enabled, path } = hook
       const usageParams: UsageParams = { lifecycle, enabled }
 
@@ -149,7 +149,7 @@ export class SDKStats extends TelemetryStats {
   }
 
   private parseMethods(methods: string[]): Usage[] {
-    const sdkMethods = _.countBy(methods.filter(method => method?.split('.')[0] === 'bp'))
+    const sdkMethods = _.countBy(methods.filter((method) => method?.split('.')[0] === 'bp'))
     return _.map(sdkMethods, (count, methodChain) => {
       const [, ...namespace] = methodChain.split('.')
       const method = namespace.pop() || ''
@@ -160,7 +160,7 @@ export class SDKStats extends TelemetryStats {
   private extractFunctions(ast): string[] {
     const functions: string[] = []
 
-    const findCallee = function(node) {
+    const findCallee = function (node) {
       if (node.type === 'MemberExpression') {
         return `${findCallee(node.object)}.${node.property.name}`
       } else {
@@ -168,7 +168,7 @@ export class SDKStats extends TelemetryStats {
       }
     }
 
-    const enter = function(path) {
+    const enter = function (path) {
       if (path.node.type === 'CallExpression') {
         const callee = findCallee(path.node.callee)
         functions.push(callee)

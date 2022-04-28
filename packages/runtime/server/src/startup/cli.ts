@@ -25,7 +25,7 @@ yargs
         type: 'boolean'
       }
     },
-    async argv => {
+    async (argv) => {
       process.IS_PRODUCTION = argv.production || yn(process.env.BP_PRODUCTION) || yn(process.env.CLUSTER_ENABLED)
 
       process.AUTO_MIGRATE =

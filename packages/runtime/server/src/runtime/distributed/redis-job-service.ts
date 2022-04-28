@@ -36,7 +36,7 @@ const getLockName = (resource: string) => makeRedisKey(`lock_${resource}`)
 export class RedisJobService implements JobService, IInitializeFromConfig {
   private _redisSub!: Redis
   private _redisPub!: Redis
-  private _redisAvailable: Promise<void> = new Promise(resolve => (this._setRedisAvailable = resolve))
+  private _redisAvailable: Promise<void> = new Promise((resolve) => (this._setRedisAvailable = resolve))
   private _redisClientId!: string
   private _setRedisAvailable!: Function
   private _jobsList: Job[] = []
@@ -84,7 +84,7 @@ export class RedisJobService implements JobService, IInitializeFromConfig {
 
     let result: T
 
-    that.onMessage(that._redisSub, JobStartChannel, async message => {
+    that.onMessage(that._redisSub, JobStartChannel, async (message) => {
       if (message.jobName !== jobName) {
         return
       }
@@ -101,7 +101,7 @@ export class RedisJobService implements JobService, IInitializeFromConfig {
       await that._redisPub.publish(JobDoneChannel, JSON.stringify(jobDoneMessage))
     })
 
-    return async function(): Promise<T> {
+    return async function (): Promise<T> {
       /**
        * Events should not be broadcasted when the bot is starting up. Otherwise, every running server reload all bots.
        * It also cause issues when a server is not entirely up / if it gets spammed by multiple servers booting at the same time.
@@ -128,7 +128,7 @@ export class RedisJobService implements JobService, IInitializeFromConfig {
   }
 
   private _clearJob(jobId: string) {
-    const index = this._jobsList.findIndex(j => j.jobId === jobId)
+    const index = this._jobsList.findIndex((j) => j.jobId === jobId)
     if (index > -1) {
       this._jobsList.splice(index, 1)
     }
@@ -140,7 +140,7 @@ export class RedisJobService implements JobService, IInitializeFromConfig {
     }
 
     const message = JSON.parse(rawMessage)
-    const job = this._jobsList.find(x => x.jobId === message.jobId)
+    const job = this._jobsList.find((x) => x.jobId === message.jobId)
     if (!job) {
       return
     }
@@ -159,11 +159,11 @@ export class RedisJobService implements JobService, IInitializeFromConfig {
   private async waitUntillAllNodesAreDone(jobId: string, publishFn): Promise<any> {
     const totalSubscribers = await this.getNumberOfSubscribers()
 
-    const timeoutPromise = new Promise(reject => {
+    const timeoutPromise = new Promise((reject) => {
       setTimeout(() => reject(), 1500)
     })
 
-    const jobPromise = new Promise(resolve =>
+    const jobPromise = new Promise((resolve) =>
       this._jobsList.push({ jobId, clientsDoneIds: [], totalSubscribers, endJob: resolve })
     )
 

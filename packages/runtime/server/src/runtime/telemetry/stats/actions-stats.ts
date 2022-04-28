@@ -61,30 +61,30 @@ export class ActionsStats extends TelemetryStats {
   private async getFlowsWithActions(): Promise<ParsedFlow[]> {
     const botIds = BotService.getMountedBots()
     const flows = _.flatten(
-      await Promise.map(botIds, async botID => {
+      await Promise.map(botIds, async (botID) => {
         const flowView = await this.flowService.forBot(botID).getAllFlows()
-        return flowView.map(flow => {
+        return flowView.map((flow) => {
           const { name } = flow
           const actions = flow.nodes
-            .map(node => [...((node.onEnter as string[]) ?? []), ...((node.onReceive as string[]) ?? [])])
+            .map((node) => [...((node.onEnter as string[]) ?? []), ...((node.onReceive as string[]) ?? [])])
             .reduce((acc, cur) => [...acc, ...cur], [])
 
           return { flowName: name, botID, actions }
         })
       })
     )
-    return flows.map(flow => this.parseFlow(flow)).filter(flow => flow.actions.length > 0)
+    return flows.map((flow) => this.parseFlow(flow)).filter((flow) => flow.actions.length > 0)
   }
 
   private parseFlow(flow: RawFlow): ParsedFlow {
     const actions = flow.actions
-      .map(action => parseActionInstruction(action))
-      .filter(action => BUILTIN_MODULES.includes(action.actionName.split('/')[0]))
+      .map((action) => parseActionInstruction(action))
+      .filter((action) => BUILTIN_MODULES.includes(action.actionName.split('/')[0]))
 
     return {
       flowName: calculateHash(flow.flowName),
       botID: calculateHash(flow.botID),
-      actions: actions.map(action => {
+      actions: actions.map((action) => {
         const actionName = action.actionName.split('/')[1]
         try {
           const params = JSON.parse(action.argsStr)

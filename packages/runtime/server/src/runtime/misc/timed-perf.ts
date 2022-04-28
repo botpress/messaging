@@ -17,7 +17,7 @@ export class TimedPerfCounter {
     const key = ~~(Date.now() / 1000)
     this._store[key] = (this._store[key] || 0) + 1
     if (this._lastRecordKey < key) {
-      this._subscribers.forEach(cb => cb && cb.call(this, this._store[this._lastRecordKey], this._lastRecordKey))
+      this._subscribers.forEach((cb) => cb && cb.call(this, this._store[this._lastRecordKey], this._lastRecordKey))
     }
     this._lastRecordKey = key
   }
@@ -27,8 +27,8 @@ export class TimedPerfCounter {
 
     Object.keys(this._store)
       .map(parseInt)
-      .filter(n => !isNaN(n) || n <= cutoff)
-      .forEach(n => delete this._store[n])
+      .filter((n) => !isNaN(n) || n <= cutoff)
+      .forEach((n) => delete this._store[n])
   }
 
   subscribe(cb: TimedPerfCallback) {

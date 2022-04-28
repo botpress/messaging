@@ -9,29 +9,17 @@ import { ChannelUserRepository } from '../../users'
 import { TYPES } from '../types'
 
 const RepositoriesContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-  bind<SessionRepository>(TYPES.SessionRepository)
-    .to(SessionRepository)
-    .inSingletonScope()
+  bind<SessionRepository>(TYPES.SessionRepository).to(SessionRepository).inSingletonScope()
 
-  bind<ChannelUserRepository>(TYPES.UserRepository)
-    .to(ChannelUserRepository)
-    .inSingletonScope()
+  bind<ChannelUserRepository>(TYPES.UserRepository).to(ChannelUserRepository).inSingletonScope()
 
-  bind<LogsRepository>(TYPES.LogsRepository)
-    .to(LogsRepository)
-    .inSingletonScope()
+  bind<LogsRepository>(TYPES.LogsRepository).to(LogsRepository).inSingletonScope()
 
-  bind<TelemetryRepository>(TYPES.TelemetryRepository)
-    .to(TelemetryRepository)
-    .inSingletonScope()
+  bind<TelemetryRepository>(TYPES.TelemetryRepository).to(TelemetryRepository).inSingletonScope()
 
-  bind<EventRepository>(TYPES.EventRepository)
-    .to(EventRepository)
-    .inSingletonScope()
+  bind<EventRepository>(TYPES.EventRepository).to(EventRepository).inSingletonScope()
 
-  bind<TasksRepository>(TYPES.TasksRepository)
-    .to(TasksRepository)
-    .inSingletonScope()
+  bind<TasksRepository>(TYPES.TasksRepository).to(TasksRepository).inSingletonScope()
 })
 
 export const RepositoriesContainerModules = [RepositoriesContainerModule]

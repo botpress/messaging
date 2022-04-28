@@ -30,11 +30,11 @@ export const getBaseLookupPaths = (fullPath: string, lastPathPart: string, botId
 }
 
 export const prepareRequire = (fullPath: string, lookups: string[]) => {
-  return module => requireAtPaths(module, lookups, fullPath)
+  return (module) => requireAtPaths(module, lookups, fullPath)
 }
 
 export const prepareRequireTester = (parentScript: string, lookups: string[]) => {
-  const _require = module => requireAtPaths(module, lookups, parentScript)
+  const _require = (module) => requireAtPaths(module, lookups, parentScript)
 
   return (file: string) => {
     try {
@@ -66,7 +66,7 @@ export const filterDisabled = (filesPaths: string[]): string[] => filesPaths.fil
 export const enabled = (filename: string) => !path.basename(filename).startsWith('.')
 
 export const isTrustedAction = (actionName: string) =>
-  !!BUILTIN_MODULES.find(module => actionName.startsWith(`${module}/`))
+  !!BUILTIN_MODULES.find((module) => actionName.startsWith(`${module}/`))
 
 export const actionServerIdRegex = /^[a-zA-Z0-9]*$/
 

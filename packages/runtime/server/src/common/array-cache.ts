@@ -37,7 +37,7 @@ export class ArrayCache<K, V> {
    * @returns Returns an object of type V or undefined when the is no hit.
    */
   get(key: K) {
-    return this.array.find(x => this.getKey(x) === key)
+    return this.array.find((x) => this.getKey(x) === key)
   }
 
   /**
@@ -84,6 +84,6 @@ export class ArrayCache<K, V> {
   }
 
   private indexOf(key: K) {
-    return this.array.findIndex(x => this.getKey(x) === key)
+    return this.array.findIndex((x) => this.getKey(x) === key)
   }
 }

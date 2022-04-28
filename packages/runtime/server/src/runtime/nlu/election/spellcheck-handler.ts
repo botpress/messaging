@@ -7,8 +7,8 @@ const debug = DEBUG('nlu:predict')
 
 const getTop1Intent = (mostConfidentCtx: NLU.ContextPrediction & { name: string }) => {
   return _(mostConfidentCtx.intents)
-    .orderBy(i => i.confidence, 'desc')
-    .filter(i => i.label !== NONE_INTENT) // only relevant when legacy-election is enabled
+    .orderBy((i) => i.confidence, 'desc')
+    .filter((i) => i.label !== NONE_INTENT) // only relevant when legacy-election is enabled
     .map(({ label, confidence }) => ({ name: label, context: mostConfidentCtx.name, confidence }))
     .first()
 }

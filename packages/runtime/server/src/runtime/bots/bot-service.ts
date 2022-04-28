@@ -94,10 +94,7 @@ export class BotService {
         const bot = await this.findBotById(botId)
         bot && bots.set(botId, bot)
       } catch (err) {
-        this.logger
-          .forBot(botId)
-          .attachError(err)
-          .error(`Bot configuration file not found for bot "${botId}"`)
+        this.logger.forBot(botId).attachError(err).error(`Bot configuration file not found for bot "${botId}"`)
       }
     }
 
@@ -207,7 +204,7 @@ export class BotService {
   }
 
   private async _validateBotArchive(directory: string): Promise<string> {
-    const configFile = await Promise.fromCallback<string[]>(cb => glob('**/bot.config.json', { cwd: directory }, cb))
+    const configFile = await Promise.fromCallback<string[]>((cb) => glob('**/bot.config.json', { cwd: directory }, cb))
     if (configFile.length > 1) {
       throw new Error('Bots must be imported in separate archives')
     } else if (configFile.length !== 1) {
@@ -288,10 +285,7 @@ export class BotService {
       BotService.setBotStatus(botId, 'healthy')
       return true
     } catch (err) {
-      this.logger
-        .forBot(botId)
-        .attachError(err)
-        .critical(`Cannot mount bot "${botId}"`)
+      this.logger.forBot(botId).attachError(err).critical(`Cannot mount bot "${botId}"`)
 
       return false
     } finally {
@@ -340,8 +334,8 @@ export class BotService {
     const botIds = await this.getBotsIds()
 
     Object.keys(BotService._botHealth)
-      .filter(x => !botIds.includes(x))
-      .forEach(id => delete BotService._botHealth[id])
+      .filter((x) => !botIds.includes(x))
+      .forEach((id) => delete BotService._botHealth[id])
 
     const redis = this.jobService.getRedisClient()
     if (redis) {
@@ -362,7 +356,7 @@ export class BotService {
     }
 
     const servers = await redis.mget(...serverIds)
-    return Promise.mapSeries(servers, data => JSON.parse(data as string))
+    return Promise.mapSeries(servers, (data) => JSON.parse(data as string))
   }
 
   public static incrementBotStats(botId: string, type: 'error' | 'warning' | 'critical') {

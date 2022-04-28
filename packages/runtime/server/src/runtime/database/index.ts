@@ -2,7 +2,6 @@ import { KnexExtended, Logger } from 'botpress/runtime-sdk'
 import { mkdirpSync } from 'fs-extra'
 import { inject, injectable, tagged } from 'inversify'
 import Knex from 'knex'
-import _ from 'lodash'
 import path from 'path'
 
 import { TYPES } from '../types'
@@ -26,7 +25,7 @@ export default class Database {
   ) {}
 
   async bootstrap() {
-    await Promise.mapSeries(AllTables, async Tbl => {
+    await Promise.mapSeries(AllTables, async (Tbl) => {
       const table = new Tbl(this.knex!)
       const created = await table.bootstrap()
       if (created) {
@@ -41,7 +40,7 @@ export default class Database {
   }
 
   async teardownTables() {
-    await Promise.mapSeries(AllTables, async Tbl => {
+    await Promise.mapSeries(AllTables, async (Tbl) => {
       const table = new Tbl(this.knex!)
       if (this.knex.isLite) {
         await this.knex.raw('PRAGMA foreign_keys = OFF;')
@@ -58,7 +57,7 @@ export default class Database {
     const { DATABASE_URL, DATABASE_POOL } = process.env
 
     let poolOptions = {
-      log: message => logger.warn(`[pool] ${message}`)
+      log: (message) => logger.warn(`[pool] ${message}`)
     }
 
     try {
@@ -80,9 +79,9 @@ export default class Database {
     const config: Knex.Config = {
       useNullAsDefault: true,
       log: {
-        error: message => logger.error(`[knex] ${message}`),
-        warn: message => logger.warn(`[knex] ${message}`),
-        debug: message => logger.debug(`[knex] ${message}`)
+        error: (message) => logger.error(`[knex] ${message}`),
+        warn: (message) => logger.warn(`[knex] ${message}`),
+        debug: (message) => logger.debug(`[knex] ${message}`)
       }
     }
 

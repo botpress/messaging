@@ -11,7 +11,7 @@ export const explodePath = (location: string): string[] => {
   const paths: string[] = []
   const abs = path.isAbsolute(location)
 
-  const push = p => {
+  const push = (p) => {
     paths.push(abs ? path.resolve('/', p) : p)
   }
 
@@ -87,7 +87,7 @@ export const buildLookupPaths = (module: string, locations: string[]) => {
   const folders = _.flatten(locations.map(explodePath))
 
   return _.flatten(
-    folders.map(folder => {
+    folders.map((folder) => {
       const paths = [
         path.join(folder, module + '.js'),
         path.join(folder, module),

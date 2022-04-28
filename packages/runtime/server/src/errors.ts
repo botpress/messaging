@@ -28,9 +28,9 @@ export function WrapErrorsWith(message: string | MessageFn, options: ErrorOption
 }
 
 function getNewFunction(originalMethod: Function, message: string | MessageFn, options: ErrorOptions) {
-  return function(this: any, ...args: any[]) {
+  return function (this: any, ...args: any[]) {
     const msg = typeof message === 'string' ? message : message(args)
-    const genError = err => {
+    const genError = (err) => {
       const verr = new VError(err, msg)
       verr['__hideStackTrace'] = options.hideStackTrace
       return verr
@@ -38,7 +38,7 @@ function getNewFunction(originalMethod: Function, message: string | MessageFn, o
     try {
       const ret = originalMethod.apply(this, args)
       if (ret && typeof ret.catch === 'function') {
-        return ret.catch(err => {
+        return ret.catch((err) => {
           throw genError(err)
         })
       }

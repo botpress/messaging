@@ -26,13 +26,13 @@ export const showBanner = (config: BannerConfig) => {
   try {
     const metadata: BuildMetadata = require('../../metadata.json')
     const builtFrom = process.pkg ? 'BIN' : 'SRC'
-    const branchInfo = !['master', 'HEAD'].find(x => x === metadata.branch) ? `/${metadata.branch}` : ''
+    const branchInfo = !['master', 'HEAD'].find((x) => x === metadata.branch) ? `/${metadata.branch}` : ''
 
     buildMetadata = `Build ${moment(metadata.date).format('YYYYMMDD-HHmm')}_${builtFrom}${branchInfo}`
   } catch (err) {}
 
   const os = process.distro ? `OS: ${process.distro}` : undefined
-  const infos = [`Version ${version}`, buildMetadata, os].filter(x => x !== undefined)
+  const infos = [`Version ${version}`, buildMetadata, os].filter((x) => x !== undefined)
   const border = _.repeat('=', bannerWidth)
 
   logger.info(`${border}

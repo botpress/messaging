@@ -78,7 +78,7 @@ export class KvsService implements sdk.KvsService {
       .where({ botId })
       .andWhere({ key })
       .first()
-      .then(async row => {
+      .then(async (row) => {
         if (!row) {
           return undefined
         }
@@ -98,17 +98,13 @@ export class KvsService implements sdk.KvsService {
   }
 
   set = async (key: string, value, path?: string, expiry?: string) => {
-    const expireOn = expiry
-      ? moment()
-          .add(ms(expiry), 'milliseconds')
-          .toDate()
-      : undefined
+    const expireOn = expiry ? moment().add(ms(expiry), 'milliseconds').toDate() : undefined
 
     if (!path) {
       return this._upsert(key, value, expireOn)
     }
 
-    const setValue = obj => {
+    const setValue = (obj) => {
       if (path) {
         _.set(obj, path, value)
         return obj
@@ -117,17 +113,13 @@ export class KvsService implements sdk.KvsService {
       }
     }
 
-    return this.get(key).then(original => this._upsert(key, setValue(original || {}), expireOn))
+    return this.get(key).then((original) => this._upsert(key, setValue(original || {}), expireOn))
   }
 
   delete = async (key: string) => {
     const { botId } = this
 
-    await this.database
-      .knex(TABLE_NAME)
-      .where({ botId })
-      .andWhere({ key })
-      .del()
+    await this.database.knex(TABLE_NAME).where({ botId }).andWhere({ key }).del()
   }
 
   exists = async (key: string) => {
@@ -141,7 +133,7 @@ export class KvsService implements sdk.KvsService {
     return { value, expiry: expiryDate }
   }
 
-  private unboxWithExpiry = box => {
+  private unboxWithExpiry = (box) => {
     if (box && box.expiry && (box.expiry === 'never' || moment(box.expiry).isAfter())) {
       return box.value
     }
@@ -166,5 +158,5 @@ export class KvsService implements sdk.KvsService {
 
   getConversationStorageKey = (sessionId, variable) => `storage/conversation/${sessionId}/${variable}`
   getUserStorageKey = (userId, variable) => `storage/users/${userId}/${variable}`
-  getGlobalStorageKey = variable => `storage/global/${variable}`
+  getGlobalStorageKey = (variable) => `storage/global/${variable}`
 }

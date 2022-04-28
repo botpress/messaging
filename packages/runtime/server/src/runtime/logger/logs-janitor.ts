@@ -45,7 +45,7 @@ export class LogsJanitor extends Janitor {
     const botsIds = Array.from(botsConfigs.keys())
     const globalLogsExpiryTime = ms(_.get(botpressConfig, 'logs.dbOutput.expiration', '2 weeks'))
 
-    await Promise.mapSeries(botsIds, botId => {
+    await Promise.mapSeries(botsIds, (botId) => {
       const botConfig = botsConfigs.get(botId)!
       const expiration = moment()
         .subtract(ms(_.get(botConfig, 'logs.expiration') || globalLogsExpiryTime))

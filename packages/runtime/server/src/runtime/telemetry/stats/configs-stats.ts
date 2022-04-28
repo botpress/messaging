@@ -80,7 +80,7 @@ export class ConfigsStats extends TelemetryStats {
     return _.reduce(
       config,
       (res, value, key) => {
-        if (SECRET_KEYS.find(x => key.toLowerCase().includes(x))) {
+        if (SECRET_KEYS.find((x) => key.toLowerCase().includes(x))) {
           res[key] = _.isEqual(config[key], defaultConfig?.[key] ?? {}) ? DEFAULT : REDACTED
         } else if (!_.isArray(value) && _.isObject(value)) {
           res[key] = this.obfuscateSecrets(value, defaultConfig?.[key] ?? {})

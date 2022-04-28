@@ -12,9 +12,7 @@ export const patchKnex = (knex: Knex): KnexExtended => {
   }
 
   const dateFormat = (date: Date) => {
-    const iso = moment(date)
-      .toDate()
-      .toISOString()
+    const iso = moment(date).toDate().toISOString()
     return dateParse(`'${iso}'`)
   }
 
@@ -31,7 +29,7 @@ export const patchKnex = (knex: Knex): KnexExtended => {
   }
 
   const createTableIfNotExists = async (tableName: string, cb: Knex.KnexCallback): Promise<boolean> => {
-    return knex.schema.hasTable(tableName).then(exists => {
+    return knex.schema.hasTable(tableName).then((exists) => {
       if (exists) {
         return false
       }
@@ -47,7 +45,7 @@ export const patchKnex = (knex: Knex): KnexExtended => {
     idColumnName: string = 'id',
     trx?: Knex.Transaction
   ): Promise<T> => {
-    const handleResult = res => {
+    const handleResult = (res) => {
       if (!res || res.length !== 1) {
         throw new VError('Error doing insertAndRetrieve')
       }
@@ -56,13 +54,10 @@ export const patchKnex = (knex: Knex): KnexExtended => {
 
     // postgres supports 'returning' natively
     if (!isLite) {
-      return knex(tableName)
-        .insert(data)
-        .returning(returnColumns)
-        .then(handleResult)
+      return knex(tableName).insert(data).returning(returnColumns).then(handleResult)
     }
 
-    const getQuery = trx =>
+    const getQuery = (trx) =>
       knex(tableName)
         .insert(data)
         .transacting(trx)
@@ -79,12 +74,7 @@ export const patchKnex = (knex: Knex): KnexExtended => {
               if (returnColumns === idColumnName) {
                 return id
               }
-              return knex(tableName)
-                .select('*')
-                .where(idColumnName, id)
-                .limit(1)
-                .transacting(trx)
-                .then(handleResult)
+              return knex(tableName).select('*').where(idColumnName, id).limit(1).transacting(trx).then(handleResult)
             })
         )
 
@@ -93,11 +83,7 @@ export const patchKnex = (knex: Knex): KnexExtended => {
       return getQuery(trx)
     }
 
-    return knex.transaction(trx =>
-      getQuery(trx)
-        .then(trx.commit)
-        .catch(trx.rollback)
-    )
+    return knex.transaction((trx) => getQuery(trx).then(trx.commit).catch(trx.rollback))
   }
 
   const binary: Knex.Binary = {
@@ -112,7 +98,7 @@ export const patchKnex = (knex: Knex): KnexExtended => {
 
   const date: Knex.Date = {
     set: (date?: Date) => (date ? date.toISOString() : undefined),
-    get: date => new Date(date),
+    get: (date) => new Date(date),
 
     format: dateFormat,
     now: () => (isLite ? knex.raw("strftime('%Y-%m-%dT%H:%M:%fZ', 'now')") : knex.raw('now()')),
@@ -164,12 +150,12 @@ export const patchKnex = (knex: Knex): KnexExtended => {
   const bool: Knex.Bool = {
     true: () => (isLite ? 1 : true),
     false: () => (isLite ? 0 : false),
-    parse: value => (isLite ? !!value : value)
+    parse: (value) => (isLite ? !!value : value)
   }
 
   const json: Knex.Json = {
-    set: obj => (isLite ? obj && JSON.stringify(obj) : obj),
-    get: obj => (isLite ? obj && JSON.parse(obj) : obj)
+    set: (obj) => (isLite ? obj && JSON.stringify(obj) : obj),
+    get: (obj) => (isLite ? obj && JSON.parse(obj) : obj)
   }
 
   const extensions: KnexExtension = {

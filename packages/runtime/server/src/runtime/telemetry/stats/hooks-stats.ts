@@ -34,7 +34,7 @@ export interface HookPayload {
 
 export const getHooksLifecycle = async (ghostService: GhostService, hashBotId: boolean): Promise<HookPayload> => {
   const botIds = BotService.getMountedBots()
-  const perBots = await Promise.map(botIds, async id => {
+  const perBots = await Promise.map(botIds, async (id) => {
     const botHooksPaths = await ghostService.forBot(id).directoryListing('/hooks', '*.js')
     const lifecycles = parsePaths(botHooksPaths)
     return { botId: hashBotId ? calculateHash(id) : id, hooks: lifecycles }

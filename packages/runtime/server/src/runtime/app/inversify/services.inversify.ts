@@ -19,25 +19,15 @@ import { DataRetentionService } from '../../users'
 import { TYPES } from '../types'
 
 const ServicesContainerModule = new ContainerModule((bind: interfaces.Bind) => {
-  bind<CMSService>(TYPES.CMSService)
-    .to(CMSService)
-    .inSingletonScope()
+  bind<CMSService>(TYPES.CMSService).to(CMSService).inSingletonScope()
 
-  bind<ActionService>(TYPES.ActionService)
-    .to(ActionService)
-    .inSingletonScope()
+  bind<ActionService>(TYPES.ActionService).to(ActionService).inSingletonScope()
 
-  bind<ConverseService>(TYPES.ConverseService)
-    .to(ConverseService)
-    .inSingletonScope()
+  bind<ConverseService>(TYPES.ConverseService).to(ConverseService).inSingletonScope()
 
-  bind<BotMonitoringService>(TYPES.BotMonitoringService)
-    .to(BotMonitoringService)
-    .inSingletonScope()
+  bind<BotMonitoringService>(TYPES.BotMonitoringService).to(BotMonitoringService).inSingletonScope()
 
-  bind<MessagingService>(TYPES.MessagingService)
-    .to(MessagingService)
-    .inSingletonScope()
+  bind<MessagingService>(TYPES.MessagingService).to(MessagingService).inSingletonScope()
 
   bind<Queue<IO.IncomingEvent>>(TYPES.IncomingQueue).toDynamicValue((context: interfaces.Context) => {
     return new MemoryQueue('Incoming', context.container.getTagged(TYPES.Logger, 'name', 'IQueue'))
@@ -57,41 +47,23 @@ const ServicesContainerModule = new ContainerModule((bind: interfaces.Bind) => {
     .inSingletonScope()
     .when(() => process.CLUSTER_ENABLED)
 
-  bind<HookService>(TYPES.HookService)
-    .to(HookService)
-    .inSingletonScope()
+  bind<HookService>(TYPES.HookService).to(HookService).inSingletonScope()
 
-  bind<EventEngine>(TYPES.EventEngine)
-    .to(EventEngine)
-    .inSingletonScope()
+  bind<EventEngine>(TYPES.EventEngine).to(EventEngine).inSingletonScope()
 
-  bind<LogsJanitor>(TYPES.LogJanitorRunner)
-    .to(LogsJanitor)
-    .inSingletonScope()
+  bind<LogsJanitor>(TYPES.LogJanitorRunner).to(LogsJanitor).inSingletonScope()
 
-  bind<KeyValueStore>(TYPES.KeyValueStore)
-    .to(KeyValueStore)
-    .inSingletonScope()
+  bind<KeyValueStore>(TYPES.KeyValueStore).to(KeyValueStore).inSingletonScope()
 
-  bind<BotService>(TYPES.BotService)
-    .to(BotService)
-    .inSingletonScope()
+  bind<BotService>(TYPES.BotService).to(BotService).inSingletonScope()
 
-  bind<StatsService>(TYPES.StatsService)
-    .to(StatsService)
-    .inSingletonScope()
+  bind<StatsService>(TYPES.StatsService).to(StatsService).inSingletonScope()
 
-  bind<QnaService>(TYPES.QnaService)
-    .to(QnaService)
-    .inSingletonScope()
+  bind<QnaService>(TYPES.QnaService).to(QnaService).inSingletonScope()
 
-  bind<DataRetentionService>(TYPES.DataRetentionService)
-    .to(DataRetentionService)
-    .inSingletonScope()
+  bind<DataRetentionService>(TYPES.DataRetentionService).to(DataRetentionService).inSingletonScope()
 
-  bind<NLUInferenceService>(TYPES.NLUInferenceService)
-    .to(NLUInferenceService)
-    .inSingletonScope()
+  bind<NLUInferenceService>(TYPES.NLUInferenceService).to(NLUInferenceService).inSingletonScope()
 })
 
 export const ServicesContainerModules = [ServicesContainerModule, DialogContainerModule, GhostContainerModule]

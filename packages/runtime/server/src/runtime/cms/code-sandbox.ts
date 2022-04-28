@@ -93,15 +93,7 @@ export class SafeCodeSandbox {
       }
 
       const code = await fse.readFile(this.filesMap[fileName], 'utf8')
-      return this.vm!.run(
-        code,
-        path.join(
-          this.tmpPath,
-          `${Math.random()
-            .toString()
-            .substr(2, 6)}.js`
-        )
-      ) // Await cause if it returns a promise we await it
+      return this.vm!.run(code, path.join(this.tmpPath, `${Math.random().toString().substr(2, 6)}.js`)) // Await cause if it returns a promise we await it
     } catch (e) {
       throw new VError(e, `Error executing file "${fileName}" in SafeSandbox`)
     }

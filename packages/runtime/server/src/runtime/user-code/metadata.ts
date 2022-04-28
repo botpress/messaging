@@ -57,7 +57,7 @@ export const extractMetadata = (code: string): ActionMetadata => {
     metadata.hidden = yn((hidden as any).description)
   }
 
-  metadata.params = _.filter(extracted.tags, { title: 'param' }).map(tag => {
+  metadata.params = _.filter(extracted.tags, { title: 'param' }).map((tag) => {
     const type: string = _.get(tag, 'type.name', '')
     const required = _.get(tag, 'type.type') !== doctrine.type.Syntax.OptionalType
     const def = _.get(tag, 'default', '')

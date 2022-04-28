@@ -40,7 +40,7 @@ export class ScopedFlowService {
 
   constructor(private botId: string, private ghost: ScopedGhostService, private logger: Logger) {
     this.cache = new ArrayCache<string, FlowView>(
-      x => x.name,
+      (x) => x.name,
       (x, prevKey, newKey) => ({ ...x, name: newKey, location: newKey })
     )
   }
@@ -79,10 +79,7 @@ export class ScopedFlowService {
 
       return flows
     } catch (err) {
-      this.logger
-        .forBot(this.botId)
-        .attachError(err)
-        .error('Could not load flows')
+      this.logger.forBot(this.botId).attachError(err).error('Could not load flows')
       return []
     }
   }
@@ -98,7 +95,7 @@ export class ScopedFlowService {
     const uiEq = await this.ghost.readFileAsObject<FlowView>(FLOW_DIR, this.toUiPath(flowPath))
     let unplacedIndex = -1
 
-    const nodeViews: NodeView[] = flow.nodes.map(node => {
+    const nodeViews: NodeView[] = flow.nodes.map((node) => {
       const position = _.get(_.find(uiEq.nodes, { id: node.id }), 'position')
       unplacedIndex = position ? unplacedIndex : unplacedIndex + 1
       return {

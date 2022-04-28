@@ -32,7 +32,7 @@ export class Predictor {
       detectedLanguage = await this._nluClient.detectLanguage(
         this._botId,
         textInput,
-        models.map(m => m.modelId)
+        models.map((m) => m.modelId)
       )
     } catch (err) {
       let msg = `An error occured when detecting language for input "${textInput}"\n`
@@ -48,7 +48,7 @@ export class Predictor {
       .value()
 
     for (const lang of languagesToTry) {
-      const { modelId } = models.find(m => m.lang === lang) ?? {}
+      const { modelId } = models.find((m) => m.lang === lang) ?? {}
       if (!modelId) {
         continue
       }

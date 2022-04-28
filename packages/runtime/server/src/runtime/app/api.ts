@@ -96,7 +96,7 @@ const kvs = (kvs: KeyValueStore): typeof sdk.kvs => {
 
 const messaging = (messagingService: MessagingService): typeof sdk.messaging => {
   return {
-    forBot: botId => messagingService.lifetime.getHttpClient(botId)
+    forBot: (botId) => messagingService.lifetime.getHttpClient(botId)
   }
 }
 
@@ -127,16 +127,12 @@ const cms = (cmsService: CMSService): typeof sdk.cms => {
     getContentElement: limit(cmsService.getContentElement.bind(cmsService)),
     getContentElements: limit(cmsService.getContentElements.bind(cmsService)),
     listContentElements: limit(cmsService.listContentElements.bind(cmsService)),
-    getAllContentTypes: limit(
-      (botId: string): Promise<any[]> => {
-        return cmsService.getAllContentTypes(botId)
-      }
-    ),
-    renderElement: limit(
-      (contentId: string, args: any, eventDestination: sdk.IO.EventDestination): Promise<any> => {
-        return cmsService.renderElement(contentId, args, eventDestination)
-      }
-    ),
+    getAllContentTypes: limit((botId: string): Promise<any[]> => {
+      return cmsService.getAllContentTypes(botId)
+    }),
+    renderElement: limit((contentId: string, args: any, eventDestination: sdk.IO.EventDestination): Promise<any> => {
+      return cmsService.renderElement(contentId, args, eventDestination)
+    }),
     renderTemplate: (templateItem: sdk.cms.TemplateItem, context): sdk.cms.TemplateItem => {
       return renderRecursive(templateItem, context)
     }

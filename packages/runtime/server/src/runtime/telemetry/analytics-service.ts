@@ -22,7 +22,7 @@ export class AnalyticsService {
 
     const uuid = await machineUUID()
     this._visitor = ua(gaId, uuid, { strictCidFormat: false })
-    this._queued.forEach(event => event())
+    this._queued.forEach((event) => event())
     this._queued = []
   }
 

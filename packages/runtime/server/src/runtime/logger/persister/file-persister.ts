@@ -1,7 +1,6 @@
 import { Logger, LoggerEntry } from 'botpress/runtime-sdk'
 import fs from 'fs'
 import { injectable } from 'inversify'
-import _ from 'lodash'
 import moment from 'moment'
 import ms from 'ms'
 import path from 'path'
@@ -122,8 +121,8 @@ export class LoggerFilePersister {
     }
 
     const logStream = fs.createWriteStream(this._getLogFilePath(), { flags: 'a' })
-    this.currentPromise = Promise.fromCallback(cb =>
-      logStream.write(content, err => {
+    this.currentPromise = Promise.fromCallback((cb) =>
+      logStream.write(content, (err) => {
         logStream.end(cb)
       })
     ).finally(() => {

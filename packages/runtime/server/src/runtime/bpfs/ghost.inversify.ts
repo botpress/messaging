@@ -25,15 +25,9 @@ export const GhostContainerModule = new ContainerModule((bind: interfaces.Bind) 
     .inSingletonScope()
     .when(() => process.CLUSTER_ENABLED)
 
-  bind<DiskStorageDriver>(TYPES.DiskStorageDriver)
-    .to(DiskStorageDriver)
-    .inSingletonScope()
+  bind<DiskStorageDriver>(TYPES.DiskStorageDriver).to(DiskStorageDriver).inSingletonScope()
 
-  bind<DBStorageDriver>(TYPES.DBStorageDriver)
-    .to(DBStorageDriver)
-    .inSingletonScope()
+  bind<DBStorageDriver>(TYPES.DBStorageDriver).to(DBStorageDriver).inSingletonScope()
 
-  bind<GhostService>(TYPES.GhostService)
-    .to(GhostService)
-    .inSingletonScope()
+  bind<GhostService>(TYPES.GhostService).to(GhostService).inSingletonScope()
 })

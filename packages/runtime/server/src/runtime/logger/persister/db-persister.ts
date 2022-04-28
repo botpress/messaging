@@ -1,6 +1,5 @@
 import { KnexExtended, Logger, LoggerEntry } from 'botpress/runtime-sdk'
 import { injectable } from 'inversify'
-import _ from 'lodash'
 import ms from 'ms'
 
 import Database from '../../database'
@@ -64,18 +63,15 @@ export class LoggerDbPersister {
 
     const batchCount = this.batch.length >= this.BATCH_SIZE ? this.BATCH_SIZE : this.batch.length
     const elements = this.batch.splice(0, batchCount)
-    const formatedRows = elements.map(log => ({
+    const formatedRows = elements.map((log) => ({
       ...log,
       timestamp: this.knex.date.format(log.timestamp)
     }))
 
     this.currentPromise = this.knex
       .batchInsert(this.TABLE_NAME, formatedRows, this.BATCH_SIZE)
-      .catch(err => {
-        this.logger
-          .attachError(err)
-          .persist(false)
-          .error('Error persisting messages')
+      .catch((err) => {
+        this.logger.attachError(err).persist(false).error('Error persisting messages')
         this.batch.push(...elements)
       })
       .finally(() => {

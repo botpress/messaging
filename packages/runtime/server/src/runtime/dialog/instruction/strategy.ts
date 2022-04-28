@@ -103,7 +103,7 @@ export class ActionStrategy implements InstructionStrategy {
 
     const actionArgs = extractEventCommonArgs(event, args)
 
-    args = _.mapValues(args, value => renderTemplate(value, actionArgs))
+    args = _.mapValues(args, (value) => renderTemplate(value, actionArgs))
 
     debug.forBot(botId, `[${event.target}] execute action "${actionName}"`)
 

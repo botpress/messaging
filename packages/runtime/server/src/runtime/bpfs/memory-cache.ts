@@ -17,7 +17,7 @@ export class MemoryObjectCache implements ObjectCache {
   constructor(@inject(TYPES.FileCacheInvalidator) private cacheInvalidator: CacheInvalidators.FileChangedInvalidator) {
     this.cache = new LRU({
       max: asBytes(process.runtime_env.BP_MAX_MEMORY_CACHE_SIZE || '1gb'),
-      length: obj => {
+      length: (obj) => {
         if (Buffer.isBuffer(obj)) {
           return obj.length
         } else if (typeof obj === 'string') {
@@ -49,11 +49,11 @@ export class MemoryObjectCache implements ObjectCache {
   }
 
   async invalidateStartingWith(prefix: string): Promise<void> {
-    const keys = this.cache.keys().filter(x => {
+    const keys = this.cache.keys().filter((x) => {
       return x.startsWith('buffer::' + prefix) || x.startsWith('string::' + prefix) || x.startsWith('object::' + prefix)
     })
 
-    keys.forEach(x => this.cache.del(x))
+    keys.forEach((x) => this.cache.del(x))
     this.events.emit('invalidation', prefix)
   }
 

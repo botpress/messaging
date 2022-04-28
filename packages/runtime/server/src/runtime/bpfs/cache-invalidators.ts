@@ -60,20 +60,20 @@ export namespace CacheInvalidators {
       const watcher = chokidar.watch(foldersToWatch, {
         ignoreInitial: true,
         ignorePermissionErrors: true,
-        ignored: path => path.includes('node_modules')
+        ignored: (path) => path.includes('node_modules')
       })
 
       watcher.on('add', this.handle)
       watcher.on('change', this.handle)
       watcher.on('unlink', this.handle)
-      watcher.on('error', err => this.logger.attachError(err).error('Watcher error'))
+      watcher.on('error', (err) => this.logger.attachError(err).error('Watcher error'))
     }
 
     async stop() {
       await this.watcher.stop()
     }
 
-    handle = async file => {
+    handle = async (file) => {
       if (!this.cache) {
         return
       }

@@ -1,5 +1,4 @@
 import { inject, injectable } from 'inversify'
-import _ from 'lodash'
 import ms from 'ms'
 
 import { buildSchema } from '../../../common/telemetry'

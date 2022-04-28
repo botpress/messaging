@@ -26,29 +26,29 @@ function electIntent(input: sdk.IO.EventUnderstanding): sdk.IO.EventUnderstandin
 
   const allCtx = Object.keys(inputPredictions)
 
-  const ctx_predictions = allCtx.map(label => {
+  const ctx_predictions = allCtx.map((label) => {
     const { confidence } = inputPredictions[label]
     return { label, confidence }
   })
 
-  const perCtxIntentPrediction = _.mapValues(input.predictions, p => p.intents)
+  const perCtxIntentPrediction = _.mapValues(input.predictions, (p) => p.intents)
 
-  const oos_predictions = _.mapValues(input.predictions, p => p.oos)
+  const oos_predictions = _.mapValues(input.predictions, (p) => p.oos)
 
   const totalConfidence = Math.min(
     1,
     _.sumBy(
-      ctx_predictions.filter(x => input.includedContexts.includes(x.label)),
+      ctx_predictions.filter((x) => input.includedContexts.includes(x.label)),
       'confidence'
     )
   )
-  const ctxPreds = ctx_predictions.map(x => ({ ...x, confidence: x.confidence / totalConfidence }))
+  const ctxPreds = ctx_predictions.map((x) => ({ ...x, confidence: x.confidence / totalConfidence }))
 
   // taken from svm classifier #349
   let predictions = _.chain(ctxPreds)
     .flatMap(({ label: ctx, confidence: ctxConf }) => {
       const intentPreds = _.chain(perCtxIntentPrediction[ctx] || [])
-        .thru(preds => {
+        .thru((preds) => {
           if (oos_predictions[ctx] >= OOS_AS_NONE_TRESH) {
             return [
               ...preds,
@@ -63,7 +63,7 @@ function electIntent(input: sdk.IO.EventUnderstanding): sdk.IO.EventUnderstandin
             return preds
           }
         })
-        .map(p => ({ ...p, confidence: _.round(p.confidence, 2) }))
+        .map((p) => ({ ...p, confidence: _.round(p.confidence, 2) }))
         .orderBy('confidence', 'desc')
         .value() as (IntentPred & { context: string })[]
 
@@ -85,7 +85,7 @@ function electIntent(input: sdk.IO.EventUnderstanding): sdk.IO.EventUnderstandin
         })
       }
 
-      const lnstd = std(intentPreds.filter(x => x.confidence !== 0).map(x => Math.log(x.confidence))) // because we want a lognormal distribution
+      const lnstd = std(intentPreds.filter((x) => x.confidence !== 0).map((x) => Math.log(x.confidence))) // because we want a lognormal distribution
       let p1Conf = GetZPercent((Math.log(intentPreds[0].confidence) - Math.log(intentPreds[1].confidence)) / lnstd)
       if (isNaN(p1Conf)) {
         p1Conf = 0.5
@@ -101,10 +101,10 @@ function electIntent(input: sdk.IO.EventUnderstanding): sdk.IO.EventUnderstandin
         }
       ]
     })
-    .orderBy(i => i.confidence, 'desc')
-    .filter(p => input.includedContexts.includes(p.context))
-    .uniqBy(p => p.label)
-    .map(p => ({ name: p.label, context: p.context, confidence: p.confidence }))
+    .orderBy((i) => i.confidence, 'desc')
+    .filter((p) => input.includedContexts.includes(p.context))
+    .uniqBy((p) => p.label)
+    .map((p) => ({ name: p.label, context: p.context, confidence: p.confidence }))
     .value()
 
   const ctx = _.get(predictions, '0.context', 'global')
@@ -116,7 +116,7 @@ function electIntent(input: sdk.IO.EventUnderstanding): sdk.IO.EventUnderstandin
   if (!predictions.length || shouldConsiderOOS) {
     predictions = _.orderBy(
       [
-        ...predictions.filter(p => p.name !== NONE_INTENT),
+        ...predictions.filter((p) => p.name !== NONE_INTENT),
         { name: NONE_INTENT, context: ctx, confidence: oos_predictions[ctx] || 1 }
       ],
       'confidence'
@@ -144,7 +144,7 @@ function extractElectedIntentSlot(input: sdk.IO.EventUnderstanding): sdk.IO.Even
   }
 
   const elected = input.intent!
-  const electedIntent = inputPredictions[elected.context].intents.find(i => i.label === elected.name)
+  const electedIntent = inputPredictions[elected.context].intents.find((i) => i.label === elected.name)
   return { ...input, slots: electedIntent!.slots }
 }
 
@@ -155,12 +155,12 @@ function predictionsReallyConfused(predictions: IntentPred[]): boolean {
     return false
   }
 
-  const stdev = std(predictions.map(p => p.confidence))
+  const stdev = std(predictions.map((p) => p.confidence))
   const diff = (predictions[0].confidence - predictions[1].confidence) / stdev
   if (diff >= 2.5) {
     return false
   }
 
-  const bestOf3STD = std(predictions.slice(0, 3).map(p => p.confidence))
+  const bestOf3STD = std(predictions.slice(0, 3).map((p) => p.confidence))
   return bestOf3STD <= 0.03
 }

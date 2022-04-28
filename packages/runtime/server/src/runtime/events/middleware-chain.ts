@@ -1,5 +1,4 @@
 import * as sdk from 'botpress/runtime-sdk'
-import _ from 'lodash'
 import ms from 'ms'
 
 import { addStepToEvent, StepScopes, StepStatus } from './utils'
@@ -36,7 +35,7 @@ export class MiddlewareChain {
       const timePromise = new Promise(() => {}).timeout(timeoutInMs).catch(() => {
         timedOut = true
       })
-      const mwPromise = Promise.fromCallback<boolean>(cb => mw(event, cb), { multiArgs: true })
+      const mwPromise = Promise.fromCallback<boolean>((cb) => mw(event, cb), { multiArgs: true })
       const result = await Promise.race<Boolean[]>([timePromise, mwPromise])
 
       if (timedOut) {

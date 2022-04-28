@@ -44,17 +44,14 @@ export class TasksRepository {
     this.currentPromise = this.database.knex
       .batchInsert(
         this.TABLE_NAME,
-        elements.map(e => ({
+        elements.map((e) => ({
           ...e,
           actionArgs: this.database.knex.json.set(e.actionArgs || {})
         })),
         this.BATCH_SIZE
       )
-      .catch(err => {
-        this.logger
-          .attachError(err)
-          .persist(false)
-          .error('Error persisting tasks')
+      .catch((err) => {
+        this.logger.attachError(err).persist(false).error('Error persisting tasks')
         this.batch.push(...elements)
       })
       .finally(() => {

@@ -1,5 +1,3 @@
-
-
 interface MediaUrlElements {
   botId?: string
   mediaId?: string

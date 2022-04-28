@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 interface Nodes {
   obj: Object
   path: string[]
@@ -32,7 +30,7 @@ export function getPaths(sourceObject: any): any {
     const node = nodes.pop()
 
     node &&
-      Object.keys(node.obj).forEach(key => {
+      Object.keys(node.obj).forEach((key) => {
         const value = node.obj[key]
         const currentPath = node.path.concat(key)
 

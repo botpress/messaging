@@ -1,7 +1,6 @@
 import * as sdk from 'botpress/runtime-sdk'
 
 import { inject, injectable, tagged } from 'inversify'
-import _ from 'lodash'
 import moment from 'moment'
 import ms from 'ms'
 
@@ -171,7 +170,7 @@ export class Botpress {
     this.logger.info(`Mounting ${botsToMount.length} bots...`)
 
     const maxConcurrentMount = parseInt(process.env.MAX_CONCURRENT_MOUNT || '5')
-    await Promise.map(botsToMount, botId => this.botService.mountBot(botId), { concurrency: maxConcurrentMount })
+    await Promise.map(botsToMount, (botId) => this.botService.mountBot(botId), { concurrency: maxConcurrentMount })
   }
 
   private async initializeServices() {

@@ -87,24 +87,20 @@ export class BotMonitoringService {
       return
     }
 
-    const from =
-      this._lastBotMonitorCheckTs ||
-      moment()
-        .subtract(this._interval)
-        .toDate()
+    const from = this._lastBotMonitorCheckTs || moment().subtract(this._interval).toDate()
 
     this._lastBotMonitorCheckTs = new Date()
 
     this._currentPromise = this.logsRepo
       .getBotsErrorLogs(from, this._lastBotMonitorCheckTs)
-      .then(async result => {
-        const grouped = _.groupBy(result, r => r.botId)
+      .then(async (result) => {
+        const grouped = _.groupBy(result, (r) => r.botId)
 
         for (const botId in grouped) {
           await this.onBotError!(botId, grouped[botId])
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.logger.attachError(err).error('Error while processing logs for hook onBotError')
       })
       .finally(() => {

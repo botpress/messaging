@@ -1,6 +1,5 @@
 import { DirectoryListingOptions } from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
-import _ from 'lodash'
 import { nanoid } from 'nanoid'
 import path from 'path'
 import { VError } from 'verror'
@@ -83,7 +82,7 @@ export class DBStorageDriver implements StorageDriver {
         .select(this.database.knex.raw('length(content) as len'))
         .limit(1)
         .first()
-        .then(entry => entry.len)
+        .then((entry) => entry.len)
 
       return size
     } catch (e) {
@@ -114,12 +113,9 @@ export class DBStorageDriver implements StorageDriver {
     }
   }
 
-  @WrapErrorsWith(args => `[DB Storage] Error while moving file from "${args[0]}" to  "${args[1]}".`)
+  @WrapErrorsWith((args) => `[DB Storage] Error while moving file from "${args[0]}" to  "${args[1]}".`)
   async moveFile(fromPath: string, toPath: string) {
-    await this.database
-      .knex('srv_ghost_files')
-      .update({ file_path: toPath })
-      .where({ file_path: fromPath })
+    await this.database.knex('srv_ghost_files').update({ file_path: toPath }).where({ file_path: fromPath })
   }
 
   async deleteFile(filePath: string, recordRevision: boolean): Promise<void>
@@ -127,10 +123,7 @@ export class DBStorageDriver implements StorageDriver {
   async deleteFile(filePath: string, recordRevision: boolean = true): Promise<void> {
     try {
       if (recordRevision) {
-        await this.database
-          .knex('srv_ghost_files')
-          .where({ file_path: filePath })
-          .update({ deleted: true })
+        await this.database.knex('srv_ghost_files').where({ file_path: filePath }).update({ deleted: true })
 
         await this.database.knex('srv_ghost_index').insert({
           file_path: filePath,
@@ -139,10 +132,7 @@ export class DBStorageDriver implements StorageDriver {
           created_on: this.database.knex.date.now()
         })
       } else {
-        await this.database
-          .knex('srv_ghost_files')
-          .where({ file_path: filePath })
-          .del()
+        await this.database.knex('srv_ghost_files').where({ file_path: filePath }).del()
       }
     } catch (e) {
       throw new VError(e, `[DB Storage] Error deleting file "${filePath}"`)
@@ -151,10 +141,7 @@ export class DBStorageDriver implements StorageDriver {
 
   async deleteDir(dirPath: string): Promise<void> {
     try {
-      await this.database
-        .knex('srv_ghost_files')
-        .where('file_path', 'like', `${dirPath}%`)
-        .update({ deleted: true })
+      await this.database.knex('srv_ghost_files').where('file_path', 'like', `${dirPath}%`).update({ deleted: true })
     } catch (e) {
       throw new VError(e, `[DB Storage] Error deleting folder "${dirPath}"`)
     }
@@ -167,12 +154,9 @@ export class DBStorageDriver implements StorageDriver {
     }
   ): Promise<string[]> {
     try {
-      let query = this.database
-        .knex('srv_ghost_files')
-        .select('file_path')
-        .where({
-          deleted: false
-        })
+      let query = this.database.knex('srv_ghost_files').select('file_path').where({
+        deleted: false
+      })
 
       if (folder.length) {
         query = query.andWhere('file_path', 'like', `${folder}%`)
@@ -192,7 +176,7 @@ export class DBStorageDriver implements StorageDriver {
       }
 
       const ignoredGlobs = Array.isArray(options.excludes) ? options.excludes : [options.excludes]
-      return filterByGlobs(paths, path => path, ignoredGlobs)
+      return filterByGlobs(paths, (path) => path, ignoredGlobs)
     } catch (e) {
       throw new VError(e, `[DB Storage] Error listing directory content for folder "${folder}"`)
     }
@@ -207,9 +191,9 @@ export class DBStorageDriver implements StorageDriver {
         query = query.where('file_path', 'like', `${pathPrefix}%`)
       }
 
-      return await query.then(entries =>
+      return await query.then((entries) =>
         entries.map(
-          x =>
+          (x) =>
             <FileRevision>{
               path: x.file_path,
               revision: x.revision,

@@ -127,7 +127,7 @@ export class EventCollector {
       createdOn: this.knex.date.format(new Date())
     }
 
-    const existingIndex = this.batch.findIndex(x => x.id === id)
+    const existingIndex = this.batch.findIndex((x) => x.id === id)
     if (existingIndex !== -1) {
       entry.createdOn = this.batch[existingIndex].createdOn
       this.batch.splice(existingIndex, 1, entry)
@@ -151,8 +151,8 @@ export class EventCollector {
 
   private buildQuery = (elements: BatchEvent[]) => {
     const values = elements
-      .map(entry => {
-        const mappedValues = eventsFields.map(x => (x === 'event' ? JSON.stringify(entry[x]) : entry[x]) ?? null)
+      .map((entry) => {
+        const mappedValues = eventsFields.map((x) => (x === 'event' ? JSON.stringify(entry[x]) : entry[x]) ?? null)
         return this.knex.raw(`(${eventsFields.map(() => '?').join(',')})`, mappedValues).toQuery()
       })
       .join(',')
@@ -160,7 +160,7 @@ export class EventCollector {
     return this.knex
       .raw(
         `INSERT INTO ${this.TABLE_NAME}
-      (${eventsFields.map(x => `"${x}"`).join(',')}) VALUES ${values}
+      (${eventsFields.map((x) => `"${x}"`).join(',')}) VALUES ${values}
         ON CONFLICT("id")
         DO UPDATE SET event = EXCLUDED.event`
       )
@@ -176,22 +176,22 @@ export class EventCollector {
     const elements = this.batch.splice(0, batchCount)
 
     this.currentPromise = this.knex
-      .transaction(async trx => {
+      .transaction(async (trx) => {
         await trx.raw(this.buildQuery(elements))
       })
       .then(() => {
         if (Date.now() - this.lastPruneTs >= this.PRUNE_INTERVAL) {
           this.lastPruneTs = Date.now()
-          return this.runCleanup().catch(err => {
+          return this.runCleanup().catch((err) => {
             /* swallow errors */
           })
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.logger.attachError(err).error("Couldn't store events to the database. Re-queuing elements")
         const elementsToRetry = elements
-          .map(x => ({ ...x, retry: x.retry ? x.retry + 1 : 1 }))
-          .filter(x => x.retry < this.MAX_RETRY_ATTEMPTS)
+          .map((x) => ({ ...x, retry: x.retry ? x.retry + 1 : 1 }))
+          .filter((x) => x.retry < this.MAX_RETRY_ATTEMPTS)
         this.batch.push(...elementsToRetry)
       })
       .finally(() => {
@@ -200,9 +200,7 @@ export class EventCollector {
   }
 
   private async runCleanup() {
-    const expiration = moment()
-      .subtract(this.retentionPeriod)
-      .toDate()
+    const expiration = moment().subtract(this.retentionPeriod).toDate()
 
     return this.eventRepo.pruneUntil(expiration)
   }

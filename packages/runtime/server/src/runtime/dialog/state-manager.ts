@@ -159,7 +159,7 @@ export class StateManager {
     const elements = this.batch.splice(0, batchCount)
 
     this.currentPromise = this.knex
-      .transaction(async trx => {
+      .transaction(async (trx) => {
         for (const { event, ignoreContext } of elements) {
           await this._saveState(event, ignoreContext, trx)
         }

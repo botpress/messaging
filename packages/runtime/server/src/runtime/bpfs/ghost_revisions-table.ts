@@ -5,7 +5,7 @@ export class GhostRevisionsTable extends Table {
 
   async bootstrap() {
     let created = false
-    await this.knex.createTableIfNotExists(this.name, table => {
+    await this.knex.createTableIfNotExists(this.name, (table) => {
       table.string('file_path')
       table.string('revision')
       table.string('created_by')

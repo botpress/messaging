@@ -12,7 +12,7 @@ import { VError } from 'verror'
 import { forceForwardSlashes } from '../runtime/misc/utils'
 
 // Source: https://github.com/kevva/is-zip
-const isZip = buf => {
+const isZip = (buf) => {
   if (!buf || buf.length < 4) {
     return false
   }
@@ -49,8 +49,8 @@ export const extractArchive = async (archive: Buffer, destination: string): Prom
       writeStream.on('error', reject)
     })
 
-    const files = await Promise.fromCallback<string[]>(cb => glob('**/*.*', { cwd: destination }, cb))
-    return files.map(filePath => forceForwardSlashes(filePath))
+    const files = await Promise.fromCallback<string[]>((cb) => glob('**/*.*', { cwd: destination }, cb))
+    return files.map((filePath) => forceForwardSlashes(filePath))
   } catch (err) {
     throw new VError(err, `[Archive] Error extracting archive to "${destination}"`)
   }
@@ -77,7 +77,7 @@ export const createArchiveFromFolder = async (folder: string, ignoredFiles: stri
   const tmpDir = tmp.dirSync({ unsafeCleanup: true })
 
   try {
-    const files: string[] = await Promise.fromCallback(cb =>
+    const files: string[] = await Promise.fromCallback((cb) =>
       glob('**/*', { cwd: folder, ignore: ignoredFiles, nodir: true, dot: true }, cb)
     )
 

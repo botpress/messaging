@@ -89,9 +89,9 @@ export const getClientsList = async (redis: Redis): Promise<ClientEntry[]> => {
     const subscribers = clients
       .split('\n')
       .map(parseLine)
-      .filter(x => x.parsed.name && x.parsed.cmd === 'subscribe')
+      .filter((x) => x.parsed.name && x.parsed.cmd === 'subscribe')
 
-    return _.uniqBy(subscribers, x => x.parsed.name)
+    return _.uniqBy(subscribers, (x) => x.parsed.name)
   } catch (err) {
     console.error('error parsing clients', err)
   }

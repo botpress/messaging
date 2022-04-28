@@ -1,5 +1,4 @@
 import { FlowNode } from 'botpress/runtime-sdk'
-import _ from 'lodash'
 
 import { FlowView } from '../../common/typings'
 

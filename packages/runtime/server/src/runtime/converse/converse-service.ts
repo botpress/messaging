@@ -123,7 +123,7 @@ export class ConverseService {
 
   private async _createDonePromise(botId, userKey: string) {
     return new Promise((resolve, reject) => {
-      converseApiEvents.once(`done.${userKey}`, async event => {
+      converseApiEvents.once(`done.${userKey}`, async (event) => {
         // We need to wait for an empty and not locked outgoing queue in order to have all responses
         await new Promise((resolve, reject) => {
           const resolveOnEmptyQueue = () => {

@@ -29,7 +29,7 @@ export class CloudMessagingChannel extends MessagingChannel {
     )
     axiosInstance.interceptors.response.use(
       undefined,
-      errorInterceptor(axiosInstance, async requestConfig => {
+      errorInterceptor(axiosInstance, async (requestConfig) => {
         const messagingClientId = getClientIdFromRequestConfig(requestConfig)
         return getToken(messagingClientId, this.clientIdToCloudConfig)
       })
@@ -62,8 +62,8 @@ const getToken = async (clientId: uuid, clientIdToCloudConfig: ClientIdToCloudCo
         scopes: ['messaging']
       }),
       {
-        getExpiryInMs: res => res.expires_in * 1000,
-        getToken: res => res.access_token
+        getExpiryInMs: (res) => res.expires_in * 1000,
+        getToken: (res) => res.access_token
       }
     )
     authByMessagingClientId[clientId] = auth

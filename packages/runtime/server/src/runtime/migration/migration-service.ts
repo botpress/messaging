@@ -121,7 +121,7 @@ export class MigrationService {
         ...this.filterMigrations(allMigrations, this.dbVersion, { isDown, type: 'database' }),
         ...this.filterMigrations(allMigrations, this.configVersion, { isDown, type: 'config' })
       ],
-      x => x.date
+      (x) => x.date
     )
 
     return isDown ? _.reverse(migrations) : migrations
@@ -137,7 +137,7 @@ export class MigrationService {
     this.dbVersion = process.env.TESTMIG_DB_VERSION || (await this._getCurrentDbVersion())
 
     if (process.runtime_env.TESTMIG_ALL || process.runtime_env.TESTMIG_NEW) {
-      const versions = migrations.map(x => x.version).sort(semver.compare)
+      const versions = migrations.map((x) => x.version).sort(semver.compare)
 
       this.targetVersion = _.last(versions)!
       this.configVersion = yn(process.runtime_env.TESTMIG_NEW) ? process.BOTPRESS_VERSION : '12.0.0'
@@ -197,7 +197,7 @@ ${_.repeat(' ', 9)}========================================`)
     // }
 
     await Promise.mapSeries(missingMigrations, async ({ filename }) => {
-      if (process.env.TESTMIG_IGNORE_LIST?.split(',').filter(x => filename.includes(x)).length) {
+      if (process.env.TESTMIG_IGNORE_LIST?.split(',').filter((x) => filename.includes(x)).length) {
         return this.logger.info(`${logPrefix}Skipping ignored migration file "${filename}"`)
       }
 
@@ -236,7 +236,7 @@ ${_.repeat(' ', 9)}========================================`)
 
   private displayMigrationStatus(missingMigrations: MigrationFile[], logger: sdk.Logger) {
     const isDown = process.MIGRATE_CMD === 'down'
-    const migrations = missingMigrations.map(x => this.loadedMigrations[x.filename].info)
+    const migrations = missingMigrations.map((x) => this.loadedMigrations[x.filename].info)
 
     let headerLabel = chalk`{bold ${centerText(`Migration${migrations.length === 1 ? '' : 's'} Required`, 40, 9)}}`
 
@@ -258,12 +258,12 @@ ${versionLabel}
 {dim ${centerText(`${migrations.length} change${migrations.length === 1 ? '' : 's'}`, 40, 9)}}
 ${_.repeat(' ', 9)}========================================`)
 
-    Object.keys(types).map(type => {
+    Object.keys(types).map((type) => {
       logger.warn(chalk`{bold ${types[type]}}`)
-      const filtered = migrations.filter(x => x.type === type)
+      const filtered = migrations.filter((x) => x.type === type)
 
       if (filtered.length) {
-        filtered.map(x => logger.warn(`- ${isDown ? '[rollback]' : ''} ${x.description}`))
+        filtered.map((x) => logger.warn(`- ${isDown ? '[rollback]' : ''} ${x.description}`))
       } else {
         logger.warn('- None')
       }
@@ -281,7 +281,7 @@ ${_.repeat(' ', 9)}========================================`)
   public getAllMigrations(): MigrationFile[] {
     const migrations = this._getMigrations(path.join(__dirname, '../../migrations'))
 
-    migrations.map(file => {
+    migrations.map((file) => {
       if (!this.loadedMigrations[file.filename]) {
         this.loadedMigrations[file.filename] = require(file.location).default
       }
@@ -307,7 +307,7 @@ ${_.repeat(' ', 9)}========================================`)
     }
 
     return _.orderBy(
-      glob.sync('**/*.js', { cwd: rootPath }).map(filepath => {
+      glob.sync('**/*.js', { cwd: rootPath }).map((filepath) => {
         const [rawVersion, timestamp, title] = path.basename(filepath).split('-')
         return {
           filename: path.basename(filepath),
@@ -333,13 +333,13 @@ ${_.repeat(' ', 9)}========================================`)
       ? `>${this.targetVersion} <= ${currentVersion}`
       : `>${currentVersion} <= ${this.targetVersion}`
 
-    const filteredFiles = files.filter(file => semver.satisfies(file.version, comparator))
+    const filteredFiles = files.filter((file) => semver.satisfies(file.version, comparator))
 
     if (_.isEmpty(this.loadedMigrations)) {
       return filteredFiles
     }
 
-    return filteredFiles.filter(file => {
+    return filteredFiles.filter((file) => {
       const content = this.loadedMigrations[file.filename]
 
       return (

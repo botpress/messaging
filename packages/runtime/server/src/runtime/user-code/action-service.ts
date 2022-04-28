@@ -108,8 +108,8 @@ export class ScopedActionService {
     this._validScripts = {}
 
     Object.keys(require.cache)
-      .filter(r => r.match(/(\\|\/)(actions|shared_libs|libraries)(\\|\/)/g))
-      .map(file => delete require.cache[file])
+      .filter((r) => r.match(/(\\|\/)(actions|shared_libs|libraries)(\\|\/)/g))
+      .map((file) => delete require.cache[file])
 
     clearRequireCache()
   }
@@ -123,7 +123,7 @@ export class ScopedActionService {
 
   async hasAction(actionName: string): Promise<boolean> {
     const actions = await this.listActions()
-    return !!actions.find(x => x.name === actionName)
+    return !!actions.find((x) => x.name === actionName)
   }
 
   public async listLocalActions() {
@@ -134,7 +134,7 @@ export class ScopedActionService {
     const actionFiles = (await this.ghost.forBot(this.botId).directoryListing('actions', '*.js', EXCLUDES)).filter(
       enabled
     )
-    const actions = await Promise.map(actionFiles, async file => this._getActionDefinition(file, 'bot'))
+    const actions = await Promise.map(actionFiles, async (file) => this._getActionDefinition(file, 'bot'))
 
     this._localActionsCache = actions
     return actions
@@ -187,7 +187,7 @@ export class ScopedActionService {
     }
 
     const actionFiles = (await this.ghost.global().directoryListing('actions', '*.js', EXCLUDES)).filter(enabled)
-    const actions = await Promise.map(actionFiles, async file => this._getActionDefinition(file, 'global'))
+    const actions = await Promise.map(actionFiles, async (file) => this._getActionDefinition(file, 'global'))
 
     this._globalActionsCache = actions
     return actions
@@ -219,7 +219,7 @@ export class ScopedActionService {
         data: { token, botId, ..._.omit(props, ['actionServer']) },
         // I override validateStatus in order for axios to not throw the Action Server returns a 500 error.
         // See https://github.com/axios/axios/issues/1143#issuecomment-340331822
-        validateStatus: status => {
+        validateStatus: (status) => {
           return true
         }
       })
@@ -427,7 +427,7 @@ export class ScopedActionService {
 
   private async _findAction(actionName: string): Promise<LocalActionDefinition> {
     const actions = await this.listActions()
-    const action = actions.find(x => x.name === actionName)
+    const action = actions.find((x) => x.name === actionName)
 
     if (!action) {
       throw new Error(`Action "${actionName}" not found`)

@@ -47,16 +47,16 @@ export class DataRetentionService {
       return
     }
 
-    const changedPaths = _.flatten(differences.filter(diff => diff.kind !== this.DELETED_ATTR).map(diff => diff.path))
+    const changedPaths = _.flatten(
+      differences.filter((diff) => diff.kind !== this.DELETED_ATTR).map((diff) => diff.path)
+    )
     if (!changedPaths.length) {
       return
     }
 
     for (const field in this.policies) {
       if (changedPaths.indexOf(field) > -1) {
-        const expiry = moment()
-          .add(ms(this.policies[field]), 'ms')
-          .toDate()
+        const expiry = moment().add(ms(this.policies[field]), 'ms').toDate()
 
         if (await this.get(channel, user_id, field)) {
           await this.update(channel, user_id, field, expiry)
@@ -94,10 +94,7 @@ export class DataRetentionService {
   }
 
   async delete(channel: string, user_id: string, field_path: string): Promise<void> {
-    await this.database
-      .knex(this.tableName)
-      .where({ channel, user_id, field_path })
-      .del()
+    await this.database.knex(this.tableName).where({ channel, user_id, field_path }).del()
   }
 
   async getExpired(batchSize): Promise<ExpiredData[]> {

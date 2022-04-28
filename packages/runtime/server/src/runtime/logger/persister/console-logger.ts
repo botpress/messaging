@@ -23,7 +23,7 @@ export type LoggerProvider = (module: string) => Promise<Logger>
 
 function serializeArgs(args: any): string {
   if (_.isArray(args)) {
-    return args.map(arg => serializeArgs(arg)).join(', ')
+    return args.map((arg) => serializeArgs(arg)).join(', ')
   } else if (_.isObject(args)) {
     return util.inspect(args, false, 2, true)
   } else if (_.isString(args)) {

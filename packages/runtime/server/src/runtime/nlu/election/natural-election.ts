@@ -32,7 +32,7 @@ function electIntent(input: sdk.IO.EventUnderstanding): sdk.IO.EventUnderstandin
   const noneIntent = { label: NONE_INTENT, confidence: mostConfidentCtx.oos, slots: {}, extractor: '' }
 
   const topTwoRaw: sdk.NLU.Intent[] = _([...mostConfidentCtx.intents, noneIntent])
-    .orderBy(i => i.confidence, 'desc')
+    .orderBy((i) => i.confidence, 'desc')
     .map(({ label, confidence }) => ({ name: label, context: mostConfidentCtx.name, confidence }))
     .take(2)
     .value()
@@ -61,7 +61,7 @@ export function extractElectedIntentSlot(input: sdk.IO.EventUnderstanding): sdk.
     return input
   }
 
-  const electedIntent = electedContext.intents.find(i => i.label === elected.name)
+  const electedIntent = electedContext.intents.find((i) => i.label === elected.name)
   if (_.isNil(electedIntent)) {
     return { ...input, slots: {} }
   }

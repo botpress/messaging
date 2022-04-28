@@ -10,7 +10,7 @@ describe('getLock', () => {
       fn()
     })
 
-    await new Promise(r => setTimeout(r, 100))
+    await new Promise((r) => setTimeout(r, 100))
 
     expect(fn).not.toHaveBeenCalled()
   })
@@ -20,7 +20,7 @@ describe('getLock', () => {
 
     let value = ''
 
-    lock('key').then(unlock =>
+    lock('key').then((unlock) =>
       setTimeout(() => {
         value = 'unexpected'
         unlock()
@@ -35,7 +35,7 @@ describe('getLock', () => {
     value = 'expected'
     expect(value).toEqual('expected')
 
-    await new Promise(resolve => {
+    await new Promise((resolve) => {
       setTimeout(() => {
         expect(value).toEqual('expected')
         resolve(undefined)

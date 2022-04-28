@@ -105,7 +105,7 @@ describe('Middleware', () => {
     const err = new Error('lol')
 
     middleware.use({
-      handler: _event => {
+      handler: (_event) => {
         throw err
       },
       name: 'throw',

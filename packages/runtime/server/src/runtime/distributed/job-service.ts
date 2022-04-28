@@ -41,18 +41,14 @@ export class LocalJobService implements JobService {
       }
     }
 
-    this.locks[resource] = moment()
-      .add(duration)
-      .toDate()
+    this.locks[resource] = moment().add(duration).toDate()
 
     return {
       unlock: async () => {
         delete this.locks[resource]
       },
       extend: async (duration: number) => {
-        this.locks[resource] = moment(this.locks[resource])
-          .add(duration)
-          .toDate()
+        this.locks[resource] = moment(this.locks[resource]).add(duration).toDate()
       }
     }
   }

@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 import { Instruction } from '.'
 import { InstructionFactory } from './factory'
 

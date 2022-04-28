@@ -16,5 +16,5 @@ export const getMostConfidentContext = (
     .pickBy((_p, ctx) => availableContexts.includes(ctx))
     .entries()
     .map(([name, ctx]) => ({ ...ctx, name }))
-    .maxBy(ctx => ctx.confidence)
+    .maxBy((ctx) => ctx.confidence)
 }

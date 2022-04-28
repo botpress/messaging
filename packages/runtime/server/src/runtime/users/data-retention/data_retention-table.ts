@@ -6,7 +6,7 @@ export class DataRetentionTable extends Table {
   async bootstrap() {
     let created = false
 
-    await this.knex.createTableIfNotExists(this.name, table => {
+    await this.knex.createTableIfNotExists(this.name, (table) => {
       table.text('channel').notNullable()
       table.text('user_id').notNullable()
       table.text('field_path').notNullable()
