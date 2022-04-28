@@ -70,7 +70,7 @@ jobs:
     name: Docker
     runs-on: ubuntu-latest
     needs: check
-    if: needs.check.outputs.messaging == true
+    if: ${{ needs.check.outputs.messaging }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -103,7 +103,7 @@ jobs:
     name: Webchat
     runs-on: ubuntu-latest
     needs: check
-    if: needs.check.outputs.webchat == true
+    if: ${{ needs.check.outputs.webchat }}
     defaults:
       run:
         working-directory: ./packages/webchat/webchat
@@ -131,7 +131,7 @@ jobs:
       run:
         working-directory: ./packages/studio/${{ matrix.path }}
     needs: check
-    if: needs.check.outputs.studio == true
+    if: ${{ needs.check.outputs.studio }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -150,7 +150,7 @@ jobs:
     name: Runtime
     runs-on: ubuntu-latest
     needs: check
-    if: needs.check.outputs.runtime == true
+    if: ${{ needs.check.outputs.runtime }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
