@@ -7,7 +7,7 @@ import { lang } from '../../../components/Shared/translations'
 const MIN_NB_UTTERANCES = 3
 const GOOD_NB_UTTERANCES = 10
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   intent: sdk.NLU.IntentDefinition

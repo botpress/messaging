@@ -9,7 +9,7 @@ import { InfoTooltip } from '../../../components/Shared/Interface'
 import { lang } from '../../../components/Shared/translations'
 
 import { ActionParameters } from './ActionParameters'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 type PropType<TObj, TProp extends keyof TObj> = TObj[TProp]
 

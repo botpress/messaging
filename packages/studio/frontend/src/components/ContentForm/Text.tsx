@@ -3,7 +3,7 @@ import React, { FC, useEffect, useRef } from 'react'
 import SmartInput from '../../components/SmartInput'
 import { lang } from '../Shared/translations'
 import { isMissingCurlyBraceClosure } from '../Util/form.util'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   formData: any

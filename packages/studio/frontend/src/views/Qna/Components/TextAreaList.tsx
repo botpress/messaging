@@ -9,7 +9,7 @@ import ShortcutLabel from '../../../components/Shared/ShortcutLabel'
 import Textarea from '../../../components/Shared/Textarea'
 import { lang } from '../../../components/Shared/translations'
 import { controlKey } from '../../../components/Shared/utilities/keyboardShortcuts'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 interface Props {
   updateItems: (items: string[]) => void

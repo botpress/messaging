@@ -1,7 +1,7 @@
 import React from 'react'
 import { Jumbotron, Button, Glyphicon } from 'react-bootstrap'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 export default ({ onRecordClicked }) => (
   <div>

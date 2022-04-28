@@ -1,7 +1,7 @@
 import { Alignment, Button, Collapse } from '@blueprintjs/core'
 import React, { FC, useEffect, useState } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { CollapsibleProps } from './typings'
 
 const Collapsible: FC<CollapsibleProps> = ({ opened, hidden, toggleExpand, name, children, ownProps }) => {

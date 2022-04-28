@@ -5,7 +5,7 @@ import React from 'react'
 import confirmDialog from '../../../../components/Shared/ConfirmDialog'
 import { lang } from '../../../../components/Shared/translations'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 interface State {}
 interface Props {

@@ -10,7 +10,7 @@ import { AccessControl } from '../../../components/Shared/Utils'
 
 import { Schema } from '../typings'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import UrlUpload from './UrlUpload'
 interface IUploadWidgetProps {
   value: string | null

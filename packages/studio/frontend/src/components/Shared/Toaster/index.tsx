@@ -2,7 +2,7 @@ import { IconName, Intent, IToasterProps, Position, Toaster } from '@blueprintjs
 
 import { lang } from '../translations'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export interface ToastOptions {
   // Delaying to avoid the react lifecycle issue (executing before it is rendered)

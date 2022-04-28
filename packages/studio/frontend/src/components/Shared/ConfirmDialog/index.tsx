@@ -7,7 +7,7 @@ import React, { FC } from 'react'
 import ReactDOM from 'react-dom'
 import { Dialog } from '../Dialog'
 
-import styles from './style.scss'
+import * as style from './style.module.scss'
 import { ConfirmDialogOptions, ConfirmDialogProps } from './typings'
 
 const ConfirmDialogComponent: FC<ConfirmDialogProps> = (props) => {
@@ -26,7 +26,7 @@ const ConfirmDialogComponent: FC<ConfirmDialogProps> = (props) => {
   return (
     <Dialog.Wrapper icon="warning-sign" usePortal={false} isOpen onClose={onDecline} size="sm">
       <Dialog.Body>
-        <Icon icon="warning-sign" iconSize={32} className={styles.icon} />
+        <Icon icon="warning-sign" iconSize={32} className={style.icon} />
         <div>
           {props.message}
           {props.body}
@@ -78,7 +78,7 @@ function addDialog(props, resolve) {
   const div = document.createElement('div')
 
   div.setAttribute('id', 'confirmDialog-container')
-  div.setAttribute('class', styles.ConfirmDialogContainer)
+  div.setAttribute('class', style.ConfirmDialogContainer)
   body.appendChild(div)
 
   ReactDOM.render(<ConfirmDialogComponent {...props} resolve={resolve} />, div)

@@ -7,7 +7,7 @@ import MoreOptions from '../../MoreOptions'
 import { MoreOptionsItems } from '../../MoreOptions/typings'
 import { lang } from '../../translations'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { GroupItemWrapperProps } from './typings'
 
 const GroupItemWrapper: FC<GroupItemWrapperProps> = ({

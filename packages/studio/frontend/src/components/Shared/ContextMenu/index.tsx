@@ -2,7 +2,7 @@ import React, { Fragment, SyntheticEvent, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
 import Overlay from '../Overlay'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const ContextMenuWrapper = ({ event, onClose, children }) => {
   const [clickPosition, setClickPosition] = useState({ top: `${event.clientY}px`, left: `${event.clientX}px` })

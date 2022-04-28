@@ -13,7 +13,7 @@ import { EntitySidePanelSection } from './entities/SidePanelSection'
 import IntentNameModal from './intents/NameModal'
 import { IntentSidePanelSection } from './intents/SidePanelSection'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   contentLang: string

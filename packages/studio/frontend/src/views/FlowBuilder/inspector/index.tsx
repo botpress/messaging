@@ -22,7 +22,7 @@ import SaySomethingForm from '../nodeProps/SaySomethingForm'
 import SkillCallNode from '../nodeProps/SkillCallNode'
 import StandardNode from '../nodeProps/StandardNode'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface OwnProps {
   history: any

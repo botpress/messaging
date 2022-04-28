@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import React, { FC, useEffect } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { RightSidebarProps } from './typings'
 
 const RightSidebar: FC<RightSidebarProps> = ({ className, canOutsideClickClose, close, children }) => {

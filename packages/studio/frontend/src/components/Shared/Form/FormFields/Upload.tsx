@@ -1,7 +1,7 @@
 import { FileInput, Icon } from '@blueprintjs/core'
 import React, { FC, Fragment, useReducer } from 'react'
 
-import sharedStyle from '../../../Shared/style.scss'
+import * as sharedStyle from '../../../Shared/style.module.scss'
 import FileDisplay from '../../FileDisplay'
 import { UploadFieldProps } from './typings'
 

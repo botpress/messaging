@@ -12,7 +12,7 @@ import {
   updateFlow
 } from '../../../actions'
 import ContentForm from '../../../components/ContentForm/index'
-import style from '../../../components/ContentForm/style.scss'
+import * as style from '../../../components/ContentForm/style.module.scss'
 import Dropdown from '../../../components/Shared/Dropdown'
 import MoreOptions from '../../../components/Shared/MoreOptions'
 import { MoreOptionsItems } from '../../../components/Shared/MoreOptions/typings'

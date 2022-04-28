@@ -3,7 +3,7 @@ import React from 'react'
 import { Button, FormControl, Row, Col, Alert, Form, Collapse } from 'react-bootstrap'
 import { MdExpandLess, MdExpandMore } from 'react-icons/md'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 interface Props {
   axios: AxiosInstance

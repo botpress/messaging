@@ -13,7 +13,7 @@ import { isRTLLocale } from '../../translations'
 
 import ToolTip from '../Shared/ToolTip'
 import createMentionPlugin, { defaultSuggestionsFilter } from './Base'
-import style from './styles.scss'
+import * as style from './styles.module.scss'
 
 interface ExposedProps {
   children?: any

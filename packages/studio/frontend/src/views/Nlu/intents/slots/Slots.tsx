@@ -5,7 +5,7 @@ import React from 'react'
 import { lang } from '../../../../components/Shared/translations'
 
 import { NluClient } from '../../client'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 import SlotItem from './SlotItem'
 import SlotModal from './SlotModal'

@@ -12,7 +12,7 @@ import { EntityEditor } from './entities/EntityEditor'
 import { IntentEditor } from './intents/FullEditor'
 import { NLUSidePanel } from './SidePanel'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 type NLUItemType = 'intent' | 'entity'
 export interface NluItem {

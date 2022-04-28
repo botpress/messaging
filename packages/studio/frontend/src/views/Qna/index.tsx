@@ -15,7 +15,7 @@ import { Downloader } from './Components/Downloader'
 import { ImportModal } from './Components/ImportModal'
 import QnA from './Components/QnA'
 import EmptyStateIcon from './Icons/EmptyStateIcon'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { dispatchMiddleware, fetchReducer, itemHasError, ITEMS_PER_PAGE, Props } from './utils/qnaList.utils'
 
 const QnAList: FC<Props> = (props) => {

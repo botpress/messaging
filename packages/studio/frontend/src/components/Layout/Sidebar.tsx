@@ -5,11 +5,12 @@ import React, { FC, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { NavLink, RouteComponentProps, withRouter } from 'react-router-dom'
 
+import logo from '../../img/logo-icon.svg'
 import { RootReducer } from '../../reducers'
 import { lang } from '../Shared/translations'
 import { AccessControl } from '../Shared/Utils'
 
-import style from './Sidebar.scss'
+import * as style from './Sidebar.module.scss'
 
 type StateProps = ReturnType<typeof mapStateToProps>
 type Props = StateProps & RouteComponentProps
@@ -117,7 +118,7 @@ const Sidebar: FC<Props> = (props) => {
   return (
     <aside className={classnames(style.sidebar, 'bp-sidebar')}>
       <a href="admin/" className={classnames(style.logo, 'bp-logo')} id="bp-menu_admin">
-        <img width="19" src="assets/studio/ui/public/img/logo-icon.svg" alt="Botpress Logo" />
+        <img width="19" src={logo} alt="Botpress Logo" />
       </a>
       <ul className={classnames('nav')}>
         {window.IS_BOT_MOUNTED ? (

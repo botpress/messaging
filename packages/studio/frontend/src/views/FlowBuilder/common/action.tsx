@@ -12,7 +12,7 @@ import withLanguage from '../../../components/Util/withLanguage'
 import { isRTLLocale } from '../../../translations'
 import { ActionPopover } from './actionPopover'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   text: string

@@ -5,7 +5,7 @@ import React, { FC } from 'react'
 
 import { lang } from '../../../../../components/Shared/translations'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 const renderSlotItem = (name: string, slot: any) => {
   if (_.isArray(slot)) {

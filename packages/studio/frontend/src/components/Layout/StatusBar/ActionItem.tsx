@@ -2,8 +2,8 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import React from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-import sharedStyle from '../TopNav/style.scss'
-import style from './style.scss'
+import * as sharedStyle from '../TopNav/style.module.scss'
+import * as style from './style.module.scss'
 
 const titleToId = (txt) => txt.replace(/[^\W]/gi, '_')
 

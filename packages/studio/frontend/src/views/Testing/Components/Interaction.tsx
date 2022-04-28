@@ -4,7 +4,7 @@ import _ from 'lodash'
 import React from 'react'
 
 import { MdCheck, MdClose, MdRemove } from 'react-icons/md'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 interface Props {
   userMessage: string

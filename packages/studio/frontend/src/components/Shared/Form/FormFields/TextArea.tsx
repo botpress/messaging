@@ -5,7 +5,7 @@ import React, { FC, Fragment, useEffect, useState } from 'react'
 import sharedStyle from '../../../Shared/style.scss'
 import Textarea from '../../Textarea'
 import { lang } from '../../translations'
-import '../style.scss'
+import '../style.module.scss'
 
 import { FieldProps } from './typings'
 

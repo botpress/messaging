@@ -5,7 +5,7 @@ import { lang } from '../Shared/translations'
 
 import SmartInput from '../SmartInput'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const ArrayFieldTemplate = (props) => {
   const { canAdd, onAddClick, items, schema, formContext } = props

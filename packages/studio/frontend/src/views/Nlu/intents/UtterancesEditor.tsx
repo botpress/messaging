@@ -25,7 +25,7 @@ import PlaceholderPlugin from 'slate-react-placeholder'
 
 import { lang } from '../../../components/Shared/translations'
 import { TagSlotPopover } from './slots/SlotPopover'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { makeSlotMark, utterancesToValue, valueToUtterances } from './utterances-state-utils'
 
 const plugins = [

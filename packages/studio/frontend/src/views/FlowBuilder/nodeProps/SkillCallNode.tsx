@@ -5,7 +5,7 @@ import { Panel, Tabs, Tab, Badge, Button } from 'react-bootstrap'
 import { lang } from '../../../components/Shared/translations'
 import { AccessControl } from '../../../components/Shared/Utils'
 import EditableInput from '../common/EditableInput'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import TransitionSection from './TransitionSection'
 
 function transformText(text) {

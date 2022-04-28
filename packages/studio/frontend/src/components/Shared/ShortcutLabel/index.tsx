@@ -5,7 +5,7 @@ import React, { FC } from 'react'
 import { lang } from '../translations'
 import { keyMap } from '../utilities/keyboardShortcuts'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { ShortcutLabelProps } from './typings'
 
 const iconKeys = ['backspace', 'command', 'delete', 'enter', 'escape', 'option', 'shift', 'tab']

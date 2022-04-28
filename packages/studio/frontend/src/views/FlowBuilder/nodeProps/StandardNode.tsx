@@ -7,7 +7,7 @@ import { lang } from '../../../components/Shared/translations'
 import EditableInput from '../common/EditableInput'
 
 import ActionSection from './ActionSection'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import TransitionSection from './TransitionSection'
 
 function transformText(text: string) {

@@ -8,7 +8,7 @@ import { lang } from '../../../../components/Shared/translations'
 import { RootReducer } from '../../../../reducers'
 import { ZOOM_MAX, ZOOM_MIN } from '../constants'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 type StateProps = ReturnType<typeof mapStateToProps>
 

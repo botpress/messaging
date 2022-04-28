@@ -18,7 +18,7 @@ import { Choice } from './skill-choice'
 import { SendEmail } from './skill-send-email'
 import { Slot } from './skill-slot'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const VALID_WINDOW_SIZES = ['normal', 'large', 'small']
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { lang } from '../../../components/Shared/translations'
 import { RootReducer } from '../../../reducers'
 import LangSwitcher from './LangSwitcher'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import TrainingStatusComponent from './TrainingStatus'
 
 interface Props {

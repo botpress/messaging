@@ -25,7 +25,7 @@ import Diagram from './diagram'
 import SidePanel, { PanelPermissions, SidePanelInspector } from './sidePanelFlows'
 import SkillsBuilder from './skills'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface OwnProps {
   currentMutex: any

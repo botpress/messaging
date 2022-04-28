@@ -5,7 +5,7 @@ import { OverlayTrigger, Popover, Well } from 'react-bootstrap'
 
 import { ROUTER_CONDITON_REGEX } from '../utils/general.util'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   position: any

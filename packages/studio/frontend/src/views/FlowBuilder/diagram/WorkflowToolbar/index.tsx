@@ -7,7 +7,7 @@ import MainLayout from '../../../../components/Shared/MainLayout'
 import { lang } from '../../../../components/Shared/translations'
 import { canFlowRedo, canFlowUndo } from '../../../../reducers'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const WorkflowToolbar = ({
   canRedo,

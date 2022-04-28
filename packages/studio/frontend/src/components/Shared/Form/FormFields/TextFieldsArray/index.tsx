@@ -3,13 +3,13 @@ import cx from 'classnames'
 import _isEqual from 'lodash/isEqual'
 import React, { FC, useEffect, useRef, useState } from 'react'
 
-import sharedStyle from '../../../../Shared/style.scss'
+import * as sharedStyle from '../../../../Shared/style.module.scss'
 import Textarea from '../../../Textarea'
 import { lang } from '../../../translations'
 import AddButton from '../AddButton'
 import { TextFieldsArrayProps } from '../typings'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const TextFieldsArray: FC<TextFieldsArrayProps> = ({
   addBtnLabel,

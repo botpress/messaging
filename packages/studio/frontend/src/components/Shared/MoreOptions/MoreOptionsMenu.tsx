@@ -1,7 +1,7 @@
 import { Button, Icon, IconName } from '@blueprintjs/core'
 import cx from 'classnames'
 import React, { FC, Fragment } from 'react'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 import { MoreOptionsMenuProps } from './typings'
 

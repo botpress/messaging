@@ -6,7 +6,7 @@ import { Input, Label } from 'reactstrap'
 
 import { BotpressTooltip } from '../../../../components/Shared/BotpressTooltip'
 import { LinkDocumentationProvider } from '../../../../components/Util/DocumentationProvider'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 const methodOptions = [
   { label: 'Get', value: 'get' },

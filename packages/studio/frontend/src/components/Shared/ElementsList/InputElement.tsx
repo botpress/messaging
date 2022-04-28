@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import React from 'react'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const DEFAULT_ROW_HEIGHT = 32
 

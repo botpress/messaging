@@ -4,7 +4,7 @@ import React, { FC, Fragment } from 'react'
 
 import { lang } from '../../../../../components/Shared/translations'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 export const Entities: FC<{ entities: sdk.NLU.Entity[] }> = (props) => (
   <Fragment>

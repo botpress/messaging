@@ -16,7 +16,7 @@ import React, { FC, useState, useEffect } from 'react'
 import { HotKeys } from 'react-hotkeys'
 import SplitPane from 'react-split-pane'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import {
   ContainerProps,
   InfoTooltipProps,

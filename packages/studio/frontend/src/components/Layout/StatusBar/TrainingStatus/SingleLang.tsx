@@ -7,7 +7,7 @@ import React, { FC, useEffect, useRef, useState } from 'react'
 import { lang } from '../../../../components/Shared/translations'
 import { AccessControl, Timeout, toastFailure } from '../../../../components/Shared/Utils'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const usePrevious = <T extends any>(value: T): T | undefined => {
   const ref = useRef<T>()

@@ -8,7 +8,7 @@ import { lang } from '../../../components/Shared/translations'
 import ConditionItem from '../common/condition'
 import ConditionModalForm from './ConditionModalForm'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export default class TransitionSection extends Component<any, any> {
   state: any = {

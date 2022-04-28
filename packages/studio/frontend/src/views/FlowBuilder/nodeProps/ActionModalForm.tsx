@@ -15,7 +15,7 @@ import { RootReducer } from '../../../reducers'
 
 import ParametersTable, { Parameter } from './ParametersTable'
 import SelectActionDropdown from './SelectActionDropdown'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Action {
   label: string

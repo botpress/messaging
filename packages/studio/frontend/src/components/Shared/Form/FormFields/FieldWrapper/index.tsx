@@ -1,10 +1,10 @@
 import cx from 'classnames'
 import React, { FC } from 'react'
 
-import sharedStyle from '../../../../Shared/style.scss'
+import * as sharedStyle from '../../../../Shared/style.module.scss'
 import { FieldWrapperProps } from '../typings'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const FieldWrapper: FC<FieldWrapperProps> = ({ label, children, invalid }) => (
   <div className={sharedStyle.fieldWrapper}>

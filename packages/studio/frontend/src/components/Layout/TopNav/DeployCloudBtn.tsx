@@ -10,7 +10,7 @@ import { toast } from '../../../components/Shared/Toaster'
 import { lang } from '../../../components/Shared/translations'
 import { RootReducer } from '../../../reducers'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   trainSession: {

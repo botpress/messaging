@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import React, { FC, useState } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { TabsProps } from './typings'
 
 const Tabs: FC<TabsProps> = ({ className, currentTab, shouldFloat, tabChange, tabs }) => {

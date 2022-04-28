@@ -37,8 +37,7 @@ window.IS_BOT_MOUNTED = true // TODO: fix this .. the bot might not mount
 window.IS_CLOUD_BOT = true
 window.SEGMENT_WRITE_KEY = '7lxeXxbGysS04TvDNDOROQsFlrls9NoY'
 window['IS_PRO_ENABLED'] = false
-window.NLU_ENDPOINT = 'undefined'
-
+window.NLU_ENDPOINT = 'http://localhost:3200'
 window['BP_SOCKET_URL'] = 'http://localhost:3000'
 
 void axios.get(`${window.STUDIO_API_PATH}/flows`).then((d) => {

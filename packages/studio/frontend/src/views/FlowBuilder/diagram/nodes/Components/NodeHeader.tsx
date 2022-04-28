@@ -9,7 +9,7 @@ import { isRTLLocale } from '../../../../../translations'
 import { NodeDebugInfo } from '../../debugger'
 
 import { DebugInfo } from './DebugInfo'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 type StateProps = ReturnType<typeof mapStateToProps>
 

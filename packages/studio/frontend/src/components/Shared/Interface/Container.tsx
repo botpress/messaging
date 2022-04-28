@@ -7,7 +7,7 @@ import SplitPane from 'react-split-pane'
 import { toggleExplorer } from '../../../actions'
 import { RootReducer } from '../../../reducers'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { ContainerProps } from './typings'
 
 type StateProps = ReturnType<typeof mapStateToProps>

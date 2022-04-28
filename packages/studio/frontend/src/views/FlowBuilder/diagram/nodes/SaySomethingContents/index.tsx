@@ -7,11 +7,11 @@ import { MarkdownContent } from '../../../../../components/Shared/MarkdownConten
 import withLanguage from '../../../../../components/Util/withLanguage'
 import { RootReducer } from '../../../../../reducers'
 import { getFormData } from '../../../../../util/NodeFormData'
-import commonStyle from '../../../../../views/FlowBuilder/common/style.scss'
+import * as commonStyle from '../../../../../views/FlowBuilder/common/style.module.scss'
 
-import style from '../Components/style.scss'
+import * as style from '../Components/style.module.scss'
 
-import localStyle from './style.scss'
+import * as localStyle from './style.module.scss'
 
 interface OwnProps {
   node: any

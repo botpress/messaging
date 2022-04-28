@@ -18,7 +18,7 @@ import { RootReducer } from '../../reducers'
 import { BotReducer } from '../../reducers/bot'
 import { getNLUServerClient } from '../../util/nlu-client-provider'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const statusList = ['public', 'private', 'disabled']
 

@@ -6,7 +6,7 @@ import React from 'react'
 import { Panel, Label, Button } from 'react-bootstrap'
 
 import confirmDialog from '../../../components/Shared/ConfirmDialog'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 import FailureReport from './FailureReport'
 import Interaction from './Interaction'
 

@@ -7,7 +7,7 @@ import { lang } from '../../../../../components/Shared/translations'
 
 import { NodeDebugInfo } from '../../debugger'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 type NodeDebugInfoProps = {
   className?: string

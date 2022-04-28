@@ -7,9 +7,8 @@ import { isRTLLocale } from '../../../../../translations'
 import ConditionItem from '../../../../../views/FlowBuilder/common/condition'
 import { StandardPortWidget } from '../../nodes/Ports'
 import { BlockProps } from '../Block'
-import style from '../Components/style.scss'
-
-import localStyle from './style.scss'
+import * as style from '../Components/style.module.scss'
+import * as localStyle from './style.module.scss'
 
 type Props = Pick<BlockProps, 'node'>
 

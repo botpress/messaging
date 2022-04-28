@@ -17,7 +17,7 @@ import SplashScreen from './components/SplashScreen'
 import { RootStore, StoreDef } from './store'
 import CodeEditorApi from './store/api'
 import { EditorStore } from './store/editor'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { getContentZone, wrapper } from './utils/wrapper'
 
 export type FileWithMetadata = EditableFile & {

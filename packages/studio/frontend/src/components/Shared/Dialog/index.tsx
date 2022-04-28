@@ -2,7 +2,7 @@ import { Classes, Dialog as BPDialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import React, { FC } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { DialogProps } from './typings'
 
 export const Wrapper: FC<DialogProps> = (props) => {

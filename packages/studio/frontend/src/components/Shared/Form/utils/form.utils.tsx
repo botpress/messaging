@@ -4,7 +4,7 @@ import _ from 'lodash'
 import React from 'react'
 
 import { lang } from '../../translations'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 import { createEmptyDataFromSchema } from './fields'
 

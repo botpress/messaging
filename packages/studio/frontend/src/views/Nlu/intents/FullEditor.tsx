@@ -8,7 +8,7 @@ import { NluClient } from '../client'
 
 import IntentHint from './IntentHint'
 import Slots from './slots/Slots'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { removeSlotFromUtterances, renameSlotInUtterances } from './utterances-state-utils'
 import { UtterancesEditor } from './UtterancesEditor'
 

@@ -2,7 +2,7 @@ import { Button, Intent, Position, Tooltip } from '@blueprintjs/core'
 import mime from 'mime-types'
 import React, { FC } from 'react'
 import { lang } from '../translations'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { FileDisplayProps } from './typings'
 
 const FileDisplay: FC<FileDisplayProps> = (props) => {

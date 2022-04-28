@@ -4,9 +4,9 @@ import React, { useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import { JSONTree } from 'react-json-tree'
 
-import bpStyle from '../../style.scss'
+import * as bpStyle from '../../style.module.scss'
 import inspectorTheme from '../inspectorTheme'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 const CopyPath = (props) => {
   const [copied, setCopied] = useState(false)

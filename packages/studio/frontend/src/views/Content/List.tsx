@@ -14,7 +14,7 @@ import { Downloader } from '../../components/Shared/Utils'
 import withLanguage from '../../components/Util/withLanguage'
 
 import { ContentUsage } from '.'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { UsageModal } from './UsageModal'
 
 class ListView extends Component<Props, State> {
