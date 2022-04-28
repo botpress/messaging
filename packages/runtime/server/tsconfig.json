@@ -1,0 +1,30 @@
+{
+  // Manage references here
+  "references": [
+    {
+      "path": "../sdk"
+    },
+    {
+      "path": "../../messaging/client"
+    }
+  ],
+
+  // Defaults (don't change this)
+  "extends": "../../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // inversify uses decorators
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    // TODO: remove this (causes 291 errors)
+    "noImplicitAny": false,
+    // TODO: remove this (causes 40 errors)
+    "useUnknownInCatchVariables": false
+  },
+  "include": ["src"],
+  "exclude": ["dist", "src/**/*.test.ts"]
+}
