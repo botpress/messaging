@@ -51,13 +51,14 @@ class Editor extends React.Component<Props> {
   }
 
   setupEditor() {
-    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+    console.log('monaco.languages', monaco.languages)
+    /*     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
       target: monaco.languages.typescript.ScriptTarget.ESNext,
       module: monaco.languages.typescript.ModuleKind.CommonJS,
       moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
       allowJs: true,
       typeRoots: ['types']
-    })
+    }) */
 
     monaco.languages.registerDocumentFormattingEditProvider('typescript', {
       async provideDocumentFormattingEdits(model, _options, _token) {
