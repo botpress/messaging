@@ -18,8 +18,8 @@ export const setupErrorHandlers = () => {
     }
   }
 
-  DEBUG = Debug
-  printErrorDefault = printPlainError
+  ;(global as any).DEBUG = Debug
+  ;(global as any).printErrorDefault = printPlainError
 
   process.on('unhandledRejection', (err: any) => {
     printErrorDefault(err)
@@ -36,7 +36,7 @@ export const setupErrorHandlers = () => {
 export const setupProcessVars = () => {
   process.BOTPRESS_EVENTS = new EventEmitter2()
   process.BOTPRESS_EVENTS.setMaxListeners(1000)
-  BOTPRESS_CORE_EVENT = (event, args) => {
+  ;(global as any).BOTPRESS_CORE_EVENT = (event, args) => {
     process.BOTPRESS_EVENTS.emit(event, args)
   }
 

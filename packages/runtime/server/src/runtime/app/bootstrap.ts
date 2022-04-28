@@ -1,6 +1,4 @@
 import 'bluebird-global'
-// eslint-disable-next-line import/order
-import '../../sdk/rewire'
 
 import { RuntimeSetup } from '../../startup/embedded'
 import { BotpressApp, createApp, createLoggerProvider } from '../app/core-loader'

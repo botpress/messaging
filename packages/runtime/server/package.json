@@ -32,6 +32,7 @@
     "@botpress/messaging-client": "1.2.0",
     "@botpress/nlu-client": "1.0.0-rc.2",
     "axios": "^0.21.1",
+    "bluebird": "^3.7.2",
     "bluebird-global": "^1.0.1",
     "body-parser": "^1.18.3",
     "bottleneck": "^2.19.5",
