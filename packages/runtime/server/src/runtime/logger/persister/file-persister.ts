@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { Logger, LoggerEntry } from 'botpress/runtime-sdk'
 import fs from 'fs'
 import { injectable } from 'inversify'

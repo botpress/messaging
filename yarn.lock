@@ -2921,7 +2921,7 @@ __metadata:
     "@botpress/messaging-client": 1.2.0
     "@botpress/nlu-client": 1.0.0-rc.2
     "@types/archiver": 5.1.1
-    "@types/bluebird-global": ^3.5.9
+    "@types/bluebird": ^3.5.36
     "@types/bluebird-retry": ^0.11.4
     "@types/body-parser": ^1.19.2
     "@types/cors": ^2.8.12
@@ -2936,7 +2936,6 @@ __metadata:
     "@types/verror": ^1.10.5
     axios: ^0.21.1
     bluebird: ^3.7.2
-    bluebird-global: ^1.0.1
     body-parser: ^1.18.3
     bottleneck: ^2.19.5
     bytes: ^3.1.0
@@ -7649,15 +7648,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bluebird-global@npm:^3.5.9":
-  version: 3.5.13
-  resolution: "@types/bluebird-global@npm:3.5.13"
-  dependencies:
-    "@types/bluebird": "*"
-  checksum: 6532a122e3455282102b4e1015a75af261ac58b6133f5e8fe9372abc0c000aa422e3c6e8915edb2fadd5f8494a3646c9750d8a5931435102fc35dc7468fa0d8d
-  languageName: node
-  linkType: hard
-
 "@types/bluebird-retry@npm:^0.11.4":
   version: 0.11.5
   resolution: "@types/bluebird-retry@npm:0.11.5"
@@ -10477,15 +10467,6 @@ __metadata:
   dependencies:
     inherits: ~2.0.0
   checksum: 72733cbb816181b7c92449e7b650247c02122f743526ce9d948ff68afc27d8709106cd62f2c876c6d8cd3977e0204a014f38d22805974008039bd3bed35f2cbd
-  languageName: node
-  linkType: hard
-
-"bluebird-global@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "bluebird-global@npm:1.0.1"
-  peerDependencies:
-    bluebird: "*"
-  checksum: fa0448ba6f33e0e970fe2e26cc437c1aa706438112d2ddc00c24fcbf0b73b745a7cbca94fa62248309d774e775ab96a44d038abc5e82eb0b7201068eb3d1c779
   languageName: node
   linkType: hard
 

@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import bodyParser from 'body-parser'
 import { Logger } from 'botpress/runtime-sdk'
 import compression from 'compression'

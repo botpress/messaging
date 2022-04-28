@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { BotConfig, Logger } from 'botpress/runtime-sdk'
 import glob from 'glob'
 import { inject, injectable, postConstruct, tagged } from 'inversify'

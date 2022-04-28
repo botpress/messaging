@@ -1,4 +1,3 @@
-import 'bluebird-global'
 import { EventDirection, IO } from 'botpress/runtime-sdk'
 import 'jest-extended'
 import 'reflect-metadata'

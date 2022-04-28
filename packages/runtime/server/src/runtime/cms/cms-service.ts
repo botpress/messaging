@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import {
   ContentElement,
   ContentType,
@@ -379,30 +380,30 @@ export class CMSService implements IDisposeOnExit {
     for (const contentType of this.contentTypesByBot[botId]) {
       let elementId
       try {
-        await this.memDb(this.contentTable)
+        const elements = await this.memDb(this.contentTable)
           .select('id', 'formData', 'botId')
           .where('contentType', contentType.id)
           .andWhere({ botId })
-          .then<Iterable<any>>()
-          .each(async (element: any) => {
-            elementId = element.id
-            const computedProps = await this.fillComputedProps(
-              contentType,
-              JSON.parse(element.formData),
-              languages,
-              defaultLanguage,
-              botId
-            )
-            element = { ...element, ...computedProps }
 
-            return this.memDb(this.contentTable)
-              .where('id', element.id)
-              .andWhere({ botId })
-              .update(this.transformItemApiToDb(botId, element))
-              .catch((err) => {
-                throw new VError(err, `Could not update the element for ID "${element.id}"`)
-              })
-          })
+        for (let element of elements) {
+          elementId = element.id
+          const computedProps = await this.fillComputedProps(
+            contentType,
+            JSON.parse(element.formData),
+            languages,
+            defaultLanguage,
+            botId
+          )
+          element = { ...element, ...computedProps }
+
+          await this.memDb(this.contentTable)
+            .where('id', element.id)
+            .andWhere({ botId })
+            .update(this.transformItemApiToDb(botId, element))
+            .catch((err) => {
+              throw new VError(err, `Could not update the element for ID "${element.id}"`)
+            })
+        }
       } catch (err) {
         throw new Error(`while computing elements of type "${contentType.id}" (element: ${elementId}): ${err}`)
       }

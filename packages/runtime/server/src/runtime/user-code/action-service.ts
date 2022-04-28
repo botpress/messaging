@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Promise } from 'bluebird'
 import { IO, Logger } from 'botpress/runtime-sdk'
 import { inject, injectable, tagged } from 'inversify'
 import joi from 'joi'

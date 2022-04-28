@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { inject, injectable } from 'inversify'
 import _ from 'lodash'
 import moment from 'moment'

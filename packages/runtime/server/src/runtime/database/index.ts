@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { KnexExtended, Logger } from 'botpress/runtime-sdk'
 import { mkdirpSync } from 'fs-extra'
 import { inject, injectable, tagged } from 'inversify'

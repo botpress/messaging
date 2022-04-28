@@ -1,5 +1,6 @@
 import { parse } from '@babel/parser'
 import traverse from '@babel/traverse'
+import { Promise } from 'bluebird'
 import { inject, injectable } from 'inversify'
 import _ from 'lodash'
 import ms from 'ms'

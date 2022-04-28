@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import * as sdk from 'botpress/runtime-sdk'
 import { inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'

@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { DirectoryListingOptions } from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
 import { nanoid } from 'nanoid'
@@ -167,9 +168,8 @@ export class DBStorageDriver implements StorageDriver {
         query = query.orderBy(column === 'modifiedOn' ? 'modified_on' : 'file_path', desc ? 'desc' : 'asc')
       }
 
-      const paths = await query
-        .then<Iterable<any>>()
-        .map((x: any) => forceForwardSlashes(path.relative(folder, x.file_path)))
+      const qpaths = await query
+      const paths = qpaths.map((x: any) => forceForwardSlashes(path.relative(folder, x.file_path)))
 
       if (!options.excludes || !options.excludes.length) {
         return paths

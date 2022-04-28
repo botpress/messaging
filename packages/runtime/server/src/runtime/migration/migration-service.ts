@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import * as sdk from 'botpress/runtime-sdk'
 import chalk from 'chalk'
 import fse from 'fs-extra'

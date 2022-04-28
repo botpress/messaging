@@ -1,3 +1,4 @@
+import { Promise } from 'bluebird'
 import { Logger, RedisLock } from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
 import { Redis } from 'ioredis'
@@ -106,9 +107,7 @@ export class RedisJobService implements JobService, IInitializeFromConfig {
        * Events should not be broadcasted when the bot is starting up. Otherwise, every running server reload all bots.
        * It also cause issues when a server is not entirely up / if it gets spammed by multiple servers booting at the same time.
        */
-      if (!AppLifecycle.waitFor(AppLifecycleEvents.BOTPRESS_READY).isResolved()) {
-        return fn.apply(undefined, arguments)
-      }
+      await AppLifecycle.waitFor(AppLifecycleEvents.BOTPRESS_READY)
 
       const jobId = nanoid()
       const startJobMessage = {

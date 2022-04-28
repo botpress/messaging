@@ -17,8 +17,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
-    // TODO: should be 2021 but doesn't work due to bluebird-global
-    "target": "es2019",
     // TODO: remove this (causes 291 errors)
     "noImplicitAny": false,
     // TODO: remove this (causes 40 errors)
