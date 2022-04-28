@@ -1,10 +1,9 @@
-import { Icon } from '@blueprintjs/core'
+import { Icon, Tooltip } from '@blueprintjs/core'
 import classNames from 'classnames'
 import React from 'react'
 import { connect } from 'react-redux'
 
 import ShortcutLabel from '../../../components/Shared/ShortcutLabel'
-import ToolTip from '../../../components/Shared/ToolTip'
 import { lang } from '../../../components/Shared/translations'
 import { shortControlKey } from '../../../components/Shared/utilities/keyboardShortcuts'
 import { RootReducer } from '../../../reducers'
@@ -35,7 +34,7 @@ const RightToolBar = (props: Props) => {
     <div>
       {docHints.length > 0 && (
         <>
-          <ToolTip
+          <Tooltip
             content={
               <div className={style.tooltip}>
                 {lang.tr('topNav.help')}
@@ -48,13 +47,13 @@ const RightToolBar = (props: Props) => {
             <button className={style.item} onClick={toggleDocs}>
               <Icon color="#1a1e22" icon="help" iconSize={16} />
             </button>
-          </ToolTip>
+          </Tooltip>
           <span className={style.divider}></span>
         </>
       )}
       {isCloudBot ? <DeployCloudBtn /> : null}
       {window.IS_BOT_MOUNTED && (
-        <ToolTip content={lang.tr('topNav.toggleEmulator', { shortcut: `${shortControlKey} E` })}>
+        <Tooltip content={lang.tr('topNav.toggleEmulator', { shortcut: `${shortControlKey} E` })}>
           <button
             className={classNames(style.item, style.itemSpacing, { [style.active]: props.isEmulatorOpen })}
             onClick={toggleEmulator}
@@ -63,7 +62,7 @@ const RightToolBar = (props: Props) => {
             <Icon color="#1a1e22" icon="chat" iconSize={16} />
             <span className={style.label}>{lang.tr('topNav.emulator')}</span>
           </button>
-        </ToolTip>
+        </Tooltip>
       )}
     </div>
   )

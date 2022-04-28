@@ -9,7 +9,7 @@ import ToolTip from '../../../components/Shared/ToolTip'
 import { lang } from '../../../components/Shared/translations'
 import { shortControlKey } from '../../../components/Shared/utilities/keyboardShortcuts'
 import { RootReducer } from '../../../reducers'
-import EnterPriseTrial from './EnterpriseTrial'
+import LeftToolbar from './LeftToolbar'
 import RightToolBar from './RightToolbar'
 
 import * as style from './style.module.scss'
@@ -26,7 +26,7 @@ const toggleEmulator = () => {
 const TopNav = (props: Props) => {
   return (
     <nav className={style.topNav}>
-      <EnterPriseTrial />
+      <LeftToolbar />
       <div className={style.layoutControls}>
         <ToolTip
           content={lang.tr('topNav.toggleExplorer', { shortcut: `${shortControlKey} B` })}
