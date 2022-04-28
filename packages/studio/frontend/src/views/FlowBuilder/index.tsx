@@ -41,7 +41,7 @@ const searchTag = '#search:'
 const FlowBuilder = (props: Props) => {
   const { flow } = props.match.params as any
 
-  const diagram: any = useRef(null)
+  let diagram: any = useRef(null)
   const [showSearch, setShowSearch] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
   const [mutex, setMutex] = useState<any>()
