@@ -1,10 +1,10 @@
 import 'reflect-metadata'
 import { EventEmitter2 } from 'eventemitter2'
 import path from 'path'
-import { RuntimeEnvironmentVariables } from 'src/global'
 import yn from 'yn'
 import getos from '../common/getos'
 import { Debug } from '../debug'
+import { RuntimeEnvironmentVariables } from '../global'
 
 export const setupErrorHandlers = () => {
   const printPlainError = (err) => {

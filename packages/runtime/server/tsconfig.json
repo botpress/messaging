@@ -6,24 +6,24 @@
     }
   ],
 
+  // Defaults (don't change this)
+  "extends": "../../../tsconfig.packages.json",
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
-    "sourceMap": true,
-    "strict": true,
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "target": "es2019",
-    "noImplicitAny": false,
-    "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // inversify uses decorators
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "useUnknownInCatchVariables": false,
-    "baseUrl": "./",
-    "outDir": "dist",
-    "typeRoots": ["./src/common"]
+
+    // TODO: should be 2021 but doesn't work due to bluebird-global
+    "target": "es2019",
+    // TODO: remove this (causes 291 errors)
+    "noImplicitAny": false,
+    // TODO: remove this (causes 40 errors)
+    "useUnknownInCatchVariables": false
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts"]
+  "include": ["src"],
+  "exclude": ["dist", "src/**/*.test.ts"]
 }
