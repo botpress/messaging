@@ -12,6 +12,7 @@ import babylon from 'prettier/parser-babylon'
 import prettier from 'prettier/standalone'
 import React from 'react'
 
+// https://github.com/microsoft/monaco-editor/blob/main/docs/integrate-esm.md#using-parcel
 // @ts-ignore
 import EditorWorker from 'url:monaco-editor/esm/vs/editor/editor.worker.js'
 // @ts-ignore
