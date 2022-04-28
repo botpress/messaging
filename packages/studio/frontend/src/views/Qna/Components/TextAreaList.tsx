@@ -28,11 +28,12 @@ interface Props {
 }
 
 const TextAreaList: FC<Props> = ({ contentDirection = 'ltr', ...props }) => {
+  const { duplicateMsg, updateItems, keyPrefix, canAddContent, addItemLabel, label, refItems, placeholder } = props
+
   const [showPicker, setShowPicker] = useState(false)
   const [localItems, setLocalItems] = useState(props.items)
   // Generating unique keys so we don't need to rerender all the list as soon as we add or delete one element
   const [keys, setKeys] = useState(localItems.map((x) => _uniqueId(keyPrefix)))
-  const { duplicateMsg, updateItems, keyPrefix, canAddContent, addItemLabel, label, refItems, placeholder } = props
   const focusedElement = useRef(props.initialFocus || '')
 
   useEffect(() => {
