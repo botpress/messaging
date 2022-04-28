@@ -625,7 +625,7 @@ export interface BotConfig {
   name: string
   description?: string
   category?: string
-  details: BotDetails
+  details?: BotDetails
   author?: string
   disabled?: boolean
   private?: boolean
