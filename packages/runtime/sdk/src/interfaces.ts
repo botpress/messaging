@@ -209,7 +209,7 @@ export namespace IO {
   /**
    * These are the arguments required when creating a new {@link Event}
    */
-  interface EventCtorArgs {
+  export interface EventCtorArgs {
     type: string
     channel: string
     target: string
@@ -261,14 +261,14 @@ export namespace IO {
      * @returns Return whether or not the event has the flag
      * @example event.hasFlag(bp.IO.WellKnownFlags.SKIP_DIALOG_ENGINE)
      */
-    hasFlag(flag: symbol): boolean
+    hasFlag(flag: any): boolean
     /**
      * Sets a flag on the event so it can be intercepted and properly handled if the case applies
      * @param flag The flag symbol to set. {@link IO.WellKnownFlags}
      * @param value The value of the flag.
      * @example event.setFlag(bp.IO.WellKnownFlags.SKIP_DIALOG_ENGINE, true)
      */
-    setFlag(flag: symbol, value: boolean): void
+    setFlag(flag: any, value: boolean): void
   }
 
   export interface ProcessingEntry {
@@ -816,7 +816,7 @@ export interface ContentType {
    * @param channel The channel used to communicate, e.g. channel-web, messenger, twilio, etc.
    * @returns Return an array of rendered Content Elements
    */
-  renderElement: (data: object, channel: string) => object[] | object
+  renderElement: (data: object, channel: string) => object[]
   /**
    * Function that computes the visual representation of the text.
    * This function resides in the javascript definition of the Content Type.

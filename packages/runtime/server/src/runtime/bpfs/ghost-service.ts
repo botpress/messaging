@@ -1,5 +1,5 @@
+import { DirectoryListingOptions, ListenHandle, Logger, UpsertOptions, BotConfig } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { DirectoryListingOptions, ListenHandle, Logger, UpsertOptions, BotConfig } from 'botpress/runtime-sdk'
 import { EventEmitter2 } from 'eventemitter2'
 import fse from 'fs-extra'
 import { inject, injectable, tagged } from 'inversify'

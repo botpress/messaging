@@ -5,7 +5,7 @@ import {
   ContextPrediction as StanContextPrediction,
   EntityPrediction as StanEntityPrediction
 } from '@botpress/nlu-client'
-import { NLU as SDKNLU } from 'botpress/runtime-sdk'
+import { NLU as SDKNLU } from '@botpress/sdk'
 import _ from 'lodash'
 
 export interface BpPredictOutput {

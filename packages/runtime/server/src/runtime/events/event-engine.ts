@@ -1,11 +1,11 @@
-import * as sdk from 'botpress/runtime-sdk'
+import * as sdk from '@botpress/sdk'
+import { IO } from '@botpress/sdk'
 import { inject, injectable, tagged } from 'inversify'
 import joi from 'joi'
 import _ from 'lodash'
 import { VError } from 'verror'
 import yn from 'yn'
 
-import { WellKnownFlags } from '../dialog'
 import { LogLevel } from '../logger'
 import { TimedPerfCounter } from '../misc/timed-perf'
 import { TYPES } from '../types'
@@ -255,7 +255,7 @@ export class EventEngine {
   private async _infoMiddleware(event: sdk.IO.Event) {
     const sendText = async (text) => {
       await this.replyToEvent(event, [{ text, markdown: true }])
-      event.setFlag(WellKnownFlags.SKIP_DIALOG_ENGINE, true)
+      event.setFlag(IO.WellKnownFlags.SKIP_DIALOG_ENGINE, true)
     }
 
     if (event.preview === 'BP_VERSION') {

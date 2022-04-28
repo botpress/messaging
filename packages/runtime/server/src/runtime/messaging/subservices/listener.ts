@@ -1,5 +1,5 @@
 import { ConversationStartedEvent, MessageFeedbackEvent, MessageNewEvent, uuid } from '@botpress/messaging-client'
-import { WellKnownFlags } from '../../dialog'
+import { IO } from '@botpress/sdk'
 import { EventEngine, Event, EventRepository } from '../../events'
 import { MessagingCollector } from './collector'
 import { MessagingInteractor } from './interactor'
@@ -54,7 +54,7 @@ export class MessagingListener {
       target: data.userId,
       botId: this.lifetime.getBotId(clientId)
     })
-    event.setFlag(WellKnownFlags.SKIP_DIALOG_ENGINE, true)
+    event.setFlag(IO.WellKnownFlags.SKIP_DIALOG_ENGINE, true)
 
     return this.eventEngine.sendEvent(event)
   }

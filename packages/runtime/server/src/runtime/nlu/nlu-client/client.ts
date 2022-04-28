@@ -1,6 +1,6 @@
 import { Client, Health, PredictOutput, Specifications } from '@botpress/nlu-client'
+import { CloudConfig } from '@botpress/sdk'
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { CloudConfig } from 'botpress/runtime-sdk'
 import _ from 'lodash'
 import { CloudNluClient } from '../../cloud/nlu'
 

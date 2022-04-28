@@ -1,6 +1,6 @@
+import { Logger } from '@botpress/sdk'
 import { Promise } from 'bluebird'
 import bodyParser from 'body-parser'
-import { Logger } from 'botpress/runtime-sdk'
 import compression from 'compression'
 import cors from 'cors'
 import errorHandler from 'errorhandler'

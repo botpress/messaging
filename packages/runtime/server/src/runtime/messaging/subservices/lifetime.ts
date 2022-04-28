@@ -1,5 +1,5 @@
 import { MessagingClient, uuid } from '@botpress/messaging-client'
-import { BotConfig } from 'botpress/runtime-sdk'
+import { BotConfig } from '@botpress/sdk'
 import { VError } from 'verror'
 import { CloudMessagingChannel } from '../../cloud/messaging'
 import { ConfigProvider } from '../../config'

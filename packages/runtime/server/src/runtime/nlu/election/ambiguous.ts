@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/runtime-sdk'
+import * as sdk from '@botpress/sdk'
 import { allInRange, scaleConfidences } from './math'
 import { NONE_INTENT } from './typings'
 

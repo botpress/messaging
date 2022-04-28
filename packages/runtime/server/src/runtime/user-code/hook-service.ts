@@ -1,5 +1,5 @@
+import * as sdk from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/runtime-sdk'
 import { inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'
 import path from 'path'
@@ -42,73 +42,73 @@ export namespace Hooks {
 
   // Core or runtime hook?
   export class AfterServerStart extends BaseHook {
-    constructor(private bp: typeof sdk) {
+    constructor(private bp: sdk.sdk) {
       super('after_server_start', { bp })
     }
   }
 
   export class AfterBotMount extends BaseHook {
-    constructor(private bp: typeof sdk, botId: string) {
+    constructor(private bp: sdk.sdk, botId: string) {
       super('after_bot_mount', { bp, botId })
     }
   }
 
   export class AfterBotUnmount extends BaseHook {
-    constructor(private bp: typeof sdk, botId: string) {
+    constructor(private bp: sdk.sdk, botId: string) {
       super('after_bot_unmount', { bp, botId })
     }
   }
 
   export class BeforeIncomingMiddleware extends BaseHook {
-    constructor(bp: typeof sdk, event: sdk.IO.Event) {
+    constructor(bp: sdk.sdk, event: sdk.IO.Event) {
       super('before_incoming_middleware', { bp, event })
     }
   }
 
   export class AfterIncomingMiddleware extends BaseHook {
-    constructor(bp: typeof sdk, event: sdk.IO.Event) {
+    constructor(bp: sdk.sdk, event: sdk.IO.Event) {
       super('after_incoming_middleware', { bp, event })
     }
   }
 
   export class BeforeOutgoingMiddleware extends BaseHook {
-    constructor(bp: typeof sdk, event: sdk.IO.Event) {
+    constructor(bp: sdk.sdk, event: sdk.IO.Event) {
       super('before_outgoing_middleware', { bp, event })
     }
   }
 
   export class AfterEventProcessed extends BaseHook {
-    constructor(bp: typeof sdk, event: sdk.IO.Event) {
+    constructor(bp: sdk.sdk, event: sdk.IO.Event) {
       super('after_event_processed', { bp, event })
     }
   }
 
   export class BeforeSessionTimeout extends BaseHook {
-    constructor(bp: typeof sdk, event: sdk.IO.Event) {
+    constructor(bp: sdk.sdk, event: sdk.IO.Event) {
       super('before_session_timeout', { bp, event })
     }
   }
 
   export class BeforeConversationEnd extends BaseHook {
-    constructor(bp: typeof sdk, event: sdk.IO.Event) {
+    constructor(bp: sdk.sdk, event: sdk.IO.Event) {
       super('before_conversation_end', { bp, event })
     }
   }
 
   export class BeforeSuggestionsElection extends BaseHook {
-    constructor(bp: typeof sdk, sessionId: string, event: sdk.IO.Event, suggestions: sdk.IO.Suggestion[]) {
+    constructor(bp: sdk.sdk, sessionId: string, event: sdk.IO.Event, suggestions: sdk.IO.Suggestion[]) {
       super('before_suggestions_election', { bp, sessionId, event, suggestions })
     }
   }
 
   export class BeforeBotImport extends BaseHook {
-    constructor(bp: typeof sdk, botId: string, tmpFolder: string, hookResult: object) {
+    constructor(bp: sdk.sdk, botId: string, tmpFolder: string, hookResult: object) {
       super('before_bot_import', { bp, botId, tmpFolder, hookResult })
     }
   }
 
   export class OnBotError extends BaseHook {
-    constructor(bp: typeof sdk, botId: string, events: sdk.LoggerEntry[]) {
+    constructor(bp: sdk.sdk, botId: string, events: sdk.LoggerEntry[]) {
       super('on_bot_error', { bp, botId, events })
     }
   }

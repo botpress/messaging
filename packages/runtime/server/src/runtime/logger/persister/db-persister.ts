@@ -1,4 +1,4 @@
-import { KnexExtended, Logger, LoggerEntry } from 'botpress/runtime-sdk'
+import { KnexExtended, Logger, LoggerEntry } from '@botpress/sdk'
 import { injectable } from 'inversify'
 import ms from 'ms'
 

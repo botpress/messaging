@@ -6,4 +6,3 @@ export * from './flow/flow-service'
 export * from './dialog.inversify'
 
 export * from './errors'
-export * from './enums'

@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/runtime-sdk'
+import * as sdk from '@botpress/sdk'
 import { NextFunction, Request, Response, Router } from 'express'
 
 const debug = DEBUG('api')

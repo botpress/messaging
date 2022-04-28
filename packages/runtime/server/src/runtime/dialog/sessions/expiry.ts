@@ -1,4 +1,4 @@
-import { BotConfig } from 'botpress/runtime-sdk'
+import { BotConfig } from '@botpress/sdk'
 import _ from 'lodash'
 import moment from 'moment'
 import ms from 'ms'

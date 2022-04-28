@@ -103,7 +103,7 @@ export interface users {
   getAttributes(channel: string, userId: string): Promise<any>
 }
 
-export interface IO {
+export interface io {
   Event: IO.EventConstructor
 }
 

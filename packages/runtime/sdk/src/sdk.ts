@@ -1,10 +1,10 @@
-import { bots, cms, dialog, events, ghost, IO, kvs, messaging, users } from './functions'
+import { bots, cms, dialog, events, ghost, io, kvs, messaging, users } from './functions'
 import { Logger } from './interfaces'
 
 export interface sdk {
   version: string
   logger: Logger
-  IO: IO
+  IO: io
   events: events
   users: users
   dialog: dialog

@@ -1,4 +1,4 @@
-import { IO } from 'botpress/runtime-sdk'
+import { IO } from '@botpress/sdk'
 
 // This function is located here because importing the SDK does not build in test files
 export type EventUnderstanding = IO.EventUnderstanding

@@ -2,6 +2,9 @@
   // Manage references here
   "references": [
     {
+      "path": "../sdk"
+    },
+    {
       "path": "../../messaging/client"
     }
   ],

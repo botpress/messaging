@@ -1,5 +1,5 @@
+import { Logger, RedisLock } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { Logger, RedisLock } from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
 import { Redis } from 'ioredis'
 import _ from 'lodash'

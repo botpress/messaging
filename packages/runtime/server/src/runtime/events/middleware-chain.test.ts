@@ -1,4 +1,4 @@
-import { EventDirection, IO } from 'botpress/runtime-sdk'
+import { EventDirection, IO } from '@botpress/sdk'
 import 'jest-extended'
 import 'reflect-metadata'
 

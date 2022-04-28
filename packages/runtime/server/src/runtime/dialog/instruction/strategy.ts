@@ -1,4 +1,4 @@
-import { IO, Logger } from 'botpress/runtime-sdk'
+import { IO, Logger } from '@botpress/sdk'
 import { inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'
 import { NodeVM } from 'vm2'

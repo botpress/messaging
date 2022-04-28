@@ -1,4 +1,4 @@
-import { FlowNode, IO, Logger } from 'botpress/runtime-sdk'
+import { FlowNode, IO, Logger } from '@botpress/sdk'
 import { inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'
 

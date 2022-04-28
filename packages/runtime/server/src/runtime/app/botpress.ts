@@ -1,5 +1,5 @@
+import * as sdk from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/runtime-sdk'
 
 import { inject, injectable, tagged } from 'inversify'
 import moment from 'moment'
@@ -36,7 +36,7 @@ const DEBOUNCE_DELAY = ms('5s')
 @injectable()
 export class Botpress {
   config!: RuntimeConfig | undefined
-  api!: typeof sdk
+  api!: sdk.sdk
 
   constructor(
     @inject(TYPES.ConfigProvider) private configProvider: ConfigProvider,

@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/runtime-sdk'
+import * as sdk from '@botpress/sdk'
 import _ from 'lodash'
 
 import { detectAmbiguity } from './ambiguous'

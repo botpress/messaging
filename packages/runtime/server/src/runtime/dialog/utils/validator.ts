@@ -1,4 +1,4 @@
-import { Flow } from 'botpress/runtime-sdk'
+import { Flow } from '@botpress/sdk'
 import _ from 'lodash'
 
 export function validateFlowSchema(flow: Flow) {

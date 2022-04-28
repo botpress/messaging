@@ -1,4 +1,4 @@
-import { FlowNode } from 'botpress/runtime-sdk'
+import { FlowNode } from '@botpress/sdk'
 
 import { FlowView } from '../../common/typings'
 

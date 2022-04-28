@@ -1,4 +1,4 @@
-import { Logger, LoggerEntry } from 'botpress/runtime-sdk'
+import { Logger, LoggerEntry } from '@botpress/sdk'
 import { inject, injectable, tagged } from 'inversify'
 import { Redis } from 'ioredis'
 import _ from 'lodash'

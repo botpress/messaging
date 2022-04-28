@@ -1,4 +1,4 @@
-import { Logger } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import { inject, injectable, tagged } from 'inversify'
 import { ConfigProvider } from '../config'
 import { EventEngine, EventRepository } from '../events'

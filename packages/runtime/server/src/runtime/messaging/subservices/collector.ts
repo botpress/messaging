@@ -1,5 +1,5 @@
 import { uuid } from '@botpress/messaging-client'
-import { IO, Logger } from 'botpress/sdk'
+import { IO, Logger } from '@botpress/sdk'
 import LRUCache from 'lru-cache'
 import ms from 'ms'
 import { EventEngine } from '../../events'

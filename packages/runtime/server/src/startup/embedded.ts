@@ -1,4 +1,4 @@
-import sdk from 'botpress/sdk'
+import * as sdk from '@botpress/sdk'
 import { EventEmitter2 } from 'eventemitter2'
 import { RuntimeConfig } from '../runtime/config/runtime.config'
 
@@ -21,9 +21,9 @@ export interface BotpressRuntime {
   ) => Promise<any>
 
   /** These namespaces are provided as-is to be used by the server */
-  events: typeof sdk.events
-  dialog: typeof sdk.dialog
-  users: typeof sdk.users
+  events: sdk.events
+  dialog: sdk.dialog
+  users: sdk.users
 }
 
 export interface RuntimeSetup {

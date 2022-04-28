@@ -1,4 +1,4 @@
-import { Logger } from 'botpress/runtime-sdk'
+import { Logger } from '@botpress/sdk'
 import fse from 'fs-extra'
 import _ from 'lodash'
 import mkdirp from 'mkdirp'

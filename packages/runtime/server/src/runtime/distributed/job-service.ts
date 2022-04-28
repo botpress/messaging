@@ -1,4 +1,4 @@
-import { RedisLock } from 'botpress/runtime-sdk'
+import { RedisLock } from '@botpress/sdk'
 import { injectable } from 'inversify'
 import { Redis } from 'ioredis'
 import moment from 'moment'

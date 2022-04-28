@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/runtime-sdk'
+import * as sdk from '@botpress/sdk'
 import Bottleneck from 'bottleneck'
 import { inject, injectable } from 'inversify'
 import _ from 'lodash'
@@ -8,13 +8,11 @@ import { BotService } from '../bots'
 import { GhostService, ScopedGhostService } from '../bpfs'
 import { CMSService, renderRecursive } from '../cms'
 import * as renderEnums from '../cms/enums'
-import { StateManager, DialogEngine, WellKnownFlags } from '../dialog'
-import * as dialogEnums from '../dialog/enums'
+import { StateManager, DialogEngine } from '../dialog'
 import { SessionIdFactory } from '../dialog/sessions'
 import { EventEngine, EventRepository, Event } from '../events'
 import { KeyValueStore, KvsService } from '../kvs'
 import { LoggerProvider } from '../logger'
-import * as logEnums from '../logger/enums'
 import { MessagingService } from '../messaging'
 import { getMessageSignature } from '../security'
 import { ChannelUserRepository } from '../users'
@@ -32,7 +30,7 @@ const limit = <T extends (...args: any[]) => any>(func: T): T => {
   }
 }
 
-const event = (eventEngine: EventEngine, eventRepo: EventRepository): typeof sdk.events => {
+const event = (eventEngine: EventEngine, eventRepo: EventRepository): sdk.events => {
   return {
     registerMiddleware: (middleware: sdk.IO.MiddlewareDefinition) => {
       eventEngine.register(middleware)
@@ -47,7 +45,7 @@ const event = (eventEngine: EventEngine, eventRepo: EventRepository): typeof sdk
   }
 }
 
-const dialog = (dialogEngine: DialogEngine, stateManager: StateManager): typeof sdk.dialog => {
+const dialog = (dialogEngine: DialogEngine, stateManager: StateManager): sdk.dialog => {
   return {
     createId: SessionIdFactory.createIdFromEvent.bind(SessionIdFactory),
     processEvent: limit(dialogEngine.processEvent.bind(dialogEngine)),
@@ -56,13 +54,13 @@ const dialog = (dialogEngine: DialogEngine, stateManager: StateManager): typeof 
   }
 }
 
-const bots = (botService: BotService): typeof sdk.bots => {
+const bots = (botService: BotService): sdk.bots => {
   return {
     getBotById: limit(botService.findBotById.bind(botService))
   }
 }
 
-const users = (userRepo: ChannelUserRepository): typeof sdk.users => {
+const users = (userRepo: ChannelUserRepository): sdk.users => {
   return {
     getOrCreateUser: limit(userRepo.getOrCreate.bind(userRepo)),
     updateAttributes: limit(userRepo.updateAttributes.bind(userRepo)),
@@ -88,19 +86,19 @@ const scopedKvs = (scopedKvs: KvsService): sdk.KvsService => {
   }
 }
 
-const kvs = (kvs: KeyValueStore): typeof sdk.kvs => {
+const kvs = (kvs: KeyValueStore): sdk.kvs => {
   return {
     forBot: (botId: string) => scopedKvs(kvs.forBot(botId))
   }
 }
 
-const messaging = (messagingService: MessagingService): typeof sdk.messaging => {
+const messaging = (messagingService: MessagingService): sdk.messaging => {
   return {
     forBot: (botId) => messagingService.lifetime.getHttpClient(botId)
   }
 }
 
-const security = (): typeof sdk.security => {
+const security = (): sdk.security => {
   return {
     getMessageSignature
   }
@@ -116,13 +114,13 @@ const scopedGhost = (scopedGhost: ScopedGhostService): sdk.ScopedGhostService =>
   }
 }
 
-const ghost = (ghostService: GhostService): typeof sdk.ghost => {
+const ghost = (ghostService: GhostService): sdk.ghost => {
   return {
     forBot: (botId: string) => scopedGhost(ghostService.forBot(botId))
   }
 }
 
-const cms = (cmsService: CMSService): typeof sdk.cms => {
+const cms = (cmsService: CMSService): sdk.cms => {
   return {
     getContentElement: limit(cmsService.getContentElement.bind(cmsService)),
     getContentElements: limit(cmsService.getContentElements.bind(cmsService)),
@@ -133,7 +131,7 @@ const cms = (cmsService: CMSService): typeof sdk.cms => {
     renderElement: limit((contentId: string, args: any, eventDestination: sdk.IO.EventDestination): Promise<any> => {
       return cmsService.renderElement(contentId, args, eventDestination)
     }),
-    renderTemplate: (templateItem: sdk.cms.TemplateItem, context): sdk.cms.TemplateItem => {
+    renderTemplate: (templateItem: sdk.TemplateItem, context): sdk.TemplateItem => {
       return renderRecursive(templateItem, context)
     }
   }
@@ -141,15 +139,15 @@ const cms = (cmsService: CMSService): typeof sdk.cms => {
 
 @injectable()
 export class BotpressRuntimeAPIProvider {
-  events: typeof sdk.events
-  dialog: typeof sdk.dialog
-  users: typeof sdk.users
-  kvs: typeof sdk.kvs
-  bots: typeof sdk.bots
-  ghost: typeof sdk.ghost
-  cms: typeof sdk.cms
-  messaging: typeof sdk.messaging
-  security: typeof sdk.security
+  events: sdk.events
+  dialog: sdk.dialog
+  users: sdk.users
+  kvs: sdk.kvs
+  bots: sdk.bots
+  ghost: sdk.ghost
+  cms: sdk.cms
+  messaging: sdk.messaging
+  security: sdk.security
 
   constructor(
     @inject(TYPES.DialogEngine) dialogEngine: DialogEngine,
@@ -176,15 +174,11 @@ export class BotpressRuntimeAPIProvider {
   }
 
   @Memoize()
-  async create(loggerName: string, owner: string, augmentApi?: any): Promise<typeof sdk> {
+  async create(loggerName: string, owner: string, augmentApi?: any): Promise<sdk.sdk> {
     const runtimeApi = {
       version: '',
-      LoggerLevel: logEnums.LoggerLevel,
-      LogLevel: logEnums.LogLevel,
-      NodeActionType: dialogEnums.NodeActionType,
       IO: {
-        Event,
-        WellKnownFlags
+        Event
       },
       dialog: this.dialog,
       events: this.events,
@@ -207,10 +201,10 @@ export class BotpressRuntimeAPIProvider {
   }
 }
 
-export function createForGlobalHooks(augmentApi?: any): Promise<typeof sdk> {
+export function createForGlobalHooks(augmentApi?: any): Promise<sdk.sdk> {
   return container.get<BotpressRuntimeAPIProvider>(TYPES.BotpressAPIProvider).create('Hooks', 'hooks', augmentApi)
 }
 
-export function createForAction(augmentApi?: any): Promise<typeof sdk> {
+export function createForAction(augmentApi?: any): Promise<sdk.sdk> {
   return container.get<BotpressRuntimeAPIProvider>(TYPES.BotpressAPIProvider).create('Actions', 'actions', augmentApi)
 }

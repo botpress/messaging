@@ -1,9 +1,8 @@
-import { IO, Logger } from 'botpress/runtime-sdk'
+import { IO, Logger } from '@botpress/sdk'
 import { inject, injectable } from 'inversify'
 import _ from 'lodash'
 import yn from 'yn'
 import { ConfigProvider } from '../config'
-import { WellKnownFlags } from '../dialog'
 import { EventEngine } from '../events'
 import { TYPES } from '../types'
 
@@ -180,7 +179,7 @@ export class NLUInferenceService {
       !this.predictors[event.botId] ||
       !event.preview ||
       EVENTS_TO_IGNORE.includes(event.type) ||
-      event.hasFlag(WellKnownFlags.SKIP_NATIVE_NLU)
+      event.hasFlag(IO.WellKnownFlags.SKIP_NATIVE_NLU)
     )
   }
 }

@@ -1,5 +1,5 @@
+import { IO, Logger, LoggerEntry, LoggerListener } from '@botpress/sdk'
 import { AxiosError } from 'axios'
-import { IO, Logger, LoggerEntry, LoggerListener } from 'botpress/runtime-sdk'
 import chalk from 'chalk'
 import { EventEmitter2 } from 'eventemitter2'
 import { inject, injectable } from 'inversify'

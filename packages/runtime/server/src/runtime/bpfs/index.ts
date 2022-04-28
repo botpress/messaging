@@ -1,4 +1,4 @@
-import { DirectoryListingOptions } from 'botpress/runtime-sdk'
+import { DirectoryListingOptions } from '@botpress/sdk'
 import { ReplaceInFileConfig } from 'replace-in-file'
 
 export interface StorageDriver {

@@ -1,4 +1,4 @@
-import { Flow, FlowNode, IO } from 'botpress/runtime-sdk'
+import { Flow, FlowNode, IO } from '@botpress/sdk'
 
 import { RuntimeConfig } from '../runtime/config'
 

@@ -1,5 +1,5 @@
+import { IO } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { IO } from 'botpress/runtime-sdk'
 import { EventEmitter2 } from 'eventemitter2'
 import { inject, injectable, postConstruct } from 'inversify'
 import _ from 'lodash'

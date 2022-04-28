@@ -1,4 +1,4 @@
-import { IO } from 'botpress/runtime-sdk'
+import { IO } from '@botpress/sdk'
 import _ from 'lodash'
 
 import { EventCommonArgs, OutgoingEventCommonArgs } from './typings'

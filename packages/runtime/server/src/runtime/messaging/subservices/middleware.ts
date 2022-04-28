@@ -1,4 +1,4 @@
-import { IO } from 'botpress/sdk'
+import { IO } from '@botpress/sdk'
 import { formatUrl } from '../../../common/url'
 import { EventEngine } from '../../events'
 import { MessagingCollector } from './collector'

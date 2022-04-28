@@ -1,4 +1,4 @@
-import { IO, NLU } from 'botpress/runtime-sdk'
+import { IO, NLU } from '@botpress/sdk'
 import _ from 'lodash'
 import { getMostConfidentContext } from './most-confident'
 import { NONE_INTENT } from './typings'

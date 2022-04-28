@@ -1,6 +1,6 @@
 // eslint-disable  @typescript-eslint/no-floating-promises
 
-import { IO } from 'botpress/runtime-sdk'
+import { IO } from '@botpress/sdk'
 import 'reflect-metadata'
 
 import { createMockLogger } from '../../misc/utils'

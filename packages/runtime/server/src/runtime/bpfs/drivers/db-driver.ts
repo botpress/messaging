@@ -1,5 +1,4 @@
-import { Promise } from 'bluebird'
-import { DirectoryListingOptions } from 'botpress/runtime-sdk'
+import { DirectoryListingOptions } from '@botpress/sdk'
 import { inject, injectable } from 'inversify'
 import { nanoid } from 'nanoid'
 import path from 'path'

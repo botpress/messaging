@@ -1,4 +1,4 @@
-import { BotConfig } from 'botpress/runtime-sdk'
+import { BotConfig } from '@botpress/sdk'
 import { inject, injectable } from 'inversify'
 import _ from 'lodash'
 

@@ -31,6 +31,7 @@
     "@babel/traverse": "^7.11.0",
     "@botpress/messaging-client": "1.2.0",
     "@botpress/nlu-client": "1.0.0-rc.2",
+    "@botpress/sdk": "0.0.1",
     "axios": "^0.21.1",
     "bluebird": "^3.7.2",
     "body-parser": "^1.18.3",

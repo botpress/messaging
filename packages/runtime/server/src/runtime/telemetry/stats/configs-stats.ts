@@ -1,5 +1,4 @@
-import { BotConfig } from 'botpress/runtime-sdk'
-import { BotDetails } from 'botpress/sdk'
+import { BotDetails, BotConfig } from '@botpress/sdk'
 import fse from 'fs-extra'
 import { inject, injectable } from 'inversify'
 import defaultJsonBuilder from 'json-schema-defaults'

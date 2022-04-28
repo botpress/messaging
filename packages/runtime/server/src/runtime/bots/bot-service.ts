@@ -1,5 +1,5 @@
+import { BotConfig, Logger } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { BotConfig, Logger } from 'botpress/runtime-sdk'
 import glob from 'glob'
 import { inject, injectable, postConstruct, tagged } from 'inversify'
 import _ from 'lodash'

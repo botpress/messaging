@@ -1,4 +1,4 @@
-import { BotConfig, IO, Logger } from 'botpress/runtime-sdk'
+import { BotConfig, IO, Logger } from '@botpress/sdk'
 import { inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'
 import { Memoize } from 'lodash-decorators'

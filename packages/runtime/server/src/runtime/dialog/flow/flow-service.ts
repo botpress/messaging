@@ -1,5 +1,5 @@
+import { Flow, Logger } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { Flow, Logger } from 'botpress/runtime-sdk'
 import { inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'
 import { ArrayCache } from '../../../common/array-cache'

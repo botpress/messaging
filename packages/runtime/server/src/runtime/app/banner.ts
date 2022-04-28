@@ -1,4 +1,4 @@
-import sdk from 'botpress/runtime-sdk'
+import * as sdk from '@botpress/sdk'
 import chalk from 'chalk'
 import _ from 'lodash'
 import moment from 'moment'

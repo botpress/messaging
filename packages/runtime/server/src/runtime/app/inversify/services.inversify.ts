@@ -1,4 +1,4 @@
-import { IO } from 'botpress/runtime-sdk'
+import { IO } from '@botpress/sdk'
 import { ContainerModule, interfaces } from 'inversify'
 
 import { BotMonitoringService, BotService } from '../../bots'

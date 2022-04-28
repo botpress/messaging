@@ -1,11 +1,11 @@
-import { IO, Logger } from 'botpress/runtime-sdk'
+import { IO, Logger } from '@botpress/sdk'
 import { inject, injectable, postConstruct, tagged } from 'inversify'
 import _ from 'lodash'
 import moment from 'moment'
 import ms from 'ms'
 
 import { ConfigProvider } from '../config'
-import { StateManager, WellKnownFlags } from '../dialog'
+import { StateManager } from '../dialog'
 import { EventEngine } from '../events'
 import { AppLifecycle, AppLifecycleEvents } from '../lifecycle'
 import { TYPES } from '../types'
@@ -79,7 +79,7 @@ export class DecisionEngine {
     }
 
     if (
-      !event.hasFlag(WellKnownFlags.SKIP_DIALOG_ENGINE) &&
+      !event.hasFlag(IO.WellKnownFlags.SKIP_DIALOG_ENGINE) &&
       (!sendSuggestionResult || sendSuggestionResult!.executeFlows)
     ) {
       try {
@@ -108,7 +108,7 @@ export class DecisionEngine {
       }
     }
 
-    if (event.hasFlag(WellKnownFlags.FORCE_PERSIST_STATE)) {
+    if (event.hasFlag(IO.WellKnownFlags.FORCE_PERSIST_STATE)) {
       await this.stateManager.persist(event, false)
     }
   }

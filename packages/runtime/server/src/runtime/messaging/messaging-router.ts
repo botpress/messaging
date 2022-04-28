@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/sdk'
+import * as sdk from '@botpress/sdk'
 import { Router } from 'express'
 import { CustomRouter } from '../app/server-utils'
 import { MessagingService } from './messaging-service'

@@ -1,4 +1,4 @@
-import { NLU as NLUSDK } from 'botpress/runtime-sdk'
+import { NLU as NLUSDK } from '@botpress/sdk'
 import { extractElectedIntentSlot } from './natural-election'
 import { fakeEventUnderstanding } from './tests/fakeEventUnderstanding'
 

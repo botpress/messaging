@@ -1,4 +1,4 @@
-import * as sdk from 'botpress/runtime-sdk'
+import * as sdk from '@botpress/sdk'
 
 export class IOEvent implements sdk.IO.Event {
   public readonly id: string
@@ -68,11 +68,11 @@ export class IOEvent implements sdk.IO.Event {
     return `${process.hrtime.bigint()}${Math.random().toString().slice(-3)}`
   }
 
-  public hasFlag(flag: symbol): boolean {
+  public hasFlag(flag: any): boolean {
     return Boolean(this.flags[flag])
   }
 
-  public setFlag(flag: symbol, value: boolean) {
+  public setFlag(flag: any, value: boolean) {
     this.flags[flag] = value
   }
 

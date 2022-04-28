@@ -1,6 +1,6 @@
 import { MessagingChannel, MessagingChannelOptions, uuid } from '@botpress/messaging-client'
+import { CloudConfig } from '@botpress/sdk'
 import axios, { AxiosRequestConfig } from 'axios'
-import { CloudConfig } from 'botpress/runtime-sdk'
 import { VError } from 'verror'
 import { cache } from './cache'
 import { createOauthTokenClient, errorInterceptor, requestInterceptor } from './oauth'

@@ -1,12 +1,12 @@
+import * as sdk from '@botpress/sdk'
+import { IO } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
 import _ from 'lodash'
 
 import { BotService } from '../bots'
 import { GhostService } from '../bpfs'
 import { CMSService } from '../cms'
-import { WellKnownFlags } from '../dialog'
 import { EventEngine } from '../events'
 import { TYPES } from '../types'
 import { QnaEntry, QnaItem } from './types'
@@ -44,7 +44,7 @@ export class QnaService {
       name: 'qna.incoming',
       direction: 'incoming',
       handler: async (event: any, next) => {
-        if (!event.hasFlag(WellKnownFlags.SKIP_QNA_PROCESSING)) {
+        if (!event.hasFlag(IO.WellKnownFlags.SKIP_QNA_PROCESSING)) {
           try {
             const { defaultLang, qnaDisabled } = await this._getBotConfig(event.botId)
             if (defaultLang && !qnaDisabled) {

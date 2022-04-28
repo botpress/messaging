@@ -1,4 +1,4 @@
-import { Paging, User } from 'botpress/runtime-sdk'
+import { GetOrCreateResult, Paging, User } from '@botpress/sdk'
 import { inject, injectable, postConstruct } from 'inversify'
 import Knex from 'knex'
 import _ from 'lodash'
@@ -92,7 +92,7 @@ export class ChannelUserRepository {
     return `${channel}_${userId}`
   }
 
-  async getOrCreate(channel: string, id: string, botId?: string): Knex.GetOrCreateResult<User> {
+  async getOrCreate(channel: string, id: string, botId?: string): GetOrCreateResult<User> {
     channel = channel.toLowerCase()
     const cacheKey = this.getCacheKey(channel, id)
 

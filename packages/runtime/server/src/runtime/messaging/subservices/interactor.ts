@@ -1,5 +1,5 @@
 import { MessagingChannel, MessagingClient } from '@botpress/messaging-client'
-import { Logger } from 'botpress/sdk'
+import { Logger } from '@botpress/sdk'
 import { CloudMessagingChannel } from '../../cloud/messaging'
 
 export class MessagingInteractor {

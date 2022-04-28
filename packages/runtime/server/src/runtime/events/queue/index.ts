@@ -1,4 +1,4 @@
-import { IO } from 'botpress/runtime-sdk'
+import { IO } from '@botpress/sdk'
 
 export interface QueueOptions {
   retries: number

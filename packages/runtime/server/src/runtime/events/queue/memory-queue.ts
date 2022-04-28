@@ -1,5 +1,5 @@
+import { IO, Logger } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import { IO, Logger } from 'botpress/runtime-sdk'
 
 import { inject, injectable, optional, tagged } from 'inversify'
 import { nanoid } from 'nanoid'

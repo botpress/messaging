@@ -1,5 +1,5 @@
+import * as sdk from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import * as sdk from 'botpress/runtime-sdk'
 import ms from 'ms'
 
 import { addStepToEvent, StepScopes, StepStatus } from './utils'
