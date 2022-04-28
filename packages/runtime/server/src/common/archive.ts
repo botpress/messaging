@@ -1,4 +1,3 @@
-import 'bluebird-global'
 import fse from 'fs-extra'
 import glob from 'glob'
 import mkdirp from 'mkdirp'

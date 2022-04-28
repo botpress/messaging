@@ -1,4 +1,3 @@
-import 'bluebird-global'
 import os from 'os'
 import { OSDistribution } from '../global'
 

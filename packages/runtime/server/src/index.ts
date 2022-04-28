@@ -1,3 +1,4 @@
+import 'bluebird-global'
 import './rewire'
 
 process.IS_STANDALONE = true

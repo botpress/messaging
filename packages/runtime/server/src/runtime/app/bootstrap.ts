@@ -1,5 +1,3 @@
-import 'bluebird-global'
-
 import { RuntimeSetup } from '../../startup/embedded'
 import { BotpressApp, createApp, createLoggerProvider } from '../app/core-loader'
 import { LoggerProvider, LogLevel } from '../logger'

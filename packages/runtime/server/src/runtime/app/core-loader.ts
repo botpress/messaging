@@ -1,4 +1,3 @@
-import 'bluebird-global'
 import 'reflect-metadata'
 
 import { FatalError } from '../../errors'
