@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Highlighter from 'react-highlight-words'
 import Select from 'react-select'
 
-import style from './actionDropdown.scss'
+import * as style from './ActionDropdown.module.scss'
 
 export default class SelectActionDropdown extends Component<any> {
   private _inputValue: string
