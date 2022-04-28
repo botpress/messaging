@@ -37,6 +37,15 @@ jobs:
       webchat: ${{ steps.changed.outputs.webchat }}
       runtime: ${{ steps.changed.outputs.runtime }}
 
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+      - name: Test
+        run: |
+          echo ${{ needs.check.outputs.messaging
+
   server:
     name: Server
     runs-on: ubuntu-latest
