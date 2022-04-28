@@ -32,7 +32,7 @@ export class CMSRouter extends CustomStudioRouter {
   private contentElementsWithPreviews: ContentElementsByType | null = null
 
   constructor(services: StudioServices) {
-    super('CMS', services.logger)
+    super('CMS', services.logger, services.nlu)
     this.setupRoutes()
   }
 

@@ -5,7 +5,7 @@ import { CustomStudioRouter } from '../utils/custom-studio-router'
 
 export class ConfigRouter extends CustomStudioRouter {
   constructor(services: StudioServices) {
-    super('Config', services.logger)
+    super('Config', services.logger, services.nlu)
   }
 
   setupRoutes() {

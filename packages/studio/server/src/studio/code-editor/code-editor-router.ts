@@ -26,7 +26,7 @@ const permissions = {
 
 export class CodeEditorRouter extends CustomStudioRouter {
   constructor(services: StudioServices) {
-    super('CodeEditor', services.logger)
+    super('CodeEditor', services.logger, services.nlu)
     this.setupRoutes()
   }
 

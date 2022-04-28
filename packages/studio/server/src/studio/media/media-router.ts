@@ -33,7 +33,7 @@ class MediaRouter extends CustomStudioRouter {
   }
 
   constructor(services: StudioServices) {
-    super('User', services.logger)
+    super('User', services.logger, services.nlu)
   }
 
   async setupRoutes() {

@@ -12,7 +12,7 @@ import { CustomStudioRouter } from '../utils/custom-studio-router'
 
 export class ActionsRouter extends CustomStudioRouter {
   constructor(services: StudioServices) {
-    super('Actions', services.logger)
+    super('Actions', services.logger, services.nlu)
   }
 
   setupRoutes() {
