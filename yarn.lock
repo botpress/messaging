@@ -2986,7 +2986,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     replace-in-file: ^4.1.1
     semver: ^7.3.5
-    sqlite3: 4.2.0
+    sqlite3: ^5.0.2
     tar: ^4.4.19
     tmp: ^0.0.33
     universal-analytics: ^0.4.20
@@ -28473,16 +28473,6 @@ __metadata:
   version: 1.0.3
   resolution: "sprintf-js@npm:1.0.3"
   checksum: 19d79aec211f09b99ec3099b5b2ae2f6e9cdefe50bc91ac4c69144b6d3928a640bb6ae5b3def70c2e85a2c3d9f5ec2719921e3a59d3ca3ef4b2fd1a4656a0df3
-  languageName: node
-  linkType: hard
-
-"sqlite3@npm:4.2.0":
-  version: 4.2.0
-  resolution: "sqlite3@npm:4.2.0"
-  dependencies:
-    nan: ^2.12.1
-    node-pre-gyp: ^0.11.0
-  checksum: 4f378ec0ea6b878775af3c31d45925257273d5e13991fbbd28ac855584805c71c5de0e0f616aebadc6d6dea193817e02512d578ff47b99724987ac5c5d6ba222
   languageName: node
   linkType: hard
 

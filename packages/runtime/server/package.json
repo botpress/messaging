@@ -83,7 +83,7 @@
     "reflect-metadata": "^0.1.13",
     "replace-in-file": "^4.1.1",
     "semver": "^7.3.5",
-    "sqlite3": "4.2.0",
+    "sqlite3": "^5.0.2",
     "tar": "^4.4.19",
     "tmp": "^0.0.33",
     "universal-analytics": "^0.4.20",
