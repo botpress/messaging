@@ -290,12 +290,11 @@ ${_.repeat(' ', 9)}========================================`)
   }
 
   private async _getCurrentDbVersion(): Promise<string> {
-    const query = await this.database
+    const [query] = await this.database
       .knex('srv_metadata')
       .select('server_version')
       .orderBy('created_at', 'desc')
       .then()
-      .get(0)
 
     return query?.server_version || this.configVersion
   }

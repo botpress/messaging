@@ -41,9 +41,7 @@ export const setupProcessVars = () => {
   }
 
   process.LOADED_MODULES = {}
-  process.PROJECT_LOCATION = process.pkg
-    ? path.dirname(process.execPath) // We point at the binary path
-    : path.join(__dirname, '..') // e.g. /dist/..
+  process.PROJECT_LOCATION = path.join(__dirname, '../../dist')
 }
 
 export const loadEnvVars = () => {

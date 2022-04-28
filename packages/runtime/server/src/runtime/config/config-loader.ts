@@ -1,15 +1,13 @@
 import { BotConfig } from 'botpress/runtime-sdk'
-import fs from 'fs'
 import { inject, injectable } from 'inversify'
-import defaultJsonBuilder from 'json-schema-defaults'
 import _ from 'lodash'
-import path from 'path'
 
 import { FatalError } from '../../errors'
 import { GhostService } from '../bpfs'
 import { RuntimeConfig } from '../config'
 import { stringify } from '../misc/utils'
 import { TYPES } from '../types'
+import { DefaultRuntimeConfig } from './runtime.config.default'
 
 @injectable()
 export class ConfigProvider {
@@ -53,35 +51,16 @@ export class ConfigProvider {
     return config
   }
 
-  private async _getBotpressConfigSchema(): Promise<object> {
-    return this.ghostService.root().readFileAsObject<any>('/', 'runtime.config.schema.json')
-  }
-
   public async createDefaultConfigIfMissing() {
-    await this._copyConfigSchemas()
-
     if (!(await this.ghostService.global().fileExists('/', 'runtime.config.json'))) {
-      const botpressConfigSchema = await this._getBotpressConfigSchema()
-      const defaultConfig: RuntimeConfig = defaultJsonBuilder(botpressConfigSchema)
+      const defaultConfig: Partial<RuntimeConfig> = DefaultRuntimeConfig
 
       const config = {
-        $schema: '../runtime.config.schema.json',
         ...defaultConfig,
         version: process.BOTPRESS_VERSION
       }
 
       await this.ghostService.global().upsertFile('/', 'runtime.config.json', stringify(config))
-    }
-  }
-
-  private async _copyConfigSchemas() {
-    const schemasToCopy = ['runtime.config.schema.json']
-
-    for (const schema of schemasToCopy) {
-      if (!(await this.ghostService.root().fileExists('/', schema))) {
-        const schemaContent = fs.readFileSync(path.join(__dirname, 'schemas', schema))
-        await this.ghostService.root().upsertFile('/', schema, schemaContent)
-      }
     }
   }
 
