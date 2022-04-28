@@ -127,7 +127,7 @@ export class GhostService {
       { botId }
     )
 
-    const listenForUnmount = args => {
+    const listenForUnmount = (args) => {
       if (args && args.botId === botId) {
         scopedGhost.events.removeAllListeners()
       } else {
@@ -211,8 +211,8 @@ export class ScopedGhostService {
     return forceForwardSlashes(path.join(folder, sanitize(path.basename(fullPath))))
   }
 
-  objectCacheKey = str => `object::${str}`
-  bufferCacheKey = str => `buffer::${str}`
+  objectCacheKey = (str) => `object::${str}`
+  bufferCacheKey = (str) => `buffer::${str}`
 
   private async _invalidateFile(fileName: string) {
     await this.cache.invalidate(this.objectCacheKey(fileName))
@@ -230,7 +230,7 @@ export class ScopedGhostService {
 
   async ensureDirs(rootFolder: string, directories: string[]): Promise<void> {
     if (!this.useDbDriver) {
-      await Promise.mapSeries(directories, d => this.diskDriver.createDir(this._normalizeFileName(rootFolder, d)))
+      await Promise.mapSeries(directories, (d) => this.diskDriver.createDir(this._normalizeFileName(rootFolder, d)))
     }
   }
 
@@ -278,7 +278,7 @@ export class ScopedGhostService {
       await this._assertBotUnlocked(rootFolder)
     }
 
-    await Promise.all(content.map(c => this.upsertFile(rootFolder, c.name, c.content)))
+    await Promise.all(content.map((c) => this.upsertFile(rootFolder, c.name, c.content)))
   }
 
   /**
@@ -298,9 +298,9 @@ export class ScopedGhostService {
 
     const diskRevs = await this.diskDriver.listRevisions(this.baseDir)
     const dbRevs = await this.dbDriver.listRevisions(this.baseDir)
-    const syncedRevs = _.intersectionBy(diskRevs, dbRevs, x => `${x.path} | ${x.revision}`)
+    const syncedRevs = _.intersectionBy(diskRevs, dbRevs, (x) => `${x.path} | ${x.revision}`)
 
-    await Promise.each(syncedRevs, rev => this.dbDriver.deleteRevision(rev.path, rev.revision))
+    await Promise.each(syncedRevs, (rev) => this.dbDriver.deleteRevision(rev.path, rev.revision))
     await this._updateProduction(localFiles)
   }
 
@@ -308,12 +308,12 @@ export class ScopedGhostService {
     // Delete the prod files that has been deleted from disk
     const prodFiles = await this.dbDriver.directoryListing(this._normalizeFolderName('./'))
     const filesToDelete = _.difference(prodFiles, localFiles)
-    await Promise.map(filesToDelete, filePath =>
+    await Promise.map(filesToDelete, (filePath) =>
       this.dbDriver.deleteFile(this._normalizeFileName('./', filePath), false)
     )
 
     // Overwrite all of the prod files with the local files
-    await Promise.each(localFiles, async file => {
+    await Promise.each(localFiles, async (file) => {
       const filePath = this._normalizeFileName('./', file)
       const content = await this.diskDriver.readFile(filePath)
       await this.dbDriver.upsertFile(filePath, content, false)
@@ -323,7 +323,7 @@ export class ScopedGhostService {
   public async exportToDirectory(directory: string, excludes?: string | string[]): Promise<string[]> {
     const allFiles = await this.directoryListing('./', '*.*', excludes, true)
 
-    for (const file of allFiles.filter(x => x !== 'revisions.json')) {
+    for (const file of allFiles.filter((x) => x !== 'revisions.json')) {
       const content = await this.primaryDriver.readFile(this._normalizeFileName('./', file))
       const outPath = path.join(directory, file)
       mkdirp.sync(path.dirname(outPath))
@@ -343,7 +343,7 @@ export class ScopedGhostService {
   public async importFromDirectory(directory: string) {
     const filenames = await this.diskDriver.absoluteDirectoryListing(directory)
 
-    const files = filenames.map(file => {
+    const files = filenames.map((file) => {
       return {
         name: file,
         content: fse.readFileSync(path.join(directory, file))
@@ -465,9 +465,9 @@ export class ScopedGhostService {
     }
 
     const remoteFiles = await this.dbDriver.directoryListing(this._normalizeFolderName(rootFolder))
-    const filePath = filename => this._normalizeFileName(rootFolder, filename)
+    const filePath = (filename) => this._normalizeFileName(rootFolder, filename)
 
-    await Promise.mapSeries(remoteFiles, async file =>
+    await Promise.mapSeries(remoteFiles, async (file) =>
       this.diskDriver.upsertFile(filePath(file), await this.dbDriver.readFile(filePath(file)))
     )
   }
@@ -538,7 +538,7 @@ export class ScopedGhostService {
   }
 
   onFileChanged(callback: (filePath: string) => void): ListenHandle {
-    const cb = file => callback && callback(file)
+    const cb = (file) => callback && callback(file)
     this.events.on('changed', cb)
     return { remove: () => this.events.off('changed', cb) }
   }

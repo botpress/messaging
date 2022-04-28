@@ -19,16 +19,14 @@ export class TelemetryRepository {
   ) {}
 
   async refreshAvailability(): Promise<void> {
-    const time = moment()
-      .subtract(5, 'minute')
-      .toDate()
+    const time = moment().subtract(5, 'minute').toDate()
 
     const events = await this.database.knex
       .from(this.tableName)
       .select('uuid')
       .where(this.database.knex.date.isBefore('lastChanged', time))
 
-    const uuIds = events.map(event => event.uuid)
+    const uuIds = events.map((event) => event.uuid)
 
     await this.updateAvailability(uuIds, true)
   }
@@ -38,7 +36,7 @@ export class TelemetryRepository {
       return
     }
 
-    await Promise.mapSeries(_.chunk(uuIds, 500), async uuIdChunk => {
+    await Promise.mapSeries(_.chunk(uuIds, 500), async (uuIdChunk) => {
       await this.database
         .knex(this.tableName)
         .whereIn('uuid', uuIdChunk)
@@ -58,17 +56,14 @@ export class TelemetryRepository {
       .select('uuid')
       .orderBy('creationDate', 'desc')
       .offset(offset)
-      .then(rows => rows.map(entry => entry.uuid))
+      .then((rows) => rows.map((entry) => entry.uuid))
 
     return this.removeMany(uuIds)
   }
 
   async removeMany(uuIds: string[]): Promise<void> {
-    await Promise.mapSeries(_.chunk(uuIds, 500), async uuIdChunk => {
-      await this.database
-        .knex(this.tableName)
-        .whereIn('uuid', uuIdChunk)
-        .del()
+    await Promise.mapSeries(_.chunk(uuIds, 500), async (uuIdChunk) => {
+      await this.database.knex(this.tableName).whereIn('uuid', uuIdChunk).del()
     })
   }
 
@@ -80,11 +75,11 @@ export class TelemetryRepository {
       .limit(200)
 
     if (events.length > 0) {
-      const uuIds = events.map(event => event.uuid)
+      const uuIds = events.map((event) => event.uuid)
       await this.updateAvailability(uuIds, this.database.knex.bool.false())
     }
 
-    return events.map(event => this.database.knex.json.get(event.payload))
+    return events.map((event) => this.database.knex.json.get(event.payload))
   }
 
   async insertPayload(uuid: string, payload: JSON) {
@@ -100,17 +95,10 @@ export class TelemetryRepository {
   }
 
   async getEntry(uuid: string): Promise<TelemetryEntry> {
-    return this.database.knex
-      .from(this.tableName)
-      .select('*')
-      .where('uuid', uuid)
-      .first()
+    return this.database.knex.from(this.tableName).select('*').where('uuid', uuid).first()
   }
 
   async removePayload(uuid: string): Promise<void> {
-    await this.database
-      .knex(this.tableName)
-      .where({ uuid })
-      .del()
+    await this.database.knex(this.tableName).where({ uuid }).del()
   }
 }

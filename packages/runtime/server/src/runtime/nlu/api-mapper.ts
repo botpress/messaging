@@ -10,7 +10,7 @@ import _ from 'lodash'
 
 export interface BpPredictOutput {
   entities: SDKNLU.Entity[]
-  predictions: Dic<SDKNLU.ContextPrediction>
+  predictions: { [key: string]: SDKNLU.ContextPrediction }
   spellChecked: string
 }
 type BpSlotPrediction = SDKNLU.Slot
@@ -46,7 +46,7 @@ function mapIntent(intent: StanIntentPrediction): BpIntentPrediction {
     extractor,
     slots: _(slots)
       .map(mapOutputSlot)
-      .keyBy(s => s.name)
+      .keyBy((s) => s.name)
       .value()
   }
 }
@@ -79,7 +79,7 @@ export const mapPredictOutput = (predictOutput: StanPredictOutput): BpPredictOut
   const { contexts, spellChecked, entities } = predictOutput
   return {
     predictions: _(contexts)
-      .keyBy(c => c.name)
+      .keyBy((c) => c.name)
       .mapValues(mapContext)
       .value(),
     spellChecked,

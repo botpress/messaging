@@ -21,7 +21,7 @@ export class ChannelUserRepository {
   private readonly tableName = 'srv_channel_users'
   private readonly botUsersTableName = 'bot_chat_users'
 
-  private batches: Dic<Row> = {}
+  private batches: { [key: string]: Row } = {}
   private flushLock: boolean = false
   private userCache = new LRU({ max: 10000, maxAge: ms('1h') })
   private broadcastDeleteUserCache!: Function
@@ -61,7 +61,9 @@ export class ChannelUserRepository {
       this.batches = _.omit(this.batches, keys)
       // build a master query
       const today = this.database.knex.date.today().toQuery()
-      const values = keys.map(k => this.database.knex.raw('(:botId, :channel, :userId)', original[k] as any)).join(',')
+      const values = keys
+        .map((k) => this.database.knex.raw('(:botId, :channel, :userId)', original[k] as any))
+        .join(',')
       const query = this.database.knex
         .raw(
           // careful if changing this query, make sure it works in both SQLite and Postgres
@@ -73,10 +75,10 @@ export class ChannelUserRepository {
         .toQuery()
 
       await this.database.knex
-        .transaction(async trx => {
+        .transaction(async (trx) => {
           await trx.raw(query)
         })
-        .catch(_err => {
+        .catch((_err) => {
           // we restore rows we couldn't insert
           this.batches = _.merge(original, this.batches)
         })
@@ -138,7 +140,7 @@ export class ChannelUserRepository {
         },
         ['attributes', 'channel', 'created_at', 'updated_at']
       )
-      .then(res => {
+      .then((res) => {
         return {
           id: res.id,
           attributes: this.database.knex.json.get(res.attributes),
@@ -208,10 +210,7 @@ export class ChannelUserRepository {
   }
 
   async getAllUsers(paging?: Paging) {
-    let query = this.database
-      .knex(this.tableName)
-      .select('*')
-      .orderBy('created_at', 'asc')
+    let query = this.database.knex(this.tableName).select('*').orderBy('created_at', 'asc')
 
     if (paging) {
       query = query.offset(paging.start).limit(paging.count)
@@ -219,7 +218,7 @@ export class ChannelUserRepository {
 
     const users = await query
 
-    return users.map(user => ({
+    return users.map((user) => ({
       ...user,
       attributes: this.database.knex.json.get(user.attributes)
     }))
@@ -230,7 +229,7 @@ export class ChannelUserRepository {
       .knex<User>(this.tableName)
       .count<Record<string, number>>('user_id as qty')
       .first()
-      .then(result => result!.qty)
+      .then((result) => result!.qty)
 
     // depending on the DB type (sqlite, postgres), the returned type can be string or int. We force int.
     // @ts-ignore

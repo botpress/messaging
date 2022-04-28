@@ -190,7 +190,9 @@ declare module 'botpress/runtime-sdk' {
       end: number
     }
 
-    export type SlotCollection = Dic<Slot>
+    export interface SlotCollection {
+      [key: string]: Slot
+    }
 
     export interface ContextPrediction {
       confidence: number

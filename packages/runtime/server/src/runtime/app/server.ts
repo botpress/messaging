@@ -7,15 +7,12 @@ import express from 'express'
 import rateLimit from 'express-rate-limit'
 import { createServer, Server } from 'http'
 import { inject, injectable, tagged } from 'inversify'
-import _ from 'lodash'
 import ms from 'ms'
 import portFinder from 'portfinder'
 import yn from 'yn'
 
 import { BotService } from '../bots'
 import { ConfigProvider } from '../config'
-import { ConverseService } from '../converse'
-import { EventEngine, EventRepository } from '../events'
 import { AppLifecycle, AppLifecycleEvents } from '../lifecycle'
 import { MessagingRouter, MessagingService } from '../messaging'
 
@@ -160,8 +157,8 @@ export class HTTPServer {
     }
 
     const hostname = config.host === 'localhost' ? undefined : config.host
-    await Promise.fromCallback(callback => {
-      this.httpServer.listen(process.PORT, hostname, config.backlog, callback)
+    await Promise.fromCallback((callback) => {
+      this.httpServer.listen(process.PORT, hostname, config.backlog, callback as () => void)
     })
 
     return this.app

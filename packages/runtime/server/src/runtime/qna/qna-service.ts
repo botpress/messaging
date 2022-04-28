@@ -1,4 +1,3 @@
-import { QnaEntry, QnaItem } from '@botpress/typings/qna'
 import * as sdk from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
 import _ from 'lodash'
@@ -9,6 +8,7 @@ import { CMSService } from '../cms'
 import { WellKnownFlags } from '../dialog'
 import { EventEngine } from '../events'
 import { TYPES } from '../types'
+import { QnaEntry, QnaItem } from './types'
 
 const NLU_PREFIX = '__qna__'
 const TEXT_RENDERER = '#builtin_text'
@@ -131,7 +131,7 @@ export class QnaService {
       questions = questions.slice(opts.start, opts.start + opts.count)
     }
 
-    return Promise.map(questions, itemName => this.getQuestion(itemName, botId))
+    return Promise.map(questions, (itemName) => this.getQuestion(itemName, botId))
   }
 
   private _totalQuestionsCount = async (botId: string): Promise<number> => {
@@ -140,7 +140,7 @@ export class QnaService {
 
   private _filterByContextsAndQuestion = async (botId, question: string, filteredContexts: string[]) => {
     const allQuestions = await this._fetchQuestions(botId)
-    const filteredQuestions = allQuestions.filter(q => {
+    const filteredQuestions = allQuestions.filter((q) => {
       const { questions, contexts } = q.data
 
       const hasMatch =

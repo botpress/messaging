@@ -1,73 +1,7 @@
-declare namespace NodeJS {
-  export interface ExtraRequire {
-    addToNodePath(path: string): void
-    getPaths(): string[]
-    overwritePaths(paths: string[])
-  }
-
-  export interface Global {
-    printErrorDefault(err: unknown): void
-    DEBUG: IDebug
-    BOTPRESS_CORE_EVENT: IEmitCoreEvent
-    BOTPRESS_CORE_EVENT_TYPES: BotpressCoreEvents
-    require: ExtraRequire
-    rewire: (name: string) => string
-    printBotLog(botId: string, args: any[]): void
-    printLog(args: any[]): void
-  }
-
-  export interface Process {
-    VERBOSITY_LEVEL: number
-    IS_PRODUCTION: boolean // TODO: look to remove this
-    BPFS_STORAGE: 'database' | 'disk'
-    APP_SECRET: string
-    HOST: string
-    PORT: number
-    EXTERNAL_URL: string
-    LOCAL_URL: string
-    IS_STANDALONE: boolean
-    PROJECT_LOCATION: string
-    LOADED_MODULES: { [module: string]: string }
-    pkg: any
-    IS_LICENSED?: boolean
-    CLUSTER_ENABLED: boolean
-    ASSERT_LICENSED?: Function
-    TELEMETRY_URL: string
-    BOTPRESS_VERSION: string
-    runtime_env: RuntimeEnvironmentVariables
-    distro: OSDistribution
-    BOTPRESS_EVENTS: any
-    AUTO_MIGRATE: boolean
-    MIGRATE_CMD?: 'up' | 'down'
-    MIGRATE_TARGET?: string
-    MIGRATE_DRYRUN?: boolean
-    IS_FAILSAFE: boolean
-    /** A random ID generated on server start to identify each server in a cluster */
-    SERVER_ID: string
-    DISABLE_GLOBAL_SANDBOX: boolean
-    DISABLE_BOT_SANDBOX: boolean
-    DISABLE_TRANSITION_SANDBOX: boolean
-    DISABLE_CONTENT_SANDBOX: boolean
-
-    // The internal password is used for inter-process communication
-    INTERNAL_PASSWORD: string
-
-    OAUTH_ENDPOINT?: string
-    /** These two endpoints may either be provided as environment variables (when standalone) or from the main process */
-    NLU_ENDPOINT?: string
-    MESSAGING_ENDPOINT?: string
-    MESSAGING_SESSION_COOKIE_NAME?: string
-    SDK_RATE_LIMIT?: string
-  }
-}
-
-declare var process: NodeJS.Process
-declare var global: NodeJS.Global
-
 /**
  * This is a copy of process.env to add typing and documentation to variables
  */
-declare interface RuntimeEnvironmentVariables {
+export interface RuntimeEnvironmentVariables {
   /** Replace the path of the NodeJS Native Extensions for external OS-specific libraries such as fastText and CRFSuite */
   readonly NATIVE_EXTENSIONS_DIR?: string
 
@@ -257,11 +191,21 @@ declare interface RuntimeEnvironmentVariables {
   readonly CORE_DISABLE_FILE_LISTENERS?: boolean
 }
 
-interface IDebug {
+export interface OSDistribution {
+  os: NodeJS.Platform
+  /** The distribution, e.g. "centos", "ubuntu" */
+  dist: string
+  /** If a codename is available, for example "final" or "alpine" */
+  codename: string
+  /** The release number, for example 18.04 */
+  release: string
+}
+
+export interface IDebug {
   (module: string, botId?: string): IDebugInstance
 }
 
-interface IDebugInstance {
+export interface IDebugInstance {
   readonly enabled: boolean
 
   (msg: string, extra?: any): void
@@ -274,20 +218,59 @@ interface IDebugInstance {
   sub(namespace: string): IDebugInstance
 }
 
-declare var DEBUG: IDebug
+declare global {
+  let printErrorDefault: (err: Error) => void
+  let DEBUG: IDebug
+  let rewire: (name: string) => string
+  let printBotLog: (botId: string, args: any[]) => void
+  let printLog: (args: any[]) => void
+  let BOTPRESS_CORE_EVENT: IEmitCoreEvent
 
-declare interface OSDistribution {
-  os: NodeJS.Platform
-  /** The distribution, e.g. "centos", "ubuntu" */
-  dist: string
-  /** If a codename is available, for example "final" or "alpine" */
-  codename: string
-  /** The release number, for example 18.04 */
-  release: string
-}
+  namespace NodeJS {
+    export interface Process {
+      VERBOSITY_LEVEL: number
+      IS_PRODUCTION: boolean // TODO: look to remove this
+      BPFS_STORAGE: 'database' | 'disk'
+      APP_SECRET: string
+      HOST: string
+      PORT: number
+      EXTERNAL_URL: string
+      LOCAL_URL: string
+      IS_STANDALONE: boolean
+      PROJECT_LOCATION: string
+      LOADED_MODULES: { [module: string]: string }
+      pkg: any
+      IS_LICENSED?: boolean
+      CLUSTER_ENABLED: boolean
+      ASSERT_LICENSED?: Function
+      TELEMETRY_URL: string
+      BOTPRESS_VERSION: string
+      runtime_env: RuntimeEnvironmentVariables
+      distro: OSDistribution
+      BOTPRESS_EVENTS: any
+      AUTO_MIGRATE: boolean
+      MIGRATE_CMD?: 'up' | 'down'
+      MIGRATE_TARGET?: string
+      MIGRATE_DRYRUN?: boolean
+      IS_FAILSAFE: boolean
+      /** A random ID generated on server start to identify each server in a cluster */
+      SERVER_ID: string
+      DISABLE_GLOBAL_SANDBOX: boolean
+      DISABLE_BOT_SANDBOX: boolean
+      DISABLE_TRANSITION_SANDBOX: boolean
+      DISABLE_CONTENT_SANDBOX: boolean
 
-declare interface Dic<T> {
-  [Key: string]: T
+      // The internal password is used for inter-process communication
+      INTERNAL_PASSWORD: string
+
+      OAUTH_ENDPOINT?: string
+      /** These two endpoints may either be provided as environment variables (when standalone) or from the main process */
+      NLU_ENDPOINT?: string
+      MESSAGING_ENDPOINT?: string
+      MESSAGING_SESSION_COOKIE_NAME?: string
+      SDK_RATE_LIMIT?: string
+    }
+  }
 }
 
 declare interface BotpressCoreEvents {
@@ -304,5 +287,3 @@ interface IEmitCoreEvent {
     args: { [key in keyof BotpressCoreEvents[T]]: BotpressCoreEvents[T][key] }
   ): void
 }
-
-declare var BOTPRESS_CORE_EVENT: IEmitCoreEvent

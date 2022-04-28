@@ -1,3 +1,4 @@
+import { RuntimeEnvironmentVariables } from './global'
 import { BotpressRuntime, RuntimeSetup } from './startup/embedded'
 import { setupProcess } from './startup/misc'
 

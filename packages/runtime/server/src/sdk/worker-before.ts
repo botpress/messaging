@@ -3,10 +3,11 @@ import path from 'path'
 import { workerData } from 'worker_threads'
 
 import { Distro } from '../common/getos'
+import { RuntimeEnvironmentVariables } from '../global'
 
 process.BOTPRESS_EVENTS = new EventEmitter()
 process.BOTPRESS_EVENTS.setMaxListeners(1000)
-global.BOTPRESS_CORE_EVENT = (event, args) => process.BOTPRESS_EVENTS.emit(event, args)
+BOTPRESS_CORE_EVENT = (event, args) => process.BOTPRESS_EVENTS.emit(event, args)
 
 const processData = workerData?.processData
 if (processData) {

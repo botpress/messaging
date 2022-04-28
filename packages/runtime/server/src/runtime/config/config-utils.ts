@@ -11,7 +11,9 @@ export interface UnionNode {
 
 export interface NestedNode {
   type: 'object'
-  properties?: Dic<SchemaNode>
+  properties?: {
+    [key: string]: SchemaNode
+  }
   additionalProperties?: SchemaNode
 }
 
@@ -26,7 +28,7 @@ const isNested = (node: any): node is NestedNode =>
 
 export function getPropertiesRecursive(node: SchemaNode, path: string = ''): string[] {
   if (isUnion(node)) {
-    return _.flatMap(node.anyOf, value => getPropertiesRecursive(value, path))
+    return _.flatMap(node.anyOf, (value) => getPropertiesRecursive(value, path))
   }
   if (isNested(node)) {
     return _(node.properties)
@@ -44,14 +46,14 @@ function expandPath(path: string, data: any, knwonPaths: string[]): string[] {
   const idx = path.indexOf(ADD_PROP_KEY)
   const truncated = path.slice(0, idx - 1)
 
-  const knownKeys = knwonPaths.filter(p => p.startsWith(truncated)).map(p => p.slice(truncated.length + 1))
+  const knownKeys = knwonPaths.filter((p) => p.startsWith(truncated)).map((p) => p.slice(truncated.length + 1))
 
   const expanded = _.chain(data)
     .get(truncated)
     .keys()
-    .filter(key => !knownKeys.some(p => p.startsWith(key)))
-    .map(k => path.replace(ADD_PROP_KEY, k))
-    .thru(paths => (paths.length ? resolveAdditionalProperties(paths, data) : paths))
+    .filter((key) => !knownKeys.some((p) => p.startsWith(key)))
+    .map((k) => path.replace(ADD_PROP_KEY, k))
+    .thru((paths) => (paths.length ? resolveAdditionalProperties(paths, data) : paths))
     .value()
 
   return [truncated, ...expanded]
@@ -73,7 +75,7 @@ function splitNeedsResolutionPaths(paths: string[]): [string[], string[]] {
 export function resolveAdditionalProperties(paths: string[], runtimeData: any): string[] {
   const [ok, needsResolve] = splitNeedsResolutionPaths(paths)
   return _(needsResolve)
-    .flatMap(p => expandPath(p, runtimeData, ok))
+    .flatMap((p) => expandPath(p, runtimeData, ok))
     .uniq()
     .concat(ok)
     .sort()

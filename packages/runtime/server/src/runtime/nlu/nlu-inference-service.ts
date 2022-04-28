@@ -38,7 +38,7 @@ interface PredictionArgs {
 export class NLUInferenceService {
   private nluEnabled: boolean = false
   private _nluEndpoint!: string
-  private _clientPerBot: Dic<NLUClient> = {}
+  private _clientPerBot: { [key: string]: NLUClient } = {}
   private predictors: { [botId: string]: Predictor } = {}
 
   constructor(
@@ -125,7 +125,7 @@ export class NLUInferenceService {
     return naturalElection(electionInput)
   }
 
-  private _modelIdGetter = (botId: string) => async (): Promise<Dic<string>> => {
+  private _modelIdGetter = (botId: string) => async (): Promise<{ [key: string]: string }> => {
     // TODO: implement some caching to prevent from reading bot config at each predict
     const botConfig = await this.configProvider.getBotConfig(botId)
     return botConfig.nluModels ?? {}
@@ -164,7 +164,7 @@ export class NLUInferenceService {
     }
 
     try {
-      const sensitiveEntities = event.nlu.entities.filter(ent => ent.meta.sensitive)
+      const sensitiveEntities = event.nlu.entities.filter((ent) => ent.meta.sensitive)
       for (const entity of sensitiveEntities) {
         const stars = '*'.repeat(entity.data.value.length)
         event.payload.text = event.payload.text.replace(entity.data.value, stars)

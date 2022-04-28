@@ -11,7 +11,7 @@ import { showBanner } from './banner'
 async function getLogger(provider: LoggerProvider, loggerName: string) {
   const logger = await provider(loggerName)
 
-  global.printErrorDefault = err => {
+  printErrorDefault = (err) => {
     logger.attachError(err).error('Unhandled Rejection')
   }
 
@@ -21,18 +21,14 @@ async function getLogger(provider: LoggerProvider, loggerName: string) {
 async function setupDebugLogger(provider: LoggerProvider) {
   const logger = await provider('')
 
-  global.printBotLog = (botId, args) => {
+  printBotLog = (botId, args) => {
     const message = args[0]
     const rest = args.slice(1)
 
-    logger
-      .level(LogLevel.DEBUG)
-      .persist(false)
-      .forBot(botId)
-      .debug(message.trim(), rest)
+    logger.level(LogLevel.DEBUG).persist(false).forBot(botId).debug(message.trim(), rest)
   }
 
-  global.printLog = args => {
+  printLog = (args) => {
     const message = args[0]
     const rest = args.slice(1)
 
@@ -76,7 +72,7 @@ const setupStandalone = async (app: BotpressApp) => {
     logger
   })
 
-  await app.botpress.start().catch(err => {
+  await app.botpress.start().catch((err) => {
     logger.attachError(err).error('Error starting Botpress')
 
     if (!process.IS_FAILSAFE) {

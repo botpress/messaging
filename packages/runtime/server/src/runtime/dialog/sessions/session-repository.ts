@@ -1,7 +1,6 @@
 import * as sdk from 'botpress/runtime-sdk'
 import { inject, injectable } from 'inversify'
 import Knex from 'knex'
-import _ from 'lodash'
 
 import Database from '../../database'
 import { TYPES } from '../../types'
@@ -67,12 +66,9 @@ export class SessionRepository {
   }
 
   async get(id: string): Promise<DialogSession> {
-    const session = <DialogSession>await this.database
-      .knex<DialogSession>(this.tableName)
-      .where({ id })
-      .select('*')
-      .first()
-      .then()
+    const session = <DialogSession>(
+      await this.database.knex<DialogSession>(this.tableName).where({ id }).select('*').first().then()
+    )
 
     if (session) {
       session.context = this.database.knex.json.get(session.context)
@@ -98,8 +94,8 @@ export class SessionRepository {
       .select('id')
       .limit(250)
       .orderBy('modified_on')
-      .then(rows => {
-        return rows.map(r => r.id)
+      .then((rows) => {
+        return rows.map((r) => r.id)
       })) as string[]
   }
 
@@ -131,9 +127,6 @@ export class SessionRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this.database
-      .knex(this.tableName)
-      .where({ id })
-      .del()
+    await this.database.knex(this.tableName).where({ id }).del()
   }
 }

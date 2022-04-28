@@ -1,11 +1,11 @@
 import * as sdk from 'botpress/runtime-sdk'
 import { inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'
-import ms from 'ms'
 import path from 'path'
 import { NodeVM } from 'vm2'
 
 import { ActionScope } from '../../common/typings'
+import { IDebugInstance } from '../../global'
 import { GhostService } from '../bpfs'
 import { addErrorToEvent, addStepToEvent, StepScopes, StepStatus } from '../events'
 import { UntrustedSandbox } from '../misc/code-sandbox'
@@ -138,8 +138,8 @@ export class HookService {
     this._scriptsCache.clear()
 
     Object.keys(require.cache)
-      .filter(r => r.match(/(\\|\/)(hooks|shared_libs|libraries)(\\|\/)/g))
-      .map(file => delete require.cache[file])
+      .filter((r) => r.match(/(\\|\/)(hooks|shared_libs|libraries)(\\|\/)/g))
+      .map((file) => delete require.cache[file])
 
     clearRequireCache()
   }
@@ -147,7 +147,7 @@ export class HookService {
   async executeHook(hook: Hooks.BaseHook): Promise<void> {
     const botId = hook.args?.event?.botId || hook.args?.botId
     const scripts = await this.extractScripts(hook, botId)
-    await Promise.mapSeries(_.orderBy(scripts, ['filename'], ['asc']), script => this.runScript(script, hook))
+    await Promise.mapSeries(_.orderBy(scripts, ['filename'], ['asc']), (script) => this.runScript(script, hook))
   }
 
   private async extractScripts(hook: Hooks.BaseHook, botId?: string): Promise<HookScript[]> {
@@ -159,11 +159,13 @@ export class HookService {
 
     try {
       const globalHooks = filterDisabled(await this.ghost.global().directoryListing(`hooks/${hook.folder}`, '*.js'))
-      const scripts: HookScript[] = await Promise.map(globalHooks, async path => this._getHookScript(hook.folder, path))
+      const scripts: HookScript[] = await Promise.map(globalHooks, async (path) =>
+        this._getHookScript(hook.folder, path)
+      )
 
       if (botId) {
         const botHooks = filterDisabled(await this.ghost.forBot(botId).directoryListing(`hooks/${hook.folder}`, '*.js'))
-        scripts.push(...(await Promise.map(botHooks, async path => this._getHookScript(hook.folder, path, botId))))
+        scripts.push(...(await Promise.map(botHooks, async (path) => this._getHookScript(hook.folder, path, botId))))
       }
 
       this._scriptsCache.set(scriptKey, scripts)
@@ -281,7 +283,7 @@ export class HookService {
     await vmRunner
       .runInVm(vm, hookScript.code, hookScript.path)
       .then(() => this.addEventStep(hookScript.name, 'completed', hook))
-      .catch(err => {
+      .catch((err) => {
         this.addEventStep(hookScript.name, 'error', hook, err)
         this.logScriptError(err, botId, hookScript.path, hook.folder)
 
@@ -294,10 +296,7 @@ export class HookService {
   private logScriptError(err: Error, botId: string, path: string, folder: string) {
     const message = `An error occurred on "${path}" on "${folder}". ${err}`
     if (botId) {
-      this.logger
-        .forBot(botId)
-        .attachError(err)
-        .error(message)
+      this.logger.forBot(botId).attachError(err).error(message)
     } else {
       this.logger.attachError(err).error(message)
     }

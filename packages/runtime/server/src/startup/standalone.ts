@@ -10,5 +10,5 @@ loadEnvVars()
 try {
   require('./cli')
 } catch (err) {
-  global.printErrorDefault(err)
+  printErrorDefault(err)
 }

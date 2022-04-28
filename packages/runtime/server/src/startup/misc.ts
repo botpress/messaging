@@ -1,12 +1,13 @@
 import 'reflect-metadata'
 import { EventEmitter2 } from 'eventemitter2'
 import path from 'path'
+import { RuntimeEnvironmentVariables } from 'src/global'
 import yn from 'yn'
 import getos from '../common/getos'
 import { Debug } from '../debug'
 
 export const setupErrorHandlers = () => {
-  const printPlainError = err => {
+  const printPlainError = (err) => {
     console.error('Error starting botpress')
     console.error(err)
 
@@ -17,34 +18,15 @@ export const setupErrorHandlers = () => {
     }
   }
 
-  global.DEBUG = Debug
-  global.printErrorDefault = printPlainError
+  DEBUG = Debug
+  printErrorDefault = printPlainError
 
-  const originalWrite = process.stdout.write
-
-  const shouldDiscardError = message =>
-    !![
-      '[DEP0005]' // Buffer() deprecation warning
-    ].find(e => message.indexOf(e) >= 0)
-
-  function stripDeprecationWrite(buffer: string, encoding: string, cb?: Function | undefined): boolean
-  function stripDeprecationWrite(buffer: string | Buffer, cb?: Function | undefined): boolean
-  function stripDeprecationWrite(this: Function): boolean {
-    if (typeof arguments[0] === 'string' && shouldDiscardError(arguments[0])) {
-      return (arguments[2] || arguments[1])()
-    }
-
-    return originalWrite.apply(this, (arguments as never) as [string])
-  }
-
-  process.stderr.write = stripDeprecationWrite
-
-  process.on('unhandledRejection', err => {
-    global.printErrorDefault(err)
+  process.on('unhandledRejection', (err: any) => {
+    printErrorDefault(err)
   })
 
-  process.on('uncaughtException', err => {
-    global.printErrorDefault(err)
+  process.on('uncaughtException', (err) => {
+    printErrorDefault(err)
     if (!process.IS_FAILSAFE) {
       process.exit(1)
     }
@@ -54,7 +36,7 @@ export const setupErrorHandlers = () => {
 export const setupProcessVars = () => {
   process.BOTPRESS_EVENTS = new EventEmitter2()
   process.BOTPRESS_EVENTS.setMaxListeners(1000)
-  global.BOTPRESS_CORE_EVENT = (event, args) => {
+  BOTPRESS_CORE_EVENT = (event, args) => {
     process.BOTPRESS_EVENTS.emit(event, args)
   }
 

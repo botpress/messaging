@@ -22,7 +22,7 @@
     "useUnknownInCatchVariables": false,
     "baseUrl": "./",
     "outDir": "dist",
-    "typeRoots": ["./src/typings", "../../node_modules/@types", "./src/common"]
+    "typeRoots": ["./src/common"]
   },
   "include": ["src/**/*"],
   "exclude": ["src/**/*.test.ts"]

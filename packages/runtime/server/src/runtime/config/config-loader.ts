@@ -2,7 +2,7 @@ import { BotConfig } from 'botpress/runtime-sdk'
 import fs from 'fs'
 import { inject, injectable } from 'inversify'
 import defaultJsonBuilder from 'json-schema-defaults'
-import _, { PartialDeep } from 'lodash'
+import _ from 'lodash'
 import path from 'path'
 
 import { FatalError } from '../../errors'
@@ -46,7 +46,7 @@ export class ConfigProvider {
     await this.ghostService.forBot(botId).upsertFile('/', 'bot.config.json', stringify(config), { ignoreLock })
   }
 
-  async mergeBotConfig(botId: string, partialConfig: PartialDeep<BotConfig>, ignoreLock?: boolean): Promise<BotConfig> {
+  async mergeBotConfig(botId: string, partialConfig: Partial<BotConfig>, ignoreLock?: boolean): Promise<BotConfig> {
     const originalConfig = await this.getBotConfig(botId)
     const config = _.merge(originalConfig, partialConfig)
     await this.setBotConfig(botId, config, ignoreLock)
@@ -93,12 +93,12 @@ export class ConfigProvider {
         content = await this.ghostService
           .forBot(botId)
           .readFileAsString('/', fileName)
-          .catch(_err => this.ghostService.forBot(botId).readFileAsString('/', fileName))
+          .catch((_err) => this.ghostService.forBot(botId).readFileAsString('/', fileName))
       } else {
         content = await this.ghostService
           .global()
           .readFileAsString('/', fileName)
-          .catch(_err => this.ghostService.global().readFileAsString('/', fileName))
+          .catch((_err) => this.ghostService.global().readFileAsString('/', fileName))
       }
 
       if (!content) {
