@@ -1,3 +1,6 @@
+// Required to have JSON and Typescript languages
+import 'monaco-editor'
+
 import { Icon, Position, Tooltip, AnchorButton } from '@blueprintjs/core'
 import { EditableFile } from '@botpress/common'
 import cx from 'classnames'
@@ -51,14 +54,13 @@ class Editor extends React.Component<Props> {
   }
 
   setupEditor() {
-    console.log('monaco.languages', monaco.languages)
-    /*     monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
       target: monaco.languages.typescript.ScriptTarget.ESNext,
       module: monaco.languages.typescript.ModuleKind.CommonJS,
       moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
       allowJs: true,
       typeRoots: ['types']
-    }) */
+    })
 
     monaco.languages.registerDocumentFormattingEditProvider('typescript', {
       async provideDocumentFormattingEdits(model, _options, _token) {
@@ -87,13 +89,13 @@ class Editor extends React.Component<Props> {
     const preventBackspace = this.editor.createContextKey('preventBackspace', false)
     const preventDelete = this.editor.createContextKey('preventDelete', false)
 
-    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => this.saveChanges())
-    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.KeyN, this.props.createNewAction)
-    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyP, () =>
+    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => this.saveChanges())
+    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Alt | monaco.KeyCode.KEY_N, this.props.createNewAction)
+    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KEY_P, () =>
       this.editor.trigger('', 'editor.action.quickCommand', '')
     )
 
-    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyA, () => {
+    this.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_A, () => {
       const { startLine, endLine } = this.getEditableZone()
       this.editor.setSelection({
         startLineNumber: startLine + 1,
