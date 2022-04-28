@@ -7,7 +7,7 @@ import { OverlayTrigger, Tooltip, Table } from 'react-bootstrap'
 import { lang } from '../../../components/Shared/translations'
 import SmartInput from '../../../components/SmartInput'
 
-import style from './parameters.scss'
+import * as style from './parameters.module.scss'
 
 export interface Parameter {
   [key: string]: string
