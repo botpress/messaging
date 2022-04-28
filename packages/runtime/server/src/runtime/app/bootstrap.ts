@@ -19,14 +19,13 @@ async function getLogger(provider: LoggerProvider, loggerName: string) {
 async function setupDebugLogger(provider: LoggerProvider) {
   const logger = await provider('')
 
-  printBotLog = (botId, args) => {
+  ;(global as any).printBotLog = (botId, args) => {
     const message = args[0]
     const rest = args.slice(1)
 
     logger.level(LogLevel.DEBUG).persist(false).forBot(botId).debug(message.trim(), rest)
   }
-
-  printLog = (args) => {
+  ;(global as any).printLog = (args) => {
     const message = args[0]
     const rest = args.slice(1)
 

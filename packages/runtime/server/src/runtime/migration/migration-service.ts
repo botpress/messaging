@@ -6,7 +6,6 @@ import { Container, inject, injectable, tagged } from 'inversify'
 import _ from 'lodash'
 import path from 'path'
 import semver from 'semver'
-import stripAnsi from 'strip-ansi'
 import yn from 'yn'
 
 import { container } from '../app/inversify/app.inversify'
@@ -74,7 +73,7 @@ export class MigrationService {
 
     const logs: string[] = []
     const captureLogger = PersistedConsoleLogger.listenForAllLogs((level, message) => {
-      logs.push(`[${level}] ${stripAnsi(message)}`)
+      logs.push(`[${level}] ${message}`)
     })
 
     this.displayMigrationStatus(migrationsToExecute, this.logger)

@@ -6,7 +6,6 @@ import { inject, injectable } from 'inversify'
 import _ from 'lodash'
 import moment from 'moment'
 import os from 'os'
-import stripAnsi from 'strip-ansi'
 import util from 'util'
 
 import { LoggerLevel, LogLevel } from '..'
@@ -192,8 +191,8 @@ export class PersistedConsoleLogger implements Logger {
       hostname: this.serverHostname,
       level: level.toString(),
       scope: displayName,
-      message: stripAnsi(indentedMessage),
-      metadata: stripAnsi(serializedMetadata),
+      message: indentedMessage,
+      metadata: serializedMetadata,
       timestamp: new Date()
     }
 
