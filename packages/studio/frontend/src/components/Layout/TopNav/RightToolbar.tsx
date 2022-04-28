@@ -10,7 +10,7 @@ import { shortControlKey } from '../../../components/Shared/utilities/keyboardSh
 import { RootReducer } from '../../../reducers'
 
 import DeployCloudBtn from './DeployCloudBtn'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   docHints: any[]

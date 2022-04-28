@@ -8,7 +8,7 @@ import mentionStrategy from './mentionStrategy'
 import MentionSuggestions from './MentionSuggestions'
 import MentionSuggestionsPortal from './MentionSuggestionsPortal'
 import mentionSuggestionsStrategy from './mentionSuggestionsStrategy'
-import style from './styles.scss'
+import * as style from './styles.module.scss'
 import suggestionsFilter from './utils/defaultSuggestionsFilter'
 import defaultPositionSuggestions from './utils/positionSuggestions'
 

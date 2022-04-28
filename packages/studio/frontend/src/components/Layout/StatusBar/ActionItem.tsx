@@ -2,19 +2,29 @@ import classNames from 'classnames'
 import _ from 'lodash'
 import React from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
-import sharedStyle from '../TopNav/style.scss'
-import style from './style.scss'
+import * as sharedStyle from '../TopNav/style.module.scss'
+import * as style from './style.module.scss'
 
-const titleToId = (txt) => txt.replace(/[^\W]/gi, '_')
+const titleToId = (txt: string) => txt.replace(/[^\W]/gi, '_')
 
-export default (props) => (
+interface Props {
+  text: string
+  shortcut?: any
+  description?: string
+  className?: string
+  disabled?: boolean
+  layoutv2?: boolean
+  children?: React.ReactNode
+}
+
+export default (props: Props) => (
   <OverlayTrigger
     placement="top"
     delayShow={500}
     overlay={
-      <Tooltip id={titleToId(props.title)}>
+      <Tooltip id={titleToId(props.text)}>
         <div>
-          <strong>{props.title}</strong>
+          <strong>{props.text}</strong>
         </div>
         {props.shortcut && <div className={sharedStyle.shortcut}>{props.shortcut}</div>}
         {props.description}

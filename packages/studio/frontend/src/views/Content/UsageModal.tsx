@@ -6,7 +6,7 @@ import { lang } from '../../components/Shared/translations'
 import { getFlowLabel } from '../../components/Shared/Utils'
 
 import { ContentUsage } from '.'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   usage: ContentUsage[]

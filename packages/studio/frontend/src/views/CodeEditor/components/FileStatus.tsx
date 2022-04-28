@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 import { lang } from '../../../components/Shared/translations'
 import { RootStore } from '../store'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const FileStatus = (props) => {
   const [tab, setTab] = useState<any>('problems')

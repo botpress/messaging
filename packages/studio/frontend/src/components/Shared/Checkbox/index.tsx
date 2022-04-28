@@ -2,7 +2,7 @@ import { Checkbox } from '@blueprintjs/core'
 import cx from 'classnames'
 import React, { FC } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { CheckboxProps } from './typings'
 
 const SharedCheckbox: FC<CheckboxProps> = ({ fieldKey, label, className, checked, onChange, children }) => {

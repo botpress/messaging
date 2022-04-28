@@ -8,7 +8,7 @@ import Widget from '../../Content/Select'
 import ContentPickerWidget from '../../Content/Select/Widget'
 
 import { InputElement } from './InputElement'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   onUpdate: (id: string, index: number) => void

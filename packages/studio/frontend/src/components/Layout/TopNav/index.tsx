@@ -12,7 +12,7 @@ import { RootReducer } from '../../../reducers'
 import EnterPriseTrial from './EnterpriseTrial'
 import RightToolBar from './RightToolbar'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 type Props = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps
 

@@ -98,15 +98,16 @@ export class HTTPServer {
       showPoweredBy: true
     }
 
-    return `
-    window.SEND_USAGE_STATS = ${config.sendUsageStats};
-    window.USE_JWT_COOKIES = ${process.USE_JWT_COOKIES};
-    window.EXPERIMENTAL = ${config.experimental};
-    window.SOCKET_TRANSPORTS = ["${getSocketTransports().join('","')}"];
-    window.SHOW_POWERED_BY = ${!!config.showPoweredBy};
-    window.UUID = "${this.machineId}"
-    window.BP_SERVER_URL = "${process.env.BP_SERVER_URL || ''}"
-    window.IS_STANDALONE = ${process.IS_STANDALONE}`
+    return {
+      SEND_USAGE_STATS: config.sendUsageStats,
+      USE_JWT_COOKIES: process.USE_JWT_COOKIES,
+      EXPERIMENTAL: config.experimental,
+      SOCKET_TRANSPORTS: [getSocketTransports().join('","')],
+      SHOW_POWERED_BY: !!config.showPoweredBy,
+      UUID: this.machineId,
+      BP_SERVER_URL: process.env.BP_SERVER_URL || '',
+      IS_STANDALONE: process.IS_STANDALONE
+    }
   }
 
   async setupCoreProxy() {
@@ -239,11 +240,6 @@ export class HTTPServer {
     })
 
     await this.setupCoreProxy()
-
-    this.app.use('/', (req, res) => {
-      res.sendStatus(200)
-      // res.redirect(`${process.EXTERNAL_URL}`)
-    })
 
     return this.app
   }

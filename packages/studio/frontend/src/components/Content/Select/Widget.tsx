@@ -13,7 +13,7 @@ import ActionItem from '../../../views/FlowBuilder/common/action'
 import withLanguage from '../../Util/withLanguage'
 import CreateOrEditModal from '../CreateOrEditModal'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface DispatchProps {
   deleteMedia: (formData: any) => Promise<void>

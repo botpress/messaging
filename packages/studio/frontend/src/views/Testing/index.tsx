@@ -12,7 +12,7 @@ import { toast } from '../../components/Shared/Toaster'
 import NoScenarios from './Components/NoScenarios'
 import ScenarioComponent from './Components/Scenario'
 import ScenarioRecorder from './Components/ScenarioRecorder'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const WEBCHAT_READY_TIMEOUT = 10000
 

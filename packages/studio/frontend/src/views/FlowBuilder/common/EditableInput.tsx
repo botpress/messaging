@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import React, { Component } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const KEY_A = 65
 

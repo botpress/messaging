@@ -4,7 +4,7 @@ import React, { FC, Fragment } from 'react'
 import { parseActionInstruction } from '../../../../../views/FlowBuilder/common/parse'
 
 import { BlockProps } from '../Block'
-import style from '../Components/style.scss'
+import * as style from '../Components/style.module.scss'
 
 export const ActionInfo: FC<{ action: Action }> = ({ action }) => {
   if (!action.name || !action.actionServerId) {

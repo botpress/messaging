@@ -2,9 +2,7 @@ import classnames from 'classnames'
 import React, { Component } from 'react'
 import { Navbar } from 'react-bootstrap'
 
-// FIXME: Somehow, the typing file is not generated
-// @ts-ignore
-import style from './SidebarHeader.scss'
+import * as style from './SidebarHeader.module.scss'
 
 export default class SidebarHeader extends Component {
   render() {

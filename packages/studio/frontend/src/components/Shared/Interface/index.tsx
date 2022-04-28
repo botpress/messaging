@@ -15,7 +15,7 @@ import cx from 'classnames'
 import React, { useState } from 'react'
 
 import Container from './Container'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import {
   InfoTooltipProps,
   ItemListProps,

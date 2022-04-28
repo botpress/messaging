@@ -4,7 +4,7 @@ import Mustache from 'mustache'
 import React, { Component } from 'react'
 import { OverlayTrigger, Popover, Well } from 'react-bootstrap'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export default class ConditionItem extends Component<any> {
   renderNormal(child: any) {

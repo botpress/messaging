@@ -7,7 +7,7 @@ import ContentSection from '../../../../../components/Shared/ContentSection'
 import { lang } from '../../../../../components/Shared/translations'
 
 import { Intents } from '../components/Intents'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 import { Entities } from './Entities'
 import { Language } from './Language'

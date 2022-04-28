@@ -2,7 +2,7 @@ import React from 'react'
 
 import ToolTip from '../../../components/Shared/ToolTip'
 import { lang } from '../../../components/Shared/translations'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export default () => {
   return (window as any).IS_PRO_ENABLED ? (

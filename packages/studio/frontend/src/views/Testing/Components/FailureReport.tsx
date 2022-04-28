@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Row, Col, Grid } from 'react-bootstrap'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 import Interaction from './Interaction'
 
 interface Props {

@@ -9,7 +9,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 
 import { getFlowNames } from '../../../../reducers'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export class StandardIncomingPortModel extends DefaultPortModel {
   constructor(name: string, type: string) {

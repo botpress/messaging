@@ -3,7 +3,7 @@ import cx from 'classnames'
 import React, { FC, Fragment } from 'react'
 import ToolTip from '../../ToolTip'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { HeaderProps } from './typings'
 
 const Header: FC<HeaderProps> = ({ children, rightButtons, leftButtons }) => {

@@ -10,28 +10,22 @@ import './style.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@projectstorm/react-diagrams/dist/style.min.css'
 import './theme.scss'
-import { getToken } from './components/Shared/auth'
+
 import { keyMap } from './components/Shared/utilities/keyboardShortcuts'
 import store from './store'
 import { initializeTranslations } from './translations'
 
-const token = getToken()
-if (token) {
-  if ((window as any).USE_JWT_COOKIES) {
-    // TODO: remove all CSRF notion in studio
-  } else {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-  }
-}
+const STUDIO_API_URL = 'http://localhost:3000'
 
-if (!window.BOT_ID) {
-  console.error("This bot doesn't exist. Redirecting to admin ")
-  window.location.href = `${window.ROOT_PATH}/admin`
-} else {
+void axios.get<object>(`${STUDIO_API_URL}${window.location.pathname}/env`).then((d) => {
+  for (const [key, value] of Object.entries(d.data)) {
+    window[key] = value
+  }
+
   initializeTranslations()
 
+  // TODO: This is not the way to go
   // Do not use "import App from ..." as hoisting will screw up styling
-  // @ts-ignore
   const App = require('./components/App').default
 
   ReactDOM.render(
@@ -42,7 +36,4 @@ if (!window.BOT_ID) {
     </Provider>,
     document.getElementById('app')
   )
-}
-
-// TODO: what ?
-// telemetry.startFallback(axios.create({ baseURL: window.API_PATH })).catch()
+})

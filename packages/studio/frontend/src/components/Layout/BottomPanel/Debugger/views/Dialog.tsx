@@ -8,7 +8,7 @@ import ContentSection from '../../../../../components/Shared/ContentSection'
 import { lang } from '../../../../../components/Shared/translations'
 
 import { Intent, isQnaItem } from '../components/Intent'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 interface Props {
   suggestions: sdk.IO.Suggestion[]

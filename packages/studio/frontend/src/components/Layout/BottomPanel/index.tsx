@@ -12,7 +12,7 @@ import Debugger from './Debugger'
 import Inspector, { DataEntry } from './Inspector'
 import Logs from './Logs'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const MAX_HISTORY = 10
 const BOTTOM_PANEL_TAB = 'bottomPanelTab'

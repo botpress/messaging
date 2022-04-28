@@ -16,7 +16,7 @@ import { CONTENT_TYPES_MEDIA } from '../../../util/ContentDeletion'
 import withLanguage from '../../Util/withLanguage'
 import CreateOrEditModal from '../CreateOrEditModal'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const SEARCH_RESULTS_LIMIT = 10
 

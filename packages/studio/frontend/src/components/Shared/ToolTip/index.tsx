@@ -3,7 +3,7 @@ import _uniqueId from 'lodash/uniqueId'
 import React, { Children, cloneElement, FC, useRef } from 'react'
 import ReactDOM from 'react-dom'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { ToolTipProps } from './typings'
 
 const getPositions = (positionClasses, el, tooltip) => {

@@ -6,8 +6,8 @@ import { UploadFieldProps } from '../../../components/Shared/Form/FormFields/typ
 import { lang } from '../../../components/Shared/translations'
 import SmartInput from '../../../components/SmartInput'
 
-import parentStyle from '../style.scss'
-import style from './style.scss'
+import * as parentStyle from '../style.module.scss'
+import * as style from './style.module.scss'
 
 interface IUrlUploadProps {
   value: string | null

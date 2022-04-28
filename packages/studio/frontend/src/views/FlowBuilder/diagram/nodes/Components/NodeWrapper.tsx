@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import React from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export default ({ children, isHighlighed, isLarge, onClick }) => (
   <div

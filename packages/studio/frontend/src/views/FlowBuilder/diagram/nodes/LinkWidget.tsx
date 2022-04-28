@@ -10,7 +10,7 @@ import React from 'react'
 
 import { ExtendedDiagramEngine } from '..'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 // the end and beginning of a link counts as two points
 export const LINK_DEFAULT_NUMBER_OF_POINTS = 2

@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { OverlayProps } from './typings'
 
 const Overlay: FC<OverlayProps> = ({ onClick, onContextMenu }) => (

@@ -17,7 +17,7 @@ import { customAlphabet } from 'nanoid'
 import React from 'react'
 
 import ContentPickerWidget from '../../../../components/Content/Select/Widget'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 import { SkillProps } from '../typings'
 
 const MAX_RETRIES = 10

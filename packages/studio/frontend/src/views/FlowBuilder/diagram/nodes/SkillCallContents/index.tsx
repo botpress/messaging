@@ -6,8 +6,8 @@ import ActionItem from '../../../../../components/Layout/StatusBar/ActionItem'
 import ConditionItem from '../../../../../views/FlowBuilder/common/condition'
 import { StandardPortWidget } from '../../nodes/Ports'
 import { BlockProps } from '../Block'
-import style from '../Components/style.scss'
-import localStyle from '../StandardContents/style.scss'
+import * as style from '../Components/style.module.scss'
+import * as localStyle from '../StandardContents/style.module.scss'
 
 export interface SkillDefinition {
   id: string

@@ -7,7 +7,7 @@ import ToolTip from '../../../../components/Shared/ToolTip'
 import { lang } from '../../../../components/Shared/translations'
 
 import inspectorTheme from '../Debugger/inspectorTheme'
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 export interface DataEntry {
   id: string

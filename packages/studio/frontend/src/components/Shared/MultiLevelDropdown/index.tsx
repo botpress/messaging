@@ -6,7 +6,7 @@ import confirmDialog from '../ConfirmDialog'
 import Overlay from '../Overlay'
 import { lang } from '../translations'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { MultiLevelDropdownProps, Option } from './typings'
 
 const MultiLevelDropdown: FC<MultiLevelDropdownProps> = ({

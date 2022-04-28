@@ -4,7 +4,7 @@ import React, { FC, Fragment } from 'react'
 import Overlay from '../Overlay'
 import MoreOptionsMenu from './MoreOptionsMenu'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { MoreOptionsProps } from './typings'
 
 const MoreOptions: FC<MoreOptionsProps> = (props) => {

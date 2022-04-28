@@ -15,10 +15,10 @@ import { lang } from '../../../../components/Shared/translations'
 import { downloadBlob } from '../../../../util'
 import EventBus from '../../../../util/EventBus'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 import Debug from './Debug'
-import logStyle from './style.scss'
+import * as logStyle from './style.module.scss'
 
 const INITIAL_LOGS_LIMIT = 200
 const MAX_LOGS_LIMIT = 500

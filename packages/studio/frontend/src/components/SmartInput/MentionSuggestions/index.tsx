@@ -2,8 +2,9 @@ import { genKey } from 'draft-js'
 import { escapeRegExp } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+
 import addMention from '../modifiers/addMention'
-import style from '../styles.scss'
+import * as style from '../styles.module.scss'
 import decodeOffsetKey from '../utils/decodeOffsetKey'
 import getSearchText from '../utils/getSearchText'
 

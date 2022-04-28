@@ -9,7 +9,7 @@ import { lang } from '../translations'
 import { controlKey } from '../utilities/keyboardShortcuts'
 
 import { getCommonShortcuts } from './shortcuts'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import bpTheme from './theme/bp-theme'
 import './theme/custom.css'
 import { Command, CommanderProps } from './typings'

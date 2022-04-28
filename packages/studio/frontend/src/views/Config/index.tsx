@@ -18,7 +18,7 @@ import { RootReducer } from '../../reducers'
 import { BotReducer } from '../../reducers/bot'
 import { getNLUServerClient } from '../../util/nlu-client-provider'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const statusList = ['public', 'private', 'disabled']
 
@@ -136,19 +136,20 @@ class ConfigView extends Component<Props, State> {
       description: bot.description || '',
       selectedDefaultLang: languages.find((l) => l.value === bot.defaultLanguage),
       selectedLanguages: languages.filter((x) => bot?.languages?.includes(x.value) ?? []),
-      website: bot?.details.website || '',
-      phoneNumber: bot?.details.phoneNumber || '',
-      emailAddress: bot?.details.emailAddress || '',
-      termsConditions: bot.details.termsConditions || '',
-      privacyPolicy: bot.details.privacyPolicy || '',
-      avatarUrl: bot.details.avatarUrl || '',
-      coverPictureUrl: bot.details.coverPictureUrl || '',
+      website: bot?.details?.website || '',
+      phoneNumber: bot?.details?.phoneNumber || '',
+      emailAddress: bot?.details?.emailAddress || '',
+      termsConditions: bot.details?.termsConditions || '',
+      privacyPolicy: bot.details?.privacyPolicy || '',
+      avatarUrl: bot.details?.avatarUrl || '',
+      coverPictureUrl: bot.details?.coverPictureUrl || '',
       statuses
     }
   }
 
   async componentDidUpdate(prevProps: Readonly<Props>) {
     if (!prevProps.bot && this.props.bot) {
+      console.log('this.props.bot', this.props.bot)
       const state = await this.getBotStateFromConfig(this.props.bot)
       this.setState({ ...state })
     }

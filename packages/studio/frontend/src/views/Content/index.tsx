@@ -29,7 +29,7 @@ import { CONTENT_TYPES_MEDIA } from '../../util/ContentDeletion'
 
 import List from './List'
 import Sidebar from './SideBar'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 class ContentView extends Component<Props, State> {
   private canRead = false

@@ -5,7 +5,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { lang } from '../../../components/Shared/translations'
 import { NluClient } from '../client'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   contexts: string[]

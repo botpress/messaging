@@ -25,7 +25,7 @@ import Diagram from './diagram'
 import SidePanel, { PanelPermissions, SidePanelInspector } from './sidePanelFlows'
 import SkillsBuilder from './skills'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface OwnProps {
   currentMutex: any
@@ -41,7 +41,7 @@ const searchTag = '#search:'
 const FlowBuilder = (props: Props) => {
   const { flow } = props.match.params as any
 
-  const diagram: any = useRef(null)
+  let diagram: any = useRef(null)
   const [showSearch, setShowSearch] = useState(false)
   const [readOnly, setReadOnly] = useState(false)
   const [mutex, setMutex] = useState<any>()

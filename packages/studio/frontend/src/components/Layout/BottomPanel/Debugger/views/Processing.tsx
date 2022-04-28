@@ -9,8 +9,8 @@ import ContentSection from '../../../../../components/Shared/ContentSection'
 import ToolTip from '../../../../../components/Shared/ToolTip'
 import { lang } from '../../../../../components/Shared/translations'
 
-import bpStyle from '../../style.scss'
-import style from '../style.scss'
+import * as bpStyle from '../../style.module.scss'
+import * as style from '../style.module.scss'
 
 interface Element {
   execTime: number

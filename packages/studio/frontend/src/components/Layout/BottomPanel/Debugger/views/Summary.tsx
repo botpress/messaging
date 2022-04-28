@@ -4,7 +4,7 @@ import React from 'react'
 import ContentSection from '../../../../../components/Shared/ContentSection'
 import { lang } from '../../../../../components/Shared/translations'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 import Dialog from './Dialog'
 import NLU from './NLU'

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const requireFlag = (code: string) => {
   try {

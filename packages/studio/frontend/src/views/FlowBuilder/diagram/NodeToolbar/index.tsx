@@ -8,7 +8,7 @@ import ToolTip from '../../../../components/Shared/ToolTip'
 import { lang } from '../../../../components/Shared/translations'
 import { AccessControl } from '../../../../components/Shared/Utils'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface ToolItemProps {
   type: string

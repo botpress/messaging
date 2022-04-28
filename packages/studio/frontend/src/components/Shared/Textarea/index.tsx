@@ -1,10 +1,10 @@
 import cx from 'classnames'
 import React, { FC, Fragment, useEffect, useRef, useState } from 'react'
 
-import sharedStyle from '../style.scss'
+import * as sharedStyle from '../style.module.scss'
 import { lang } from '../translations'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { TextareaProps } from './typings'
 
 const Textarea: FC<TextareaProps> = ({

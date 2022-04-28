@@ -3,7 +3,7 @@ import React from 'react'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { MdErrorOutline } from 'react-icons/md'
 
-import style from '../style.scss'
+import * as style from '../style.module.scss'
 
 interface Props {
   formData: any

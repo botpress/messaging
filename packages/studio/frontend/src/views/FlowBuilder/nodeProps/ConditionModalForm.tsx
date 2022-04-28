@@ -12,7 +12,7 @@ import { getFlowLabel, reorderFlows } from '../../../components/Shared/Utils'
 import SmartInput from '../../../components/SmartInput'
 import { RootReducer } from '../../../reducers'
 import { ROUTER_CONDITON_REGEX } from '../utils/general.util'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 const availableProps: Option[] = [
   { label: 'User Data', value: 'user' },

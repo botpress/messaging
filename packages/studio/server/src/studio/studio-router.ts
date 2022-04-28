@@ -87,7 +87,7 @@ export class StudioRouter extends CustomRouter {
 
     app.use('/studio/manage', this.checkTokenHeader, this.manageRouter.router)
 
-    app.use(rewrite('/studio/:botId/*env.js', '/api/v1/studio/:botId/env.js'))
+    app.use(rewrite('/studio/:botId/*env', '/api/v1/studio/:botId/env'))
 
     app.use('/api/v1/studio/:botId', this.router)
 
@@ -122,7 +122,7 @@ export class StudioRouter extends CustomRouter {
      * Do not return sensitive information there. These must be accessible by unauthenticated users
      */
     this.router.get(
-      '/env.js',
+      '/env',
       this.asyncMiddleware(async (req, res) => {
         const { botId } = req.params
 
@@ -134,30 +134,29 @@ export class StudioRouter extends CustomRouter {
           ? 'OzjoqVagiw3p3o1uocuw6kd2YYjm6CHi' // Dev key from Segment
           : '7lxeXxbGysS04TvDNDOROQsFlrls9NoY' // Prod key from Segment
 
-        const totalEnv = `
-          (function(window) {
-              ${commonEnv}
-              window.STUDIO_VERSION = "${process.STUDIO_VERSION}";
-              window.ANALYTICS_ID = "${gaId}";
-              window.API_PATH = "${process.ROOT_PATH}/api/v1";
-              window.BOT_API_PATH = "${process.ROOT_PATH}/api/v1/bots/${botId}";
-              window.STUDIO_API_PATH = "${process.ROOT_PATH}/api/v1/studio/${botId}";
-              window.BOT_ID = "${botId}";
-              window.BP_BASE_PATH = "${process.ROOT_PATH}/studio/${botId}";
-              window.APP_NAME = "Botpress Studio";
-              window.APP_FAVICON = "${favicon}";
-              window.APP_CUSTOM_CSS = "";
-              window.BOT_LOCKED = false;
-              window.IS_BOT_MOUNTED = ${true}; // TODO: fix this .. the bot might not mount
-              window.IS_CLOUD_BOT = true;
-              window.SEGMENT_WRITE_KEY = "${segmentWriteKey}";
-              window.IS_PRO_ENABLED = ${process.IS_PRO_ENABLED};
-              window.NLU_ENDPOINT = "${process.NLU_ENDPOINT}";
-            })(typeof window != 'undefined' ? window : {})
-          `
+        const host = process.env.EXTERNAL_URL || `http://localhost:${process.PORT}`
+        const env = {
+          ...commonEnv,
+          STUDIO_VERSION: process.STUDIO_VERSION,
+          ANALYTICS_ID: gaId,
+          API_PATH: `${host}/api/v1`,
+          BOT_API_PATH: `${host}/api/v1/bots/${botId}`,
+          STUDIO_API_PATH: `${host}/api/v1/studio/${botId}`,
+          BOT_ID: botId,
+          BP_BASE_PATH: `studio/${botId}`,
+          APP_NAME: 'Botpress Studio',
+          APP_FAVICON: favicon,
+          APP_CUSTOM_CSS: '',
+          BOT_LOCKED: false,
+          IS_BOT_MOUNTED: true,
+          IS_CLOUD_BOT: true,
+          SEGMENT_WRITE_KEY: segmentWriteKey,
+          IS_PRO_ENABLED: process.IS_PRO_ENABLED,
+          NLU_ENDPOINT: process.NLU_ENDPOINT,
+          BP_SOCKET_URL: host
+        }
 
-        res.contentType('text/javascript')
-        res.send(totalEnv)
+        res.send(env)
       })
     )
   }

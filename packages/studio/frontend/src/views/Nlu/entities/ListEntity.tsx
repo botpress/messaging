@@ -9,7 +9,7 @@ import { lang } from '../../../components/Shared/translations'
 import { inspect } from '../../../components/Shared/utilities/inspect'
 
 import { Occurrence } from './ListEntityOccurrence'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 interface Props {
   entities: NLU.EntityDefinition[]

@@ -5,7 +5,7 @@ import { Tabs, Tab, Badge } from 'react-bootstrap'
 
 import { lang } from '../../../components/Shared/translations'
 import ActionSection from './ActionSection'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import TransitionSection from './TransitionSection'
 
 export default (props) => {

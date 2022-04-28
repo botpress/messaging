@@ -13,7 +13,7 @@ import Inspector from '../inspector'
 
 import FlowNameModal from './FlowNameModal'
 import FlowsList from './FlowsList'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export type PanelPermissions = 'create' | 'rename' | 'delete'
 

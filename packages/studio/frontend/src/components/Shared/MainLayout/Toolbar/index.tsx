@@ -5,7 +5,7 @@ import MoreOptions from '../../MoreOptions'
 import Tabs from '../../Tabs'
 import ToolTip from '../../ToolTip'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { ToolbarProps } from './typings'
 
 const Toolbar: FC<ToolbarProps> = (props) => {

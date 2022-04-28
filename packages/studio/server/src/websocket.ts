@@ -100,7 +100,6 @@ export class RealtimeService {
 
   async installOnHttpServer(server: Server) {
     const io = new Socket.Server(server, {
-      path: `${process.ROOT_PATH}/socket.io`,
       cors: { origin: '*' },
       serveClient: false
     })

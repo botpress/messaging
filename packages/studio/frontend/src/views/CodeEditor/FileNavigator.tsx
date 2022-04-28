@@ -20,7 +20,7 @@ import { lang } from '../../components/Shared/translations'
 
 import { RootStore, StoreDef } from './store'
 import { EditorStore } from './store/editor'
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { TreeNodeRenameInput } from './TreeNodeRenameInput'
 import { buildTree, EXAMPLE_FOLDER_LABEL, FOLDER_EXAMPLE, FOLDER_ICON } from './utils/tree'
 

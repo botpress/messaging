@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import confirmDialog from '../ConfirmDialog'
 import { lang } from '../translations'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import { DropdownProps, Option } from './typings'
 
 const itemRenderer = (option, { modifiers, handleClick }) => {
