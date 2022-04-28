@@ -1,0 +1,29 @@
+{
+  // Manage references here
+  "references": [
+    {
+      "path": "../../messaging/client"
+    }
+  ],
+
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "sourceMap": true,
+    "strict": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "target": "es2019",
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "useUnknownInCatchVariables": false,
+    "baseUrl": "./",
+    "outDir": "dist",
+    "typeRoots": ["./src/typings", "../../node_modules/@types", "./src/common"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts"]
+}
