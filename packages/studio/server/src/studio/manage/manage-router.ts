@@ -4,7 +4,7 @@ import { CustomStudioRouter } from '../utils/custom-studio-router'
 // TODO last router that isn't ported
 class ManageRouter extends CustomStudioRouter {
   constructor(services: StudioServices) {
-    super('Manage', services.logger)
+    super('Manage', services.logger, services.nlu)
   }
 
   setupRoutes() {

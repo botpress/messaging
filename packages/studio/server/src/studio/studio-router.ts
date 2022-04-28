@@ -5,6 +5,7 @@ import rewrite from 'express-urlrewrite'
 import fs from 'fs'
 import path from 'path'
 import { ActionsRouter } from './actions/actions-router'
+import { CloudRouter } from './cloud/cloud-router'
 import { CMSRouter } from './cms/cms-router'
 import { CodeEditorRouter } from './code-editor/code-editor-router'
 import { ConfigRouter } from './config/config-router'
@@ -12,12 +13,13 @@ import { FlowsRouter } from './flows/flows-router'
 import { HintsRouter } from './hints/hints-router'
 import ManageRouter from './manage/manage-router'
 import MediaRouter from './media/media-router'
-import { NLURouter } from './nlu'
+import { NLURouter, NLUService } from './nlu'
 import { QNARouter } from './qna'
 import { HTTPServer } from './server'
 
 export interface StudioServices {
   logger: Logger
+  nlu: NLUService
 }
 
 let indexCache: { [pageUrl: string]: string } = {}
@@ -49,14 +51,15 @@ export class StudioRouter extends CustomRouter {
   // private testingRouter: TestingRouter
   private manageRouter: ManageRouter
   private codeEditorRouter: CodeEditorRouter
-  // private cloudRouter: CloudRouter
+  private cloudRouter: CloudRouter
 
   constructor(logger: Logger, private httpServer: HTTPServer) {
     super('Studio', logger, Router({ mergeParams: true }))
     this.checkTokenHeader = (req, res, next) => next()
 
     const studioServices: StudioServices = {
-      logger
+      logger,
+      nlu: new NLUService(logger)
     }
 
     this.cmsRouter = new CMSRouter(studioServices)
@@ -70,7 +73,7 @@ export class StudioRouter extends CustomRouter {
     // this.testingRouter = new TestingRouter(studioServices)
     this.manageRouter = new ManageRouter(studioServices)
     this.codeEditorRouter = new CodeEditorRouter(studioServices)
-    // this.cloudRouter = new CloudRouter(studioServices)
+    this.cloudRouter = new CloudRouter(studioServices)
   }
 
   async setupRoutes(app: express.Express) {
@@ -84,6 +87,7 @@ export class StudioRouter extends CustomRouter {
     // this.testingRouter.setupRoutes()
     this.manageRouter.setupRoutes()
     this.codeEditorRouter.setupRoutes()
+    this.cloudRouter.setupRoutes()
 
     app.use('/studio/manage', this.checkTokenHeader, this.manageRouter.router)
 
@@ -110,6 +114,7 @@ export class StudioRouter extends CustomRouter {
     this.router.use('/flows', this.checkTokenHeader, this.flowsRouter.router)
     this.router.use('/media', this.mediaRouter.router)
     this.router.use('/hints', this.checkTokenHeader, this.hintsRouter.router)
+    this.router.use('/cloud', this.checkTokenHeader, this.cloudRouter.router)
     this.router.use('/code-editor', this.checkTokenHeader, this.codeEditorRouter.router)
 
     this.setupUnauthenticatedRoutes(app)

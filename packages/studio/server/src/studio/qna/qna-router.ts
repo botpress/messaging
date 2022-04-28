@@ -30,7 +30,7 @@ interface ImportData {
 
 export class QNARouter extends CustomStudioRouter {
   constructor(services: StudioServices) {
-    super('QNA', services.logger)
+    super('QNA', services.logger, services.nlu)
   }
 
   private async _prepareImport(parsedJson: any): Promise<ImportData> {

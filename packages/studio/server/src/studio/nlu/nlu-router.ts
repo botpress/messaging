@@ -20,10 +20,12 @@ const removeSlotsFromUtterances = (utterances: { [key: string]: any }, slotNames
   )
 
 export class NLURouter extends CustomStudioRouter {
-  private service: NLUService = new NLUService(this.logger)
+  private service: NLUService
 
   constructor(services: StudioServices) {
-    super('NLU', services.logger)
+    super('NLU', services.logger, services.nlu)
+
+    this.service = services.nlu
 
     // TODO: Move this in the application instead of router
     void this.service.initialize().then(async (x) => {

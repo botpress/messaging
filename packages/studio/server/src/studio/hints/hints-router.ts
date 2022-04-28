@@ -7,7 +7,7 @@ export class HintsRouter extends CustomStudioRouter {
   protected hasRefreshed: boolean = false
 
   constructor(services: StudioServices) {
-    super('Hints', services.logger)
+    super('Hints', services.logger, services.nlu)
   }
 
   setupRoutes() {
