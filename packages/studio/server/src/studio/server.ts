@@ -21,8 +21,6 @@ import { StudioRouter } from './studio-router'
 
 import { debugRequestMw, resolveStudioAsset } from './utils/server-utils'
 
-const getSocketTransports = (): string[] => ['websocket', 'polling']
-
 export const monitoringMiddleware = (req: any, res: any, next: any) => {
   const startAt = Date.now()
 
@@ -102,7 +100,6 @@ export class HTTPServer {
       SEND_USAGE_STATS: config.sendUsageStats,
       USE_JWT_COOKIES: process.USE_JWT_COOKIES,
       EXPERIMENTAL: config.experimental,
-      SOCKET_TRANSPORTS: [getSocketTransports().join('","')],
       SHOW_POWERED_BY: !!config.showPoweredBy,
       UUID: this.machineId,
       BP_SERVER_URL: process.env.BP_SERVER_URL || '',
