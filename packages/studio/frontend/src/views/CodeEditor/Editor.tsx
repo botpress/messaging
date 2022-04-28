@@ -12,6 +12,17 @@ import babylon from 'prettier/parser-babylon'
 import prettier from 'prettier/standalone'
 import React from 'react'
 
+// @ts-ignore
+import EditorWorker from 'url:monaco-editor/esm/vs/editor/editor.worker.js'
+// @ts-ignore
+import CSSWorker from 'url:monaco-editor/esm/vs/language/css/css.worker.js'
+// @ts-ignore
+import HTMLWorker from 'url:monaco-editor/esm/vs/language/html/html.worker.js'
+// @ts-ignore
+import JSONWorker from 'url:monaco-editor/esm/vs/language/json/json.worker.js'
+// @ts-ignore
+import TSWorker from 'url:monaco-editor/esm/vs/language/typescript/ts.worker.js'
+
 import confirmDialog from '../../components/Shared/ConfirmDialog'
 import { toast } from '../../components/Shared/Toaster'
 import { lang } from '../../components/Shared/translations'
@@ -31,6 +42,24 @@ export type FileWithMetadata = EditableFile & {
 }
 
 const MONACO_MARKER_ERROR_SEVERITY = 8
+
+;(self as any).MonacoEnvironment = {
+  getWorkerUrl(moduleId, label) {
+    if (label === 'json') {
+      return JSONWorker
+    }
+    if (label === 'css' || label === 'scss' || label === 'less') {
+      return CSSWorker
+    }
+    if (label === 'html' || label === 'handlebars' || label === 'razor') {
+      return HTMLWorker
+    }
+    if (label === 'typescript' || label === 'javascript') {
+      return TSWorker
+    }
+    return EditorWorker
+  }
+}
 
 class Editor extends React.Component<Props> {
   private editor: monaco.editor.IStandaloneCodeEditor
