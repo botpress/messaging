@@ -5,8 +5,8 @@ describe('getLock', () => {
     const fn = jest.fn()
 
     const lock = Locker()
-    lock('key')
-    lock('key').then(() => {
+    void lock('key')
+    void lock('key').then(() => {
       fn()
     })
 
@@ -20,7 +20,7 @@ describe('getLock', () => {
 
     let value = ''
 
-    lock('key').then((unlock) =>
+    void lock('key').then((unlock) =>
       setTimeout(() => {
         value = 'unexpected'
         unlock()

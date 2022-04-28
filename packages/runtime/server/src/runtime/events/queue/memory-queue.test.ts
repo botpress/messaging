@@ -2,6 +2,7 @@
 
 import { IO } from '@botpress/sdk'
 import 'reflect-metadata'
+import { Promise } from 'bluebird'
 
 import { createMockLogger } from '../../misc/utils'
 import { Event } from '../event-sdk-impl'
@@ -38,7 +39,7 @@ describe('Lite Queues', () => {
     })
 
     for (let i = 0; i < 10; i++) {
-      queue.enqueue({ ...stubEvent, id: i.toString() })
+      void queue.enqueue({ ...stubEvent, id: i.toString() })
     }
 
     while (!queue.isEmpty()) {
@@ -59,7 +60,7 @@ describe('Lite Queues', () => {
     })
 
     for (let i = 0; i < 10; i++) {
-      queue.enqueue({ ...stubEvent, id: i.toString() })
+      void queue.enqueue({ ...stubEvent, id: i.toString() })
     }
 
     while (!queue.isEmpty()) {
@@ -85,7 +86,7 @@ describe('Lite Queues', () => {
       order.push(event.id)
     })
 
-    queue.enqueue({ ...stubEvent, id: i.toString() })
+    void queue.enqueue({ ...stubEvent, id: i.toString() })
 
     while (!queue.isEmpty()) {
       await Promise.delay(5)
@@ -108,7 +109,7 @@ describe('Lite Queues', () => {
       order.push(event.id)
     })
 
-    queue.enqueue({ ...stubEvent, id: i.toString() })
+    void queue.enqueue({ ...stubEvent, id: i.toString() })
 
     while (!queue.isEmpty()) {
       await Promise.delay(5)
@@ -129,9 +130,9 @@ describe('Lite Queues', () => {
       }
     })
 
-    queue.enqueue({ ...stubEvent, id: '1', target: 'a' })
-    queue.enqueue({ ...stubEvent, id: '2', target: 'b' }) // This message will be locked
-    queue.enqueue({ ...stubEvent, id: '3', target: 'c' }) // But this message will process even if user 'a' is locked
+    void queue.enqueue({ ...stubEvent, id: '1', target: 'a' })
+    void queue.enqueue({ ...stubEvent, id: '2', target: 'b' }) // This message will be locked
+    void queue.enqueue({ ...stubEvent, id: '3', target: 'c' }) // But this message will process even if user 'a' is locked
 
     while (!queue.isEmpty()) {
       await Promise.delay(5)
@@ -157,15 +158,15 @@ describe('Lite Queues', () => {
 
     // Enqueue jobs that takes ~ 1ms to execute
     for (let i = 0; i < 10; i++) {
-      queue.enqueue({ ...stubEvent, id: i.toString(), target: 'a' })
+      void queue.enqueue({ ...stubEvent, id: i.toString(), target: 'a' })
     }
 
     // Cancel remaining jobs for target a
-    queue.cancelAll({ ...stubEvent, target: 'a' })
+    void queue.cancelAll({ ...stubEvent, target: 'a' })
 
     // Enqueue jobs for target b
     for (let i = 10; i < 20; i++) {
-      queue.enqueue({ ...stubEvent, id: i.toString(), target: 'b' })
+      void queue.enqueue({ ...stubEvent, id: i.toString(), target: 'b' })
     }
 
     /**
