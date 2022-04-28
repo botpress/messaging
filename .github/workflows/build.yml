@@ -12,25 +12,13 @@ jobs:
           # TODO: This can be moved into a file and reused
           filters: |
             messaging:
-              - '**/**'
-              - '!packages'
               - 'packages/messaging/**'
-              - 'packages/base/**'
             studio:
-              - '**/**'
-              - '!packages'
               - 'packages/studio/**'
-              - 'packages/base/**'
             webchat:
-              - '**/**'
-              - '!packages'
               - 'packages/webchat/**'
-              - 'packages/base/**'
             runtime:
-              - '**/**'
-              - '!packages'
               - 'packages/runtime/**'
-              - 'packages/base/**'
     outputs:
       messaging: ${{ steps.changed.outputs.messaging }}
       studio: ${{ steps.changed.outputs.studio }}
