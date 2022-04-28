@@ -2998,9 +2998,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/sdk@0.0.1, @botpress/sdk@workspace:packages/studio/sdk":
+"@botpress/sdk@0.0.1, @botpress/sdk@workspace:packages/runtime/sdk":
   version: 0.0.0-use.local
-  resolution: "@botpress/sdk@workspace:packages/studio/sdk"
+  resolution: "@botpress/sdk@workspace:packages/runtime/sdk"
   dependencies:
     "@types/express": ^4.17.13
     "@types/node": ^16.11.13
