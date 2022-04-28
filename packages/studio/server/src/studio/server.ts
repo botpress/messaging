@@ -211,7 +211,6 @@ export class HTTPServer {
     })
 
     this.app.use(function handleUnexpectedError(err: any, req: any, res: any, next: any) {
-      console.log('err', err)
       const statusCode = err.statusCode || 400
       const errorCode = err.errorCode
       const message = err.message || err || 'Unexpected error'
