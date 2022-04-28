@@ -44,7 +44,7 @@ jobs:
     steps:
       - name: Test
         run: |
-          echo ${{ needs.check.outputs.messaging
+          echo ${{ needs.check.outputs.messaging }}
 
   server:
     name: Server
