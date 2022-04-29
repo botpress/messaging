@@ -1,0 +1,46 @@
+name: Files Changed
+
+on:
+  workflow_call:
+    outputs:
+      messaging:
+        description: 'Returns if there were changes in the messaging package'
+        value: ${{ jobs.files_changed.outputs.messaging }}
+      studio:
+        description: 'Returns if there were changes in the studio package'
+        value: ${{ jobs.files_changed.outputs.studio }}
+      webchat:
+        description: 'Returns if there were changes in the webchat package'
+        value: ${{ jobs.files_changed.outputs.webchat }}
+      runtime:
+        description: 'Returns if there were changes in the runtime package'
+        value: ${{ jobs.files_changed.outputs.runtime }}
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  files_changed:
+    name: Files Changed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changed
+        with:
+          # This is where we can list dependencies of our packages
+          # so that we only trigger jobs related to a package when needed
+          filters: |
+            messaging:
+              - 'packages/messaging/**'
+            studio:
+              - 'packages/studio/**'
+            webchat:
+              - 'packages/webchat/**'
+            runtime:
+              - 'packages/runtime/**'
+    outputs:
+      messaging: ${{ steps.changed.outputs.messaging }}
+      studio: ${{ steps.changed.outputs.studio }}
+      webchat: ${{ steps.changed.outputs.webchat }}
+      runtime: ${{ steps.changed.outputs.runtime }}
