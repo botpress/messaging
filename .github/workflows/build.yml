@@ -3,7 +3,7 @@ on: [pull_request]
 
 jobs:
   files_changed:
-    uses: 'botpress/messaging/.github/workflows/files-changed.yml@dev-2622-adapt-ci-on-messaging-to-accommodate'
+    uses: 'botpress/messaging/.github/workflows/files-changed.yml@master'
 
   server:
     name: Server
@@ -95,7 +95,7 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --immutable
-      - name: Build Messaging
+      - name: Build Studio
         run: |
           yarn workspace @botpress/${{ matrix.path }} build:tsc
           yarn workspace @botpress/${{ matrix.path }} build
@@ -115,6 +115,6 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --immutable
-      - name: Build Messaging
+      - name: Build Runtime
         run: |
           yarn workspace @botpress/runtime build
