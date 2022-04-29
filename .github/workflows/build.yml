@@ -4,10 +4,7 @@ on: [pull_request]
 jobs:
   files_changed:
     name: Pre
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: './.github/workflows/files-changed.yml'
+    uses: 'botpress/messaging/.github/workflows/files-changed.yml@dev-2622-adapt-ci-on-messaging-to-accommodate'
 
   server:
     name: Server
