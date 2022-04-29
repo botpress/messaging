@@ -1,0 +1,27 @@
+name: Files Changed
+on: [workflow_call]
+
+jobs:
+  files_changed:
+    name: Files Changed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changed
+        with:
+          # This is where we can list dependencies of our packages
+          # so that we only trigger jobs related to a package when needed
+          filters: |
+            messaging:
+              - 'packages/messaging/**'
+            studio:
+              - 'packages/studio/**'
+            webchat:
+              - 'packages/webchat/**'
+            runtime:
+              - 'packages/runtime/**'
+    outputs:
+      messaging: ${{ steps.changed.outputs.messaging }}
+      studio: ${{ steps.changed.outputs.studio }}
+      webchat: ${{ steps.changed.outputs.webchat }}
+      runtime: ${{ steps.changed.outputs.runtime }}

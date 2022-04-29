@@ -2,43 +2,14 @@ name: Build
 on: [pull_request]
 
 jobs:
-  check:
-    name: Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: dorny/paths-filter@v2
-        id: changed
-        with:
-          # TODO: This can be moved into a file and reused
-          filters: |
-            messaging:
-              - 'packages/messaging/**'
-            studio:
-              - 'packages/studio/**'
-            webchat:
-              - 'packages/webchat/**'
-            runtime:
-              - 'packages/runtime/**'
-    outputs:
-      messaging: ${{ steps.changed.outputs.messaging }}
-      studio: ${{ steps.changed.outputs.studio }}
-      webchat: ${{ steps.changed.outputs.webchat }}
-      runtime: ${{ steps.changed.outputs.runtime }}
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    needs: check
-    steps:
-      - name: Test
-        run: |
-          echo ${{ needs.check.outputs.messaging }}
+  files_changed:
+    uses: '.github/workflows/files-changed.yml'
 
   server:
     name: Server
     runs-on: ubuntu-latest
-    needs: check
-    if: needs.check.outputs.messaging == 'true'
+    needs: files_changed
+    if: needs.files_changed.outputs.messaging == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -57,8 +28,8 @@ jobs:
   docker:
     name: Docker
     runs-on: ubuntu-latest
-    needs: check
-    if: needs.check.outputs.messaging == 'true'
+    needs: files_changed
+    if: needs.files_changed.outputs.messaging == 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -90,8 +61,8 @@ jobs:
   webchat:
     name: Webchat
     runs-on: ubuntu-latest
-    needs: check
-    if: needs.check.outputs.webchat == 'true'
+    needs: files_changed
+    if: needs.files_changed.outputs.webchat == 'true'
     defaults:
       run:
         working-directory: ./packages/webchat/webchat
@@ -118,8 +89,8 @@ jobs:
     defaults:
       run:
         working-directory: ./packages/studio/${{ matrix.path }}
-    needs: check
-    if: needs.check.outputs.studio == 'true'
+    needs: files_changed
+    if: needs.files_changed.outputs.studio == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -137,8 +108,8 @@ jobs:
   runtime:
     name: Runtime
     runs-on: ubuntu-latest
-    needs: check
-    if: needs.check.outputs.runtime == 'true'
+    needs: files_changed
+    if: needs.files_changed.outputs.runtime == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@master
