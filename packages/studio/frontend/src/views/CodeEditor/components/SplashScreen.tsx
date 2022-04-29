@@ -4,7 +4,7 @@ import React from 'react'
 import { KeyboardShortcut, SplashScreen } from '../../../components/Shared/Interface'
 import { lang } from '../../../components/Shared/translations'
 
-import style from '../style.module.scss'
+import * as style from '../style.module.scss'
 
 export default ({ hasRawPermissions, isAdvanced, setAdvanced }) => (
   <SplashScreen
