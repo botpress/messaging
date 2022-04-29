@@ -17,7 +17,7 @@ describe('Migration CLI', () => {
   beforeAll(async () => {
     // Speeds up tests
     await buildMessagingServer({
-      command: 'yarn build',
+      command: 'yarn workspace @botpress/messaging-server build',
       launchTimeout: TIMEOUT * 4
     })
 

@@ -22,7 +22,7 @@ jobs:
           yarn --immutable
       - name: Build Messaging
         run: |
-          yarn build
+          yarn workspace @botpress/messaging-server build
 
   # Taken from: https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md#local-cache
   docker:
