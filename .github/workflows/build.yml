@@ -79,7 +79,7 @@ jobs:
 
   studio:
     name: Studio
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: files_changed
     if: needs.files_changed.outputs.studio == 'true'
     strategy:

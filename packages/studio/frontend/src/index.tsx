@@ -37,3 +37,5 @@ void axios.get<object>(`${STUDIO_API_URL}${window.location.pathname}/env`).then(
     document.getElementById('app')
   )
 })
+
+console.log('okokokok')
