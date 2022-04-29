@@ -1,5 +1,20 @@
 name: Files Changed
-on: [workflow_call]
+
+on:
+  workflow_call:
+    outputs:
+      messaging:
+        description: 'Returns if there were changes in the messaging package'
+        value: ${{ jobs.files_changed.outputs.messaging }}
+      studio:
+        description: 'Returns if there were changes in the studio package'
+        value: ${{ jobs.files_changed.outputs.studio }}
+      webchat:
+        description: 'Returns if there were changes in the webchat package'
+        value: ${{ jobs.files_changed.outputs.webchat }}
+      runtime:
+        description: 'Returns if there were changes in the runtime package'
+        value: ${{ jobs.files_changed.outputs.runtime }}
 
 jobs:
   files_changed:

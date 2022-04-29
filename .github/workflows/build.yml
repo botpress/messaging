@@ -3,7 +3,11 @@ on: [pull_request]
 
 jobs:
   files_changed:
-    uses: '.github/workflows/files-changed.yml'
+    name: Pre
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: './.github/workflows/files-changed.yml'
 
   server:
     name: Server
