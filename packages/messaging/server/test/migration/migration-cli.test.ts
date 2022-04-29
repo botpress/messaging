@@ -17,7 +17,7 @@ describe('Migration CLI', () => {
   beforeAll(async () => {
     // Speeds up tests
     await buildMessagingServer({
-      command: 'yarn build',
+      command: 'yarn workspace @botpress/messaging-server build',
       launchTimeout: TIMEOUT * 4
     })
 
@@ -52,7 +52,7 @@ describe('Migration CLI', () => {
     async () => {
       await startMessagingServer(
         {
-          command: 'yarn start migrate up --dry',
+          command: 'yarn workspace @botpress/messaging-server start migrate up --dry',
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -71,7 +71,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: 'yarn start --auto-migrate',
+          command: 'yarn workspace @botpress/messaging-server start --auto-migrate',
           launchTimeout: TIMEOUT,
           protocol: 'http',
           host: '127.0.0.1',
@@ -94,7 +94,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: `yarn start migrate down --target ${target}`,
+          command: `yarn workspace @botpress/messaging-server start migrate down --target ${target}`,
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -104,7 +104,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: 'yarn start migrate up',
+          command: 'yarn workspace @botpress/messaging-server start migrate up',
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -122,7 +122,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: `yarn start migrate down --target ${target}`,
+          command: `yarn workspace @botpress/messaging-server start migrate down --target ${target}`,
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -140,7 +140,7 @@ describe('Migration CLI', () => {
 
       await startMessagingServer(
         {
-          command: `yarn start migrate up --target ${target}`,
+          command: `yarn workspace @botpress/messaging-server start migrate up --target ${target}`,
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -156,7 +156,7 @@ describe('Migration CLI', () => {
     async () => {
       await startMessagingServer(
         {
-          command: 'yarn start migrate down',
+          command: 'yarn workspace @botpress/messaging-server start migrate down',
           launchTimeout: TIMEOUT
         },
         CLI_MIGRATIONS
@@ -176,7 +176,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn start migrate down --target ${target}`,
+            command: `yarn workspace @botpress/messaging-server start migrate down --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS
@@ -197,7 +197,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn start migrate up --target ${target}`,
+            command: `yarn workspace @botpress/messaging-server start migrate up --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS
@@ -218,7 +218,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn start migrate up --target ${target}`,
+            command: `yarn workspace @botpress/messaging-server start migrate up --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS
@@ -238,7 +238,7 @@ describe('Migration CLI', () => {
       await expect(
         startMessagingServer(
           {
-            command: `yarn start migrate up --target ${target}`,
+            command: `yarn workspace @botpress/messaging-server start migrate up --target ${target}`,
             launchTimeout: TIMEOUT
           },
           CLI_MIGRATIONS

@@ -9,7 +9,7 @@ export const setupServer = async () => {
 
   await setupDevServer({
     debug,
-    command: 'yarn dev',
+    command: 'yarn workspace @botpress/messaging-server dev',
     launchTimeout: 30000,
     protocol: 'http',
     host: '127.0.0.1',

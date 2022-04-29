@@ -5,7 +5,7 @@ ADD . /messaging
 WORKDIR /messaging
 
 RUN yarn --immutable
-RUN yarn build
+RUN yarn workspace @botpress/messaging-server build
 
 FROM node:16.13.2-alpine
 

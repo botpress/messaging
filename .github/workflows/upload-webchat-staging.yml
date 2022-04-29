@@ -4,10 +4,10 @@ on:
     branches:
       - master
     paths:
-      - 'packages/inject/**'
-      - 'packages/components/**'
-      - 'packages/webchat/**'
-      - 'packages/socket/**'
+      - 'packages/webchat/inject/**'
+      - 'packages/webchat/components/**'
+      - 'packages/webchat/webchat/**'
+      - 'packages/messaging/socket/**'
 
 permissions:
   id-token: write
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./packages/inject
+        working-directory: ./packages/webchat/inject
     steps:
       - uses: actions/checkout@v2.1.0
       - uses: actions/setup-node@v2
@@ -36,7 +36,7 @@ jobs:
           yarn write:version
       - uses: botpress/gh-actions/deploy/s3@v2
         with:
-          source: ./packages/inject/dist
+          source: ./packages/webchat/inject/dist
           bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
           aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
           cloudfront-distribution: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}

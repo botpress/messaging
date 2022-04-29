@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./packages/inject
+        working-directory: ./packages/webchat/inject
     steps:
       - uses: actions/checkout@v2.1.0
       - uses: actions/setup-node@v2
@@ -29,7 +29,7 @@ jobs:
           yarn write:version
       - uses: botpress/gh-actions/deploy/s3@v2
         with:
-          source: ./packages/inject/dist
+          source: ./packages/webchat/inject/dist
           bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
           aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
           prefix: webchat/v0 # TODO: Change the version (for test purpose)
