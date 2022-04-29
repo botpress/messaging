@@ -16,6 +16,10 @@ on:
         description: 'Returns if there were changes in the runtime package'
         value: ${{ jobs.files_changed.outputs.runtime }}
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   files_changed:
     name: Files Changed
