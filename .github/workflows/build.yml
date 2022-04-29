@@ -3,7 +3,7 @@ on: [pull_request]
 
 jobs:
   files_changed:
-    uses: 'botpress/messaging/.github/workflows/files-changed.yml@master'
+    uses: 'botpress/messaging/.github/workflows/files-changed.yml@dev-2622-adapt-ci-on-messaging-to-accommodate'
 
   server:
     name: Server
