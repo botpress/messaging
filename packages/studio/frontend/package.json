@@ -7,12 +7,19 @@
     "watch": "yarn && yarn run -T parcel watch src/index.html",
     "dev": "yarn && yarn run -T parcel src/index.html",
     "build:scss-types": "typed-scss-modules src --logLevel error --nameFormat none --exportType default",
-    "build:tsc": "yarn run -T tsc --build"
+    "build:tsc": "yarn run -T tsc --build",
+    "storybook": "yarn run -T start-storybook -p 6006 -c story/config",
+    "build-storybook": "yarn run -T build-storybook -c story/config"
   },
   "devDependencies": {
     "@parcel/config-default": "2.2.1",
     "@parcel/transformer-sass": "2.2.1",
     "@parcel/transformer-typescript-tsc": "2.2.1",
+    "@storybook/addon-essentials": "^6.4.22",
+    "@storybook/addon-interactions": "^6.4.22",
+    "@storybook/addon-links": "^6.4.22",
+    "@storybook/addon-storysource": "^6.4.22",
+    "@storybook/react": "^6.4.22",
     "@types/classnames": "^2.3.1",
     "@types/json-schema": "^7.0.11",
     "@types/lodash": "^4.14.178",
