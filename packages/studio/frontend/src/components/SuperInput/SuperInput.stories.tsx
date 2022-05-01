@@ -1,5 +1,4 @@
-import { Button } from '@blueprintjs/core'
-import { ComponentMeta, storiesOf } from '@storybook/react'
+import { storiesOf } from '@storybook/react'
 import React from 'react'
 import { SiTypes, SuperInput } from '.'
 import { data } from './data'
@@ -31,32 +30,14 @@ const msgs = {
   noGlobsEvalMsg: 'no eventState'
 }
 
-storiesOf('SuperInput', SuperInput).add('Primary', () => (
-  <SuperInput type={SiTypes.EXPRESSION} value={code0} eventState={eventState} {...msgs} />
-))
-
-// export const Primary = () => <SuperInput type={SiTypes.EXPRESSION} value={code0} eventState={eventState} {...msgs} />
-// Primary.story = {
-//   name: 'Expression'
-// }
-
-// export const ExpressionNoEventState = () => <SuperInput type={SiTypes.EXPRESSION} value={code0} {...msgs} />
-// ExpressionNoEventState.story = {
-//   name: 'Expression (no eventState)'
-// }
-
-// export const Valid = () => <SuperInput value={code2} eventState={eventState} {...msgs} />
-
-// export const Invalid = () => <SuperInput value={code1} eventState={eventState} {...msgs} autoFocus />
-
-// export const SomethingElse = () => <SuperInput value={code3} />
-// SomethingElse.story = {
-//   name: 'Something Else (no eventState)'
-// }
-
-// export const AcceptsInputProps = () => (
-//   <SuperInput leftIcon="user" placeholder="Email Address" rightElement={<Button>Sign Up</Button>} />
-// )
-// AcceptsInputProps.story = {
-//   name: 'Accepts Input Props'
-// }
+storiesOf('SuperInput', SuperInput as any)
+  .add('Primary', () => <SuperInput type={SiTypes.EXPRESSION} value={code0} eventState={eventState} {...msgs} />)
+  .add('Expression No Event State', () => (
+    <SuperInput type={SiTypes.EXPRESSION} value={code0} eventState={eventState} {...msgs} />
+  ))
+  .add('valid', () => <SuperInput value={code2} eventState={eventState} {...msgs} />)
+  .add('Invalid', () => <SuperInput value={code1} eventState={eventState} {...msgs} autoFocus />)
+  .add('Something Else (no eventState)', () => <SuperInput value={code3} />)
+  .add('Accepts Input Props', () => (
+    <SuperInput leftIcon="user" placeholder="Email Address" rightElement={<Button>Sign Up</Button>} />
+  ))

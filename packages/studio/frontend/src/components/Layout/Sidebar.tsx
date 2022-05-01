@@ -24,6 +24,13 @@ const BASIC_MENU_ITEMS = [
     icon: 'page-layout'
   },
   {
+    id: 'oldflows',
+    name: 'oldflows',
+    path: '/oldflows',
+    rule: { res: 'bot.flows', op: 'read' },
+    icon: 'page-layout'
+  },
+  {
     id: 'content',
     name: lang.tr('content'),
     path: '/content',

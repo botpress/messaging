@@ -112,6 +112,7 @@ export class StudioRouter extends CustomRouter {
     this.router.use('/qna', this.checkTokenHeader, this.qnaRouter.router)
     // this.router.use('/testing', this.checkTokenHeader, this.testingRouter.router)
     this.router.use('/flows', this.checkTokenHeader, this.flowsRouter.router)
+    this.router.use('/oldflows', this.checkTokenHeader, this.flowsRouter.router)
     this.router.use('/media', this.mediaRouter.router)
     this.router.use('/hints', this.checkTokenHeader, this.hintsRouter.router)
     this.router.use('/cloud', this.checkTokenHeader, this.cloudRouter.router)
