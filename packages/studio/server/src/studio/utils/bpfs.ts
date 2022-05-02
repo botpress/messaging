@@ -1,6 +1,6 @@
 import { DirectoryListingOptions } from '@botpress/sdk'
 import { Promise } from 'bluebird'
-import fse, { mkdirp } from 'fs-extra'
+import fse from 'fs-extra'
 import glob from 'glob'
 import _ from 'lodash'
 import path from 'path'
@@ -108,22 +108,24 @@ export const Instance: bpfs = {
         const content = await this.readFile(file)
 
         const outPath = path.join(tmpDir.name, file)
-        await mkdirp(path.dirname(outPath))
+        await fse.mkdirp(path.dirname(outPath))
         await fse.writeFile(outPath, content)
       }
 
-      await tar.create(
-        {
-          cwd: tmpDir.name,
-          file: filename,
-          portable: true,
-          gzip: true
-        },
-        files
-      )
-      return await fse.readFile(filename)
-    } catch (err) {
-      throw new VError(err as Error, `[Archive] Error creating archive "${filename}"`)
+      try {
+        await tar.create(
+          {
+            cwd: tmpDir.name,
+            file: filename,
+            portable: true,
+            gzip: true
+          },
+          files
+        )
+        return await fse.readFile(filename)
+      } catch (err) {
+        throw new VError(err as Error, `[Instance] Error creating archive "${filename}"`)
+      }
     } finally {
       tmpDir.removeCallback()
     }
