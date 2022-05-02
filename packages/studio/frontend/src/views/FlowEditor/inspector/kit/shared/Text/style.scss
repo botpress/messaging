@@ -1,0 +1,39 @@
+@import '~@blueprintjs/core/lib/scss/variables';
+
+.common {
+  color: $dark-gray5;
+  font-family: 'Roboto';
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.large {
+  font-size: 14px;
+  line-height: 17px;
+  color: $dark-gray2;
+}
+
+.default {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.lite {
+  font-style: normal;
+  font-weight: 400;
+}
+
+.placeholder {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.lite-placeholder {
+  font-style: italic;
+  font-weight: 400;
+
+  color: $gray3;
+  &.large {
+    color: $gray3;
+  }
+}
