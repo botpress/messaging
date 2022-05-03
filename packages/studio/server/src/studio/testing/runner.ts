@@ -1,5 +1,5 @@
+import * as sdk from '@botpress/sdk'
 import axios from 'axios'
-import * as sdk from 'botpress/sdk'
 import _ from 'lodash'
 
 import { DialogStep, RunningScenario, Scenario, ScenarioMismatch, ScenarioStatus, Status } from './typings'
