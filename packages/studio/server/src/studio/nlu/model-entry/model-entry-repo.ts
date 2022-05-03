@@ -1,3 +1,6 @@
+import { BotConfig } from '@botpress/sdk'
+import { Instance } from '../../utils/bpfs'
+
 /**
  * A bot can have up to one model and one training per language.
  * "ready" means the model is currently used for prediction.
@@ -18,11 +21,26 @@ interface ModelEntryRow extends ModelEntryPrimaryKey {
 
 const getKey = (primaryKey: ModelEntryPrimaryKey) => `${primaryKey.botId}/${primaryKey.language}/${primaryKey.status}`
 
-// TODO: Keep this in a file for restarts... right now restarting Botpress marks the model as dirty automatically
 export class ModelEntryRepository {
   private state: { [key: string]: ModelEntryRow } = {}
+  private botConfig!: BotConfig
 
   constructor() {}
+
+  public async initialize() {
+    this.botConfig = await Instance.readFile('bot.config.json').then((f) => JSON.parse(f.toString()))
+
+    const models = this.botConfig.nluModels
+    if (!models) {
+      return
+    }
+
+    for (const lang of Object.keys(models)) {
+      const model = models[lang]
+      // A model saved on the bot config is always ready
+      await this.set({ ...model, botId: this.botConfig.id, language: lang, status: 'ready' })
+    }
+  }
 
   public async get(key: ModelEntryPrimaryKey): Promise<ModelEntryRow | undefined> {
     return this.state[getKey(key)] ? { ...this.state[getKey(key)] } : undefined

@@ -1,14 +1,5 @@
 import { Training as BpTraining } from '@botpress/common'
-import { CloudConfig } from '@botpress/sdk'
-
-export interface BotConfig {
-  id: string
-  defaultLanguage: string
-  languages: string[]
-  nluSeed?: number
-  nluModels?: { [lang: string]: string }
-  cloud?: CloudConfig
-}
+import { BotConfig } from '@botpress/sdk'
 
 export interface BotDefinition {
   botId: string
