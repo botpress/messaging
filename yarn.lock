@@ -2,7 +2,7 @@
 # Manual changes might be lost - proceed with caution!
 
 __metadata:
-  version: 5
+  version: 6
   cacheKey: 8
 
 "@ampproject/remapping@npm:^2.1.0":
@@ -21733,13 +21733,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx-react-lite@npm:2.0.0":
-  version: 2.0.0
-  resolution: "mobx-react-lite@npm:2.0.0"
+"mobx-react-lite@npm:^2.2.0":
+  version: 2.2.2
+  resolution: "mobx-react-lite@npm:2.2.2"
   peerDependencies:
     mobx: ^4.0.0 || ^5.0.0
     react: ^16.8.0
-  checksum: a1b7db842552bba82a8eb3f3b917bc4a163339d7c0cabab9c07e1a3185a692fa2ff8bec15f4a36266a8e093e6dfec3358ec8f4804c2af56f6e71a5f0da23d8b4
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 27dac5d088c6ea4148b1d71cf1608376d263dae2e835e8ad725e992af41fcbd8a81bd3330d205e383f22997668fb031c2382332ca60633f5e284d61df6d1eb4c
   languageName: node
   linkType: hard
 
@@ -21747,7 +21752,7 @@ __metadata:
   version: 6.3.1
   resolution: "mobx-react@npm:6.3.1"
   dependencies:
-    mobx-react-lite: 2.0.0
+    mobx-react-lite: ^2.2.0
   peerDependencies:
     mobx: ^5.15.4 || ^4.15.4
     react: ^16.8.0 || 16.9.0-alpha.0
@@ -26759,7 +26764,7 @@ __metadata:
     parse-entities: ^2.0.0
     repeat-string: ^1.5.4
     state-toggle: ^1.0.0
-    trim: ^0.0.3
+    trim: 0.0.1
     trim-trailing-lines: ^1.0.0
     unherit: ^1.0.4
     unist-util-remove-position: ^2.0.0
@@ -29771,13 +29776,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"trim@npm:^0.0.3":
-  version: 0.0.3
-  resolution: "trim@npm:0.0.3"
-  checksum: 9a059ba56d5e22c9e571798a7c63640cb25478c495d8a9d001f6352927207c6bd224018751a0c5145fbedc943ee2ebab1d7cc2e8ccba3121a51a7d3428dd879c
-  languageName: node
-  linkType: hard
-
 "trough@npm:^1.0.0":
   version: 1.0.5
   resolution: "trough@npm:1.0.5"
@@ -30354,17 +30352,17 @@ __metadata:
 
 "typescript@patch:typescript@>=3.0.0#~builtin<compat/typescript>":
   version: 4.5.4
-  resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=493e53"
+  resolution: "typescript@patch:typescript@npm%3A4.5.4#~builtin<compat/typescript>::version=4.5.4&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 2e488dde7d2c4a2fa2e79cf2470600f8ce81bc0563c276b72df8ff412d74456ae532ba824650ae936ce207440c79720ddcfaa25e3cb4477572b8534fa4e34d49
+  checksum: eda87927f9cfb94aca9b5e47842daf37347ad3073133e17f556fbb6c18f3493c5b551eedab0f4b26774235ddb7acbe0087250d5285f72ce6819a0891dd5a74ed
   languageName: node
   linkType: hard
 
 "typescript@patch:typescript@^2.5.0#~builtin<compat/typescript>":
   version: 2.9.2
-  resolution: "typescript@patch:typescript@npm%3A2.9.2#~builtin<compat/typescript>::version=2.9.2&hash=493e53"
+  resolution: "typescript@patch:typescript@npm%3A2.9.2#~builtin<compat/typescript>::version=2.9.2&hash=bda367"
   bin:
     tsc: ./bin/tsc
     tsserver: ./bin/tsserver
@@ -30374,11 +30372,11 @@ __metadata:
 
 "typescript@patch:typescript@~4.5.0#~builtin<compat/typescript>, typescript@patch:typescript@~4.5.5#~builtin<compat/typescript>":
   version: 4.5.5
-  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=493e53"
+  resolution: "typescript@patch:typescript@npm%3A4.5.5#~builtin<compat/typescript>::version=4.5.5&hash=bda367"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: c05c318d79c690f101d7ffb34cd6c7d6bbd884d3af9cefe7749ad0cd6be43c7082f098280982ca945dcba23fde34a08fed9602bb26540936baf8c0520727d3ba
+  checksum: 858c61fa63f7274ca4aaaffeced854d550bf416cff6e558c4884041b3311fb662f476f167cf5c9f8680c607239797e26a2ee0bcc6467fbc05bfcb218e1c6c671
   languageName: node
   linkType: hard
 
