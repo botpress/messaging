@@ -1,0 +1,19 @@
+@import '~@blueprintjs/core/lib/scss/variables';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $light-gray5;
+  border: 1px solid $gray4;
+  border-radius: 8px;
+  padding: 8px;
+
+  :first-child {
+    margin-top: 0;
+  }
+  :last-child {
+    margin-bottom: 0;
+  }
+}

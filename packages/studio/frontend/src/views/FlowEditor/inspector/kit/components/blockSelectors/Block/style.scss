@@ -1,0 +1,82 @@
+@import '~@blueprintjs/core/lib/scss/variables';
+
+.container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.block {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid $dark-gray2;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Old versions of Firefox */
+  user-select: none;
+
+  .name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 8px;
+  }
+  .options {
+    margin-left: auto;
+  }
+
+  &.grab {
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &.temp {
+    border: 1px dashed $dark-gray2;
+  }
+
+  &.dragging {
+    border: 1px solid $gray3;
+    border-radius: 5px;
+    background-color: $gray3;
+
+    * {
+      visibility: hidden;
+    }
+  }
+}
+
+.blockTag {
+  background-color: $blue3;
+  margin-right: 8px;
+  min-width: fit-content;
+
+  ::first-letter {
+    text-transform: capitalize;
+  }
+
+  &.content {
+    background-color: $green2;
+  }
+  &.ask {
+    background-color: $red2;
+  }
+  &.code {
+    background-color: $blue2;
+  }
+  &.complex {
+    background-color: $orange2;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}

@@ -10,6 +10,11 @@ export default {
   ],
   framework: '@storybook/react',
   webpackFinal: async (config: any) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '~': path.resolve(__dirname, '../../')
+    }
+    // config.resolve.extensions.push('.ts', '.tsx')
     // add SCSS support for CSS Modules
     config.module.rules.push({
       test: /\.scss$/,
@@ -20,3 +25,14 @@ export default {
     return config
   }
 }
+
+// module.exports = {
+//   webpackFinal: async (config: any) => {
+//     config.resolve.alias = {
+//       ...config.resolve.alias,
+//       '~/': path.resolve(__dirname, '../../')
+//     }
+//     // config.resolve.extensions.push('.ts', '.tsx')
+//     return config
+//   }
+// }
