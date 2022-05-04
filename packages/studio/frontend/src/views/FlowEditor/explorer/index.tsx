@@ -8,8 +8,6 @@ import { SearchBar, SidePanel, SidePanelSection } from '~/src/components/Shared/
 import { lang } from '~/src/components/Shared/translations'
 import { getAllFlows, getCurrentFlow, getDirtyFlows, getFlowNamesList } from '~/src/reducers'
 
-// import Inspector from '../inspector'
-
 import FlowNameModal from './FlowNameModal'
 import FlowsList from './FlowsList'
 
@@ -102,21 +100,6 @@ const SidePanelContent: FC<any> = (props) => {
   )
 }
 
-// const SidePanelInspectorContent: FC<Props> = (props) => {
-//   if (!props.explorerOpen) {
-//     return <Fragment />
-//   }
-
-//   return (
-//     <div className={props.showFlowNodeProps ? style.rightPanelActive : style.rightPanel}>
-//       <SidePanel>
-//         <SidePanelSection label="Inspector"></SidePanelSection>
-//         {props.showFlowNodeProps ? <Inspector /> : null}
-//       </SidePanel>
-//     </div>
-//   )
-// }
-
 const mapStateToProps = (state) => ({
   currentFlow: getCurrentFlow(state),
   flows: getAllFlows(state),
@@ -133,7 +116,4 @@ const mapDispatchToProps = {
   renameFlow
 }
 
-// const SidePanelInspector = connect(mapStateToProps, mapDispatchToProps)(SidePanelInspectorContent)
-
 export default connect(mapStateToProps, mapDispatchToProps)(SidePanelContent)
-// export { SidePanelInspector }
