@@ -1,4 +1,4 @@
-import { syntaxTree, syntaxParserRunning } from '@codemirror/language'
+import { syntaxTree } from '@codemirror/language'
 import { hoverTooltip } from '@codemirror/tooltip'
 
 import InspectCard from './InspectCard'
