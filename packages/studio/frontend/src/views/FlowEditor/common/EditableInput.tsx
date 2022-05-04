@@ -1,11 +1,14 @@
 import classnames from 'classnames'
 import React, { Component } from 'react'
 
-const style = require('./style.scss')
+import * as style from './style.module.scss'
+
 const KEY_A = 65
 
-export default class EditableInput extends Component {
-  constructor(props) {
+export default class EditableInput extends Component<any, any> {
+  private input: HTMLInputElement
+
+  constructor(props: any) {
     super(props)
     this.state = {
       value: props.value || props.defaultValue
@@ -19,11 +22,11 @@ export default class EditableInput extends Component {
     }
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
     this.setState({ value: nextProps.value || nextProps.defaultValue })
   }
 
-  onChanged = event => {
+  onChanged = (event) => {
     let txt = event.target.value
     if (this.props.transform) {
       txt = this.props.transform(txt)
@@ -32,7 +35,7 @@ export default class EditableInput extends Component {
     this.setState({ value: txt })
   }
 
-  onKeyDown = event => {
+  onKeyDown = (event) => {
     if ((event.ctrlKey || event.metaKey) && event.keyCode === KEY_A) {
       event.target.select()
     }
@@ -57,7 +60,7 @@ export default class EditableInput extends Component {
 
   render() {
     const inputWidth = Math.max(120, 20 + 8 * this.props.value.length) + 'px'
-    // TODO: should the class check take into account `state.value` intead?
+    // TODO: should the class check take into account `state.value` instead?
     const inputClass = classnames(style.editableInput, this.props.className, {
       [style.defaultValue]: this.props.value === this.props.defaultValue
     })
@@ -66,7 +69,7 @@ export default class EditableInput extends Component {
       <input
         className={inputClass}
         type="text"
-        ref={el => (this.input = el)}
+        ref={(el) => (this.input = el)}
         style={{ width: inputWidth }}
         autoComplete="off"
         value={this.state.value}

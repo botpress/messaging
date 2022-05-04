@@ -4,14 +4,14 @@ import Mustache from 'mustache'
 import React, { Component } from 'react'
 import { OverlayTrigger, Popover, Well } from 'react-bootstrap'
 
-const style = require('./style.scss')
+import * as style from './style.module.scss'
 
-export default class ConditionItem extends Component {
-  renderNormal(child) {
+export default class ConditionItem extends Component<any> {
+  renderNormal(child: any) {
     return child
   }
 
-  renderOverlay = child => {
+  renderOverlay = (child: any) => {
     const popoverHoverFocus = (
       <Popover id="popover-action" title="⚡ Conditional transition">
         <Well>{this.props.condition.condition}</Well>
@@ -26,7 +26,7 @@ export default class ConditionItem extends Component {
   }
 
   render() {
-    let raw
+    let raw: string
     const { position } = this.props
 
     const { condition, caption } = this.props.condition
@@ -36,10 +36,10 @@ export default class ConditionItem extends Component {
     if (caption) {
       const vars = {}
 
-      const stripDots = str => str.replace(/\./g, '--dot--')
-      const restoreDots = str => str.replace(/--dot--/g, '.')
+      const stripDots = (str: string) => str.replace(/\./g, '--dot--')
+      const restoreDots = (str: string) => str.replace(/--dot--/g, '.')
 
-      const htmlTpl = caption.replace(/\[(.+)]/gi, x => {
+      const htmlTpl = caption.replace(/\[(.+)]/gi, (x) => {
         const name = stripDots(x.replace(/[\[\]]/g, ''))
         vars[name] = '<span class="val">' + _.escape(name) + '</span>'
         return '{{{' + name + '}}}'
