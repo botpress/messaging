@@ -1,8 +1,8 @@
 // Copyright 2016 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
-@import "~@blueprintjs/icons/src/icons";
-@import "../../common/variables";
+@import '@blueprintjs/icons/src/icons';
+@import '../../common/variables';
 
 /*
 Breadcrumbs
@@ -38,10 +38,17 @@ Styleguide breadcrumbs
     &::after {
       display: block;
       margin: 0 ($pt-grid-size / 2);
-      background: svg-icon("16px/chevron-right.svg", (path: (fill: $pt-icon-color)));
+      background: svg-icon(
+        '16px/chevron-right.svg',
+        (
+          path: (
+            fill: $pt-icon-color
+          )
+        )
+      );
       width: $pt-icon-size-standard;
       height: $pt-icon-size-standard;
-      content: "";
+      content: '';
     }
 
     &:last-of-type::after {
@@ -100,10 +107,18 @@ Styleguide breadcrumbs
 
   &::before {
     display: block;
-    background: svg-icon("16px/more.svg", (circle: (fill: $pt-icon-color))) center no-repeat;
+    background: svg-icon(
+        '16px/more.svg',
+        (
+          circle: (
+            fill: $pt-icon-color
+          )
+        )
+      )
+      center no-repeat;
     width: $pt-icon-size-standard;
     height: $pt-icon-size-standard;
-    content: "";
+    content: '';
   }
 
   &:hover {
