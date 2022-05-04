@@ -1,9 +1,15 @@
 import cx from 'classnames'
-import React from 'react'
+import React, { FC } from 'react'
 
 import * as style from './style.module.scss'
 
-export default ({ children, isHighlighed, isLarge, onClick }) => (
+interface OwnProps {
+  isHighlighed?: boolean
+  isLarge?: boolean
+  onClick?: React.MouseEventHandler<HTMLDivElement>
+}
+
+const NodeWrapper: FC<OwnProps> = ({ children, isHighlighed, isLarge, onClick }) => (
   <div
     className={cx(style.nodeWrapper, { [style.highlighted]: isHighlighed, [style.large]: isLarge })}
     onContextMenu={(e) => {
@@ -15,3 +21,5 @@ export default ({ children, isHighlighed, isLarge, onClick }) => (
     {children}
   </div>
 )
+
+export default NodeWrapper

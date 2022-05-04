@@ -18,7 +18,6 @@ interface Props {
   expanded?: boolean
   defaultLabel: string
   handleContextMenu?: (e: SyntheticEvent) => void
-  children?: any
   className?: string
   debugInfo: NodeDebugInfo
   nodeType: string

@@ -4,9 +4,8 @@ import React, { FC } from 'react'
 import * as style from './style.module.scss'
 
 interface Props {
-  onEdit: () => void
+  onEdit: React.MouseEventHandler<HTMLButtonElement>
   className?: string
-  children: any
 }
 
 const NodeContentItem: FC<Props> = ({ onEdit, className, children }) => {
