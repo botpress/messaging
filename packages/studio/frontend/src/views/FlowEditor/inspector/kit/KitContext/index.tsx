@@ -1,6 +1,6 @@
 import React, { useState, useCallback, FC, useEffect } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export type FormOnClick = (id: string, idx: number, event: React.MouseEvent) => void
 

@@ -15,10 +15,10 @@
 // import { useDrag, useDrop } from 'react-dnd'
 // import { getEmptyImage } from 'react-dnd-html5-backend'
 // import { Label, AddBtn, Text, TextIntents, FormKitOnAction } from '../../shared'
-// import layout from '../../shared/layout.scss'
+// import * as layout from '../../shared/layout.module.scss'
 // import Block from '../Block'
 // import CustomDragLayer from './CustomDragLayer'
-// import style from './style.scss'
+// import * as style from './style.scss'
 // import { BlockData } from './types'
 
 // export enum BlockListActions {

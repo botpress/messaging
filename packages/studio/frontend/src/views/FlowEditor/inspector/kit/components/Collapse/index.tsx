@@ -2,7 +2,7 @@ import { Collapse as BpCollapse, Icon } from '@blueprintjs/core'
 import React, { FC } from 'react'
 
 // import BlockList from '../../../formKit/blockSelectors/BlockList'
-import style from './style.scss'
+import * as style from './style.scss'
 
 export type CollapseClick = (id: string, idx: number, event: React.MouseEvent) => void
 

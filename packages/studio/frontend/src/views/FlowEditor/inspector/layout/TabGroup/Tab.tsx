@@ -1,7 +1,7 @@
 import { Icon } from '@blueprintjs/core'
 import React, { FC } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export type TabOnClick = (id: string, idx: number, event: React.MouseEvent) => void
 

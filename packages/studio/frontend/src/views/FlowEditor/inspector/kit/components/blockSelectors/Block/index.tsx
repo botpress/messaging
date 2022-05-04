@@ -2,7 +2,7 @@ import cx from 'classnames'
 import React, { useCallback, forwardRef, FC } from 'react'
 import { Grabber, OptionMenu, Text, TextIntents } from '../../../shared'
 import BlockTags from './BlockTags'
-import style from './style.scss'
+import * as style from './style.scss'
 
 // export enum BlockTypes {
 //   CONTENT = 'content',

@@ -11,7 +11,7 @@ import { isRTLLocale } from '~/src/translations'
 import withLanguage from '../../../components/Util/withLanguage'
 import { ActionPopover } from './actionPopover'
 
-import style from './style.scss'
+import * as style from './style.scss'
 
 interface Props {
   text: string

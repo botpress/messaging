@@ -1,6 +1,6 @@
 import React, { useState, useCallback, FC } from 'react'
 
-import style from './style.scss'
+import * as style from './style.module.scss'
 import Tab, { TabOnClick } from './Tab'
 
 export interface OwnProps {

@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 import { lang } from '~/src/components/Shared/translations'
 import { parseActionInstruction } from './parse'
 
-import style from './style.scss'
+import * as style from './style.scss'
 
 interface Props {
   text: string

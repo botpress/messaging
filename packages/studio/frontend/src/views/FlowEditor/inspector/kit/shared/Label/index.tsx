@@ -1,7 +1,7 @@
 import { Tooltip, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import cx from 'classnames'
 import React, { FC } from 'react'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export interface OwnProps {
   label: string

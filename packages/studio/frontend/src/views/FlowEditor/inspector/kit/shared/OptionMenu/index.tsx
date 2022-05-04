@@ -1,7 +1,7 @@
 import cx from 'classnames'
 import React, { useState, useEffect, useRef, RefObject, FC } from 'react'
 import OptionDots from './OptionDots'
-import style from './style.scss'
+import * as style from './style.module.scss'
 
 export enum OptionActions {
   DELETE = 'delete'

@@ -1,8 +1,7 @@
-import cx from 'classnames'
 import React, { FC } from 'react'
 
 import BackgroundGrid from '../BackgroundGrid'
-import style from './style.scss'
+import * as style from './style.scss'
 
 interface OwnProps {
   center?: boolean

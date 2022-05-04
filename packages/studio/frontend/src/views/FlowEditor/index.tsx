@@ -22,7 +22,7 @@ import { RootReducer } from '~/src/reducers'
 
 import Diagram from './diagram'
 import SidePanel, { PanelPermissions } from './explorer'
-import style from './style.module.scss'
+import * as style from './style.module.scss'
 
 interface OwnProps {
   currentMutex: any

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useCallback, useMemo, FC } from 'react'
 import { useDragLayer } from 'react-dnd'
 import Block from '../Block'
-import style from './style.scss'
+import * as style from './style.scss'
 
 interface OwnProps {
   type: string

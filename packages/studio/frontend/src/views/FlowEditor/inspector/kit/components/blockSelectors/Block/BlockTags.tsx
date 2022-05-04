@@ -1,7 +1,7 @@
 import { Tag, Icon } from '@blueprintjs/core'
 import cx from 'classnames'
 import React, { FC } from 'react'
-import style from './style.scss'
+import * as style from './style.scss'
 
 const typeTypes: any = {
   text: 'content',

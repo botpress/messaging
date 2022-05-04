@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import style from './EditorFrame.module.scss'
+import * as style from './EditorFrame.module.scss'
 import { SafeInputGroupProps } from './types'
 
 const EditorFrame = forwardRef<HTMLInputElement, { children: React.ReactNode } & SafeInputGroupProps>(

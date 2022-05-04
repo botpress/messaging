@@ -4,7 +4,7 @@ import React, { FC } from 'react'
 // import { HTML5Backend } from 'react-dnd-html5-backend'
 import { DragDropContext } from 'react-beautiful-dnd'
 
-import style from './style.scss'
+import * as style from './style.scss'
 
 const BackgroundGrid: FC = ({ children }) => {
   return (
