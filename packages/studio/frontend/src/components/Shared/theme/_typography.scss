@@ -3,9 +3,9 @@
 // Copyright 2015 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
-@import "common/variables";
-@import "common/mixins";
-@import "~@blueprintjs/icons/src/icons";
+@import 'common/variables';
+@import 'common/mixins';
+@import '@blueprintjs/icons/src/icons';
 
 /*
 Headings
@@ -31,12 +31,30 @@ Styleguide headings
 
 // tag: (font-size, line-height)
 $headings: (
-  "h1": (36px, 40px),
-  "h2": (28px, 32px),
-  "h3": (22px, 25px),
-  "h4": (18px, 21px),
-  "h5": (16px, 19px),
-  "h6": (14px, 16px)
+  'h1': (
+    36px,
+    40px
+  ),
+  'h2': (
+    28px,
+    32px
+  ),
+  'h3': (
+    22px,
+    25px
+  ),
+  'h4': (
+    18px,
+    21px
+  ),
+  'h5': (
+    16px,
+    19px
+  ),
+  'h6': (
+    14px,
+    16px
+  )
 ) !default;
 
 @each $tag, $props in $headings {

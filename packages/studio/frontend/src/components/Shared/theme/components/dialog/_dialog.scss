@@ -1,10 +1,10 @@
 // Copyright 2015 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
-@import "~@blueprintjs/icons/src/icons";
-@import "../../common/mixins";
-@import "../../common/react-transition";
-@import "../../common/variables";
+@import '@blueprintjs/icons/src/icons';
+@import '../../common/mixins';
+@import '../../common/react-transition';
+@import '../../common/variables';
 
 /*
 Dialog
@@ -40,17 +40,23 @@ $dialog-padding: $pt-grid-size * 2 !default;
 
 .#{$ns}-dialog-container {
   $dialog-transition-props: (
-    opacity: (0, 1),
-    transform: (scale(0.5), scale(1))
+    opacity: (
+      0,
+      1
+    ),
+    transform: (
+      scale(0.5),
+      scale(1)
+    )
   );
 
   @include react-transition(
-    "#{$ns}-overlay",
+    '#{$ns}-overlay',
     $dialog-transition-props,
     $duration: $pt-transition-duration * 3,
     $easing: $pt-transition-ease-bounce,
-    $before: "&",
-    $after: "> .#{$ns}-dialog"
+    $before: '&',
+    $after: '> .#{$ns}-dialog'
   );
   display: flex;
   align-items: center;
@@ -68,7 +74,7 @@ $dialog-padding: $pt-grid-size * 2 !default;
   border-radius: $dialog-border-radius;
   box-shadow: $pt-dialog-box-shadow;
   background: $light-gray4;
-  padding-bottom:0;
+  padding-bottom: 0;
   pointer-events: all;
   user-select: text;
   width: 500px;
@@ -142,8 +148,8 @@ $dialog-padding: $pt-grid-size * 2 !default;
 .#{$ns}-dialog-footer-actions {
   display: flex;
   justify-content: flex-end;
-  padding-top:10px;
-  padding-bottom:10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 
   .btn {
     margin-left: $pt-grid-size;
