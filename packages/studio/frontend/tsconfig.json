@@ -35,5 +35,5 @@
     "strict": false
   },
   "include": ["src", "src/**/*.json"],
-  "exclude": ["dist"]
+  "exclude": ["dist", "**/*.stories.tsx"]
 }
