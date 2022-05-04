@@ -8,8 +8,8 @@
     "dev": "yarn && yarn run -T parcel src/index.html",
     "build:scss-types": "typed-scss-modules src --logLevel error --nameFormat none --exportType default",
     "build:tsc": "yarn run -T tsc --build",
-    "storybook": "yarn run -T start-storybook -p 6006 -c story/config",
-    "build-storybook": "yarn run -T build-storybook -c story/config"
+    "start:storybook": "yarn run -T start-storybook -p 6006 -c story/config",
+    "build:storybook": "yarn run -T build-storybook -c story/config"
   },
   "devDependencies": {
     "@parcel/config-default": "2.2.1",
