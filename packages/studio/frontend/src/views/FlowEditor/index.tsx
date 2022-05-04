@@ -1,4 +1,4 @@
-import { FlowView } from 'common/typings'
+import { FlowView } from '@botpress/common'
 import _ from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
 import { connect } from 'react-redux'
@@ -182,15 +182,6 @@ const FlowEditor = (props: Props) => {
       </div>
     </div>
   )
-  //   <Container keyHandlers={keyHandlers}>
-  // <SidePanel
-  //   onDeleteSelectedElements={() => diagram?.deleteSelectedElements()}
-  //   readOnly={readOnly}
-  //   mutexInfo={mutex}
-  //   permissions={actions}
-  //   onCreateFlow={createFlow}
-  // />
-  // </Container>
 }
 
 const mapStateToProps = (state: RootReducer) => ({

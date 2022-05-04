@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export const parseActionInstruction = (actionInstruction: string): any => {
   const chunks = actionInstruction.split(' ')
   const serverAndAction = _.head(chunks)!
