@@ -134,7 +134,7 @@
     "slate-react": "0.22.4",
     "slate-react-placeholder": "0.2.4",
     "snarkdown": "^1.2.2",
-    "socket.io-client": "^4.4.1",
+    "socket.io-client": "^4.5.0",
     "styled-components": "^5.3.0",
     "tree-model": "^1.0.7",
     "uuid": "^8.3.2",

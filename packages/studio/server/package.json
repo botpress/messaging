@@ -88,7 +88,7 @@
     "reflect-metadata": "^0.1.13",
     "replace-in-file": "^4.1.1",
     "rimraf": "^3.0.2",
-    "socket.io": "4.3.2",
+    "socket.io": "4.5.0",
     "tar": "^6.1.11",
     "tmp": "^0.2.1",
     "unzipper": "^0.10.11",
