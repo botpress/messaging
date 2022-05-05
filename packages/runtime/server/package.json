@@ -84,7 +84,7 @@
     "replace-in-file": "^4.1.1",
     "semver": "^7.3.5",
     "sqlite3": "^5.0.2",
-    "tar": "^4.4.19",
+    "tar": "^6.1.11",
     "tmp": "^0.2.1",
     "universal-analytics": "^0.5.3",
     "unzipper": "^0.10.11",
