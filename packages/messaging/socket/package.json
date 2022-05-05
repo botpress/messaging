@@ -14,7 +14,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.5.0",
     "@types/lodash": "^4.14.178",
     "@types/node": "^16.11.13",
     "@types/uuid": "^8.3.4",
