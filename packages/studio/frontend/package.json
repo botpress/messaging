@@ -6,7 +6,6 @@
     "build": "yarn && yarn run -T parcel build src/index.html",
     "watch": "yarn && yarn run -T parcel watch src/index.html",
     "dev": "yarn && yarn run -T parcel src/index.html",
-    "build:scss-types": "typed-scss-modules src --logLevel error --nameFormat none --exportType default",
     "build:tsc": "yarn run -T tsc --build",
     "start:storybook": "yarn run -T start-storybook -p 6006 -c story/config",
     "build:storybook": "yarn run -T build-storybook -c story/config"
@@ -39,8 +38,7 @@
     "postcss": "^8.4.12",
     "rimraf": "^3.0.2",
     "sass": "^1.49.9",
-    "sass-loader": "^10",
-    "typed-scss-modules": "^6.2.1"
+    "sass-loader": "^10"
   },
   "dependencies": {
     "@analytics/segment": "^1.1.3",
