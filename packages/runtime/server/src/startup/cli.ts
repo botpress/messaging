@@ -29,7 +29,7 @@ yargs
       process.IS_PRODUCTION = argv.production || yn(process.env.BP_PRODUCTION) || yn(process.env.CLUSTER_ENABLED)
 
       process.AUTO_MIGRATE =
-        process.env.AUTO_MIGRATE === undefined ? yn(argv.autoMigrate) : yn(process.env.AUTO_MIGRATE)
+        (process.env.AUTO_MIGRATE === undefined ? yn(argv.autoMigrate) : yn(process.env.AUTO_MIGRATE)) || false
 
       process.TELEMETRY_URL = process.env.TELEMETRY_URL || 'https://telemetry.botpress.cloud/ingest'
       process.VERBOSITY_LEVEL = argv.verbose ? Number(argv.verbose) : defaultVerbosity

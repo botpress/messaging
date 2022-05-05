@@ -43,7 +43,7 @@ export class StateManager {
     @inject(TYPES.JobService) private jobService: JobService
   ) {
     // Temporarily opt-in until thoroughly tested
-    this.useRedis = process.CLUSTER_ENABLED && yn(process.env.USE_REDIS_STATE)
+    this.useRedis = process.CLUSTER_ENABLED && (yn(process.env.USE_REDIS_STATE) || false)
   }
 
   public initialize() {
