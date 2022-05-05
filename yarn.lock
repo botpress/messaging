@@ -2913,7 +2913,7 @@ __metadata:
     sqlite3: ^5.0.2
     tar: ^4.4.19
     tmp: ^0.0.33
-    universal-analytics: ^0.4.20
+    universal-analytics: ^0.5.3
     unzipper: ^0.10.11
     uuid: ^8.3.2
     verror: ^1.10.1
@@ -25020,7 +25020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"request@npm:^2.87.0, request@npm:^2.88.2":
+"request@npm:^2.87.0":
   version: 2.88.2
   resolution: "request@npm:2.88.2"
   dependencies:
@@ -28532,14 +28532,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"universal-analytics@npm:^0.4.20":
-  version: 0.4.23
-  resolution: "universal-analytics@npm:0.4.23"
+"universal-analytics@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "universal-analytics@npm:0.5.3"
   dependencies:
-    debug: ^4.1.1
-    request: ^2.88.2
-    uuid: ^3.0.0
-  checksum: ca6b77ec782323ec8b52f90fc75c4c983cdb213cb7a2c77327026cff4ba6d4db6f92cd2e8bdb8236f60fe745ab8a18bf044679818deffdf561e311b1fb698c06
+    debug: ^4.3.1
+    uuid: ^8.0.0
+  checksum: 5a8d4d4206bcd2b1b64a6206b01f8fe597222e0d41623a1adf3e692038a32ab9377ca47c1c220f2eddd52ee1edc9ea82d44a80a8c5dc0247611f956b3f51dfdb
   languageName: node
   linkType: hard
 
@@ -28838,7 +28837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^3.0.0, uuid@npm:^3.1.0, uuid@npm:^3.2.1, uuid@npm:^3.3.2":
+"uuid@npm:^3.1.0, uuid@npm:^3.2.1, uuid@npm:^3.3.2":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
   bin:
@@ -28856,7 +28855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^8.3.0, uuid@npm:^8.3.2":
+"uuid@npm:^8.0.0, uuid@npm:^8.3.0, uuid@npm:^8.3.2":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:

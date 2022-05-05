@@ -86,7 +86,7 @@
     "sqlite3": "^5.0.2",
     "tar": "^4.4.19",
     "tmp": "^0.0.33",
-    "universal-analytics": "^0.4.20",
+    "universal-analytics": "^0.5.3",
     "unzipper": "^0.10.11",
     "uuid": "^8.3.2",
     "verror": "^1.10.1",
