@@ -37,8 +37,8 @@
     "immutable": "^4.0.0",
     "postcss": "^8.4.12",
     "rimraf": "^3.0.2",
-    "sass": "^1.49.9",
-    "sass-loader": "^10"
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0"
   },
   "dependencies": {
     "@analytics/segment": "^1.1.3",
