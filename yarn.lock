@@ -3151,7 +3151,7 @@ __metadata:
     slate-react-placeholder: 0.2.4
     snarkdown: ^1.2.2
     socket.io-client: ^4.5.0
-    styled-components: ^5.3.0
+    styled-components: ^5.3.5
     tree-model: ^1.0.7
     uuid: ^8.3.2
     yn: 4.0.0
@@ -26452,7 +26452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"styled-components@npm:^5.3.0":
+"styled-components@npm:^5.3.5":
   version: 5.3.5
   resolution: "styled-components@npm:5.3.5"
   dependencies:
