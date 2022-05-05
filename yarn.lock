@@ -2478,8 +2478,8 @@ __metadata:
     "@botpress/messaging-client": 1.2.0
     "@botpress/messaging-socket": 1.2.0
     "@botpress/webchat": 0.4.0
-    "@parcel/config-default": ^2.2.1
-    "@parcel/transformer-typescript-tsc": ^2.2.1
+    "@parcel/config-default": 2.2.1
+    "@parcel/transformer-typescript-tsc": 2.2.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     react: ^17.0.2
@@ -3106,7 +3106,6 @@ __metadata:
     multer: ^1.4.2
     mustache: ^2.3.0
     nanoid: ^3.2.0
-    parcel: 2.2.1
     pathfinding: ^0.4.18
     paths-js: ^0.4.9
     postcss: ^8.4.12
@@ -3166,9 +3165,9 @@ __metadata:
   resolution: "@botpress/webchat-inject@workspace:packages/webchat/inject"
   dependencies:
     "@botpress/webchat": 0.4.0
-    "@parcel/config-default": ^2.2.1
+    "@parcel/config-default": 2.2.1
     "@parcel/reporter-bundle-analyzer": 2.2.1
-    "@parcel/transformer-typescript-tsc": ^2.2.1
+    "@parcel/transformer-typescript-tsc": 2.2.1
     "@types/react": ^17.0.38
     "@types/react-dom": ^17.0.11
     react: ^17.0.2
@@ -3186,8 +3185,8 @@ __metadata:
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.0.2
-    "@parcel/config-default": ^2.2.1
-    "@parcel/transformer-typescript-tsc": ^2.2.1
+    "@parcel/config-default": 2.2.1
+    "@parcel/transformer-typescript-tsc": 2.2.1
     "@types/crypto-js": ^4.1.1
     "@types/js-cookie": ^3.0.1
     "@types/lodash": ^4.14.178
@@ -5139,7 +5138,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@parcel/transformer-typescript-tsc@npm:2.2.1, @parcel/transformer-typescript-tsc@npm:^2.2.1":
+"@parcel/transformer-typescript-tsc@npm:2.2.1":
   version: 2.2.1
   resolution: "@parcel/transformer-typescript-tsc@npm:2.2.1"
   dependencies:

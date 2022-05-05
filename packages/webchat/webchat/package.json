@@ -17,8 +17,8 @@
     "assets"
   ],
   "devDependencies": {
-    "@parcel/config-default": "^2.2.1",
-    "@parcel/transformer-typescript-tsc": "^2.2.1",
+    "@parcel/config-default": "2.2.1",
+    "@parcel/transformer-typescript-tsc": "2.2.1",
     "@types/crypto-js": "^4.1.1",
     "@types/js-cookie": "^3.0.1",
     "@types/lodash": "^4.14.178",
