@@ -27,7 +27,7 @@
     "knex-schema-inspector": "^1.7.5",
     "pg": "^8.7.1",
     "socket.io-client": "^4.5.0",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.7"
   },
   "dependencies": {
     "@botpress/messaging-base": "1.2.0",
