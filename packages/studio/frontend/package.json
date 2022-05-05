@@ -21,7 +21,7 @@
     "@storybook/react": "^6.4.22",
     "@types/classnames": "^2.3.1",
     "@types/json-schema": "^7.0.11",
-    "@types/lodash": "^4.14.178",
+    "@types/lodash": "^4.14.182",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^16.11.13",
     "@types/react": "^17.0.38",

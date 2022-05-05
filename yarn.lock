@@ -2425,7 +2425,7 @@ __metadata:
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/jest": ^27.5.0
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/lru-cache": ^5.1.1
     "@types/ms": ^0.7.31
     "@types/uuid": ^8.3.4
@@ -2456,7 +2456,7 @@ __metadata:
   resolution: "@botpress/logger@workspace:packages/studio/logger"
   dependencies:
     "@types/cli-color": ^2.0.2
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/node": ^16.11.13
     cli-color: ^2.0.1
     lodash: ^4.17.21
@@ -2496,7 +2496,7 @@ __metadata:
     "@types/cli-color": ^2.0.2
     "@types/express": ^4.17.13
     "@types/jsonwebtoken": ^8.5.8
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/lru-cache": ^5.1.1
     "@types/ms": ^0.7.31
     "@types/node": ^16.11.13
@@ -2602,7 +2602,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/ioredis": ^4.28.7
     "@types/jest": ^27.5.0
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/lru-cache": ^5.1.1
     "@types/ms": ^0.7.31
     "@types/node": ^16.11.13
@@ -2640,7 +2640,7 @@ __metadata:
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/jest": ^27.5.0
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/lru-cache": ^5.1.1
     "@types/ms": ^0.7.31
     "@types/node": ^16.11.13
@@ -2682,7 +2682,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/jest": ^27.5.0
     "@types/jest-dev-server": ^5.0.0
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/ms": ^0.7.31
     "@types/node": ^16.11.13
     "@types/semver": ^7.3.9
@@ -2721,7 +2721,7 @@ __metadata:
   dependencies:
     "@botpress/messaging-base": 1.2.0
     "@types/jest": ^27.5.0
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
     lodash: ^4.17.21
@@ -2851,7 +2851,7 @@ __metadata:
     "@types/body-parser": ^1.19.2
     "@types/cors": ^2.8.12
     "@types/express": ^4.16.0
-    "@types/lodash": ^4.14.116
+    "@types/lodash": ^4.14.182
     "@types/minimatch": ^3.0.5
     "@types/ms": ^0.7.30
     "@types/node": ^16.11.13
@@ -2889,8 +2889,8 @@ __metadata:
     jsonwebtoken: ^8.5.1
     knex: ^0.20.1
     lock: ^1.1.0
-    lodash: ^4.17.19
-    lodash-decorators: ^6.0.0
+    lodash: ^4.17.21
+    lodash-decorators: ^6.0.1
     lru-cache: ^5.1.1
     mathjs: ^7.5.1
     minimatch: ^5.0.1
@@ -2954,7 +2954,7 @@ __metadata:
     "@types/fs-extra": ^9.0.13
     "@types/glob": ^7.1.0
     "@types/joi": ^13.4.5
-    "@types/lodash": 4.14.178
+    "@types/lodash": 4.14.182
     "@types/mime-types": ^2.1.1
     "@types/minimatch": ^3.0.5
     "@types/ms": ^0.7.31
@@ -3061,7 +3061,7 @@ __metadata:
     "@storybook/react": ^6.4.22
     "@types/classnames": ^2.3.1
     "@types/json-schema": ^7.0.11
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/mime-types": ^2.1.1
     "@types/node": ^16.11.13
     "@types/react": ^17.0.38
@@ -3187,7 +3187,7 @@ __metadata:
     "@parcel/transformer-typescript-tsc": 2.2.1
     "@types/crypto-js": ^4.1.1
     "@types/js-cookie": ^3.0.1
-    "@types/lodash": ^4.14.178
+    "@types/lodash": ^4.14.182
     "@types/mime": ^2.0.3
     "@types/node": ^16.11.13
     "@types/react": ^17.0.38
@@ -7568,17 +7568,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:4.14.178, @types/lodash@npm:^4.14.178":
-  version: 4.14.178
-  resolution: "@types/lodash@npm:4.14.178"
-  checksum: a69a04a60bfc5257c3130a554b4efa0c383f0141b7b3db8ab7cf07ad2a46ea085fce66d0242da41da7e5647b133d5dfb2c15add9cbed8d7fef955e4a1e5b3128
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:^4.14.116":
+"@types/lodash@npm:4.14.182, @types/lodash@npm:^4.14.182":
   version: 4.14.182
   resolution: "@types/lodash@npm:4.14.182"
   checksum: 7dd137aa9dbabd632408bd37009d984655164fa1ecc3f2b6eb94afe35bf0a5852cbab6183148d883e9c73a958b7fec9a9bcf7c8e45d41195add6a18c34958209
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4.14.178":
+  version: 4.14.178
+  resolution: "@types/lodash@npm:4.14.178"
+  checksum: a69a04a60bfc5257c3130a554b4efa0c383f0141b7b3db8ab7cf07ad2a46ea085fce66d0242da41da7e5647b133d5dfb2c15add9cbed8d7fef955e4a1e5b3128
   languageName: node
   linkType: hard
 
@@ -18887,7 +18887,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash-decorators@npm:^6.0.0, lodash-decorators@npm:^6.0.1":
+"lodash-decorators@npm:^6.0.1":
   version: 6.0.1
   resolution: "lodash-decorators@npm:6.0.1"
   dependencies:
