@@ -10,7 +10,7 @@
   "devDependencies": {
     "@types/cli-color": "^2.0.2",
     "@types/lodash": "^4.14.182",
-    "@types/node": "^16.11.13"
+    "@types/node": "^16.11.33"
   },
   "dependencies": {
     "cli-color": "^2.0.2",

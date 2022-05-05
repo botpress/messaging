@@ -11,8 +11,8 @@
   "devDependencies": {
     "@parcel/config-default": "2.2.1",
     "@parcel/transformer-typescript-tsc": "2.2.1",
-    "@types/react": "^17.0.38",
-    "@types/react-dom": "^17.0.11"
+    "@types/react": "^17.0.44",
+    "@types/react-dom": "^17.0.16"
   },
   "dependencies": {
     "@botpress/messaging-base": "1.2.0",
