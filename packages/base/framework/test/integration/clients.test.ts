@@ -1,6 +1,7 @@
-import { Client, ClientService } from '@botpress/messaging-framework'
-import { validate as validateUuid } from 'uuid'
-import { app, destroyApp, setupApp } from '../utils'
+import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
+
+import { Client, ClientService } from '../../src'
+import { destroyApp, framework, setupApp } from '../utils'
 
 describe('Clients', () => {
   let clients: ClientService
@@ -9,7 +10,8 @@ describe('Clients', () => {
 
   beforeAll(async () => {
     await setupApp()
-    clients = app.clients
+
+    clients = framework.clients
     querySpy = jest.spyOn(clients as any, 'query')
 
     state = {}
@@ -20,10 +22,10 @@ describe('Clients', () => {
   })
 
   beforeEach(async () => {
-    app.caching.resetAll()
+    framework.caching.resetAll()
   })
 
-  test('Create client', async () => {
+  test('Should be able to create a client', async () => {
     const client = await clients.create()
 
     expect(client).toBeDefined()
@@ -32,13 +34,13 @@ describe('Clients', () => {
     state.client = client
   })
 
-  test('Get client by id', async () => {
+  test('Should be able to get a client by id', async () => {
     const client = await clients.getById(state.client!.id)
     expect(client).toEqual(state.client)
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 
-  test('Get client by id cached', async () => {
+  test('Should be able to get a cached client by id', async () => {
     const client = await clients.getById(state.client!.id)
     expect(client).toEqual(state.client)
     expect(querySpy).toHaveBeenCalledTimes(1)
@@ -48,6 +50,12 @@ describe('Clients', () => {
       expect(cached).toEqual(state.client)
     }
 
+    expect(querySpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Should throw an error if the client does not exist', async () => {
+    const clientId = uuidv4()
+    await expect(clients.getById(clientId)).rejects.toThrow(`Client ${clientId} not found`)
     expect(querySpy).toHaveBeenCalledTimes(1)
   })
 })
