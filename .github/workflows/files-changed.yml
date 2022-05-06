@@ -18,6 +18,9 @@ on:
       base:
         description: 'Returns if there were changes in the base package'
         value: ${{ jobs.files_changed.outputs.base }}
+      packages:
+        description: 'Returns the list of packages with changes'
+        value: ${{ jobs.files_changed.outputs.packages }}
 
 permissions:
   contents: read
@@ -50,3 +53,4 @@ jobs:
       webchat: ${{ steps.changed.outputs.webchat }}
       runtime: ${{ steps.changed.outputs.runtime }}
       base: ${{ steps.changed.outputs.base }}
+      packages: ${{ steps.changed.outputs.changes }}

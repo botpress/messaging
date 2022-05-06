@@ -30,9 +30,8 @@ jobs:
     strategy:
       matrix:
         database: ['sqlite', 'postgres']
-        project: ['messaging', 'base']
+        project: ${{ fromJSON(needs.files_changed.outputs.packages) }}
     needs: files_changed
-    if: ${{ needs.files_changed.outputs[format('{0}', 'messaging')] == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -57,7 +56,7 @@ jobs:
         run: until pg_isready -h localhost; do sleep 1; done
       - name: Run tests
         run: |
-          yarn test:int --coverage --verbose
+          yarn test:int --coverage --verbose packages/${{ matrix.project }}
         env:
           DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432' || '' }}
 
