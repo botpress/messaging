@@ -32,7 +32,7 @@ jobs:
         database: ['sqlite', 'postgres']
         project: ['messaging', 'base']
     needs: files_changed
-    if: needs.files_changed.outputs.${{ matrix.project }} == 'true'
+    if: needs.files_changed.outputs.base == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -57,7 +57,7 @@ jobs:
         run: until pg_isready -h localhost; do sleep 1; done
       - name: Run tests
         run: |
-          yarn test:int --selectProjects ${{ matrix.project }} --coverage --verbose
+          yarn test:int --coverage --verbose
         env:
           DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432' || '' }}
 
