@@ -32,7 +32,7 @@ jobs:
         database: ['sqlite', 'postgres']
         project: ['messaging', 'base']
     needs: files_changed
-    if: needs.files_changed.outputs.base == 'true'
+    if: ${{ needs.files_changed.outputs[matrix.project] == 'true' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@master
