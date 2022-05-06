@@ -15,6 +15,9 @@ on:
       runtime:
         description: 'Returns if there were changes in the runtime package'
         value: ${{ jobs.files_changed.outputs.runtime }}
+      base:
+        description: 'Returns if there were changes in the base package'
+        value: ${{ jobs.files_changed.outputs.base }}
 
 permissions:
   contents: read
@@ -39,8 +42,11 @@ jobs:
               - 'packages/webchat/**'
             runtime:
               - 'packages/runtime/**'
+            base:
+              - 'packages/base/**'
     outputs:
       messaging: ${{ steps.changed.outputs.messaging }}
       studio: ${{ steps.changed.outputs.studio }}
       webchat: ${{ steps.changed.outputs.webchat }}
       runtime: ${{ steps.changed.outputs.runtime }}
+      base: ${{ steps.changed.outputs.base }}
