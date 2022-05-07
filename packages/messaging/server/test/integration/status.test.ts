@@ -1,3 +1,4 @@
+import { randStr } from '@botpress/base-test/src'
 import _ from 'lodash'
 import ms from 'ms'
 import { validate as validateUuid } from 'uuid'
@@ -5,7 +6,7 @@ import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
 import { StatusService } from '../../src/status/service'
 import { ConduitStatus } from '../../src/status/types'
-import { app, destroyApp, randStr, setupApp } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 const TOLERANCE = ms('1h')
 const LIMIT = 10

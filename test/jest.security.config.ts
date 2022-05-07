@@ -4,13 +4,11 @@ import { pathsToModuleNameMapper } from 'ts-jest'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  globalSetup: './jest.e2e.setup.ts',
-  globalTeardown: './jest.e2e.teardown.ts',
   projects: [
     {
       rootDir: 'packages/messaging/server',
       testMatch: ['<rootDir>/test/security/**/(*.)test.ts'],
-      displayName: { name: 'Server', color: 'white' },
+      displayName: { name: 'Messaging', color: 'white' },
       testEnvironment: 'node',
       transform: {
         '^.+\\.tsx?$': require.resolve('ts-jest')
@@ -20,6 +18,8 @@ const config: Config.InitialOptions = {
           tsconfig: '<rootDir>/test/tsconfig.json'
         }
       },
+      globalSetup: '<rootDir>/test/jest.security.setup.ts',
+      globalTeardown: '<rootDir>/test/jest.security.teardown.ts',
       clearMocks: true,
       moduleNameMapper: pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     }

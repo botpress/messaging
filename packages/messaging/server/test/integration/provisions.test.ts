@@ -1,8 +1,9 @@
+import { randStr } from '@botpress/base-test/src'
 import { Client } from '@botpress/messaging-framework'
 import { Provider } from '../../src/providers/types'
 import { ProvisionService } from '../../src/provisions/service'
 import { Provision } from '../../src/provisions/types'
-import { app, destroyApp, randStr, setupApp } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 describe('Provisions', () => {
   let provisions: ProvisionService

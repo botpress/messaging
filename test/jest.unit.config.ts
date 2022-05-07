@@ -4,15 +4,6 @@ import { pathsToModuleNameMapper } from 'ts-jest'
 
 const config: Config.InitialOptions = {
   preset: 'ts-jest',
-  // TODO: Re-enable coverage threshold once we have enough tests
-  /*coverageThreshold: {
-    global: {
-      branches: 60,
-      functions: 60,
-      lines: 60,
-      statements: 60
-    }
-  }*/
   projects: [
     {
       rootDir: 'packages/base/engine',
@@ -27,7 +18,7 @@ const config: Config.InitialOptions = {
     {
       rootDir: 'packages/messaging/server',
       testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
-      displayName: { name: 'Server', color: 'blue' },
+      displayName: { name: 'Messaging', color: 'blue' },
       testEnvironment: 'node',
       transform: {
         '^.+\\.tsx?$': require.resolve('ts-jest')
