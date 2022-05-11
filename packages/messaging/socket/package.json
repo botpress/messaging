@@ -14,15 +14,15 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/jest": "^27.4.0",
-    "@types/lodash": "^4.14.178",
-    "@types/node": "^16.11.13",
+    "@types/jest": "^27.5.0",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^16.11.33",
     "@types/uuid": "^8.3.4",
     "lodash": "^4.17.21",
     "uuid": "^8.3.2"
   },
   "dependencies": {
     "@botpress/messaging-base": "1.2.0",
-    "socket.io-client": "^4.4.1"
+    "socket.io-client": "^4.5.0"
   }
 }
