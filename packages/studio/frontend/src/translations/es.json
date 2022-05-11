@@ -464,8 +464,7 @@
       "usageModal": {
         "contentUsage": "Uso de contenido",
         "node": "Nodo"
-      },
-      "contentTypeWarning": "Tenga en cuenta que este tipo de contenido solo es compatible con {channels}"
+      }
     },
     "flow": {
       "zoomIn": "Agrandar",

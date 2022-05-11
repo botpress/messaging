@@ -2,7 +2,7 @@ import path from 'path'
 import url from 'url'
 
 const isBpUrl = (str: string) => {
-  const re = /^\/api\/.*\/bots\/.*\/media\/.*/
+  const re = /^\/api\/v1\/studio\/.*\/media\/.*/
   return re.test(str)
 }
 

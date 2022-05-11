@@ -1,4 +1,5 @@
 import { FormField } from '@botpress/sdk'
+import { AxiosInstance } from 'axios'
 import { InvalidField } from '../typings'
 
 export interface FieldProps {
@@ -63,7 +64,7 @@ export type TextProps = FieldProps & { field: FormField }
 export type SupportedFileType = 'image' | 'audio' | 'video' | 'file'
 
 export interface UploadFieldProps extends FieldProps {
-  axios: any
+  axios: AxiosInstance
   customPath?: string
   onChange?: (url: string | undefined) => void
   type: SupportedFileType
