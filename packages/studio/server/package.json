@@ -21,6 +21,7 @@
     "@types/express": "^4.17.13",
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",
+    "@types/jest": "^27.5.0",
     "@types/joi": "^13.6.3",
     "@types/lodash": "4.14.182",
     "@types/mime-types": "^2.1.1",
