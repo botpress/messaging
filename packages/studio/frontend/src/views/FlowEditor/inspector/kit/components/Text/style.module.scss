@@ -1,0 +1,67 @@
+@use '~/src/scss/vendor/index.module' as bp;
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+
+.container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  row-gap: 6px;
+  box-sizing: border-box;
+}
+
+.textInput {
+  //Reset
+  border: 0;
+  appearance: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+
+  @extend %text-normal, %font-sm;
+  display: flex;
+  width: 100%;
+
+  outline: none;
+  padding: 8px 12px;
+
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 30px;
+
+  background: bp.$light-gray5;
+
+  border: 1px solid bp.$light-gray2;
+  border-radius: 6px;
+  transition: all 75ms linear;
+  &:focus,
+  &:hover {
+    // @extend .shadow2;
+    border: 1px solid abstracts.$bp-blue;
+  }
+  &:focus {
+    background-color: white;
+    appearance: none;
+    @extend .shadow-focus;
+  }
+}
+
+.error {
+  .textInput {
+    border: 1px solid bp.$red3;
+    background-color: abstracts.$red-highlight4;
+    color: bp.$red3;
+
+    &:hover,
+    &:focus {
+      @extend .shadow-error;
+    }
+
+    &:focus {
+      background-color: white;
+    }
+  }
+}
