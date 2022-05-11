@@ -120,7 +120,7 @@ export class ConfigsStats extends TelemetryStats {
   private formatBotConfig(botConfig: BotConfig, defaultConfig): BotConfig {
     return {
       ...this.obfuscateSecrets(botConfig, defaultConfig),
-      details: this.formatBotDetails(botConfig.details),
+      details: this.formatBotDetails(botConfig.details!),
       id: calculateHash(botConfig.id),
       name: calculateHash(botConfig.name)
     }
