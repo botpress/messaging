@@ -28,7 +28,7 @@ const Label: FC<OwnProps> = ({ label, hint, required, className }) => {
 
   const LabelText = () => {
     return (
-      <h4>
+      <h4 className={style.labelText}>
         <span className={cx({ [style.hint]: hint })}>{label}</span>
         {/* {hint && fillLink(hint)} */}
         {required && <span className={style.req}>&nbsp;*</span>}

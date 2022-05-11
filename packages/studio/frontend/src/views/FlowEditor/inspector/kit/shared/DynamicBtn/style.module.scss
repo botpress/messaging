@@ -1,15 +1,14 @@
-@import '@blueprintjs/core/lib/scss/variables';
+@use '../../../../../../scss/vendor/index.module' as vendor;
 
 .dynamicBtn {
-  // display: flex;
-  // align-items: center;
-  // justify-content: center;
-
-  color: $gray2;
   cursor: pointer;
+  color: vendor.$gray2;
+  user-select: none;
+  height: 16px;
+  transition: all 75ms linear;
 
   &:hover {
-    color: $gray4;
+    color: vendor.$gray4;
   }
 
   &[aria-active='true'] {
