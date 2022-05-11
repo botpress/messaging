@@ -17,6 +17,7 @@ export interface MessengerMessage {
     mid: string
     text: string
     quick_reply?: { payload: string }
+    attachments?: { type: string; payload: { url: string } }[]
   }
   postback?: {
     mid: string

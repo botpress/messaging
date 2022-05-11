@@ -67,6 +67,13 @@ export class MessengerApi extends ChannelApi<MessengerService> {
           text: message.message.text,
           payload: message.message.quick_reply.payload
         })
+      } else if (message.message.attachments) {
+        for (const attachment of message.message.attachments) {
+          await this.service.receive(scope, this.extractEndpoint(message), {
+            type: attachment.type,
+            [attachment.type]: attachment.payload.url
+          })
+        }
       } else {
         await this.service.receive(scope, this.extractEndpoint(message), { type: 'text', text: message.message.text })
       }
