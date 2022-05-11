@@ -48,14 +48,14 @@ export const loadEnvVars = () => {
   require('dotenv').config({ path: path.resolve(process.PROJECT_LOCATION, '.env') })
   process.runtime_env = process.env as RuntimeEnvironmentVariables
 
-  process.DISABLE_GLOBAL_SANDBOX = yn(process.runtime_env.DISABLE_GLOBAL_SANDBOX)
-  process.DISABLE_BOT_SANDBOX = yn(process.runtime_env.DISABLE_BOT_SANDBOX)
-  process.DISABLE_TRANSITION_SANDBOX = yn(process.runtime_env.DISABLE_TRANSITION_SANDBOX)
-  process.DISABLE_CONTENT_SANDBOX = yn(process.runtime_env.DISABLE_CONTENT_SANDBOX)
+  process.DISABLE_GLOBAL_SANDBOX = yn(process.runtime_env.DISABLE_GLOBAL_SANDBOX) || false
+  process.DISABLE_BOT_SANDBOX = yn(process.runtime_env.DISABLE_BOT_SANDBOX) || false
+  process.DISABLE_TRANSITION_SANDBOX = yn(process.runtime_env.DISABLE_TRANSITION_SANDBOX) || false
+  process.DISABLE_CONTENT_SANDBOX = yn(process.runtime_env.DISABLE_CONTENT_SANDBOX) || false
   process.IS_LICENSED = true
   process.ASSERT_LICENSED = () => {}
   process.BPFS_STORAGE = process.runtime_env.BPFS_STORAGE || 'disk'
-  process.CLUSTER_ENABLED = yn(process.runtime_env.CLUSTER_ENABLED)
+  process.CLUSTER_ENABLED = yn(process.runtime_env.CLUSTER_ENABLED) || false
   process.OAUTH_ENDPOINT = process.runtime_env.OAUTH_ENDPOINT
   process.NLU_ENDPOINT = process.runtime_env.NLU_ENDPOINT
   process.MESSAGING_ENDPOINT = process.runtime_env.MESSAGING_ENDPOINT

@@ -9,7 +9,6 @@ jobs:
     name: Unit
     runs-on: ubuntu-latest
     needs: files_changed
-    if: needs.files_changed.outputs.messaging == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@master

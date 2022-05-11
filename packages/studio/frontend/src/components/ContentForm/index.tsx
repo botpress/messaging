@@ -1,7 +1,7 @@
-import { Icon, Button, Intent } from '@blueprintjs/core'
+import { Button, Intent } from '@blueprintjs/core'
 import _ from 'lodash'
 import React, { FC } from 'react'
-import Form, { FieldProps, IChangeEvent, UiSchema, WidgetProps } from 'react-jsonschema-form'
+import Form, { IChangeEvent, UiSchema, WidgetProps } from 'react-jsonschema-form'
 import CheckboxWidget from 'react-jsonschema-form/lib/components/widgets/CheckboxWidget'
 
 import SmartInput from '../../components/SmartInput'
@@ -96,41 +96,9 @@ const widgets: Widgets = {
   CheckboxWidget: CustomCheckboxWidget
 }
 
-// TODO: Remove this once audio, video, file and location content-types are
-// support on roughly half the channels
-const CustomDescriptionField = ({ description, id, formContext }: FieldProps) => {
-  const mapping = {
-    audio: ['channel-web', 'channel-vonage'],
-    video: ['channel-web', 'channel-vonage'],
-    file: ['channel-web', 'channel-vonage'],
-    location: ['channel-vonage']
-  }
-
-  if (id === 'root__description' && Object.keys(mapping).includes(formContext.subtype)) {
-    return (
-      <div id={id} style={{ lineHeight: 'normal' }}>
-        <div>
-          <span className={style.warning}>
-            <Icon icon="warning-sign" />
-            &nbsp;{' '}
-            {lang.tr('studio.content.contentTypeWarning', {
-              channels: mapping[formContext.subtype].join(', ')
-            })}
-          </span>
-        </div>
-        <br />
-        <div>{description}</div>
-      </div>
-    )
-  } else {
-    return <div id={id}>{description}</div>
-  }
-}
-
 const fields: Fields = {
   i18n_field: renderWrapped(Text),
-  i18n_array: ArrayMl as any, // TODO: Fix typings with ArrayMl class component
-  DescriptionField: CustomDescriptionField
+  i18n_array: ArrayMl as any // TODO: Fix typings with ArrayMl class component
 }
 
 const translatePropsRecursive = (schema: Schema) => {
