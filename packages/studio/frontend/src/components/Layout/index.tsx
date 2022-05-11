@@ -13,12 +13,14 @@ import {
   trainSessionReceived,
   viewModeChanged
 } from '../../actions'
+
 import SelectContentManager from '../../components/Content/Select/Manager'
 import PluginInjectionSite from '../../components/PluginInjectionSite'
 import CodeEditor from '../../views/CodeEditor'
 import Config from '../../views/Config'
 import Content from '../../views/Content'
 import FlowBuilder from '../../views/FlowBuilder'
+import FlowEditor from '../../views/FlowEditor'
 import Module from '../../views/Module'
 import NLU from '../../views/Nlu'
 import QNA from '../../views/Qna'
@@ -227,7 +229,8 @@ const Layout: FC<Props> = (props: Props) => {
                   }}
                 />
                 <Route exact path="/content" component={Content} />
-                <Route exact path="/flows/:flow*" component={FlowBuilder} />
+                <Route exact path="/flows/:flow*" component={FlowEditor} />
+                <Route exact path="/oldflows/:flow*" component={FlowBuilder} />
                 <Route exact path="/config" component={Config} />
                 <Route exact path="/nlu" component={NLU} />
                 <Route exact path="/qna" component={QNA} />

@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import Markdown from 'react-markdown'
 
-import style from './Interface/style.scss'
+import * as style from './Interface/style.scss'
 
 interface Props {
   content: JSX.Element | string

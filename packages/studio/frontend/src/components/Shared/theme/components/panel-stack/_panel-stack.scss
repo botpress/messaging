@@ -1,8 +1,8 @@
 // Copyright 2018 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
-@import "../../common/variables";
-@import "~@blueprintjs/core/src/common/react-transition";
+@import '../../common/variables';
+@import '@blueprintjs/core/src/common/react-transition';
 
 .#{$ns}-panel-stack {
   position: relative;
@@ -68,16 +68,22 @@
 // PUSH transition: enter from right (100%), existing panel moves off left.
 .#{$ns}-panel-stack-push {
   @include react-transition-phase(
-    "#{$ns}-panel-stack",
-    "enter",
-    (transform: translateX(100%) translate(0%), opacity: 0 1),
+    '#{$ns}-panel-stack',
+    'enter',
+    (
+      transform: translateX(100%) translate(0%),
+      opacity: 0 1
+    ),
     $easing: ease,
     $duration: $pt-transition-duration * 4
   );
   @include react-transition-phase(
-    "#{$ns}-panel-stack",
-    "exit",
-    (transform: translateX(-50%) translate(0%), opacity: 0 1),
+    '#{$ns}-panel-stack',
+    'exit',
+    (
+      transform: translateX(-50%) translate(0%),
+      opacity: 0 1
+    ),
     $easing: ease,
     $duration: $pt-transition-duration * 4
   );
@@ -86,16 +92,22 @@
 // POP transition: enter from left (-50%), existing panel moves off right.
 .#{$ns}-panel-stack-pop {
   @include react-transition-phase(
-    "#{$ns}-panel-stack",
-    "enter",
-    (transform: translateX(-50%) translate(0%), opacity: 0 1),
+    '#{$ns}-panel-stack',
+    'enter',
+    (
+      transform: translateX(-50%) translate(0%),
+      opacity: 0 1
+    ),
     $easing: ease,
     $duration: $pt-transition-duration * 4
   );
   @include react-transition-phase(
-    "#{$ns}-panel-stack",
-    "exit",
-    (transform: translateX(100%) translate(0%), opacity: 0 1),
+    '#{$ns}-panel-stack',
+    'exit',
+    (
+      transform: translateX(100%) translate(0%),
+      opacity: 0 1
+    ),
     $easing: ease,
     $duration: $pt-transition-duration * 4
   );

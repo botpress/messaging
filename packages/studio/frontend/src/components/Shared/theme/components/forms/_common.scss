@@ -1,9 +1,9 @@
 // Copyright 2015 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
-@import "~@blueprintjs/icons/src/icons";
-@import "../../common/variables";
-@import "../button/common";
+@import '@blueprintjs/icons/src/icons';
+@import '../../common/variables';
+@import '../button/common';
 
 $input-padding-horizontal: $pt-grid-size !default;
 $input-small-padding: $pt-input-height-small - $pt-icon-size-standard !default;
@@ -36,49 +36,41 @@ $input-box-shadow-focus: inset 0 1px 1px rgba($black, $pt-drop-shadow-opacity) !
 
 $control-group-stack: (
   // lowest z-index
-  "input-disabled",
-  "input-default",
-  "button-disabled",
-  "button-default",
-  "button-focus",
-  "button-hover",
-  "button-active",
-  "intent-button-disabled",
-  "intent-button-default",
-  "intent-button-focus",
-  "intent-button-hover",
-  "intent-button-active",
-  "intent-input-default",
-  "input-focus",
-  "intent-input-focus",
-  "input-group-children",
-  "select-caret"
+  'input-disabled',
+  'input-default',
+  'button-disabled',
+  'button-default',
+  'button-focus',
+  'button-hover',
+  'button-active',
+  'intent-button-disabled',
+  'intent-button-default',
+  'intent-button-focus',
+  'intent-button-hover',
+  'intent-button-active',
+  'intent-input-default',
+  'input-focus',
+  'intent-input-focus',
+  'input-group-children',
+  'select-caret'
 );
 
 // animating shadows requires the same number of shadows in different states
 @function input-transition-shadow($color: $input-shadow-color-focus, $focus: false) {
   @if $focus {
-    @return
-      border-shadow(1, $color, 1px),
-      border-shadow(0.3, $color, 3px);
+    @return border-shadow(1, $color, 1px), border-shadow(0.3, $color, 3px);
   } @else {
-    @return
-      border-shadow(0, $color, 0),
-      border-shadow(0, $color, 0);
+    @return border-shadow(0, $color, 0), border-shadow(0, $color, 0);
   }
 }
 
 @function dark-input-transition-shadow($color: $dark-input-shadow-color-focus, $focus: false) {
   @if $focus {
-    @return
-      border-shadow(1, $color, 1px),
-      border-shadow(1, $color, 1px), // duplicating to minimize browser antialiasing in dark
+    @return border-shadow(1, $color, 1px), border-shadow(1, $color, 1px),
+      // duplicating to minimize browser antialiasing in dark
       border-shadow(0.3, $color, 3px);
   } @else {
-    @return
-      border-shadow(0, $color, 0),
-      border-shadow(0, $color, 0),
-      border-shadow(0, $color, 0);
+    @return border-shadow(0, $color, 0), border-shadow(0, $color, 0), border-shadow(0, $color, 0);
   }
 }
 
@@ -105,7 +97,7 @@ $control-group-stack: (
     box-shadow: input-transition-shadow($input-shadow-color-focus, true), $input-box-shadow-focus;
   }
 
-  &[type="search"],
+  &[type='search'],
   &.#{$ns}-round {
     border-radius: $pt-input-height;
     // override normalize.css
@@ -144,7 +136,7 @@ $control-group-stack: (
   line-height: $pt-input-height-large;
   font-size: $pt-font-size-large;
 
-  &[type="search"],
+  &[type='search'],
   &.#{$ns}-round {
     padding: 0 ($input-padding-horizontal * 1.5);
   }
@@ -157,7 +149,7 @@ $control-group-stack: (
   line-height: $pt-input-height-small;
   font-size: $pt-font-size-small;
 
-  &[type="search"],
+  &[type='search'],
   &.#{$ns}-round {
     padding: 0 ($input-small-padding * 1.5);
   }
@@ -178,14 +170,12 @@ $control-group-stack: (
 @mixin pt-dark-input() {
   @include pt-dark-input-placeholder();
 
-  box-shadow: dark-input-transition-shadow($dark-input-shadow-color-focus),
-              $pt-dark-input-box-shadow;
+  box-shadow: dark-input-transition-shadow($dark-input-shadow-color-focus), $pt-dark-input-box-shadow;
   background: $dark-input-background-color;
   color: $dark-input-color;
 
   &:focus {
-    box-shadow: dark-input-transition-shadow($dark-input-shadow-color-focus, true),
-                $pt-dark-input-box-shadow;
+    box-shadow: dark-input-transition-shadow($dark-input-shadow-color-focus, true), $pt-dark-input-box-shadow;
   }
 
   &[readonly] {
@@ -199,13 +189,10 @@ $control-group-stack: (
 }
 
 @mixin pt-input-intent($color) {
-  box-shadow: input-transition-shadow($color),
-              inset border-shadow(1, $color),
-              $pt-input-box-shadow;
+  box-shadow: input-transition-shadow($color), inset border-shadow(1, $color), $pt-input-box-shadow;
 
   &:focus {
-    box-shadow: input-transition-shadow($color, true),
-                $input-box-shadow-focus;
+    box-shadow: input-transition-shadow($color, true), $input-box-shadow-focus;
   }
 
   &[readonly] {
@@ -219,13 +206,10 @@ $control-group-stack: (
 }
 
 @mixin pt-dark-input-intent($color) {
-  box-shadow: dark-input-transition-shadow($color),
-              inset border-shadow(1, $color),
-              $pt-dark-input-box-shadow;
+  box-shadow: dark-input-transition-shadow($color), inset border-shadow(1, $color), $pt-dark-input-box-shadow;
 
   &:focus {
-    box-shadow: dark-input-transition-shadow($color, true),
-                $pt-dark-input-box-shadow;
+    box-shadow: dark-input-transition-shadow($color, true), $pt-dark-input-box-shadow;
   }
 
   &[readonly] {

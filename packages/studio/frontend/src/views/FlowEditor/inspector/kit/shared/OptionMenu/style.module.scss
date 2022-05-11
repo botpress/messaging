@@ -1,0 +1,58 @@
+@import '@blueprintjs/core/lib/scss/variables';
+
+.container {
+  position: relative;
+  width: fit-content;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Old versions of Firefox */
+  user-select: none;
+}
+
+.optionDots {
+  display: flex;
+  color: #111418;
+  padding: 2px;
+  cursor: pointer;
+  &:hover {
+    color: #343b43;
+  }
+}
+
+.options {
+  position: absolute;
+  right: 0;
+  margin-top: 4px;
+  text-align: right;
+  background-color: white;
+  padding: 4px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid $gray1;
+  z-index: 100;
+
+  span {
+    width: 100%;
+    padding: 4px 8px;
+    text-align: left;
+    border-radius: 4px;
+    color: $dark-gray2;
+
+    &:hover {
+      cursor: pointer;
+      background-color: $light-gray5;
+    }
+  }
+
+  span.delete {
+    font-weight: bold;
+    color: red;
+  }
+}
+
+// &:not(:last-child) {
+//   border-bottom: 1px solid $gray5;
+// }
