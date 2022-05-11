@@ -1,0 +1,22 @@
+@import '@blueprintjs/core/lib/scss/variables';
+
+.dynamicBtn {
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+
+  color: $gray2;
+  cursor: pointer;
+
+  &:hover {
+    color: $gray4;
+  }
+
+  &[aria-active='true'] {
+    color: #0070f7;
+
+    &:hover {
+      color: #3e93f9;
+    }
+  }
+}

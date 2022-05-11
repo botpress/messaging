@@ -120,13 +120,12 @@ export class CloudRouter extends CustomStudioRouter {
   private async makeBotUploadPayload(botId: string, cloudBotMeta: Introspect): Promise<FormData> {
     await this.nluService.downloadAndSaveModelWeights(botId)
 
-    // TODO: Implement proper export
-    //const botBlob = await this.botService.exportBot(botId, { cloud: true })
+    const botBlob = await Instance.exportToArchiveBuffer()
 
     const botMultipart = new FormData()
     botMultipart.append('botId', cloudBotMeta.botId)
     botMultipart.append('botName', cloudBotMeta.botName)
-    //botMultipart.append('botArchive', botBlob, 'bot.tgz')
+    botMultipart.append('botArchive', botBlob, 'bot.tgz')
     botMultipart.append('runtimeName', cloudBotMeta.runtimeName)
     botMultipart.append('botFileName', `bot_${botId}_${Date.now()}.tgz`)
 

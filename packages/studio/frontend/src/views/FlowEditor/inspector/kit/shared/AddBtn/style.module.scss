@@ -1,0 +1,27 @@
+@import '@blueprintjs/core/lib/scss/variables.scss';
+
+.btn {
+  width: 18px;
+  height: 18px;
+  background-color: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #32a467;
+  cursor: pointer;
+
+  span {
+    margin: auto;
+    color: #32a467;
+    padding-bottom: 1px;
+  }
+
+  &:hover {
+    background-color: #32a467;
+    span {
+      color: #ffffff;
+    }
+  }
+
+  &:active {
+    background-color: #20844e;
+  }
+}

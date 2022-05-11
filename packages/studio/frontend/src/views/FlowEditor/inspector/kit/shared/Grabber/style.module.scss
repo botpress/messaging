@@ -1,0 +1,15 @@
+.grabber {
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+  cursor: grab;
+  color: #abb3bf;
+
+  &:hover {
+    color: #8c94a2;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}

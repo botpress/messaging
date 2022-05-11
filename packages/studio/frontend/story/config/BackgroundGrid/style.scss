@@ -1,0 +1,12 @@
+.backgroundGrid {
+  height: 94vh;
+  width: 100%;
+  background: linear-gradient(90deg, #f5f6f8 10px, transparent 1%) center,
+    linear-gradient(#f5f6f8 10px, transparent 1%) center, #e2e2e2;
+  background-position: top left;
+  background-size: 12px 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
