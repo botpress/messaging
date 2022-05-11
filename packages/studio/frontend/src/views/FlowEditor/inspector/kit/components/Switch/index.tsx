@@ -1,8 +1,8 @@
 import { Switch as BpSwitch } from '@blueprintjs/core'
 import React, { useEffect, useState, useMemo, FC } from 'react'
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
+import * as layout from '../../../styles/layout.module.scss'
 import { Label, DynamicBtn } from '../../shared'
-import * as layout from '../../shared/layout.module.scss'
 
 export interface OwnProps {
   id: string

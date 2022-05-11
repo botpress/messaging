@@ -1,0 +1,38 @@
+.paneItem {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex-grow: 1;
+  padding: 0px;
+  row-gap: 8px;
+}
+
+.formKitContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.labelSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Old versions of Firefox */
+  user-select: none;
+
+  .leftBtn {
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .center {
+    flex-grow: 4;
+  }
+
+  .rightBtn {
+    flex-grow: 1;
+  }
+}

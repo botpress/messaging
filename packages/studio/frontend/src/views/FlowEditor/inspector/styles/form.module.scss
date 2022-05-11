@@ -1,0 +1,49 @@
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as bp;
+
+.well {
+  @extend .shadow-inner;
+  min-height: 50px;
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  border-radius: 8px;
+  background-color: bp.$light-gray4;
+  padding: 4px;
+  column-gap: 8px;
+  align-items: center;
+
+  &-row {
+    @extend .well;
+    flex-direction: row;
+  }
+
+  &-column {
+    @extend .well;
+    flex-direction: column;
+  }
+}
+
+.text-input {
+  @extend %font-sm, %text-normal, .shadow-sm;
+  display: flex;
+  width: 100%;
+  appearance: none;
+  outline: none;
+  padding: 8px 12px;
+  background: bp.$light-gray5;
+  border: 1px solid bp.$light-gray2;
+  border-radius: 6px;
+  transition: all 75ms linear;
+
+  &:focus,
+  &:hover {
+    border: 1px solid abstracts.$bp-blue;
+  }
+
+  &:focus {
+    @extend .shadow-focus;
+    background-color: white;
+  }
+}
