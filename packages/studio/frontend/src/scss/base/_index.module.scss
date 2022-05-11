@@ -1,0 +1,10 @@
+/*
+This file is used to contain all base forwards.
+Files inside this folder can contain global styles used in
+the project.
+*/
+//Forward Base files
+@forward 'global';
+@forward 'reset';
+@forward 'typography';
+@forward 'utility.module';

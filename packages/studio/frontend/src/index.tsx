@@ -1,5 +1,3 @@
-import '@blueprintjs/core/lib/css/blueprint.css'
-
 import axios from 'axios'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -7,6 +5,7 @@ import { HotKeys } from 'react-hotkeys'
 import { Provider } from 'react-redux'
 
 import './style.scss'
+import './scss/style.scss'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@projectstorm/react-diagrams/dist/style.min.css'
 import './theme.scss'
