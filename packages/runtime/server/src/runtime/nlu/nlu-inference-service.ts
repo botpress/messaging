@@ -106,7 +106,7 @@ export class NLUInferenceService {
     }
 
     const { includedContexts, utterance, language } = args
-    const skipSpellcheck: boolean = args.skipSpellcheck ?? yn(process.env.NLU_SKIP_SPELLCHECK)
+    const skipSpellcheck: boolean = args.skipSpellcheck ?? (yn(process.env.NLU_SKIP_SPELLCHECK) || false)
     const t0 = Date.now()
 
     const predOutput = await bot.predict(utterance, language)

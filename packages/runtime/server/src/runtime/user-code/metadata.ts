@@ -39,22 +39,22 @@ export const extractMetadata = (code: string): ActionMetadata => {
 
   const author = _.find(extracted.tags, { title: 'author' })
   if (author) {
-    metadata.author = (author as any).description || ''
+    metadata.author = author.description || ''
   }
 
   const category = _.find(extracted.tags, { title: 'category' })
   if (category) {
-    metadata.category = (category as any).description || ''
+    metadata.category = category.description || ''
   }
 
   const title = _.find(extracted.tags, { title: 'title' })
   if (title) {
-    metadata.title = (title as any).description || ''
+    metadata.title = title.description || ''
   }
 
   const hidden = _.find(extracted.tags, { title: 'hidden' })
   if (hidden) {
-    metadata.hidden = yn((hidden as any).description)
+    metadata.hidden = yn(hidden.description) || false
   }
 
   metadata.params = _.filter(extracted.tags, { title: 'param' }).map((tag) => {
@@ -64,7 +64,7 @@ export const extractMetadata = (code: string): ActionMetadata => {
     const name = _.get(tag, 'name', '')
 
     return {
-      description: (tag as any).description || '',
+      description: tag.description || '',
       type,
       default: def,
       required,

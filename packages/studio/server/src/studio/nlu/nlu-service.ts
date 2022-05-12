@@ -1,9 +1,10 @@
 import { NLUProgressEvent, Training as BpTraining } from '@botpress/common'
 import { Specifications as StanSpecifications } from '@botpress/nlu-client'
 import { Logger } from '@botpress/sdk'
-
 import _ from 'lodash'
+import path from 'path'
 import yn from 'yn'
+
 import { AppLifecycle, AppLifecycleEvents } from '../../lifecycle'
 import { GlobalEvents, StudioEvents } from '../../studio/events'
 import { Instance } from '../../studio/utils/bpfs'
@@ -148,29 +149,26 @@ export class NLUService {
   }
 
   public async downloadAndSaveModelWeights(botId: string) {
-    // TODO: reimpl this
-    /*
     const bot = this._bots[botId]
     if (!bot) {
       throw new BotNotMountedError(botId)
     }
 
-    const botConfig = await this.configProvider.getBotConfig(botId)
+    const botConfig: BotConfig = await Instance.readFile('bot.config.json').then((buf) => JSON.parse(buf.toString()))
 
     if (!botConfig.nluModels) {
       throw new Error('Missing NLU models. Bot is not trained.')
     }
 
     const modelsFolder = 'models'
-    await this.ghost.forBot(botId).deleteFolder(modelsFolder)
+    await Instance.deleteDir(modelsFolder)
 
     for (const lang of Object.keys(botConfig.nluModels)) {
       const modelId = botConfig.nluModels[lang]
       const modelWeights = await bot.downloadModelWeights(botId, modelId)
 
-      await this.ghost.forBot(botId).upsertFile(modelsFolder, `${modelId}.model`, modelWeights)
+      await Instance.upsertFile(path.join(modelsFolder, `${modelId}.model`), modelWeights)
     }
-    */
   }
 
   private _getWebsocket = () => {

@@ -8,7 +8,7 @@ import { FileDisplayProps } from './typings'
 const FileDisplay: FC<FileDisplayProps> = (props) => {
   const { url, type, deletable, onDelete } = props
 
-  const fullUrl = `${window['ROOT_PATH']}${url}`
+  const fullUrl = `${window['STUDIO_API_URL']}${url}`
   const filename = url.substring(url.lastIndexOf('/') + 1)
   const mimeType = mime.lookup(url) || undefined
 

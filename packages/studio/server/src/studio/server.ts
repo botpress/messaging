@@ -142,7 +142,7 @@ export class HTTPServer {
         enabled: true
       },
       host: 'localhost',
-      port: 3000,
+      port: 3300,
       externalUrl: null,
       backlog: 100
     }
