@@ -3,10 +3,10 @@
   "compilerOptions": {
     "rootDir": "..",
     "paths": {
-      "@botpress/messaging-base": ["../../base/src/index.ts"],
-      "@botpress/messaging-engine": ["../../../base/engine/src/index.ts"],
-      "@botpress/messaging-channels": ["../../channels/src/index.ts"],
-      "@botpress/base-test": ["../../../base/test/src/index.ts"]
+      "@botpress/messaging-base": ["../../../messaging/base/src/index.ts"],
+      "@botpress/messaging-engine": ["../../engine/src/index.ts"],
+      "@botpress/messaging-channels": ["../../../messaging/channels/src/index.ts"],
+      "@botpress/base-test": ["../../test/src/index.ts"]
     }
   },
   "include": ["../test/**/*", "../src/**/*"]

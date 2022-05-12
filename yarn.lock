@@ -2583,6 +2583,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-engine@workspace:packages/base/engine"
   dependencies:
+    "@botpress/base-test": 0.0.1
     "@botpress/messaging-base": 1.2.0
     "@types/bcryptjs": ^2.4.2
     "@types/cli-color": ^2.0.2
