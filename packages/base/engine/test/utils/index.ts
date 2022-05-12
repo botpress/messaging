@@ -14,6 +14,7 @@ export const setupApp = async (
   env = { ...process.env }
 
   process.env.ENCRYPTION_KEY = Buffer.from('encryption_key_of_32_chars_long_').toString('base64')
+  process.env.BATCHING_ENABLED = 'true'
   process.env.SKIP_LOAD_ENV = 'true'
   process.env.SUPPRESS_LOGGING = 'true'
   process.env.DATABASE_URL = process.env.DATABASE_URL || path.join(getTestDataPath(), `${prefix || uuidv4()}.sqlite`)

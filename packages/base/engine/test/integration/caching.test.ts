@@ -2,7 +2,7 @@ import LRU from 'lru-cache'
 import { CachingService, ServerCache, ServerCache2D } from '../../src'
 import { setupApp, destroyApp, engine } from '../utils'
 
-describe('CryptoService', () => {
+describe('CachingService', () => {
   let caching: CachingService
   let state: {
     serverCache1?: ServerCache<string, string>
