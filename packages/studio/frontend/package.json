@@ -82,6 +82,7 @@
     "hash.js": "^1.1.7",
     "history": "^4.9.0",
     "howler": "^2.1.2",
+    "immer": "^9.0.13",
     "joi": "13.7.0",
     "js-cookie": "^2.2.0",
     "json-schema": "^0.4.0",
@@ -141,6 +142,7 @@
     "styled-components": "^5.3.0",
     "tree-model": "^1.0.7",
     "uuid": "^8.3.2",
-    "yn": "^4.0.0"
+    "yn": "^4.0.0",
+    "zustand": "^4.0.0-rc.1"
   }
 }

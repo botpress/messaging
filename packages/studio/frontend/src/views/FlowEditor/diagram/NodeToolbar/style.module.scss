@@ -2,10 +2,8 @@
   background: #fff;
   border-radius: 4px;
   padding: var(--spacing-small);
-  position: absolute;
-  left: var(--spacing-large);
-  top: 50%;
-  transform: translate(0, -50%);
+  display: flex;
+  flex-direction: row;
 }
 
 .toolItem {
@@ -22,10 +20,6 @@
   margin-top: var(--spacing-small);
   width: 30px;
   transition: background 0.3s, border 0.3s;
-
-  &:first-of-type {
-    margin: 0;
-  }
 
   &:active {
     background: var(--hover-ocean);

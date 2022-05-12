@@ -6,9 +6,9 @@ import Grabber from './Grabber'
 import Label from './Label'
 import OptionMenu from './OptionMenu'
 import Text, { TextIntents } from './Text'
+
 import { FormKitOnAction } from './types'
 // import SidePane from './SidePane'
-// import Text from './Text'
 // import Title from './Title'
 
 export {
@@ -19,7 +19,6 @@ export {
   EditBtn,
   Grabber,
   OptionMenu,
-  // Text,
   // Title,
   // SidePane,
   // FieldContainer,

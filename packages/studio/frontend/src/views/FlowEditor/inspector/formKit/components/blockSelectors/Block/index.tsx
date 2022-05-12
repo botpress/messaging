@@ -38,9 +38,9 @@ const Block: FC<OwnProps> = forwardRef(
           className={cx(style.block, { [style.temp]: temp, [style.grab]: grab, [style.dragging]: dragging })}
           onClick={handleClicks}
         >
-          <BlockTags type={block.type} />
+          <BlockTags type={'text'} />
           {/* <Text className={style.type} value={block.type} large /> */}
-          <Text className={style.name} intent={TextIntents.LITE} value={block.name} large />
+          <Text className={style.name} intent={TextIntents.LITE} value={block} large />
           {/* <Text className={style.id} intent={TextIntent.LITE_PLACEHOLDER} value={} /> */}
           {grab && !dragging && <OptionMenu className={style.options} onAction={() => {}} />}
         </div>

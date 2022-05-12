@@ -6,7 +6,7 @@ import Text, { TextIntents } from '.'
 const testText = 'Search for a component'
 
 export default {
-  title: 'FormKit/shared/SubText',
+  title: 'FormKit/shared/Text',
   component: Text
 } as ComponentMeta<typeof Text>
 

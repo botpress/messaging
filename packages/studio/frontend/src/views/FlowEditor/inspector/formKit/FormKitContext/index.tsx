@@ -8,7 +8,7 @@ interface OwnProps {
   onUpdate?: any
 }
 
-const KitContext: FC<OwnProps> = ({ children, onUpdate }) => {
+const FormKitContext: FC<OwnProps> = ({ children, onUpdate }) => {
   const [selectedForm, setSelectedForm] = useState(0)
 
   const handleFormCollapseClick: FormOnClick = useCallback(
@@ -27,11 +27,11 @@ const KitContext: FC<OwnProps> = ({ children, onUpdate }) => {
     <div className={style.forms}>
       {React.Children.map(children, (child, idx) => {
         if (React.isValidElement(child)) {
-          return React.cloneElement(child, { active: selectedForm === idx, idx, onClick: handleFormCollapseClick })
+          return React.cloneElement(child, { isActive: selectedForm === idx, idx, onClick: handleFormCollapseClick })
         }
       })}
     </div>
   )
 }
 
-export { KitContext }
+export default FormKitContext

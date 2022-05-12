@@ -3093,6 +3093,7 @@ __metadata:
     hash.js: ^1.1.7
     history: ^4.9.0
     howler: ^2.1.2
+    immer: ^9.0.13
     immutable: ^4.0.0
     joi: 13.7.0
     js-cookie: ^2.2.0
@@ -3160,6 +3161,7 @@ __metadata:
     typed-scss-modules: ^6.2.1
     uuid: ^8.3.2
     yn: ^4.0.0
+    zustand: ^4.0.0-rc.1
   languageName: unknown
   linkType: soft
 
@@ -16675,6 +16677,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"immer@npm:^9.0.13":
+  version: 9.0.13
+  resolution: "immer@npm:9.0.13"
+  checksum: cd3b82d4f4e9ad61879ab27071855224665fd8b5893ecc42a267f8965a7f75bcceae24e47244c826768124e95a3ae0a4a15a0dfd034a9efae4298936e162c7d7
+  languageName: node
+  linkType: hard
+
 "immutable@npm:^3.7.4, immutable@npm:^3.8.2":
   version: 3.8.2
   resolution: "immutable@npm:3.8.2"
@@ -28672,6 +28681,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"use-sync-external-store@npm:1.1.0":
+  version: 1.1.0
+  resolution: "use-sync-external-store@npm:1.1.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 8993a0b642f91d7fcdbb02b7b3ac984bd3af4769686f38291fe7fcfe73dfb73d6c64d20dfb7e5e7fbf5a6da8f5392d6f8e5b00c243a04975595946e82c02b883
+  languageName: node
+  linkType: hard
+
 "use@npm:^3.1.0":
   version: 3.1.1
   resolution: "use@npm:3.1.1"
@@ -29671,6 +29689,23 @@ __metadata:
   version: 1.11.17
   resolution: "zod@npm:1.11.17"
   checksum: e07764a8a2fba195a4ec0ed9e66cee20e651ee1d9e533e5f48956de1ded6c6bcf80f63fed4a2bdb67de40a1300399edc9ee2095ee382c67d85745e3b0ccd14ca
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^4.0.0-rc.1":
+  version: 4.0.0-rc.1
+  resolution: "zustand@npm:4.0.0-rc.1"
+  dependencies:
+    use-sync-external-store: 1.1.0
+  peerDependencies:
+    immer: ">=9.0"
+    react: ">=16.8"
+  peerDependenciesMeta:
+    immer:
+      optional: true
+    react:
+      optional: true
+  checksum: c88ae96286229b3c463cf7989c860fcde8ec9cf885eb50a0e0eaf9642388d407a854e5e07b9f80676454732bf15e1c7645201cff21fd9feacd5df8bbd62fcd46
   languageName: node
   linkType: hard
 

@@ -1,9 +1,9 @@
 .zoomWrapper {
   background: #fff;
-  position: absolute;
+  position: relative;
   border-radius: 5px;
-  bottom: var(--spacing-medium);
-  left: var(--spacing-large);
+  // bottom: var(--spacing-medium);
+  // left: var(--spacing-large);
   padding: var(--spacing-small) var(--spacing-medium);
 
   button {

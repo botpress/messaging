@@ -1,20 +1,19 @@
 import { Collapse as BpCollapse, Icon } from '@blueprintjs/core'
 import React, { FC } from 'react'
 
-import * as style from './style.scss'
+import * as style from './style.module.scss'
 
 export type CollapseClick = (id: string, idx: number, event: React.MouseEvent) => void
 
 interface OwnProps {
   id: string
-  form: any
   label: string
   idx?: number
   isActive?: boolean
   onClick?: CollapseClick
 }
 
-const Collapse: FC<OwnProps> = ({ id, form, label, idx = 0, isActive = false, onClick = () => {}, children }) => {
+const Collapse: FC<OwnProps> = ({ id, label, idx = 0, isActive = false, onClick = () => {}, children }) => {
   return (
     <>
       <div onClick={(e) => onClick(id, idx, e)} className={style.form}>

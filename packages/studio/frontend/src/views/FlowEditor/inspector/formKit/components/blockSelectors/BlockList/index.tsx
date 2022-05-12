@@ -48,7 +48,7 @@ const BlockList: FC<OwnProps> = ({ id, label, hint, value, disableable, disableT
         {(provided: any, snapshot: any) => (
           <div className={style.container} ref={provided.innerRef} {...provided.droppableProps}>
             {value.map((block, idx) => (
-              <Draggable draggableId={block.id} index={idx}>
+              <Draggable draggableId={block} index={idx} key={block}>
                 {renderItem}
               </Draggable>
             ))}

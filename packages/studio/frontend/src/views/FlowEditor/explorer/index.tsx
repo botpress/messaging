@@ -4,12 +4,13 @@ import React, { FC, useState } from 'react'
 import { connect } from 'react-redux'
 import { deleteFlow, duplicateFlow, renameFlow } from '~/src/actions'
 import { history } from '~/src/components/Routes'
-import { SearchBar, SidePanel, SidePanelSection } from '~/src/components/Shared/Interface'
+import { SearchBar } from '~/src/components/Shared/Interface'
 import { lang } from '~/src/components/Shared/translations'
 import { getAllFlows, getCurrentFlow, getDirtyFlows, getFlowNamesList } from '~/src/reducers'
 
 import FlowNameModal from './FlowNameModal'
 import FlowsList from './FlowsList'
+import * as style from './style.module.scss'
 
 export type PanelPermissions = 'create' | 'rename' | 'delete'
 
@@ -29,7 +30,15 @@ interface Props {
   explorerOpen: boolean
 }
 
-const SidePanelContent: FC<any> = (props) => {
+const SidePanelContent: FC<Props> = ({
+  flows,
+  readOnly,
+  permissions,
+  dirtyFlows,
+  currentFlow,
+  flowsNames,
+  onCreateFlow
+}) => {
   const [modalOpen, setModalOpen] = useState(false)
   const [flowName, setFlowName] = useState<string>()
   const [flowAction, setFlowAction] = useState<any>('create')
@@ -37,7 +46,7 @@ const SidePanelContent: FC<any> = (props) => {
 
   const goToFlow = (flow) => history.push(`/flows/${flow.replace(/\.flow\.json$/i, '')}`)
 
-  const normalFlows = reject(props.flows, (x) => x.name.startsWith('skills/'))
+  const normalFlows = reject(flows, (x) => x.name.startsWith('skills/'))
   const flowsName = normalFlows.map((x) => {
     return { name: x.name }
   })
@@ -53,50 +62,51 @@ const SidePanelContent: FC<any> = (props) => {
     }
   }
 
-  const renameFlow = (flowName: string) => {
+  const renameFlow: any = (flowName: string) => {
     setFlowName(flowName)
     setFlowAction('rename')
     setModalOpen(true)
   }
 
-  const duplicateFlow = (flowName: string) => {
+  const duplicateFlow: any = (flowName: string) => {
     setFlowName(flowName)
     setFlowAction('duplicate')
     setModalOpen(true)
   }
 
   return (
-    <SidePanel>
-      <SidePanelSection
-        label={lang.tr('flows')}
-        actions={!props.readOnly && props.permissions.includes('create') && [createFlowAction]}
-      >
+    <div className={style.container}>
+      <div className={style.sectionOutset}>
+        <h2>{lang.tr('flows')}</h2>
         <SearchBar icon="filter" placeholder={lang.tr('studio.flow.sidePanel.filterFlows')} onChange={setFilter} />
+      </div>
+      <div className={style.sectionInset}>
         <FlowsList
-          readOnly={props.readOnly}
-          canDelete={props.permissions.includes('delete')}
-          canRename={props.permissions.includes('rename')}
+          readOnly={readOnly}
+          canDelete={permissions.includes('delete')}
+          canRename={permissions.includes('rename')}
           flows={flowsName}
-          dirtyFlows={props.dirtyFlows}
+          dirtyFlows={dirtyFlows}
           goToFlow={goToFlow}
-          deleteFlow={props.deleteFlow}
+          deleteFlow={deleteFlow}
           duplicateFlow={duplicateFlow}
           renameFlow={renameFlow}
-          currentFlow={props.currentFlow}
+          currentFlow={currentFlow}
           filter={filter}
         />
-      </SidePanelSection>
+      </div>
+
       <FlowNameModal
         action={flowAction}
         originalName={flowName}
-        flowsNames={props.flowsNames}
+        flowsNames={flowsNames}
         isOpen={modalOpen}
         toggle={() => setModalOpen(!modalOpen)}
-        onCreateFlow={props.onCreateFlow}
-        onRenameFlow={props.renameFlow}
-        onDuplicateFlow={props.duplicateFlow}
+        onCreateFlow={onCreateFlow}
+        onRenameFlow={renameFlow}
+        onDuplicateFlow={duplicateFlow}
       />
-    </SidePanel>
+    </div>
   )
 }
 

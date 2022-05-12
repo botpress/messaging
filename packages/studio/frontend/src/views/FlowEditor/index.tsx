@@ -1,6 +1,7 @@
 import { FlowView } from '@botpress/common'
 import _ from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
+import { DragDropContext } from 'react-beautiful-dnd'
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import {
@@ -22,6 +23,7 @@ import { RootReducer } from '~/src/reducers'
 
 import Diagram from './diagram'
 import SidePanel, { PanelPermissions } from './explorer'
+import Inspector from './inspector'
 import * as style from './style.module.scss'
 
 interface OwnProps {
@@ -157,13 +159,6 @@ const FlowEditor = (props: Props) => {
 
   return (
     <div className={style.container}>
-      <SidePanel
-        onDeleteSelectedElements={() => diagram?.deleteSelectedElements()}
-        readOnly={readOnly}
-        mutexInfo={mutex}
-        permissions={actions}
-        onCreateFlow={createFlow}
-      />
       <div className={style.diagram}>
         <Diagram
           readOnly={readOnly}
@@ -180,6 +175,16 @@ const FlowEditor = (props: Props) => {
           }}
         />
       </div>
+      <SidePanel
+        onDeleteSelectedElements={() => diagram?.deleteSelectedElements()}
+        readOnly={readOnly}
+        mutexInfo={mutex}
+        permissions={actions}
+        onCreateFlow={createFlow}
+      />
+      <DragDropContext>
+        <Inspector />
+      </DragDropContext>
     </div>
   )
 }
