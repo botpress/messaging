@@ -1,5 +1,7 @@
 import cx from 'classnames'
 import React, { useCallback, forwardRef, FC } from 'react'
+
+import useInspectorStore from '../../../../store'
 import { Grabber, OptionMenu, Text, TextIntents } from '../../../shared'
 import BlockTags from './BlockTags'
 import * as style from './style.module.scss'
@@ -22,6 +24,8 @@ export interface OwnProps {
 
 const Block: FC<OwnProps> = forwardRef(
   ({ block, grab, temp, options, className, dragging, onDoubleClick = () => {} }, ref) => {
+    const openTabId = useInspectorStore((state) => state.openTabId)
+
     const handleClicks = useCallback(
       (e) => {
         if (e.detail === 2) {
@@ -32,7 +36,7 @@ const Block: FC<OwnProps> = forwardRef(
     )
 
     return (
-      <div ref={ref as any} className={cx(style.container, className)}>
+      <div ref={ref as any} className={cx(style.container, className)} onClick={() => openTabId(block)}>
         {grab && <Grabber className={cx({ [style.hidden]: dragging })} />}
         <div
           className={cx(style.block, { [style.temp]: temp, [style.grab]: grab, [style.dragging]: dragging })}

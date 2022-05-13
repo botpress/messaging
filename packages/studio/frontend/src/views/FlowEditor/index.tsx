@@ -1,7 +1,7 @@
 import { FlowView } from '@botpress/common'
 import _ from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
-import { DragDropContext } from 'react-beautiful-dnd'
+
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
 import {
@@ -19,7 +19,7 @@ import { isInputFocused } from '~/src/components/Shared/utilities/inputs'
 import { inspect } from '~/src/components/Shared/utilities/inspect'
 import { Timeout, toastFailure, toastInfo } from '~/src/components/Shared/Utils'
 import { isOperationAllowed } from '~/src/components/Shared/Utils/AccessControl'
-import { RootReducer } from '~/src/reducers'
+import { RootReducer, getCurrentFlowNode } from '~/src/reducers'
 
 import Diagram from './diagram'
 import SidePanel, { PanelPermissions } from './explorer'
@@ -39,6 +39,7 @@ const searchTag = '#search:'
 
 const FlowEditor = (props: Props) => {
   const { flow } = props.match.params as any
+  const { currentFlowNode } = props
 
   let diagram: any = useRef(null)
   const [showSearch, setShowSearch] = useState(false)
@@ -182,9 +183,7 @@ const FlowEditor = (props: Props) => {
         permissions={actions}
         onCreateFlow={createFlow}
       />
-      <DragDropContext>
-        <Inspector />
-      </DragDropContext>
+      {currentFlowNode && <Inspector currentFlowNode={currentFlowNode} />}
     </div>
   )
 }
@@ -194,7 +193,8 @@ const mapStateToProps = (state: RootReducer) => ({
   flowsByName: state.flows.flowsByName,
   showFlowNodeProps: state.flows.showFlowNodeProps,
   user: state.user,
-  errorSavingFlows: state.flows.errorSavingFlows
+  errorSavingFlows: state.flows.errorSavingFlows,
+  currentFlowNode: getCurrentFlowNode(state as never) as any
 })
 
 const mapDispatchToProps = {

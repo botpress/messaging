@@ -3,10 +3,8 @@ import { connect } from 'react-redux'
 
 import { getCurrentFlowNode } from '../../../../reducers'
 
-import BlockList from '../formKit/components/blockSelectors/BlockList'
-import Collapse from '../formKit/components/Collapse'
-import FormKitContext from '../formKit/FormKitContext'
-import { Text } from '../formKit/shared'
+import FormKit, { Collapse, BlockList } from '../FormKit'
+import { Text } from '../FormKit/shared'
 import * as layout from './layout.module.scss'
 
 interface OwnProps {
@@ -17,17 +15,17 @@ const NodePane: FC<OwnProps> = ({ currentNode }) => {
   const { name, onEnter, onReceive } = currentNode
   return (
     <div className={layout.container}>
-      <FormKitContext onUpdate={console.log}>
-        <Collapse id="basic" label="Basic">
+      <FormKit form={{ heello: 'lol' }}>
+        <Collapse idx={0} label="Basic">
           <Text value={name} large />
           <Text value={'just a regular standard normal node.'} />
           <BlockList id="onEnter" label="On Enter" value={onEnter} />
           <BlockList id="onReceive" label="On Receive" value={onReceive || []} />
         </Collapse>
-        <Collapse id="transitions" label="Transitions">
+        <Collapse idx={1} label="Transitions">
           <div>todo</div>
         </Collapse>
-      </FormKitContext>
+      </FormKit>
     </div>
   )
 }
