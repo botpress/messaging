@@ -80,7 +80,7 @@
   user-select: none; /* Non-prefixed version, currently
                                 supported by Chrome, Edge, Opera and Firefox */
 
-  &[aria-active='true'] {
+  &.active {
     border: 1px solid #0070f7;
     color: #0070f7;
     background-color: #ffffff;
