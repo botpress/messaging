@@ -38,8 +38,8 @@ export class DistributedService extends Service {
     return this.subservice.publish(channel, message)
   }
 
-  async using(ressource: string, callback: () => Promise<void>) {
-    const lock = await this.lock(ressource)
+  async using(resource: string, callback: () => Promise<void>) {
+    const lock = await this.lock(resource)
     try {
       await callback()
     } catch (e) {
@@ -49,8 +49,8 @@ export class DistributedService extends Service {
     }
   }
 
-  private async lock(ressource: string): Promise<Lock> {
-    return this.subservice.lock(ressource)
+  private async lock(resource: string): Promise<Lock> {
+    return this.subservice.lock(resource)
   }
 
   private async release(lock: Lock) {

@@ -1,27 +1,11 @@
 import compose from 'docker-compose'
 import knex from 'knex'
 import path from 'path'
-
-interface ComposeError {
-  exitCode: number
-  err: string
-  out: string
-}
-
-const getErrorMessage = (error: unknown): string => {
-  const err = error as ComposeError
-
-  let message = ''
-  if (err.err) {
-    message = err.err
-  }
-
-  return message
-}
+import { getErrorMessage } from '../compose'
 
 export const setup = async () => {
   try {
-    await compose.upAll({ cwd: path.join(__dirname, '../../misc'), log: process.env.DEBUG === 'true' })
+    await compose.upOne('pg', { cwd: path.join(__dirname, '../../misc'), log: process.env.DEBUG === 'true' })
     process.env.DATABASE_URL = 'postgres://postgres:postgres@localhost:2345'
   } catch (e) {
     throw new Error(`An error occurred while trying to setup the PostgreSQL database: ${getErrorMessage(e)}`)
