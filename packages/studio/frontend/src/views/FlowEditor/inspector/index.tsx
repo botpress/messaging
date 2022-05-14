@@ -25,7 +25,7 @@ const Inspector: FC<OwnProps> = ({ currentFlowNode = {} }) => {
       case PaneTypes.NODE:
         return <NodePane />
       case PaneTypes.BLOCK:
-        return <div>Block TBD</div>
+        return <div>Block {tabs[activeTabIdx]}</div>
       case PaneTypes.SKILL:
         return <div>Skill TBD</div>
     }
