@@ -24,10 +24,6 @@ describe.each(['redis', 'local'])('DistributedService (%s)', (service) => {
     await destroyApp()
   })
 
-  beforeEach(async () => {
-    engine.caching.resetAll()
-  })
-
   const publishFromAnotherNode = async () => {
     const subservice = new RedisSubservice()
     await subservice.setup()

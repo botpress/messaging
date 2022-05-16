@@ -16,10 +16,6 @@ describe('DatabaseService', () => {
     await destroyApp()
   })
 
-  beforeEach(async () => {
-    engine.caching.resetAll()
-  })
-
   const getTables = async (): Promise<any[]> => {
     if (database.getIsLite()) {
       return database.knex.select('*').from('sqlite_master').where({ type: 'table' })

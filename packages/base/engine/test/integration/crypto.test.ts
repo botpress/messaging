@@ -25,10 +25,6 @@ describe('CryptoService', () => {
     await destroyApp()
   })
 
-  beforeEach(async () => {
-    engine.caching.resetAll()
-  })
-
   describe('Encrypt', () => {
     test('Should be able to encrypt a string', async () => {
       state.encrypted1 = crypto.encrypt(state.decrypted1)

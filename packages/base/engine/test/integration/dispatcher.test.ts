@@ -22,10 +22,6 @@ describe('DispatcherService', () => {
     await destroyApp()
   })
 
-  beforeEach(async () => {
-    engine.caching.resetAll()
-  })
-
   describe('Create', () => {
     test('Should be able to create a new dispatcher', async () => {
       const dispatcher = await dispatches.create('test', TestDispatcher)

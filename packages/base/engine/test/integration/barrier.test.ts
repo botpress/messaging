@@ -23,10 +23,6 @@ describe('BarrierService', () => {
     await destroyApp()
   })
 
-  beforeEach(async () => {
-    engine.caching.resetAll()
-  })
-
   describe('NewBarrier2D', () => {
     test('Should be able to create barriers', async () => {
       state.barrier1 = await barriers.newBarrier2D(state.barrierId1)

@@ -31,10 +31,6 @@ describe('BatchingService', () => {
     await destroyApp()
   })
 
-  beforeEach(async () => {
-    engine.caching.resetAll()
-  })
-
   describe('NewBatcher', () => {
     test('Should be able to create batchers', async () => {
       state.batcher1 = await batching.newBatcher<string>(state.batcherId1, [], state.batcherOnFlush1)
