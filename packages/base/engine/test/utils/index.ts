@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { Engine } from '../../src'
 
 export let engine: Engine
+export const DEFAULT_VERSION = '0.0.0'
+
 let env: NodeJS.ProcessEnv
 
 export const setupApp = async (
@@ -30,7 +32,7 @@ export const setupApp = async (
 
   engine = new Engine()
 
-  engine.meta.setPkg({ version: '0.0.0' })
+  engine.meta.setPkg({ version: DEFAULT_VERSION })
 
   await engine.setup()
   await engine.postSetup()
