@@ -88,14 +88,14 @@ describe('BarrierService', () => {
   })
 
   describe('Fetch', () => {
-    test('Should fetch the version of the application from the database', async () => {
+    test('Should fetch the current version of the application from the database', async () => {
       const entry = await meta.fetch()
 
       expect(entry).not.toBeUndefined()
       expect(meta.get()).toEqual({ version: entry!.data.version })
     })
 
-    test('Should return undefined if not version was stored', async () => {
+    test('Should return undefined if no version was stored', async () => {
       await meta['query']().delete()
 
       const entry = await meta.fetch()
