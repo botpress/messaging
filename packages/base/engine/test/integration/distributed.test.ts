@@ -2,6 +2,7 @@ import { DistributedService } from '../../src'
 import { RedisSubservice } from '../../src/distributed/redis/subservice'
 import { setupApp, destroyApp, engine } from '../utils'
 
+// There are certain functions of the distributed service that are only available when redis is enabled.
 const describeif = (condition: boolean) => (condition ? describe : describe.skip)
 
 describe.each(['redis', 'local'])('DistributedService (%s)', (service) => {
@@ -73,6 +74,7 @@ describe.each(['redis', 'local'])('DistributedService (%s)', (service) => {
         await publishFromAnotherNode()
       }
 
+      // Wait for redis to propagate the message
       await wait(5000)
 
       expect(callback).toHaveBeenCalledTimes(count)
@@ -93,6 +95,7 @@ describe.each(['redis', 'local'])('DistributedService (%s)', (service) => {
 
       await publishFromAnotherNode()
 
+      // Wait for redis to propagate the message
       await wait(5000)
 
       expect(callback).toHaveBeenCalledTimes(0)
@@ -119,6 +122,7 @@ describe.each(['redis', 'local'])('DistributedService (%s)', (service) => {
       expect(secondCallback).toHaveBeenCalledTimes(0)
       expect(callback).toHaveBeenCalledTimes(1)
 
+      // Wait for the lock to be released
       await wait(waitTime * 2)
 
       expect(secondCallback).toHaveBeenCalledTimes(1)
@@ -149,6 +153,7 @@ describe.each(['redis', 'local'])('DistributedService (%s)', (service) => {
       expect(secondCallback).toHaveBeenCalledTimes(0)
       expect(callback).toHaveBeenCalledTimes(1)
 
+      // Wait for the lock to be released
       await wait(waitTime * 2)
 
       expect(secondCallback).toHaveBeenCalledTimes(1)
