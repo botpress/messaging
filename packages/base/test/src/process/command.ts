@@ -1,5 +1,6 @@
 import { spawn } from 'child_process'
 import clc from 'cli-color'
+import path from 'path'
 import { ServerOptions } from './interfaces'
 
 const errorDelimiters = clc.red('red').split('red')
@@ -16,12 +17,14 @@ export const runCommand = async (options: Pick<ServerOptions, 'command' | 'debug
     const server = spawn(options.command, {
       env: process.env,
       shell: true,
-      cwd: __dirname
+      cwd: path.join(__dirname, '../../../../../')
     })
 
     if (options.debug) {
       server.stdout.pipe(process.stdout)
     }
+
+    server.stderr.pipe(process.stderr)
 
     // Since we don't write to stderr when logging in the messaging server,
     // we have to manually extract the error so we can accelerate debugging
@@ -40,7 +43,12 @@ export const runCommand = async (options: Pick<ServerOptions, 'command' | 'debug
       if (code === 0 && errors.length === 0) {
         resolve(undefined)
       } else {
-        reject(new Error(errors.join('\n')))
+        let message = `Process exited with a non zero code: ${code}`
+        if (errors.length > 0) {
+          message = errors.join('\n')
+        }
+
+        reject(new Error(message))
       }
     })
   })
