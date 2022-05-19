@@ -68,15 +68,15 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     if ('data' in ctx.callbackQuery) {
       const data = ctx.callbackQuery.data
 
-      if (data.startsWith(SAY_PREFIX)) {
+      if (data?.startsWith(SAY_PREFIX)) {
         await this.service.receive(scope, this.extractEndpoint(ctx), {
           type: 'say_something',
           text: data.replace(SAY_PREFIX, '')
         })
-      } else if (data.startsWith(POSTBACK_PREFIX)) {
+      } else if (data?.startsWith(POSTBACK_PREFIX)) {
         await this.service.receive(scope, this.extractEndpoint(ctx), {
           type: 'postback',
-          payload: data.replace(POSTBACK_PREFIX, '')
+          payload: data?.replace(POSTBACK_PREFIX, '')
         })
       }
     }

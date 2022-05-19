@@ -12,11 +12,9 @@ const DEFAULT_ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'aud
 const DEFAULT_MAX_FILE_SIZE = '25mb'
 
 class MediaRouter extends CustomStudioRouter {
-  // TODO: botId must be provided somehow
-  botId: string = 'smalltalk'
-  getFileUrl(fileName: string) {
+  getFileUrl(botId: string, fileName: string) {
     // TODO: we need a router that returns those files (GET). I think it's part of the BP backend atm
-    return `/api/v1/studio/${this.botId}/media/${encodeURIComponent(fileName)}`
+    return `/api/v1/studio/${botId}/media/${encodeURIComponent(fileName)}`
   }
 
   getMediaFiles(formData: any): string[] {
@@ -50,7 +48,7 @@ class MediaRouter extends CustomStudioRouter {
     this.router.get(
       '/:file',
       this.asyncMiddleware(async (req, res) => {
-        const { botId, file } = req.params
+        const { file } = req.params
 
         // TODO: we need to guard against a malicious filename here (not to serve any file on the system)
         if (await Instance.fileExists(path.join('media', file))) {
@@ -66,6 +64,8 @@ class MediaRouter extends CustomStudioRouter {
       this.checkTokenHeader,
       this.needPermissions('write', 'bot.media'),
       this.asyncMiddleware(async (req, res) => {
+        const { botId } = req.params
+
         mediaUploadMulter(req, res, async (err: any) => {
           if (err) {
             return res.status(400).send(err.message)
@@ -76,7 +76,7 @@ class MediaRouter extends CustomStudioRouter {
 
           await Instance.upsertFile(path.join('media', fileName), file.buffer)
 
-          res.json({ url: this.getFileUrl(fileName) })
+          res.json({ url: this.getFileUrl(botId, fileName) })
         })
       })
     )

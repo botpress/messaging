@@ -214,8 +214,8 @@ export class CMSRouter extends CustomStudioRouter {
       }
     }
 
-    // TODO: add BOT_URL
-    const context = { BOT_ID: '' }
+    const host = process.EXTERNAL_URL || `http://${process.HOST}:${process.PORT}`
+    const context = { BOT_ID: '', BOT_URL: host }
 
     const computed: ContentElementsByType = []
     for (const type of elements) {

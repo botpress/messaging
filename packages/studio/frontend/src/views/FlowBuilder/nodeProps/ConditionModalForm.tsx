@@ -1,11 +1,11 @@
 import { FlowView } from '@botpress/common'
-import { SuperInput, SiTypes } from '@botpress/inspector-kit'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { Button, Radio, FormControl, Alert, Form } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import Select from 'react-select'
 
+import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 import { Dialog } from '../../../components/Shared/Dialog'
 import { lang } from '../../../components/Shared/translations'
 import { getFlowLabel, reorderFlows } from '../../../components/Shared/Utils'

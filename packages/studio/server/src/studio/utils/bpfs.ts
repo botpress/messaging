@@ -5,6 +5,8 @@ import fse from 'fs-extra'
 import glob from 'glob'
 import _ from 'lodash'
 import path from 'path'
+import tar from 'tar'
+import tmp from 'tmp'
 import VError from 'verror'
 
 export interface bpfs {
@@ -18,6 +20,7 @@ export interface bpfs {
   fileSize(filePath: string): Promise<number>
   moveFile(fromPath: string, toPath: string): Promise<void>
   onFileChanged(callback: (filePath: string) => void): ListenHandle
+  exportToArchiveBuffer(): Promise<Buffer>
 }
 
 const forceForwardSlashes = (path: string) => path.replace(/\\/g, '/')
@@ -101,5 +104,38 @@ export const Instance: bpfs = {
   onFileChanged(callback: (filePath: string) => void): ListenHandle {
     this.events.on('changed', callback)
     return { remove: () => this.events.off('changed', callback) }
+  },
+  async exportToArchiveBuffer(): Promise<Buffer> {
+    const tmpDir = tmp.dirSync({ unsafeCleanup: true })
+    const filename = path.join(tmpDir.name, 'archive.tgz')
+
+    try {
+      const files = await this.directoryListing('./', {})
+
+      for (const file of files) {
+        const content = await this.readFile(file)
+
+        const outPath = path.join(tmpDir.name, file)
+        await fse.mkdirp(path.dirname(outPath))
+        await fse.writeFile(outPath, content)
+      }
+
+      try {
+        await tar.create(
+          {
+            cwd: tmpDir.name,
+            file: filename,
+            portable: true,
+            gzip: true
+          },
+          files
+        )
+        return await fse.readFile(filename)
+      } catch (err) {
+        throw new VError(err as Error, `[Instance] Error creating archive "${filename}"`)
+      }
+    } finally {
+      tmpDir.removeCallback()
+    }
   }
 }

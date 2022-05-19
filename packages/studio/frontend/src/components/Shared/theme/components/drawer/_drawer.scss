@@ -1,10 +1,10 @@
 // Copyright 2018 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
-@import "~@blueprintjs/icons/src/icons";
-@import "../../common/mixins";
-@import "../../common/react-transition";
-@import "../../common/variables";
+@import '@blueprintjs/icons/src/icons';
+@import '../../common/mixins';
+@import '../../common/react-transition';
+@import '../../common/variables';
 
 $drawer-margin: ($pt-grid-size * 3) 0 !default;
 $drawer-padding: $pt-grid-size * 2 !default;
@@ -28,19 +28,29 @@ $dark-drawer-background-color: $dark-gray4 !default;
 
   &.#{$ns}-position-top {
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "enter",
-      (transform: (translateY(-100%), translateY(0))),
+      '#{$ns}-overlay',
+      'enter',
+      (
+        transform: (
+          translateY(-100%),
+          translateY(0)
+        )
+      ),
       $pt-transition-duration * 2,
       $pt-transition-ease,
-      $before: "&"
+      $before: '&'
     );
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "exit",
-      (transform: (translateY(-100%), translateY(0))),
+      '#{$ns}-overlay',
+      'exit',
+      (
+        transform: (
+          translateY(-100%),
+          translateY(0)
+        )
+      ),
       $pt-transition-duration,
-      $before: "&"
+      $before: '&'
     );
 
     top: 0;
@@ -51,19 +61,29 @@ $dark-drawer-background-color: $dark-gray4 !default;
 
   &.#{$ns}-position-bottom {
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "enter",
-      (transform: (translateY(100%), translateY(0))),
+      '#{$ns}-overlay',
+      'enter',
+      (
+        transform: (
+          translateY(100%),
+          translateY(0)
+        )
+      ),
       $pt-transition-duration * 2,
       $pt-transition-ease,
-      $before: "&"
+      $before: '&'
     );
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "exit",
-      (transform: (translateY(100%), translateY(0))),
+      '#{$ns}-overlay',
+      'exit',
+      (
+        transform: (
+          translateY(100%),
+          translateY(0)
+        )
+      ),
       $pt-transition-duration,
-      $before: "&"
+      $before: '&'
     );
 
     right: 0;
@@ -74,19 +94,29 @@ $dark-drawer-background-color: $dark-gray4 !default;
 
   &.#{$ns}-position-left {
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "enter",
-      (transform: (translateX(-100%), translateX(0))),
+      '#{$ns}-overlay',
+      'enter',
+      (
+        transform: (
+          translateX(-100%),
+          translateX(0)
+        )
+      ),
       $pt-transition-duration * 2,
       $pt-transition-ease,
-      $before: "&"
+      $before: '&'
     );
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "exit",
-      (transform: (translateX(-100%), translateX(0))),
+      '#{$ns}-overlay',
+      'exit',
+      (
+        transform: (
+          translateX(-100%),
+          translateX(0)
+        )
+      ),
       $pt-transition-duration,
-      $before: "&"
+      $before: '&'
     );
 
     top: 0;
@@ -97,19 +127,29 @@ $dark-drawer-background-color: $dark-gray4 !default;
 
   &.#{$ns}-position-right {
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "enter",
-      (transform: (translateX(100%), translateX(0))),
+      '#{$ns}-overlay',
+      'enter',
+      (
+        transform: (
+          translateX(100%),
+          translateX(0)
+        )
+      ),
       $pt-transition-duration * 2,
       $pt-transition-ease,
-      $before: "&"
+      $before: '&'
     );
     @include react-transition-phase(
-      "#{$ns}-overlay",
-      "exit",
-      (transform: (translateX(100%), translateX(0))),
+      '#{$ns}-overlay',
+      'exit',
+      (
+        transform: (
+          translateX(100%),
+          translateX(0)
+        )
+      ),
       $pt-transition-duration,
-      $before: "&"
+      $before: '&'
     );
 
     top: 0;
@@ -118,23 +158,32 @@ $dark-drawer-background-color: $dark-gray4 !default;
     width: $drawer-default-size;
   }
 
-  &:not(.#{$ns}-position-top):not(.#{$ns}-position-bottom):not(.#{$ns}-position-left):not(
-  .#{$ns}-position-right) {
+  &:not(.#{$ns}-position-top):not(.#{$ns}-position-bottom):not(.#{$ns}-position-left):not(.#{$ns}-position-right) {
     &:not(.#{$ns}-vertical) {
       @include react-transition-phase(
-        "#{$ns}-overlay",
-        "enter",
-        (transform: (translateX(100%), translateX(0))),
+        '#{$ns}-overlay',
+        'enter',
+        (
+          transform: (
+            translateX(100%),
+            translateX(0)
+          )
+        ),
         $pt-transition-duration * 2,
         $pt-transition-ease,
-        $before: "&"
+        $before: '&'
       );
       @include react-transition-phase(
-        "#{$ns}-overlay",
-        "exit",
-        (transform: (translateX(100%), translateX(0))),
+        '#{$ns}-overlay',
+        'exit',
+        (
+          transform: (
+            translateX(100%),
+            translateX(0)
+          )
+        ),
         $pt-transition-duration,
-        $before: "&"
+        $before: '&'
       );
 
       top: 0;
@@ -145,19 +194,29 @@ $dark-drawer-background-color: $dark-gray4 !default;
 
     &.#{$ns}-vertical {
       @include react-transition-phase(
-        "#{$ns}-overlay",
-        "enter",
-        (transform: (translateY(100%), translateY(0))),
+        '#{$ns}-overlay',
+        'enter',
+        (
+          transform: (
+            translateY(100%),
+            translateY(0)
+          )
+        ),
         $pt-transition-duration * 2,
         $pt-transition-ease,
-        $before: "&"
+        $before: '&'
       );
       @include react-transition-phase(
-        "#{$ns}-overlay",
-        "exit",
-        (transform: (translateY(100%), translateY(0))),
+        '#{$ns}-overlay',
+        'exit',
+        (
+          transform: (
+            translateY(100%),
+            translateY(0)
+          )
+        ),
         $pt-transition-duration,
-        $before: "&"
+        $before: '&'
       );
 
       right: 0;
