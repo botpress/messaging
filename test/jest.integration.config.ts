@@ -1,3 +1,4 @@
+import EngineConfig from '../packages/base/engine/test/tsconfig.json'
 import FrameworkConfig from '../packages/base/framework/test/tsconfig.json'
 import MessagingServerConfig from '../packages/messaging/server/test/tsconfig.json'
 import type { Config } from '@jest/types'
@@ -43,6 +44,24 @@ const config: Config.InitialOptions = {
       globalTeardown: '<rootDir>/test/jest.integration.teardown.ts',
       clearMocks: true,
       moduleNameMapper: pathsToModuleNameMapper(FrameworkConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
+    },
+    {
+      rootDir: 'packages/base/engine',
+      testMatch: ['<rootDir>/test/integration/**/*.test.ts'],
+      displayName: { name: 'Engine', color: 'red' },
+      testEnvironment: 'node',
+      transform: {
+        '^.+\\.tsx?$': require.resolve('ts-jest')
+      },
+      globals: {
+        'ts-jest': {
+          tsconfig: '<rootDir>/test/tsconfig.json'
+        }
+      },
+      globalSetup: '<rootDir>/test/jest.integration.setup.ts',
+      globalTeardown: '<rootDir>/test/jest.integration.teardown.ts',
+      clearMocks: true,
+      moduleNameMapper: pathsToModuleNameMapper(EngineConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
     }
   ]
 }

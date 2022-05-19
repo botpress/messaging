@@ -41,7 +41,8 @@ export class MetaService extends Service {
       return
     }
 
-    if (this.get() && semver.eq(this.get()!.version, data.version)) {
+    const metadata = this.get()
+    if (metadata && semver.eq(metadata.version, data.version)) {
       return
     }
 

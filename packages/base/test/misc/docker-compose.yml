@@ -11,3 +11,11 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - '2345:5432'
+
+  redis:
+    container_name: messaging_redis
+    hostname: 'messaging_redis'
+    image: redis
+    restart: always
+    ports:
+      - '9736:6379'

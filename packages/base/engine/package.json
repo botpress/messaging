@@ -10,6 +10,7 @@
     "watch": "yarn && yarn run -T tsc --build --watch"
   },
   "devDependencies": {
+    "@botpress/base-test": "0.0.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/cli-color": "^2.0.2",
     "@types/express": "^4.17.13",
