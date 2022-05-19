@@ -55,7 +55,7 @@ jobs:
         run: until pg_isready -h localhost; do sleep 1; done
       - name: Run tests
         run: |
-          yarn test:int --coverage --verbose packages/${{ matrix.project }}
+          yarn test:int --coverage --verbose --passWithNoTests packages/${{ matrix.project }}
         env:
           DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432' || '' }}
 
