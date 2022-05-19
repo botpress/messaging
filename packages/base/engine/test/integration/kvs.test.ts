@@ -27,6 +27,10 @@ describe('KvsService', () => {
     await destroyApp()
   })
 
+  afterEach(async () => {
+    engine.caching.resetAll()
+  })
+
   describe('Set', () => {
     test('Should be able to store a key and value in the database', async () => {
       await kvs.set(state.key1, state.value1)
