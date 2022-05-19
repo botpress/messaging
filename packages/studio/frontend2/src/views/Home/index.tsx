@@ -1,6 +1,7 @@
 import i18next from 'i18next'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 
 import { useStore } from './store'
 import * as style from './style.module.scss'
@@ -22,6 +23,10 @@ const Home = () => {
         <button onClick={() => changeLang('en')}>EN</button>
         <button onClick={() => changeLang('fr')}>FR</button>
         <button onClick={() => changeLang('es')}>ES</button>
+      </div>
+
+      <div>
+        <Link to="/stats">Stats</Link>
       </div>
     </div>
   )
