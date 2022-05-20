@@ -144,7 +144,7 @@ class PanelContent extends React.Component<Props> {
   }
 
   renderSectionActions() {
-    let actions: any = [
+    const actions = [
       {
         id: 'btn-add-action',
         icon: <Icon icon="add" />,
@@ -152,19 +152,6 @@ class PanelContent extends React.Component<Props> {
         onClick: () => this.createFilePrompt('action_legacy')
       }
     ]
-    if (window.EXPERIMENTAL) {
-      actions = [
-        {
-          id: 'btn-add-action',
-          icon: <Icon icon="add" />,
-          key: 'add',
-          items: [
-            { label: 'Action (HTTP)', onClick: () => this.createFilePrompt('action_http') },
-            { label: 'Action (Legacy)', onClick: () => this.createFilePrompt('action_legacy') }
-          ]
-        }
-      ]
-    }
 
     return (
       <SidePanelSection label={lang.tr('code-editor.sidePanel.actions')} actions={actions}>
