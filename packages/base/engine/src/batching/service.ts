@@ -9,6 +9,7 @@ const MAX_BATCH_SIZE = 400
 export class BatchingService extends Service {
   private enabled!: boolean
   private batchers: { [cacheId: string]: Batcher<any> } = {}
+  private intervals: { [cacheId: string]: NodeJS.Timer } = {}
   private logger = new Logger('Batching')
 
   async setup() {
@@ -18,6 +19,8 @@ export class BatchingService extends Service {
   async destroy() {
     for (const batcher of Object.values(this.batchers)) {
       try {
+        clearInterval(this.intervals[batcher.id])
+
         await batcher.flush()
       } catch (e) {
         this.logger.error(e, `Failed to destroy batch ${batcher.id}`)
@@ -33,7 +36,11 @@ export class BatchingService extends Service {
     if (this.enabled) {
       const batcher = new DelayedBatcher(id, dependencies, MAX_BATCH_SIZE, onFlush)
 
-      setInterval(async () => {
+      if (this.intervals[id]) {
+        clearInterval(this.intervals[id])
+      }
+
+      this.intervals[id] = setInterval(async () => {
         await batcher.flush()
       }, ms('15s'))
 

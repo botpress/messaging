@@ -1,7 +1,8 @@
+import { randStr } from '@botpress/base-test/src'
 import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
 
 import { Client, ClientToken, ClientTokenService } from '../../src'
-import { setupApp, destroyApp, randStr, framework } from '../utils'
+import { setupApp, destroyApp, framework } from '../utils'
 
 describe('ClientTokens', () => {
   let clientTokens: ClientTokenService

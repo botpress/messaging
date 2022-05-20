@@ -20,7 +20,7 @@ const config: Config.InitialOptions = {
     {
       rootDir: 'packages/messaging/server',
       testMatch: ['<rootDir>/test/unit/**/*.test.ts'],
-      displayName: { name: 'Server', color: 'blue' },
+      displayName: { name: 'Messaging', color: 'blue' },
       testEnvironment: 'node',
       transform: {
         '^.+\\.tsx?$': require.resolve('ts-jest')

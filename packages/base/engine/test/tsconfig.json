@@ -1,7 +1,12 @@
 {
   "extends": "../../../../tsconfig.packages.json",
   "compilerOptions": {
-    "rootDir": ".."
+    "rootDir": "..",
+
+    "paths": {
+      "@botpress/messaging-base": ["../../../messaging/base/src/index.ts"],
+      "@botpress/base-test": ["../../test/src/index.ts"]
+    }
   },
   "include": ["../test/**/*", "../src/**/*"]
 }

@@ -1,9 +1,10 @@
+import { randStr } from '@botpress/base-test/src'
 import { uuid } from '@botpress/messaging-base'
 import { Endpoint } from '@botpress/messaging-channels'
 import { validate as validateUuid } from 'uuid'
 import { MappingService } from '../../src/mapping/service'
 import { Provider } from '../../src/providers/types'
-import { app, destroyApp, randStr, setupApp } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 export interface Mapping {
   tunnelId: uuid

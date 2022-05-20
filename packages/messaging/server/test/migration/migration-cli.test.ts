@@ -76,8 +76,7 @@ describe('Migration CLI', () => {
           protocol: 'http',
           host: '127.0.0.1',
           port,
-          path: 'status',
-          usedPortAction: 'error'
+          path: 'status'
         },
         CLI_MIGRATIONS
       )

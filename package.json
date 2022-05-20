@@ -16,12 +16,11 @@
     "test:e2e": "jest -c ./test/jest.e2e.config.ts",
     "test:sec": "jest -c ./test/jest.security.config.ts",
     "test:mig": "jest -c ./test/jest.migration.config.ts",
-    "test:int:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.integration.config.ts",
-    "test:e2e:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.e2e.config.ts",
-    "test:sec:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.security.config.ts",
-    "test:mig:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.migration.config.ts",
-    "test:chat": "ts-node test/cypress/start.ts",
-    "cypress:open": "cypress open"
+    "test:int:pg": "cross-env POSTGRESQL=true REDIS=true jest -c ./test/jest.integration.config.ts",
+    "test:e2e:pg": "cross-env POSTGRESQL=true REDIS=true jest -c ./test/jest.e2e.config.ts",
+    "test:sec:pg": "cross-env POSTGRESQL=true REDIS=true jest -c ./test/jest.security.config.ts",
+    "test:mig:pg": "cross-env POSTGRESQL=true REDIS=true jest -c ./test/jest.migration.config.ts",
+    "test:chat": "yarn workspace @botpress/webchat test:e2e"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",
