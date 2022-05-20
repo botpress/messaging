@@ -149,7 +149,6 @@ class ConfigView extends Component<Props, State> {
 
   async componentDidUpdate(prevProps: Readonly<Props>) {
     if (!prevProps.bot && this.props.bot) {
-      console.log('this.props.bot', this.props.bot)
       const state = await this.getBotStateFromConfig(this.props.bot)
       this.setState({ ...state })
     }
