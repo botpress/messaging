@@ -160,7 +160,7 @@ export class NLUService {
     await Instance.deleteDir(modelsFolder)
 
     for (const lang of Object.keys(botConfig.nluModels)) {
-      const modelId = botConfig.nluModels[lang]
+      const modelId = botConfig.nluModels[lang].modelId
       const modelWeights = await bot.downloadModelWeights(botId, modelId)
 
       await Instance.upsertFile(path.join(modelsFolder, `${modelId}.model`), modelWeights)
