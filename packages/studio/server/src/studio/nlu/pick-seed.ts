@@ -1,5 +1,5 @@
+import { BotConfig } from '@botpress/sdk'
 import _ from 'lodash'
-import { BotConfig } from './typings'
 
 const MAX_SEED = 10000
 const BYTES_PER_NUMBER = 8 // 64 bits floats === 8 bytes

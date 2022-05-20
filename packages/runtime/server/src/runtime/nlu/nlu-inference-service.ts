@@ -124,11 +124,12 @@ export class NLUInferenceService {
     return naturalElection(electionInput)
   }
 
-  private _modelIdGetter = (botId: string) => async (): Promise<{ [key: string]: string }> => {
-    // TODO: implement some caching to prevent from reading bot config at each predict
-    const botConfig = await this.configProvider.getBotConfig(botId)
-    return botConfig.nluModels ?? {}
-  }
+  private _modelIdGetter =
+    (botId: string) => async (): Promise<{ [key: string]: { modelId: string; definitionHash: string } }> => {
+      // TODO: implement some caching to prevent from reading bot config at each predict
+      const botConfig = await this.configProvider.getBotConfig(botId)
+      return botConfig.nluModels ?? {}
+    }
 
   private handleIncomingEvent = async (event: IO.Event, next: IO.MiddlewareNextCallback) => {
     const incomingEvent = event as IO.IncomingEvent

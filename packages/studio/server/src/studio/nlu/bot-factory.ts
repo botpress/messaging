@@ -1,4 +1,4 @@
-import { Logger } from '@botpress/sdk'
+import { BotConfig, Logger } from '@botpress/sdk'
 import _ from 'lodash'
 import { Bot } from './bot'
 import { DefinitionsRepository } from './definitions-repository'
@@ -6,7 +6,7 @@ import { ModelEntryService, TrainingEntryService, ModelEntryRepository } from '.
 import { NLUClient } from './nlu-client'
 import pickSeed from './pick-seed'
 
-import { BotDefinition, BotConfig, TrainListener } from './typings'
+import { BotDefinition, TrainListener } from './typings'
 
 export class BotFactory {
   constructor(
