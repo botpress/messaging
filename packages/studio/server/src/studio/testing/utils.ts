@@ -33,7 +33,6 @@ export const buildScenarioFromEvents = (events: sdk.IO.StoredEvent[]): Scenario 
     initialState: undefined,
     finalState: (_.last(events)?.event as sdk.IO.IncomingEvent).state
   }
-
   for (const event of events) {
     const incoming = event.event as sdk.IO.IncomingEvent
 
@@ -51,22 +50,24 @@ export const buildScenarioFromEvents = (events: sdk.IO.StoredEvent[]): Scenario 
 }
 
 export const getMappingFromVisitor = async (
-  database: sdk.KnexExtended,
+  database: any,
   logger: sdk.Logger,
   botId: string,
   visitorId: string
 ): Promise<string | undefined> => {
-  try {
-    const rows = await database('web_user_map').where({ botId, visitorId })
+  logger.error('An error occurred while fetching a visitor mapping. Not implemented')
+  return undefined
+  // TODO fix this
+  // try {
+  //   // const rows = await database('web_user_map').where({ botId, visitorId })
 
-    if (rows?.length) {
-      const mapping = rows[0]
+  //   // if (rows?.length) {
+  //   //   const mapping = rows[0]
 
-      return mapping.userId
-    }
-  } catch (err) {
-    logger.error('An error occurred while fetching a visitor mapping.', err)
+  //   //   return mapping.userId
+  //   // }
 
-    return undefined
-  }
+  // } catch (err) {
+
+  // }
 }
