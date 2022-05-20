@@ -1,8 +1,7 @@
-import { getTestDataPath } from '@botpress/base-test/src'
-import crypto from 'crypto'
-import knex from 'knex'
+import { createDatabaseIfNotExists, getTestDataPath, randomLetters } from '@botpress/base-test/src'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
+
 import { Engine } from '../../src'
 
 export let engine: Engine
@@ -22,8 +21,12 @@ export const setupApp = async (
   process.env.DATABASE_URL = process.env.DATABASE_URL || path.join(getTestDataPath(), `${prefix || uuidv4()}.sqlite`)
 
   if (process.env.DATABASE_URL.startsWith('postgres')) {
+    // Transient means that the database will be cleared when destroyApp is called
     transient && (process.env.DATABASE_TRANSIENT = 'true')
 
+    // Note: At this point, we should have received a connection URL that gives
+    // us access to the whole database. We can then create databases with random
+    // names to prevent having conflicts between tests
     const name = prefix || randomLetters(8)
     await createDatabaseIfNotExists(process.env.DATABASE_URL, name)
 
@@ -46,39 +49,4 @@ export const destroyApp = async () => {
   } finally {
     process.env = env
   }
-}
-
-export const createDatabaseIfNotExists = async (url: string, name: string) => {
-  if (!name.trim()) {
-    return
-  }
-
-  const conn = knex({
-    client: 'postgres',
-    connection: url,
-    useNullAsDefault: true
-  })
-
-  try {
-    const exists = (await conn.raw(`SELECT COUNT(*) FROM pg_database WHERE datname = '${name}'`)).rows?.[0].count > 0
-
-    if (!exists) {
-      await conn.raw(`CREATE DATABASE ${name};`)
-    }
-  } finally {
-    await conn.destroy()
-  }
-}
-
-const randomLetters = (length: number) => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz'
-  let str = ''
-  for (let i = 0; i < length; i++) {
-    str += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return str
-}
-
-export const randStr = () => {
-  return crypto.randomBytes(20).toString('hex')
 }

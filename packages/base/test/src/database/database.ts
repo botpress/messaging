@@ -1,10 +1,10 @@
 import { setup as setupPostgres, teardown as teardownPostgres } from './postgresql'
 import { setup as setupSqlite, teardown as teardownSqlite } from './sqlite'
 
-export const setupDatabase = async ({ postgresOnly }: { postgresOnly: boolean } = { postgresOnly: false }) => {
+export const setupDatabase = async () => {
   if (process.env.POSTGRESQL === 'true') {
     await setupPostgres()
-  } else if (!postgresOnly) {
+  } else {
     setupSqlite()
   }
 }
@@ -16,3 +16,5 @@ export const teardownDatabase = async () => {
     teardownSqlite()
   }
 }
+
+export { setupPostgres, teardownPostgres, setupSqlite, teardownSqlite }
