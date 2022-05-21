@@ -6,3 +6,10 @@
   top: 0;
   left: -320px;
 }
+
+.head {
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+}

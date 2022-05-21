@@ -6,6 +6,8 @@ interface InspectorStore {
   openTabId: (id: string) => void
   changeTab: (idx: number) => void
   closeTabIdx: (idx: number) => void
+  activeCollapse: number
+  setActiveCollapse: (idx: number) => void
   resetInspector: () => void
 }
 
@@ -27,8 +29,11 @@ const useInspectorStore = create<InspectorStore>((set, get) => ({
   closeTabIdx: (idx) =>
     set((state) => ({ tabs: state.tabs.filter((_, i) => i !== idx), activeTabIdx: state.activeTabIdx - 1 })),
 
+  // Collapses
+  activeCollapse: 0,
+  setActiveCollapse: (idx) => set(() => ({ activeCollapse: idx })),
   // Reset Inspector
-  resetInspector: () => set(() => ({ tabs: [], activeTabIdx: -1 }))
+  resetInspector: () => set(() => ({ tabs: [], activeTabIdx: -1, activeCollapse: 0 }))
 }))
 
 export default useInspectorStore

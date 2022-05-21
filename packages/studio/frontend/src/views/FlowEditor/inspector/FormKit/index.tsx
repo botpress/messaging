@@ -1,20 +1,22 @@
-import React, { useEffect, FC } from 'react'
+import { Formik } from 'formik'
+import React, { FC } from 'react'
 
-import useFormKitStore from './store'
-import * as style from './style.module.scss'
+import Autosave from './Autosave'
 
 interface OwnProps {
-  form: any
+  initialValues: any
+  onSubmit: any
 }
 
-const FormKit: FC<OwnProps> = ({ form, children }) => {
-  const resetKit = useFormKitStore((state) => state.resetKit)
-
-  useEffect(() => {
-    return () => resetKit()
-  })
-
-  return <div className={style.forms}>{children}</div>
+const FormKit: FC<OwnProps> = ({ initialValues, onSubmit, children }) => {
+  return (
+    <Formik initialValues={initialValues} onSubmit={onSubmit}>
+      <>
+        {children}
+        <Autosave />
+      </>
+    </Formik>
+  )
 }
 
 export default FormKit

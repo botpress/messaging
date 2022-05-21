@@ -1,0 +1,39 @@
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as bp;
+
+.tag {
+  display: flex;
+  column-gap: 4px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: white;
+  height: 20px;
+  width: 20px;
+  text-transform: capitalize;
+
+  span {
+    @extend %font-sm, %text-normal;
+  }
+
+  &-simple {
+    @extend .tag;
+    background-color: bp.$green4;
+  }
+  &-code {
+    @extend .tag;
+    background-color: bp.$cobalt4;
+  }
+  &-complex {
+    @extend .tag;
+    background-color: bp.$indigo4;
+  }
+  &-prompt {
+    @extend .tag;
+    background-color: bp.$orange4;
+  }
+
+  svg {
+    height: 100%;
+  }
+}

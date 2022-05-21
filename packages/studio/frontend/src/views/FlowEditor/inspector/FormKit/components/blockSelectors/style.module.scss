@@ -1,3 +1,7 @@
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as bp;
+
 @import '@blueprintjs/core/lib/scss/variables';
 
 .container {
@@ -9,11 +13,4 @@
   border: 1px solid $gray4;
   border-radius: 8px;
   padding: 8px;
-
-  :first-child {
-    margin-top: 0;
-  }
-  :last-child {
-    margin-bottom: 0;
-  }
 }

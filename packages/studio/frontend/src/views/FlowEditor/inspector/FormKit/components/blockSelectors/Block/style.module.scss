@@ -1,3 +1,7 @@
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as bp;
+
 @import '@blueprintjs/core/lib/scss/variables';
 
 .container {
@@ -5,25 +9,62 @@
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
+  margin-bottom: 6px;
 }
 
 .block {
-  min-width: 0;
-  width: 100%;
-  box-sizing: border-box;
   display: flex;
+  flex-direction: row;
+  column-gap: 8px;
+  height: 36px;
+  width: 100%;
+  padding: 4px;
+  border-radius: 6px;
   align-items: center;
-  padding: 8px 12px;
-  border: 1px solid $dark-gray2;
+  color: bp.$gray1;
   background-color: white;
-  border-radius: 5px;
+  overflow: hidden;
+
+  @include abstracts.block-shadow-smooth(2px, 1px, bp.$gray5);
+
+  &:hover {
+    background-color: white;
+    color: bp.$dark-gray4;
+  }
+
   cursor: pointer;
 
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Old versions of Firefox */
   user-select: none;
 
+  &:hover {
+    background-color: white;
+    color: bp.$dark-gray4;
+  }
+
+  &-prompt {
+    @extend .block;
+    @include abstracts.block-shadow-smooth(2px, 1px, bp.$orange4);
+  }
+
+  &-simple {
+    @extend .block;
+    @include abstracts.block-shadow-smooth(2px, 1px, bp.$green4);
+  }
+
+  &-code {
+    @extend .block;
+    @include abstracts.block-shadow-smooth(2px, 1px, bp.$cobalt4);
+  }
+
+  &-complex {
+    @extend .block;
+    @include abstracts.block-shadow-smooth(2px, 1px, bp.$indigo4);
+  }
+
   .name {
+    @extend %font-md;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

@@ -5,6 +5,7 @@
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
   "scripts": {
+    "dev:studio": "concurrently -n FE,BE -c cyan,yellow -P \"yarn workspace @botpress/studio-ui dev\" \"yarn workspace @botpress/studio-be dev -d {1}\"",
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
     "clean": "mkdirp packages/messaging/server/dist && rimraf packages/*/*/dist test/.test-data",
@@ -54,6 +55,7 @@
     "@types/yargs": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
+    "concurrently": "^7.2.0",
     "conventional-changelog": "^3.1.25",
     "copyfiles": "^2.4.1",
     "core-js": "^3.0.1",

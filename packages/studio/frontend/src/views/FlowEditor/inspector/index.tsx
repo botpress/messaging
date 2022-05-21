@@ -1,10 +1,10 @@
 import { FlowNode } from '@botpress/sdk'
 import React, { useEffect, FC } from 'react'
-import { DragDropContext } from 'react-beautiful-dnd'
 import shallow from 'zustand/shallow'
 
 import TabBar from './layout/TabBar'
 import { PaneTypes } from './panes'
+import ContentPane from './panes/ContentPane'
 import NodePane from './panes/NodePane'
 import useInspectorStore from './store'
 import * as style from './style.module.scss'
@@ -20,28 +20,18 @@ const Inspector: FC<OwnProps> = ({ currentFlowNode = {} }) => {
     shallow
   )
 
-  const renderPane = (pt: PaneTypes) => {
-    switch (pt) {
-      case PaneTypes.NODE:
-        return <NodePane />
-      case PaneTypes.BLOCK:
-        return <div>Block {tabs[activeTabIdx]}</div>
-      case PaneTypes.SKILL:
-        return <div>Skill TBD</div>
-    }
-  }
-
   useEffect(() => {
     resetInspector()
   }, [currentFlowNode])
 
   return (
-    <DragDropContext>
-      <div className={style.container}>
-        <TabBar contextNodeName={name} />
-        {activeTabIdx === -1 ? renderPane(type as PaneTypes) : renderPane(PaneTypes.BLOCK)}
-      </div>
-    </DragDropContext>
+    <div className={style.container}>
+      <TabBar contextNodeName={name} />
+      {type === PaneTypes.NODE ? <NodePane selected={activeTabIdx === -1} /> : <div>tbd</div>}
+      {tabs.map((tab, idx) => (
+        <ContentPane key={tab} contentId={tab} selected={idx === activeTabIdx} />
+      ))}
+    </div>
   )
 }
 
