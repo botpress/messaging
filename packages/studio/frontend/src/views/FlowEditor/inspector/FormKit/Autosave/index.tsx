@@ -1,8 +1,8 @@
 import { useFormikContext } from 'formik'
 import { debounce } from 'lodash'
-import React, { useState, useCallback, useEffect, useRef, useMemo, FC } from 'react'
-import { connect } from 'react-redux'
 import moment from 'moment'
+import React, { useState, useCallback, useEffect, useRef, FC } from 'react'
+import { connect } from 'react-redux'
 
 import { getCurrentFlowNode } from '../../../../../reducers'
 import * as style from './style.module.scss'
@@ -17,14 +17,17 @@ const useDidMountEffect = (func, deps) => {
   const didMount = useRef(false)
 
   useEffect(() => {
-    if (didMount.current) func()
-    else didMount.current = true
+    if (didMount.current) {
+      func()
+    } else {
+      didMount.current = true
+    }
   }, deps)
 }
 
-const AutoSave: FC<OwnProps> = ({ currentNode }) => {
-  const [fromNow, setFromNow] = useState('some time ago lmao xd')
-  const { submitForm, values, isSubmitting, resetForm } = useFormikContext()
+const AutoSave: FC<OwnProps> = ({ currentNode: { lastModified } }) => {
+  const [fromNow, setFromNow] = useState(moment(lastModified).fromNow())
+  const { submitForm, values } = useFormikContext()
 
   const debouncedSubmit = useCallback(
     debounce(() => submitForm(), DEBOUNCE_MS),
@@ -32,20 +35,16 @@ const AutoSave: FC<OwnProps> = ({ currentNode }) => {
   )
 
   useDidMountEffect(() => {
-    resetForm()
-  }, [resetForm, currentNode])
+    setFromNow(moment(lastModified).fromNow())
+  }, [setFromNow, lastModified])
 
   useDidMountEffect(() => {
-    console.log('why', values)
-    debouncedSubmit()
+    console.log('debounce', values)
+    debouncedSubmit() as any
+    setFromNow(null)
   }, [debouncedSubmit, values])
 
-  return (
-    <div className={style.test}>
-      {' '}
-      {isSubmitting ? 'saving...' : fromNow !== null ? `Last Saved: ${fromNow}` : null}
-    </div>
-  )
+  return <div className={style.test}> {!fromNow ? 'saving...' : `Last Saved: ${fromNow}`}</div>
 }
 
 const mapStateToProps = (state) => ({
