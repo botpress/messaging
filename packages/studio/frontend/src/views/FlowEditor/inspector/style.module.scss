@@ -6,6 +6,9 @@
 .container {
   @extend %flex-column;
   // row-gap: 2px;
+  position: absolute;
+  top: 15px;
+  right: 10px;
   z-index: 50;
   width: 350px;
   min-height: 100px;

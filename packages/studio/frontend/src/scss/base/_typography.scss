@@ -1,0 +1,69 @@
+@use '~/src/scss/abstracts/variables.module' as vars;
+@use '~/src/scss/vendor/blueprintjs' as bp;
+
+
+%font {
+  font-weight: 400;
+  // color: bp.$dark-gray2;
+
+  &-sm {
+    font-size: vars.$font-sm;
+  }
+
+  &-md {
+    font-size: vars.$font-md;
+  }
+
+  &-lg {
+    font-size: vars.$font-lg;
+  }
+
+  &-xl {
+    font-size: vars.$font-xl;
+  }
+
+  &-2xl {
+    font-size: vars.$font-2xl;
+  }
+
+  &-3xl {
+    font-size: vars.$font-3xl;
+  }
+}
+
+%text {
+  &-normal {
+    font-weight: 400;
+  }
+  &-medium {
+    font-weight: 500;
+  }
+  &-semibold {
+    font-weight: 600;
+  }
+  &-bold {
+    font-weight: 700;
+  }
+}
+
+%style {
+  &-normal {
+    font-style: normal;
+  }
+  &-italic {
+    font-style: italic;
+  }
+  &-oblique {
+    font-style: oblique;
+  }
+}
+
+.placeholder {
+  @extend %text-normal, %font-sm, %style-italic;
+  color: bp.$gray3;
+  user-select: none;
+}
+
+.normal {
+  @extend %text-normal, %font-sm, %style-normal;
+}
