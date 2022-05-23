@@ -1,6 +1,4 @@
-@use '~/src/scss/vendor/index.module' as *;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/abstracts/index.module' as *;
+@use '~/src/scss/style.scss' as *;
 
 .formKitContainer {
   display: flex;
@@ -22,6 +20,14 @@
   .leftBtn {
     margin: 0;
     flex-grow: 1;
+
+    span {
+      outline: none !important;
+
+      :focus {
+        outline: none !important;
+      }
+    }
   }
 
   .center {

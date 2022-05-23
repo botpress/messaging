@@ -1,8 +1,8 @@
 import { EditableText } from '@blueprintjs/core'
-import React, { FC } from 'react'
 import { useField } from 'formik'
+import React, { FC } from 'react'
 
-import * as layout from '../../shared/layout.module.scss'
+import * as layout from '../../shared/styles/layout.module.scss'
 
 import * as style from './style.module.scss'
 
@@ -26,11 +26,9 @@ const EditableTextBlock: FC<OwnProps> = ({ type, placeholder, error, name }) => 
         placeholder={placeholder}
         className={type === 'title' ? style.editable__title : style.editable__text}
         value={value}
-        onChange={
-          (change) => {
-            setValue(change)
-          }
-        }
+        onChange={(change) => {
+          setValue(change)
+        }}
       />
     </div>
   )

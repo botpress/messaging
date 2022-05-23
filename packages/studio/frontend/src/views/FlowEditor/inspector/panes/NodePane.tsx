@@ -3,10 +3,9 @@ import { connect } from 'react-redux'
 
 import { updateFlowNode } from '~/src/actions'
 import { getCurrentFlowNode } from '../../../../reducers'
+import FormKit, { BlockList, Switch, TextInput, SelectDropdown, EditableTextBlock, ReorderList } from '../FormKit'
 import Autosave from '../FormKit/Autosave'
 
-import FormKit, { BlockList, Switch, TextInput, NumberInput, SelectDropdown, SingleContent, EditableTextBlock } from '../FormKit'
-import { Text } from '../FormKit/shared'
 import Collapse from '../layout/Collapse'
 import Pane from '../layout/Pane'
 import * as layout from './layout.module.scss'
@@ -30,9 +29,9 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
           onEnter,
           next,
           name,
-          description: 'just a regular standard normal node.', 
+          description: 'just a regular standard normal node.',
           test: true,
-          test2: "asdf"
+          test2: 'asdf'
         }}
         onSubmit={(values, { setSubmitting }) => {
           console.log('submit happen', values)
@@ -40,24 +39,20 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
         }}
       >
         <div className={layout.head}>
-          <EditableTextBlock name="name" type="title"/>
-          <EditableTextBlock name="description" type="text"/>
+          <EditableTextBlock name="name" type="title" />
+          <EditableTextBlock name="description" type="text" />
           <Autosave />
         </div>
 
         <Collapse idx={0} label="Basic">
-
-
-
-          {/* <Switch name="test" label="test" />
-          <TextInput name="test2" label="test2" req/>
+          <Switch name="test" label="test" />
+          <TextInput name="test2" label="test2" req />
           <SelectDropdown name="select" label="Select" />
-
+          {/*
           <NumberInput name="number" label="Input Number"/>
           <SingleContent name="singleContent" label="Select content" /> */}
 
-
-
+          <ReorderList name="dummy" label="Select" />
           <BlockList name="onEnter" label="On Enter" />
           <BlockList name="onReceive" label="On Receive" />
         </Collapse>

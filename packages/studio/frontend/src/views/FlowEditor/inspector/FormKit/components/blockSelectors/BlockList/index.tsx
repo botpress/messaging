@@ -5,8 +5,8 @@ import React, { useCallback, FC } from 'react'
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd'
 
 import { Label, AddBtn } from '../../../shared'
-import * as layout from '../../../shared/layout.module.scss'
-import Block from '../Block'
+import Block from '../../../shared/Block'
+import * as layout from '../../../shared/styles/layout.module.scss'
 
 import * as style from './style.module.scss'
 

@@ -1,10 +1,9 @@
 import { Switch as BpSwitch } from '@blueprintjs/core'
 import { useField } from 'formik'
 import React, { useState, useMemo, FC, useEffect } from 'react'
-import { Label, DynamicBtn } from '../../shared'
-import * as layout from '../../shared/layout.module.scss'
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
-
+import { Label, DynamicBtn } from '../../shared'
+import * as layout from '../../shared/styles/layout.module.scss'
 
 export interface OwnProps {
   name: string
@@ -16,7 +15,6 @@ const Switch: FC<OwnProps> = ({ label, name, hint }) => {
   const [isDynamic, setIsDynamic] = useState(false)
 
   const [field, { value }, { setValue }] = useField(name)
-
 
   const _isBool = (token: string) => {
     try {
