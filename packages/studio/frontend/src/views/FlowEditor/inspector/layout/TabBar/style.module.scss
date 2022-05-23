@@ -43,13 +43,12 @@
 .contentTabs {
   height: 100%;
   width: 100%;
-  border-radius: 6px;
+  border-radius: 4px;
   display: flex;
   flex-direction: row-reverse;
   column-gap: 4px;
 
-  overflow-x: scroll;
-  overflow-y: visible;
+  overflow-x: auto;
 
   scrollbar-width: 0;
   &::-webkit-scrollbar {
@@ -62,7 +61,7 @@
   @extend %font-sm, %text-medium, %transition-all-75, %flex-row;
   align-items: center;
 
-  height: 32px;
+  height: 100%;
   min-width: min-content;
   max-width: 150px;
 
