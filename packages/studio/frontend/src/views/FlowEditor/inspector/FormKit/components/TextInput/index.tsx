@@ -1,12 +1,11 @@
 import { TextArea } from '@blueprintjs/core'
+import { useField } from 'formik'
 import React, { FC, useState } from 'react'
 
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
-import { useField } from 'formik'
-
-import * as layout from '../../shared/layout.module.scss'
 
 import { Label, DynamicBtn } from '../../shared'
+import * as layout from '../../shared/styles/layout.module.scss'
 
 import * as style from './style.module.scss'
 
@@ -39,11 +38,12 @@ const TextInput: FC<OwnProps> = ({ label, hint, req, placeholder, help, error, m
         )
       ) : (
         <SuperInput
-          type={SiTypes.BOOL} 
+          type={SiTypes.BOOL}
           value={value}
           onChange={(change) => {
             setValue(change)
-        }} />
+          }}
+        />
       )}
     </div>
   )

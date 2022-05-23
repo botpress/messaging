@@ -5,10 +5,9 @@ import React, { useCallback, FC } from 'react'
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd'
 
 import { Label, AddBtn } from '../../../shared'
-import * as layout from '../../../shared/layout.module.scss'
+import * as layout from '../../../shared/styles/layout.module.scss'
 import Block from '../Block'
 import BlockSidePane from '../BlockSidePane'
-
 import * as style from './style.module.scss'
 
 export interface OwnProps {

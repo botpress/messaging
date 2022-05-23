@@ -2,10 +2,9 @@ import React, { FC, useState } from 'react'
 
 import * as base from '~/src/scss/base/_index.module.scss'
 
-import * as layout from '../../shared/layout.module.scss'
-
 import Add from '../../shared/AddBtn'
 import Label from '../../shared/Label'
+import * as layout from '../../shared/styles/layout.module.scss'
 import SwapIcon from '../../shared/SwapIcon'
 
 import * as style from './style.module.scss'

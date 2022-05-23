@@ -3,7 +3,7 @@ import { useField } from 'formik'
 import React, { useState, useMemo, FC, useEffect } from 'react'
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 import { Label, DynamicBtn } from '../../shared'
-import * as layout from '../../shared/layout.module.scss'
+import * as layout from '../../shared/styles/layout.module.scss'
 
 export interface OwnProps {
   name: string

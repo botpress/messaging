@@ -1,0 +1,15 @@
+@use '~/src/scss/style.scss' as *;
+
+%border-focus {
+  border: 1px solid $light-gray2;
+  border-radius: 6px;
+
+  &:hover {
+    border-color: $gray5;
+  }
+  &:focus {
+    border-color: $bp-blue;
+
+    box-shadow: 0 0 0 1px $cobalt5;
+  }
+}

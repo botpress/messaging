@@ -3,8 +3,8 @@ import React, { FC, useState } from 'react'
 
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 
-import * as layout from '../../shared/layout.module.scss'
 import { Label, DynamicBtn } from '../../shared/'
+import * as layout from '../../shared/styles/layout.module.scss'
 
 import * as style from './style.module.scss'
 

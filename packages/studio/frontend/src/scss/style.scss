@@ -1,8 +1,8 @@
 @charset "UTF-8";
 
 //Abstracts
-@use 'abstracts/index.module' as abstracts;
+@forward 'abstracts/index.module';
 //Base Styles
-@use 'base/index.module' as base;
+@forward 'base/index.module';
 //Vendor
-@use 'vendor/index.module' as vendor;
+@forward 'vendor/index.module';

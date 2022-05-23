@@ -1,20 +1,17 @@
-import { Colors } from "@blueprintjs/core";
+import { Colors } from '@blueprintjs/core'
 import React, { FC, useState } from 'react'
 import Select from 'react-select'
 
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 
-import * as layout from '../../shared/layout.module.scss'
-import * as style from './style.module.scss'
-
 import { Label, DynamicBtn } from '../../shared'
-import { styleTags } from '@codemirror/highlight'
+import * as layout from '../../shared/styles/layout.module.scss'
 
 interface OwnProps {
   name: string
   label?: string
   hint?: string
-  req?: boolean,
+  req?: boolean
   placeholder?: string
   error?: boolean
   options?: Array<Record<string, string>>
@@ -46,12 +43,13 @@ const SelectDropdown: FC<OwnProps> = ({
   const customStyles = {
     control: (provided) => ({
       ...provided,
+      transition: 'all 75ms linear',
       minHeight: '36px',
       height: '36px',
       background: Colors.LIGHT_GRAY5,
-      borderColor:  Colors.LIGHT_GRAY2,
+      borderColor: Colors.LIGHT_GRAY2,
       '&:hover': {
-        borderColor:  Colors.GRAY5
+        borderColor: Colors.GRAY5
       },
       '&:focus-within': {
         borderColor: '#0070f7',
@@ -59,10 +57,9 @@ const SelectDropdown: FC<OwnProps> = ({
         background: 'white'
       },
       borderRadius: '6px',
-      width: '100%',
-    }),
+      width: '100%'
+    })
   }
-
 
   return (
     <div className={layout.formKitContainer}>

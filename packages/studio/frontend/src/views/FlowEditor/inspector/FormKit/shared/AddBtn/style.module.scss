@@ -1,27 +1,31 @@
-@import '@blueprintjs/core/lib/scss/variables.scss';
+@use '~/src/scss/style.scss' as *;
 
 .btn {
+  @extend %transition-all-75, %flex-row;
   width: 18px;
   height: 18px;
-  background-color: #ffffff;
+  background-color: mix(white, $green5, 90%);
   border-radius: 4px;
-  border: 1px solid #32a467;
+  border: 1px solid $green4;
+
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 
   span {
-    margin: auto;
-    color: #32a467;
-    padding-bottom: 1px;
+    color: $green4;
   }
 
   &:hover {
-    background-color: #32a467;
+    background-color: $green4;
+
     span {
       color: #ffffff;
     }
   }
 
   &:active {
-    background-color: #20844e;
+    background-color: $green3;
+    border-color: $green3;
   }
 }

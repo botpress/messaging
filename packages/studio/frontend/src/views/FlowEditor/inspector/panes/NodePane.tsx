@@ -29,9 +29,8 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
           onEnter,
           next,
           name,
-          description: 'just a regular standard normal node.',
-          test: true,
-          test2: 'asdf'
+          description: 'This is a standard node pane',
+          list: ['OMGOMG', 'WWOWOW', 'LOLOL']
         }}
         onSubmit={(values, { setSubmitting }) => {
           console.log('submit happen', values)
@@ -48,9 +47,10 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
           {/* <Switch name="test" label="test" />
           <TextInput name="test2" label="test2" req/>
           <SelectDropdown name="select" label="Select" />
-
+          {/*
           <NumberInput name="number" label="Input Number"/>
-          <SingleContent name="singleContent" label="Select content" /> */}
+          <SingleContent name="singleContent" label="Select content" />
+          <ReorderList name="list" label="Messages" help="Select message" req /> */}
 
           <BlockList name="onEnter" label="On Enter" />
           <BlockList name="onReceive" label="On Receive" />

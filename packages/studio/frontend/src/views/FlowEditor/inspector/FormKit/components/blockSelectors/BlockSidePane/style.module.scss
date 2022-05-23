@@ -3,7 +3,9 @@
 @use '~/src/scss/vendor/index.module' as *;
 
 .search {
-  margin-bottom: 26px;
+  margin-bottom: 6px;
+  height: 32px;
+  border-radius: 6px;
 }
 
 .contents {
@@ -12,13 +14,15 @@
   row-gap: 4px;
 
   .content {
+    transition: all 75ms linear;
     cursor: pointer;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 4px;
+    padding: 4px 8px;
     height: 37px;
+    border-radius: 6px;
 
     h4 {
       font-family: 'Roboto';
@@ -30,8 +34,8 @@
     }
 
     &:hover {
-      background-color: $light-gray5;
-
+      padding: 8px 8px;
+      background-color: $light-gray4;
       color: $dark-gray5;
       h4 {
         font-weight: 700;
@@ -41,29 +45,34 @@
 }
 
 .results {
-  display: flex;
-  flex-direction: column;
+  transition: all 75ms linear;
+  @extend %flex-column, %shadow-inner-2;
+
   align-items: flex-start;
-  padding: 12px;
+  padding: 6px;
   background-color: $light-gray4;
-  box-shadow: inset 0px 0px 2px rgba(33, 37, 41, 0.15);
-  border-radius: 6px;
+
+  border-radius: 8px;
   margin-bottom: 6px;
+  min-height: 36px;
 
   .result {
+    @extend %flex-row;
     cursor: pointer;
-    display: flex;
-    flex-direction: row;
+    user-select: none;
+
     align-items: center;
     width: 100%;
     padding: 8px 12px;
     border-radius: 7px;
 
+    transition: all 75ms linear;
+
     &:hover {
+      @extend %shadow-sm;
       background: $white;
       /* Shadow 2 */
       color: $blue3;
-      box-shadow: 0px 1px 2px rgba(33, 37, 41, 0.12), 0px 0px 1px rgba(33, 37, 41, 0.08);
     }
 
     // &:active {

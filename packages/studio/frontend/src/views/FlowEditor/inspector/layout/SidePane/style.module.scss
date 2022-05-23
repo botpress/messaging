@@ -1,6 +1,4 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as *;
+@use '~/src/scss/style.scss' as *;
 
 .sidePane {
   background-color: $white;
@@ -8,8 +6,11 @@
   width: 260px;
   min-height: 150px;
   max-height: 650px;
-  padding: 21px 16px;
-  padding-bottom: 6px;
+  margin-top: 16px;
+  padding: 12px;
+  padding-top: 16px;
+  border: 1px solid $light-gray2;
+  box-shadow: 0 1px 0px $light-gray2;
 }
 
 .head {
@@ -28,12 +29,11 @@
     line-height: 23px;
     margin: 0;
   }
-
-  div {
-  }
 }
 
 .body {
+  @extend %flex-column;
+  row-gap: 6px;
   width: 100%;
 }
 
