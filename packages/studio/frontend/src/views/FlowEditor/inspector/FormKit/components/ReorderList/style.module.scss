@@ -26,18 +26,18 @@
   padding: 4px;
   transition: all 75ms linear;
   border: 1px solid $light-gray2;
+  box-shadow: 0 1px 0px $light-gray2;
 }
 
 .listHeader {
-  @extend %shadow-sm;
-
   display: flex;
   flex-direction: row;
-  background-color: $white;
-  padding: 6px;
+  // background-color: $white;
+  padding: 4px;
   column-gap: 8px;
   border-radius: 4px;
-  border: 1px solid $light-gray2;
+  // border: 1px solid $light-gray2;
+  transform: translateY(-1px);
 
   p {
     flex: 1;
@@ -72,6 +72,7 @@
 
 .listItem {
   @extend %border-focus, %flex-row;
+  @include block-shadow-smooth(2px, 1px, $light-gray2);
 
   height: 32px;
   width: 100%;
@@ -79,15 +80,21 @@
   justify-content: flex-start;
   column-gap: 8px;
   align-items: center;
+  background-color: white;
 
   padding: 8px 12px 8px 8px;
-  border-radius: 4px;
-  background-color: white;
+  border-radius: 6px;
 
   transition: all 75ms linear;
 
   &:hover {
     cursor: grab;
+    background-color: white;
+  }
+
+  &:active {
+    @extend %shadow-edge-md;
+    transform: translateY(-1px);
   }
 
   .label {

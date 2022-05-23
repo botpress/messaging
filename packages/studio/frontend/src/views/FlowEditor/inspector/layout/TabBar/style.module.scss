@@ -1,6 +1,6 @@
-@use '~/src/scss/abstracts/index.module'as *;
-@use '~/src/scss/base/index.module'as base;
-@use '~/src/scss/vendor/index.module'as *;
+@use '~/src/scss/abstracts/index.module' as *;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as *;
 
 @import '@blueprintjs/core/lib/scss/variables';
 
@@ -15,6 +15,8 @@
   border-radius: 6px;
   padding: 4px;
   z-index: 1;
+  box-shadow: 0 1px 0px $light-gray2;
+  border: 1px solid $light-gray2;
 }
 
 .contextTab {
@@ -28,7 +30,6 @@
   .tab {
     @extend %font-md;
   }
-
 }
 
 .divider {
@@ -55,21 +56,16 @@
     width: 0;
     height: 0;
   }
-
-
 }
 
 .tab {
-  @extend %font-sm,
-  %text-medium,
-  %transition-all-75,
-  %flex-row;
+  @extend %font-sm, %text-medium, %transition-all-75, %flex-row;
   align-items: center;
 
   height: 32px;
   min-width: min-content;
   max-width: 150px;
-  
+
   color: $dark-gray2;
   background-color: $light-gray5;
 
@@ -86,16 +82,13 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
-
   &:active {
     border-color: $gray5;
     background-color: $light-gray5;
-
   }
 
   &:hover {
     color: $dark-gray5;
-
   }
 
   &__active {
@@ -118,7 +111,6 @@
     }
   }
 }
-
 
 .storyContainer {
   position: absolute;

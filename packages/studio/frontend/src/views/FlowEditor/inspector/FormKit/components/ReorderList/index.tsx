@@ -13,7 +13,7 @@ import * as layout from '../../shared/styles/layout.module.scss'
 import * as style from './style.module.scss'
 
 interface OwnProps {
-  name: string
+  name?: string
   label?: string
   hint?: string
   req?: boolean
@@ -42,13 +42,9 @@ const ListItem: FC<OwnProps> = ({ label, error }) => {
 }
 
 const getRenderItem = (blocks: any) => (provided: any, snapshot: any, rubric: any) => {
-  const [isHover, setIsHover] = useState(false)
-
   return (
     <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className={style.draggable}>
-      {/* <Block block={blocks[rubric.source.index]} /> */}
-
-      <ListItem name="asdf" label="HIHI" />
+      <ListItem label={rubric.draggableId} />
     </div>
   )
 }
@@ -100,13 +96,7 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, req, help, placeholder, 
                   {/* Message Container */}
                   <div className={style.listContainer} ref={provided.innerRef} {...provided.droppableProps}>
                     <div className={style.placeholderText}>{placeholder}</div>
-                    {/* <ListItem label="HIHI" error={false} /> */}
 
-                    {/* <div
-                    className={style.container}
-                    // style={{ minHeight: `${BLOCK_HEIGHT_PX * value.length}px` }}
-                  > */}
-                    <ListItem name="asdf" label="HIHI" />
                     {value === undefined ? (
                       <Spinner className={style.loading} size={50}>
                         loading
@@ -121,7 +111,6 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, req, help, placeholder, 
                       ))
                     )}
                     {provided.placeholder}
-                    {/* </div> */}
                   </div>
                 </div>
               )}
