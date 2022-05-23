@@ -12,7 +12,7 @@ export interface OwnProps {
 const AddBtn: FC<OwnProps> = ({ className, onClick = () => {} }) => {
   return (
     <div className={cx(style.btn, className)} onClick={onClick}>
-      <Icon icon="plus" />
+      <Icon icon="plus" size={14} />
     </div>
   )
 }

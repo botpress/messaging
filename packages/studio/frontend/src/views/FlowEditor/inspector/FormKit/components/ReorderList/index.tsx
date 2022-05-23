@@ -8,7 +8,6 @@ import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 import { Label, DynamicBtn } from '../../shared/'
 import AddBtn from '../../shared/AddBtn'
 
-import Grabber from '../../shared/Grabber'
 import * as layout from '../../shared/styles/layout.module.scss'
 
 import * as style from './style.module.scss'
@@ -23,11 +22,33 @@ interface OwnProps {
   error?: boolean
 }
 
+const ListItem: FC<OwnProps> = ({ label, error }) => {
+  const [isHover, setIsHover] = useState(false)
+
+  return (
+    <div
+      className={`${style.listItem} ${error ? style.itemError : ''} ${isHover && error ? style.errorShadow : ''}`}
+      onMouseEnter={() => {
+        setIsHover(true)
+      }}
+      onMouseLeave={() => {
+        setIsHover(false)
+      }}
+    >
+      {/* Label */}
+      <span className={style.label}>{label}</span>
+    </div>
+  )
+}
+
 const getRenderItem = (blocks: any) => (provided: any, snapshot: any, rubric: any) => {
+  const [isHover, setIsHover] = useState(false)
+
   return (
     <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className={style.draggable}>
       {/* <Block block={blocks[rubric.source.index]} /> */}
-      asdf
+
+      <ListItem name="asdf" label="HIHI" />
     </div>
   )
 }
@@ -85,6 +106,7 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, req, help, placeholder, 
                     className={style.container}
                     // style={{ minHeight: `${BLOCK_HEIGHT_PX * value.length}px` }}
                   > */}
+                    <ListItem name="asdf" label="HIHI" />
                     {value === undefined ? (
                       <Spinner className={style.loading} size={50}>
                         loading
@@ -110,27 +132,6 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, req, help, placeholder, 
         )}
       </div>
     </>
-  )
-}
-
-const ListItem: FC<OwnProps> = ({ label, error }) => {
-  const [isHover, setIsHover] = useState(false)
-
-  return (
-    <div
-      className={`${style.listItem} ${error ? style.itemError : ''} ${isHover && error ? style.errorShadow : ''}`}
-      onMouseEnter={() => {
-        setIsHover(true)
-      }}
-      onMouseLeave={() => {
-        setIsHover(false)
-      }}
-    >
-      <Grabber />
-      {/* Label */}
-      <span className={style.label}>{label}</span>
-      {/* Options */}
-    </div>
   )
 }
 
