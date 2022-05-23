@@ -1,28 +1,17 @@
 import { useFormikContext } from 'formik'
 import { debounce } from 'lodash'
 import moment from 'moment'
-import React, { useState, useCallback, useEffect, useRef, FC } from 'react'
+import React, { useState, useCallback, FC } from 'react'
 import { connect } from 'react-redux'
 
 import { getCurrentFlowNode } from '../../../../../reducers'
+import { useDidMountEffect } from '../../../utils/useDidMountEffect'
 import * as style from './style.module.scss'
 
 const DEBOUNCE_MS = 2500
 
 interface OwnProps {
   currentNode: any
-}
-
-const useDidMountEffect = (func, deps) => {
-  const didMount = useRef(false)
-
-  useEffect(() => {
-    if (didMount.current) {
-      func()
-    } else {
-      didMount.current = true
-    }
-  }, deps)
 }
 
 const AutoSave: FC<OwnProps> = ({ currentNode: { lastModified } }) => {

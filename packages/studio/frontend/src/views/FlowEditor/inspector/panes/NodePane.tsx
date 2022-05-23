@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { updateFlowNode } from '~/src/actions'
 import { getCurrentFlowNode } from '../../../../reducers'
-import FormKit, { BlockList, Switch, TextInput, SelectDropdown, EditableTextBlock, ReorderList } from '../FormKit'
+import FormKit, { BlockList, EditableTextBlock } from '../FormKit'
 import Autosave from '../FormKit/Autosave'
 
 import Collapse from '../layout/Collapse'
@@ -45,14 +45,13 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
         </div>
 
         <Collapse idx={0} label="Basic">
-          <Switch name="test" label="test" />
-          <TextInput name="test2" label="test2" req />
+          {/* <Switch name="test" label="test" />
+          <TextInput name="test2" label="test2" req/>
           <SelectDropdown name="select" label="Select" />
           {/*
           <NumberInput name="number" label="Input Number"/>
           <SingleContent name="singleContent" label="Select content" /> */}
 
-          <ReorderList name="dummy" label="Select" />
           <BlockList name="onEnter" label="On Enter" />
           <BlockList name="onReceive" label="On Receive" />
         </Collapse>

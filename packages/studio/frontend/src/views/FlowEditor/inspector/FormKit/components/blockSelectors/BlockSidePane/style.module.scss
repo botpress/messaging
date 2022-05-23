@@ -1,0 +1,122 @@
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as *;
+
+.search {
+  margin-bottom: 26px;
+}
+
+.contents {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+
+  .content {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px;
+    height: 37px;
+
+    h4 {
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 17px;
+      margin: 0;
+    }
+
+    &:hover {
+      background-color: $light-gray5;
+
+      color: $dark-gray5;
+      h4 {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px;
+  background-color: $light-gray4;
+  box-shadow: inset 0px 0px 2px rgba(33, 37, 41, 0.15);
+  border-radius: 6px;
+  margin-bottom: 6px;
+
+  .result {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 7px;
+
+    &:hover {
+      background: $white;
+      /* Shadow 2 */
+      color: $blue3;
+      box-shadow: 0px 1px 2px rgba(33, 37, 41, 0.12), 0px 0px 1px rgba(33, 37, 41, 0.08);
+    }
+
+    // &:active {
+    //   background: $white;
+    //   /* Shadow 2 */
+    //   color: $blue3;
+    //   box-shadow: 0px 1px 2px rgba(33, 37, 41, 0.12), 0px 0px 1px rgba(33, 37, 41, 0.08);
+    // }
+  }
+}
+
+.createBtn {
+  @extend %transition-all-75;
+  cursor: pointer;
+
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+
+  width: 100%;
+  height: 42px;
+
+  p {
+    // funk: 100%;
+    margin: 0;
+  }
+
+  background: #ffffff;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: mix(white, $green5, 90%);
+    color: $green4;
+    div {
+      background-color: #32a467;
+      span {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.simple {
+  background-color: $green4;
+}
+.code {
+  background-color: $cobalt4;
+}
+.complex {
+  background-color: $indigo4;
+}
+.prompt {
+  background-color: $orange4;
+}

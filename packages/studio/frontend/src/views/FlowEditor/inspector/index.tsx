@@ -2,7 +2,7 @@ import { FlowNode } from '@botpress/sdk'
 import React, { useEffect, FC } from 'react'
 import shallow from 'zustand/shallow'
 
-import TabBar from './layout/TabBar'
+import { TabBar } from './layout'
 import { PaneTypes } from './panes'
 import ContentPane from './panes/ContentPane'
 import NodePane from './panes/NodePane'

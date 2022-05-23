@@ -3,9 +3,7 @@ import { connect } from 'react-redux'
 
 import FormKit from '../FormKit'
 import { Text } from '../FormKit/shared'
-import Collapse from '../layout/Collapse'
-import Pane from '../layout/Pane'
-import * as layout from './layout.module.scss'
+import { Pane, Collapse } from '../layout'
 
 interface OwnProps {
   contentId: any
@@ -17,10 +15,8 @@ const ContentPane: FC<OwnProps> = ({ contentId, selected }) => {
     <Pane show={selected}>
       <FormKit initialValues={{}} onSubmit={console.log}>
         <Collapse idx={0} label="Basic">
-          <div className={layout.head}>
-            <Text value={contentId} large />
-            <Text value={'just a regular standard normal node.'} />
-          </div>
+          <Text value={contentId} large />
+          <Text value={'just a regular standard normal node.'} />
         </Collapse>
         <Collapse idx={1} label="Transitions">
           <div>todo</div>

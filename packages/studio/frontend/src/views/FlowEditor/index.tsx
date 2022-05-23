@@ -12,7 +12,8 @@ import {
   refreshActions,
   refreshIntents,
   setDiagramAction,
-  switchFlow
+  switchFlow,
+  fetchContentCategories
 } from '~/src/actions'
 import { lang } from '~/src/components/Shared/translations'
 import { isInputFocused } from '~/src/components/Shared/utilities/inputs'
@@ -51,6 +52,7 @@ const FlowEditor = (props: Props) => {
   useEffect(() => {
     props.refreshActions()
     props.refreshIntents()
+    props.fetchContentCategories()
 
     if (!isOperationAllowed({ operation: 'write', resource: 'bot.flows' })) {
       setReadOnly(true)
@@ -205,7 +207,8 @@ const mapDispatchToProps = {
   clearErrorSaveFlows,
   closeFlowNodeProps,
   refreshActions,
-  refreshIntents
+  refreshIntents,
+  fetchContentCategories
 }
 
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, mapDispatchToProps)(withRouter(FlowEditor))

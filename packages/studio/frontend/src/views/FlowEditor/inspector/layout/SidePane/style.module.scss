@@ -1,0 +1,48 @@
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as *;
+
+.sidePane {
+  background-color: $white;
+  border-radius: 8px;
+  width: 260px;
+  min-height: 150px;
+  max-height: 650px;
+  padding: 21px 16px;
+  padding-bottom: 6px;
+}
+
+.head {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  h4 {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+    margin: 0;
+  }
+
+  div {
+  }
+}
+
+.body {
+  width: 100%;
+}
+
+.closeBtn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: $red2;
+  }
+}
