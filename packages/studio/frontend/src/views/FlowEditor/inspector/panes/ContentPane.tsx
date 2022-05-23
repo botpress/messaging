@@ -14,9 +14,9 @@ const ContentPane: FC<OwnProps> = ({ contentId, selected }) => {
   return (
     <Pane show={selected}>
       <FormKit initialValues={{}} onSubmit={console.log}>
+        <Text value={contentId} />
         <Collapse idx={0} label="Basic">
-          <Text value={contentId} large />
-          <Text value={'just a regular standard normal node.'} />
+          {/* <TextInput name="" large /> */}
         </Collapse>
         <Collapse idx={1} label="Transitions">
           <div>todo</div>
