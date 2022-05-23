@@ -7,6 +7,7 @@ import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd'
 import { Label, AddBtn } from '../../../shared'
 import * as layout from '../../../shared/layout.module.scss'
 import Block from '../Block'
+import BlockSidePane from '../BlockSidePane'
 
 import * as style from './style.module.scss'
 
@@ -46,12 +47,14 @@ const BlockList: FC<OwnProps> = ({ name, label, hint }) => {
   )
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className={layout.formKitContainer}>
+    <div className={layout.formKitContainer}>
+      <BlockSidePane>
         <div className={layout.labelSection}>
           <Label className={layout.center} label={label} hint={hint} />
           <AddBtn className={layout.rightBtn} />
         </div>
+      </BlockSidePane>
+      <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId={name} renderClone={renderItem}>
           {(provided: any, snapshot: any) => (
             <div
@@ -77,8 +80,8 @@ const BlockList: FC<OwnProps> = ({ name, label, hint }) => {
             </div>
           )}
         </Droppable>
-      </div>
-    </DragDropContext>
+      </DragDropContext>
+    </div>
   )
 }
 

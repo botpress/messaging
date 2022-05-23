@@ -8,7 +8,6 @@ import FormKit, { BlockList } from '../FormKit'
 import { Text } from '../FormKit/shared'
 import Collapse from '../layout/Collapse'
 import Pane from '../layout/Pane'
-import * as layout from './layout.module.scss'
 
 interface OwnProps {
   currentNode: any
@@ -32,12 +31,9 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
           updateFlowNode(values)
         }}
       >
+        <Text value={name} large />
+        <Text value={'just a regular standard normal node.'} />
         <Collapse idx={0} label="Basic">
-          <div className={layout.head}>
-            <Text value={name} large />
-            <Text value={'just a regular standard normal node.'} />
-          </div>
-
           <BlockList name="onEnter" label="On Enter" />
           <BlockList name="onReceive" label="On Receive" />
         </Collapse>
