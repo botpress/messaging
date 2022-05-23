@@ -24,7 +24,7 @@ const Tab: FC<OwnProps> = ({ idx, children }) => {
   }, [isActive])
 
   return (
-    <div onClick={() => changeTab(idx)} className={cx(style.tab, { [style.active]: isActive })} ref={tabRef}>
+    <div onClick={() => changeTab(idx)} className={cx(style.tab, { [style.tab__active]: isActive })} ref={tabRef}>
       {children}
       {idx > -1 && isActive && (
         <Icon

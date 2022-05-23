@@ -3,8 +3,9 @@ import { connect } from 'react-redux'
 
 import { updateFlowNode } from '~/src/actions'
 import { getCurrentFlowNode } from '../../../../reducers'
+import Autosave from '../FormKit/Autosave'
 
-import FormKit, { BlockList } from '../FormKit'
+import FormKit, { BlockList, Switch, TextInput, NumberInput, SelectDropdown, SingleContent, EditableTextBlock } from '../FormKit'
 import { Text } from '../FormKit/shared'
 import Collapse from '../layout/Collapse'
 import Pane from '../layout/Pane'
@@ -19,30 +20,49 @@ interface OwnProps {
 const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
   const { name, onEnter, onReceive, next } = currentNode
 
+  console.log(currentNode)
+
   return (
     <Pane show={selected}>
       <FormKit
         initialValues={{
           onReceive,
           onEnter,
-          next
+          next,
+          name,
+          description: 'just a regular standard normal node.', 
+          test: true,
+          test2: "asdf"
         }}
         onSubmit={(values, { setSubmitting }) => {
-          console.log('submit happen')
+          console.log('submit happen', values)
           updateFlowNode(values)
         }}
       >
+        <div className={layout.head}>
+          <EditableTextBlock name="name" type="title"/>
+          <EditableTextBlock name="description" type="text"/>
+          <Autosave />
+        </div>
+
         <Collapse idx={0} label="Basic">
-          <div className={layout.head}>
-            <Text value={name} large />
-            <Text value={'just a regular standard normal node.'} />
-          </div>
+
+
+
+          {/* <Switch name="test" label="test" />
+          <TextInput name="test2" label="test2" req/>
+          <SelectDropdown name="select" label="Select" />
+
+          <NumberInput name="number" label="Input Number"/>
+          <SingleContent name="singleContent" label="Select content" /> */}
+
+
 
           <BlockList name="onEnter" label="On Enter" />
           <BlockList name="onReceive" label="On Receive" />
         </Collapse>
         <Collapse idx={1} label="Transitions">
-          <div>todo</div>
+          <BlockList name="tmp" label="On Receive" />
         </Collapse>
       </FormKit>
     </Pane>

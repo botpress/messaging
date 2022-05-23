@@ -4,8 +4,10 @@
 
 .paneLayout {
   @extend %shadow-edge-md;
+  max-height: inherit;
   background-color: $white;
-  border-radius: 0 0 8px 8px;
+
+  border-radius:8px;
   border: 1px solid $light-gray2;
 
   &.hide {

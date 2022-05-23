@@ -25,7 +25,7 @@ const Inspector: FC<OwnProps> = ({ currentFlowNode = {} }) => {
   }, [currentFlowNode])
 
   return (
-    <div className={style.container}>
+    <div className={style.inspector}>
       <TabBar contextNodeName={name} />
       {type === PaneTypes.NODE ? <NodePane selected={activeTabIdx === -1} /> : <div>tbd</div>}
       {tabs.map((tab, idx) => (

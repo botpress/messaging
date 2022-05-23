@@ -1,0 +1,60 @@
+@use '~/src/scss/vendor/index.module' as *;
+@use '~/src/scss/abstracts/index.module' as *;
+@use '~/src/scss/base/index.module' as base;
+
+.container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  row-gap: 6px;
+  box-sizing: border-box;
+}
+
+.textInput {
+  @extend %text-normal, %font-sm, %transition-all-75;
+
+  display: flex;
+  width: 100%;
+
+  outline: none;
+  padding: 8px 12px;
+
+  max-width: 100%;
+  min-width: 100%;
+  min-height: 30px;
+
+  background: $light-gray5;
+
+  border: 1px solid $light-gray2;
+  border-radius: 6px;
+  
+  &:hover {
+    border-color: $gray5;
+  }
+  &:focus {
+    border-color: $bp-blue;
+    appearance: none;
+    background-color: white;
+    box-shadow: 0 0 0 1px $cobalt5;
+  }
+}
+
+.error {
+  .textInput {
+    border: 1px solid $red3;
+    background-color: $red-highlight4;
+    color: $red3;
+
+    &:hover,
+    &:focus {
+      @extend %shadow-error;
+    }
+
+    &:focus {
+      background-color: white;
+    }
+  }
+}

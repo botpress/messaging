@@ -3,18 +3,14 @@
 @use '~/src/scss/base/index.module' as base;
 @use '~/src/scss/vendor/index.module' as *;
 
-.container {
+.inspector {
   @extend %flex-column;
-  // row-gap: 2px;
-  position: absolute;
-  top: 15px;
-  right: 10px;
-  z-index: 50;
+  height: 100%;
+  align-self: flex-start;
   width: 350px;
-  min-height: 100px;
-  align-self: flex-end;
-  border-radius: 8px;
-  box-shadow: 0px 4px 0px $light-gray2, 1px 4px 0px $light-gray2, -1px 4px 0px $light-gray2;
+  padding: 6px;
+  overflow: hidden;
+  z-index: 10;
 }
 
 .panes {
