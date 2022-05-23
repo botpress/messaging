@@ -7,7 +7,7 @@ import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 
 import { Label, DynamicBtn } from '../../shared/'
 import AddBtn from '../../shared/AddBtn'
-import Block from '../../shared/Block'
+
 import Grabber from '../../shared/Grabber'
 import * as layout from '../../shared/styles/layout.module.scss'
 
@@ -26,7 +26,8 @@ interface OwnProps {
 const getRenderItem = (blocks: any) => (provided: any, snapshot: any, rubric: any) => {
   return (
     <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className={style.draggable}>
-      <Block block={blocks[rubric.source.index]} />
+      {/* <Block block={blocks[rubric.source.index]} /> */}
+      asdf
     </div>
   )
 }

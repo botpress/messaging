@@ -3,8 +3,8 @@ import React, { useState, useEffect, useCallback, forwardRef, FC } from 'react'
 import { connect } from 'react-redux'
 
 import Tags from '~/src/components/Tags'
-import { Text, TextIntents } from '..'
-import useInspectorStore from '../../../store'
+import useInspectorStore from '../../../../store'
+import { Text, TextIntents } from '../../../shared'
 import * as style from './style.module.scss'
 
 // export enum BlockTypes {
