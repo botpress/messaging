@@ -1,0 +1,12 @@
+@use '~/src/scss/base/index.module' as base;
+
+.editable {
+  height: fit-content;
+
+  &__text {
+    @extend %font-md, %text-normal, %w-full;
+  }
+  &__title {
+    @extend %font-xl, %text-medium;
+  }
+}

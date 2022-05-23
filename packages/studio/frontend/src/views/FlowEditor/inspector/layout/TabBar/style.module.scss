@@ -1,23 +1,19 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as bp;
+@use '~/src/scss/abstracts/index.module'as *;
+@use '~/src/scss/base/index.module'as base;
+@use '~/src/scss/vendor/index.module'as *;
 
 @import '@blueprintjs/core/lib/scss/variables';
 
 .tabs {
-  position: relative;
-  width: 100%;
-  height: 40px;
-
+  @extend %shadow-edge-sm;
   display: flex;
-  align-items: flex-end;
-  border-radius: 8px 8px 2px 2px;
-
-  overflow: hidden;
-  gap: 4px;
-
-  // box-shadow: 0px 2px 0px 0px $light-gray1, 0px 6px 2px 0px rgba($gray1, 0.1);
-  // margin-bottom: 4px;
+  column-gap: 4px;
+  height: 40px;
+  width: 100%;
+  background: $white;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  padding: 4px;
   z-index: 1;
 }
 
@@ -26,203 +22,95 @@
   align-items: center;
   position: relative;
   height: 100%;
-  padding: 4px;
-  padding-right: 6px;
   background-color: $white;
-  border-radius: 8px 8px 0 0;
-  border: 1px solid $light-gray2;
-  box-shadow: 4px 2px 0px $light-gray2;
-  z-index: 1;
-  border-bottom: 0;
+  border-radius: 6px;
 
   .tab {
-    @extend %font-lg;
-    // @include abstracts.block-shadow-smooth(2px, 1px, bp.$gray5);
-    color: $dark-gray2;
-    margin: 0;
-    border-radius: 6px;
-    border-width: 2px;
-
-    height: 100%;
-
-    box-shadow: 0px -1px 0px 0px $light-gray1 inset;
-    border-color: $light-gray1;
-
-    &:active {
-      box-shadow: 0px 0px 1px $gray5, 0px 2px 0px 0px $gray5 inset;
-      border-color: $gray5;
-      border-width: 2px;
-      background-color: $light-gray5;
-      transform: translateY(1px);
-    }
-
-    &:hover {
-      color: $dark-gray5;
-    }
-
-    &.active {
-      border-width: 2px;
-      // @include abstracts.block-shadow-smooth(2px, 1px, bp.$cobalt4);
-    }
+    @extend %font-md;
   }
+
 }
 
-// .contextFade {
-//   // position: absolute;
-//   // z-index: 100;
-//   // left: 100%;
-//   // bottom: 0;
-//   // pointer-events: none;
-//   // background-image: linear-gradient(to left, rgba(bp.$light-gray5, 0), rgba(bp.$light-gray5, 1) 90%);
-//   // width: 0px;
-//   // height: 100%;
-// }
-
-.contextDiv {
+.divider {
   width: 1px;
   border-radius: 8px;
-
-  // margin: auto 0;
-  margin-left: 5px;
+  background-color: $light-gray2;
+  margin-left: 4px;
   height: 24px;
 }
 
 .contentTabs {
+  height: 100%;
+  width: 100%;
+  border-radius: 6px;
   display: flex;
   flex-direction: row-reverse;
   column-gap: 4px;
-  position: relative;
-  background-color: $light-gray5;
 
-  width: calc(100% + 4px);
-  align-items: flex-end;
-  overflow-y: hidden;
   overflow-x: scroll;
-  border-radius: 0px 8px 2px 0;
-  border: 1px solid $light-gray2;
-  border-bottom: 0;
-  border-left: 0;
+  overflow-y: visible;
 
-  padding: 6px 6px 0px 6px;
-
-  height: fit-content;
-  min-height: 32px;
-
-  /* ===== Scrollbar CSS ===== */
-  /* Firefox */
-  * {
-    scrollbar-width: auto;
-    scrollbar-color: #808080 #ffffff;
-  }
-
-  /* Chrome, Edge, and Safari */
-  // *::-webkit-scrollbar {
-  //   width: 2px;
-  //   height: 2px;
-  // }
-
-  // *::-webkit-scrollbar-track {
-  //   background: #ffffff;
-  // }
-
-  // *::-webkit-scrollbar-thumb {
-  //   background-color: #808080;
-  //   border-radius: 0px;
-  //   border: 0px solid #ffffff;
-  // }
-
+  scrollbar-width: 0;
   &::-webkit-scrollbar {
-    width: 2px;
-    height: 2px;
+    width: 0;
+    height: 0;
   }
-  &::-webkit-scrollbar-button {
-    width: 0px;
-    height: 0px;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: $gray1;
-    border: 0px none #ffffff;
-    border-radius: 2px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background: #424242;
-  }
-  &::-webkit-scrollbar-thumb:active {
-    background: #3b3b3b;
-  }
-  &::-webkit-scrollbar-track {
-    background: $light-gray2;
-    border: 0px none #ffffff;
-    overflow: hidden;
-    padding: 0px 2px;
-  }
-  &::-webkit-scrollbar-track:hover {
-    background: $light-gray1;
-  }
-  &::-webkit-scrollbar-track:active {
-    background: $gray5;
-  }
-  &::-webkit-scrollbar-corner {
-    background: transparent;
-  }
+
+
 }
 
 .tab {
-  @extend %font-md, %text-medium, %transition-all-75;
-  color: $gray1;
-  background-color: $white;
+  @extend %font-sm,
+  %text-medium,
+  %transition-all-75,
+  %flex-row;
+  align-items: center;
 
-  padding: 2px 6px;
+  height: 32px;
+  min-width: min-content;
+  max-width: 150px;
+  
+  color: $dark-gray2;
+  background-color: $light-gray5;
+
+  padding: 2px 8px;
+
+  border-radius: 6px;
+  border: 1px solid $light-gray1;
+
   cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: flex;
-  // height: 32px;
-  min-width: min-content;
-  border-radius: 6px 6px 0 0;
-  align-items: center;
-  border: 1px solid $light-gray1;
-  border-bottom: 0;
 
-  // outline-offset: 0;
-
-  // transform: translateY(-1px);
-
-  box-shadow: 0px 0px 0px $gray5, 0px -1px 0px 0px $gray5 inset;
-
-  -webkit-user-select: none; /* Safari */
-  user-select: none; /* Non-prefixed version, currently
-                                supported by Chrome, Edge, Opera and Firefox */
 
   &:active {
-    box-shadow: 0px 0px 0px $gray5, 0px 0px 0px 0px $gray5 inset;
-    background-color: $light-gray1;
-    transform: translateY(1px);
+    border-color: $gray5;
+    background-color: $light-gray5;
+
   }
 
   &:hover {
-    background-color: white;
-    color: $gray2;
+    color: $dark-gray5;
+
   }
 
-  &.active {
-    &:active {
-      box-shadow: 0px 0px 0px $cobalt4, 0px -2px 0px 0px $cobalt4 inset;
-      transform: translateY(1px);
-      // border-width: 2px;
-    }
-
-    border: 1px solid $cobalt4;
-    border-bottom: 0;
-    box-shadow: 0px 2px 0px $cobalt4, 0px -2px 0px 0px $cobalt4 inset;
+  &__active {
+    border-color: $cobalt4;
     color: $cobalt4;
-    background-color: #ffffff;
-    transform: translateY(-1px);
+    background-color: mix(white, $cobalt4, 90%);
+
+    &:hover {
+      color: $cobalt3;
+    }
   }
 
   span {
-    color: $gray3;
+    color: inherit;
+    opacity: 0.5;
     margin-left: 4px;
 
     &:hover {
@@ -231,18 +119,6 @@
   }
 }
 
-.closeTab {
-  font-family: 'Roboto';
-  font-size: 0.55rem;
-  padding: 1px 3px;
-  display: flex;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  background-color: red;
-  border-radius: 8px;
-  z-index: 1000;
-}
 
 .storyContainer {
   position: absolute;

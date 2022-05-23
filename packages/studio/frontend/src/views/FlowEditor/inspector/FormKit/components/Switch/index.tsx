@@ -1,23 +1,24 @@
 import { Switch as BpSwitch } from '@blueprintjs/core'
-import React, { useEffect, useState, useMemo, FC } from 'react'
+import { useField } from 'formik'
+import React, { useState, useMemo, FC, useEffect } from 'react'
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 import { Label, DynamicBtn } from '../../shared'
 import * as layout from '../../shared/layout.module.scss'
 
 export interface OwnProps {
-  id: string
+  name: string
   label: string
   hint?: string
-  value: string
-  onChange?: any
 }
 
-const Switch: FC<OwnProps> = ({ id, label, hint, value, onChange }) => {
-  const [isDynamic, setIsDynamic] = useState(true)
+const Switch: FC<OwnProps> = ({ label, name, hint }) => {
+  const [isDynamic, setIsDynamic] = useState(false)
+
+  const [field, { value }, { setValue }] = useField(name)
 
   const _isBool = (token: string) => {
     try {
-      const parseToken = JSON.parse(value)
+      const parseToken = JSON.parse(token)
       if (typeof parseToken === 'boolean') {
         return parseToken
       }
@@ -41,10 +42,10 @@ const Switch: FC<OwnProps> = ({ id, label, hint, value, onChange }) => {
             className={layout.leftBtn}
             checked={valueBool}
             disabled={valueBool === null}
-            large
             onChange={(event) => {
-              onChange(id, (event.target as HTMLInputElement).checked ? 'true' : 'false')
+              setValue((event.target as HTMLInputElement).checked ? 'true' : 'false')
             }}
+            large
           />
         )}
         <Label className={layout.center} label={label} hint={hint} />
@@ -55,7 +56,7 @@ const Switch: FC<OwnProps> = ({ id, label, hint, value, onChange }) => {
           type={SiTypes.BOOL}
           value={value}
           onChange={(change) => {
-            onChange(id, change)
+            setValue(change)
           }}
         />
       )}

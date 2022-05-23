@@ -1,7 +1,7 @@
 import { Formik } from 'formik'
 import React, { FC } from 'react'
 
-import Autosave from './Autosave'
+
 
 interface OwnProps {
   initialValues: any
@@ -13,7 +13,6 @@ const FormKit: FC<OwnProps> = ({ initialValues, onSubmit, children }) => {
     <Formik initialValues={initialValues} onSubmit={onSubmit}>
       <>
         {children}
-        <Autosave />
       </>
     </Formik>
   )

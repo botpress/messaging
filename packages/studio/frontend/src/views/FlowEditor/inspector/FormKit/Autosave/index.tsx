@@ -8,7 +8,7 @@ import { getCurrentFlowNode } from '../../../../../reducers'
 import { useDidMountEffect } from '../../../utils/useDidMountEffect'
 import * as style from './style.module.scss'
 
-const DEBOUNCE_MS = 4000
+const DEBOUNCE_MS = 2500
 
 interface OwnProps {
   currentNode: any

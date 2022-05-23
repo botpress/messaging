@@ -20,10 +20,10 @@ const Collapse: FC<OwnProps> = ({ idx, label, children }) => {
 
   return (
     <>
-      <div onClick={(e) => setActiveCollapse(idx)} className={isActive ? style.collapse : style.collapse__active}>
-        {isActive ? <Icon icon="chevron-up" size={20} /> : <Icon icon="chevron-down" size={20} />} {label}
+      <div onClick={(e) => setActiveCollapse(idx)} className={isActive ? style.sectionBtn : style.sectionBtn__active}>
+        {isActive ? <Icon icon="chevron-up" size={16} /> : <Icon icon="chevron-down" size={16} />} {label}
       </div>
-      <BpCollapse isOpen={isActive} keepChildrenMounted>
+      <BpCollapse isOpen={isActive} className={style.collapse} keepChildrenMounted>
         {children}
       </BpCollapse>
     </>

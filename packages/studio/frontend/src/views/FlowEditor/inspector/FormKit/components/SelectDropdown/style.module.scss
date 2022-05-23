@@ -2,10 +2,8 @@
 @use '~/src/scss/abstracts/index.module' as *;
 @use '~/src/scss/base/index.module' as base;
 
-.test {
-  @extend %font-sm;
-  color: $gray3;
-  display: flex;
-  padding: 0px 12px;
+.select {
+  width: 100%;
 
+ 
 }

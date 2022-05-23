@@ -1,4 +1,25 @@
-@import '@blueprintjs/core/lib/scss/variables';
+@use '~/src/scss/abstracts/index.module' as abstracts;
+@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/vendor/index.module' as bp;
+
+.labelText {
+  @extend %font-md, %text-medium;
+  flex: 1;
+  margin: 0;
+
+  .req {
+    color: red;
+  }
+
+  .hint {
+    cursor: help;
+    padding-bottom: 2px;
+    border-bottom: 2px dashed #8a9ba8;
+
+    // &:hover {
+    // }
+  }
+}
 
 .label {
   width: 100%;
@@ -6,26 +27,6 @@
   flex-direction: row;
   align-items: center;
   padding-right: 0.6rem;
-
-  h4 {
-    font-size: 1rem;
-    font-weight: 500;
-    flex: 1;
-    margin: 0;
-
-    .req {
-      color: red;
-    }
-
-    .hint {
-      cursor: help;
-      padding-bottom: 2px;
-      border-bottom: 2px dashed #8a9ba8;
-
-      // &:hover {
-      // }
-    }
-  }
 }
 
 // .tooltip {
@@ -37,10 +38,10 @@
 
 .externalLink {
   // appearance: none;
-  color: $gray3;
+  color: bp.$gray3;
   text-decoration: underline;
 
   &:hover {
-    color: $gray5;
+    color: bp.$gray5;
   }
 }
