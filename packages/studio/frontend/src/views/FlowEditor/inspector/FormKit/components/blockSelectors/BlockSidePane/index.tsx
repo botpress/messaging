@@ -8,6 +8,7 @@ import { CIcon, contentStyleType } from '~/src/components/contentStyles'
 import { lang } from '~/src/components/Shared/translations'
 import { useDidMountEffect } from '../../../../../utils/useDidMountEffect'
 import { SidePane } from '../../../../layout'
+import { AddBtn } from '../../../shared'
 import * as style from './style.module.scss'
 
 export interface OwnProps {
@@ -64,8 +65,6 @@ const BlockSidePane: FC<OwnProps> = ({ currentItems, fetchContentItems, categori
     setLoading(false)
   }, [currentItems])
 
-  console.log('content ', currentItems)
-
   return (
     <SidePane label="Block Library" target={children} onClose={resetContentType}>
       <>
@@ -94,7 +93,10 @@ const BlockSidePane: FC<OwnProps> = ({ currentItems, fetchContentItems, categori
                 currentItems.map((item) => <div className={style.result}>{item.previews.en}</div>)
               )}
             </div>
-            <div className={style.createBtn}>Create New {lang.tr(contentType.title)}</div>
+            <div className={style.createBtn}>
+              <p>Create New {lang.tr(contentType.title)}</p>
+              <AddBtn />
+            </div>
           </>
         ) : (
           <div className={style.contents}>

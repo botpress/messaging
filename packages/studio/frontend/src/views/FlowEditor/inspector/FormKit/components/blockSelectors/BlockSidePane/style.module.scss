@@ -75,17 +75,37 @@
 }
 
 .createBtn {
+  @extend %transition-all-75;
+  cursor: pointer;
+
   width: 100%;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   padding: 12px 20px;
 
-  width: 242px;
+  width: 100%;
   height: 42px;
+
+  p {
+    // funk: 100%;
+    margin: 0;
+  }
 
   background: #ffffff;
   border-radius: 6px;
+
+  &:hover {
+    background-color: mix(white, $green5, 90%);
+    color: $green4;
+    div {
+      background-color: #32a467;
+      span {
+        color: #ffffff;
+      }
+    }
+  }
 }
 
 .simple {

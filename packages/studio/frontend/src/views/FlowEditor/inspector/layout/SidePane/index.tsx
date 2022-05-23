@@ -11,7 +11,7 @@ export interface OwnProps {
   label: any
   onClose?: () => void
 }
-const SidePane: FC<OwnProps> = ({ target, label, onClose, offsetX = 10, children }) => {
+const SidePane: FC<OwnProps> = ({ target, label, onClose, offsetX = 20, children }) => {
   return (
     <Popover2
       interactionKind="click"
