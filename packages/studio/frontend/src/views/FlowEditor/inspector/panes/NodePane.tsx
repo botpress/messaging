@@ -7,44 +7,42 @@ import FormKit, { BlockList, EditableTextBlock } from '../FormKit'
 import Autosave from '../FormKit/Autosave'
 
 import Collapse from '../layout/Collapse'
-import Pane from '../layout/Pane'
 import * as layout from './layout.module.scss'
 
 interface OwnProps {
   currentNode: any
   updateFlowNode: any
-  selected?: boolean
 }
 
-const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
+const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
   const { name, onEnter, onReceive, next } = currentNode
 
   console.log(currentNode)
 
   return (
-    <Pane show={selected}>
-      <FormKit
-        initialValues={{
-          onReceive,
-          onEnter,
-          next,
-          name,
-          description: 'This is a standard node pane',
-          list: ['OMGOMG', 'WWOWOW', 'LOLOL']
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log('submit happen', values)
-          updateFlowNode(values)
-        }}
-      >
-        <div className={layout.head}>
-          <EditableTextBlock name="name" type="title" />
-          <EditableTextBlock name="description" type="text" />
-          <Autosave />
-        </div>
+    <FormKit
+      initialValues={{
+        onReceive,
+        onEnter,
+        next,
+        name,
+        description: 'This is a standard node pane',
+        list: ['OMGOMG', 'WWOWOW', 'LOLOL']
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        console.log('submit happen', values)
+        updateFlowNode(values)
+        setSubmitting()
+      }}
+    >
+      <div className={layout.head}>
+        <EditableTextBlock name="name" type="title" />
+        <EditableTextBlock name="description" type="text" />
+        <Autosave />
+      </div>
 
-        <Collapse idx={0} label="Basic">
-          {/* <Switch name="test" label="test" />
+      <Collapse idx={0} label="Basic">
+        {/* <Switch name="test" label="test" />
           <TextInput name="test2" label="test2" req/>
           <SelectDropdown name="select" label="Select" />
           {/*
@@ -52,14 +50,13 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
           <SingleContent name="singleContent" label="Select content" />
           <ReorderList name="list" label="Messages" help="Select message" req /> */}
 
-          <BlockList name="onEnter" label="On Enter" />
-          <BlockList name="onReceive" label="On Receive" />
-        </Collapse>
-        <Collapse idx={1} label="Transitions">
-          <BlockList name="tmp" label="On Receive" />
-        </Collapse>
-      </FormKit>
-    </Pane>
+        <BlockList name="onEnter" label="On Enter" />
+        <BlockList name="onReceive" label="On Receive" />
+      </Collapse>
+      <Collapse idx={1} label="Transitions">
+        <BlockList name="tmp" label="On Receive" />
+      </Collapse>
+    </FormKit>
   )
 }
 

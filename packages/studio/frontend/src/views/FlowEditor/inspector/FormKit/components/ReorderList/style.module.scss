@@ -59,6 +59,7 @@
   padding: 4px;
   max-height: 224px;
   background-color: $light-gray4;
+  cursor: grab;
 
   border-radius: 6px;
   // overflow-y: auto;
@@ -88,12 +89,13 @@
   transition: all 75ms linear;
 
   &:hover {
-    cursor: grab;
+    cursor: pointer;
     background-color: white;
   }
 
   &:active {
     @extend %shadow-edge-md;
+    cursor: grab;
     transform: translateY(-1px);
   }
 
