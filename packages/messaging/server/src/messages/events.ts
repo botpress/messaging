@@ -1,4 +1,4 @@
-import { Emitter, uuid } from '@botpress/base'
+import { Emitter, uuid } from '@botpress/framework'
 import { Message } from '@botpress/messaging-base'
 import { ActionSource } from '../base/source'
 

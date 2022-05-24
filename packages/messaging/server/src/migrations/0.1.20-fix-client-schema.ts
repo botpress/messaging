@@ -1,4 +1,4 @@
-import { Migration } from '@botpress/engine'
+import { Migration } from '@botpress/framework'
 
 export class FixClientSchemaMigration extends Migration {
   meta = {

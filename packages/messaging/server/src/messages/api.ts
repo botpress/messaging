@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { ApiManager, ClientApiRequest } from '@botpress/framework'
+import { uuid, ApiManager, ClientApiRequest } from '@botpress/framework'
 import { Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { ConversationService } from '../conversations/service'

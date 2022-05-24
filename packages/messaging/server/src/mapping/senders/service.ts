@@ -1,5 +1,5 @@
-import { uuid } from '@botpress/base'
 import {
+  uuid,
   Barrier2D,
   BarrierService,
   Batcher,
@@ -9,7 +9,7 @@ import {
   ServerCache,
   ServerCache2D,
   Service
-} from '@botpress/engine'
+} from '@botpress/framework'
 import { v4 as uuidv4 } from 'uuid'
 import { SenderTable } from './table'
 import { Sender } from './types'

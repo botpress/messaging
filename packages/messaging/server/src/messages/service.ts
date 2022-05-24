@@ -1,5 +1,12 @@
-import { uuid } from '@botpress/base'
-import { Batcher, BatchingService, CachingService, DatabaseService, ServerCache, Service } from '@botpress/engine'
+import {
+  uuid,
+  Batcher,
+  BatchingService,
+  CachingService,
+  DatabaseService,
+  ServerCache,
+  Service
+} from '@botpress/framework'
 import { Message } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
 import { ActionSource } from '../base/source'

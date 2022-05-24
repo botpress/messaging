@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { Service, DatabaseService, LoggerService, KvsService } from '@botpress/engine'
+import { uuid, Service, DatabaseService, LoggerService, KvsService } from '@botpress/framework'
 import {
   Channel,
   MessengerChannel,

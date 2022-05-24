@@ -1,4 +1,4 @@
-import { Migration } from '@botpress/engine'
+import { Migration } from '@botpress/framework'
 import { InitMigration } from './0.0.1-init'
 import { StatusMigration } from './0.1.19-status'
 import { FixClientSchemaMigration } from './0.1.20-fix-client-schema'

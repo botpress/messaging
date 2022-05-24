@@ -1,4 +1,4 @@
-import { Emitter } from '@botpress/base'
+import { Emitter } from '@botpress/framework'
 import { HealthEvent } from '@botpress/messaging-base'
 
 export enum HealthEvents {

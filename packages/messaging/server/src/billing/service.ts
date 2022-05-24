@@ -1,4 +1,4 @@
-import { Logger, LoggerService, Service } from '@botpress/engine'
+import { Logger, LoggerService, Service } from '@botpress/framework'
 import axios from 'axios'
 import clc from 'cli-color'
 import ms from 'ms'

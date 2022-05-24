@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/base'
+import { uuid } from '@botpress/framework'
 import { Streamer } from '../base/streamer'
 import { ChannelService } from '../channels/service'
 import { ConversationService } from '../conversations/service'

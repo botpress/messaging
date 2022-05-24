@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/engine'
+import { uuid, CachingService, DatabaseService, ServerCache, Service } from '@botpress/framework'
 import { HealthEvent, HealthEventType, HealthReport, HealthReportEvent } from '@botpress/messaging-base'
 import { v4 as uuidv4 } from 'uuid'
 import { ChannelService } from '../channels/service'

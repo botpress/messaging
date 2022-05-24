@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { Dispatcher, DispatchService, Logger } from '@botpress/engine'
+import { uuid, Dispatcher, DispatchService, Logger } from '@botpress/framework'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import clc from 'cli-color'
 import { backOff } from 'exponential-backoff'

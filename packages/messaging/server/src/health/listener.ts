@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/base'
+import { uuid } from '@botpress/framework'
 import { HealthEventType } from '@botpress/messaging-base'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'

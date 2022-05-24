@@ -1,4 +1,4 @@
-import { Dispatcher } from '@botpress/engine'
+import { Dispatcher } from '@botpress/framework'
 
 export enum InstanceLifetimeDispatches {
   Stop

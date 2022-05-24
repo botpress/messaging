@@ -1,5 +1,5 @@
-import { uuid } from '@botpress/base'
 import {
+  uuid,
   Batcher,
   BatchingService,
   CachingService,
@@ -7,7 +7,7 @@ import {
   DatabaseService,
   ServerCache,
   Service
-} from '@botpress/engine'
+} from '@botpress/framework'
 import crypto from 'crypto'
 import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
 import { UserService } from '../users/service'

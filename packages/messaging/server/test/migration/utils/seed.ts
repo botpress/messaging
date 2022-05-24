@@ -1,4 +1,4 @@
-import { DatabaseService } from '@botpress/engine'
+import { DatabaseService } from '@botpress/framework'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { v4 as uuid } from 'uuid'

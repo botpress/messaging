@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/base'
+import { uuid } from '@botpress/framework'
 import { Message } from '@botpress/messaging-base'
 
 export interface Collector {

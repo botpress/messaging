@@ -1,4 +1,4 @@
-import { Migration } from '@botpress/engine'
+import { Migration } from '@botpress/framework'
 import { v4 as uuidv4 } from 'uuid'
 
 export class ClientTokensMigration extends Migration {

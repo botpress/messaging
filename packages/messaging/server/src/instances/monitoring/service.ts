@@ -1,4 +1,4 @@
-import { DistributedService, Logger, Service } from '@botpress/engine'
+import { DistributedService, Logger, Service } from '@botpress/framework'
 import ms from 'ms'
 import { StatusService } from '../../status/service'
 import { InstanceLifetimeService, MAX_ALLOWED_FAILURES } from '../lifetime/service'

@@ -1,4 +1,4 @@
-import { Emitter, uuid } from '@botpress/base'
+import { Emitter, uuid } from '@botpress/framework'
 
 export enum SocketEvents {
   UserConnected,

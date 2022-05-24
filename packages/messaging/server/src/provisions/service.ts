@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/engine'
+import { uuid, CachingService, DatabaseService, ServerCache, Service } from '@botpress/framework'
 import { ProviderDeletingEvent, ProviderEvents } from '../providers/events'
 import { ProviderService } from '../providers/service'
 import { ProvisionTable } from './table'

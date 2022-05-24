@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { Dispatcher } from '@botpress/engine'
+import { uuid, Dispatcher } from '@botpress/framework'
 import { Message } from '@botpress/messaging-base'
 
 export enum ConverseDispatches {

@@ -1,6 +1,4 @@
-import { uuid } from '@botpress/base'
-import { DistributedService, Logger, LoggerService, Service } from '@botpress/engine'
-import { ClientService } from '@botpress/framework'
+import { uuid, DistributedService, Logger, LoggerService, Service, ClientService } from '@botpress/framework'
 import { SyncChannels, SyncRequest, SyncResult, SyncWebhook } from '@botpress/messaging-base'
 import _ from 'lodash'
 import yn from 'yn'

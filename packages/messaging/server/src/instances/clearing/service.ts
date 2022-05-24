@@ -1,4 +1,4 @@
-import { CachingService, Logger, ServerCache2D, Service } from '@botpress/engine'
+import { CachingService, Logger, ServerCache2D, Service } from '@botpress/framework'
 import ms from 'ms'
 import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'

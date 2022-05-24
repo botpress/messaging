@@ -1,4 +1,4 @@
-import { Emitter, uuid } from '@botpress/base'
+import { Emitter, uuid } from '@botpress/framework'
 import { Conversation } from '@botpress/messaging-base'
 
 export enum ConversationEvents {

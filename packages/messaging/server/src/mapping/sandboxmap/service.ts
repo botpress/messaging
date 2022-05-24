@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/engine'
+import { uuid, CachingService, DatabaseService, ServerCache, Service } from '@botpress/framework'
 import { Endpoint } from '@botpress/messaging-channels'
 import { SandboxmapTable } from './table'
 import { Sandboxmap } from './types'

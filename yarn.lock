@@ -2692,9 +2692,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-server@workspace:packages/messaging/server"
   dependencies:
-    "@botpress/base": 1.2.0
     "@botpress/base-test": 0.0.1
-    "@botpress/engine": 1.2.0
     "@botpress/framework": 1.2.0
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-channels": 1.2.0

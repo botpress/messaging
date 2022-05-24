@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/base'
+import { uuid } from '@botpress/framework'
 
 export interface Provider {
   id: uuid
