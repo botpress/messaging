@@ -71,7 +71,7 @@ export class BillingService extends Service {
       stat.received = 0
 
       if (process.env.BILLING_ENDPOINT?.length) {
-        await axios.post(process.env.BILLING_ENDPOINT!, {
+        await axios.post(process.env.BILLING_ENDPOINT, {
           meta: {
             timestamp,
             sender: 'messaging',

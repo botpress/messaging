@@ -123,30 +123,6 @@ describe('Logger', () => {
       }
     })
 
-    test('Should display more info when SPINNED is true', () => {
-      process.env.SPINNED = 'true'
-
-      const logger = new Logger(scope)
-      const spy = jest.spyOn(console, 'log').mockImplementation()
-
-      for (const level of levels) {
-        const params: any[] = [message]
-        const outputParams: any[] = [expect.anything(), expect.stringContaining(`[Messaging] ${scope}`), message]
-
-        if (level === 'error') {
-          params.unshift(error)
-          outputParams.push(error.stack)
-        }
-
-        ;(<any>logger)[level](...params)
-
-        expect(spy).toHaveBeenCalledTimes(1)
-        expect(spy).toHaveBeenCalledWith(...outputParams)
-
-        spy.mockReset()
-      }
-    })
-
     test('Should display single-line info when SINGLE_LINE_LOGGING is true', () => {
       process.env.SINGLE_LINE_LOGGING = 'true'
 

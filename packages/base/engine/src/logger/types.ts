@@ -75,8 +75,7 @@ export class Logger {
 
   private center(text: string, width: number) {
     const indent =
-      (yn(process.env.SPINNED) ? 12 : 0) +
-      (!yn(process.env.SPINNED) && yn(process.env.CLUSTER_ENABLED) ? `[${RedisSubservice.nodeId}] `.length : 0) +
+      (yn(process.env.CLUSTER_ENABLED) ? `[${RedisSubservice.nodeId}] `.length : 0) +
       (yn(process.env.DISABLE_LOGGING_TIMESTAMP) ? 0 : 24) +
       1 +
       this.scope.length
@@ -100,9 +99,7 @@ export class Logger {
     }
 
     let title = this.scope
-    if (yn(process.env.SPINNED)) {
-      title = `[Messaging] ${title}`
-    } else if (yn(process.env.CLUSTER_ENABLED)) {
+    if (yn(process.env.CLUSTER_ENABLED)) {
       title = `[${RedisSubservice.nodeId}] ${title}`
     }
 
