@@ -38,7 +38,7 @@ const TextInput: FC<OwnProps> = ({ label, hint, req, placeholder, help, error, m
         )
       ) : (
         <SuperInput
-          type={SiTypes.BOOL}
+          type={SiTypes.TEMPLATE}
           value={value}
           onChange={(change) => {
             setValue(change)

@@ -7,7 +7,6 @@ import Label from './Label'
 import OptionMenu from './OptionMenu'
 import Text, { TextIntents } from './Text'
 
-import { FormKitOnAction } from './types'
 // import SidePane from './SidePane'
 // import Title from './Title'
 
@@ -22,6 +21,5 @@ export {
   // Title,
   // SidePane,
   // FieldContainer,
-  Label,
-  FormKitOnAction
+  Label
 }

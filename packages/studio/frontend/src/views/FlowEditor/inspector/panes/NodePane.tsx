@@ -7,57 +7,53 @@ import FormKit, { BlockList, EditableTextBlock } from '../FormKit'
 import Autosave from '../FormKit/Autosave'
 
 import Collapse from '../layout/Collapse'
-import Pane from '../layout/Pane'
 
 interface OwnProps {
   currentNode: any
   updateFlowNode: any
-  selected?: boolean
 }
 
-const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode, selected }) => {
+const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
   const { name, onEnter, onReceive, next } = currentNode
 
   console.log(currentNode)
 
   return (
-    <Pane show={selected}>
-      <FormKit
-        initialValues={{
-          onReceive,
-          onEnter,
-          next,
-          name,
-          description: 'This is a standard node pane',
-          list: ['OMGOMG', 'WWOWOW', 'LOLOL']
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log('submit happen', values)
-          updateFlowNode(values)
-        }}
-      >
-        <Autosave />
-        {/* <div className={layout.head}> */}
-        <EditableTextBlock name="name" type="title" />
-        <EditableTextBlock name="description" type="text" style={{ marginBottom: '16px' }} />
-        {/* </div> */}
+    <FormKit
+      initialValues={{
+        onReceive,
+        onEnter,
+        next,
+        name,
+        description: 'This is a standard node pane',
+        list: ['OMGOMG', 'WWOWOW', 'LOLOL']
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        console.log('submit happen', values)
+        updateFlowNode(values)
+      }}
+    >
+      <Autosave />
+      {/* <div className={layout.head}> */}
+      <EditableTextBlock name="name" type="title" />
+      <EditableTextBlock name="description" type="text" />
+      {/* </div> */}
 
-        <Collapse idx={0} label="Basic">
-          {/* <TextInput name="test2" label="test2" req /> */}
-          {/* <Switch name="test" label="test" /> */}
-          {/* <SelectDropdown name="select" label="Select" />
-          <NumberInput name="number" label="Input Number"/>
-          <SingleContent name="singleContent" label="Select content" />*/}
-          {/* <ReorderList name="list" label="Messages" help="Select message" req /> */}
+      <Collapse idx={0} label="Basic">
+        {/* <TextInput name="test2" label="test2" req /> */}
+        {/* <Switch name="test" label="test" /> */}
+        {/* {/* <SelectDropdown name="select" label="Select" />  */}
+        {/* <NumberInput name="number" label="Input Number"/> */}
+        {/* <SingleContent name="singleContent" label="Select content" /> */}
+        {/* <ReorderList name="list" label="Messages" help="Select message" req /> */}
 
-          <BlockList name="onEnter" label="On Enter" />
-          <BlockList name="onReceive" label="On Receive" />
-        </Collapse>
-        <Collapse idx={1} label="Transitions">
-          <BlockList name="tmp" label="On Receive" />
-        </Collapse>
-      </FormKit>
-    </Pane>
+        <BlockList name="onEnter" label="On Enter" />
+        <BlockList name="onReceive" label="On Receive" />
+      </Collapse>
+      <Collapse idx={1} label="Transitions">
+        <BlockList name="tmp" label="On Receive" />
+      </Collapse>
+    </FormKit>
   )
 }
 

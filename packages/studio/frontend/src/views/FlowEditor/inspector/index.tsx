@@ -3,6 +3,7 @@ import React, { useEffect, FC } from 'react'
 import shallow from 'zustand/shallow'
 
 import { TabBar } from './layout'
+import Pane from './layout/Pane'
 import { PaneTypes } from './panes'
 import ContentPane from './panes/ContentPane'
 import NodePane from './panes/NodePane'
@@ -27,9 +28,11 @@ const Inspector: FC<OwnProps> = ({ currentFlowNode = {} }) => {
   return (
     <div className={style.inspector}>
       <TabBar contextNodeName={name} />
-      {type === PaneTypes.NODE ? <NodePane selected={activeTabIdx === -1} /> : <div>tbd</div>}
+      <Pane show={activeTabIdx === -1}>{type === PaneTypes.NODE ? <NodePane /> : <div>tbd</div>}</Pane>
       {tabs.map((tab, idx) => (
-        <ContentPane key={tab} contentId={tab} selected={idx === activeTabIdx} />
+        <Pane key={tab} show={idx === activeTabIdx}>
+          <ContentPane contentId={tab} />
+        </Pane>
       ))}
     </div>
   )

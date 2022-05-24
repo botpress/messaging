@@ -1,23 +1,18 @@
 import { Spinner, Icon, Colors, Intent } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { debounce } from 'lodash'
-import moment from 'moment'
 import React, { useState, useCallback, FC } from 'react'
-import { connect } from 'react-redux'
 
-import { getCurrentFlowNode } from '../../../../../reducers'
 import { useDidMountEffect } from '../../../utils/useDidMountEffect'
 import * as style from './style.module.scss'
 
 const DEBOUNCE_MS = 2500
 
-interface OwnProps {
-  currentNode: any
-}
+interface OwnProps {}
 
-const AutoSave: FC<OwnProps> = ({ currentNode: { lastModified } }) => {
-  const [fromNow, setFromNow] = useState(moment(lastModified).fromNow())
-  const { submitForm, values } = useFormikContext()
+const Autosave: FC<OwnProps> = () => {
+  const [updating, setUpdating] = useState(null)
+  const { submitForm, values, isSubmitting } = useFormikContext()
 
   const debouncedSubmit = useCallback(
     debounce(() => submitForm(), DEBOUNCE_MS),
@@ -25,18 +20,20 @@ const AutoSave: FC<OwnProps> = ({ currentNode: { lastModified } }) => {
   )
 
   useDidMountEffect(() => {
-    setFromNow(moment(lastModified).fromNow())
-  }, [setFromNow, lastModified])
+    if (!isSubmitting) {
+      setUpdating(false)
+    }
+  }, [isSubmitting, setUpdating])
 
   useDidMountEffect(() => {
     console.log('debounce', values)
     debouncedSubmit() as any
-    setFromNow(null)
+    setUpdating(true)
   }, [debouncedSubmit, values])
 
   return (
     <div className={style.container}>
-      {!fromNow ? (
+      {updating ? (
         <Spinner className={style.loading} size={18} intent={Intent.PRIMARY}>
           loading
         </Spinner>
@@ -50,9 +47,9 @@ const AutoSave: FC<OwnProps> = ({ currentNode: { lastModified } }) => {
   )
 }
 
-const mapStateToProps = (state) => ({
-  currentNode: getCurrentFlowNode(state as never) as any
-})
+// const mapStateToProps = (state) => ({
+//   currentNode: getCurrentFlowNode(state as never) as any
+// })
 
 const mapDispatchToProps = {
   // deleteFlow,
@@ -60,4 +57,5 @@ const mapDispatchToProps = {
   // renameFlow
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AutoSave)
+// export default connect(mapStateToProps, mapDispatchToProps)(AutoSave)
+export default Autosave
