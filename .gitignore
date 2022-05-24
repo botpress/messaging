@@ -21,3 +21,4 @@ test/cypress/downloads
 .rollup.cache
 lib
 node_modules
+.DS_Store

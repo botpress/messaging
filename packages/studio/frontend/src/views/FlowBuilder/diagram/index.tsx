@@ -35,7 +35,6 @@ import {
   zoomToLevel
 } from '../../../actions'
 import contextMenu from '../../../components/Shared/ContextMenu'
-import Say from '../../../components/Shared/Icons/Say'
 import storage from '../../../components/Shared/lite-utils/storage'
 import MainLayout from '../../../components/Shared/MainLayout'
 import ShortcutLabel from '../../../components/Shared/ShortcutLabel'
@@ -361,15 +360,6 @@ class Diagram extends Component<Props> {
           onClick={wrap(this.add.flowNode, point)}
           icon="chat"
         />
-        {window.EXPERIMENTAL && (
-          <Fragment>
-            <MenuItem text={lang.tr('say')} onClick={wrap(this.add.sayNode, point)} icon={<Say />} />
-            <MenuItem text={lang.tr('execute')} onClick={wrap(this.add.executeNode, point)} icon="code" />
-            <MenuItem text={lang.tr('listen')} onClick={wrap(this.add.listenNode, point)} icon="hand" />
-            <MenuItem text={lang.tr('router')} onClick={wrap(this.add.routerNode, point)} icon="fork" />
-            <MenuItem text={lang.tr('action')} onClick={wrap(this.add.actionNode, point)} icon="offline" />
-          </Fragment>
-        )}
 
         <MenuItem
           tagName="button"

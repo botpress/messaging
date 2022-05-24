@@ -2956,7 +2956,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/studio-be@workspace:packages/studio/server"
   dependencies:
-    "@apidevtools/json-schema-ref-parser": ^9.0.9
     "@botpress/common": 0.0.1
     "@botpress/logger": 0.0.1
     "@botpress/nlu-client": 1.0.2-rc.6
@@ -2992,56 +2991,37 @@ __metadata:
     cerialize: ^0.1.18
     cli-color: ^2.0.2
     compression: ^1.7.4
-    cookie-parser: ^1.4.6
-    cookie-session: ^1.4.0
     cors: ^2.8.5
-    cross-env: ^7.0.3
     debug: ^4.3.4
     doctrine: ^3.0.0
     dotenv: ^16.0.0
     errorhandler: ^1.5.1
     eventemitter2: ^5.0.1
     express: ^4.18.1
-    express-rate-limit: ^3.5.3
     express-urlrewrite: ^1.4.0
     form-data: ^4.0.0
     fs-extra: ^9.1.0
-    getos: ^3.2.1
     glob: ^8.0.1
-    globrex: ^0.1.2
     http-proxy-middleware: ^2.0.6
-    inversify: ^5.1.1
     joi: ^13.7.0
-    json-schema-defaults: ^0.4.0
     jsonlint-mod: ^1.7.6
     jsonwebtoken: ^8.5.1
-    knex: ^0.20.15
     lock: ^1.1.0
     lodash: ^4.17.21
-    lodash-decorators: ^6.0.1
     mime-types: ^2.1.35
     minimatch: ^5.0.1
     moment: ^2.29.3
     ms: ^2.1.3
     multer: ^1.4.4
     nanoid: ^3.3.4
-    ncp: ^2.0.0
     node-machine-id: ^1.1.12
     on-headers: ^1.0.2
-    pg: ^8.7.3
-    plur: ^4.0.0
     portfinder: ^1.0.28
-    proper-lockfile: ^4.1.2
-    reflect-metadata: ^0.1.13
-    replace-in-file: ^4.3.1
-    rimraf: ^3.0.2
     socket.io: 4.5.0
     tar: ^6.1.11
     tmp: ^0.2.1
-    unzipper: ^0.10.11
     uuid: ^8.3.2
     verror: ^1.10.1
-    vm2: ^3.9.6
     yargs: ^17.4.1
     yn: 4.0.0
   languageName: unknown
@@ -8753,7 +8733,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"acorn-walk@npm:^8.1.1, acorn-walk@npm:^8.2.0":
+"acorn-walk@npm:^8.1.1":
   version: 8.2.0
   resolution: "acorn-walk@npm:8.2.0"
   checksum: 1715e76c01dd7b2d4ca472f9c58968516a4899378a63ad5b6c2d668bba8da21a71976c14ec5f5b75f887b6317c4ae0b897ab141c831d741dc76024d8745f1ad1
@@ -11643,27 +11623,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie-parser@npm:^1.4.6":
-  version: 1.4.6
-  resolution: "cookie-parser@npm:1.4.6"
-  dependencies:
-    cookie: 0.4.1
-    cookie-signature: 1.0.6
-  checksum: 1e5a63aa82e8eb4e02d2977c6902983dee87b02e87ec5ec43ac3cb1e72da354003716570cd5190c0ad9e8a454c9d3237f4ad6e2f16d0902205a96a1c72b77ba5
-  languageName: node
-  linkType: hard
-
-"cookie-session@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "cookie-session@npm:1.4.0"
-  dependencies:
-    cookies: 0.8.0
-    debug: 2.6.9
-    on-headers: ~1.0.2
-  checksum: 5ffc6bc7b623abef65b7a4d0cabd29e61518f3ec71eeb1f992288bf8195db02382f59a2f75cbf9fa9ef54daf3838bcb4832261a2078ee35fb0967d5f999c63a9
-  languageName: node
-  linkType: hard
-
 "cookie-signature@npm:1.0.6":
   version: 1.0.6
   resolution: "cookie-signature@npm:1.0.6"
@@ -11703,16 +11662,6 @@ __metadata:
   version: 2.1.3
   resolution: "cookiejar@npm:2.1.3"
   checksum: 88259983ebc52ceb23cdacfa48762b6a518a57872eff1c7ed01d214fff5cf492e2660d7d5c04700a28f1787a76811df39e8639f8e17670b3cf94ecd86e161f07
-  languageName: node
-  linkType: hard
-
-"cookies@npm:0.8.0":
-  version: 0.8.0
-  resolution: "cookies@npm:0.8.0"
-  dependencies:
-    depd: ~2.0.0
-    keygrip: ~1.1.0
-  checksum: 806055a44f128705265b1bc6a853058da18bf80dea3654ad99be20985b1fa1b14f86c1eef73644aab8071241f8a78acd57202b54c4c5c70769fc694fbb9c4edc
   languageName: node
   linkType: hard
 
@@ -12639,7 +12588,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"depd@npm:2.0.0, depd@npm:~2.0.0":
+"depd@npm:2.0.0":
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
   checksum: abbe19c768c97ee2eed6282d8ce3031126662252c58d711f646921c9623f9052e3e1906443066beec1095832f534e57c523b7333f8e7e0d93051ab6baef5ab3a
@@ -14126,15 +14075,6 @@ __metadata:
   version: 3.1.0
   resolution: "exponential-backoff@npm:3.1.0"
   checksum: 9367d2848044d3738b27e00f20ee2b605aecea6b3397b0c08bdf4bd48af34379ea7019c157e729101d2a7363dd6ee1ffc6d2305c4b6f80fc215da1eb73ac3f84
-  languageName: node
-  linkType: hard
-
-"express-rate-limit@npm:^3.5.3":
-  version: 3.5.3
-  resolution: "express-rate-limit@npm:3.5.3"
-  dependencies:
-    defaults: ^1.0.3
-  checksum: 460b04f9e94f5bf5140989885ab31713735752d47b05328986bdcb4238233bb7fb149f24401003ba84fe47292b3877c0082aafe8b9d6a73551f99701c88956eb
   languageName: node
   linkType: hard
 
@@ -16799,13 +16739,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inversify@npm:^5.1.1":
-  version: 5.1.1
-  resolution: "inversify@npm:5.1.1"
-  checksum: 22d201647b572024333c58bed8ac929da4724a4c0c8a261ecc261a180afcb899359013fafb8d87ce4d606000149fb4590dc5c8278b9feb544a5f69a6159e4ffb
-  languageName: node
-  linkType: hard
-
 "ioredis@npm:^4.28.5":
   version: 4.28.5
   resolution: "ioredis@npm:4.28.5"
@@ -16836,13 +16769,6 @@ __metadata:
   version: 1.9.1
   resolution: "ipaddr.js@npm:1.9.1"
   checksum: f88d3825981486f5a1942414c8d77dd6674dd71c065adcfa46f578d677edcb99fda25af42675cb59db492fdf427b34a5abfcde3982da11a8fd83a500b41cfe77
-  languageName: node
-  linkType: hard
-
-"irregular-plurals@npm:^3.2.0":
-  version: 3.3.0
-  resolution: "irregular-plurals@npm:3.3.0"
-  checksum: 1282d8adfb00a9718655ce21e5b096d4b31d2115c817a30e1e3254648ae4ac0f84d706cd0cad2a93c64f4bb5c5572ea8f63fcc9766f005a5362031c56d9e77b5
   languageName: node
   linkType: hard
 
@@ -18771,15 +18697,6 @@ __metadata:
   version: 2.2.1
   resolution: "keycode@npm:2.2.1"
   checksum: 7a5c775b2410a3b6d9c07a415ecb70639187a965be239d2c11c71079cb1ca2f9dede94b86426f3ece475dc8ae3debf2367531bbcafc0af8c82f157d9a4f7e6cb
-  languageName: node
-  linkType: hard
-
-"keygrip@npm:~1.1.0":
-  version: 1.1.0
-  resolution: "keygrip@npm:1.1.0"
-  dependencies:
-    tsscmp: 1.0.6
-  checksum: 078cd16a463d187121f0a27c1c9c95c52ad392b620f823431689f345a0501132cee60f6e96914b07d570105af470b96960402accd6c48a0b1f3cd8fac4fa2cae
   languageName: node
   linkType: hard
 
@@ -21915,15 +21832,6 @@ __metadata:
   dependencies:
     semver-compare: ^1.0.0
   checksum: d87c41581a2a022fbe25965a97006238cd9b8cbbf49b39f78d262548149a9d30bd2bdf35fec3d810e0001e630cd46ef13c7e19c389dea8de7e64db271a2381bb
-  languageName: node
-  linkType: hard
-
-"plur@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "plur@npm:4.0.0"
-  dependencies:
-    irregular-plurals: ^3.2.0
-  checksum: fea2e903efca67cc5c7a8952fca3db46ae8d9e9353373b406714977e601a5d3b628bcb043c3ad2126c6ff0e73d8020bf43af30a72dd087eff1ec240eb13b90e1
   languageName: node
   linkType: hard
 
@@ -27445,7 +27353,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsscmp@npm:1.0.6, tsscmp@npm:^1.0.6":
+"tsscmp@npm:^1.0.6":
   version: 1.0.6
   resolution: "tsscmp@npm:1.0.6"
   checksum: 1512384def36bccc9125cabbd4c3b0e68608d7ee08127ceaa0b84a71797263f1a01c7f82fa69be8a3bd3c1396e2965d2f7b52d581d3a5eeaf3967fbc52e3b3bf
@@ -28484,18 +28392,6 @@ __metadata:
   bin:
     vm2: bin/vm2
   checksum: d83dbe929ca4d1c9fca71cda34a5aee9a6b4bdc1de1ddb11777c4f6e1e48a471764195258dbf608f962df1a1c3d6ae917c9755f11a8f37b9e0bbf691313a725c
-  languageName: node
-  linkType: hard
-
-"vm2@npm:^3.9.6":
-  version: 3.9.9
-  resolution: "vm2@npm:3.9.9"
-  dependencies:
-    acorn: ^8.7.0
-    acorn-walk: ^8.2.0
-  bin:
-    vm2: bin/vm2
-  checksum: ea4859565668918b53cf8c087bc18e2a9506f9f4ef919528707a6fecf50a110a2a8c48bc0c7a754c9d12b97cd16775f005b2b941e99d3a52aadfaac5ce77e04d
   languageName: node
   linkType: hard
 

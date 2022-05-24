@@ -1,4 +1,4 @@
-import { asyncMiddleware, AsyncMiddleware, gaId } from '@botpress/common'
+import { asyncMiddleware, AsyncMiddleware, gaId, machineUUID } from '@botpress/common'
 import { Logger } from '@botpress/sdk'
 import express, { RequestHandler, Router } from 'express'
 import rewrite from 'express-urlrewrite'
@@ -135,7 +135,14 @@ export class StudioRouter extends CustomRouter {
 
         const favicon = 'assets/ui-studio/public/img/favicon.png'
 
-        const commonEnv = await this.httpServer.getCommonEnv()
+        const commonEnv = {
+          SEND_USAGE_STATS: true, //should we make this configurable ?
+          USE_JWT_COOKIES: false, //not sure why we would want that
+          SHOW_POWERED_BY: true, //should this exist ?
+          UUID: await machineUUID(),
+          BP_SERVER_URL: process.env.BP_SERVER_URL || '',
+          IS_STANDALONE: true
+        }
 
         const segmentWriteKey = process.core_env.BP_DEBUG_SEGMENT
           ? 'OzjoqVagiw3p3o1uocuw6kd2YYjm6CHi' // Dev key from Segment
@@ -158,7 +165,6 @@ export class StudioRouter extends CustomRouter {
           IS_BOT_MOUNTED: true,
           IS_CLOUD_BOT: true,
           SEGMENT_WRITE_KEY: segmentWriteKey,
-          IS_PRO_ENABLED: process.IS_PRO_ENABLED,
           NLU_ENDPOINT: process.NLU_ENDPOINT,
           BP_SOCKET_URL: host
         }

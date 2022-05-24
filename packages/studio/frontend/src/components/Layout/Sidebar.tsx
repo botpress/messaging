@@ -97,12 +97,11 @@ const Sidebar: FC<Props> = (props) => {
             content={
               <div className={style.tooltipContent}>
                 <span>{lang.tr(`module.${module.name}.fullName`) || module.menuText}</span>
-                {module.experimental && <span className={style.tag}>Beta</span>}
               </div>
             }
           >
             <NavLink to={path} title={module.menuText} activeClassName={style.active}>
-              {moduleIcon} {module.experimental && <span className={style.small_tag}>Beta</span>}
+              {moduleIcon}
             </NavLink>
           </Tooltip>
         </li>
