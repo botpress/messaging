@@ -40,7 +40,7 @@ const Autosave: FC<OwnProps> = () => {
       ) : (
         // <div className={style.saved}>
         //   <span>{fromNow}</span>
-        <Icon icon="tick-circle" size={18} color={Colors.GREEN4} />
+        <Icon icon="tick-circle" size={18} color={Colors.GREEN4} className={style.success} />
         // </div>
       )}
     </div>
