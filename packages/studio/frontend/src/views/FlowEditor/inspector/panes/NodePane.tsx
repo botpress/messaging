@@ -31,6 +31,7 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
       onSubmit={(values, { setSubmitting }) => {
         console.log('submit happen', values)
         updateFlowNode(values)
+        setSubmitting()
       }}
     >
       <Autosave />
@@ -45,7 +46,7 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
         {/* {/* <SelectDropdown name="select" label="Select" />  */}
         {/* <NumberInput name="number" label="Input Number"/> */}
         {/* <SingleContent name="singleContent" label="Select content" /> */}
-        {/* <ReorderList name="list" label="Messages" help="Select message" req /> */}
+        {/* <ReorderList name="list" label="Messages" help="Select message" /> */}
 
         <BlockList name="onEnter" label="On Enter" />
         <BlockList name="onReceive" label="On Receive" />
