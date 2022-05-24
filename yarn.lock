@@ -2439,12 +2439,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/extensions-example@workspace:packages/base/example":
+"@botpress/framework-example@workspace:packages/base/example":
   version: 0.0.0-use.local
-  resolution: "@botpress/extensions-example@workspace:packages/base/example"
+  resolution: "@botpress/framework-example@workspace:packages/base/example"
   dependencies:
-    "@botpress/base": 1.2.0
-    "@botpress/engine": 1.2.0
     "@botpress/framework": 1.2.0
     "@sentry/node": ^6.19.7
     "@types/cli-color": ^2.0.2

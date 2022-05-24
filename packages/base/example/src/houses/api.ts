@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/base'
-import { ApiManager, ClientApiRequest } from '@botpress/framework'
+import { ApiManager, ClientApiRequest, uuid } from '@botpress/framework'
 import { Response } from 'express'
 import { Schema } from './schema'
 import { HouseService } from './service'

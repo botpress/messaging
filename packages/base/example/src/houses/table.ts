@@ -1,4 +1,4 @@
-import { Table } from '@botpress/engine'
+import { Table } from '@botpress/framework'
 import { Knex } from 'knex'
 
 export class HouseTable extends Table {
