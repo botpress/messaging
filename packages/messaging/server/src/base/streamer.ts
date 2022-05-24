@@ -78,21 +78,21 @@ export class Streamer {
   }
 
   public async send(url: string, data?: any, headers?: { [name: string]: string }) {
-    const config: AxiosRequestConfig<typeof data> = {}
+    try {
+      const config: AxiosRequestConfig<typeof data> = {}
 
-    if (headers) {
-      config.headers = headers
-    }
-
-    if (process.env.INTERNAL_PASSWORD) {
-      if (!config.headers) {
-        config.headers = {}
+      if (headers) {
+        config.headers = headers
       }
 
-      config.headers.password = process.env.INTERNAL_PASSWORD
-    }
+      if (process.env.INTERNAL_PASSWORD) {
+        if (!config.headers) {
+          config.headers = {}
+        }
 
-    try {
+        config.headers.password = process.env.INTERNAL_PASSWORD
+      }
+
       await backOff(async () => axios.post(url, data, config), {
         jitter: 'none',
         numOfAttempts: MAX_ATTEMPTS,
