@@ -1,4 +1,5 @@
-import { Emitter, Message, uuid } from '@botpress/messaging-base'
+import { Emitter, uuid } from '@botpress/base'
+import { Message } from '@botpress/messaging-base'
 import { ActionSource } from '../base/source'
 
 export enum MessageEvents {

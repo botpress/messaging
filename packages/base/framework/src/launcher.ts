@@ -1,4 +1,4 @@
-import { Logger, ShutDownSignal } from '@botpress/messaging-engine'
+import { Logger, ShutDownSignal } from '@botpress/engine'
 import clc from 'cli-color'
 import { Express } from 'express'
 import { Server } from 'http'

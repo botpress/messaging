@@ -1,4 +1,4 @@
-import { Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/engine'
 import { Knex } from 'knex'
 
 export class SandboxmapTable extends Table {

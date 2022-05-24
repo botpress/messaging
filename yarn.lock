@@ -2401,13 +2401,51 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@botpress/engine@1.2.0, @botpress/engine@workspace:packages/base/engine":
+  version: 0.0.0-use.local
+  resolution: "@botpress/engine@workspace:packages/base/engine"
+  dependencies:
+    "@botpress/base": 1.2.0
+    "@botpress/base-test": 0.0.1
+    "@types/bcryptjs": ^2.4.2
+    "@types/cli-color": ^2.0.2
+    "@types/express": ^4.17.13
+    "@types/ioredis": ^4.28.10
+    "@types/jest": ^27.5.0
+    "@types/lodash": ^4.14.182
+    "@types/lru-cache": ^5.1.1
+    "@types/ms": ^0.7.31
+    "@types/node": ^16.11.33
+    "@types/redlock": ^4.0.3
+    "@types/semver": ^7.3.9
+    "@types/uuid": ^8.3.4
+    bcryptjs: ^2.4.3
+    cli-color: ^2.0.2
+    express: ^4.18.1
+    ioredis: ^4.28.5
+    jest-mock: ^27.5.1
+    joi: ^17.6.0
+    knex: ^0.95.15
+    lodash: ^4.17.21
+    lru-cache: ^6.0.0
+    moment: ^2.29.3
+    ms: ^2.1.3
+    pg: ^8.7.3
+    redlock: ^4.2.0
+    semver: ^7.3.7
+    sqlite3: ^5.0.7
+    uuid: ^8.3.2
+    yn: 4.0.0
+  languageName: unknown
+  linkType: soft
+
 "@botpress/extensions-example@workspace:packages/base/example":
   version: 0.0.0-use.local
   resolution: "@botpress/extensions-example@workspace:packages/base/example"
   dependencies:
-    "@botpress/messaging-base": 1.2.0
-    "@botpress/messaging-engine": 1.2.0
-    "@botpress/messaging-framework": 1.2.0
+    "@botpress/base": 1.2.0
+    "@botpress/engine": 1.2.0
+    "@botpress/framework": 1.2.0
     "@sentry/node": ^6.19.7
     "@types/cli-color": ^2.0.2
     "@types/cors": ^2.8.12
@@ -2416,6 +2454,7 @@ __metadata:
     "@types/lodash": ^4.14.182
     "@types/lru-cache": ^5.1.1
     "@types/ms": ^0.7.31
+    "@types/node": ^16.11.33
     "@types/uuid": ^8.3.4
     "@types/yargs": ^17.0.10
     axios: ^0.25.0
@@ -2431,6 +2470,46 @@ __metadata:
     lodash: ^4.17.21
     moment: ^2.29.3
     ms: ^2.1.3
+    portfinder: ^1.0.28
+    socket.io: ^4.5.0
+    uuid: ^8.3.2
+    yargs: ^17.4.1
+    yn: 4.0.0
+  languageName: unknown
+  linkType: soft
+
+"@botpress/framework@1.2.0, @botpress/framework@workspace:packages/base/framework":
+  version: 0.0.0-use.local
+  resolution: "@botpress/framework@workspace:packages/base/framework"
+  dependencies:
+    "@botpress/base": 1.2.0
+    "@botpress/base-test": 0.0.1
+    "@botpress/engine": 1.2.0
+    "@sentry/node": ^6.19.7
+    "@types/cli-color": ^2.0.2
+    "@types/cors": ^2.8.12
+    "@types/express": ^4.17.13
+    "@types/jest": ^27.5.0
+    "@types/lodash": ^4.14.182
+    "@types/lru-cache": ^5.1.1
+    "@types/ms": ^0.7.31
+    "@types/node": ^16.11.33
+    "@types/uuid": ^8.3.4
+    "@types/yargs": ^17.0.10
+    axios: ^0.25.0
+    cli-color: ^2.0.2
+    cors: ^2.8.5
+    dotenv: ^15.0.1
+    exponential-backoff: ^3.1.0
+    express: ^4.18.1
+    http-terminator: ^3.2.0
+    joi: ^17.6.0
+    knex: ^0.95.15
+    knex-schema-inspector: ^1.7.5
+    lodash: ^4.17.21
+    moment: ^2.29.3
+    ms: ^2.1.3
+    pg: ^8.7.3
     portfinder: ^1.0.28
     socket.io: ^4.5.0
     uuid: ^8.3.2
@@ -2611,93 +2690,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-engine@1.2.0, @botpress/messaging-engine@workspace:packages/base/engine":
-  version: 0.0.0-use.local
-  resolution: "@botpress/messaging-engine@workspace:packages/base/engine"
-  dependencies:
-    "@botpress/base-test": 0.0.1
-    "@botpress/messaging-base": 1.2.0
-    "@types/bcryptjs": ^2.4.2
-    "@types/cli-color": ^2.0.2
-    "@types/express": ^4.17.13
-    "@types/ioredis": ^4.28.10
-    "@types/jest": ^27.5.0
-    "@types/lodash": ^4.14.182
-    "@types/lru-cache": ^5.1.1
-    "@types/ms": ^0.7.31
-    "@types/node": ^16.11.33
-    "@types/redlock": ^4.0.3
-    "@types/semver": ^7.3.9
-    "@types/uuid": ^8.3.4
-    bcryptjs: ^2.4.3
-    cli-color: ^2.0.2
-    express: ^4.18.1
-    ioredis: ^4.28.5
-    jest-mock: ^27.5.1
-    joi: ^17.6.0
-    knex: ^0.95.15
-    lodash: ^4.17.21
-    lru-cache: ^6.0.0
-    moment: ^2.29.3
-    ms: ^2.1.3
-    pg: ^8.7.3
-    redlock: ^4.2.0
-    semver: ^7.3.7
-    sqlite3: ^5.0.7
-    uuid: ^8.3.2
-    yn: 4.0.0
-  languageName: unknown
-  linkType: soft
-
-"@botpress/messaging-framework@1.2.0, @botpress/messaging-framework@workspace:packages/base/framework":
-  version: 0.0.0-use.local
-  resolution: "@botpress/messaging-framework@workspace:packages/base/framework"
-  dependencies:
-    "@botpress/base-test": 0.0.1
-    "@botpress/messaging-base": 1.2.0
-    "@botpress/messaging-engine": 1.2.0
-    "@sentry/node": ^6.19.7
-    "@types/cli-color": ^2.0.2
-    "@types/cors": ^2.8.12
-    "@types/express": ^4.17.13
-    "@types/jest": ^27.5.0
-    "@types/lodash": ^4.14.182
-    "@types/lru-cache": ^5.1.1
-    "@types/ms": ^0.7.31
-    "@types/node": ^16.11.33
-    "@types/uuid": ^8.3.4
-    "@types/yargs": ^17.0.10
-    axios: ^0.25.0
-    cli-color: ^2.0.2
-    cors: ^2.8.5
-    dotenv: ^15.0.1
-    exponential-backoff: ^3.1.0
-    express: ^4.18.1
-    http-terminator: ^3.2.0
-    joi: ^17.6.0
-    knex: ^0.95.15
-    knex-schema-inspector: ^1.7.5
-    lodash: ^4.17.21
-    moment: ^2.29.3
-    ms: ^2.1.3
-    pg: ^8.7.3
-    portfinder: ^1.0.28
-    socket.io: ^4.5.0
-    uuid: ^8.3.2
-    yargs: ^17.4.1
-    yn: 4.0.0
-  languageName: unknown
-  linkType: soft
-
 "@botpress/messaging-server@workspace:packages/messaging/server":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-server@workspace:packages/messaging/server"
   dependencies:
+    "@botpress/base": 1.2.0
     "@botpress/base-test": 0.0.1
+    "@botpress/engine": 1.2.0
+    "@botpress/framework": 1.2.0
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-channels": 1.2.0
-    "@botpress/messaging-engine": 1.2.0
-    "@botpress/messaging-framework": 1.2.0
     "@sentry/node": ^6.19.7
     "@types/bcryptjs": ^2.4.2
     "@types/cli-color": ^2.0.2

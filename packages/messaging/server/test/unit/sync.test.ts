@@ -1,8 +1,8 @@
-import { Logger, LoggerService } from '@botpress/messaging-engine'
+import { Logger, LoggerService } from '@botpress/engine'
 import { ChannelService } from '../../src/channels/service'
 import { SyncApi } from '../../src/sync/api'
 
-jest.mock('@botpress/messaging-engine')
+jest.mock('@botpress/engine')
 
 const channels = {
   messenger: {

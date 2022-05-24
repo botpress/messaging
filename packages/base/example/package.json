@@ -17,14 +17,15 @@
     "@types/lodash": "^4.14.182",
     "@types/lru-cache": "^5.1.1",
     "@types/ms": "^0.7.31",
+    "@types/node": "^16.11.33",
     "@types/uuid": "^8.3.4",
     "@types/yargs": "^17.0.10",
     "knex-schema-inspector": "^1.7.5"
   },
   "dependencies": {
-    "@botpress/messaging-base": "1.2.0",
-    "@botpress/messaging-engine": "1.2.0",
-    "@botpress/messaging-framework": "1.2.0",
+    "@botpress/base": "1.2.0",
+    "@botpress/engine": "1.2.0",
+    "@botpress/framework": "1.2.0",
     "@sentry/node": "^6.19.7",
     "axios": "^0.25.0",
     "cli-color": "^2.0.2",

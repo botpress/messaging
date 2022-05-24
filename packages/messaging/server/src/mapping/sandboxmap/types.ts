@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
 
 export interface Sandboxmap {
   conduitId: uuid

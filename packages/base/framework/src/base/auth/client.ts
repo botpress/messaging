@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
 import { Request, Response } from 'express'
 import { ClientTokenService } from '../../client-tokens/service'
 import { AuthHandler, Middleware } from './base'

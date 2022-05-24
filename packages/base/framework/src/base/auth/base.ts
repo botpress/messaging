@@ -1,4 +1,4 @@
-import { Logger } from '@botpress/messaging-engine'
+import { Logger } from '@botpress/engine'
 import { Request, Response } from 'express'
 
 export type Middleware<T> = (req: T, res: Response) => Promise<any>

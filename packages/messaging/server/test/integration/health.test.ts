@@ -1,6 +1,6 @@
 import { randStr } from '@botpress/base-test/src'
+import { Client } from '@botpress/framework'
 import { HealthEventType, HealthReport } from '@botpress/messaging-base'
-import { Client } from '@botpress/messaging-framework'
 import { Conduit } from '../../src/conduits/types'
 import { HealthService } from '../../src/health/service'
 import { app, destroyApp, setupApp } from '../utils'

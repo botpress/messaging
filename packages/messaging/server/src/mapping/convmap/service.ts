@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
 import {
   Barrier2D,
   BarrierService,
@@ -9,7 +9,7 @@ import {
   ServerCache,
   ServerCache2D,
   Service
-} from '@botpress/messaging-engine'
+} from '@botpress/engine'
 import { ConversationService } from '../../conversations/service'
 import { ThreadService } from '../threads/service'
 import { TunnelService } from '../tunnels/service'

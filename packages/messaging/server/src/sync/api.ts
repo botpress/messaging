@@ -1,6 +1,6 @@
+import { ApiManager, ClientApiRequest } from '@botpress/framework'
 import { SyncChannels, SyncRequest, SyncWebhook } from '@botpress/messaging-base'
 import { ChannelTestError } from '@botpress/messaging-channels'
-import { ApiManager, ClientApiRequest } from '@botpress/messaging-framework'
 import { Response } from 'express'
 import Joi from 'joi'
 import _ from 'lodash'

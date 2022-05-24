@@ -31,10 +31,11 @@
     "sqlite3": "^5.0.7"
   },
   "dependencies": {
+    "@botpress/base": "1.2.0",
+    "@botpress/engine": "1.2.0",
+    "@botpress/framework": "1.2.0",
     "@botpress/messaging-base": "1.2.0",
     "@botpress/messaging-channels": "1.2.0",
-    "@botpress/messaging-engine": "1.2.0",
-    "@botpress/messaging-framework": "1.2.0",
     "@sentry/node": "^6.19.7",
     "axios": "^0.25.0",
     "cli-color": "^2.0.2",

@@ -2,7 +2,7 @@
   // Manage references here
   "references": [
     {
-      "path": "../base"
+      "path": "../../base/base"
     },
     {
       "path": "../../base/engine"
@@ -12,6 +12,9 @@
     },
     {
       "path": "../channels"
+    },
+    {
+      "path": "../base"
     }
   ],
 

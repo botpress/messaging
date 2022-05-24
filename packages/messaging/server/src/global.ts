@@ -1,4 +1,4 @@
-import { FrameworkEnv } from '@botpress/messaging-framework'
+import { FrameworkEnv } from '@botpress/framework'
 
 export type MessagingEnv = FrameworkEnv & {
   TWILIO_TESTING?: string

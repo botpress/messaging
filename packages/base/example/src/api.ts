@@ -1,4 +1,4 @@
-import { ApiManager, ClientApiRequest, ReqSchema } from '@botpress/messaging-framework'
+import { ApiManager, ClientApiRequest, ReqSchema } from '@botpress/framework'
 import { Response } from 'express'
 import { App } from './app'
 import { HouseApi } from './houses/api'

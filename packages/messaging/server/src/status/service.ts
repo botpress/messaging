@@ -1,5 +1,5 @@
-import { uuid } from '@botpress/messaging-base'
-import { CachingService, DatabaseService, DistributedService, ServerCache, Service } from '@botpress/messaging-engine'
+import { uuid } from '@botpress/base'
+import { CachingService, DatabaseService, DistributedService, ServerCache, Service } from '@botpress/engine'
 import { ConduitEvents } from '../conduits/events'
 import { ConduitService } from '../conduits/service'
 import { StatusTable } from './table'

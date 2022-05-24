@@ -1,4 +1,5 @@
-import { uuid, Message } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
+import { Message } from '@botpress/messaging-base'
 
 export interface Collector {
   // Id of the message that started the collector

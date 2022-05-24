@@ -1,4 +1,5 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
+import { Service, DatabaseService, LoggerService, KvsService } from '@botpress/engine'
 import {
   Channel,
   MessengerChannel,
@@ -9,7 +10,6 @@ import {
   TwilioChannel,
   VonageChannel
 } from '@botpress/messaging-channels'
-import { Service, DatabaseService, LoggerService, KvsService } from '@botpress/messaging-engine'
 import semver from 'semver'
 import { ChannelTable } from './table'
 

@@ -1,5 +1,5 @@
-import { Engine, Migration } from '@botpress/messaging-engine'
-import { ServerMetadata } from '@botpress/messaging-engine/src/meta/types'
+import { Engine, Migration } from '@botpress/engine'
+import { ServerMetadata } from '@botpress/engine/src/meta/types'
 import { ClientTokenService } from './client-tokens/service'
 import { ClientService } from './clients/service'
 
