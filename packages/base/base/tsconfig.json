@@ -1,13 +1,6 @@
 {
   // Manage references here
-  "references": [
-    {
-      "path": "../../base/base"
-    },
-    {
-      "path": "../base"
-    }
-  ],
+  "references": [],
 
   // Defaults (don't change this)
   "extends": "../../../tsconfig.packages.json",
@@ -21,6 +14,5 @@
     "declaration": true,
     "sourceMap": false
   },
-  "include": ["src"],
   "exclude": ["dist"]
 }

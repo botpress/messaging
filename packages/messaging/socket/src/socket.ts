@@ -1,4 +1,5 @@
-import { Conversation, Message, User, uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
+import { Conversation, Message, User } from '@botpress/messaging-base'
 import { SocketCom, SocketComEvents } from './com'
 import { SocketEmitter } from './emitter'
 

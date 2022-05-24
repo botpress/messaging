@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import cookie from 'cookie'
 import { ConversationStartedEvent, MessageFeedbackEvent, MessageNewEvent, UserNewEvent } from '.'

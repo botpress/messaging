@@ -1,5 +1,5 @@
 {
-  "name": "@botpress/messaging-base",
+  "name": "@botpress/base",
   "version": "1.2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,8 +12,5 @@
   },
   "files": [
     "dist"
-  ],
-  "dependencies": {
-    "@botpress/base": "1.2.0"
-  }
+  ]
 }

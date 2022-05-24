@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
 
 export class Emitter<T extends { [key: string]: any }> {
   private listeners: { [eventId: string]: (((clientId: uuid, arg: any) => Promise<any>) | ((arg: any) => void))[] } = {}

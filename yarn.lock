@@ -2378,6 +2378,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@botpress/base@1.2.0, @botpress/base@workspace:packages/base/base":
+  version: 0.0.0-use.local
+  resolution: "@botpress/base@workspace:packages/base/base"
+  languageName: unknown
+  linkType: soft
+
 "@botpress/common@0.0.1, @botpress/common@workspace:packages/studio/common":
   version: 0.0.0-use.local
   resolution: "@botpress/common@workspace:packages/studio/common"
@@ -2472,6 +2478,8 @@ __metadata:
 "@botpress/messaging-base@1.2.0, @botpress/messaging-base@workspace:packages/messaging/base":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-base@workspace:packages/messaging/base"
+  dependencies:
+    "@botpress/base": 1.2.0
   languageName: unknown
   linkType: soft
 
@@ -2530,6 +2538,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-client@workspace:packages/messaging/client"
   dependencies:
+    "@botpress/base": 1.2.0
     "@botpress/base-test": 0.0.1
     "@botpress/messaging-base": 1.2.0
     "@types/cookie": ^0.4.1
@@ -2733,6 +2742,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-socket@workspace:packages/messaging/socket"
   dependencies:
+    "@botpress/base": 1.2.0
     "@botpress/base-test": 0.0.1
     "@botpress/messaging-base": 1.2.0
     "@types/jest": ^27.5.0
