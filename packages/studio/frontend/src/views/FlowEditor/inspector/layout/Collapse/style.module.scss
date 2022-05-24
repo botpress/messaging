@@ -1,15 +1,13 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as bp;
+@use '~/src/scss/style.scss' as *;
 
 .sectionBtn {
-  @extend %font-md, %text-medium;
+  @extend %text-md, %font-medium;
   display: flex;
   align-items: center;
   padding: 8px 12px;
 
   text-align: left;
-  color: bp.$dark-gray2;
+  color: $dark-gray2;
   max-height: 100%;
   // overflow-y: auto;
   // border-radius: 8px;
@@ -21,10 +19,10 @@
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background-color: bp.$light-gray5;
+    background-color: $light-gray5;
   }
   &:active {
-    background-color: bp.$light-gray4;
+    background-color: $light-gray4;
   }
   span {
     padding-right: 16px;

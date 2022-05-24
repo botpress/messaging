@@ -1,8 +1,4 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as bp;
-
-@import '@blueprintjs/core/lib/scss/variables';
+@use '~/src/scss/style.scss' as *;
 
 .container {
   display: flex;
@@ -12,13 +8,14 @@
   min-height: 38px;
   padding: 4px;
   padding-bottom: 0;
-  background-color: bp.$light-gray4;
+  background-color: $light-gray4;
   @extend %shadow-inner-2;
 }
 
-// .draggable {
-//   // height: 36px;
-// }
+.draggable {
+  // height: 36px;
+  outline: none;
+}
 
 .loading {
   margin: 20px;

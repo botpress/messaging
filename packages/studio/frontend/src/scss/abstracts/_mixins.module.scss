@@ -18,13 +18,13 @@
 @mixin block-shadow-smooth($height, $transform, $border-color) {
   transition: all 75ms linear;
   box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset,
-    0px 1px 1px 0px mix(black, $border-color, 60%);
+    0px 1px 1px 0px mix(black, $border-color, 50%);
   border: 1px solid $border-color;
   background-color: mix(white, $border-color, 90%);
 
   &:hover {
     box-shadow: 0px $height 0px $border-color, 0px -1px 0px $border-color inset,
-      0px 2px 2px 0px mix(black, $border-color, 60%);
+      0px 2px 2px 0px mix(black, $border-color, 50%);
     transform: translateY(-$transform);
     border: 1px solid $border-color;
     background-color: white;
@@ -32,7 +32,7 @@
 
   &:active {
     box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset,
-      0px 1px 1px 0px mix(black, $border-color, 60%);
+      0px 1px 1px 0px mix(black, $border-color, 50%);
     transform: translateY(0);
   }
 }

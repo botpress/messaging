@@ -1,6 +1,4 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as bp;
+@use '~/src/scss/style.scss' as *;
 
 .tag {
   display: flex;
@@ -13,24 +11,24 @@
   text-transform: capitalize;
 
   span {
-    @extend %font-sm, %text-normal;
+    @extend %text-sm, %font-normal;
   }
 
   &-simple {
     @extend .tag;
-    background-color: bp.$green4;
+    background-color: $green4;
   }
   &-code {
     @extend .tag;
-    background-color: bp.$cobalt4;
+    background-color: $cobalt4;
   }
   &-complex {
     @extend .tag;
-    background-color: bp.$indigo4;
+    background-color: $indigo4;
   }
   &-prompt {
     @extend .tag;
-    background-color: bp.$orange4;
+    background-color: $orange4;
   }
 
   svg {

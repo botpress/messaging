@@ -1,12 +1,31 @@
-@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/style.scss' as *;
 
 .editable {
+  @extend %transition-all-75;
   height: fit-content;
+  user-select: contain;
+
+  &::before {
+    border-radius: 0px;
+    box-shadow: 0 1px 0 -1px $gray5;
+  }
+
+  &:hover {
+    &::before {
+      box-shadow: 0 2px 0 -1px $gray5;
+    }
+  }
+
+  &:focus-within {
+    &::before {
+      box-shadow: 0 2px 0 -1px $bp-blue, 0 3px 0 -1px $cobalt5;
+    }
+  }
 
   &__text {
-    @extend %font-md, %text-normal, %w-full;
+    @extend %text-md, %font-normal, .editable;
   }
   &__title {
-    @extend %font-xl, %text-medium;
+    @extend %text-xl, %font-medium, .editable;
   }
 }

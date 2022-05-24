@@ -1,8 +1,4 @@
-@use '~/src/scss/abstracts/index.module' as *;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as *;
-
-@import '@blueprintjs/core/lib/scss/variables';
+@use '~/src/scss/style.scss' as *;
 
 .tabs {
   @extend %shadow-edge-sm;
@@ -28,7 +24,7 @@
   border-radius: 6px;
 
   .tab {
-    @extend %font-md;
+    @extend %text-md;
   }
 }
 
@@ -58,7 +54,7 @@
 }
 
 .tab {
-  @extend %font-sm, %text-medium, %transition-all-75, %flex-row;
+  @extend %text-sm, %font-medium, %transition-all-75, %flex-row;
   align-items: center;
 
   height: 100%;
@@ -107,6 +103,7 @@
 
     &:hover {
       color: $red3;
+      opacity: 0.8;
     }
   }
 }

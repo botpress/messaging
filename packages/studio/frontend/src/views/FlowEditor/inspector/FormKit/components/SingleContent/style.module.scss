@@ -1,6 +1,4 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as bp;
+@use '~/src/scss/style.scss' as *;
 
 .container {
   width: 100%;
@@ -24,7 +22,7 @@
   transition: all 50ms linear;
   column-gap: 8px;
   background-color: white;
-  border: 1px solid bp.$light-gray1;
+  border: 1px solid $light-gray1;
   padding: 4px 12px;
   font-weight: 500;
   font-size: 12px;
@@ -38,17 +36,17 @@
 
 .error {
   .contentWell {
-    border: 1px solid bp.$red3;
-    background-color: abstracts.$red-highlight4;
+    border: 1px solid $red3;
+    background-color: $red-highlight4;
   }
   p {
-    color: bp.$red3;
+    color: $red3;
     user-select: none;
   }
 
   .item {
-    border: 1px solid bp.$red3;
-    color: bp.$red3;
+    border: 1px solid $red3;
+    color: $red3;
   }
 }
 

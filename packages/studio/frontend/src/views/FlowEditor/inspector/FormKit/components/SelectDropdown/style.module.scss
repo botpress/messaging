@@ -1,9 +1,5 @@
-@use '~/src/scss/vendor/index.module' as *;
-@use '~/src/scss/abstracts/index.module' as *;
-@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/style.scss' as *;
 
 .select {
   width: 100%;
-
- 
 }

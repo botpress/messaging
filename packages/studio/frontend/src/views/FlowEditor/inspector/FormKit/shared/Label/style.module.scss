@@ -1,9 +1,7 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as bp;
+@use '~/src/scss/style.scss' as *;
 
 .labelText {
-  @extend %font-md, %text-medium;
+  @extend %text-sm, %font-medium;
   flex: 1;
   margin: 0;
 
@@ -38,10 +36,10 @@
 
 .externalLink {
   // appearance: none;
-  color: bp.$gray3;
+  color: $gray3;
   text-decoration: underline;
 
   &:hover {
-    color: bp.$gray5;
+    color: $gray5;
   }
 }

@@ -1,3 +1,4 @@
+import { Spinner, Icon, Colors, Intent } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { debounce } from 'lodash'
 import moment from 'moment'
@@ -33,7 +34,20 @@ const AutoSave: FC<OwnProps> = ({ currentNode: { lastModified } }) => {
     setFromNow(null)
   }, [debouncedSubmit, values])
 
-  return <div className={style.test}> {!fromNow ? 'saving...' : `Last Saved: ${fromNow}`}</div>
+  return (
+    <div className={style.container}>
+      {!fromNow ? (
+        <Spinner className={style.loading} size={18} intent={Intent.PRIMARY}>
+          loading
+        </Spinner>
+      ) : (
+        // <div className={style.saved}>
+        //   <span>{fromNow}</span>
+        <Icon icon="tick-circle" size={18} color={Colors.GREEN4} />
+        // </div>
+      )}
+    </div>
+  )
 }
 
 const mapStateToProps = (state) => ({

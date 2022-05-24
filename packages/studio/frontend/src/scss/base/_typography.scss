@@ -1,8 +1,7 @@
 @use '~/src/scss/abstracts/variables.module' as vars;
 @use '~/src/scss/vendor/blueprintjs' as bp;
 
-
-%font {
+%text {
   font-weight: 400;
   // color: bp.$dark-gray2;
 
@@ -31,7 +30,7 @@
   }
 }
 
-%text {
+%font {
   &-normal {
     font-weight: 400;
   }
@@ -59,11 +58,11 @@
 }
 
 .placeholder {
-  @extend %text-normal, %font-sm, %style-italic;
+  @extend %font-normal, %text-sm, %style-italic;
   color: bp.$gray3;
   user-select: none;
 }
 
 .normal {
-  @extend %text-normal, %font-sm, %style-normal;
+  @extend %font-normal, %text-sm, %style-normal;
 }

@@ -1,6 +1,4 @@
-@use '~/src/scss/abstracts/index.module' as abstracts;
-@use '~/src/scss/base/index.module' as base;
-@use '~/src/scss/vendor/index.module' as bp;
+@use '~/src/scss/style.scss' as *;
 
 .input {
   width: 100%;
@@ -17,7 +15,7 @@
     padding: 8px 12px;
     flex-grow: 1;
     box-shadow: none;
-    background: bp.$light-gray5;
+    background: $light-gray5;
     font-weight: 400;
     font-size: 12px;
     border: 1px solid #dadce0;
@@ -25,7 +23,7 @@
     transition: all 75ms linear;
     &:focus,
     &:hover {
-      border: 1px solid abstracts.$bp-blue;
+      border: 1px solid $bp-blue;
     }
 
     &:focus {

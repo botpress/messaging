@@ -1,5 +1,4 @@
 @use '~/src/scss/style.scss' as *;
-@use '../../shared/styles/form.module.scss' as *;
 
 .error {
   .list {
@@ -54,9 +53,9 @@
   display: flex;
   flex-direction: column;
   min-height: 34px;
-  justify-content: flex-start;
-  row-gap: 4px;
+
   padding: 4px;
+  padding-bottom: 0;
   max-height: 224px;
   background-color: $light-gray4;
 
@@ -70,9 +69,12 @@
   }
 }
 
+.draggable {
+}
+
 .listItem {
   @extend %border-focus, %flex-row;
-  @include block-shadow-smooth(2px, 1px, $light-gray2);
+  // @include block-shadow-smooth(2px, 1px, $gray5);
 
   height: 32px;
   width: 100%;
@@ -81,19 +83,23 @@
   column-gap: 8px;
   align-items: center;
   background-color: white;
+  margin-bottom: 4px;
 
   padding: 8px 12px 8px 8px;
   border-radius: 6px;
+
+  box-shadow: 0 1px 0 $light-gray2;
 
   transition: all 75ms linear;
 
   &:hover {
     cursor: grab;
     background-color: white;
+    box-shadow: 0 1px 0 $gray5;
   }
 
   &:active {
-    @extend %shadow-edge-md;
+    @extend %shadow-edge-sm;
     transform: translateY(-1px);
   }
 

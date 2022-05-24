@@ -85,6 +85,7 @@ const BlockSidePane: FC<OwnProps> = ({ currentItems, fetchContentItems, categori
         {contentType ? (
           <>
             <div className={style.results}>
+              <span className={style.empty}>No Content</span>
               {loading ? (
                 <Spinner className={style.loading} size={50}>
                   loading

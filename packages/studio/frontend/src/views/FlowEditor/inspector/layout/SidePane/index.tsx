@@ -26,7 +26,7 @@ const SidePane: FC<OwnProps> = ({ target, label, onClose, offsetX = 20, children
           <div className={style.head}>
             <h4>{label}</h4>
             <div className={cx(Classes.POPOVER2_DISMISS, style.closeBtn)}>
-              <Icon size={24} icon="cross" />
+              <Icon size={18} icon="cross" />
             </div>
           </div>
           <div className={style.body}>{children}</div>

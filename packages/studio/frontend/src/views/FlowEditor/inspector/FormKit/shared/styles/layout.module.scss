@@ -4,14 +4,14 @@
   display: flex;
   flex-direction: column;
   padding: 8px 12px;
-  row-gap: 6px;
 }
 
 .labelSection {
   display: flex;
   align-items: center;
-  justify-content: center;
-  // margin-bottom: 8px;
+  // justify-content: center;
+  margin: 0 4px;
+  margin-bottom: 8px;
 
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Old versions of Firefox */
@@ -63,7 +63,7 @@
 }
 
 .text-input {
-  @extend %font-sm, %text-normal, %shadow-sm;
+  @extend %text-sm, %font-normal, %shadow-sm;
   display: flex;
   width: 100%;
   appearance: none;

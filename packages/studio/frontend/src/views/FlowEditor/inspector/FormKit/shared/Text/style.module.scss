@@ -1,4 +1,4 @@
-@import '@blueprintjs/core/lib/scss/variables';
+@use '~/src/scss/style.scss' as *;
 
 .common {
   color: $dark-gray5;

@@ -1,10 +1,19 @@
-@use '~/src/scss/vendor/index.module' as *;
-@use '~/src/scss/abstracts/index.module' as *;
-@use '~/src/scss/base/index.module' as base;
+@use '~/src/scss/style.scss' as *;
 
-.test {
-  @extend %font-sm;
+.container {
+  @extend %text-sm;
+  position: absolute;
+  top: 2px;
+  right: -2px;
   color: $gray3;
   display: flex;
   padding: 8px 12px;
+  z-index: 5;
+}
+
+.saved {
+  @extend %flex-row;
+  color: mix(white, $green3, 40%);
+  column-gap: 6px;
+  align-items: center;
 }
