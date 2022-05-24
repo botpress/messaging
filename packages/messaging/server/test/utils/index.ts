@@ -1,4 +1,4 @@
-import { createDatabaseIfNotExists, getTestDataPath, randomLetters } from '@-test/src'
+import { createDatabaseIfNotExists, getTestDataPath, randomLetters } from '@botpress/base-test/src'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { App } from '../../src/app'
