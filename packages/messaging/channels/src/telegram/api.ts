@@ -1,9 +1,8 @@
 import { Response } from 'express'
 import { Context, NarrowedContext } from 'telegraf'
 import { Update } from 'telegraf/typings/core/types/typegram'
-import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
-import { ChannelInitializeEvent, ChannelStartEvent, ChannelStopEvent } from '../base/service'
+import { ChannelInitializeEvent, ChannelStartEvent } from '../base/service'
 import { POSTBACK_PREFIX, SAY_PREFIX } from './renderers/carousel'
 import { TelegramService } from './service'
 
@@ -13,7 +12,6 @@ export class TelegramApi extends ChannelApi<TelegramService> {
 
     this.service.on('start', this.handleStart.bind(this))
     this.service.on('initialize', this.handleInitialize.bind(this))
-    this.service.on('stop', this.handleStop.bind(this))
   }
 
   private async handleRequest(req: ChannelApiRequest, res: Response) {
@@ -28,11 +26,9 @@ export class TelegramApi extends ChannelApi<TelegramService> {
   }
 
   private async handleInitialize({ scope }: ChannelInitializeEvent) {
-    if (this.useWebhook()) {
-      const { telegraf, config } = this.service.get(scope)
-      const webhook = `${await this.urlCallback!(scope)}/${config.botToken}`
-      await telegraf.telegram.setWebhook(webhook)
-    }
+    const { telegraf, config } = this.service.get(scope)
+    const webhook = `${await this.urlCallback!(scope)}/${config.botToken}`
+    await telegraf.telegram.setWebhook(webhook)
   }
 
   private async handleStart({ scope }: ChannelStartEvent) {
@@ -41,18 +37,7 @@ export class TelegramApi extends ChannelApi<TelegramService> {
     telegraf.on('message', this.asyncCallback(scope, this.handleTelegrafMessage.bind(this)))
     telegraf.on('callback_query', this.asyncCallback(scope, this.handleTelegrafCallbackQuery.bind(this)))
 
-    if (this.useWebhook()) {
-      this.service.get(scope).callback = telegraf.webhookCallback('/')
-    } else {
-      await telegraf.telegram.deleteWebhook()
-      await telegraf.launch()
-    }
-  }
-
-  private async handleStop({ scope }: ChannelStopEvent) {
-    if (!this.useWebhook()) {
-      this.service.get(scope).telegraf.stop()
-    }
+    this.service.get(scope).callback = telegraf.webhookCallback('/')
   }
 
   private async handleTelegrafMessage(scope: string, ctx: NarrowedContext<Context<Update>, Update.MessageUpdate>) {
@@ -97,10 +82,5 @@ export class TelegramApi extends ChannelApi<TelegramService> {
         this.service.logger?.error('Error occurred in telegram callback', e)
       })
     }
-  }
-
-  private useWebhook() {
-    // TODO: remove this dependency on server env vars
-    return !yn(process.env.SPINNED) || yn(process.env.CLUSTER_ENABLED)
   }
 }

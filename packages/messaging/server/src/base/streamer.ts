@@ -70,7 +70,7 @@ export class Streamer {
     const webhooks = await this.webhooks.list(clientId)
 
     for (const webhook of webhooks) {
-      void this.send(process.env.SPINNED_URL || webhook.url, payload, {
+      void this.send(webhook.url, payload, {
         'x-bp-messaging-client-id': clientId,
         'x-bp-messaging-webhook-token': webhook.token
       })
@@ -97,7 +97,7 @@ export class Streamer {
         jitter: 'none',
         numOfAttempts: MAX_ATTEMPTS,
         retry: (e: AxiosError, attemptNumber: number) => {
-          if (attemptNumber === 1 && (e.response?.status !== 503 || !yn(process.env.SPINNED))) {
+          if (attemptNumber === 1) {
             this.logWebhookError(e, url, 'Failed to send webhook event on first attempt. Retrying 9 more times')
           }
           return !this.destroyed

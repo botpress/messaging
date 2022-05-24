@@ -69,19 +69,15 @@ export class Launcher {
       this.httpTerminator = createHttpTerminator({ server, gracefulTerminationTimeout: this.shutdownTimeout })
 
       // TODO: remove mentions of messaging here
-      if (!yn(process.env.SPINNED)) {
-        this.logger.info(`Server is listening at: http://localhost:${port}`)
+      this.logger.info(`Server is listening at: http://localhost:${port}`)
 
-        const externalUrl = process.env.EXTERNAL_URL
-        if (externalUrl?.length) {
-          this.logger.info(`Server is exposed at: ${externalUrl}`)
-        } else {
-          this.logger.warn(
-            "No external URL configured. Messaging Server might not behave as expected. Set the value for 'EXTERNAL_URL' to suppress this warning"
-          )
-        }
+      const externalUrl = process.env.EXTERNAL_URL
+      if (externalUrl?.length) {
+        this.logger.info(`Server is exposed at: ${externalUrl}`)
       } else {
-        this.logger.info(clc.blackBright(`Messaging is listening at: http://localhost:${port}`))
+        this.logger.warn(
+          "No external URL configured. Messaging Server might not behave as expected. Set the value for 'EXTERNAL_URL' to suppress this warning"
+        )
       }
 
       await this.monitorCallback()
@@ -96,24 +92,24 @@ export class Launcher {
   }
 
   async shutDown(code?: number) {
-    if (yn(process.env.SPINNED)) {
+    if (this.shuttingDown) {
+      return
+    }
+
+    this.shuttingDown = true
+
+    try {
+      this.logger.info('Server gracefully closing down...')
+
+      await this.terminateCallback()
+      await this.httpTerminator?.terminate()
+      await this.destroyCallback()
+
+      this.logger.info('Server shutdown complete')
+    } catch (e) {
+      this.logger.error(e, 'Server failed to shutdown gracefully')
+    } finally {
       process.exit(code)
-    } else if (!this.shuttingDown) {
-      this.shuttingDown = true
-
-      try {
-        this.logger.info('Server gracefully closing down...')
-
-        await this.terminateCallback()
-        await this.httpTerminator?.terminate()
-        await this.destroyCallback()
-
-        this.logger.info('Server shutdown complete')
-      } catch (e) {
-        this.logger.error(e, 'Server failed to shutdown gracefully')
-      } finally {
-        process.exit(code)
-      }
     }
   }
 
