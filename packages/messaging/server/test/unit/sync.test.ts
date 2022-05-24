@@ -1,4 +1,4 @@
-import { Logger, LoggerService } from '@botpress/engine'
+import { Logger, LoggerService } from '@botpress/framework'
 import { ChannelService } from '../../src/channels/service'
 import { SyncApi } from '../../src/sync/api'
 
