@@ -2778,7 +2778,7 @@ __metadata:
     "@types/conventional-changelog": ^3.1.1
     "@types/jest": ^27.5.0
     "@types/jest-dev-server": ^5.0.0
-    "@types/node": ^17.0.35
+    "@types/node": ^16.11.33
     "@types/uuid": ^8.3.4
     "@types/yargs": ^17.0.10
     "@typescript-eslint/eslint-plugin": ^5.22.0
@@ -7773,13 +7773,6 @@ __metadata:
   version: 16.11.33
   resolution: "@types/node@npm:16.11.33"
   checksum: 5c86d3f1e3b996607b41405d368d2e19d410eee0054595cef73d230368a609a2863926e75ad19f5091f0fd742cd018b667d54c51292018dd8020a202a5b29fa9
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^17.0.35":
-  version: 17.0.35
-  resolution: "@types/node@npm:17.0.35"
-  checksum: 7a24946ae7fd20267ed92466384f594e448bfb151081158d565cc635d406ecb29ea8fb85fcd2a1f71efccf26fb5bd3c6f509bde56077eb8b832b847a6664bc62
   languageName: node
   linkType: hard
 
