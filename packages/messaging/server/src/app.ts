@@ -1,4 +1,4 @@
-import { Framework } from '@botpress/messaging-framework'
+import { Framework } from '@botpress/framework'
 import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
 import { ConduitService } from './conduits/service'

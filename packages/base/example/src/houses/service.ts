@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import { DatabaseService, Service } from '@botpress/messaging-engine'
+import { DatabaseService, Service, uuid } from '@botpress/framework'
 import { v4 as uuidv4 } from 'uuid'
 import { HouseTable } from './table'
 import { House } from './types'

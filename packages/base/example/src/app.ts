@@ -1,4 +1,4 @@
-import { Framework } from '@botpress/messaging-framework'
+import { Framework } from '@botpress/framework'
 import { HouseService } from './houses/service'
 
 export class App extends Framework {

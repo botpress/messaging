@@ -1,13 +1,5 @@
-import {
-  Conversation,
-  Endpoint,
-  HealthReport,
-  Message,
-  SyncRequest,
-  SyncResult,
-  User,
-  uuid
-} from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
+import { Conversation, Endpoint, HealthReport, Message, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
 import { handleUnauthorized } from '.'
 import { MessagingChannelBase } from './base'
 import { handleNotFound } from './errors'

@@ -1,6 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import { Logger } from '@botpress/messaging-engine'
-import { ClientService } from '@botpress/messaging-framework'
+import { uuid, Logger, ClientService } from '@botpress/framework'
 import clc from 'cli-color'
 import { Server } from 'http'
 import Joi from 'joi'

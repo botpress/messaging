@@ -1,5 +1,5 @@
-import { uuid } from '@botpress/messaging-base'
-import { Logger, LoggerLevel } from '@botpress/messaging-engine'
+import { uuid } from '@botpress/base'
+import { Logger, LoggerLevel } from '@botpress/engine'
 import clc from 'cli-color'
 import { Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'

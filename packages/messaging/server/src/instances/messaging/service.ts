@@ -1,6 +1,6 @@
-import { Message, uuid } from '@botpress/messaging-base'
+import { uuid, CachingService, Logger, ServerCache, Service } from '@botpress/framework'
+import { Message } from '@botpress/messaging-base'
 import { Endpoint } from '@botpress/messaging-channels'
-import { CachingService, Logger, ServerCache, Service } from '@botpress/messaging-engine'
 import { ChannelService } from '../../channels/service'
 import { ConduitService } from '../../conduits/service'
 import { ConversationService } from '../../conversations/service'

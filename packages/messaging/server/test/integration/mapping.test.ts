@@ -1,5 +1,5 @@
 import { randStr } from '@botpress/base-test/src'
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/framework'
 import { Endpoint } from '@botpress/messaging-channels'
 import { validate as validateUuid } from 'uuid'
 import { MappingService } from '../../src/mapping/service'

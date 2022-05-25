@@ -12,5 +12,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "@botpress/base": "1.2.0"
+  }
 }

@@ -1,4 +1,4 @@
-import { Migration } from '@botpress/messaging-engine'
+import { Migration } from '@botpress/framework'
 
 export class CustomChannelsMigration extends Migration {
   meta = {

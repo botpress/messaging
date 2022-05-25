@@ -1,5 +1,5 @@
 import './rewire'
-import { Entry, start } from '@botpress/messaging-framework'
+import { Entry, start } from '@botpress/framework'
 import { Api } from './api'
 import { App } from './app'
 import { Migrations } from './migrations'

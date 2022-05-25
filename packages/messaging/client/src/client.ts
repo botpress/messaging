@@ -1,18 +1,9 @@
-import {
-  Conversation,
-  Endpoint,
-  HealthReport,
-  Message,
-  SyncRequest,
-  SyncResult,
-  User,
-  uuid
-} from '@botpress/messaging-base'
+import { ProtectedEmitter, uuid } from '@botpress/base'
+import { Conversation, Endpoint, HealthReport, Message, SyncRequest, SyncResult, User } from '@botpress/messaging-base'
 import { AxiosRequestConfig } from 'axios'
 import { Router } from 'express'
 import { MessageFeedbackEvent } from '.'
 import { MessagingChannel } from './channel'
-import { ProtectedEmitter } from './emitter'
 import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from './events'
 import { Logger } from './logger'
 import { MessagingOptions } from './options'

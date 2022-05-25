@@ -14,6 +14,9 @@ WORKDIR /messaging
 COPY --from=build /messaging/packages/messaging/server/dist packages/messaging/server/dist
 COPY --from=build /messaging/packages/messaging/server/package.json packages/messaging/server/package.json
 
+COPY --from=build /messaging/packages/messaging/base/dist packages/messaging/base/dist
+COPY --from=build /messaging/packages/messaging/base/package.json packages/messaging/base/package.json
+
 COPY --from=build /messaging/packages/messaging/channels/dist packages/messaging/channels/dist
 COPY --from=build /messaging/packages/messaging/channels/package.json packages/messaging/channels/package.json
 
@@ -22,9 +25,9 @@ COPY --from=build /messaging/packages/base/framework/package.json packages/base/
 
 COPY --from=build /messaging/packages/base/engine/dist packages/base/engine/dist
 COPY --from=build /messaging/packages/base/engine/package.json packages/base/engine/package.json
- 
-COPY --from=build /messaging/packages/messaging/base/dist packages/messaging/base/dist
-COPY --from=build /messaging/packages/messaging/base/package.json packages/messaging/base/package.json
+
+COPY --from=build /messaging/packages/base/base/dist packages/base/base/dist
+COPY --from=build /messaging/packages/base/base/package.json packages/base/base/package.json
 
 COPY --from=build /messaging/package.json package.json
 COPY --from=build /messaging/yarn.lock yarn.lock

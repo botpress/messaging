@@ -1,5 +1,5 @@
 import { randStr } from '@botpress/base-test/src'
-import { Client } from '@botpress/messaging-framework'
+import { Client } from '@botpress/framework'
 import { Provider } from '../../src/providers/types'
 import { ProvisionService } from '../../src/provisions/service'
 import { Provision } from '../../src/provisions/types'

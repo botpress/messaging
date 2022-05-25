@@ -2,7 +2,7 @@
   // Manage references here
   "references": [
     {
-      "path": "../../messaging/base"
+      "path": "../base"
     }
   ],
 

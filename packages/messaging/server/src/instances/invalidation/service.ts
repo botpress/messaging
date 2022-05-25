@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import { Service } from '@botpress/messaging-engine'
+import { uuid, Service } from '@botpress/framework'
 import { ChannelService } from '../../channels/service'
 import { ConduitEvents } from '../../conduits/events'
 import { ConduitService } from '../../conduits/service'

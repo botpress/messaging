@@ -1,4 +1,4 @@
-import { Emitter, uuid } from '@botpress/messaging-base'
+import { Emitter, uuid } from '@botpress/base'
 import io, { Socket } from 'socket.io-client'
 import { UserCredentials } from './socket'
 

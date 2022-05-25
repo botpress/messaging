@@ -1,0 +1,16 @@
+{
+  "name": "@botpress/base",
+  "version": "1.2.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn && yarn run -T tsc --build",
+    "watch": "yarn && yarn run -T tsc --build --watch",
+    "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T tsc --build && yarn run -T rimraf dist/.tsbuildinfo"
+  },
+  "files": [
+    "dist"
+  ]
+}

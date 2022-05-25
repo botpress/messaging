@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import { Dispatcher, DispatchService, Logger } from '@botpress/messaging-engine'
+import { uuid, Dispatcher, DispatchService, Logger } from '@botpress/framework'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import clc from 'cli-color'
 import { backOff } from 'exponential-backoff'

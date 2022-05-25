@@ -1,7 +1,11 @@
-export class Emitter<T extends { [key: number]: any }> {
-  private listeners: { [eventId: number]: ((arg: any) => Promise<void>)[] } = {}
+export class BaseEmitter<T extends { [key: string]: any }> {
+  protected listeners: { [eventId: number]: (((arg: any) => Promise<void>) | ((arg: any) => void))[] } = {}
 
-  public on<K extends keyof T>(event: K, listener: (arg: T[K]) => Promise<void>, pushBack: boolean = false) {
+  protected sealedOn<K extends keyof T>(
+    event: K,
+    listener: ((arg: T[K]) => Promise<void>) | ((arg: T[K]) => void),
+    pushBack: boolean = false
+  ) {
     const listeners = this.listeners[event as number]
     if (!listeners) {
       this.listeners[event as number] = [listener]
@@ -12,7 +16,7 @@ export class Emitter<T extends { [key: number]: any }> {
     }
   }
 
-  public async emit<K extends keyof T>(event: K, arg: T[K]): Promise<boolean> {
+  protected async sealedEmit<K extends keyof T>(event: K, arg: T[K]): Promise<boolean> {
     const listeners = this.listeners[event as number]
     if (listeners?.length) {
       for (const listener of listeners) {

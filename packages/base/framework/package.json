@@ -1,5 +1,5 @@
 {
-  "name": "@botpress/messaging-framework",
+  "name": "@botpress/framework",
   "version": "1.2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,8 +24,8 @@
     "knex-schema-inspector": "^1.7.5"
   },
   "dependencies": {
-    "@botpress/messaging-base": "1.2.0",
-    "@botpress/messaging-engine": "1.2.0",
+    "@botpress/base": "1.2.0",
+    "@botpress/engine": "1.2.0",
     "@sentry/node": "^6.19.7",
     "axios": "^0.25.0",
     "cli-color": "^2.0.2",

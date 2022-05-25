@@ -1,5 +1,5 @@
-import { uuid } from '@botpress/messaging-base'
 import {
+  uuid,
   Barrier2D,
   BarrierService,
   CachingService,
@@ -7,7 +7,7 @@ import {
   ServerCache,
   ServerCache2D,
   Service
-} from '@botpress/messaging-engine'
+} from '@botpress/framework'
 import { v4 as uuidv4 } from 'uuid'
 import { IdentityTable } from './table'
 import { Identity } from './types'

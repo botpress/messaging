@@ -1,5 +1,5 @@
-import { uuid } from '@botpress/messaging-base'
 import {
+  uuid,
   Barrier2D,
   BarrierService,
   Batcher,
@@ -8,7 +8,7 @@ import {
   DatabaseService,
   ServerCache2D,
   Service
-} from '@botpress/messaging-engine'
+} from '@botpress/framework'
 import { UserService } from '../../users/service'
 import { SenderService } from '../senders/service'
 import { TunnelService } from '../tunnels/service'

@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
 import { AxiosRequestConfig } from 'axios'
 import { MessagingClientAuth } from './auth'
 import { Logger } from './logger'

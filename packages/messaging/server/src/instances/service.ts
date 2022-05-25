@@ -1,12 +1,12 @@
 import {
+  ClientService,
   CachingService,
   DispatchService,
   DistributedService,
   Logger,
   LoggerService,
   Service
-} from '@botpress/messaging-engine'
-import { ClientService } from '@botpress/messaging-framework'
+} from '@botpress/framework'
 import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'

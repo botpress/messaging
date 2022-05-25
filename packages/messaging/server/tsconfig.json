@@ -2,16 +2,13 @@
   // Manage references here
   "references": [
     {
-      "path": "../base"
-    },
-    {
-      "path": "../../base/engine"
-    },
-    {
       "path": "../../base/framework"
     },
     {
       "path": "../channels"
+    },
+    {
+      "path": "../base"
     }
   ],
 

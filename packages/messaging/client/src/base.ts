@@ -1,13 +1,12 @@
-import { uuid } from '@botpress/messaging-base'
+import { ProtectedScopedEmitter, uuid } from '@botpress/base'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import cookie from 'cookie'
 import { ConversationStartedEvent, MessageFeedbackEvent, MessageNewEvent, UserNewEvent } from '.'
 import { MessagingClientAuth } from './auth'
-import { Emitter } from './emitter'
 import { Logger } from './logger'
 import { MessagingChannelOptions } from './options'
 
-export abstract class MessagingChannelBase extends Emitter<{
+export abstract class MessagingChannelBase extends ProtectedScopedEmitter<{
   user: UserNewEvent
   started: ConversationStartedEvent
   message: MessageNewEvent
