@@ -17,6 +17,9 @@ COPY --from=build /messaging/packages/messaging/server/package.json packages/mes
 COPY --from=build /messaging/packages/messaging/base/dist packages/messaging/base/dist
 COPY --from=build /messaging/packages/messaging/base/package.json packages/messaging/base/package.json
 
+COPY --from=build /messaging/packages/messaging/content/dist packages/messaging/content/dist
+COPY --from=build /messaging/packages/messaging/content/package.json packages/messaging/content/package.json
+
 COPY --from=build /messaging/packages/messaging/channels/dist packages/messaging/channels/dist
 COPY --from=build /messaging/packages/messaging/channels/package.json packages/messaging/channels/package.json
 
