@@ -1,12 +1,13 @@
 {
-  "name": "@botpress/base-test",
-  "version": "0.0.1",
+  "name": "@botpress/testing",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn && yarn run -T tsc --build"
+    "build": "yarn && yarn run -T tsc --build",
+    "watch": "yarn && yarn run -T tsc --build --watch"
   },
   "devDependencies": {
     "@types/cli-color": "^2.0.2",

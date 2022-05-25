@@ -14,7 +14,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@botpress/base-test": "0.0.1",
+    "@botpress/testing": "1.0.0",
     "@types/jest": "^27.5.0",
     "@types/jest-dev-server": "^5.0.0",
     "@types/lodash": "^4.14.182",

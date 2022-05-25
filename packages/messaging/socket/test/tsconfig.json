@@ -4,8 +4,7 @@
     "rootDir": "..",
     "paths": {
       "@botpress/base": ["../../../base/base/src/index.ts"],
-      "@botpress/messaging-base": ["../../base/src/index.ts"],
-      "@botpress/base-test": ["../../../base/test/src/index.ts"]
+      "@botpress/messaging-base": ["../../base/src/index.ts"]
     }
   },
   "include": ["../test/**/*", "../src/**/*"]

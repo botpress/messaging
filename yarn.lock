@@ -2358,26 +2358,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@botpress/base-test@0.0.1, @botpress/base-test@workspace:packages/base/test":
-  version: 0.0.0-use.local
-  resolution: "@botpress/base-test@workspace:packages/base/test"
-  dependencies:
-    "@types/cli-color": ^2.0.2
-    "@types/cwd": ~0.10.0
-    "@types/node": ^16.11.13
-    "@types/uuid": ^8.3.4
-    "@types/wait-on": ^5.3.1
-    cli-color: ^2.0.2
-    cwd: ~0.10.0
-    docker-compose: ^0.23.17
-    knex: ^0.95.15
-    pg: ^8.7.1
-    tree-kill: ^1.2.2
-    uuid: ^8.3.2
-    wait-on: ^6.0.1
-  languageName: unknown
-  linkType: soft
-
 "@botpress/base@1.2.0, @botpress/base@workspace:packages/base/base":
   version: 0.0.0-use.local
   resolution: "@botpress/base@workspace:packages/base/base"
@@ -2406,7 +2386,7 @@ __metadata:
   resolution: "@botpress/engine@workspace:packages/base/engine"
   dependencies:
     "@botpress/base": 1.2.0
-    "@botpress/base-test": 0.0.1
+    "@botpress/testing": 1.0.0
     "@types/bcryptjs": ^2.4.2
     "@types/cli-color": ^2.0.2
     "@types/express": ^4.17.13
@@ -2481,8 +2461,8 @@ __metadata:
   resolution: "@botpress/framework@workspace:packages/base/framework"
   dependencies:
     "@botpress/base": 1.2.0
-    "@botpress/base-test": 0.0.1
     "@botpress/engine": 1.2.0
+    "@botpress/testing": 1.0.0
     "@sentry/node": ^6.19.7
     "@types/cli-color": ^2.0.2
     "@types/cors": ^2.8.12
@@ -2631,8 +2611,8 @@ __metadata:
   resolution: "@botpress/messaging-client@workspace:packages/messaging/client"
   dependencies:
     "@botpress/base": 1.2.0
-    "@botpress/base-test": 0.0.1
     "@botpress/messaging-base": 1.2.0
+    "@botpress/testing": 1.0.0
     "@types/cookie": ^0.4.1
     "@types/express": ^4.17.13
     "@types/jest": ^27.5.0
@@ -2713,10 +2693,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-server@workspace:packages/messaging/server"
   dependencies:
-    "@botpress/base-test": 0.0.1
     "@botpress/framework": 1.2.0
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-channels": 1.2.0
+    "@botpress/testing": 1.0.0
     "@sentry/node": ^6.19.7
     "@types/bcryptjs": ^2.4.2
     "@types/cli-color": ^2.0.2
@@ -2762,8 +2742,8 @@ __metadata:
   resolution: "@botpress/messaging-socket@workspace:packages/messaging/socket"
   dependencies:
     "@botpress/base": 1.2.0
-    "@botpress/base-test": 0.0.1
     "@botpress/messaging-base": 1.2.0
+    "@botpress/testing": 1.0.0
     "@types/jest": ^27.5.0
     "@types/jest-dev-server": ^5.0.0
     "@types/lodash": ^4.14.182
@@ -3189,6 +3169,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@botpress/testing@1.0.0, @botpress/testing@workspace:packages/base/testing":
+  version: 0.0.0-use.local
+  resolution: "@botpress/testing@workspace:packages/base/testing"
+  dependencies:
+    "@types/cli-color": ^2.0.2
+    "@types/cwd": ~0.10.0
+    "@types/node": ^16.11.13
+    "@types/uuid": ^8.3.4
+    "@types/wait-on": ^5.3.1
+    cli-color: ^2.0.2
+    cwd: ~0.10.0
+    docker-compose: ^0.23.17
+    knex: ^0.95.15
+    pg: ^8.7.1
+    tree-kill: ^1.2.2
+    uuid: ^8.3.2
+    wait-on: ^6.0.1
+  languageName: unknown
+  linkType: soft
+
 "@botpress/webchat-inject@workspace:packages/webchat/inject":
   version: 0.0.0-use.local
   resolution: "@botpress/webchat-inject@workspace:packages/webchat/inject"
@@ -3209,9 +3209,9 @@ __metadata:
   resolution: "@botpress/webchat@workspace:packages/webchat/webchat"
   dependencies:
     "@blueprintjs/core": ^3.54.0
-    "@botpress/base-test": 0.0.1
     "@botpress/messaging-components": 0.4.0
     "@botpress/messaging-socket": 1.2.0
+    "@botpress/testing": 1.0.0
     "@formatjs/intl-pluralrules": ^4.3.3
     "@formatjs/intl-utils": ^3.8.4
     "@juggle/resize-observer": ^3.3.1

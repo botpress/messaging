@@ -19,7 +19,7 @@
     "assets"
   ],
   "devDependencies": {
-    "@botpress/base-test": "0.0.1",
+    "@botpress/testing": "1.0.0",
     "@parcel/config-default": "2.2.1",
     "@parcel/transformer-typescript-tsc": "2.2.1",
     "@types/crypto-js": "^4.1.1",
