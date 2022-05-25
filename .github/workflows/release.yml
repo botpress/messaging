@@ -4,9 +4,11 @@ on:
     branches:
       - master
       - v1.2
+  workflow_dispatch:
+
 jobs:
   release_bin:
-    if: "${{ startsWith(github.event.head_commit.message, 'chore(server): release v') == true }}"
+    if: "${{ startsWith(github.event.head_commit.message, 'chore(server): release v') == true || github.event_name == 'workflow_dispatch'  }}"
     name: Release Binaries
     runs-on: ubuntu-latest
     steps:
