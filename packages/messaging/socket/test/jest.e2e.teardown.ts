@@ -1,5 +1,4 @@
-// FIXME: ts-node seems to require the '/src' part for some reason
-import { teardownDatabase, teardownServer } from '@botpress/base-test/src'
+import { teardownDatabase, teardownServer } from '@botpress/testing'
 
 const teardown = async () => {
   await teardownServer()

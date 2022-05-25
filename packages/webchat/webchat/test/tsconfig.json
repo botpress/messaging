@@ -14,7 +14,9 @@
     // to avoid clashing with Jest types
     "types": ["cypress", "node"],
 
-    "paths": {}
+    "paths": {
+      "@botpress/testing": ["../../../base/testing/src/index.ts"]
+    }
   },
   "include": ["../test/**/*", "../src"]
 }
