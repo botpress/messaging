@@ -3204,6 +3204,7 @@ __metadata:
     react-select: ^5.1.0
     react-split-pane: ^0.1.89
     react-table: ^6.11.5
+    react-transition-group: ^4.4.2
     reactour: ^1.18.7
     reactstrap: ^9.0.2
     reduce-reducers: ^0.1.2

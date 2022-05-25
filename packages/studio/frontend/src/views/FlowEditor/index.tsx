@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 import {
   clearErrorSaveFlows,
   closeFlowNodeProps,
@@ -26,6 +27,7 @@ import Diagram from './diagram'
 import SidePanel, { PanelPermissions } from './explorer'
 import Inspector from './inspector'
 import * as style from './style.module.scss'
+import '~src/scss/abstracts/_transitions.scss'
 
 interface OwnProps {
   currentMutex: any
@@ -185,7 +187,9 @@ const FlowEditor = (props: Props) => {
         permissions={actions}
         onCreateFlow={createFlow}
       />
-      {currentFlowNode && <Inspector currentFlowNode={currentFlowNode} />}
+      <CSSTransition in={currentFlowNode ? true : false} timeout={300} classNames="slide-left">
+        {currentFlowNode ? <Inspector currentFlowNode={currentFlowNode} /> : <span className={style.test}></span>}
+      </CSSTransition>
     </div>
   )
 }
