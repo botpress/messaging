@@ -1,3 +1,12 @@
+## [1.2.3](https://github.com/botpress/messaging/compare/v1.2.2...v1.2.3) (2022-05-25)
+
+
+### Features
+
+* **messenger:** allow receiving file content elements ([#480](https://github.com/botpress/messaging/issues/480)) ([cfab6a1](https://github.com/botpress/messaging/commit/cfab6a175a36dbf1589e41cee804f43b17f79e2d))
+
+
+
 ## [1.2.2](https://github.com/botpress/messaging/compare/v1.2.1...v1.2.2) (2022-04-19)
 
 
