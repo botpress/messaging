@@ -1,4 +1,4 @@
-import { Emitter } from '@botpress/base'
+import { ProtectedEmitter } from '@botpress/base'
 import LRU from 'lru-cache'
 import ms from 'ms'
 import { ChannelStateManager } from '..'
@@ -15,7 +15,7 @@ export interface ChannelState<T> {
 export abstract class ChannelService<
   TConfig extends ChannelConfig,
   TState extends ChannelState<TConfig>
-> extends Emitter<{
+> extends ProtectedEmitter<{
   start: ChannelStartEvent
   test: ChannelTestEvent
   initialize: ChannelInitializeEvent

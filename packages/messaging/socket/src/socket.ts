@@ -1,9 +1,8 @@
-import { uuid } from '@botpress/base'
+import { ProtectedEmitter, uuid } from '@botpress/base'
 import { Conversation, Message, User } from '@botpress/messaging-base'
 import { SocketCom, SocketComEvents } from './com'
-import { SocketEmitter } from './emitter'
 
-export class MessagingSocket extends SocketEmitter<{
+export class MessagingSocket extends ProtectedEmitter<{
   connect: UserCredentials
   disconnect: undefined
   user: uuid | undefined
