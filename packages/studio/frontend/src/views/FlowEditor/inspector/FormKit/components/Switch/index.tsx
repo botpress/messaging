@@ -41,7 +41,6 @@ const Switch: FC<OwnProps> = ({ label, name, hint }) => {
         {!isDynamic && (
           <BpSwitch
             className={style.switch}
-            id={style.check}
             checked={valueBool}
             disabled={valueBool === null}
             onChange={(event) => {

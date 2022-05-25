@@ -14,3 +14,27 @@
     box-shadow: 0 0 0 1px $cobalt5;
   }
 }
+
+%switch {
+  &:checked ~ span {
+    background: $cobalt3;
+
+    &:hover {
+      background: $cobalt4;
+    }
+  }
+
+  &:focus ~ span {
+    outline: 1px solid $cobalt4;
+    outline-offset: 0.5px;
+  }
+
+  & ~ span {
+    outline-width: 0px;
+    background: $light-gray3;
+
+    &:hover {
+      background: $light-gray1;
+    }
+  }
+}
