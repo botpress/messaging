@@ -6,6 +6,7 @@
       "@botpress/base": ["../../../base/base/src/index.ts"],
       "@botpress/framework": ["../../../base/framework/src/index.ts"],
       "@botpress/engine": ["../../../base/engine/src/index.ts"],
+      "@botpress/messaging-content": ["../../content/src/index.ts"],
       "@botpress/messaging-channels": ["../../channels/src/index.ts"],
       "@botpress/messaging-base": ["../../base/src/index.ts"],
       "@botpress/base-test": ["../../../base/test/src/index.ts"]
