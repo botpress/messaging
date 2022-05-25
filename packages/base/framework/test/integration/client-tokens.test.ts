@@ -1,4 +1,4 @@
-import { randStr } from '@botpress/base-test/src'
+import { randStr } from '@botpress/testing'
 import { validate as validateUuid, v4 as uuidv4 } from 'uuid'
 
 import { Client, ClientToken, ClientTokenService } from '../../src'
