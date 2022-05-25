@@ -1,0 +1,34 @@
+@use '~/src/scss/style.scss' as *;
+@use '../../shared/styles/layout.module.scss' as *;
+
+.switch {
+  @extend .leftBtn;
+  margin: auto 0;
+  width: min-content;
+}
+
+#check {
+  @extend %transition-all-75;
+
+  &:checked ~ span {
+    background: $cobalt4;
+
+    &:hover {
+      background: $cobalt3;
+    }
+  }
+
+  &:focus ~ span {
+    outline: 1px solid $cobalt4;
+    outline-offset: 0.5px;
+  }
+
+  & ~ span {
+    outline-width: 0px;
+    background: $light-gray3;
+
+    &:hover {
+      background: $light-gray1;
+    }
+  }
+}

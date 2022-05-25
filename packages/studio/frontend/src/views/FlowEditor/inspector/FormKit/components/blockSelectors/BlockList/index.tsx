@@ -1,4 +1,5 @@
 import { Spinner } from '@blueprintjs/core'
+import cx from 'classnames'
 import { useField } from 'formik'
 import produce from 'immer'
 import React, { useCallback, FC } from 'react'
@@ -18,8 +19,13 @@ export interface OwnProps {
 
 const getRenderItem = (blocks: any) => (provided: any, snapshot: any, rubric: any) => {
   return (
-    <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className={style.draggable}>
-      <Block block={blocks[rubric.source.index]} />
+    <div
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+      ref={provided.innerRef}
+      className={cx(style.draggable)}
+    >
+      <Block block={blocks[rubric.source.index]} {...snapshot} />
     </div>
   )
 }
@@ -63,7 +69,7 @@ const BlockList: FC<OwnProps> = ({ name, label, hint }) => {
               {...provided.droppableProps}
             >
               {value === undefined ? (
-                <Spinner className={style.loading} size={50}>
+                <Spinner className={style.loading} size={25}>
                   loading
                 </Spinner>
               ) : value === null ? (

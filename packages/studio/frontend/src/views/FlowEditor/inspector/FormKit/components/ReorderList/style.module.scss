@@ -70,7 +70,14 @@
   }
 }
 
+.loading {
+  margin: 12px 0;
+}
+
 .draggable {
+  &:focus {
+    outline: 0;
+  }
 }
 
 .listItem {
@@ -89,7 +96,7 @@
   padding: 8px 12px 8px 8px;
   border-radius: 6px;
 
-  box-shadow: 0 1px 0 $light-gray2;
+  box-shadow: 0 1px 0 $light-gray1;
 
   transition: all 75ms linear;
 

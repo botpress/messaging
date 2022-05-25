@@ -9,8 +9,9 @@
 }
 
 .block {
-  display: flex;
-  flex-direction: row;
+  @extend %transition-all-75, %flex-row;
+  cursor: pointer;
+
   column-gap: 8px;
   height: 36px;
   width: 100%;
@@ -18,17 +19,10 @@
   border-radius: 6px;
   align-items: center;
   color: $gray1;
-  background-color: white;
-  overflow: hidden;
 
-  @include block-shadow-smooth(2px, 1px, $gray5);
+  border: 1px solid $light-gray1;
 
-  &:hover {
-    background-color: white;
-    color: $dark-gray4;
-  }
-
-  cursor: pointer;
+  @include block-shadow-solid;
 
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Old versions of Firefox */
@@ -39,24 +33,64 @@
     color: $dark-gray4;
   }
 
-  &-prompt {
+  &__dragging {
     @extend .block;
-    @include block-shadow-smooth(2px, 1px, $orange4);
+
+    &::after {
+      @extend %transition-all-75;
+      content: '';
+      border-radius: 6px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      box-shadow: 0 0 0 rgba(white, 0);
+    }
+
+    &[type-data='prompt'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($orange3, 0.25);
+      }
+    }
+
+    &[type-data='simple'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($green3, 0.25);
+      }
+    }
+
+    &[type-data='complex'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($indigo3, 0.25);
+      }
+    }
+
+    &[type-data='code'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($cobalt3, 0.25);
+      }
+    }
   }
 
-  &-simple {
+  &[type-data='prompt'] {
     @extend .block;
-    @include block-shadow-smooth(2px, 1px, $green4);
+    @include block-shadow-solid($orange4, mix(white, $orange4, 20%));
   }
 
-  &-code {
+  &[type-data='simple'] {
     @extend .block;
-    @include block-shadow-smooth(2px, 1px, $cobalt4);
+    @include block-shadow-solid($green4, mix(white, $green4, 20%));
   }
 
-  &-complex {
+  &[type-data='complex'] {
     @extend .block;
-    @include block-shadow-smooth(2px, 1px, $indigo4);
+    @include block-shadow-solid($indigo4, mix(white, $indigo4, 20%));
+  }
+
+  &[type-data='code'] {
+    @extend .block;
+    @include block-shadow-solid($cobalt4, mix(white, $cobalt4, 20%));
   }
 
   .name {
@@ -78,16 +112,6 @@
 
   &.temp {
     border: 1px dashed $dark-gray2;
-  }
-
-  &.dragging {
-    border: 1px solid $gray3;
-    border-radius: 5px;
-    background-color: $gray3;
-
-    * {
-      visibility: hidden;
-    }
   }
 }
 

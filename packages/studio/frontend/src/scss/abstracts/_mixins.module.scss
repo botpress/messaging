@@ -15,25 +15,24 @@
   }
 }
 
-@mixin block-shadow-smooth($height, $transform, $border-color) {
-  transition: all 75ms linear;
-  box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset,
-    0px 1px 1px 0px mix(black, $border-color, 50%);
+@mixin block-shadow-solid($border-color: bp.$light-gray1, $hover-color: bp.$gray5) {
+  transition: all 75ms ease-in;
+  box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset;
   border: 1px solid $border-color;
-  background-color: mix(white, $border-color, 90%);
+  background-color: mix(white, $border-color, 95%);
+  transform: translateY(1px);
 
   &:hover {
-    box-shadow: 0px $height 0px $border-color, 0px -1px 0px $border-color inset,
-      0px 2px 2px 0px mix(black, $border-color, 50%);
-    transform: translateY(-$transform);
-    border: 1px solid $border-color;
+    box-shadow: 0px 2px 0px $hover-color, 0px -1px 0px $hover-color inset;
+    transform: translateY(0);
+    border: 1px solid $hover-color;
     background-color: white;
   }
 
   &:active {
-    box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset,
-      0px 1px 1px 0px mix(black, $border-color, 50%);
-    transform: translateY(0);
+    box-shadow: 0px 1px 0px $hover-color, 0px -1px 0px 0px $hover-color inset;
+    background-color: mix(white, $border-color, 95%);
+    transform: translateY(1px);
   }
 }
 

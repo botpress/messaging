@@ -4,6 +4,7 @@ import React, { useState, useMemo, FC, useEffect } from 'react'
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 import { Label, DynamicBtn } from '../../shared'
 import * as layout from '../../shared/styles/layout.module.scss'
+import * as style from './style.module.scss'
 
 export interface OwnProps {
   name: string
@@ -39,7 +40,8 @@ const Switch: FC<OwnProps> = ({ label, name, hint }) => {
       <div className={layout.labelSection}>
         {!isDynamic && (
           <BpSwitch
-            className={layout.leftBtn}
+            className={style.switch}
+            id={style.check}
             checked={valueBool}
             disabled={valueBool === null}
             onChange={(event) => {

@@ -84,7 +84,7 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, help, placeholder, child
                         <div className={style.placeholderText}>{placeholder}</div>
 
                         {value === undefined ? (
-                          <Spinner className={style.loading} size={50}>
+                          <Spinner className={style.loading} size={25}>
                             loading
                           </Spinner>
                         ) : value === null ? (

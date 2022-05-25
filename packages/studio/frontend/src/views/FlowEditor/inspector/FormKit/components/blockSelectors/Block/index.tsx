@@ -17,7 +17,7 @@ export interface OwnProps {
   block: any
   grab?: boolean
   temp?: boolean
-  dragging?: boolean
+  isDragging?: boolean
   options?: boolean
   className?: string
   ref?: React.ForwardedRef<any>
@@ -25,10 +25,25 @@ export interface OwnProps {
   fetchContentItem: any
   items: any
 }
+const contentTypes = {
+  builtin_text: 'simple',
+  builtin_audio: 'simple',
+  builtin_image: 'simple',
+  builtin_video: 'simple',
+  builtin_location: 'simple',
+  builtin_file: 'simple',
+  builtin_card: 'complex',
+  builtin_carousel: 'complex',
+  builtin_actionbuttons: 'prompt',
+  dropdown: 'prompt',
+  'builtin_single choice': 'prompt'
+}
 
-const Block: FC<OwnProps> = forwardRef(({ items, block, grab, temp, options, className, dragging }, ref) => {
+const Block: FC<OwnProps> = forwardRef(({ items, block, grab, temp, options, className, isDragging }, ref) => {
   const [actionId, setActionId] = useState('')
   const openTabId = useInspectorStore((state) => state.openTabId)
+
+  console.log(items[actionId]?.contentType)
 
   const handleClicks = useCallback(
     (e) => {
@@ -50,8 +65,16 @@ const Block: FC<OwnProps> = forwardRef(({ items, block, grab, temp, options, cla
 
   return (
     <div ref={ref as any} className={cx(style.container, className)} onClick={handleClicks}>
-      {/* {grab && <Grabber className={cx({ [style.hidden]: dragging })} />} */}
-      <div className={cx(style.block, { [style.temp]: temp, [style.grab]: grab, [style.dragging]: dragging })}>
+      <div
+        type-data={
+          !block.startsWith('say')
+            ? 'code'
+            : items[actionId]?.contentType in contentTypes
+            ? contentTypes[items[actionId]?.contentType]
+            : null
+        }
+        className={cx(style.block, { [style.temp]: temp, [style.grab]: grab, [style.block__dragging]: isDragging })}
+      >
         <Tags type={!block.startsWith('say') ? 'code' : items[actionId]?.contentType} />
         {/* <Text className={style.type} value={block.type} large /> */}
         <Text
