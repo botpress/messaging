@@ -2364,12 +2364,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/base@1.2.0, @botpress/base@workspace:packages/base/base":
-  version: 0.0.0-use.local
-  resolution: "@botpress/base@workspace:packages/base/base"
-  languageName: unknown
-  linkType: soft
-
 "@botpress/common@0.0.1, @botpress/common@workspace:packages/studio/common":
   version: 0.0.0-use.local
   resolution: "@botpress/common@workspace:packages/studio/common"
