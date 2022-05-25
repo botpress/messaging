@@ -1,5 +1,5 @@
+import { FileContent } from '@botpress/messaging-content'
 import { FileRenderer } from '../../base/renderers/file'
-import { FileContent } from '../../content/types'
 import { VonageContext } from '../context'
 
 export class VonageFileRenderer extends FileRenderer {

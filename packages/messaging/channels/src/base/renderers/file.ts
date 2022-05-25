@@ -1,5 +1,5 @@
+import { FileContent } from '@botpress/messaging-content'
 import { ChannelRenderer } from '../../base/renderer'
-import { FileContent } from '../../content/types'
 import { ChannelContext } from '../context'
 
 export abstract class FileRenderer implements ChannelRenderer<any> {

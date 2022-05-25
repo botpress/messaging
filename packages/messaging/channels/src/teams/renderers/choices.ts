@@ -1,6 +1,6 @@
+import { ChoiceContent } from '@botpress/messaging-content'
 import { CardFactory } from 'botbuilder'
 import { ChoicesRenderer } from '../../base/renderers/choices'
-import { ChoiceContent } from '../../content/types'
 import { TeamsContext } from '../context'
 
 export const QUICK_REPLY_PREFIX = 'quick_reply::'

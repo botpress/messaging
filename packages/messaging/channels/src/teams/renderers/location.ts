@@ -1,5 +1,5 @@
+import { LocationContent } from '@botpress/messaging-content'
 import { LocationRenderer } from '../../base/renderers/location'
-import { LocationContent } from '../../content/types'
 import { TeamsContext } from '../context'
 
 export class TeamsLocationRenderer extends LocationRenderer {

@@ -1,6 +1,6 @@
+import { ImageContent } from '@botpress/messaging-content'
 import { CardFactory } from 'botbuilder'
 import { ImageRenderer } from '../../base/renderers/image'
-import { ImageContent } from '../../content/types'
 import { TeamsContext } from '../context'
 
 export class TeamsImageRenderer extends ImageRenderer {

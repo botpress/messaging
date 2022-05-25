@@ -1,5 +1,5 @@
+import { TextContent } from '@botpress/messaging-content'
 import { TextRenderer } from '../../base/renderers/text'
-import { TextContent } from '../../content/types'
 import { TwilioContext } from '../context'
 
 export class TwilioTextRenderer extends TextRenderer {

@@ -1,5 +1,5 @@
+import { AudioContent } from '@botpress/messaging-content'
 import { AudioRenderer } from '../../base/renderers/audio'
-import { AudioContent } from '../../content/types'
 import { VonageContext } from '../context'
 
 export class VonageAudioRenderer extends AudioRenderer {

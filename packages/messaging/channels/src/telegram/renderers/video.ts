@@ -1,6 +1,6 @@
+import { VideoContent } from '@botpress/messaging-content'
 import path from 'path'
 import { VideoRenderer } from '../../base/renderers/video'
-import { VideoContent } from '../../content/types'
 import { TelegramContext } from '../context'
 
 export class TelegramVideoRenderer extends VideoRenderer {
