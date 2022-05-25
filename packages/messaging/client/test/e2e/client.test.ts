@@ -373,7 +373,7 @@ describe('Http Client', () => {
 
       test('Should be able to map an endpoint to a conversation id', async () => {
         convoId = await client.mapEndpoint(endpoint)
-        expect(validateUuid(convoId)).toBeTruthy()
+        expect(validateUuid(convoId!)).toBeTruthy()
       })
 
       test('Should be able to map the endpoint to the same conversation id again', async () => {
