@@ -5,7 +5,7 @@ import {
   runCommand,
   getTestDataPath,
   createDatabaseIfNotExists
-} from '@botpress/base-test/src'
+} from '@botpress/testing'
 import path from 'path'
 
 export const startMessagingServer = async (options: ServerOptions, prefix: string) => {

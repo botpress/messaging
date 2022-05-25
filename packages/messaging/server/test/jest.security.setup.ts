@@ -1,4 +1,4 @@
-import { setupDatabase, setupServer } from '@botpress/base-test/src'
+import { setupDatabase, setupServer } from '@botpress/testing'
 import portfinder from 'portfinder'
 
 const setup = async () => {

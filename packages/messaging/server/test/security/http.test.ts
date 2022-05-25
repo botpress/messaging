@@ -1,5 +1,5 @@
-import { randStr } from '@botpress/base-test/src'
 import { Conversation, Endpoint, Message, SyncResult, User } from '@botpress/messaging-base'
+import { randStr } from '@botpress/testing'
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { v4 as uuid } from 'uuid'
 import froth from './mocha-froth'

@@ -1,4 +1,4 @@
-import { setupPostgres } from '@botpress/base-test/src'
+import { setupPostgres } from '@botpress/testing'
 
 const setup = async () => {
   // Only setup PostgreSQL as we create the SQLite DBs manually during the tests

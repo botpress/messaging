@@ -1,4 +1,4 @@
-import { teardownDatabase, teardownServer } from '@botpress/base-test/src'
+import { teardownDatabase, teardownServer } from '@botpress/testing'
 
 const teardown = async () => {
   await teardownServer()

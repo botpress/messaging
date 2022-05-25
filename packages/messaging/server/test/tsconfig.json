@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "..",
     "paths": {
+      "@botpress/testing": ["../../../base/testing/src/index.ts"],
       "@botpress/base": ["../../../base/base/src/index.ts"],
       "@botpress/framework": ["../../../base/framework/src/index.ts"],
       "@botpress/engine": ["../../../base/engine/src/index.ts"],

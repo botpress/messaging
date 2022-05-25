@@ -1,5 +1,5 @@
-import { randStr } from '@botpress/base-test/src'
 import { Channel } from '@botpress/messaging-channels'
+import { randStr } from '@botpress/testing'
 import _ from 'lodash'
 import { validate as validateUuid } from 'uuid'
 import { ConduitService } from '../../src/conduits/service'
