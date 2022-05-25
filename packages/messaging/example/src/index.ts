@@ -1,3 +1,4 @@
+import './rewire'
 import clc from 'cli-color'
 import express, { Router } from 'express'
 import { App } from './app'
