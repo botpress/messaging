@@ -2,7 +2,7 @@
   // Manage references here
   "references": [
     {
-      "path": "../../base/base"
+      "path": "../channels"
     }
   ],
 
@@ -13,11 +13,8 @@
     "outDir": "dist",
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
-    // Specific settings for npm package
-    "target": "es6",
-    "declaration": true,
-    "sourceMap": false
+    "resolveJsonModule": true
   },
-  "include": ["src"],
+  "include": ["src", "src/**.json"],
   "exclude": ["dist"]
 }

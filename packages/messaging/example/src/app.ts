@@ -1,14 +1,16 @@
+import {
+  Channel,
+  MessengerChannel,
+  SlackChannel,
+  SmoochChannel,
+  TeamsChannel,
+  TelegramChannel,
+  TwilioChannel,
+  VonageChannel
+} from '@botpress/messaging-channels'
 import clc from 'cli-color'
 import { Router } from 'express'
 import Joi from 'joi'
-import { Channel } from '../src/base/channel'
-import { MessengerChannel } from '../src/messenger/channel'
-import { SlackChannel } from '../src/slack/channel'
-import { SmoochChannel } from '../src/smooch/channel'
-import { TeamsChannel } from '../src/teams/channel'
-import { TelegramChannel } from '../src/telegram/channel'
-import { TwilioChannel } from '../src/twilio/channel'
-import { VonageChannel } from '../src/vonage/channel'
 import payloads from './payloads.json'
 
 export class App {
