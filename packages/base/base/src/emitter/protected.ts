@@ -9,6 +9,10 @@ export class ProtectedEmitter<T extends { [key: string]: any }> extends BaseEmit
     return this.sealedOn(event, listener, pushBack)
   }
 
+  protected async emit<K extends keyof T>(event: K, arg: T[K]): Promise<boolean> {
+    return this.sealedEmit(event, arg)
+  }
+
   public removeListeners<K extends keyof T>(event: K) {
     this.listeners[event as number] = []
   }
