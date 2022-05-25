@@ -1,7 +1,7 @@
+import { Emitter } from '@botpress/base'
 import LRU from 'lru-cache'
 import ms from 'ms'
 import { ChannelStateManager } from '..'
-import { Emitter } from '../base/emitter'
 import { Endpoint } from '../base/endpoint'
 import { ChannelConfig } from './config'
 import { IndexChoiceOption, IndexChoiceType } from './context'

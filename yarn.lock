@@ -2581,6 +2581,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-channels@workspace:packages/messaging/channels"
   dependencies:
+    "@botpress/base": 1.2.0
     "@slack/bolt": ^3.11.0
     "@slack/web-api": ^6.7.1
     "@types/cli-color": ^2.0.2
