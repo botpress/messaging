@@ -1,5 +1,5 @@
+import { ImageContent } from '@botpress/messaging-content'
 import { ImageRenderer } from '../../base/renderers/image'
-import { ImageContent } from '../../content/types'
 import { SlackContext } from '../context'
 
 export class SlackImageRenderer extends ImageRenderer {

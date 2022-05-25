@@ -1,8 +1,8 @@
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '@botpress/messaging-content'
 import path from 'path'
 import { Markup } from 'telegraf'
 import { InlineKeyboardButton } from 'telegraf/typings/core/types/typegram'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
-import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '../../content/types'
 import { TelegramContext } from '../context'
 
 type Context = CarouselContext<TelegramContext> & {

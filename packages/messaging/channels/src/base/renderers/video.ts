@@ -1,4 +1,4 @@
-import { VideoContent } from '../../content/types'
+import { VideoContent } from '@botpress/messaging-content'
 import { ChannelContext } from '../context'
 import { ChannelRenderer } from '../renderer'
 

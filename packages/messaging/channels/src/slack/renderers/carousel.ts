@@ -1,7 +1,7 @@
+import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '@botpress/messaging-content'
 import { Button } from '@slack/bolt'
 import { v4 as uuidv4 } from 'uuid'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
-import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent } from '../../content/types'
 import { SlackContext } from '../context'
 
 export const POSTBACK_PREFIX = 'postback::'

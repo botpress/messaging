@@ -1,5 +1,5 @@
+import { FileContent } from '@botpress/messaging-content'
 import { FileRenderer } from '../../base/renderers/file'
-import { FileContent } from '../../content/types'
 import { MessengerContext } from '../context'
 
 export class MessengerFileRenderer extends FileRenderer {

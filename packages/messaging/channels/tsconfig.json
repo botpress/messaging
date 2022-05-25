@@ -3,6 +3,9 @@
   "references": [
     {
       "path": "../../base/base"
+    },
+    {
+      "path": "../content"
     }
   ],
 

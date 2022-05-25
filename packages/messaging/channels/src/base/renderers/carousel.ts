@@ -1,4 +1,3 @@
-import { ChannelRenderer } from '../../base/renderer'
 import {
   ActionOpenURL,
   ActionPostback,
@@ -6,7 +5,8 @@ import {
   ButtonAction,
   CardContent,
   CarouselContent
-} from '../../content/types'
+} from '@botpress/messaging-content'
+import { ChannelRenderer } from '../../base/renderer'
 import { ChannelContext } from '../context'
 
 export interface CarouselContext<T extends ChannelContext<any>> {

@@ -1,6 +1,12 @@
+import {
+  ActionOpenURL,
+  ActionPostback,
+  ActionSaySomething,
+  CardContent,
+  CarouselContent
+} from '@botpress/messaging-content'
 import { Attachment, AttachmentLayoutTypes, CardAction, CardFactory } from 'botbuilder'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
-import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../content/types'
 import { TeamsContext } from '../context'
 
 export const POSTBACK_PREFIX = 'postback::'

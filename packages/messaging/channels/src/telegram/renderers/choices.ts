@@ -1,6 +1,6 @@
+import { ChoiceContent } from '@botpress/messaging-content'
 import { Markup } from 'telegraf'
 import { ChoicesRenderer } from '../../base/renderers/choices'
-import { ChoiceContent } from '../../content/types'
 import { TelegramContext } from '../context'
 
 export class TelegramChoicesRenderer extends ChoicesRenderer {

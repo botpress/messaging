@@ -1,6 +1,6 @@
+import { ChoiceContent } from '@botpress/messaging-content'
 import { v4 as uuidv4 } from 'uuid'
 import { ChoicesRenderer } from '../../base/renderers/choices'
-import { ChoiceContent } from '../../content/types'
 import { SlackContext } from '../context'
 
 export const QUICK_REPLY_PREFIX = 'quick_reply::'

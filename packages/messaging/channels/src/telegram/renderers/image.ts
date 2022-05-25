@@ -1,6 +1,6 @@
+import { ImageContent } from '@botpress/messaging-content'
 import path from 'path'
 import { ImageRenderer } from '../../base/renderers/image'
-import { ImageContent } from '../../content/types'
 import { TelegramContext } from '../context'
 
 export class TelegramImageRenderer extends ImageRenderer {

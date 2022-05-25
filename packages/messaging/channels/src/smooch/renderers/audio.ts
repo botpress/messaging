@@ -1,5 +1,5 @@
+import { AudioContent } from '@botpress/messaging-content'
 import { AudioRenderer } from '../../base/renderers/audio'
-import { AudioContent } from '../../content/types'
 import { SmoochContext } from '../context'
 
 export class SmoochAudioRenderer extends AudioRenderer {

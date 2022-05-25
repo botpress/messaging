@@ -1,6 +1,6 @@
+import { ChoiceContent, ChoiceOption } from '@botpress/messaging-content'
 import { IndexChoiceType } from '../../base/context'
 import { ChoicesRenderer } from '../../base/renderers/choices'
-import { ChoiceContent, ChoiceOption } from '../../content/types'
 import { TwilioContext } from '../context'
 
 export class TwilioChoicesRenderer extends ChoicesRenderer {

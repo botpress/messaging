@@ -1,5 +1,5 @@
+import { AudioContent } from '@botpress/messaging-content'
 import { ChannelRenderer } from '../../base/renderer'
-import { AudioContent } from '../../content/types'
 import { ChannelContext } from '../context'
 
 export abstract class AudioRenderer implements ChannelRenderer<any> {

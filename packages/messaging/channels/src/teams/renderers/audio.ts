@@ -1,5 +1,5 @@
+import { AudioContent } from '@botpress/messaging-content'
 import { AudioRenderer } from '../../base/renderers/audio'
-import { AudioContent } from '../../content/types'
 import { TeamsContext } from '../context'
 
 export class TeamsAudioRenderer extends AudioRenderer {

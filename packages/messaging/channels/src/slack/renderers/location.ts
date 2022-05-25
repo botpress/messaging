@@ -1,5 +1,5 @@
+import { LocationContent } from '@botpress/messaging-content'
 import { LocationRenderer } from '../../base/renderers/location'
-import { LocationContent } from '../../content/types'
 import { SlackContext } from '../context'
 
 export class SlackLocationRenderer extends LocationRenderer {
