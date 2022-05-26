@@ -98,6 +98,7 @@
   },
   "packageManager": "yarn@3.2.1",
   "alias": {
+    "@botpress/base": "@botpress/base/src",
     "@botpress/chat": "@botpress/chat/src",
     "@botpress/chat-skin": "@botpress/chat-skin/src",
     "@botpress/common": "@botpress/common/src",
