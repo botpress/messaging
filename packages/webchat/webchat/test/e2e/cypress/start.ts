@@ -1,4 +1,4 @@
-import { setupServer, teardownServer, runCommand } from '@botpress/testing'
+import { setupServer, teardownServer, runCommand } from '@botpress/testing/src'
 import path from 'path'
 import portfinder from 'portfinder'
 
