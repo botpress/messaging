@@ -1,6 +1,6 @@
-import { sleep } from '@botpress/base-test/src'
 import { Client } from '@botpress/framework'
 import { Conversation, User } from '@botpress/messaging-base'
+import { sleep } from '@botpress/testing'
 import { validate as validateUuid } from 'uuid'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'

@@ -1,4 +1,4 @@
-import { getTestDataPath } from '@botpress/base-test/src'
+import { getTestDataPath } from '@botpress/testing'
 import fs from 'fs'
 import knex, { Knex } from 'knex'
 import schemaInspector from 'knex-schema-inspector'

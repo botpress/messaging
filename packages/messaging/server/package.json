@@ -12,7 +12,7 @@
     "dev": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts"
   },
   "devDependencies": {
-    "@botpress/base-test": "0.0.1",
+    "@botpress/testing": "1.0.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/cli-color": "^2.0.2",
     "@types/cors": "^2.8.12",

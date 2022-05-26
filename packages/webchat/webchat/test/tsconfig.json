@@ -15,7 +15,7 @@
     "types": ["cypress", "node"],
 
     "paths": {
-      "@botpress/base-test": ["../../../base/test/src/index.ts"]
+      "@botpress/testing": ["../../../base/testing/src/index.ts"]
     }
   },
   "include": ["../test/**/*", "../src"]

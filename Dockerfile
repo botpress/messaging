@@ -1,4 +1,4 @@
-FROM node:16.13.2-alpine AS build
+FROM node:16.15.0-alpine AS build
 
 ADD . /messaging
 
@@ -7,7 +7,7 @@ WORKDIR /messaging
 RUN yarn --immutable
 RUN yarn workspace @botpress/messaging-server build
 
-FROM node:16.13.2-alpine
+FROM node:16.15.0-alpine
 
 WORKDIR /messaging
 
