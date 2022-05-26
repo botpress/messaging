@@ -5,6 +5,7 @@
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
   "scripts": {
+    "dev:electron": "concurrently -n FE,BE,EL -c cyan,yellow,magenta -P \"yarn workspace @botpress/studio-ui dev\" \"yarn workspace @botpress/studio-be dev -d {1}\" \"wait-on http://localhost:1234 && yarn workspace @botpress/studio-electron start\"",
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
     "clean": "mkdirp packages/messaging/server/dist && rimraf packages/*/*/dist test/.test-data",
@@ -53,6 +54,8 @@
     "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
+    "@vercel/ncc": "0.34.0",
+    "concurrently": "^7.2.1",
     "conventional-changelog": "^3.1.25",
     "copyfiles": "^2.4.1",
     "core-js": "^3.22.4",
@@ -87,6 +90,7 @@
     "ts-node-dev": "^1.1.8",
     "typescript": "~4.6.4",
     "uuid": "^8.3.2",
+    "wait-on": "6.0.1",
     "yargs": "^17.4.1"
   },
   "private": true,
