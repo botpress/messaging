@@ -3,12 +3,13 @@
   "version": "0.0.1",
   "license": "AGPL-3.0",
   "scripts": {
-    "build": "yarn && yarn run -T parcel build src/index.html",
-    "watch": "yarn && yarn run -T parcel watch src/index.html",
-    "dev": "yarn && yarn run -T parcel src/index.html",
-    "build:tsc": "yarn run -T tsc --build",
+    "build": "yarn && yarn clean && yarn run -T parcel build src/index.html --public-url ./",
+    "watch": "yarn && yarn clean && yarn run -T parcel watch src/index.html --public-url ./",
+    "dev": "yarn && yarn clean && yarn run -T parcel src/index.html",
+    "build:tsc": "yarn clean && yarn run -T tsc --build",
     "start:storybook": "yarn run -T start-storybook -p 6006 -c story/config",
-    "build:storybook": "yarn run -T build-storybook -c story/config"
+    "build:storybook": "yarn run -T build-storybook -c story/config",
+    "clean": "rimraf dist"
   },
   "devDependencies": {
     "@parcel/config-default": "2.2.1",
@@ -20,6 +21,7 @@
     "@storybook/addon-storysource": "^6.4.22",
     "@storybook/react": "^6.4.22",
     "@types/classnames": "^2.3.1",
+    "@types/history": "^4.7.5",
     "@types/json-schema": "^7.0.11",
     "@types/lodash": "^4.14.182",
     "@types/mime-types": "^2.1.1",
