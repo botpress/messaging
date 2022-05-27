@@ -1,17 +1,20 @@
 {
   "name": "@botpress/studio-electron",
   "version": "0.0.1",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "source": "src/index.ts",
   "license": "AGPL-3.0",
   "scripts": {
     "build": "yarn && yarn run -T ncc build src/index.ts -o dist -e electron",
-    "start": "yarn build && NODE_OPTIONS=\"\" electron ./dist/index.js"
+    "watch": "yarn && yarn run -T ncc build -w src/index.ts -m -o dist -e electron",
+    "start": "yarn build && NODE_OPTIONS=\"\" electron ./dist/index.js",
+    "package": "rimraf lib && mkdirp lib && yarn workspace @botpress/studio-ui build && ncp ../frontend/dist lib && yarn workspace @botpress/studio-be build:ncc && ncp ../server/dist/index.js lib/server.js && yarn build && ncp dist lib && ncp package.json lib/package.json && yarn electron-packager lib botpress-studio --overwrite --out bin"
   },
   "devDependencies": {
     "@types/node": "^16.11.33",
-    "@types/uuid": "8.3.4"
+    "@types/uuid": "8.3.4",
+    "electron-packager": "^15.5.1",
+    "mkdirp": "^1.0.4",
+    "ncp": "^2.0.0",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "electron": "^18.2.0",

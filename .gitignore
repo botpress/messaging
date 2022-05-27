@@ -22,3 +22,4 @@ test/cypress/downloads
 lib
 node_modules
 .DS_Store
+bin

@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "AGPL-3.0",
   "scripts": {
+    "build:ncc": "yarn build && yarn run -T rimraf dist && yarn run -T ncc build src/index.ts -o dist -e electron",
     "build": "yarn && yarn run -T tsc --build",
     "build:tsc": "yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",

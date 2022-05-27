@@ -1,24 +1,28 @@
 import { app, BrowserWindow } from 'electron'
-import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 
+if (app.isPackaged) {
+  require('./server.js')
+}
+
 const id = uuidv4()
-// eslint-disable-next-line no-console
-console.log('test external dep : ', id)
+console.log('bonjour', id)
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
+    height: 600
   })
 
-  void mainWindow.loadURL('http://localhost:1234/studio/gggg')
+  if (app.isPackaged) {
+    void mainWindow.loadFile('index.html')
+  } else {
+    void mainWindow.loadURL('http://localhost:1234')
+  }
 
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
+
 void app.whenReady().then(() => {
   createWindow()
 
