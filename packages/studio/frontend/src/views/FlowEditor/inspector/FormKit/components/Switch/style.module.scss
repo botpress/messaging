@@ -1,34 +1,43 @@
 @use '~/src/scss/style.scss' as *;
 @use '../../shared/styles/layout.module.scss' as *;
 
-.switch {
+// Triple class name required to overwrite Blueprintjs styles
+// This is due to css specificity
+.switch.switch.switch {
   @extend .leftBtn;
   margin: auto 0;
   width: min-content;
-}
+  cursor: pointer;
 
-#check {
-  @extend %transition-all-75;
-
-  &:checked ~ span {
-    background: $cobalt4;
-
-    &:hover {
-      background: $cobalt3;
+  &:hover {
+    span {
+      background: $cobalt4;
     }
   }
 
-  &:focus ~ span {
-    outline: 1px solid $cobalt4;
-    outline-offset: 0.5px;
-  }
+  input[type='checkbox'] {
+    @extend %transition-all-75;
 
-  & ~ span {
-    outline-width: 0px;
-    background: $light-gray3;
+    &:checked ~ span {
+      background: $cobalt3;
 
-    &:hover {
-      background: $light-gray1;
+      &:hover {
+        background: $cobalt4;
+      }
+    }
+
+    &:focus ~ span {
+      outline: 1px solid $cobalt4;
+      outline-offset: 0.5px;
+    }
+
+    & ~ span {
+      outline-width: 0px;
+      background: $light-gray3;
+
+      &:hover {
+        background: $light-gray1;
+      }
     }
   }
 }
