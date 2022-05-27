@@ -1,4 +1,4 @@
-import { createBrowserHistory } from 'history'
+import { createHashHistory, History } from 'history'
 import queryString from 'query-string'
 import React from 'react'
 import ReactGA from 'react-ga'
@@ -10,13 +10,13 @@ import injectSegment from '../../util/InjectSegment'
 
 // react-router doesn't do query parsing anymore since V4
 // https://github.com/ReactTraining/react-router/issues/4410
-const addLocationQuery = (history) => {
+const addLocationQuery = (history: History<unknown>) => {
   history.location = Object.assign(history.location, {
     query: queryString.parse(history.location.search)
   })
 }
 
-export const history = createBrowserHistory({ basename: window.BP_BASE_PATH + '/' })
+export const history = createHashHistory({ basename: window.BP_BASE_PATH + '/' })
 addLocationQuery(history)
 history.listen(() => {
   addLocationQuery(history)

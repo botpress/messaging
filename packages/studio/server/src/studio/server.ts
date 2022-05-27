@@ -4,7 +4,6 @@ import bodyParser from 'body-parser'
 
 import compression from 'compression'
 import cors from 'cors'
-import errorHandler from 'errorhandler'
 import express from 'express'
 import { createServer, Server } from 'http'
 import { createProxyMiddleware, fixRequestBody } from 'http-proxy-middleware'
@@ -40,10 +39,6 @@ export class HTTPServer {
 
   constructor(private logger: Logger) {
     this.app = express()
-
-    if (!process.IS_PRODUCTION) {
-      this.app.use(errorHandler())
-    }
 
     if (process.core_env.REVERSE_PROXY) {
       const boolVal = yn(process.core_env.REVERSE_PROXY)
