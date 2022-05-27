@@ -1,4 +1,5 @@
-import { Message, uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/base'
+import { Message } from '@botpress/messaging-base'
 
 /**
  * Generic interface for all events that concern a messaging user

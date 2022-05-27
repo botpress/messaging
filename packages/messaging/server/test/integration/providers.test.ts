@@ -1,7 +1,8 @@
+import { randStr } from '@botpress/testing'
 import { validate as validateUuid } from 'uuid'
 import { ProviderService } from '../../src/providers/service'
 import { Provider } from '../../src/providers/types'
-import { app, destroyApp, randStr, setupApp } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 describe('Providers', () => {
   let providers: ProviderService

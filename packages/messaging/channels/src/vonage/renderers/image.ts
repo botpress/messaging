@@ -1,5 +1,5 @@
+import { ImageContent } from '@botpress/messaging-content'
 import { ImageRenderer } from '../../base/renderers/image'
-import { ImageContent } from '../../content/types'
 import { VonageContext } from '../context'
 
 export class VonageImageRenderer extends ImageRenderer {

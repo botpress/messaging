@@ -1,5 +1,5 @@
+import { AudioContent } from '@botpress/messaging-content'
 import { AudioRenderer } from '../../base/renderers/audio'
-import { AudioContent } from '../../content/types'
 import { TwilioContext } from '../context'
 
 export class TwilioAudioRenderer extends AudioRenderer {

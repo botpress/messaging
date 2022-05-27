@@ -1,7 +1,5 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid, Logger, Service, ClientService } from '@botpress/framework'
 import { Endpoint } from '@botpress/messaging-channels'
-import { Logger, Service } from '@botpress/messaging-engine'
-import { ClientService } from '@botpress/messaging-framework'
 import { validate as uuidValidate } from 'uuid'
 import { MappingService } from '../../mapping/service'
 import { InstanceMessagingService } from '../messaging/service'

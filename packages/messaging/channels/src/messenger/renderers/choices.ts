@@ -1,5 +1,5 @@
+import { ChoiceContent } from '@botpress/messaging-content'
 import { ChoicesRenderer } from '../../base/renderers/choices'
-import { ChoiceContent } from '../../content/types'
 import { MessengerContext } from '../context'
 
 export class MessengerChoicesRenderer extends ChoicesRenderer {

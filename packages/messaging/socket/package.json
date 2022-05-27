@@ -14,15 +14,21 @@
     "dist"
   ],
   "devDependencies": {
-    "@types/jest": "^27.4.0",
-    "@types/lodash": "^4.14.178",
-    "@types/node": "^16.11.13",
+    "@botpress/testing": "1.0.0",
+    "@types/jest": "^27.5.0",
+    "@types/jest-dev-server": "^5.0.0",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^16.11.33",
     "@types/uuid": "^8.3.4",
+    "jest-dev-server": "^6.0.3",
     "lodash": "^4.17.21",
+    "portfinder": "^1.0.28",
+    "ts-node": "^10.7.0",
     "uuid": "^8.3.2"
   },
   "dependencies": {
+    "@botpress/base": "1.2.0",
     "@botpress/messaging-base": "1.2.0",
-    "socket.io-client": "^4.4.1"
+    "socket.io-client": "^4.5.0"
   }
 }

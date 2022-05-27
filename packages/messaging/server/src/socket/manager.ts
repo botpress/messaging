@@ -1,6 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import { Logger } from '@botpress/messaging-engine'
-import { ClientService } from '@botpress/messaging-framework'
+import { uuid, Logger, ClientService } from '@botpress/framework'
 import clc from 'cli-color'
 import { Server } from 'http'
 import Joi from 'joi'
@@ -24,10 +22,6 @@ export class SocketManager {
   ) {}
 
   async setup(server: Server) {
-    if (yn(process.env.DISABLE_SOCKETS)) {
-      return
-    }
-
     this.ws = new Socket.Server(server, { serveClient: false, cors: { origin: '*' } })
     this.ws.use(this.handleSocketAuthentication.bind(this))
     this.ws.on('connection', this.handleSocketConnection.bind(this))

@@ -1,12 +1,12 @@
-import { uuid } from '@botpress/messaging-base'
 import {
+  uuid,
   CachingService,
   CryptoService,
   DatabaseService,
   ServerCache,
   ServerCache2D,
   Service
-} from '@botpress/messaging-engine'
+} from '@botpress/framework'
 import Joi from 'joi'
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'

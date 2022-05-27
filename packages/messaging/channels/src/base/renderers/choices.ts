@@ -1,5 +1,5 @@
+import { ChoiceContent } from '@botpress/messaging-content'
 import { ChannelRenderer } from '../../base/renderer'
-import { ChoiceContent } from '../../content/types'
 import { ChannelContext } from '../context'
 
 export abstract class ChoicesRenderer implements ChannelRenderer<any> {

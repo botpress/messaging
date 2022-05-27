@@ -12,7 +12,11 @@
 
     // be explicit about types included
     // to avoid clashing with Jest types
-    "types": ["cypress"]
+    "types": ["cypress", "node"],
+
+    "paths": {
+      "@botpress/testing": ["../../../base/testing/src/index.ts"]
+    }
   },
   "include": ["../test/**/*", "../src"]
 }

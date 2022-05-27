@@ -1,6 +1,12 @@
+import {
+  ActionOpenURL,
+  ActionPostback,
+  ActionSaySomething,
+  CardContent,
+  CarouselContent
+} from '@botpress/messaging-content'
 import { IndexChoiceOption, IndexChoiceType } from '../../base/context'
 import { CarouselRenderer, CarouselContext } from '../../base/renderers/carousel'
-import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../content/types'
 import { VonageContext } from '../context'
 
 type Context = CarouselContext<VonageContext> & {

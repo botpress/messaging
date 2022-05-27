@@ -4,6 +4,7 @@
 **/.parcel-cache
 **/.cache
 **/test
+!packages/*/test
 **/dist
 **/story
 

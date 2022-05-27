@@ -1,4 +1,4 @@
-import { asyncMiddleware, AsyncMiddleware, gaId } from '@botpress/common'
+import { asyncMiddleware, AsyncMiddleware, gaId, machineUUID } from '@botpress/common'
 import { Logger } from '@botpress/sdk'
 import express, { RequestHandler, Router } from 'express'
 import rewrite from 'express-urlrewrite'
@@ -16,6 +16,7 @@ import MediaRouter from './media/media-router'
 import { NLURouter, NLUService } from './nlu'
 import { QNARouter } from './qna'
 import { HTTPServer } from './server'
+import { TestingRouter } from './testing'
 
 export interface StudioServices {
   logger: Logger
@@ -48,7 +49,7 @@ export class StudioRouter extends CustomRouter {
   private configRouter: ConfigRouter
   private nluRouter: NLURouter
   private qnaRouter: QNARouter
-  // private testingRouter: TestingRouter
+  private testingRouter: TestingRouter
   private manageRouter: ManageRouter
   private codeEditorRouter: CodeEditorRouter
   private cloudRouter: CloudRouter
@@ -70,7 +71,7 @@ export class StudioRouter extends CustomRouter {
     this.configRouter = new ConfigRouter(studioServices)
     this.nluRouter = new NLURouter(studioServices)
     this.qnaRouter = new QNARouter(studioServices)
-    // this.testingRouter = new TestingRouter(studioServices)
+    this.testingRouter = new TestingRouter(studioServices)
     this.manageRouter = new ManageRouter(studioServices)
     this.codeEditorRouter = new CodeEditorRouter(studioServices)
     this.cloudRouter = new CloudRouter(studioServices)
@@ -84,7 +85,7 @@ export class StudioRouter extends CustomRouter {
     this.configRouter.setupRoutes()
     this.nluRouter.setupRoutes()
     this.qnaRouter.setupRoutes()
-    // this.testingRouter.setupRoutes()
+    this.testingRouter.setupRoutes()
     this.manageRouter.setupRoutes()
     this.codeEditorRouter.setupRoutes()
     this.cloudRouter.setupRoutes()
@@ -110,7 +111,7 @@ export class StudioRouter extends CustomRouter {
     this.router.use('/cms', this.checkTokenHeader, this.cmsRouter.router)
     this.router.use('/nlu', this.checkTokenHeader, this.nluRouter.router)
     this.router.use('/qna', this.checkTokenHeader, this.qnaRouter.router)
-    // this.router.use('/testing', this.checkTokenHeader, this.testingRouter.router)
+    this.router.use('/testing', this.checkTokenHeader, this.testingRouter.router)
     this.router.use('/flows', this.checkTokenHeader, this.flowsRouter.router)
     this.router.use('/oldflows', this.checkTokenHeader, this.flowsRouter.router)
     this.router.use('/media', this.mediaRouter.router)
@@ -134,7 +135,14 @@ export class StudioRouter extends CustomRouter {
 
         const favicon = 'assets/ui-studio/public/img/favicon.png'
 
-        const commonEnv = await this.httpServer.getCommonEnv()
+        const commonEnv = {
+          SEND_USAGE_STATS: true, //should we make this configurable ?
+          USE_JWT_COOKIES: false, //not sure why we would want that
+          SHOW_POWERED_BY: true, //should this exist ?
+          UUID: await machineUUID(),
+          BP_SERVER_URL: process.env.BP_SERVER_URL || '',
+          IS_STANDALONE: true
+        }
 
         const segmentWriteKey = process.core_env.BP_DEBUG_SEGMENT
           ? 'OzjoqVagiw3p3o1uocuw6kd2YYjm6CHi' // Dev key from Segment
@@ -157,7 +165,6 @@ export class StudioRouter extends CustomRouter {
           IS_BOT_MOUNTED: true,
           IS_CLOUD_BOT: true,
           SEGMENT_WRITE_KEY: segmentWriteKey,
-          IS_PRO_ENABLED: process.IS_PRO_ENABLED,
           NLU_ENDPOINT: process.NLU_ENDPOINT,
           BP_SOCKET_URL: host
         }

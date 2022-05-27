@@ -1,6 +1,6 @@
+import { AudioContent } from '@botpress/messaging-content'
 import path from 'path'
 import { AudioRenderer } from '../../base/renderers/audio'
-import { AudioContent } from '../../content/types'
 import { TelegramContext } from '../context'
 
 export class TelegramAudioRenderer extends AudioRenderer {

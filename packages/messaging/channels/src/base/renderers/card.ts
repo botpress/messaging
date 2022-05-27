@@ -1,5 +1,5 @@
+import { CardContent } from '@botpress/messaging-content'
 import { ChannelRenderer } from '../../base/renderer'
-import { CardContent } from '../../content/types'
 import { ChannelContext } from '../context'
 
 export class CardToCarouselRenderer implements ChannelRenderer<ChannelContext<any>> {

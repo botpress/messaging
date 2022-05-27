@@ -1,5 +1,5 @@
+import { VideoContent } from '@botpress/messaging-content'
 import { VideoRenderer } from '../../base/renderers/video'
-import { VideoContent } from '../../content/types'
 import { SmoochContext } from '../context'
 
 export class SmoochVideoRenderer extends VideoRenderer {

@@ -649,7 +649,10 @@ export interface BotConfig {
    */
   nluSeed?: number
   nluModels?: {
-    [lang: string]: string
+    [lang: string]: {
+      modelId: string
+      definitionHash: string
+    }
   }
   qna: {
     disabled: boolean

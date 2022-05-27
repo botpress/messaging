@@ -1,4 +1,4 @@
-import { ShutDownSignal } from '@botpress/messaging-engine'
+import { ShutDownSignal } from '@botpress/framework'
 
 export const handleShutDownSignal = async <T>(fn: () => PromiseLike<T>) => {
   try {

@@ -1,4 +1,4 @@
-import { Migration } from '@botpress/messaging-engine'
+import { Migration } from '@botpress/engine'
 import express, { Express } from 'express'
 import { Server } from 'http'
 import { AdminApiManager, ApiManager } from './base/api-manager'

@@ -1,13 +1,25 @@
 {
   // Manage references here
-  "references": [],
+  "references": [
+    {
+      "path": "../../base/base"
+    },
+    {
+      "path": "../content"
+    }
+  ],
 
   // Defaults (don't change this)
   "extends": "../../../tsconfig.packages.json",
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
-    "tsBuildInfoFile": "dist/.tsbuildinfo"
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+
+    // Specific settings for npm package
+    "target": "es6",
+    "declaration": true,
+    "sourceMap": false
   },
   "include": ["src"],
   "exclude": ["dist"]

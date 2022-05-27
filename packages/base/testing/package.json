@@ -1,0 +1,27 @@
+{
+  "name": "@botpress/testing",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "yarn && yarn run -T tsc --build",
+    "watch": "yarn && yarn run -T tsc --build --watch"
+  },
+  "devDependencies": {
+    "@types/cli-color": "^2.0.2",
+    "@types/cwd": "~0.10.0",
+    "@types/node": "^16.11.13",
+    "@types/uuid": "^8.3.4",
+    "@types/wait-on": "^5.3.1",
+    "cli-color": "^2.0.2",
+    "cwd": "~0.10.0",
+    "docker-compose": "^0.23.17",
+    "knex": "^0.95.15",
+    "pg": "^8.7.1",
+    "tree-kill": "^1.2.2",
+    "uuid": "^8.3.2",
+    "wait-on": "^6.0.1"
+  }
+}

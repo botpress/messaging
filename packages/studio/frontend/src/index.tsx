@@ -15,9 +15,9 @@ import { keyMap } from './components/Shared/utilities/keyboardShortcuts'
 import store from './store'
 import { initializeTranslations } from './translations'
 
-const STUDIO_API_URL = 'http://localhost:3000'
+window['STUDIO_API_URL'] = 'http://localhost:3300'
 
-void axios.get<object>(`${STUDIO_API_URL}${window.location.pathname}/env`).then((d) => {
+void axios.get<object>(`${window['STUDIO_API_URL']}${window.location.pathname}/env`).then((d) => {
   for (const [key, value] of Object.entries(d.data)) {
     window[key] = value
   }

@@ -1,9 +1,11 @@
 import { NLUProgressEvent, Training as BpTraining } from '@botpress/common'
 import { Specifications as StanSpecifications } from '@botpress/nlu-client'
-import { Logger } from '@botpress/sdk'
+import { BotConfig, Logger } from '@botpress/sdk'
 
 import _ from 'lodash'
+import path from 'path'
 import yn from 'yn'
+
 import { AppLifecycle, AppLifecycleEvents } from '../../lifecycle'
 import { GlobalEvents, StudioEvents } from '../../studio/events'
 import { Instance } from '../../studio/utils/bpfs'
@@ -16,7 +18,6 @@ import { BotNotMountedError, NLUServiceNotInitializedError } from './errors'
 import { IntentRepository } from './intent-repo'
 import { ModelEntryRepository } from './model-entry'
 import { NLUClient } from './nlu-client'
-import { BotConfig } from './typings'
 
 interface ServerInfo {
   specs: StanSpecifications
@@ -46,20 +47,17 @@ export class NLUService {
   }
 
   public async initialize() {
-    // if (!process.NLU_ENDPOINT) {
-    //   throw new Error('NLU Service expects variable "NLU_ENDPOINT" to be set.')
-    // }
-
     const queueTrainingOnBotMount = false
     const trainingEnabled = !yn(process.env.BP_NLU_DISABLE_TRAINING)
 
     const baseClient = new NLUClient({
-      baseURL: CLOUD_NLU_ENDPOINT // process.NLU_ENDPOINT
+      baseURL: CLOUD_NLU_ENDPOINT
     })
 
     const socket = this._getWebsocket()
 
     const modelRepo = new ModelEntryRepository()
+    await modelRepo.initialize()
 
     const defRepo = new DefinitionsRepository(this.entities, this.intents)
     const botFactory = new BotFactory(this._logger, defRepo, modelRepo, socket, CLOUD_NLU_ENDPOINT)
@@ -98,7 +96,6 @@ export class NLUService {
     }
 
     const botConfig: BotConfig = await Instance.readFile('bot.config.json').then((buf) => JSON.parse(buf.toString()))
-
     const bot = await this._app.botFactory.makeBot(botConfig)
     this._bots[botId] = bot
     return bot.mount({
@@ -148,29 +145,26 @@ export class NLUService {
   }
 
   public async downloadAndSaveModelWeights(botId: string) {
-    // TODO: reimpl this
-    /*
     const bot = this._bots[botId]
     if (!bot) {
       throw new BotNotMountedError(botId)
     }
 
-    const botConfig = await this.configProvider.getBotConfig(botId)
+    const botConfig: BotConfig = await Instance.readFile('bot.config.json').then((buf) => JSON.parse(buf.toString()))
 
     if (!botConfig.nluModels) {
       throw new Error('Missing NLU models. Bot is not trained.')
     }
 
     const modelsFolder = 'models'
-    await this.ghost.forBot(botId).deleteFolder(modelsFolder)
+    await Instance.deleteDir(modelsFolder)
 
     for (const lang of Object.keys(botConfig.nluModels)) {
-      const modelId = botConfig.nluModels[lang]
+      const modelId = botConfig.nluModels[lang].modelId
       const modelWeights = await bot.downloadModelWeights(botId, modelId)
 
-      await this.ghost.forBot(botId).upsertFile(modelsFolder, `${modelId}.model`, modelWeights)
+      await Instance.upsertFile(path.join(modelsFolder, `${modelId}.model`), modelWeights)
     }
-    */
   }
 
   private _getWebsocket = () => {

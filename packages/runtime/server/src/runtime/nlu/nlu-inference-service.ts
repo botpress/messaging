@@ -106,7 +106,7 @@ export class NLUInferenceService {
     }
 
     const { includedContexts, utterance, language } = args
-    const skipSpellcheck: boolean = args.skipSpellcheck ?? yn(process.env.NLU_SKIP_SPELLCHECK)
+    const skipSpellcheck: boolean = args.skipSpellcheck ?? (yn(process.env.NLU_SKIP_SPELLCHECK) || false)
     const t0 = Date.now()
 
     const predOutput = await bot.predict(utterance, language)
@@ -124,11 +124,12 @@ export class NLUInferenceService {
     return naturalElection(electionInput)
   }
 
-  private _modelIdGetter = (botId: string) => async (): Promise<{ [key: string]: string }> => {
-    // TODO: implement some caching to prevent from reading bot config at each predict
-    const botConfig = await this.configProvider.getBotConfig(botId)
-    return botConfig.nluModels ?? {}
-  }
+  private _modelIdGetter =
+    (botId: string) => async (): Promise<{ [key: string]: { modelId: string; definitionHash: string } }> => {
+      // TODO: implement some caching to prevent from reading bot config at each predict
+      const botConfig = await this.configProvider.getBotConfig(botId)
+      return botConfig.nluModels ?? {}
+    }
 
   private handleIncomingEvent = async (event: IO.Event, next: IO.MiddlewareNextCallback) => {
     const incomingEvent = event as IO.IncomingEvent

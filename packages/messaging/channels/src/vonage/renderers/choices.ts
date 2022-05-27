@@ -1,6 +1,6 @@
+import { ChoiceContent } from '@botpress/messaging-content'
 import { IndexChoiceType } from '../../base/context'
 import { ChoicesRenderer } from '../../base/renderers/choices'
-import { ChoiceContent } from '../../content/types'
 import { VonageContext } from '../context'
 
 export class VonageChoicesRenderer extends ChoicesRenderer {

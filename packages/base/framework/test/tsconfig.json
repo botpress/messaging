@@ -1,0 +1,12 @@
+{
+  "extends": "../../../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "paths": {
+      "@botpress/testing": ["../../testing/src/index.ts"],
+      "@botpress/base": ["../../base/src/index.ts"],
+      "@botpress/engine": ["../../engine/src/index.ts"]
+    }
+  },
+  "include": ["../test/**/*", "../src/**/*"]
+}

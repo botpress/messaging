@@ -1,10 +1,11 @@
-import { Conversation, User } from '@botpress/messaging-base/src'
-import { Client } from '@botpress/messaging-framework'
+import { Client } from '@botpress/framework'
+import { Conversation, User } from '@botpress/messaging-base'
+import { sleep } from '@botpress/testing'
 import { validate as validateUuid } from 'uuid'
 import { ConversationService } from '../../src/conversations/service'
 import { MessageService } from '../../src/messages/service'
 import { UserService } from '../../src/users/service'
-import { app, destroyApp, setupApp, sleep } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 describe('Conversations', () => {
   let conversations: ConversationService

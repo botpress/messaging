@@ -4,35 +4,10 @@ export interface BotpressEnvironmentVariables {
   readonly ROOT_PATH?: string
 
   readonly APP_SECRET?: string
-  readonly PRO_ENABLED?: boolean
   readonly INTERNAL_PASSWORD?: string
-
-  /** Replace the path of the NodeJS Native Extensions for external OS-specific libraries such as fastText and CRFSuite */
-  readonly NATIVE_EXTENSIONS_DIR?: string
-
-  /** Change the BPFS storage mechanism ("database" or "disk"). Defaults to "disk" */
-  readonly BPFS_STORAGE?: 'database' | 'disk'
 
   /** The URL exposed by Botpress to external users (eg: when displaying links) */
   readonly EXTERNAL_URL?: string
-
-  /**
-   * The connection string for redis
-   * @example redis://username:password@localhost:6379
-   */
-  readonly REDIS_URL?: string
-
-  /**
-   * The database connection string. The first part indicates which database to use
-   * @example postgres://user:pass@host/db
-   */
-  readonly DATABASE_URL?: string
-
-  /** When running botpress in production, some optimizations are applied */
-  readonly BP_PRODUCTION?: boolean
-
-  /** Enable cluster mode */
-  readonly CLUSTER_ENABLED?: boolean
 
   /**
    * Set this to true if you're exposing Botpress through a reverse proxy such as Nginx
@@ -58,9 +33,6 @@ export interface BotpressEnvironmentVariables {
    */
   readonly DEBUG?: string
 
-  /** Enable performance hooks to track incoming and outgoing events */
-  readonly BP_DEBUG_IO?: boolean
-
   /**
    * Overrides the auto-computed `process.APP_DATA_PATH` path
    * @see Process.APP_DATA_PATH
@@ -80,47 +52,10 @@ export interface BotpressEnvironmentVariables {
   readonly BP_MAX_MEMORY_CACHE_SIZE?: string
 
   /**
-   * When set to true, Botpress will not automatically restart on crash
-   * @default false
-   */
-  readonly BP_DISABLE_AUTO_RESTART?: boolean
-
-  /**
-   * Define the maximum number of time the server will be automatically restarted.
-   * @default 5
-   */
-  readonly BP_MAX_SERVER_REBOOT?: number
-
-  /**
-   * Disable API calls to the serverConfig endpoint (which may return sensitive data - only for super admins
-   * @default false
-   */
-  readonly BP_DISABLE_SERVER_CONFIG?: boolean
-
-  /**
-   * Disable API call to generate a diagnostic report. Command line/environment variables will still work
-   * @default false
-   */
-  readonly BP_DISABLE_SERVER_DIAG?: boolean
-
-  /**
    * Prevents Botpress from closing cleanly when an error is encountered.
    * This only affects fatal errors, it will not affect business rules checks (eg: licensing)
    */
   readonly BP_FAILSAFE?: boolean
-
-  /** When true, Redis will be used to keep active sessions in memory for better performances */
-  readonly USE_REDIS_STATE?: boolean
-
-  /** When true, content elements rendering will be executed outside of the sandbox */
-  readonly DISABLE_CONTENT_SANDBOX?: boolean
-
-  /**
-   * Indicates how many child process to spawn as Machibe Learning workers.
-   * Defaults to 4 if supported by CPU
-   * @default 4
-   */
-  readonly BP_NUM_ML_THREADS?: number
 
   /**
    * Overrides the maximum file size allowed for the BPFS
@@ -128,41 +63,13 @@ export interface BotpressEnvironmentVariables {
    */
   readonly BP_BPFS_MAX_FILE_SIZE?: string
 
-  /**
-   * Overrides the maximum concurrency for BPFS upload
-   * @default 50
-   */
-  readonly BP_BPFS_UPLOAD_CONCURRENCY?: number
-
-  /**
-   * Overwrites the modules that are enabled by default.
-   * Has to be formatted as JSON,
-   * ex: ['nlu', 'nlu-testing']
-   */
-  readonly BP_ENABLED_MODULES?: string
   readonly BP_DEBUG_SEGMENT?: boolean
 
   /*
    * endpoint of cloud controller API
    */
   readonly CLOUD_CONTROLLER_ENDPOINT?: string
-
-  /**
-   * Supports read-only deployments by allowing disabling file listeners
-   */
-  readonly CORE_DISABLE_FILE_LISTENERS?: boolean
 }
-
-export interface OSDistribution {
-  os: NodeJS.Platform
-  /** The distribution, e.g. "centos", "ubuntu" */
-  dist: string
-  /** If a codename is available, for example "final" or "alpine" */
-  codename: string
-  /** The release number, for example 18.04 */
-  release: string
-}
-
 export interface IDebug {
   (module: string, botId?: string): IDebugInstance
 }
@@ -191,9 +98,7 @@ declare global {
     export interface Process {
       VERBOSITY_LEVEL: number
       IS_PRODUCTION: boolean // TODO: look to remove this
-      BPFS_STORAGE: 'database' | 'disk'
       APP_SECRET: string
-      IS_STANDALONE: boolean
       /**
        * Path to the global APP DATA folder, shared across all installations of Botpress Server
        * Use this folder to store stuff you'd like to cache, like NLU language models etc
@@ -212,20 +117,10 @@ declare global {
       DATA_LOCATION: string
       LOADED_MODULES: { [module: string]: string }
       pkg: any
-      IS_LICENSED?: boolean
-      IS_PRO_AVAILABLE: boolean
-      IS_PRO_ENABLED: boolean
-      CLUSTER_ENABLED: boolean
       STUDIO_VERSION: string
-      BOTPRESS_VERSION: string
       TELEMETRY_URL: string
       core_env: BotpressEnvironmentVariables
-      distro: OSDistribution
       IS_FAILSAFE: boolean
-      DISABLE_CONTENT_SANDBOX: boolean
-      USE_JWT_COOKIES: boolean
-      /** This property is set when the binary is built in a branch other than master */
-      DEV_BRANCH?: string
       NLU_ENDPOINT?: string
       CLOUD_OAUTH_ENDPOINT: string
       CLOUD_CONTROLLER_ENDPOINT: string

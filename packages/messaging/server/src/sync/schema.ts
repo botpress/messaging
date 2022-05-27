@@ -1,5 +1,5 @@
+import { ReqSchema } from '@botpress/framework'
 import { Channel } from '@botpress/messaging-channels'
-import { ReqSchema } from '@botpress/messaging-framework'
 import Joi from 'joi'
 import yn from 'yn'
 

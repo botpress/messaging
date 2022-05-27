@@ -1,3 +1,4 @@
+import { getTestDataPath } from '@botpress/testing'
 import fs from 'fs'
 import knex, { Knex } from 'knex'
 import schemaInspector from 'knex-schema-inspector'
@@ -5,7 +6,7 @@ import { SchemaInspector } from 'knex-schema-inspector/dist/types/schema-inspect
 import { Table } from 'knex-schema-inspector/dist/types/table'
 import path from 'path'
 
-const sqlitePath = (suffix: string) => path.join(__dirname, './../../../../../../test/.test-data', `${suffix}.sqlite`)
+const sqlitePath = (suffix: string) => path.join(getTestDataPath(), `${suffix}.sqlite`)
 
 export const copyDatabase = async (from: string, to: string) => {
   const url = process.env.DATABASE_URL || sqlitePath(from)

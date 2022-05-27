@@ -54,7 +54,7 @@ export class RedisSubservice implements DistributedSubservice {
     try {
       await callback(message, channel)
     } catch (e) {
-      this.logger.error(e, 'Error occured in callback', channel)
+      this.logger.error(e, 'Error occurred in callback', channel)
     }
   }
 

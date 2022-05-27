@@ -1,12 +1,12 @@
 import {
+  ClientService,
   CachingService,
   DispatchService,
   DistributedService,
   Logger,
   LoggerService,
   Service
-} from '@botpress/messaging-engine'
-import { ClientService } from '@botpress/messaging-framework'
+} from '@botpress/framework'
 import { ChannelService } from '../channels/service'
 import { ConduitService } from '../conduits/service'
 import { ConversationService } from '../conversations/service'
@@ -78,14 +78,7 @@ export class InstanceService extends Service {
       this.lifetimes
     )
     this.clearing = new InstanceClearingService(caching, channels, providers, conduits, this.lifetimes, this.logger)
-    this.monitoring = new InstanceMonitoringService(
-      this.distributed,
-      this.channels,
-      this.conduits,
-      this.status,
-      this.lifetimes,
-      this.logger
-    )
+    this.monitoring = new InstanceMonitoringService(this.distributed, this.status, this.lifetimes, this.logger)
     this.sandbox = new InstanceSandboxService(this.clients, this.mapping, this.messaging)
   }
 

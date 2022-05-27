@@ -1,9 +1,10 @@
+import { Client } from '@botpress/framework'
 import { User } from '@botpress/messaging-base'
-import { Client } from '@botpress/messaging-framework'
+import { randStr } from '@botpress/testing'
 import { validate as validateUuid } from 'uuid'
 import { UserTokenService } from '../../src/user-tokens/service'
 import { UserToken } from '../../src/user-tokens/types'
-import { app, destroyApp, randStr, setupApp } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 describe('UserTokens', () => {
   let userTokens: UserTokenService

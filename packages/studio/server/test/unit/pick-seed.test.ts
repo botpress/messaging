@@ -1,6 +1,7 @@
+import { BotConfig } from '@botpress/sdk'
 import _ from 'lodash'
+
 import pickSeed from '../../src/studio/nlu/pick-seed'
-import { BotConfig } from '../../src/studio/nlu/typings'
 
 test('make seed with defined seed should not generate one', () => {
   const actual = pickSeed({ id: 'testy', nluSeed: 42 } as BotConfig)

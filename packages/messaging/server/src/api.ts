@@ -1,4 +1,4 @@
-import { AdminApiManager, ApiManager } from '@botpress/messaging-framework'
+import { AdminApiManager, ApiManager } from '@botpress/framework'
 import { Router } from 'express'
 import { App } from './app'
 import { ChannelApi } from './channels/api'

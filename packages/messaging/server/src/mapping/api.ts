@@ -1,5 +1,5 @@
+import { ApiManager, ClientApiRequest } from '@botpress/framework'
 import { Endpoint } from '@botpress/messaging-base'
-import { ApiManager, ClientApiRequest } from '@botpress/messaging-framework'
 import { Response } from 'express'
 import { ChannelService } from '../channels/service'
 import { ConversationService } from '../conversations/service'

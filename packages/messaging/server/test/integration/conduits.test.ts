@@ -1,10 +1,11 @@
 import { Channel } from '@botpress/messaging-channels'
+import { randStr } from '@botpress/testing'
 import _ from 'lodash'
 import { validate as validateUuid } from 'uuid'
 import { ConduitService } from '../../src/conduits/service'
 import { Conduit } from '../../src/conduits/types'
 import { Provider } from '../../src/providers/types'
-import { app, destroyApp, randStr, setupApp } from '../utils'
+import { app, destroyApp, setupApp } from '../utils'
 
 describe('Conduits', () => {
   let conduits: ConduitService

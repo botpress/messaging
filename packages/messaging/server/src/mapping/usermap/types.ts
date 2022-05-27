@@ -1,4 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
+import { uuid } from '@botpress/framework'
 
 export interface Usermap {
   tunnelId: uuid

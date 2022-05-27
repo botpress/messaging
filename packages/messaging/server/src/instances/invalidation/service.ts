@@ -1,6 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import { Service } from '@botpress/messaging-engine'
-import yn from 'yn'
+import { uuid, Service } from '@botpress/framework'
 import { ChannelService } from '../../channels/service'
 import { ConduitEvents } from '../../conduits/events'
 import { ConduitService } from '../../conduits/service'
@@ -10,8 +8,6 @@ import { StatusService } from '../../status/service'
 import { InstanceLifetimeService } from '../lifetime/service'
 
 export class InstanceInvalidationService extends Service {
-  private lazyLoadingEnabled!: boolean
-
   constructor(
     private channels: ChannelService,
     private providers: ProviderService,
@@ -23,8 +19,6 @@ export class InstanceInvalidationService extends Service {
   }
 
   async setup() {
-    this.lazyLoadingEnabled = !yn(process.env.NO_LAZY_LOADING)
-
     this.conduits.events.on(ConduitEvents.Created, this.onConduitCreated.bind(this))
     this.conduits.events.on(ConduitEvents.Deleting, this.onConduitDeleting.bind(this))
     this.conduits.events.on(ConduitEvents.Updated, this.onConduitUpdated.bind(this))
@@ -39,7 +33,7 @@ export class InstanceInvalidationService extends Service {
       await this.lifetimes.initialize(conduitId)
     }
 
-    if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
+    if (!channel.meta.lazy) {
       await this.lifetimes.start(conduit.id)
     }
   }
@@ -60,7 +54,7 @@ export class InstanceInvalidationService extends Service {
       await this.lifetimes.initialize(conduitId)
     }
 
-    if (!channel.meta.lazy || !this.lazyLoadingEnabled) {
+    if (!channel.meta.lazy) {
       await this.lifetimes.start(conduit.id)
     }
   }

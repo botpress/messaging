@@ -1,5 +1,11 @@
+import {
+  ActionOpenURL,
+  ActionPostback,
+  ActionSaySomething,
+  CardContent,
+  CarouselContent
+} from '@botpress/messaging-content'
 import { CarouselContext, CarouselRenderer } from '../../base/renderers/carousel'
-import { ActionOpenURL, ActionPostback, ActionSaySomething, CardContent, CarouselContent } from '../../content/types'
 import { MessengerContext } from '../context'
 import { MessengerButton, MessengerCard } from '../messenger'
 

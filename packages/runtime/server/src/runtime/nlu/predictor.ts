@@ -9,7 +9,7 @@ type EventUnderstanding = Omit<sdk.IO.EventUnderstanding, 'includedContexts' | '
 
 const isDefined = <T>(x: T | undefined): x is T => _.negate(_.isUndefined)(x)
 
-type ModelIdGetter = () => Promise<{ [lang: string]: string }>
+type ModelIdGetter = () => Promise<{ [lang: string]: { modelId: string; definitionHash: string } }>
 
 export class Predictor {
   constructor(
@@ -24,7 +24,7 @@ export class Predictor {
     const allModels = await this._modelIdGetter()
     const models = _(allModels)
       .toPairs()
-      .map(([lang, modelId]) => ({ lang, modelId }))
+      .map(([lang, model]) => ({ lang, modelId: model.modelId }))
       .value()
 
     let detectedLanguage: string | undefined

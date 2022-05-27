@@ -5,7 +5,6 @@ import clc from 'cli-color'
 import path from 'path'
 import yn from 'yn'
 import { Debug } from './debug'
-import getos from './getos'
 import { BotpressEnvironmentVariables } from './global'
 
 export function getAppDataPath() {
@@ -77,9 +76,6 @@ try {
     defaultVerbosity = Number(process.env.VERBOSITY_LEVEL)
   }
 
-  process.IS_PRO_AVAILABLE = true // TODO: fix this, pull from user profile
-  process.BPFS_STORAGE = process.core_env.BPFS_STORAGE || 'disk'
-
   const localCloud = yn(process.env.CLOUD_LOCAL)
   process.CLOUD_CONTROLLER_ENDPOINT =
     process.env.CLOUD_CONTROLLER_ENDPOINT ||
@@ -90,15 +86,12 @@ try {
   process.CLOUD_NLU_ENDPOINT =
     process.env.CLOUD_NLU_ENDPOINT || (localCloud ? 'http://localhost:3200' : 'https://nlu-builder.botpress.dev')
 
-  process.CLUSTER_ENABLED = yn(process.env.CLUSTER_ENABLED) || false
-  process.IS_PRO_ENABLED = yn(process.env.PRO_ENABLED) || yn(process.env['BP_CONFIG_PRO_ENABLED']) || false
   process.STUDIO_VERSION = '13.0.0'
-  process.BOTPRESS_VERSION = process.env.BOTPRESS_VERSION!
 
   require('yargs')
     .command(
       ['serve', '$0'],
-      'Start your botpress server',
+      'Start botpress studio server',
       {
         dataFolder: {
           alias: ['d', 'data'],
@@ -109,13 +102,8 @@ try {
       async (argv: any) => {
         if (process.env.BP_DATA_FOLDER) {
           process.DATA_LOCATION = process.env.BP_DATA_FOLDER
-          process.IS_STANDALONE = true
         } else if (argv.dataFolder) {
-          process.IS_STANDALONE = true // TODO: remove most of this
-          process.IS_PRO_ENABLED = false
-          process.BPFS_STORAGE = 'disk'
           process.IS_PRODUCTION = false
-          process.CLUSTER_ENABLED = false
 
           process.DATA_LOCATION = path.resolve(argv.dataFolder)
         } else {
@@ -126,7 +114,6 @@ try {
         }
 
         process.VERBOSITY_LEVEL = defaultVerbosity
-        process.distro = await getos()
 
         require('./bootstrap')
       }

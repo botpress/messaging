@@ -1,4 +1,4 @@
-import { Table } from '@botpress/messaging-engine'
+import { Table } from '@botpress/framework'
 import { Knex } from 'knex'
 
 export class UserTable extends Table {

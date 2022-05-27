@@ -1,5 +1,5 @@
+import { LocationContent } from '@botpress/messaging-content'
 import { ChannelRenderer } from '../../base/renderer'
-import { LocationContent } from '../../content/types'
 import { ChannelContext } from '../context'
 
 export abstract class LocationRenderer implements ChannelRenderer<any> {

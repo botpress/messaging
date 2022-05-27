@@ -1,4 +1,4 @@
-import { Logger, LoggerService, Service } from '@botpress/messaging-engine'
+import { Logger, LoggerService, Service } from '@botpress/framework'
 import axios from 'axios'
 import clc from 'cli-color'
 import ms from 'ms'
@@ -71,7 +71,7 @@ export class BillingService extends Service {
       stat.received = 0
 
       if (process.env.BILLING_ENDPOINT?.length) {
-        await axios.post(process.env.BILLING_ENDPOINT!, {
+        await axios.post(process.env.BILLING_ENDPOINT, {
           meta: {
             timestamp,
             sender: 'messaging',

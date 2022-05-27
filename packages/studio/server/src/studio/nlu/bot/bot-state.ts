@@ -1,4 +1,5 @@
 import { TrainInput as StanTrainInput, TrainingState as StanTrainingState } from '@botpress/nlu-client'
+import { BotConfig } from '@botpress/sdk'
 import crypto from 'crypto'
 import { Instance } from '../../../studio/utils/bpfs'
 import { DefinitionsRepository } from '../definitions-repository'
@@ -73,7 +74,7 @@ export class BotState {
     const { modelId, definitionHash } = model
     await this._trainings.del({ botId: this._botId, language })
     await this._models.set({ botId: this._botId, language, modelId, definitionHash })
-    return this._updateBotConfig(language, modelId)
+    return this._updateBotConfig(language, modelId, definitionHash)
   }
 
   public async isDirty(language: string, model: ModelEntry) {
@@ -83,10 +84,13 @@ export class BotState {
     return definitionHash !== currentHash
   }
 
-  private async _updateBotConfig(language: string, modelId: string) {
-    const botConfig = JSON.parse((await Instance.readFile('bot.config.json')).toString())
-    botConfig.nluModels = { ...botConfig.nluModels, [language]: modelId }
-    await Instance.upsertFile('bot.config.json', JSON.stringify(botConfig, undefined, 2))
+  private async _updateBotConfig(language: string, modelId: string, definitionHash: string) {
+    const filename = 'bot.config.json'
+    const botConfig: BotConfig = await Instance.readFile(filename).then((buf) => JSON.parse(buf.toString()))
+
+    botConfig.nluModels = { ...botConfig.nluModels, [language]: { modelId, definitionHash } }
+
+    await Instance.upsertFile(filename, JSON.stringify(botConfig, undefined, 2))
   }
 
   private async _getTrainSet(languageCode: string): Promise<StanTrainInput & { contexts: string[] }> {

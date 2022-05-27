@@ -1,5 +1,4 @@
-import { uuid } from '@botpress/messaging-base'
-import { CachingService, DatabaseService, ServerCache, Service } from '@botpress/messaging-engine'
+import { uuid, CachingService, DatabaseService, ServerCache, Service } from '@botpress/framework'
 import { v4 as uuidv4 } from 'uuid'
 import { ProviderEmitter, ProviderEvents, ProviderWatcher } from './events'
 import { ProviderTable } from './table'

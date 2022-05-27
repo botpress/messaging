@@ -1,5 +1,5 @@
+import { uuid } from '@botpress/base'
 import { Router, NextFunction, Request, Response } from 'express'
-import { uuid } from '.'
 import { MessagingChannelApi } from './api'
 import { Schemas } from './schema'
 

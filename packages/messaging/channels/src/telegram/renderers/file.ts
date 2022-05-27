@@ -1,6 +1,6 @@
+import { FileContent } from '@botpress/messaging-content'
 import path from 'path'
 import { FileRenderer } from '../../base/renderers/file'
-import { FileContent } from '../../content/types'
 import { TelegramContext } from '../context'
 
 export class TelegramFileRenderer extends FileRenderer {
