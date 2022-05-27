@@ -43,8 +43,6 @@ const Block: FC<OwnProps> = forwardRef(({ items, block, grab, temp, options, cla
   const [actionId, setActionId] = useState('')
   const openTabId = useInspectorStore((state) => state.openTabId)
 
-  console.log(items[actionId]?.contentType)
-
   const handleClicks = useCallback(
     (e) => {
       if (e.detail === 2) {

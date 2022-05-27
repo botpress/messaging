@@ -1,11 +1,12 @@
+// import { useFormikContext } from 'formik'
 import React, { FC } from 'react'
 import { connect } from 'react-redux'
 
 import { updateFlowNode } from '~/src/actions'
 import { getCurrentFlowNode } from '../../../../reducers'
+// import { useDidMountEffect } from '../../utils/useDidMountEffect'
 import FormKit, { BlockList, EditableTextBlock } from '../FormKit'
-import Autosave from '../FormKit/Autosave'
-
+import { Autosave } from '../FormKit/formHooks'
 import Collapse from '../layout/Collapse'
 
 interface OwnProps {
@@ -14,9 +15,7 @@ interface OwnProps {
 }
 
 const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
-  const { name, onEnter, onReceive, next } = currentNode
-
-  console.log(currentNode)
+  const { id, name, onEnter, onReceive, next } = currentNode
 
   return (
     <FormKit
@@ -24,9 +23,7 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
         onReceive,
         onEnter,
         next,
-        name,
-        description: 'This is a standard node pane',
-        list: ['OMGOMG', 'WWOWOW', 'LOLOL']
+        name
       }}
       onSubmit={(values, { setSubmitting }) => {
         console.log('submit happen', values)
@@ -41,13 +38,6 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
       {/* </div> */}
 
       <Collapse idx={0} label="Basic">
-        {/* <TextInput name="test2" label="test2" req /> */}
-        {/* <Switch name="test" label="test" /> */}
-        {/* {/* <SelectDropdown name="select" label="Select" />  */}
-        {/* <NumberInput name="number" label="Input Number"/> */}
-        {/* <SingleContent name="singleContent" label="Select content" /> */}
-        {/* <ReorderList name="list" label="Messages" help="Select message" /> */}
-
         <BlockList name="onEnter" label="On Enter" />
         <BlockList name="onReceive" label="On Receive" />
       </Collapse>
@@ -59,31 +49,8 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
 }
 
 const mapStateToProps = (state) => ({
-  // flows: getAllFlows(state),
-  // dirtyFlows: getDirtyFlows(state as never),
-  // flowProblems: state.flows.flowProblems,
-  // flowsName: getFlowNamesList(state as never),
   currentNode: getCurrentFlowNode(state as never) as any
 })
-
-// {
-//   "next": [
-//       {
-//           "condition": "true",
-//           "node": ""
-//       }
-//   ],
-//   "id": "ab7904a7c5",
-//   "name": "node-8e51",
-//   "onEnter": [
-//       "say #!builtin_carousel-7CNNq0"
-//   ],
-//   "onReceive": null,
-//   "type": "standard",
-//   "x": 5,
-//   "y": -240,
-//   "lastModified": "2022-05-10T02:33:15.638Z"
-// }
 
 const mapDispatchToProps = {
   // deleteFlow,

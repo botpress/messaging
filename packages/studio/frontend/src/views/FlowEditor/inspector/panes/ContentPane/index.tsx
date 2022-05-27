@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { fetchContentItem, upsertContentItem } from '~/src/actions'
 import FormKit from '../../FormKit'
-import Autosave from '../../FormKit/Autosave'
+import { Autosave } from '../../FormKit/formHooks'
 import { Text } from '../../FormKit/shared'
 import TextForm from './TextForm'
 

@@ -1,7 +1,8 @@
 import { FlowNode } from '@botpress/sdk'
-import React, { useEffect, FC } from 'react'
-
+import React, { FC } from 'react'
 import shallow from 'zustand/shallow'
+
+import { useDidMountEffect } from '../utils/useDidMountEffect'
 import { TabBar } from './layout'
 import Pane from './layout/Pane'
 import { PaneTypes } from './panes'
@@ -15,15 +16,15 @@ interface OwnProps {
 }
 
 const Inspector: FC<OwnProps> = ({ currentFlowNode = {} }) => {
-  const { type, name } = currentFlowNode
+  const { id, type, name } = currentFlowNode
   const [tabs, activeTabIdx, resetInspector] = useInspectorStore(
     (state) => [state.tabs, state.activeTabIdx, state.resetInspector],
     shallow
   )
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     resetInspector()
-  }, [currentFlowNode])
+  }, [id])
 
   return (
     <div className={style.inspector}>

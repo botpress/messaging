@@ -3,7 +3,7 @@ import { useFormikContext } from 'formik'
 import { debounce } from 'lodash'
 import React, { useState, useCallback, FC } from 'react'
 
-import { useDidMountEffect } from '../../../utils/useDidMountEffect'
+import { useDidMountEffect } from '../../../../utils/useDidMountEffect'
 import * as style from './style.module.scss'
 
 const DEBOUNCE_MS = 2500
@@ -27,8 +27,11 @@ const Autosave: FC<OwnProps> = () => {
 
   useDidMountEffect(() => {
     console.log('debounce', values)
-    debouncedSubmit() as any
-    setUpdating(true)
+    if (!updating) {
+      setUpdating(true)
+    }
+    const debSubmit = debouncedSubmit() as any
+    return () => debSubmit.cancel()
   }, [debouncedSubmit, values])
 
   return (

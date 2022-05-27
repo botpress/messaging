@@ -53,7 +53,7 @@ const BlockList: FC<OwnProps> = ({ name, label, hint }) => {
 
   return (
     <div className={layout.formKitContainer}>
-      <BlockSidePane>
+      <BlockSidePane name={name}>
         <div className={layout.labelSection}>
           <Label className={layout.center} label={label} hint={hint} />
           <AddBtn className={layout.rightBtn} />
