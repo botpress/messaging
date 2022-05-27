@@ -2,10 +2,8 @@ import React, { FC, useState } from 'react'
 
 import * as base from '~/src/scss/base/_index.module.scss'
 
-import Add from '../../shared/AddBtn'
-import Label from '../../shared/Label'
+import { Label, AddBtn, SwapIcon } from '../../shared'
 import * as layout from '../../shared/styles/layout.module.scss'
-import SwapIcon from '../../shared/SwapIcon'
 
 import * as style from './style.module.scss'
 
@@ -58,7 +56,7 @@ const SingleContent: FC<OwnProps> = ({ name, label, hint, req, placeholder, erro
             }}
           />
         ) : (
-          <Add
+          <AddBtn
             // error={error ? true : false}
             onClick={() => {
               setIsFull(true)
