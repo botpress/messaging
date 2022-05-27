@@ -6,6 +6,7 @@ if (app.isPackaged) {
 }
 
 const id = uuidv4()
+// eslint-disable-next-line no-console
 console.log('bonjour', id)
 
 const createWindow = () => {
