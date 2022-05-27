@@ -5,7 +5,7 @@ import React, { FC, useState, useCallback, useLayoutEffect } from 'react'
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd'
 
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
-import { Label, DynamicBtn } from '../../shared/'
+import { Label, DynamicBtn } from '../../shared'
 import AddBtn from '../../shared/AddBtn'
 import * as layout from '../../shared/styles/layout.module.scss'
 import ListItem from './ListItem'

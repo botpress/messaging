@@ -1,10 +1,8 @@
 import React, { FC, useState } from 'react'
 
-import * as base from '~/src/scss/base/_index.module.scss'
-
 import { Label, AddBtn, SwapIcon } from '../../shared'
+import * as base from '~/src/scss/base/_index.module.scss'
 import * as layout from '../../shared/styles/layout.module.scss'
-
 import * as style from './style.module.scss'
 
 interface OwnProps {
@@ -18,10 +16,6 @@ interface OwnProps {
 }
 
 const SingleContent: FC<OwnProps> = ({ name, label, hint, req, placeholder, error }) => {
-  function add(): void {
-    console.log('ADD')
-  }
-
   const content = <Item label="Text | welcome_msg" />
 
   const [isFull, setIsFull] = useState(false)

@@ -1,5 +1,6 @@
 import { NumericInput } from '@blueprintjs/core'
 import React, { FC, useState } from 'react'
+import cx from 'classnames'
 
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
 
@@ -22,7 +23,7 @@ const NumberInput: FC<OwnProps> = ({ label, hint, req, placeholder, help, error,
   const [isDynamic, setIsDynamic] = useState(false)
 
   return (
-    <div className={`${layout.formKitContainer} ${error ? style.error : ''}`}>
+    <div className={cx(layout.formKitContainer, { [style.error]: error })}>
       <div className={layout.labelSection}>
         <Label className={layout.center} label={label} hint={hint} required />
         <DynamicBtn className={layout.rightBtn} active={isDynamic} onClick={() => setIsDynamic(!isDynamic)} />

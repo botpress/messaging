@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import style from './style.module.scss'
+import * as style from './style.module.scss'
 
 interface OwnProps {
   onClick?: () => void

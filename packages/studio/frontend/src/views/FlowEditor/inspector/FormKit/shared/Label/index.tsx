@@ -41,7 +41,7 @@ const Label: FC<OwnProps> = ({ label, hint, required, className }) => {
       {hint ? (
         <Tooltip
           // defaultIsOpen
-          popoverClassName={style.tooltip}
+          // popoverClassName={style.tooltip}
           position={Position.TOP}
           interactionKind={PopoverInteractionKind.HOVER}
           content={<>{fillLinks(hint)}</>}

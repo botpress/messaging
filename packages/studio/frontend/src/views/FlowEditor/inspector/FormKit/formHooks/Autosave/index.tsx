@@ -37,7 +37,7 @@ const Autosave: FC<OwnProps> = () => {
   return (
     <div className={style.container}>
       {updating ? (
-        <Spinner className={style.loading} size={18} intent={Intent.PRIMARY}>
+        <Spinner size={18} intent={Intent.PRIMARY}>
           loading
         </Spinner>
       ) : (

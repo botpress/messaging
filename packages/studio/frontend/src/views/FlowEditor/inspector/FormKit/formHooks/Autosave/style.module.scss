@@ -50,22 +50,22 @@
   }
 }
 
-.spinner {
-  &-enter {
-    opacity: 0.01;
-  }
+// .spinner {
+//   &-enter {
+//     opacity: 0.01;
+//   }
 
-  &-enter.spinner-enter-active {
-    opacity: 1;
-    transition: opacity 500ms ease-in;
-  }
+//   &-enter.spinner-enter-active {
+//     opacity: 1;
+//     transition: opacity 500ms ease-in;
+//   }
 
-  &-leave {
-    opacity: 1;
-  }
+//   &-leave {
+//     opacity: 1;
+//   }
 
-  &-leave.spinner-leave-active {
-    opacity: 0.01;
-    transition: opacity 300ms ease-in;
-  }
-}
+//   &-leave.spinner-leave-active {
+//     opacity: 0.01;
+//     transition: opacity 300ms ease-in;
+//   }
+// }
