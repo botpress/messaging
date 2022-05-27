@@ -84,7 +84,7 @@ jobs:
     if: needs.files_changed.outputs.studio == 'true'
     strategy:
       matrix:
-        path: ['studio-be', 'studio-ui']
+        path: ['studio-server', 'studio-frontend']
     steps:
       - name: Checkout code
         uses: actions/checkout@master

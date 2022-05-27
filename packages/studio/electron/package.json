@@ -6,7 +6,7 @@
     "build": "yarn && yarn run -T ncc build src/index.ts -o dist -e electron",
     "watch": "yarn && yarn run -T ncc build -w src/index.ts -m -o dist -e electron",
     "start": "yarn build && NODE_OPTIONS=\"\" electron ./dist/index.js",
-    "package": "rimraf lib && mkdirp lib && yarn workspace @botpress/studio-ui build && ncp ../frontend/dist lib && yarn workspace @botpress/studio-be build:ncc && ncp ../server/dist/index.js lib/server.js && yarn build && ncp dist lib && ncp package.json lib/package.json && yarn electron-packager lib botpress-studio --overwrite --out bin"
+    "package": "rimraf lib && mkdirp lib && yarn workspace @botpress/studio-frontend build && ncp ../frontend/dist lib && yarn workspace @botpress/studio-server build:ncc && ncp ../server/dist/index.js lib/server.js && yarn build && ncp dist lib && ncp package.json lib/package.json && yarn electron-packager lib botpress-studio --overwrite --out bin"
   },
   "devDependencies": {
     "@types/node": "^16.11.33",
