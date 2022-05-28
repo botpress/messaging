@@ -10,6 +10,7 @@ export class HintService extends Service {
   async setup() {}
 
   async get() {
-    return BaseHints
+    // TODO: this is incomplete
+    return { inputs: BaseHints }
   }
 }
