@@ -3,6 +3,7 @@ import { ConfigService } from './config/service'
 import { FileService } from './files/service'
 import { FlowService } from './flows/service'
 import { HintService } from './hints/service'
+import { NluService } from './nlu/service'
 import { PathService } from './paths/service'
 import { SocketService } from './socket/service'
 
@@ -11,6 +12,7 @@ export class App extends Framework {
   files: FileService
   config: ConfigService
   hints: HintService
+  nlu: NluService
   flows: FlowService
   sockets: SocketService
 
@@ -20,6 +22,7 @@ export class App extends Framework {
     this.files = new FileService(this.paths)
     this.config = new ConfigService(this.files)
     this.hints = new HintService(this.files)
+    this.nlu = new NluService()
     this.flows = new FlowService(this.paths, this.files)
     this.sockets = new SocketService()
   }
@@ -29,6 +32,7 @@ export class App extends Framework {
     await this.files.setup()
     await this.config.setup()
     await this.hints.setup()
+    await this.nlu.setup()
     await this.flows.setup()
     await this.sockets.setup()
   }
