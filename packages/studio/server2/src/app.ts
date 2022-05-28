@@ -4,6 +4,7 @@ import { FileService } from './files/service'
 import { FlowService } from './flows/service'
 import { HintService } from './hints/service'
 import { PathService } from './paths/service'
+import { SocketService } from './socket/service'
 
 export class App extends Framework {
   paths: PathService
@@ -11,6 +12,7 @@ export class App extends Framework {
   config: ConfigService
   hints: HintService
   flows: FlowService
+  sockets: SocketService
 
   constructor() {
     super()
@@ -19,6 +21,7 @@ export class App extends Framework {
     this.config = new ConfigService(this.files)
     this.hints = new HintService(this.files)
     this.flows = new FlowService(this.paths, this.files)
+    this.sockets = new SocketService()
   }
 
   async setup() {
@@ -27,5 +30,6 @@ export class App extends Framework {
     await this.config.setup()
     await this.hints.setup()
     await this.flows.setup()
+    await this.sockets.setup()
   }
 }
