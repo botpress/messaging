@@ -16,7 +16,7 @@ import store from './store'
 import { initializeTranslations } from './translations'
 
 // TODO: Change this value to point to your bot ID
-window.location.replace('index.html#/studio/test')
+window.location.replace('index.html#/flows')
 
 window['STUDIO_API_URL'] = 'http://localhost:3300'
 
