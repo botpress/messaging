@@ -20,7 +20,7 @@ window.location.replace('index.html#/studio/test')
 
 window['STUDIO_API_URL'] = 'http://localhost:3300'
 
-void axios.get<object>(`${window['STUDIO_API_URL']}${window.location.hash.replace('#', '')}/env`).then((d) => {
+void axios.get<object>(`${window['STUDIO_API_URL']}/api/v1/env`).then((d) => {
   for (const [key, value] of Object.entries(d.data)) {
     window[key] = value
   }
