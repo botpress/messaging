@@ -13,8 +13,8 @@ export class FlowService extends Service {
   async setup() {}
 
   async list(): Promise<Flow[]> {
-    const paths = await this.paths.listFiles('flows')
-    const flowPaths = paths.filter((x) => this.isFlowFile(x))
+    const paths = await this.paths.listFilesRecursive('flows')
+    const flowPaths = paths.filter((x) => this.isFlowFile(x)).sort()
 
     return Promise.all(flowPaths.map((x) => this.get(x)))
   }
