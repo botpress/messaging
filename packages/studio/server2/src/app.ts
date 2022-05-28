@@ -12,7 +12,7 @@ export class App extends Framework {
     super()
     this.paths = new PathService()
     this.files = new FileService(this.paths)
-    this.flows = new FlowService(this.files)
+    this.flows = new FlowService(this.paths, this.files)
   }
 
   async setup() {
