@@ -1,6 +1,8 @@
 import { FrameworkEnv } from '@botpress/framework'
 
-export type ServerEnv = FrameworkEnv & {}
+export type ServerEnv = FrameworkEnv & {
+  DATA_PATH?: string
+}
 
 declare global {
   namespace NodeJS {

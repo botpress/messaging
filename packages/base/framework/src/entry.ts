@@ -1,7 +1,7 @@
 import { Migration } from '@botpress/engine'
 import express, { Express } from 'express'
 import { Server } from 'http'
-import { AdminApiManager, ApiManager } from './base/api-manager'
+import { ApiManagers } from './base/api-manager'
 import { Auth } from './base/auth/auth'
 import { ClientApi } from './clients/api'
 import { Framework } from './framework'
@@ -21,13 +21,12 @@ export abstract class Entry {
   stream: IStream
   socket: ISocket
 
-  manager: ApiManager
-  adminManager: AdminApiManager
+  managers: ApiManagers
   clients: ClientApi
 
   constructor(
     tapp: { new (): IApp },
-    tapi: { new (app: IApp & any, manager: ApiManager, adminManager: AdminApiManager, express: Express): IApi },
+    tapi: { new (app: IApp & any, managers: ApiManagers): IApi },
     tstream: { new (app: IApp & any): IStream },
     tsocket: { new (app: IApp & any): ISocket }
   ) {
@@ -38,9 +37,8 @@ export abstract class Entry {
     this.app = new tapp()
 
     const auth = new Auth(this.app.clientTokens)
-    this.manager = new ApiManager(this.routes.router, auth)
-    this.adminManager = new AdminApiManager(this.routes.router, auth)
-    this.api = new tapi(this.app, this.manager, this.adminManager, this.router)
+    this.managers = new ApiManagers(this.routes.router, auth)
+    this.api = new tapi(this.app, this.managers)
 
     this.stream = new tstream(this.app)
     this.socket = new tsocket(this.app)
@@ -54,7 +52,7 @@ export abstract class Entry {
     await this.app.postSetup()
 
     this.routes.setup(this.package)
-    this.clients.setup(this.adminManager)
+    this.clients.setup(this.managers.admin)
     await this.api.setup()
     this.routes.postSetup()
 

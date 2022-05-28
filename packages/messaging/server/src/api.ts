@@ -1,5 +1,4 @@
-import { AdminApiManager, ApiManager } from '@botpress/framework'
-import { Router } from 'express'
+import { ApiManagers } from '@botpress/framework'
 import { App } from './app'
 import { ChannelApi } from './channels/api'
 import { ClientApi } from './clients/api'
@@ -22,12 +21,7 @@ export class Api {
   private mapping: MappingApi
   private channels: ChannelApi
 
-  constructor(
-    private app: App,
-    private manager: ApiManager,
-    private adminManager: AdminApiManager,
-    private root: Router
-  ) {
+  constructor(private app: App, private managers: ApiManagers) {
     this.clients = new ClientApi(this.app.providers, this.app.clients, this.app.provisions)
     this.syncs = new SyncApi(this.app.syncs, this.app.channels)
     this.health = new HealthApi(this.app.health)
@@ -36,18 +30,18 @@ export class Api {
     this.conversations = new ConversationApi(this.app.users, this.app.conversations)
     this.messages = new MessageApi(this.app.users, this.app.conversations, this.app.messages, this.app.converse)
     this.mapping = new MappingApi(this.app.channels, this.app.conversations, this.app.mapping)
-    this.channels = new ChannelApi(this.root, this.app)
+    this.channels = new ChannelApi(this.managers.root, this.app)
   }
 
   async setup() {
-    this.clients.setup(this.manager, this.adminManager)
-    this.syncs.setup(this.manager)
-    this.health.setup(this.manager)
-    this.users.setup(this.manager)
-    this.userTokens.setup(this.manager)
-    this.conversations.setup(this.manager)
-    this.messages.setup(this.manager)
-    this.mapping.setup(this.manager)
+    this.clients.setup(this.managers.client, this.managers.admin)
+    this.syncs.setup(this.managers.client)
+    this.health.setup(this.managers.client)
+    this.users.setup(this.managers.client)
+    this.userTokens.setup(this.managers.client)
+    this.conversations.setup(this.managers.client)
+    this.messages.setup(this.managers.client)
+    this.mapping.setup(this.managers.client)
     await this.channels.setup()
   }
 }

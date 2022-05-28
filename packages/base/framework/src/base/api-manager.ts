@@ -4,6 +4,20 @@ import { Auth } from './auth/auth'
 import { Middleware } from './auth/base'
 import { ClientApiRequest } from './auth/client'
 
+export class ApiManagers {
+  public readonly root: Router
+  public readonly client: ApiManager
+  public readonly public: PublicApiManager
+  public readonly admin: AdminApiManager
+
+  constructor(private router: Router, private auth: Auth) {
+    this.root = router
+    this.client = new ApiManager(this.router, this.auth)
+    this.public = new PublicApiManager(this.router, this.auth)
+    this.admin = new AdminApiManager(this.router, this.auth)
+  }
+}
+
 export class ApiManager {
   constructor(private router: Router, private auth: Auth) {}
 
@@ -34,7 +48,7 @@ export class ApiManager {
   }
 }
 
-export class PublicManager {
+export class PublicApiManager {
   constructor(private router: Router, private auth: Auth) {}
 
   post(path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
