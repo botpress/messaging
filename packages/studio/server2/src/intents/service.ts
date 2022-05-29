@@ -12,4 +12,8 @@ export class IntentService extends Service {
     const intents = await this.files.list('intents')
     return intents.map((x) => x.content)
   }
+
+  async get(name: string) {
+    return this.files.get(`intents/${name}.json`)
+  }
 }
