@@ -8,6 +8,7 @@ import { FlowApi } from './flows/api'
 import { HintApi } from './hints/api'
 import { IntentApi } from './intents/api'
 import { NluApi } from './nlu/api'
+import { QnaApi } from './qna/api'
 
 export class Api {
   private env: EnvApi
@@ -18,6 +19,7 @@ export class Api {
   private entities: EntityApi
   private flows: FlowApi
   private cms: CmsApi
+  private qnas: QnaApi
 
   constructor(private app: App, private managers: ApiManagers) {
     this.env = new EnvApi()
@@ -28,6 +30,7 @@ export class Api {
     this.entities = new EntityApi(this.app.entities)
     this.flows = new FlowApi(this.app.flows)
     this.cms = new CmsApi(this.app.cms)
+    this.qnas = new QnaApi(this.app.qnas)
   }
 
   async setup() {
@@ -39,5 +42,6 @@ export class Api {
     this.entities.setup(this.managers.public)
     this.flows.setup(this.managers.public)
     this.cms.setup(this.managers.public)
+    this.qnas.setup(this.managers.public)
   }
 }

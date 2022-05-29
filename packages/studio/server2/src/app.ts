@@ -8,6 +8,7 @@ import { HintService } from './hints/service'
 import { IntentService } from './intents/service'
 import { NluService } from './nlu/service'
 import { PathService } from './paths/service'
+import { QnaService } from './qna/service'
 import { SocketService } from './socket/service'
 
 export class App extends Framework {
@@ -20,6 +21,7 @@ export class App extends Framework {
   entities: EntityService
   flows: FlowService
   cms: CmsService
+  qnas: QnaService
   sockets: SocketService
 
   constructor() {
@@ -33,6 +35,7 @@ export class App extends Framework {
     this.entities = new EntityService(this.files)
     this.flows = new FlowService(this.paths, this.files)
     this.cms = new CmsService(this.paths, this.files)
+    this.qnas = new QnaService(this.files)
     this.sockets = new SocketService()
   }
 
@@ -47,6 +50,7 @@ export class App extends Framework {
     await this.entities.setup()
     await this.flows.setup()
     await this.cms.setup()
+    await this.qnas.setup()
     await this.sockets.setup()
   }
 }
