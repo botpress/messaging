@@ -5,19 +5,21 @@ import { FileService } from '../files/service'
 import { PathService } from '../paths/service'
 
 export class CmsService extends Service {
+  private contentTypes!: any[]
+
   constructor(private paths: PathService, private files: FileService) {
     super()
   }
 
-  async setup() {}
-
-  async listTypes() {
+  async setup() {
     const contentTypesPathsWithUtils = await this.paths.listFiles('content-types')
     const contentTypesPaths = contentTypesPathsWithUtils.filter((x) => !path.basename(x).startsWith('_'))
 
-    const contentTypes = contentTypesPaths.map((x) => require(this.paths.absolute(x)).default)
+    this.contentTypes = contentTypesPaths.map((x) => require(this.paths.absolute(x)).default)
+  }
 
-    return contentTypes.map((x) => ({
+  async listTypes() {
+    return this.contentTypes.map((x) => ({
       id: x.id,
       // TODO: count doesn't work
       count: undefined,
@@ -33,16 +35,25 @@ export class CmsService extends Service {
   }
 
   async listElements() {
+    // TODO: missing preview
+
     const contentElementsPerFile = await this.files.list('content-elements')
     const contentElements = []
 
     for (const file of contentElementsPerFile) {
-      const contentType = path.basename(file.path).replace('.json', '')
+      const contentTypeId = path.basename(file.path).replace('.json', '')
+      const contentType = this.contentTypes.find((x) => x.id === contentTypeId)
 
       for (const element of file.content) {
         contentElements.push({
           ...element,
-          contentType
+          contentType: contentTypeId,
+          schema: {
+            json: contentType.jsonSchema,
+            ui: contentType.uiSchema,
+            title: contentType.title,
+            renderer: contentType.id
+          }
         })
       }
     }
