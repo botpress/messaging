@@ -9,6 +9,7 @@ export class IntentApi {
   setup(router: PublicApiManager) {
     router.get('/nlu/intents/:name', Schema.Api.Get, this.get.bind(this))
     router.get('/nlu/intents', Schema.Api.List, this.list.bind(this))
+    router.get('/nlu/contexts', Schema.Api.ListContexts, this.listContexts.bind(this))
   }
 
   async get(req: Request, res: Response) {
@@ -18,5 +19,9 @@ export class IntentApi {
 
   async list(req: Request, res: Response) {
     res.send(await this.intents.list())
+  }
+
+  async listContexts(req: Request, res: Response) {
+    res.send(await this.intents.listContexts())
   }
 }

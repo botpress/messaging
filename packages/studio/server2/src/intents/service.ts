@@ -16,4 +16,11 @@ export class IntentService extends Service {
   async get(name: string) {
     return this.files.get(`intents/${name}.json`)
   }
+
+  async listContexts() {
+    const intents = await this.list()
+    const contexts = intents.map((x) => x.contexts).flat()
+
+    return [...new Set(contexts)]
+  }
 }
