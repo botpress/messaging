@@ -1,9 +1,11 @@
 import { Service } from '@botpress/framework'
+import _ from 'lodash'
 import path from 'path'
+import { FileService } from '../files/service'
 import { PathService } from '../paths/service'
 
 export class CmsService extends Service {
-  constructor(private paths: PathService) {
+  constructor(private paths: PathService, private files: FileService) {
     super()
   }
 
@@ -28,5 +30,23 @@ export class CmsService extends Service {
         renderer: x.id
       }
     }))
+  }
+
+  async listElements() {
+    const contentElementsPerFile = await this.files.list('content-elements')
+    const contentElements = []
+
+    for (const file of contentElementsPerFile) {
+      const contentType = path.basename(file.path).replace('.json', '')
+
+      for (const element of file.content) {
+        contentElements.push({
+          ...element,
+          contentType
+        })
+      }
+    }
+
+    return _.sortBy(contentElements, 'createdOn')
   }
 }

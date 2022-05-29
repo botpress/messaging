@@ -32,12 +32,13 @@ export class App extends Framework {
     this.intents = new IntentService(this.files)
     this.entities = new EntityService(this.files)
     this.flows = new FlowService(this.paths, this.files)
-    this.cms = new CmsService(this.paths)
+    this.cms = new CmsService(this.paths, this.files)
     this.sockets = new SocketService()
   }
 
   async setup() {
     await super.setup()
+    await this.paths.setup()
     await this.files.setup()
     await this.config.setup()
     await this.hints.setup()
