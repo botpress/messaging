@@ -7,10 +7,10 @@ export class CmsApi {
   constructor(private cms: CmsService) {}
 
   setup(router: PublicApiManager) {
-    router.get('/cms/types', Schema.Api.List, this.list.bind(this))
+    router.get('/cms/types', Schema.Api.ListTypes, this.listTypes.bind(this))
   }
 
-  async list(req: Request, res: Response) {
-    res.send({ registered: await this.cms.list(), unregistered: [] })
+  async listTypes(req: Request, res: Response) {
+    res.send({ registered: await this.cms.listTypes(), unregistered: [] })
   }
 }

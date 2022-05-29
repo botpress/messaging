@@ -1,7 +1,7 @@
 import { ReqSchema } from '@botpress/framework'
 
 const Api = {
-  List: ReqSchema()
+  ListTypes: ReqSchema()
 }
 
 export const Schema = { Api }

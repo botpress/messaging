@@ -9,7 +9,7 @@ export class CmsService extends Service {
 
   async setup() {}
 
-  async list() {
+  async listTypes() {
     const contentTypesPathsWithUtils = await this.paths.listFiles('content-types')
     const contentTypesPaths = contentTypesPathsWithUtils.filter((x) => !path.basename(x).startsWith('_'))
 
