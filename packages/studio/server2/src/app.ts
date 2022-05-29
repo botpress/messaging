@@ -1,5 +1,6 @@
 import { Framework } from '@botpress/framework'
 import { ConfigService } from './config/service'
+import { EntityService } from './entities/service'
 import { FileService } from './files/service'
 import { FlowService } from './flows/service'
 import { HintService } from './hints/service'
@@ -15,6 +16,7 @@ export class App extends Framework {
   hints: HintService
   nlu: NluService
   intents: IntentService
+  entities: EntityService
   flows: FlowService
   sockets: SocketService
 
@@ -26,6 +28,7 @@ export class App extends Framework {
     this.hints = new HintService(this.files)
     this.nlu = new NluService()
     this.intents = new IntentService(this.files)
+    this.entities = new EntityService(this.files)
     this.flows = new FlowService(this.paths, this.files)
     this.sockets = new SocketService()
   }
@@ -36,6 +39,8 @@ export class App extends Framework {
     await this.config.setup()
     await this.hints.setup()
     await this.nlu.setup()
+    await this.intents.setup()
+    await this.entities.setup()
     await this.flows.setup()
     await this.sockets.setup()
   }

@@ -1,6 +1,7 @@
 import { ApiManagers } from '@botpress/framework'
 import { App } from './app'
 import { ConfigApi } from './config/api'
+import { EntityApi } from './entities/api'
 import { EnvApi } from './env/api'
 import { FlowApi } from './flows/api'
 import { HintApi } from './hints/api'
@@ -13,6 +14,7 @@ export class Api {
   private hints: HintApi
   private nlu: NluApi
   private intents: IntentApi
+  private entities: EntityApi
   private flows: FlowApi
 
   constructor(private app: App, private managers: ApiManagers) {
@@ -21,6 +23,7 @@ export class Api {
     this.hints = new HintApi(this.app.hints)
     this.nlu = new NluApi(this.app.nlu)
     this.intents = new IntentApi(this.app.intents)
+    this.entities = new EntityApi(this.app.entities)
     this.flows = new FlowApi(this.app.flows)
   }
 
@@ -30,6 +33,7 @@ export class Api {
     this.hints.setup(this.managers.public)
     this.nlu.setup(this.managers.public)
     this.intents.setup(this.managers.public)
+    this.entities.setup(this.managers.public)
     this.flows.setup(this.managers.public)
   }
 }
