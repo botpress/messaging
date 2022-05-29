@@ -1,5 +1,6 @@
 import { ApiManagers } from '@botpress/framework'
 import { App } from './app'
+import { CmsApi } from './cms/api'
 import { ConfigApi } from './config/api'
 import { EntityApi } from './entities/api'
 import { EnvApi } from './env/api'
@@ -16,6 +17,7 @@ export class Api {
   private intents: IntentApi
   private entities: EntityApi
   private flows: FlowApi
+  private cms: CmsApi
 
   constructor(private app: App, private managers: ApiManagers) {
     this.env = new EnvApi()
@@ -25,6 +27,7 @@ export class Api {
     this.intents = new IntentApi(this.app.intents)
     this.entities = new EntityApi(this.app.entities)
     this.flows = new FlowApi(this.app.flows)
+    this.cms = new CmsApi(this.app.cms)
   }
 
   async setup() {
@@ -35,5 +38,6 @@ export class Api {
     this.intents.setup(this.managers.public)
     this.entities.setup(this.managers.public)
     this.flows.setup(this.managers.public)
+    this.cms.setup(this.managers.public)
   }
 }

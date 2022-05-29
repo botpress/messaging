@@ -1,4 +1,5 @@
 import { Framework } from '@botpress/framework'
+import { CmsService } from './cms/service'
 import { ConfigService } from './config/service'
 import { EntityService } from './entities/service'
 import { FileService } from './files/service'
@@ -18,6 +19,7 @@ export class App extends Framework {
   intents: IntentService
   entities: EntityService
   flows: FlowService
+  cms: CmsService
   sockets: SocketService
 
   constructor() {
@@ -30,6 +32,7 @@ export class App extends Framework {
     this.intents = new IntentService(this.files)
     this.entities = new EntityService(this.files)
     this.flows = new FlowService(this.paths, this.files)
+    this.cms = new CmsService(this.paths)
     this.sockets = new SocketService()
   }
 
@@ -42,6 +45,7 @@ export class App extends Framework {
     await this.intents.setup()
     await this.entities.setup()
     await this.flows.setup()
+    await this.cms.setup()
     await this.sockets.setup()
   }
 }
