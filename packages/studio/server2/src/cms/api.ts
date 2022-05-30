@@ -1,5 +1,6 @@
 import { PublicApiManager } from '@botpress/framework'
 import { Request, Response } from 'express'
+import { nanoid } from 'nanoid'
 import { Schema } from './schema'
 import { CmsService } from './service'
 
@@ -9,6 +10,8 @@ export class CmsApi {
   setup(router: PublicApiManager) {
     router.get('/cms/types', Schema.Api.ListTypes, this.listTypes.bind(this))
     router.post('/cms/:contentType?/elements', Schema.Api.ListElements, this.listElements.bind(this))
+    router.post('/cms/:contentType/element/:elementId?', Schema.Api.CreateElement, this.createElement.bind(this))
+    router.get('/cms/element/:elementId', Schema.Api.GetElement, this.getElement.bind(this))
   }
 
   async listTypes(req: Request, res: Response) {
@@ -22,7 +25,7 @@ export class CmsApi {
     let elements = await this.cms.listElements()
 
     if (contentType) {
-      elements = elements.filter((x) => x.type === contentType)
+      elements = elements.filter((x) => x.contentType === contentType)
     }
 
     if (searchTerm) {
@@ -41,5 +44,24 @@ export class CmsApi {
     }
 
     res.send(elements)
+  }
+
+  async createElement(req: Request, res: Response) {
+    const { contentType, elementId } = req.params
+    const { formData } = req.body
+
+    const id = elementId || req.body.id || `${contentType.replace('#', '')}-${nanoid(6)}`
+    await this.cms.updateElement(contentType, {
+      id,
+      modifiedOn: new Date(),
+      formData
+    })
+
+    res.send(id)
+  }
+
+  async getElement(req: Request, res: Response) {
+    const { elementId } = req.params
+    res.send(await this.cms.getElement(elementId))
   }
 }

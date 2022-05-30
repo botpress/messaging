@@ -3110,6 +3110,7 @@ __metadata:
     joi: ^17.6.0
     knex: ^0.95.15
     lodash: ^4.17.21
+    nanoid: ^3.3.4
     socket.io: ^4.5.0
     uuid: ^8.3.2
     yn: 4.0.0

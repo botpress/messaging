@@ -53,11 +53,30 @@ export class CmsService extends Service {
             ui: contentType.uiSchema,
             title: contentType.title,
             renderer: contentType.id
+          },
+          previews: {
+            en: element.id,
+            fr: element.id
           }
         })
       }
     }
 
     return _.sortBy(contentElements, 'createdOn')
+  }
+
+  async updateElement(contentType: string, contentElement: any) {
+    const filepath = `content-elements/${contentType}.json`
+    const elements: any[] = await this.files.get(filepath)
+
+    const newElements = [...elements.filter((x) => x.id !== contentElement.id), contentElement]
+    await this.files.update(filepath, newElements)
+  }
+
+  async getElement(elementId: string) {
+    // TODO: absolute dogshit performance over here!
+
+    const elements = await this.listElements()
+    return elements.find((x) => x.id === elementId)
   }
 }

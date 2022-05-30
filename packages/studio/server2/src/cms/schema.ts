@@ -14,7 +14,12 @@ const Api = {
       sortOrder: Joi.array(),
       ids: Joi.array().items(Joi.string()).optional()
     }
-  })
+  }),
+  CreateElement: ReqSchema({
+    params: { contentType: Joi.string().required(), elementId: Joi.string() },
+    body: { formData: Joi.object().required() }
+  }),
+  GetElement: ReqSchema({ params: { elementId: Joi.string().required() } })
 }
 
 export const Schema = { Api }
