@@ -30,6 +30,27 @@ export class EditorService extends Service {
     }))
   }
 
+  async getPermissions() {
+    return {
+      'bot.hooks': {
+        type: 'hook',
+        isGlobal: false,
+        read: true,
+        write: true
+      },
+      'bot.actions': {
+        type: 'action_legacy',
+        isGlobal: false,
+        read: true,
+        write: true
+      }
+    }
+  }
+
+  async getTypings() {
+    return {}
+  }
+
   private excludeBuiltin(paths: string[]) {
     return paths.filter((x) => !x.includes('/builtin/'))
   }

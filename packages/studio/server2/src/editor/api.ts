@@ -8,9 +8,20 @@ export class EditorApi {
 
   setup(router: PublicApiManager) {
     router.get('/code-editor/files', Schema.Api.ListFiles, this.listFiles.bind(this))
+    router.get('/code-editor/permissions', Schema.Api.GetPermissions, this.getPermissions.bind(this))
+    // TODO: no typings at the moment
+    router.get('/code-editor/typings', Schema.Api.GetTypings, this.getTypings.bind(this))
   }
 
   async listFiles(req: Request, res: Response) {
     res.send({ 'bot.hooks': await this.editor.listHooks(), 'bot.actions': await this.editor.listActions() })
+  }
+
+  async getPermissions(req: Request, res: Response) {
+    res.send(await this.editor.getPermissions())
+  }
+
+  async getTypings(req: Request, res: Response) {
+    res.send(await this.editor.getTypings())
   }
 }
