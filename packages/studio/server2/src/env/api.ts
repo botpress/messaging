@@ -19,9 +19,9 @@ export class EnvApi {
       IS_STANDALONE: true
     }
 
-    // const segmentWriteKey = process.core_env.BP_DEBUG_SEGMENT
-    //   ? 'OzjoqVagiw3p3o1uocuw6kd2YYjm6CHi' // Dev key from Segment
-    //  : '7lxeXxbGysS04TvDNDOROQsFlrls9NoY' // Prod key from Segment
+    const segmentWriteKey = process.env.BP_DEBUG_SEGMENT
+      ? 'OzjoqVagiw3p3o1uocuw6kd2YYjm6CHi' // Dev key from Segment
+      : '7lxeXxbGysS04TvDNDOROQsFlrls9NoY' // Prod key from Segment
 
     const host = process.env.EXTERNAL_URL || 'http://localhost:3300'
     const env = {
@@ -39,7 +39,7 @@ export class EnvApi {
       BOT_LOCKED: false,
       IS_BOT_MOUNTED: true,
       IS_CLOUD_BOT: true,
-      // SEGMENT_WRITE_KEY: segmentWriteKey,
+      SEGMENT_WRITE_KEY: segmentWriteKey,
       // NLU_ENDPOINT: process.NLU_ENDPOINT,
       BP_SOCKET_URL: host
     }
