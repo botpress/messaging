@@ -8,6 +8,10 @@ export class EntityService extends Service {
 
   async setup() {}
 
+  async create(entity: any) {
+    await this.files.update(`entities/${entity.name}.json`, entity)
+  }
+
   async list() {
     return [...this.listSystemEntities(), ...(await this.listCustomEntities())]
   }
