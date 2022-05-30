@@ -56,7 +56,7 @@ export const UsageModal: FC<Props> = (props) => {
   const getHref = (x) => {
     if (x.original.type === 'Flow') {
       const flowName = x.original.name.replace(/\.flow\.json$/i, '')
-      return `/studio/${window.BOT_ID}/flows/${flowName}/#search:${x.original.node}`
+      return `/studio/${window.BOT_ID}/oldflows/${flowName}/#search:${x.original.node}` // TODO: Fix this as it uses hash instead of query param for search
     } else {
       return `/studio/${window.BOT_ID}/qna?id=${x.original.id}`
     }

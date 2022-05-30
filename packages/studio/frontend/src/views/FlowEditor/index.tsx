@@ -108,7 +108,7 @@ const FlowEditor = (props: Props) => {
     }
   }, [props.flowsByName, props.currentFlow])
 
-  const pushFlowState = (flow) => props.history.push(`/flows/${flow.replace(/\.flow\.json/i, '')}`)
+  const pushFlowState = (flow) => props.history.push(`/oldflows/${flow.replace(/\.flow\.json/i, '')}`)
 
   const keyHandlers = {
     add: (e) => {

@@ -35,7 +35,7 @@ const SidePanelContent: FC<any> = (props) => {
   const [flowAction, setFlowAction] = useState<any>('create')
   const [filter, setFilter] = useState<any>()
 
-  const goToFlow = (flow) => history.push(`/flows/${flow.replace(/\.flow\.json$/i, '')}`)
+  const goToFlow = (flow) => history.push(`/oldflows/${flow.replace(/\.flow\.json$/i, '')}`)
 
   const normalFlows = reject(props.flows, (x) => x.name.startsWith('skills/'))
   const flowsName = normalFlows.map((x) => {

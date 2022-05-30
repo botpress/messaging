@@ -99,7 +99,7 @@ const QnAList: FC<Props> = (props) => {
   }, [fetchMore])
 
   const fetchFlows = async () => {
-    await axios.get('/flows', { baseURL: window.STUDIO_API_PATH }).then(({ data }) => {
+    await axios.get('/oldflows', { baseURL: window.STUDIO_API_PATH }).then(({ data }) => {
       setFlows(reorderFlows(data.filter((flow) => !flow.name.startsWith('skills/'))))
     })
   }
