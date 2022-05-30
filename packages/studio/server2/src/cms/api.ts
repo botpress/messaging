@@ -17,6 +17,13 @@ export class CmsApi {
   }
 
   async listElements(req: Request, res: Response) {
-    res.send(await this.cms.listElements())
+    const ids = req.body.ids as string[] | undefined
+
+    let elements = await this.cms.listElements()
+    if (ids) {
+      elements = elements.filter((x) => ids.includes)
+    }
+
+    res.send(elements)
   }
 }
