@@ -12,6 +12,10 @@ export class EntityService extends Service {
     await this.files.update(`entities/${entity.name}.json`, entity)
   }
 
+  async delete(id: string) {
+    await this.files.delete(`entities/${id}.json`)
+  }
+
   async list() {
     return [...this.listSystemEntities(), ...(await this.listCustomEntities())]
   }
