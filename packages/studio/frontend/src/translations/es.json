@@ -199,9 +199,6 @@
       "uploadFile": "Subir archivo"
     }
   },
-  "testing": {
-    "fullName": "Pruebas"
-  },
   "skills": {
     "callApi": "Llamar API",
     "choice": "Elección",
