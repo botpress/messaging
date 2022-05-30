@@ -15,10 +15,9 @@ import { keyMap } from './components/Shared/utilities/keyboardShortcuts'
 import store from './store'
 import { initializeTranslations } from './translations'
 
-// TODO: Only execute this when in the context of Electron
-//if (!window.location.hash) {
-//window.location.replace('index.html#/flows')
-//}
+if (!window.location.hash) {
+  window.location.replace('index.html#/flows')
+}
 
 window['STUDIO_API_URL'] = 'http://localhost:3300'
 
