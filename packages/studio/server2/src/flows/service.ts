@@ -41,6 +41,24 @@ export class FlowService extends Service {
     }
   }
 
+  async update(flowName: string, flow: any) {
+    const flowContent = {
+      ..._.pick(flow, ['version', 'catchAll', 'startNode', 'skillData', 'label', 'description']),
+      nodes: flow.nodes.map((node: any) => _.omit(node, 'x', 'y', 'lastModified'))
+    }
+
+    const uiContent = {
+      nodes: flow.nodes.map((node: any) => ({ id: node.id, position: _.pick(node, 'x', 'y') })),
+      links: flow.links
+    }
+
+    const flowPath = flow.location
+    const uiPath = this.toUiPath(flowPath)
+
+    await this.files.update(`flows/${flowPath}`, flowContent)
+    await this.files.update(`flows/${uiPath}`, uiContent)
+  }
+
   isFlowFile(path: string) {
     return path.endsWith('.flow.json')
   }

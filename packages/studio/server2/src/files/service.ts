@@ -1,5 +1,5 @@
 import { Service } from '@botpress/framework'
-import { readFile } from 'fs/promises'
+import { readFile, writeFile } from 'fs/promises'
 import { PathService } from '../paths/service'
 import { FileData } from './types'
 
@@ -20,5 +20,9 @@ export class FileService extends Service {
   async get(path: string): Promise<any> {
     const buffer = await readFile(this.paths.absolute(path))
     return JSON.parse(buffer.toString())
+  }
+
+  async update(path: string, content: any) {
+    await writeFile(this.paths.absolute(path), JSON.stringify(content, undefined, 2))
   }
 }
