@@ -23,7 +23,7 @@ import * as style from './style.module.scss'
 const statusList = ['public', 'private', 'disabled']
 
 const axiosConfig = {
-  baseURL: 'api/v1/'
+  baseURL: `${window['STUDIO_API_URL']}api/v1/`
 }
 
 interface StateBot {
