@@ -59,6 +59,13 @@ export class FlowService extends Service {
     await this.files.update(`flows/${uiPath}`, uiContent)
   }
 
+  async delete(flowPath: string) {
+    const uiPath = this.toUiPath(flowPath)
+
+    await this.files.delete(`flows/${flowPath}`)
+    await this.files.delete(`flows/${uiPath}`)
+  }
+
   isFlowFile(path: string) {
     return path.endsWith('.flow.json')
   }

@@ -10,6 +10,7 @@ export class FlowApi {
     router.get('/flows', Schema.Api.List, this.list.bind(this))
     router.post('/flows', Schema.Api.Create, this.create.bind(this))
     router.post('/flows/:name', Schema.Api.Update, this.update.bind(this))
+    router.post('/flows/:name/delete', Schema.Api.Delete, this.delete.bind(this))
   }
 
   async list(req: Request, res: Response) {
@@ -25,12 +26,22 @@ export class FlowApi {
   }
 
   async update(req: Request, res: Response) {
-    // TODO: rename doesn't work
-
     const name = req.params.name
     const flow = req.body.flow
 
+    if (flow.name !== name) {
+      await this.flows.delete(name)
+    }
+
     await this.flows.update(flow)
+
+    res.sendStatus(200)
+  }
+
+  async delete(req: Request, res: Response) {
+    const name = req.params.name
+
+    await this.flows.delete(name)
 
     res.sendStatus(200)
   }
