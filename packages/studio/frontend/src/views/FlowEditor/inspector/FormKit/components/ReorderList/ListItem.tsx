@@ -13,6 +13,7 @@ interface OwnProps {
 const ListItem: FC<OwnProps> = ({ label, error, children }) => {
   return (
     <SidePane
+      // @TRANSLATE
       label="Edit Item"
       target={
         <div className={cx(Classes.POPOVER2_OPEN, style.listItem, { [style.itemError]: error })}>

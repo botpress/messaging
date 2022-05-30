@@ -3,43 +3,17 @@ import React, { FC, useState } from 'react'
 import Select from 'react-select'
 
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
-
-import { Label, DynamicBtn } from '../../shared'
+import { Label, DynamicBtn, FormKitProps, FormKitLabelProps } from '../../shared'
 import * as layout from '../../shared/styles/layout.module.scss'
 
-interface OwnProps {
-  name: string
-  label?: string
-  hint?: string
-  req?: boolean
-  placeholder?: string
-  error?: boolean
-  options?: Array<Record<string, string>>
-  defaultValue?: any
-  isDisabled?: boolean
-  isLoading?: boolean
-  isClearable?: boolean
-  isRtl?: boolean
-  isSearchable?: boolean
-}
+export type OwnProps = FormKitProps & FormKitLabelProps
 
-const SelectDropdown: FC<OwnProps> = ({
-  name,
-  label,
-  hint,
-  req,
-  placeholder,
-  error,
-  options,
-  defaultValue,
-  isDisabled,
-  isLoading,
-  isClearable,
-  isRtl,
-  isSearchable
-}) => {
+const SelectDropdown: FC<OwnProps> = ({ name, label, hint, placeholder }) => {
   const [isDynamic, setIsDynamic] = useState(false)
+  // TODO: error boilerplate
+  const error = false
 
+  // @TODO: move styles elsewhere
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -64,23 +38,10 @@ const SelectDropdown: FC<OwnProps> = ({
   return (
     <div className={layout.formKitContainer}>
       <div className={layout.labelSection}>
-        <Label className={layout.center} label={label} hint={hint} required={req} />
+        <Label className={layout.center} label={label} hint={hint} />
         <DynamicBtn className={layout.rightBtn} active={isDynamic} onClick={() => setIsDynamic(!isDynamic)} />
       </div>
-      {!isDynamic ? (
-        <Select
-          styles={customStyles}
-          options={options}
-          defaultValue={defaultValue}
-          isDisabled={isDisabled}
-          isLoading={isLoading}
-          isClearable={isClearable}
-          isRtl={isRtl}
-          isSearchable={isSearchable}
-        />
-      ) : (
-        <SuperInput type={SiTypes.BOOL} />
-      )}
+      {!isDynamic ? <Select styles={customStyles} /> : <SuperInput type={SiTypes.BOOL} />}
     </div>
   )
 }

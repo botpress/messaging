@@ -1,0 +1,79 @@
+@use '~/src/scss/style.scss' as *;
+
+.container {
+  @extend %text-sm;
+  position: absolute;
+  top: 2px;
+  right: -2px;
+  color: $gray3;
+  display: flex;
+  padding: 8px 12px;
+  z-index: 5;
+}
+
+.saved {
+  @extend %flex-row;
+  color: mix(white, $green3, 40%);
+  column-gap: 6px;
+  align-items: center;
+}
+
+.saveBtn {
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  background-color: $green4;
+  color: $white;
+}
+
+.success {
+  opacity: 0;
+
+  animation: pop 2s cubic-bezier(0.3, 0.5, 0.5, 1);
+}
+// cubic-bezier(0, 0.75, 0.59, 0.6)
+
+@keyframes pop {
+  0% {
+    opacity: 0%;
+    transform: scale(0);
+  }
+
+  20% {
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 100%;
+  }
+
+  80% {
+    opacity: 100%;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0%;
+    transform: scale(1.5);
+  }
+}
+
+// .spinner {
+//   &-enter {
+//     opacity: 0.01;
+//   }
+
+//   &-enter.spinner-enter-active {
+//     opacity: 1;
+//     transition: opacity 500ms ease-in;
+//   }
+
+//   &-leave {
+//     opacity: 1;
+//   }
+
+//   &-leave.spinner-leave-active {
+//     opacity: 0.01;
+//     transition: opacity 300ms ease-in;
+//   }
+// }

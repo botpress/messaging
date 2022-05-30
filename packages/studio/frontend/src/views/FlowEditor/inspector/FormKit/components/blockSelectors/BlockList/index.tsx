@@ -5,17 +5,13 @@ import produce from 'immer'
 import React, { useCallback, FC } from 'react'
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd'
 
-import { Label, AddBtn } from '../../../shared'
+import { Label, AddBtn, FormKitProps, FormKitLabelProps } from '../../../shared'
 import * as layout from '../../../shared/styles/layout.module.scss'
 import Block from '../Block'
 import BlockSidePane from '../BlockSidePane'
 import * as style from './style.module.scss'
 
-export interface OwnProps {
-  name: string
-  label: string
-  hint?: string
-}
+export type OwnProps = FormKitProps & FormKitLabelProps
 
 const getRenderItem = (blocks: any) => (provided: any, snapshot: any, rubric: any) => {
   return (
@@ -37,7 +33,7 @@ const BlockList: FC<OwnProps> = ({ name, label, hint }) => {
   const handleDragEnd = useCallback(
     (result) => {
       const { source, destination } = result
-      // dropped outside the list
+
       if (!destination) {
         return
       }
@@ -62,17 +58,14 @@ const BlockList: FC<OwnProps> = ({ name, label, hint }) => {
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId={name} renderClone={renderItem}>
           {(provided: any, snapshot: any) => (
-            <div
-              className={style.container}
-              // style={{ minHeight: `${BLOCK_HEIGHT_PX * value.length}px` }}
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-            >
+            <div className={style.container} ref={provided.innerRef} {...provided.droppableProps}>
               {value === undefined ? (
+                //  @TRANSLATE
                 <Spinner className={style.loading} size={25}>
                   loading
                 </Spinner>
               ) : value === null ? (
+                // @TODO: remouve when merging onEnter and onReceive
                 <div>checkbox wait for user</div>
               ) : (
                 value.map((block, idx) => (

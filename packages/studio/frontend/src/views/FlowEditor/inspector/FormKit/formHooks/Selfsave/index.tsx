@@ -1,23 +1,25 @@
 import { Spinner, Icon, Colors, Intent } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
-import { debounce } from 'lodash'
-import React, { useState, useCallback, FC } from 'react'
+import React, { useState, useCallback, useRef, FC } from 'react'
 
 import { useDidMountEffect } from '../../../../utils/useDidMountEffect'
 import * as style from './style.module.scss'
 
-const DEBOUNCE_MS = 2500
-
 interface OwnProps {}
 
-const Autosave: FC<OwnProps> = () => {
+// @LEGACY: remove when autosave can be added
+const Selfsave: FC<OwnProps> = () => {
   const [updating, setUpdating] = useState(null)
+  const [dirty, setDirty] = useState(false)
   const { submitForm, values, isSubmitting } = useFormikContext()
+  const haltDirty = useRef(false)
 
-  const debouncedSubmit = useCallback(
-    debounce(() => submitForm(), DEBOUNCE_MS),
-    [submitForm]
-  )
+  const handleSave = useCallback(() => {
+    haltDirty.current = true
+    submitForm()
+      .then(() => setDirty(false))
+      .catch(() => {})
+  }, [submitForm, setDirty])
 
   useDidMountEffect(() => {
     if (!isSubmitting) {
@@ -26,19 +28,25 @@ const Autosave: FC<OwnProps> = () => {
   }, [isSubmitting, setUpdating])
 
   useDidMountEffect(() => {
-    if (!updating) {
-      setUpdating(true)
+    if (!dirty && !haltDirty.current) {
+      setDirty(true)
+    } else {
+      haltDirty.current = false
     }
-    const debSubmit = debouncedSubmit() as any
-    return () => debSubmit.cancel()
-  }, [debouncedSubmit, values])
+  }, [values])
 
   return (
     <div className={style.container}>
       {updating ? (
+        //  @TRANSLATE
         <Spinner size={18} intent={Intent.PRIMARY}>
           loading
         </Spinner>
+      ) : dirty ? (
+        // @TRANSLATE
+        <div className={style.saveBtn} onClick={handleSave}>
+          Save
+        </div>
       ) : (
         <Icon icon="tick-circle" size={18} color={Colors.GREEN4} className={style.success} />
       )}
@@ -46,4 +54,4 @@ const Autosave: FC<OwnProps> = () => {
   )
 }
 
-export default Autosave
+export default Selfsave

@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 
-import { Label, AddBtn, SwapIcon } from '../../shared'
 import * as base from '~/src/scss/base/_index.module.scss'
+import { Label, AddBtn, SwapIcon } from '../../shared'
 import * as layout from '../../shared/styles/layout.module.scss'
 import * as style from './style.module.scss'
 
@@ -15,6 +15,7 @@ interface OwnProps {
   error?: boolean
 }
 
+// @TODO: finish component
 const SingleContent: FC<OwnProps> = ({ name, label, hint, req, placeholder, error }) => {
   const content = <Item label="Text | welcome_msg" />
 
@@ -23,25 +24,21 @@ const SingleContent: FC<OwnProps> = ({ name, label, hint, req, placeholder, erro
 
   const toggleDI = () => {
     setIsDynamic(!isDynamic)
-    console.log('lOL')
   }
 
   return (
     <div className={layout.formKitContainer}>
-      {/* Label, tooltip on hover, required | super input */}
       <Label label={label} hint={hint} required />
 
       {/* Well */}
-      {/* {isDynamic ? ( */}
       <div className={`${layout['well-row']}`} style={{ padding: 8 + 'px' }}>
         {/* Content */}
         <div className={`${base['w-full']}`}>
-          {isFull ? content : null}
+          {isFull ? content : <p className={`${style.placeholderText}`}>{placeholder}</p>}
           {/* Only shows when only child */}
           <p className={`${style.placeholderText}`}>{placeholder}</p>
         </div>
         {/* Button */}
-
         {isFull ? (
           <SwapIcon
             error={error ? true : false}
@@ -51,16 +48,12 @@ const SingleContent: FC<OwnProps> = ({ name, label, hint, req, placeholder, erro
           />
         ) : (
           <AddBtn
-            // error={error ? true : false}
             onClick={() => {
               setIsFull(true)
             }}
           />
         )}
       </div>
-      {/* ) : (
-        <input type="text" className={`${layout['text-input]'}`} />
-      )} */}
     </div>
   )
 }

@@ -16,7 +16,6 @@ const TabBar: FC<OwnProps> = ({ contextNodeName }) => {
       <div className={style.contextTab}>
         <Tab idx={-1}>{contextNodeName}</Tab>
         <div className={style.divider} />
-      { /*<div className={style.contextFade} /> */}
       </div>
       <div className={style.contentTabs}>
         {tabs.map((id, idx) => (

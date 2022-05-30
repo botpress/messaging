@@ -2,18 +2,15 @@ import { EditableText } from '@blueprintjs/core'
 import { useField } from 'formik'
 import React, { FC } from 'react'
 
+import { FormKitProps } from '../../shared'
 import * as layout from '../../shared/styles/layout.module.scss'
-
 import * as style from './style.module.scss'
 
-interface OwnProps {
-  name: string
+interface OwnProps extends FormKitProps {
   type?: string
-  placeholder?: string
-  error?: boolean
 }
 
-const EditableTextBlock: FC<OwnProps> = ({ type, placeholder, error, name }) => {
+const EditableTextBlock: FC<OwnProps> = ({ type, placeholder, name }) => {
   const [field, { value }, { setValue }] = useField(name)
 
   return (

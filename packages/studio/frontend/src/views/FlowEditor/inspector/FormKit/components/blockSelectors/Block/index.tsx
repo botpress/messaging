@@ -7,12 +7,9 @@ import useInspectorStore from '../../../../store'
 import { Text, TextIntents } from '../../../shared'
 import * as style from './style.module.scss'
 
-// export enum BlockTypes {
-//   CONTENT = 'content',
-//   CODE = 'code'
-// }
 export const BLOCK_HEIGHT_PX = 36 + 8 // height + padding
 
+// @TODO: better/cleaner types
 export interface OwnProps {
   block: any
   grab?: boolean
@@ -25,6 +22,8 @@ export interface OwnProps {
   fetchContentItem: any
   items: any
 }
+
+// @TODO: content type relations elsewhere
 const contentTypes = {
   builtin_text: 'simple',
   builtin_audio: 'simple',
@@ -52,6 +51,7 @@ const Block: FC<OwnProps> = forwardRef(({ items, block, grab, temp, options, cla
     [actionId]
   )
 
+  // @LEGACY
   useEffect(() => {
     const id = block?.match(/^say #!(.*)$/)?.[1]
     if (id) {
@@ -64,6 +64,7 @@ const Block: FC<OwnProps> = forwardRef(({ items, block, grab, temp, options, cla
   return (
     <div ref={ref as any} className={cx(style.container, className)} onClick={handleClicks}>
       <div
+        //@LEGACY
         type-data={
           !block.startsWith('say')
             ? 'code'
@@ -73,20 +74,20 @@ const Block: FC<OwnProps> = forwardRef(({ items, block, grab, temp, options, cla
         }
         className={cx(style.block, { [style.temp]: temp, [style.grab]: grab, [style.block__dragging]: isDragging })}
       >
+        {/* @LEGACY */}
         <Tags type={!block.startsWith('say') ? 'code' : items[actionId]?.contentType} />
-        {/* <Text className={style.type} value={block.type} large /> */}
         <Text
           className={style.name}
           intent={TextIntents.LITE}
           value={!block.startsWith('say') ? block.split(' ')[0] + ' (args)' : items[actionId]?.previews?.en}
           large
         />
-        {/* <Text className={style.id} intent={TextIntent.LITE_PLACEHOLDER} value={} /> */}
       </div>
     </div>
   )
 })
 
+// @LEGACY
 const mapStateToProps = (state) => ({ items: state.content.itemsById })
 const mapDispatchToProps = {}
 

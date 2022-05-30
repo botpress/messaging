@@ -1,12 +1,9 @@
-// import { useFormikContext } from 'formik'
 import React, { FC } from 'react'
 import { connect } from 'react-redux'
 
 import { updateFlowNode } from '~/src/actions'
 import { getCurrentFlowNode } from '../../../../reducers'
-// import { useDidMountEffect } from '../../utils/useDidMountEffect'
 import FormKit, { BlockList, EditableTextBlock } from '../FormKit'
-import { Autosave } from '../FormKit/formHooks'
 import Collapse from '../layout/Collapse'
 
 interface OwnProps {
@@ -14,6 +11,7 @@ interface OwnProps {
   updateFlowNode: any
 }
 
+// @TRANSLATE: whole component
 const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
   const { id, name, onEnter, onReceive, next } = currentNode
 
@@ -26,16 +24,12 @@ const NodePane: FC<OwnProps> = ({ currentNode, updateFlowNode }) => {
         name
       }}
       onSubmit={(values, { setSubmitting }) => {
-        console.log('submit happen', values)
-        updateFlowNode(values)
-        setSubmitting()
+        updateFlowNode({ id, ...values })
+        setSubmitting(false)
       }}
     >
-      <Autosave />
-      {/* <div className={layout.head}> */}
       <EditableTextBlock name="name" type="title" />
       <EditableTextBlock name="description" type="text" />
-      {/* </div> */}
 
       <Collapse idx={0} label="Basic">
         <BlockList name="onEnter" label="On Enter" />

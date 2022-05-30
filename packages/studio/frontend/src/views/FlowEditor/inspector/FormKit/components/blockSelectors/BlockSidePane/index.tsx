@@ -1,7 +1,7 @@
 import { TagInput, Spinner } from '@blueprintjs/core'
 import { Classes } from '@blueprintjs/popover2'
 import cx from 'classnames'
-import { useField, useFormikContext } from 'formik'
+import { useField } from 'formik'
 import produce from 'immer'
 import { debounce } from 'lodash'
 import React, { useState, useEffect, useCallback, useMemo, FC } from 'react'
@@ -15,6 +15,7 @@ import { SidePane } from '../../../../layout'
 import { AddBtn } from '../../../shared'
 import * as style from './style.module.scss'
 
+// @LEGACY
 export interface OwnProps {
   name: string
   currentItems: any
@@ -24,6 +25,7 @@ export interface OwnProps {
   refreshFlowsLinks: any
 }
 
+// @LEGACY
 const BlockSidePane: FC<OwnProps> = ({
   name,
   currentItems,
@@ -33,16 +35,17 @@ const BlockSidePane: FC<OwnProps> = ({
   categories,
   children
 }) => {
-  const { submitForm } = useFormikContext()
+  const [field, { value }, { setValue }] = useField(name)
   const [search, setSearch] = useState('')
   const [contentType, setContentType] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [field, { value }, { setValue }] = useField(name)
 
+  // @LEGACY
   const sortedCategories = useMemo(() => {
     return [...(categories || [])].sort((a, b) => a.count || 0 - b.count || 0).reverse()
   }, [categories])
 
+  // @LEGACY
   const debouncedSearch = debounce(
     (search, type) =>
       fetchContentItems({
@@ -55,6 +58,7 @@ const BlockSidePane: FC<OwnProps> = ({
     800
   )
 
+  // @TODO: Create new content
   const createContentType = useCallback((type) => {}, [])
 
   const selectContentType = useCallback(
@@ -71,13 +75,13 @@ const BlockSidePane: FC<OwnProps> = ({
       if (!value.find((blockStr) => blockStr.includes(block.id))) {
         setValue(
           produce(value, (draft: any[]) => {
+            // @LEGACY
             if (block.contentType.startsWith('builtin') || block.contentType.startsWith('dropdown')) {
               draft.push(`say #!${block.id}`)
             }
           })
         )
       }
-      submitForm() as any
     },
     [value, setValue]
   )
@@ -103,6 +107,7 @@ const BlockSidePane: FC<OwnProps> = ({
   return (
     <SidePane label="Block Library" target={children} onClose={resetContentType}>
       <>
+        {/* @TRANSLATE */}
         <p>Select type to search or create.</p>
         <TagInput
           values={[contentType && lang.tr(contentType.title)]}
@@ -121,6 +126,7 @@ const BlockSidePane: FC<OwnProps> = ({
           <>
             <div className={style.results}>
               {loading ? (
+                // @TRANSLATE
                 <Spinner className={style.loading} size={25}>
                   loading
                 </Spinner>
@@ -135,17 +141,22 @@ const BlockSidePane: FC<OwnProps> = ({
                   </div>
                 ))
               ) : (
+                // @TRANSLATE
                 <span className={style.empty}>No Content</span>
               )}
             </div>
+            {/* @TODO: add logic for new content creation */}
             <div className={cx(style.createBtn, Classes.POPOVER2_DISMISS)} onClick={() => console.log(contentType)}>
+              {/* @TRANSLATE */}
               <p>Create New {lang.tr(contentType.title)}</p>
               <AddBtn />
             </div>
           </>
         ) : (
           <div className={style.contents}>
+            {/* @TODO: fix when codetype problem is fixed */}
             <div onClick={() => selectContentType({ title: 'code', id: 'code' })} className={style.content}>
+              {/* @TRANSLATE */}
               <h4>Run Action</h4>
               <CIcon type="code" size={16} />
             </div>
@@ -157,6 +168,7 @@ const BlockSidePane: FC<OwnProps> = ({
                 </div>
               ))
             ) : (
+              // @TRANSLATE
               <div>Loading</div>
             )}
           </div>
@@ -166,6 +178,7 @@ const BlockSidePane: FC<OwnProps> = ({
   )
 }
 
+// @LEGACY
 const mapStateToProps = (state) => ({
   currentItems: state.content.currentItems,
   categories: state.content.categories.registered

@@ -3,6 +3,7 @@ import React, { FC } from 'react'
 import { lang } from '~/src/components/Shared/translations'
 import { TextInput, ReorderList, Switch } from '../../FormKit'
 
+// @TRANSLATE: whole component
 const TextForm: FC = () => {
   return (
     <>

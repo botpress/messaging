@@ -1,24 +1,16 @@
 import { Spinner } from '@blueprintjs/core'
 import { FieldArray, useField } from 'formik'
 import produce from 'immer'
-import React, { FC, useState, useCallback, useLayoutEffect } from 'react'
+import React, { FC, useState, useCallback } from 'react'
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd'
 
 import { SuperInput, SiTypes } from '~/src/components/SuperInput'
-import { Label, DynamicBtn } from '../../shared'
-import AddBtn from '../../shared/AddBtn'
+import { Label, DynamicBtn, AddBtn, FormKitProps, FormKitLabelProps } from '../../shared'
 import * as layout from '../../shared/styles/layout.module.scss'
 import ListItem from './ListItem'
-
 import * as style from './style.module.scss'
 
-interface OwnProps {
-  name: string
-  label: string
-  hint?: string
-  help?: string
-  placeholder?: string
-}
+export type OwnProps = FormKitProps & FormKitLabelProps
 
 const getRenderItem = (blocks: any, children: any) => (provided: any, snapshot: any, rubric: any) => {
   return (
@@ -28,9 +20,8 @@ const getRenderItem = (blocks: any, children: any) => (provided: any, snapshot: 
   )
 }
 
-const ReorderList: FC<OwnProps> = ({ name, label, hint, help, placeholder, children }) => {
+const ReorderList: FC<OwnProps> = ({ name, label, hint, placeholder, children }) => {
   const [field, { value }, { setValue }] = useField(name)
-  const [firstRen, setFirstRen] = useState(false)
   const [isDynamic, setIsDynamic] = useState(false)
   const renderItem = getRenderItem(value, children)
 
@@ -51,10 +42,6 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, help, placeholder, child
     [value, setValue]
   )
 
-  useLayoutEffect(() => {
-    setFirstRen(true)
-  }, [])
-
   return (
     <>
       <div className={layout.formKitContainer}>
@@ -69,25 +56,27 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, help, placeholder, child
                 <FieldArray name={name}>
                   {({ push }) => (
                     <div className={style.list}>
-                      {/* Message Box and plus button */}
                       <div className={style.listHeader}>
-                        <p>{help}</p>
+                        {/* @TRANSLATE */}
+                        <p>help part</p>
                         <AddBtn
                           onClick={() => {
+                            // @TODO: fix reorderlist ticket
                             push('')
                           }}
                         />
                       </div>
 
-                      {/* Message Container */}
                       <div className={style.listContainer} ref={provided.innerRef} {...provided.droppableProps}>
                         <div className={style.placeholderText}>{placeholder}</div>
 
                         {value === undefined ? (
+                          //  @TRANSLATE
                           <Spinner className={style.loading} size={25}>
                             loading
                           </Spinner>
                         ) : value === null ? (
+                          // @TODO: remove once onEnter and onReceive are merged
                           <div>checkbox wait for user</div>
                         ) : (
                           value.map((block, idx) => (
@@ -113,29 +102,3 @@ const ReorderList: FC<OwnProps> = ({ name, label, hint, help, placeholder, child
 }
 
 export default ReorderList
-
-{
-  /*
-  import React, { FC, useState, useCallback, useLayoutEffect, Children, isValidElement, cloneElement } from 'react'
-<SidePane
-label="Edit Item"
-target={
-  <Draggable draggableId={block} index={idx}>
-    {renderItem}
-  </Draggable>
-}
->
-{Children.map(children, (child) => {
-  // Checking isValidElement is the safe way and avoids a TS error too.
-  if (isValidElement(child)) {
-    const { name: fName, label } = child.props
-    return cloneElement(child, {
-      name: `${name}.${idx}${fName ? `.${fName}` : ''}`,
-      label
-    })
-  }
-  return child
-})}
-</SidePane>
-*/
-}
