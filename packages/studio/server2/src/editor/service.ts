@@ -1,6 +1,8 @@
 import { Service } from '@botpress/framework'
+import { readFile } from 'fs/promises'
 import path from 'path'
 import { PathService } from '../paths/service'
+import { EditorFile } from './types'
 
 export class EditorService extends Service {
   constructor(private paths: PathService) {
@@ -49,6 +51,13 @@ export class EditorService extends Service {
 
   async getTypings() {
     return {}
+  }
+
+  async readFile(fileInfo: EditorFile) {
+    const basePath = fileInfo.type === 'hook' ? 'hooks' : 'actions'
+    const buffer = await readFile(this.paths.absolute(`${basePath}/${fileInfo.location}`))
+
+    return buffer.toString()
   }
 
   private excludeBuiltin(paths: string[]) {

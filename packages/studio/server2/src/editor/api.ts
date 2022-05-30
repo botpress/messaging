@@ -11,6 +11,7 @@ export class EditorApi {
     router.get('/code-editor/permissions', Schema.Api.GetPermissions, this.getPermissions.bind(this))
     // TODO: no typings at the moment
     router.get('/code-editor/typings', Schema.Api.GetTypings, this.getTypings.bind(this))
+    router.post('/code-editor/readFile', Schema.Api.ReadFile, this.readFile.bind(this))
   }
 
   async listFiles(req: Request, res: Response) {
@@ -23,5 +24,9 @@ export class EditorApi {
 
   async getTypings(req: Request, res: Response) {
     res.send(await this.editor.getTypings())
+  }
+
+  async readFile(req: Request, res: Response) {
+    res.send({ fileContent: await this.editor.readFile(req.body) })
   }
 }
