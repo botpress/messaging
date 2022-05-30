@@ -7,9 +7,15 @@ export class IntentApi {
   constructor(private intents: IntentService) {}
 
   setup(router: PublicApiManager) {
+    router.post('/nlu/intents', Schema.Api.Create, this.create.bind(this))
     router.get('/nlu/intents/:name', Schema.Api.Get, this.get.bind(this))
     router.get('/nlu/intents', Schema.Api.List, this.list.bind(this))
     router.get('/nlu/contexts', Schema.Api.ListContexts, this.listContexts.bind(this))
+  }
+
+  async create(req: Request, res: Response) {
+    await this.intents.create(req.body)
+    res.sendStatus(201)
   }
 
   async get(req: Request, res: Response) {

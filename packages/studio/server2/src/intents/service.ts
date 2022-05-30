@@ -13,6 +13,15 @@ export class IntentService extends Service {
     return intents.map((x) => x.content)
   }
 
+  async create(intent: any) {
+    await this.files.update(`intents/${intent.name}.json`, {
+      name: intent.name,
+      utterances: intent.utterances || {},
+      slots: intent.slots || [],
+      contexts: intent.contexts || ['global']
+    })
+  }
+
   async get(name: string) {
     return this.files.get(`intents/${name}.json`)
   }
