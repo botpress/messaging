@@ -24,7 +24,6 @@ import FlowEditor from '../../views/FlowEditor'
 import Module from '../../views/Module'
 import NLU from '../../views/Nlu'
 import QNA from '../../views/Qna'
-import Testing from '../../views/Testing'
 import storage from '../Shared/lite-utils/storage'
 import { lang } from '../Shared/translations'
 import { isInputFocused } from '../Shared/utilities/inputs'
@@ -193,7 +192,6 @@ const Layout: FC<Props> = (props: Props) => {
     'go-content': () => gotoUrl('/content'),
     'go-module-code': () => gotoUrl('/code-editor'),
     'go-module-qna': () => gotoUrl('/qna'),
-    'go-module-testing': () => gotoUrl('/modules/testing'),
     'go-module-analytics': () => gotoUrl('/modules/analytics'),
     'go-understanding': () => gotoUrl('/nlu'),
     'toggle-inspect': props.toggleInspector
@@ -234,7 +232,6 @@ const Layout: FC<Props> = (props: Props) => {
                 <Route exact path="/config" component={Config} />
                 <Route exact path="/nlu" component={NLU} />
                 <Route exact path="/qna" component={QNA} />
-                <Route exact path="/testing" component={Testing} />
                 <Route exact path="/code-editor" component={CodeEditor} />
 
                 <Route exact path="/modules/:moduleName/:componentName?" render={(props) => <Module {...props} />} />
