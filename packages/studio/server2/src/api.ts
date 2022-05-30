@@ -1,4 +1,5 @@
 import { ApiManagers } from '@botpress/framework'
+import { ActionApi } from './actions/api'
 import { App } from './app'
 import { CmsApi } from './cms/api'
 import { ConfigApi } from './config/api'
@@ -22,6 +23,7 @@ export class Api {
   private cms: CmsApi
   private qnas: QnaApi
   private editor: EditorApi
+  private actions: ActionApi
 
   constructor(private app: App, private managers: ApiManagers) {
     this.env = new EnvApi()
@@ -34,6 +36,7 @@ export class Api {
     this.cms = new CmsApi(this.app.cms)
     this.qnas = new QnaApi(this.app.qnas)
     this.editor = new EditorApi(this.app.editor)
+    this.actions = new ActionApi(this.app.actions)
   }
 
   async setup() {
@@ -47,5 +50,6 @@ export class Api {
     this.cms.setup(this.managers.public)
     this.qnas.setup(this.managers.public)
     this.editor.setup(this.managers.public)
+    this.actions.setup(this.managers.public)
   }
 }

@@ -1,4 +1,5 @@
 import { Framework } from '@botpress/framework'
+import { ActionService } from './actions/service'
 import { CmsService } from './cms/service'
 import { ConfigService } from './config/service'
 import { EditorService } from './editor/service'
@@ -24,6 +25,7 @@ export class App extends Framework {
   cms: CmsService
   qnas: QnaService
   editor: EditorService
+  actions: ActionService
   sockets: SocketService
 
   constructor() {
@@ -39,6 +41,7 @@ export class App extends Framework {
     this.cms = new CmsService(this.paths, this.files)
     this.qnas = new QnaService(this.files)
     this.editor = new EditorService(this.paths)
+    this.actions = new ActionService(this.paths)
     this.sockets = new SocketService()
   }
 
@@ -55,6 +58,7 @@ export class App extends Framework {
     await this.cms.setup()
     await this.qnas.setup()
     await this.editor.setup()
+    await this.actions.setup()
     await this.sockets.setup()
   }
 }
