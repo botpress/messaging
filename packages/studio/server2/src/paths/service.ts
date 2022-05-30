@@ -8,8 +8,12 @@ export class PathService extends Service {
   }
 
   async list(dir: string): Promise<string[]> {
-    const paths = await readdir(this.absolute(dir))
-    return paths.map((x) => path.join(dir, x))
+    try {
+      const paths = await readdir(this.absolute(dir))
+      return paths.map((x) => path.join(dir, x))
+    } catch {
+      return []
+    }
   }
 
   async listFiles(dir: string) {
