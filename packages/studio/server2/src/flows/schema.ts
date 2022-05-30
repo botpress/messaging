@@ -3,7 +3,8 @@ import Joi from 'joi'
 
 const Api = {
   List: ReqSchema(),
-  Update: ReqSchema({ params: { id: Joi.string().required() }, body: { flow: Joi.object().required() } })
+  Create: ReqSchema({ body: { flow: Joi.object().required() } }),
+  Update: ReqSchema({ params: { name: Joi.string().required() }, body: { flow: Joi.object().required() } })
 }
 
 export const Schema = { Api }

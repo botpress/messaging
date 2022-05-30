@@ -41,7 +41,7 @@ export class FlowService extends Service {
     }
   }
 
-  async update(flowName: string, flow: any) {
+  async update(flow: any) {
     const flowContent = {
       ..._.pick(flow, ['version', 'catchAll', 'startNode', 'skillData', 'label', 'description']),
       nodes: flow.nodes.map((node: any) => _.omit(node, 'x', 'y', 'lastModified'))
