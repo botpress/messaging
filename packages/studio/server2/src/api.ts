@@ -2,6 +2,7 @@ import { ApiManagers } from '@botpress/framework'
 import { App } from './app'
 import { CmsApi } from './cms/api'
 import { ConfigApi } from './config/api'
+import { EditorApi } from './editor/api'
 import { EntityApi } from './entities/api'
 import { EnvApi } from './env/api'
 import { FlowApi } from './flows/api'
@@ -20,6 +21,7 @@ export class Api {
   private flows: FlowApi
   private cms: CmsApi
   private qnas: QnaApi
+  private editor: EditorApi
 
   constructor(private app: App, private managers: ApiManagers) {
     this.env = new EnvApi()
@@ -31,6 +33,7 @@ export class Api {
     this.flows = new FlowApi(this.app.flows)
     this.cms = new CmsApi(this.app.cms)
     this.qnas = new QnaApi(this.app.qnas)
+    this.editor = new EditorApi(this.app.editor)
   }
 
   async setup() {
@@ -43,5 +46,6 @@ export class Api {
     this.flows.setup(this.managers.public)
     this.cms.setup(this.managers.public)
     this.qnas.setup(this.managers.public)
+    this.editor.setup(this.managers.public)
   }
 }
