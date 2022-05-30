@@ -79,4 +79,17 @@ export class CmsService extends Service {
     const elements = await this.listElements()
     return elements.find((x) => x.id === elementId)
   }
+
+  async deleteElements(ids: string[]) {
+    const contentElementsPerFile = await this.files.list('content-elements')
+
+    await Promise.all(
+      contentElementsPerFile.map((file) =>
+        this.files.update(
+          file.path,
+          file.content.filter((x: any) => !ids.includes(x.id))
+        )
+      )
+    )
+  }
 }

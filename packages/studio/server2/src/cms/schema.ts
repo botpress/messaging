@@ -20,7 +20,8 @@ const Api = {
     params: { contentType: Joi.string().required(), elementId: Joi.string() },
     body: { formData: Joi.object().required() }
   }),
-  GetElement: ReqSchema({ params: { elementId: Joi.string().required() } })
+  GetElement: ReqSchema({ params: { elementId: Joi.string().required() } }),
+  BulkDelete: ReqSchema({ body: { ids: Joi.array().items(Joi.string()).required() } })
 }
 
 export const Schema = { Api }

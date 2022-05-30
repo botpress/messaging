@@ -12,6 +12,7 @@ export class CmsApi {
     router.post('/cms/:contentType?/elements', Schema.Api.ListElements, this.listElements.bind(this))
     router.post('/cms/:contentType/element/:elementId?', Schema.Api.CreateElement, this.createElement.bind(this))
     router.get('/cms/element/:elementId', Schema.Api.GetElement, this.getElement.bind(this))
+    router.post('/cms/elements/bulk_delete', Schema.Api.BulkDelete, this.bulkDelete.bind(this))
   }
 
   async listTypes(req: Request, res: Response) {
@@ -63,5 +64,12 @@ export class CmsApi {
   async getElement(req: Request, res: Response) {
     const { elementId } = req.params
     res.send(await this.cms.getElement(elementId))
+  }
+
+  async bulkDelete(req: Request, res: Response) {
+    const { ids } = req.body
+    await this.cms.deleteElements(ids)
+
+    res.sendStatus(200)
   }
 }
