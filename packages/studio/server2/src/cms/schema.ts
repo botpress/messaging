@@ -12,7 +12,8 @@ const Api = {
       from: Joi.number(),
       searchTerm: Joi.string().allow(''),
       sortOrder: Joi.array(),
-      ids: Joi.array().items(Joi.string()).optional()
+      ids: Joi.array().items(Joi.string()).optional(),
+      filters: Joi.array()
     }
   }),
   CreateElement: ReqSchema({
