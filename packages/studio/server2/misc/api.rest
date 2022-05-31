@@ -1,4 +1,7 @@
 @baseUrl = http://localhost:3300
 
-### Status
+### Server 2
 GET {{baseUrl}}/api/v1/flows
+
+### Old Server
+GET http://localhost:3301/api/v1/studio/gggg/flows
