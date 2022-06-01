@@ -145,7 +145,6 @@ export class CmsService extends Service {
     const host = process.env.EXTERNAL_URL || 'http://localhost:3300' // TODO: Use env var instead of hardcoded value
     const context = { BOT_ID: '', BOT_URL: host }
 
-    recursiveProtection = 0 // reset recursive counter that prevents circular dependencies between elements
     const expandedFormData = resolveRef(element.formData)
 
     const previews = languages.reduce((result: any, lang) => {

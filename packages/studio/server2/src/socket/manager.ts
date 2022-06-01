@@ -84,12 +84,12 @@ export class SocketManager {
 
       await this.handlers[message.type](socket, message)
     } catch (e) {
-      this.logger.error(e, 'An error occured receiving a socket message', message)
+      this.logger.error(e, 'An error occurred receiving a socket message', message)
 
       try {
         return this.reply(socket, message, { error: true, message: 'an error occurred' })
       } catch (e) {
-        this.logger.error(e, 'An error occured sending an error message to the socket')
+        this.logger.error(e, 'An error occurred sending an error message to the socket')
       }
     }
   }
@@ -100,7 +100,7 @@ export class SocketManager {
 
       await this.sockets.delete(socket)
     } catch (e) {
-      this.logger.error(e, 'An error occured during a socket disconnect')
+      this.logger.error(e, 'An error occurred during a socket disconnect')
     }
   }
 }
