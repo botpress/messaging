@@ -35,8 +35,6 @@ export class CmsService extends Service {
   }
 
   async listElements() {
-    // TODO: missing preview
-
     const contentElementsPerFile = await this.files.list('content-elements')
     const contentElements = []
 
@@ -45,6 +43,8 @@ export class CmsService extends Service {
       const contentType = this.contentTypes.find((x) => x.id === contentTypeId)
 
       for (const element of file.content) {
+        const previews = this.computeElementPreviews(element, contentType, 'en', ['en', 'fr']) // TODO: provide languages and default lang
+
         contentElements.push({
           ...element,
           contentType: contentTypeId,
@@ -54,10 +54,7 @@ export class CmsService extends Service {
             title: contentType.title,
             renderer: contentType.id
           },
-          previews: {
-            en: element.id,
-            fr: element.id
-          }
+          previews
         })
       }
     }
@@ -91,5 +88,87 @@ export class CmsService extends Service {
         )
       )
     )
+  }
+
+  private computeElementPreviews(element: any, contentType: any, defaultLanguage: string, languages: string[]): any[] {
+    let recursiveProtection = 0
+
+    const resolveRef = (data: any): any => {
+      if (recursiveProtection++ >= 10) {
+        return '[error: circular dependency]'
+      }
+
+      if (!data) {
+        return data
+      }
+
+      if (Array.isArray(data)) {
+        return data.map(resolveRef)
+      }
+
+      if (_.isObject(data)) {
+        return _.mapValues(data, resolveRef)
+      }
+
+      if (_.isString(data)) {
+        const m = data.match(/^##ref\((.*)\)$/)
+        const refId = m?.[1]
+        if (!refId || !element) {
+          return data
+        }
+        return resolveRef(element.formData)
+      }
+    }
+
+    const getOriginalProps = (expandedFormData: any, lang: string, contentType: any) => {
+      const originalProps = Object.keys(_.get(contentType, 'jsonSchema.properties'))
+
+      // When data is accessible through a single key containing the '$' separator. e.g. { 'text$en': '...' }
+      const separatorExtraction = (prop: string) =>
+        expandedFormData[`${prop}$${lang}`] || (defaultLanguage && expandedFormData[`${prop}$${defaultLanguage}`])
+
+      // When data is accessible through keys of a nested dictionary. e.g. { 'text': { 'en': '...' } }
+      const nestedDictExtraction = (prop: string) =>
+        expandedFormData[prop] &&
+        (expandedFormData[prop][lang] || (defaultLanguage && expandedFormData[prop][defaultLanguage]))
+
+      if (originalProps) {
+        return originalProps.reduce(
+          (result: any, prop) => ((result[prop] = separatorExtraction(prop) || nestedDictExtraction(prop)), result),
+          {}
+        )
+      } else {
+        return expandedFormData
+      }
+    }
+
+    const host = process.env.EXTERNAL_URL || 'http://localhost:3300' // TODO: Use env var instead of hardcoded value
+    const context = { BOT_ID: '', BOT_URL: host }
+
+    recursiveProtection = 0 // reset recursive counter that prevents circular dependencies between elements
+    const expandedFormData = resolveRef(element.formData)
+
+    const previews = languages.reduce((result: any, lang) => {
+      if (!contentType || !contentType.computePreviewText) {
+        result[lang] = 'No preview'
+        return result
+      }
+
+      const translated = getOriginalProps(expandedFormData, lang, contentType)
+      let preview = contentType.computePreviewText({ ...translated, ...context })
+
+      if (!preview) {
+        const defaultTranslation = getOriginalProps(expandedFormData, defaultLanguage, contentType)
+        preview = `(missing translation) ${contentType.computePreviewText({
+          ...defaultTranslation,
+          ...context
+        })}`
+      }
+
+      result[lang] = preview
+      return result
+    }, {})
+
+    return previews
   }
 }
