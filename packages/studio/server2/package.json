@@ -17,7 +17,10 @@
     "@types/express": "^4.17.13",
     "@types/jest": "^27.5.0",
     "@types/lodash": "^4.14.182",
+    "@types/mkdirp": "^1.0.2",
     "@types/node": "^16.11.33",
+    "@types/rimraf": "^3.0.2",
+    "@types/unzipper": "^0.10.5",
     "@types/uuid": "^8.3.4"
   },
   "dependencies": {
@@ -28,8 +31,11 @@
     "joi": "^17.6.0",
     "knex": "^0.95.15",
     "lodash": "^4.17.21",
+    "mkdirp": "^1.0.4",
     "nanoid": "^3.3.4",
+    "rimraf": "^3.0.2",
     "socket.io": "^4.5.0",
+    "unzipper": "^0.10.11",
     "uuid": "^8.3.2",
     "yn": "4.0.0"
   }
