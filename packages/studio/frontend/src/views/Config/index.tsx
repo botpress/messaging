@@ -294,7 +294,7 @@ class ConfigView extends Component<Props, State> {
     }
 
     try {
-      const res = await axios.post(`studio/${this.props.bot.id}/media`, data, {
+      const res = await axios.post('/media', data, {
         ...axiosConfig,
         headers: { 'Content-Type': 'multipart/form-data' }
       })

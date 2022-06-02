@@ -9,6 +9,7 @@ import { EnvApi } from './env/api'
 import { FlowApi } from './flows/api'
 import { HintApi } from './hints/api'
 import { IntentApi } from './intents/api'
+import { MediaApi } from './media/api'
 import { NluApi } from './nlu/api'
 import { QnaApi } from './qna/api'
 
@@ -24,6 +25,7 @@ export class Api {
   private qnas: QnaApi
   private editor: EditorApi
   private actions: ActionApi
+  private media: MediaApi
 
   constructor(private app: App, private managers: ApiManagers) {
     this.env = new EnvApi()
@@ -37,6 +39,7 @@ export class Api {
     this.qnas = new QnaApi(this.app.qnas)
     this.editor = new EditorApi(this.app.editor)
     this.actions = new ActionApi(this.app.actions)
+    this.media = new MediaApi(this.app.media)
   }
 
   async setup() {
@@ -51,5 +54,6 @@ export class Api {
     this.qnas.setup(this.managers.public)
     this.editor.setup(this.managers.public)
     this.actions.setup(this.managers.public)
+    this.media.setup(this.managers.public)
   }
 }

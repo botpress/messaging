@@ -8,6 +8,7 @@ import { FileService } from './files/service'
 import { FlowService } from './flows/service'
 import { HintService } from './hints/service'
 import { IntentService } from './intents/service'
+import { MediaService } from './media/service'
 import { NluService } from './nlu/service'
 import { PathService } from './paths/service'
 import { QnaService } from './qna/service'
@@ -27,6 +28,7 @@ export class App extends Framework {
   editor: EditorService
   actions: ActionService
   sockets: SocketService
+  media: MediaService
 
   constructor() {
     super()
@@ -43,6 +45,7 @@ export class App extends Framework {
     this.editor = new EditorService(this.paths)
     this.actions = new ActionService(this.paths)
     this.sockets = new SocketService()
+    this.media = new MediaService(this.files)
   }
 
   async setup() {
@@ -60,5 +63,6 @@ export class App extends Framework {
     await this.editor.setup()
     await this.actions.setup()
     await this.sockets.setup()
+    await this.media.setup()
   }
 }
