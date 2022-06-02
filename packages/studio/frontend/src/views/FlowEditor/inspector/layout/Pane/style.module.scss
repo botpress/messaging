@@ -1,0 +1,19 @@
+@use '~/src/scss/style.scss' as *;
+
+.paneLayout {
+  @extend %shadow-edge-md, %flex-column;
+
+  padding-top: 16px;
+  position: relative;
+  max-height: inherit;
+  background-color: $white;
+  box-shadow: 0 1px 0px $light-gray2;
+
+  border-radius: 8px;
+  border: 1px solid $light-gray2;
+  user-select: contain;
+
+  &.hide {
+    display: none;
+  }
+}

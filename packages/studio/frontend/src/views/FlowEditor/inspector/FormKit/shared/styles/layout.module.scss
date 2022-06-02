@@ -1,0 +1,86 @@
+@use '~/src/scss/style.scss' as *;
+
+.formKitContainer {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+}
+
+.labelSection {
+  display: flex;
+  align-items: center;
+  // justify-content: center;
+  margin: 0 4px;
+  margin-bottom: 8px;
+
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Old versions of Firefox */
+  user-select: none;
+
+  .leftBtn {
+    margin: 0;
+    flex-grow: 1;
+
+    span {
+      outline: none !important;
+
+      :focus {
+        outline: none !important;
+      }
+    }
+  }
+
+  .center {
+    flex-grow: 4;
+  }
+
+  .rightBtn {
+    flex-grow: 1;
+  }
+}
+
+.well {
+  @extend %shadow-inner;
+  min-height: 50px;
+  height: fit-content;
+  width: 100%;
+  display: flex;
+  border-radius: 8px;
+  background-color: $light-gray4;
+  padding: 4px;
+  column-gap: 8px;
+  align-items: center;
+
+  &-row {
+    @extend .well;
+    flex-direction: row;
+  }
+
+  &-column {
+    @extend .well;
+    flex-direction: column;
+  }
+}
+
+.text-input {
+  @extend %text-sm, %font-normal, %shadow-sm;
+  display: flex;
+  width: 100%;
+  appearance: none;
+  outline: none;
+  padding: 8px 12px;
+  background: $light-gray5;
+  border: 1px solid $light-gray2;
+  border-radius: 6px;
+  transition: all 75ms linear;
+
+  &:focus,
+  &:hover {
+    border: 1px solid $bp-blue;
+  }
+
+  &:focus {
+    @extend %shadow-focus;
+    background-color: white;
+  }
+}

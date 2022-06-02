@@ -1,0 +1,40 @@
+@use '~/src/scss/abstracts/index.module.scss' as *;
+@use '~/src/scss/vendor/index.module.scss' as *;
+
+%border-focus {
+  border: 1px solid $light-gray2;
+  border-radius: 6px;
+
+  &:hover {
+    border-color: $gray5;
+  }
+  &:focus {
+    border-color: $bp-blue;
+
+    box-shadow: 0 0 0 1px $cobalt5;
+  }
+}
+
+%switch {
+  &:checked ~ span {
+    background: $cobalt3;
+
+    &:hover {
+      background: $cobalt4;
+    }
+  }
+
+  &:focus ~ span {
+    outline: 1px solid $cobalt4;
+    outline-offset: 0.5px;
+  }
+
+  & ~ span {
+    outline-width: 0px;
+    background: $light-gray3;
+
+    &:hover {
+      background: $light-gray1;
+    }
+  }
+}

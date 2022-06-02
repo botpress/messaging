@@ -1,0 +1,52 @@
+@use '~/src/scss/style.scss' as *;
+
+.sidePane {
+  position: relative;
+  background-color: $white;
+  border-radius: 8px;
+  width: 260px;
+  min-height: 150px;
+  max-height: 650px;
+  margin-top: 10px;
+  padding: 12px;
+  padding-top: 24px;
+  border: 1px solid $light-gray2;
+  box-shadow: 0 1px 0px $light-gray2;
+}
+
+.head {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  h4 {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+    margin: 0;
+  }
+}
+
+.body {
+  @extend %flex-column;
+  row-gap: 6px;
+  width: 100%;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    color: $red2;
+  }
+}

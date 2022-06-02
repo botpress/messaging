@@ -1,0 +1,128 @@
+@use '~/src/scss/style.scss' as *;
+
+.tabs {
+  @extend %shadow-edge-sm;
+  display: flex;
+  column-gap: 4px;
+  height: 40px;
+  width: 100%;
+  background: $white;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  padding: 4px;
+  z-index: 1;
+  box-shadow: 0 1px 0px $light-gray2;
+  border: 1px solid $light-gray2;
+}
+
+.contextTab {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  background-color: $white;
+  border-radius: 6px;
+
+  .tab {
+    @extend %text-md;
+  }
+}
+
+.divider {
+  width: 1px;
+  border-radius: 8px;
+  background-color: $light-gray2;
+  margin-left: 4px;
+  height: 24px;
+}
+
+.contentTabs {
+  height: 100%;
+  width: 100%;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row-reverse;
+  column-gap: 4px;
+
+  overflow-x: auto;
+
+  scrollbar-width: 0;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+
+.tab {
+  @extend %text-sm, %font-medium, %transition-all-75, %flex-row;
+  align-items: center;
+
+  height: 100%;
+  min-width: min-content;
+  max-width: 150px;
+
+  color: $dark-gray2;
+  background-color: $light-gray5;
+
+  padding: 2px 8px;
+
+  border-radius: 6px;
+  border: 1px solid $light-gray1;
+
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:active {
+    border-color: $gray5;
+    background-color: $light-gray5;
+  }
+
+  &:hover {
+    color: $dark-gray5;
+  }
+
+  &__active {
+    border-color: $cobalt4;
+    color: $cobalt4;
+    background-color: mix(white, $cobalt4, 90%);
+
+    &:hover {
+      color: $cobalt3;
+    }
+  }
+
+  span {
+    color: inherit;
+    opacity: 0.5;
+    margin-left: 4px;
+
+    &:hover {
+      color: $red3;
+      opacity: 0.8;
+    }
+  }
+}
+
+.storyContainer {
+  position: absolute;
+  top: 10%;
+  left: 30%;
+  width: 350px;
+  margin: 20px;
+  min-height: 150px;
+  margin-bottom: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  // gap: 1rem;
+  // padding: 1.8rem;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #adb5bd;
+  overflow: auto;
+}

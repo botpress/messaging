@@ -1,0 +1,22 @@
+@use '~/src/scss/style.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+
+  border-radius: 8px;
+  min-height: 38px;
+  padding: 4px;
+  padding-bottom: 0;
+  background-color: $light-gray5;
+  @extend %shadow-inner-2;
+}
+
+.draggable {
+  // height: 36px;
+  outline: none;
+}
+
+.loading {
+  margin: 20px;
+}

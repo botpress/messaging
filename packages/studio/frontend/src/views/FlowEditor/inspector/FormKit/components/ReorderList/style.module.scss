@@ -1,0 +1,147 @@
+@use '~/src/scss/style.scss' as *;
+
+.error {
+  .list {
+    border: 1px solid $red3;
+  }
+
+  .listHeader {
+    border: 1px solid $red3;
+    background-color: $red-highlight3;
+
+    p {
+      color: $red3;
+    }
+  }
+}
+
+.list {
+  @extend %flex-column;
+
+  width: 100%;
+  row-gap: 4px;
+  border-radius: 6px;
+  background-color: $light-gray5;
+  padding: 4px;
+  transition: all 75ms linear;
+  border: 1px solid $light-gray2;
+  box-shadow: 0 1px 0px $light-gray2;
+}
+
+.listHeader {
+  display: flex;
+  flex-direction: row;
+  // background-color: $white;
+  padding: 4px;
+  column-gap: 8px;
+  border-radius: 4px;
+  // border: 1px solid $light-gray2;
+  transform: translateY(-1px);
+
+  p {
+    flex: 1;
+    margin: 0;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 12px;
+    color: $dark-gray4;
+  }
+}
+
+.listContainer {
+  @extend %shadow-inner-2;
+  display: flex;
+  flex-direction: column;
+  min-height: 34px;
+
+  padding: 4px;
+  padding-bottom: 0;
+  max-height: 224px;
+  background-color: $light-gray4;
+  cursor: grab;
+
+  border-radius: 6px;
+  // overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+}
+
+.loading {
+  margin: 12px 0;
+}
+
+.draggable {
+  &:focus {
+    outline: 0;
+  }
+}
+
+.listItem {
+  @extend %border-focus, %flex-row;
+  // @include block-shadow-smooth(2px, 1px, $gray5);
+
+  height: 32px;
+  width: 100%;
+
+  justify-content: flex-start;
+  column-gap: 8px;
+  align-items: center;
+  background-color: white;
+  margin-bottom: 4px;
+
+  padding: 8px 12px 8px 8px;
+  border-radius: 6px;
+
+  box-shadow: 0 1px 0 $light-gray1;
+
+  transition: all 75ms linear;
+
+  &:hover {
+    cursor: pointer;
+    background-color: white;
+    box-shadow: 0 1px 0 $gray5;
+  }
+
+  &:active {
+    @extend %shadow-edge-md;
+    cursor: grab;
+    transform: translateY(-1px);
+  }
+
+  .label {
+    flex-grow: 1;
+    font-weight: 400;
+    font-size: 12px;
+    color: $dark-gray5;
+    user-select: none;
+  }
+
+  span {
+    flex: 1;
+  }
+}
+
+.itemError {
+  border: 1px solid $red3;
+  background-color: $red-highlight4;
+  .label {
+    color: $red3;
+  }
+  &:hover {
+    background-color: $red-highlight3;
+  }
+}
+
+.placeholderText {
+  font-style: italic;
+  text-align: center;
+  color: $gray3;
+  font-size: 12px;
+  &:not(:only-child) {
+    display: none;
+  }
+}

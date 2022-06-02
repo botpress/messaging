@@ -1,0 +1,60 @@
+@use '~/src/scss/vendor/index.module' as bp;
+@use './variables.module' as *;
+
+@mixin block-shadow($height, $transform, $border-color, $hover-color) {
+  transition: all 75ms linear;
+  box-shadow: 0px 1px 0px $border-color;
+  border: 1px solid $border-color;
+  // background-color: rgba($hover-color, 0.4);
+
+  &:hover {
+    box-shadow: 0px $height 0px $hover-color;
+
+    transform: translateY(-$transform);
+    border-color: $hover-color;
+  }
+}
+
+@mixin block-shadow-solid($border-color: bp.$light-gray1, $hover-color: bp.$gray5) {
+  transition: all 75ms ease-in;
+  box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset;
+  border: 1px solid $border-color;
+  background-color: mix(white, $border-color, 95%);
+  transform: translateY(1px);
+
+  &:hover {
+    box-shadow: 0px 2px 0px $hover-color, 0px -1px 0px $hover-color inset;
+    transform: translateY(0);
+    border: 1px solid $hover-color;
+    background-color: white;
+  }
+
+  &:active {
+    box-shadow: 0px 1px 0px $hover-color, 0px -1px 0px 0px $hover-color inset;
+    background-color: mix(white, $border-color, 95%);
+    transform: translateY(1px);
+  }
+}
+
+@mixin tab-shadow($height, $transform, $border-color) {
+  transition: all 75ms linear;
+  box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset, 1px 0.5px 0px 1px $border-color;
+  border: 1px solid $border-color;
+  background-color: white;
+  transform: translateY(-1px);
+
+  &:hover {
+    box-shadow: 0px $height 0px $border-color, 0px -1px 0px 0px $border-color inset, 1px 1px 0px 1px $border-color;
+    transition: all 75ms linear;
+    transform: translateY(-2px);
+    border: 1px solid $border-color;
+    background-color: white;
+  }
+
+  &:active {
+    color: bp.$cobalt4;
+    border: 1px solid bp.$cobalt4;
+    box-shadow: 0px 1px 0px $border-color, 0px -1px 0px 0px $border-color inset, 0.5px 0.5px 0px 1px $border-color;
+    transform: translateY(-1px);
+  }
+}

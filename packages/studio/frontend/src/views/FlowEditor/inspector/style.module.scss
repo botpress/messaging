@@ -1,0 +1,21 @@
+@use '~/src/scss/style.scss' as *;
+
+.inspector {
+  @extend %flex-column;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  align-self: flex-start;
+  width: 350px;
+  min-height: 100px;
+  padding: 6px;
+  z-index: 10;
+}
+
+.panes {
+  @extend %shadow-edge-md;
+  background-color: $white;
+  border-radius: 0 0 8px 8px;
+  border: 1px solid $light-gray2;
+  border-top: 0;
+}

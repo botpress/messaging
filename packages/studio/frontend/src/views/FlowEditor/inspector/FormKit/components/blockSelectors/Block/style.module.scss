@@ -1,0 +1,143 @@
+@use '~/src/scss/style.scss' as *;
+
+.container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  margin-bottom: 6px;
+}
+
+.block {
+  @extend %transition-all-75, %flex-row;
+  cursor: pointer;
+
+  column-gap: 8px;
+  height: 36px;
+  width: 100%;
+  padding: 4px;
+  border-radius: 6px;
+  align-items: center;
+  color: $gray1;
+
+  border: 1px solid $light-gray1;
+
+  @include block-shadow-solid;
+
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Old versions of Firefox */
+  user-select: none;
+
+  &:hover {
+    background-color: white;
+    color: $dark-gray4;
+  }
+
+  &__dragging {
+    @extend .block;
+
+    &::after {
+      @extend %transition-all-75;
+      content: '';
+      border-radius: 6px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      box-shadow: 0 0 0 rgba(white, 0);
+    }
+
+    &[type-data='prompt'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($orange3, 0.25);
+      }
+    }
+
+    &[type-data='simple'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($green3, 0.25);
+      }
+    }
+
+    &[type-data='complex'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($indigo3, 0.25);
+      }
+    }
+
+    &[type-data='code'] {
+      &::after {
+        box-shadow: 0px 6px 8px 0px rgba($cobalt3, 0.25);
+      }
+    }
+  }
+
+  &[type-data='prompt'] {
+    @extend .block;
+    @include block-shadow-solid($orange4, mix(white, $orange4, 20%));
+  }
+
+  &[type-data='simple'] {
+    @extend .block;
+    @include block-shadow-solid($green4, mix(white, $green4, 20%));
+  }
+
+  &[type-data='complex'] {
+    @extend .block;
+    @include block-shadow-solid($indigo4, mix(white, $indigo4, 20%));
+  }
+
+  &[type-data='code'] {
+    @extend .block;
+    @include block-shadow-solid($cobalt4, mix(white, $cobalt4, 20%));
+  }
+
+  .name {
+    @extend %text-md;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 8px;
+  }
+  .options {
+    margin-left: auto;
+  }
+
+  &.grab {
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &.temp {
+    border: 1px dashed $dark-gray2;
+  }
+}
+
+.blockTag {
+  background-color: $blue3;
+  margin-right: 8px;
+  min-width: fit-content;
+
+  ::first-letter {
+    text-transform: capitalize;
+  }
+
+  &.content {
+    background-color: $green2;
+  }
+  &.ask {
+    background-color: $red2;
+  }
+  &.code {
+    background-color: $blue2;
+  }
+  &.complex {
+    background-color: $orange2;
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}

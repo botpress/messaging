@@ -1,0 +1,8 @@
+@use '~/src/scss/style.scss' as *;
+
+.head {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 16px 0px;
+}
