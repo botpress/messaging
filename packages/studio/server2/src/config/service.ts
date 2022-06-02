@@ -11,4 +11,8 @@ export class ConfigService extends Service {
   async get() {
     return this.files.get('bot.config.json')
   }
+
+  async update(config: any) {
+    return this.files.update('bot.config.json', config)
+  }
 }

@@ -19,6 +19,8 @@ if (!window.location.hash) {
   window.location.replace('index.html#/flows')
 }
 
+// TODO: Those values should not be hard-coded like that!
+window['NLU_ENDPOINT'] = 'https://nlu-builder.botpress.dev'
 window['STUDIO_API_URL'] = 'http://localhost:3300'
 
 void axios.get<object>(`${window['STUDIO_API_URL']}/api/v1/env`).then((d) => {
