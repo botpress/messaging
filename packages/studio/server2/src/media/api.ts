@@ -18,8 +18,9 @@ export class MediaApi {
   }
 
   async save(req: Request, res: Response) {
-    if (Array.isArray(req.files)) {
-      const file = req.files[0]
+    if (Array.isArray((req as any).files)) {
+      // TODO: Fix typings
+      const file = (req as any).files[0]
       res.send(await this.media.save(file.buffer, path.extname(file.originalname)))
     } else {
       throw new Error('Media service can only handle single file uploads')

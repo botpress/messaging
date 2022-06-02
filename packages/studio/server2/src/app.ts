@@ -45,7 +45,7 @@ export class App extends Framework {
     this.editor = new EditorService(this.paths)
     this.actions = new ActionService(this.paths)
     this.sockets = new SocketService()
-    this.media = new MediaService(this.files)
+    this.media = new MediaService(this.paths)
   }
 
   async setup() {
