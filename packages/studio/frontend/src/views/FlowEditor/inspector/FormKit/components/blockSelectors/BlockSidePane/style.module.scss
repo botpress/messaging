@@ -1,0 +1,162 @@
+@use '~/src/scss/style.scss' as *;
+
+.search {
+  margin-bottom: 6px;
+  height: 32px;
+  border-radius: 6px;
+}
+
+.contents {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+}
+
+// .loading {
+//   justify-self: center;
+// }
+
+.content {
+  transition: all 75ms linear;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  height: 37px;
+  border-radius: 6px;
+
+  h4 {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17px;
+    margin: 0;
+  }
+
+  &:hover {
+    padding: 8px 10px;
+    background-color: mix(white, $cobalt4, 90%);
+    color: $dark-gray5;
+    h4 {
+      color: $bp-blue;
+      font-weight: 700;
+    }
+    svg {
+      color: $bp-blue;
+    }
+  }
+
+  &:active {
+    background-color: mix(white, $cobalt4, 80%);
+  }
+}
+
+.results {
+  @extend %flex-column, %shadow-inner-2, %transition-all-50;
+
+  align-items: center;
+  justify-content: start;
+  padding: 6px;
+  background-color: $light-gray5;
+  row-gap: 4px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  min-height: 36px;
+}
+
+.result {
+  @extend %text-sm, %font-medium;
+
+  cursor: pointer;
+  user-select: none;
+
+  width: 100%;
+  height: 32px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: $light-gray5;
+  transition: all 75ms linear;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  &:hover {
+    background: $light-gray3;
+    color: $dark-gray1;
+  }
+
+  &:active {
+    background: $light-gray2;
+  }
+
+  // &:not(:last-child) {
+  //   margin-bottom: 4px;
+  // }
+}
+
+.empty {
+  @extend %font-normal, %style-italic, %text-sm;
+  display: none;
+  text-align: center;
+  color: $gray5;
+  margin: 16px 0;
+
+  &:is(:only-child) {
+    display: block;
+  }
+}
+
+.createBtn {
+  @extend %transition-all-75, %font-medium;
+  cursor: pointer;
+  color: $gray1;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+
+  width: 100%;
+  height: 42px;
+
+  p {
+    // funk: 100%;
+    margin: 0;
+  }
+
+  background: #ffffff;
+  border-radius: 6px;
+
+  &:hover {
+    background-color: mix(white, $green5, 90%);
+    color: $green4;
+    div {
+      background-color: $green3;
+      span {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.loading {
+  margin: 12px 0;
+}
+
+.simple {
+  background-color: $green4;
+}
+.code {
+  background-color: $cobalt4;
+}
+.complex {
+  background-color: $indigo4;
+}
+.prompt {
+  background-color: $orange4;
+}

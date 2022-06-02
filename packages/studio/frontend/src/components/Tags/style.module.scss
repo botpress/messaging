@@ -1,0 +1,37 @@
+@use '~/src/scss/style.scss' as *;
+
+.tag {
+  display: flex;
+  column-gap: 4px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: white;
+  height: 20px;
+  width: 20px;
+  text-transform: capitalize;
+
+  span {
+    @extend %text-sm, %font-normal;
+  }
+
+  &-simple {
+    @extend .tag;
+    background-color: $green4;
+  }
+  &-code {
+    @extend .tag;
+    background-color: $cobalt4;
+  }
+  &-complex {
+    @extend .tag;
+    background-color: $indigo4;
+  }
+  &-prompt {
+    @extend .tag;
+    background-color: $orange4;
+  }
+
+  svg {
+    height: 100%;
+  }
+}

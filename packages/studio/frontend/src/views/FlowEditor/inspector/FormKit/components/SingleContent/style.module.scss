@@ -1,0 +1,61 @@
+@use '~/src/scss/style.scss' as *;
+
+.container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  row-gap: 6px;
+  box-sizing: border-box;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  height: 32px;
+  border-radius: 6px;
+  transition: all 50ms linear;
+  column-gap: 8px;
+  background-color: white;
+  border: 1px solid $light-gray1;
+  padding: 4px 12px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 24px;
+
+  &:hover {
+    cursor: pointer;
+    @extend %shadow-sm;
+  }
+}
+
+.error {
+  .contentWell {
+    border: 1px solid $red3;
+    background-color: $red-highlight4;
+  }
+  p {
+    color: $red3;
+    user-select: none;
+  }
+
+  .item {
+    border: 1px solid $red3;
+    color: $red3;
+  }
+}
+
+.placeholderText {
+  @extend .placeholder;
+  margin: 2px 0;
+  text-align: center;
+  width: 100%;
+  &:not(:only-child) {
+    display: none;
+  }
+}

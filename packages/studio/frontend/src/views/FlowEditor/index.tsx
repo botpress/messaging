@@ -1,8 +1,10 @@
 import { FlowView } from '@botpress/common'
 import _ from 'lodash'
 import React, { useEffect, useRef, useState } from 'react'
+
 import { connect } from 'react-redux'
 import { RouteComponentProps, withRouter } from 'react-router-dom'
+import { CSSTransition } from 'react-transition-group'
 import {
   clearErrorSaveFlows,
   closeFlowNodeProps,
@@ -11,18 +13,21 @@ import {
   refreshActions,
   refreshIntents,
   setDiagramAction,
-  switchFlow
+  switchFlow,
+  fetchContentCategories
 } from '~/src/actions'
 import { lang } from '~/src/components/Shared/translations'
 import { isInputFocused } from '~/src/components/Shared/utilities/inputs'
 import { inspect } from '~/src/components/Shared/utilities/inspect'
 import { Timeout, toastFailure, toastInfo } from '~/src/components/Shared/Utils'
 import { isOperationAllowed } from '~/src/components/Shared/Utils/AccessControl'
-import { RootReducer } from '~/src/reducers'
+import { RootReducer, getCurrentFlowNode } from '~/src/reducers'
 
 import Diagram from './diagram'
 import SidePanel, { PanelPermissions } from './explorer'
+import Inspector from './inspector'
 import * as style from './style.module.scss'
+import '~src/scss/abstracts/_transitions.scss'
 
 interface OwnProps {
   currentMutex: any
@@ -37,6 +42,7 @@ const searchTag = '#search:'
 
 const FlowEditor = (props: Props) => {
   const { flow } = props.match.params as any
+  const { currentFlowNode } = props
 
   let diagram: any = useRef(null)
   const [showSearch, setShowSearch] = useState(false)
@@ -48,6 +54,7 @@ const FlowEditor = (props: Props) => {
   useEffect(() => {
     props.refreshActions()
     props.refreshIntents()
+    props.fetchContentCategories()
 
     if (!isOperationAllowed({ operation: 'write', resource: 'bot.flows' })) {
       setReadOnly(true)
@@ -157,13 +164,6 @@ const FlowEditor = (props: Props) => {
 
   return (
     <div className={style.container}>
-      <SidePanel
-        onDeleteSelectedElements={() => diagram?.deleteSelectedElements()}
-        readOnly={readOnly}
-        mutexInfo={mutex}
-        permissions={actions}
-        onCreateFlow={createFlow}
-      />
       <div className={style.diagram}>
         <Diagram
           readOnly={readOnly}
@@ -180,6 +180,16 @@ const FlowEditor = (props: Props) => {
           }}
         />
       </div>
+      <SidePanel
+        onDeleteSelectedElements={() => diagram?.deleteSelectedElements()}
+        readOnly={readOnly}
+        mutexInfo={mutex}
+        permissions={actions}
+        onCreateFlow={createFlow}
+      />
+      <CSSTransition in={currentFlowNode ? true : false} timeout={300} classNames="slide-left">
+        {currentFlowNode ? <Inspector currentFlowNode={currentFlowNode} /> : <span className={style.test}></span>}
+      </CSSTransition>
     </div>
   )
 }
@@ -189,7 +199,8 @@ const mapStateToProps = (state: RootReducer) => ({
   flowsByName: state.flows.flowsByName,
   showFlowNodeProps: state.flows.showFlowNodeProps,
   user: state.user,
-  errorSavingFlows: state.flows.errorSavingFlows
+  errorSavingFlows: state.flows.errorSavingFlows,
+  currentFlowNode: getCurrentFlowNode(state as never) as any
 })
 
 const mapDispatchToProps = {
@@ -200,7 +211,8 @@ const mapDispatchToProps = {
   clearErrorSaveFlows,
   closeFlowNodeProps,
   refreshActions,
-  refreshIntents
+  refreshIntents,
+  fetchContentCategories
 }
 
 export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, mapDispatchToProps)(withRouter(FlowEditor))

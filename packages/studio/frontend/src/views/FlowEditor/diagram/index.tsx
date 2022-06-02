@@ -36,7 +36,6 @@ import {
 } from '../../../actions'
 import contextMenu from '../../../components/Shared/ContextMenu'
 import storage from '../../../components/Shared/lite-utils/storage'
-import MainLayout from '../../../components/Shared/MainLayout'
 import ShortcutLabel from '../../../components/Shared/ShortcutLabel'
 import * as sharedStyle from '../../../components/Shared/style.module.scss'
 import { lang } from '../../../components/Shared/translations'
@@ -44,13 +43,11 @@ import { getAllFlows, getCurrentFlow, getCurrentFlowNode, RootReducer } from '..
 
 import { DIAGRAM_PADDING } from './constants'
 import { prepareEventForDiagram } from './debugger'
-import DiagramToolbar from './DiagramToolbar'
 import { defaultTransition, DiagramManager, nodeTypes, Point } from './manager'
 import { BlockModel, BlockProps, BlockWidgetFactory } from './nodes/Block'
 import { DeletableLinkFactory } from './nodes/LinkWidget'
 import NodeToolbar from './NodeToolbar'
 import * as style from './style.module.scss'
-import WorkflowToolbar from './WorkflowToolbar'
 import ZoomToolbar from './ZoomToolbar'
 
 interface OwnProps {
@@ -674,40 +671,39 @@ class Diagram extends Component<Props> {
     const canAdd = !this.props.defaultLang || this.props.defaultLang === this.props.currentLang
 
     return (
-      <MainLayout.Wrapper>
-        <WorkflowToolbar
-          highlightFilter={this.props.highlightFilter}
-          handleFilterChanged={(value) => this.props.handleFilterChanged({ target: { value } })}
-        />
-        <div
-          id="diagramContainer"
-          ref={(ref) => (this.diagramContainer = ref)}
-          tabIndex={1}
-          style={{ outline: 'none', width: '100%', height: '100%' }}
-          onContextMenu={this.handleContextMenu}
-          onDrop={this.handleToolDropped}
-          onDragOver={(event) => event.preventDefault()}
-        >
-          <div className={style.floatingInfo}>
-            <DiagramToolbar
-              currentFlow={this.props.currentFlow}
-              handleFlowWideClicked={this.handleFlowWideClicked}
-              mutexInfo={this.props.mutexInfo}
-              highlightNode={(node) => {
-                this.manager.setHighlightedNodes([node])
-                this.forceUpdate()
-              }}
-            />
-          </div>
+      // <MainLayout.Wrapper>
+      //   <WorkflowToolbar
+      //     highlightFilter={this.props.highlightFilter}
+      //     handleFilterChanged={(value) => this.props.handleFilterChanged({ target: { value } })}
+      //   />
+      <div
+        id="diagramContainer"
+        ref={(ref) => (this.diagramContainer = ref)}
+        tabIndex={1}
+        style={{ outline: 'none', width: '100%', height: '100%' }}
+        onContextMenu={this.handleContextMenu}
+        onDrop={this.handleToolDropped}
+        onDragOver={(event) => event.preventDefault()}
+      >
+        {/* <DiagramToolbar
+            currentFlow={this.props.currentFlow}
+            handleFlowWideClicked={this.handleFlowWideClicked}
+            mutexInfo={this.props.mutexInfo}
+            highlightNode={(node) => {
+              this.manager.setHighlightedNodes([node])
+              this.forceUpdate()
+            }}
+          /> */}
 
-          {/* @ts-ignore */}
-          <DiagramWidget
-            ref={(w) => (this.diagramWidget = w)}
-            deleteKeys={[]}
-            diagramEngine={this.diagramEngine}
-            maxNumberPointsPerLink={MAX_NUMBER_OF_POINTS_PER_LINK}
-            inverseZoom
-          />
+        {/* @ts-ignore */}
+        <DiagramWidget
+          ref={(w) => (this.diagramWidget = w)}
+          deleteKeys={[]}
+          diagramEngine={this.diagramEngine}
+          maxNumberPointsPerLink={MAX_NUMBER_OF_POINTS_PER_LINK}
+          inverseZoom
+        />
+        <div className={style.floatingInfo}>
           <ZoomToolbar
             zoomIn={this.manager.zoomIn.bind(this.manager)}
             zoomOut={this.manager.zoomOut.bind(this.manager)}
@@ -716,7 +712,8 @@ class Diagram extends Component<Props> {
           />
           {canAdd && <NodeToolbar />}
         </div>
-      </MainLayout.Wrapper>
+      </div>
+      // </MainLayout.Wrapper>
     )
   }
 }

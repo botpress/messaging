@@ -1,0 +1,56 @@
+@use '~/src/scss/style.scss' as *;
+
+.sectionBtn {
+  @extend %text-md, %font-medium;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+
+  text-align: left;
+  color: $dark-gray2;
+  max-height: 100%;
+  // overflow-y: auto;
+  // border-radius: 8px;
+
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  user-select: none;
+
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: $light-gray5;
+  }
+  &:active {
+    background-color: $light-gray4;
+  }
+  span {
+    padding-right: 16px;
+  }
+
+  &:is(:first-child) {
+    border-radius: 8px 8px 0 0;
+  }
+
+  &__active {
+    @extend .sectionBtn;
+
+    &:is(:nth-last-child(2)) {
+      border-radius: 0 0 8px 8px;
+    }
+  }
+}
+
+.collapse {
+  max-height: 600px;
+  // overflow-y: scroll !important;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
+}
+
+.test {
+  padding: 6px 0;
+}

@@ -1,0 +1,38 @@
+@use '~/src/scss/style.scss' as *;
+
+.label {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 0.6rem;
+}
+
+.labelText {
+  @extend %text-sm, %font-medium;
+  flex: 1;
+  margin: 0;
+
+  .req {
+    color: red;
+  }
+
+  .hint {
+    cursor: help;
+    padding-bottom: 2px;
+    border-bottom: 2px dashed #8a9ba8;
+
+    // &:hover {
+    // }
+  }
+}
+
+.externalLink {
+  // appearance: none;
+  color: $gray3;
+  text-decoration: underline;
+
+  &:hover {
+    color: $gray5;
+  }
+}

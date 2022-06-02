@@ -1,0 +1,31 @@
+@use '~/src/scss/style.scss' as *;
+
+.btn {
+  @extend %transition-all-75, %flex-row;
+  width: 18px;
+  height: 18px;
+  background-color: mix(white, $green5, 90%);
+  border-radius: 4px;
+  border: 1px solid $green4;
+
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  span {
+    color: $green4;
+  }
+
+  &:hover {
+    background-color: $green4;
+
+    span {
+      color: #ffffff;
+    }
+  }
+
+  &:active {
+    background-color: $green3;
+    border-color: $green3;
+  }
+}

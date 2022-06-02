@@ -1,0 +1,12 @@
+@use '~/src/scss/style.scss' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $light-gray5;
+  border: 1px solid $gray4;
+  border-radius: 8px;
+  padding: 8px;
+}
