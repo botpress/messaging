@@ -5,8 +5,8 @@
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
   "scripts": {
-    "dev:studio": "concurrently -n FE,BE -c cyan,yellow -P \"yarn workspace @botpress/studio-ui dev\" \"yarn workspace @botpress/studio-be dev -d {1}\"",
-    "dev:electron": "concurrently -n FE,BE,EL -c cyan,yellow,magenta -P \"yarn workspace @botpress/studio-ui dev\" \"yarn workspace @botpress/studio-be dev -d {1}\" \"wait-on http://localhost:1234 && yarn workspace @botpress/studio-electron start\"",
+    "dev:studio": "concurrently -n FE,BE -c cyan,yellow -P \"yarn workspace @botpress/studio-frontend dev\" \"yarn workspace @botpress/studio-backend dev -d {1}\"",
+    "dev:electron": "concurrently -n FE,BE,EL -c cyan,yellow,magenta -P \"yarn workspace @botpress/studio-frontend dev\" \"yarn workspace @botpress/studio-backend dev -d {1}\" \"wait-on http://localhost:1234 && yarn workspace @botpress/studio-electron start\"",
     "package": "yarn workspace @botpress/studio-electron package",
     "eslint": "eslint packages/ --ext .ts",
     "prettier": "prettier --check './packages/**/*.ts' '!**/*.d.ts'",
