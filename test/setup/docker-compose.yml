@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  pg:
+    container_name: messaging_pg
+    hostname: 'messaging_pg'
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '2345:5432'
