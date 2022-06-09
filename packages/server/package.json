@@ -30,6 +30,7 @@
     "@opentelemetry/auto-instrumentations-node": "0.27.0",
     "@opentelemetry/exporter-jaeger": "1.1.1",
     "@opentelemetry/instrumentation": "0.27.0",
+    "@opentelemetry/instrumentation-aws-sdk": "0.7.0",
     "@opentelemetry/instrumentation-express": "0.27.0",
     "@opentelemetry/instrumentation-http": "0.27.0",
     "@opentelemetry/instrumentation-ioredis": "0.27.0",
