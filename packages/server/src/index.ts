@@ -1,3 +1,6 @@
+import { trace } from './tracing'
+trace.init()
+
 import './rewire'
 import { Entry, start } from '@botpress/messaging-framework'
 import { Api } from './api'
