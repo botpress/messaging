@@ -2,7 +2,7 @@ import { ApiManager, ClientApiRequest, ReqSchema } from '@botpress/framework'
 import { Response } from 'express'
 import { App } from './app'
 import { HouseApi } from './houses/api'
-
+//Some change
 export class Api {
   private houses: HouseApi
 
