@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/order
 import { trace } from './tracing'
 trace.init()
 
