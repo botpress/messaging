@@ -3,7 +3,7 @@ import Select from 'react-select'
 import Creatable from 'react-select/creatable'
 import { MessageTypeHandlerProps } from '../typings'
 import { renderUnsafeHTML } from '../utils'
-import { Keyboard, Prepend } from './keyboard'
+import { Prepend } from './keyboard'
 
 export const Dropdown = ({
   options,
@@ -67,7 +67,7 @@ export const Dropdown = ({
           )}
         </div>
 
-        {displayInKeyboard && (
+        {buttonText && (
           <button className="bpw-button" onClick={sendChoice}>
             {buttonText}
           </button>
@@ -85,8 +85,13 @@ export const Dropdown = ({
     text = <p>{message}</p>
   }
 
-  if (displayInKeyboard) {
-    return <Prepend keyboard={renderSelect(true)}>{text}</Prepend>
+  if (shouldDisplay && displayInKeyboard) {
+    return (
+      <div>
+        {text}
+        <Prepend keyboard={renderSelect(true)} />
+      </div>
+    )
   }
 
   return (
