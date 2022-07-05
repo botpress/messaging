@@ -2239,7 +2239,37 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-components@0.4.0, @botpress/messaging-components@workspace:packages/components":
+"@botpress/messaging-components@npm:0.4.0":
+  version: 0.4.0
+  resolution: "@botpress/messaging-components@npm:0.4.0"
+  dependencies:
+    "@googlemaps/react-wrapper": ^1.1.26
+    html-truncate: ^1.2.2
+    mime: ^2.5.2
+    react-intl: ^3.12.1
+    react-linkify: ^0.2.2
+    react-select: ^5.2.1
+    react-slick: ^0.28.1
+    react-text-format: ^2.0.28
+    snarkdown: ^2.0.0
+  peerDependencies:
+    "@googlemaps/react-wrapper": ^1.1.26
+    html-truncate: ^1.2.2
+    mime: ^2.5.2
+    prop-types: ^15.7.2
+    react: ">=17.0.0"
+    react-dom: ">=17.0.0"
+    react-intl: ">=3.0.0"
+    react-linkify: ^0.2.2
+    react-select: ^5.2.1
+    react-slick: ">=0.24.0"
+    react-text-format: ^2.0.28
+    snarkdown: ^2.0.0
+  checksum: f37eb4bc321b6b1fe19f30307e82c2b0181d4d3505dce6272c71b0ae7c1e9b709e4c9d8d8ddf03a93dc3af5338271021b212125e11368fcd09f97c0c1c4e7dc3
+  languageName: node
+  linkType: hard
+
+"@botpress/messaging-components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-components@workspace:packages/components"
   dependencies:
