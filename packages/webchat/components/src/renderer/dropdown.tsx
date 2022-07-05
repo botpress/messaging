@@ -67,7 +67,7 @@ export const Dropdown = ({
           )}
         </div>
 
-        {displayInKeyboard && (
+        {buttonText && (
           <button className="bpw-button" onClick={sendChoice}>
             {buttonText}
           </button>
@@ -85,8 +85,13 @@ export const Dropdown = ({
     text = <p>{message}</p>
   }
 
-  if (displayInKeyboard) {
-    return <Prepend keyboard={renderSelect(true)}>{text}</Prepend>
+  if (shouldDisplay && displayInKeyboard) {
+    return (
+      <div>
+        {text}
+        <Prepend keyboard={renderSelect(true)} />
+      </div>
+    )
   }
 
   return (
