@@ -53,7 +53,7 @@ export class SingleChoice extends Component<MessageTypeHandlerProps<'single-choi
     return (
       <div>
         {this.props.text}
-        {shouldDisplay && <Prepend keyboard={keyboard}>{this.props.children}</Prepend>}
+        {shouldDisplay && <Prepend keyboard={keyboard} />}
       </div>
     )
   }

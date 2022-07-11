@@ -2666,7 +2666,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-components@0.4.0, @botpress/messaging-components@workspace:packages/webchat/components":
+"@botpress/messaging-components@0.4.2, @botpress/messaging-components@workspace:packages/webchat/components":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-components@workspace:packages/webchat/components"
   dependencies:
@@ -3268,7 +3268,7 @@ __metadata:
   resolution: "@botpress/webchat@workspace:packages/webchat/webchat"
   dependencies:
     "@blueprintjs/core": ^3.54.0
-    "@botpress/messaging-components": 0.4.0
+    "@botpress/messaging-components": 0.4.2
     "@botpress/messaging-socket": 1.2.0
     "@botpress/testing": 1.0.0
     "@formatjs/intl-pluralrules": ^4.3.3
