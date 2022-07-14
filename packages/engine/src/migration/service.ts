@@ -32,7 +32,9 @@ export class MigrationService extends Service {
     this.srcVersion = process.env.TESTMIG_DB_VERSION || this.meta.get()?.version || '0.0.0'
     this.dstVersion = process.env.MIGRATE_TARGET || this.meta.app().version
     this.autoMigrate = !!yn(process.env.AUTO_MIGRATE) || !!process.env.MIGRATE_CMD?.length
-    this.isDown = process.env.MIGRATE_CMD === 'down'
+    this.isDown = process.env.MIGRATE_CMD
+      ? process.env.MIGRATE_CMD === 'down'
+      : semver.lt(this.dstVersion, this.srcVersion)
     this.isDry = !!yn(process.env.MIGRATE_DRYRUN)
     this.loggerDry = this.logger.prefix(this.isDry ? '[DRY] ' : '')
 
@@ -69,7 +71,14 @@ export class MigrationService extends Service {
     }
 
     if (!this.autoMigrate) {
-      this.logger.error(undefined, 'Migrations required. Please restart the messaging server with --auto-migrate')
+      if (this.isDown) {
+        this.logger.error(
+          undefined,
+          `Migrations required. Please run the down migrations with "migrate down --target ${this.dstVersion}" before restarting the server`
+        )
+      } else {
+        this.logger.error(undefined, 'Migrations required. Please restart the messaging server with "--auto-migrate"')
+      }
       throw new ShutDownSignal(1)
     }
 
