@@ -1,8 +1,24 @@
 import { Request, Router } from 'express'
 import Joi from 'joi'
+import Multer from 'multer'
+
 import { Auth } from './auth/auth'
 import { Middleware } from './auth/base'
 import { ClientApiRequest } from './auth/client'
+
+export class ApiManagers {
+  public readonly root: Router
+  public readonly client: ApiManager
+  public readonly public: PublicApiManager
+  public readonly admin: AdminApiManager
+
+  constructor(private router: Router, private auth: Auth) {
+    this.root = router
+    this.client = new ApiManager(this.router, this.auth)
+    this.public = new PublicApiManager(this.router, this.auth)
+    this.admin = new AdminApiManager(this.router, this.auth)
+  }
+}
 
 export class ApiManager {
   constructor(private router: Router, private auth: Auth) {}
@@ -23,6 +39,54 @@ export class ApiManager {
     this.router[type](
       path,
       this.auth.client.auth(async (req, res) => {
+        const { error } = schema.validate({ query: req.query, body: req.body, params: req.params })
+        if (error) {
+          return res.status(400).send(error.message)
+        }
+
+        await fn(req, res)
+      })
+    )
+  }
+}
+
+export class PublicApiManager {
+  private upload = Multer({})
+
+  constructor(private router: Router, private auth: Auth) {}
+
+  post(
+    path: string,
+    schema: Joi.ObjectSchema<any>,
+    fn: Middleware<Request>,
+    options?: { enableMultipartUpload: boolean }
+  ) {
+    this.use('post', path, schema, fn, options)
+  }
+
+  get(path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
+    this.use('get', path, schema, fn)
+  }
+
+  delete(path: string, schema: Joi.ObjectSchema<any>, fn: Middleware<Request>) {
+    this.use('delete', path, schema, fn)
+  }
+
+  use(
+    type: 'post' | 'get' | 'delete',
+    path: string,
+    schema: Joi.ObjectSchema<any>,
+    fn: Middleware<Request>,
+    { enableMultipartUpload }: { enableMultipartUpload: boolean } = { enableMultipartUpload: false }
+  ) {
+    this.router[type](
+      path,
+      enableMultipartUpload
+        ? this.upload.any()
+        : (_req, _res, next) => {
+            next()
+          },
+      this.auth.public.auth(async (req, res) => {
         const { error } = schema.validate({ query: req.query, body: req.body, params: req.params })
         if (error) {
           return res.status(400).send(error.message)

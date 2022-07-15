@@ -5,8 +5,7 @@ import * as auth from '../components/Shared/auth'
 import { authEvents } from '../util/Auth'
 
 class EventBus extends EventEmitter2 {
-  private adminSocket: Socket
-  private guestSocket: Socket
+  private socket: Socket
   static default: EventBus
 
   constructor() {
@@ -29,8 +28,7 @@ class EventBus extends EventEmitter2 {
       return
     }
 
-    const socket = name.startsWith('guest.') ? this.guestSocket : this.adminSocket
-    socket && socket.emit('event', { name, data })
+    this.socket?.emit('event', { name, data })
   }
 
   updateVisitorId = (newId: string, userIdScope?: string) => {
@@ -38,44 +36,21 @@ class EventBus extends EventEmitter2 {
   }
 
   private updateVisitorSocketId() {
-    window.__BP_VISITOR_SOCKET_ID = this.guestSocket.id
+    window.__BP_VISITOR_SOCKET_ID = this.socket.id
   }
 
   setup = (userIdScope?: string) => {
-    // TODO: implement this when the studio is executed as a standalone, since the socket is provided by the core
-    // if (!window.BP_SERVER_URL) {
-    //   console.warn('No server configured, socket is disabled')
-    //   return
-    // }
-
-    const query = {
-      visitorId: auth.getUniqueVisitorId(userIdScope)
-    }
-
-    if (this.adminSocket) {
-      this.adminSocket.off('event', this.dispatchSocketEvent)
-      this.adminSocket.disconnect()
-    }
-
-    if (this.guestSocket) {
-      this.guestSocket.off('event', this.dispatchSocketEvent)
-      this.guestSocket.off('connect', this.updateVisitorSocketId)
-      this.guestSocket.disconnect()
+    if (this.socket) {
+      this.socket.off('event', this.dispatchSocketEvent)
+      this.socket.off('connect', this.updateVisitorSocketId)
+      this.socket.disconnect()
     }
 
     const socketUrl = window['BP_SOCKET_URL']
-    const token = auth.getToken()
 
-    this.adminSocket = io(`${socketUrl}/admin`, {
-      auth: { token },
-      query
-    })
-    this.adminSocket.on('event', this.dispatchSocketEvent)
-
-    this.guestSocket = io(`${socketUrl}/guest`, { query })
-
-    this.guestSocket.on('connect', this.updateVisitorSocketId.bind(this))
-    this.guestSocket.on('event', this.dispatchSocketEvent)
+    this.socket = io(socketUrl)
+    this.socket.on('connect', this.updateVisitorSocketId.bind(this))
+    this.socket.on('event', this.dispatchSocketEvent)
   }
 }
 

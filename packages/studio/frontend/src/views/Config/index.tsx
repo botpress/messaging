@@ -23,7 +23,7 @@ import * as style from './style.module.scss'
 const statusList = ['public', 'private', 'disabled']
 
 const axiosConfig = {
-  baseURL: 'api/v1/'
+  baseURL: `${window['STUDIO_API_URL']}/api/v1/`
 }
 
 interface StateBot {
@@ -211,7 +211,7 @@ class ConfigView extends Component<Props, State> {
       }
 
       if (allow) {
-        await axios.post(`studio/${this.props.bot.id}/config`, bot, axiosConfig)
+        await axios.post('config', bot, axiosConfig)
         toastSuccess(lang.tr('config.configUpdated'))
         this.setState({ error: undefined, isSaving: false })
 
@@ -294,7 +294,7 @@ class ConfigView extends Component<Props, State> {
     }
 
     try {
-      const res = await axios.post(`studio/${this.props.bot.id}/media`, data, {
+      const res = await axios.post('/media', data, {
         ...axiosConfig,
         headers: { 'Content-Type': 'multipart/form-data' }
       })

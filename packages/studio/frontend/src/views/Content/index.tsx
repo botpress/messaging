@@ -187,7 +187,7 @@ class ContentView extends Component<Props, State> {
 
   handleDeleteSelected = (ids) => {
     this.props
-      .deleteContentItems(ids)
+      .deleteContentItems({ ids })
       .then(() => this.props.fetchContentCategories())
       .then(() => this.fetchCategoryItems(this.state.selectedId))
   }

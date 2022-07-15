@@ -15,7 +15,7 @@ type NodeDebugInfoProps = {
 } & NodeDebugInfo
 
 export const DebugInfo: FC<NodeDebugInfoProps> = ({ isEndOfFlow, nextWorkflow, prevWorkflow, hasError, className }) => {
-  const goToFlow = (flow) => history.push(`/flows/${flow.replace(/\.flow\.json/, '')}`)
+  const goToFlow = (flow) => history.push(`/oldflows/${flow.replace(/\.flow\.json/, '')}`)
 
   const infos: JSX.Element[] = []
 
