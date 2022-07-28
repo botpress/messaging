@@ -1,3 +1,17 @@
+## [1.2.5](https://github.com/botpress/messaging/compare/v1.2.2...v1.2.5) (2022-07-28)
+
+
+### Bug Fixes
+
+* **components:** fix dropdown not disappearing after selection ([#507](https://github.com/botpress/messaging/issues/507)) ([d3558f6](https://github.com/botpress/messaging/commit/d3558f6dab089a8c30526533844ff986181443a6))
+
+
+### Features
+
+* **messenger:** allow receiving file content elements ([#480](https://github.com/botpress/messaging/issues/480)) ([cfab6a1](https://github.com/botpress/messaging/commit/cfab6a175a36dbf1589e41cee804f43b17f79e2d))
+
+
+
 ## [1.2.4](https://github.com/botpress/messaging/compare/v1.2.2...v1.2.4) (2022-07-28)
 
 
