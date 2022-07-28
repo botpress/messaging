@@ -2378,21 +2378,13 @@ __metadata:
     "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.6"
     "@botpress/messaging-engine": 1.2.0
     "@botpress/messaging-framework": 1.2.0
-    "@opentelemetry/api": 1.1.0
-    "@opentelemetry/auto-instrumentations-node": 0.27.0
-    "@opentelemetry/exporter-jaeger": 1.1.1
-    "@opentelemetry/instrumentation": 0.27.0
+    "@bpinternal/trail": ^0.0.1
     "@opentelemetry/instrumentation-aws-sdk": 0.7.0
     "@opentelemetry/instrumentation-express": 0.27.0
     "@opentelemetry/instrumentation-http": 0.27.0
     "@opentelemetry/instrumentation-ioredis": 0.27.0
     "@opentelemetry/instrumentation-knex": 0.27.0
     "@opentelemetry/instrumentation-pg": 0.27.0
-    "@opentelemetry/propagator-jaeger": 1.1.1
-    "@opentelemetry/resources": 1.1.1
-    "@opentelemetry/sdk-trace-base": 1.1.1
-    "@opentelemetry/sdk-trace-node": 1.1.1
-    "@opentelemetry/semantic-conventions": 1.1.1
     "@sentry/node": ^6.17.3
     "@types/cli-color": ^2.0.2
     "@types/cors": ^2.8.12
@@ -2552,6 +2544,24 @@ __metadata:
     uuid: ^8.3.2
   languageName: unknown
   linkType: soft
+
+"@bpinternal/trail@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "@bpinternal/trail@npm:0.0.1"
+  dependencies:
+    "@opentelemetry/api": 1.1.0
+    "@opentelemetry/auto-instrumentations-node": 0.27.0
+    "@opentelemetry/exporter-jaeger": 1.1.1
+    "@opentelemetry/instrumentation": 0.27.0
+    "@opentelemetry/propagator-jaeger": 1.1.1
+    "@opentelemetry/resources": 1.1.1
+    "@opentelemetry/sdk-trace-base": 1.1.1
+    "@opentelemetry/sdk-trace-node": 1.1.1
+    "@opentelemetry/semantic-conventions": 1.1.1
+    yn: ^4.0.0
+  checksum: d7965048d3cea2dfe1fcaec800dd0cf74d0ce0a7371cc4dc80a96b421f96322dfb8930f9595e4d3bcac2fa6cedf3b86a137f088d54a442ef9d78967f2662bc5f
+  languageName: node
+  linkType: hard
 
 "@cnakazawa/watch@npm:^1.0.3":
   version: 1.0.4
