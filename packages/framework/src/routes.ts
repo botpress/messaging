@@ -29,7 +29,7 @@ export class Routes {
         allowedHeaders: '*'
       })
     )
-    this.router.use(express.json({ limit: '100kb' }))
+    this.router.use(express.json({ limit: '150kb' }))
     this.router.use(express.urlencoded({ extended: true }))
   }
 

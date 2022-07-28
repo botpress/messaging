@@ -6,7 +6,7 @@ import froth from './mocha-froth'
 
 const UUID_LENGTH = uuid().length
 const TOKEN_LENGTH = 125
-const MAX_PAYLOAD_SIZE = 100 * 1024 * 1024 // ~100kb
+const MAX_PAYLOAD_SIZE = 150 * 1024 * 1024 // ~150kb
 const FAKE_CLIENT_ID = uuid()
 const FAKE_CLIENT_TOKEN = froth(TOKEN_LENGTH, TOKEN_LENGTH, {
   none: false,
