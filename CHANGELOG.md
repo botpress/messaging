@@ -1,4 +1,7 @@
-## [1.2.4](https://github.com/botpress/messaging/compare/v1.2.2...v1.2.4) (2022-07-28)
+## [1.2.5](https://github.com/botpress/messaging/compare/v1.2.4...v1.2.5) (2022-07-28)
+
+
+## [1.2.4](https://github.com/botpress/messaging/compare/v1.2.3...v1.2.4) (2022-07-28)
 
 
 ### Bug Fixes
