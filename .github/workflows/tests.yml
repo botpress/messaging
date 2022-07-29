@@ -113,7 +113,7 @@ jobs:
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
-          yarn --frozen-lockfile
+          yarn --immutable
       - name: Await PostgreSQL
         if: ${{ matrix.database == 'postgres' }}
         timeout-minutes: 2
@@ -148,7 +148,7 @@ jobs:
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
-          yarn --frozen-lockfile
+          yarn --immutable
       - name: Await PostgreSQL
         if: ${{ matrix.database == 'postgres' }}
         timeout-minutes: 2
@@ -175,7 +175,7 @@ jobs:
           cache: 'yarn'
       - name: Fetch Node Packages
         run: |
-          yarn --frozen-lockfile
+          yarn --immutable
 
       - name: Run tests
         run: |
