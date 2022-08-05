@@ -96,6 +96,7 @@ export interface ChoiceContent extends Content {
   type: 'single-choice'
   text: string
   choices: ChoiceOption[]
+  dropdownPlaceholder?: string
 }
 
 export interface ChoiceOption {
