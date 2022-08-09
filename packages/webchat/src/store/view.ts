@@ -4,6 +4,7 @@ import { action, computed, observable, runInAction } from 'mobx'
 import constants from '../core/constants'
 import { ChatDimensions, CustomAction, CustomButton } from '../typings'
 
+import { postMessageToParent } from '../utils/webchatEvents'
 import { RootStore } from '.'
 
 class ViewStore {
@@ -179,7 +180,7 @@ class ViewStore {
   @action.bound
   setLoadingCompleted() {
     this._isLoading = false
-    this.rootStore.postMessage('webchatLoaded')
+    postMessageToParent('webchatLoaded', undefined, this.rootStore.config.chatId)
   }
 
   @action.bound
@@ -247,7 +248,7 @@ class ViewStore {
   showChat() {
     if (this.disableAnimations) {
       this.activeView = 'side'
-      this.rootStore.postMessage('webchatOpened')
+      postMessageToParent('webchatOpened', undefined, this.rootStore.config.chatId)
       return this._updateTransitions({ widgetTransition: undefined, sideTransition: 'none' })
     }
 
@@ -259,7 +260,7 @@ class ViewStore {
 
     this._endAnimation('side')
 
-    this.rootStore.postMessage('webchatOpened')
+    postMessageToParent('webchatOpened', undefined, this.rootStore.config.chatId)
   }
 
   @action.bound
@@ -270,7 +271,7 @@ class ViewStore {
 
     if (this.disableAnimations) {
       this.activeView = 'widget'
-      this.rootStore.postMessage('webchatClosed')
+      postMessageToParent('webchatClosed', undefined, this.rootStore.config.chatId)
       return this._updateTransitions({ widgetTransition: undefined, sideTransition: undefined })
     }
 
@@ -284,7 +285,7 @@ class ViewStore {
 
     this._endAnimation('widget')
 
-    this.rootStore.postMessage('webchatClosed')
+    postMessageToParent('webchatClosed', undefined, this.rootStore.config.chatId)
   }
 
   @action.bound
