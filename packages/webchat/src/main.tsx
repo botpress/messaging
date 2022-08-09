@@ -167,7 +167,6 @@ class Web extends React.Component<MainProps> {
   }
 
   handleIframeApi = async ({ data }: IframeAPIData) => {
-    console.log('handleIframeApi', data)
     switch (data.action) {
       case 'configure':
         return this.props.updateConfig!(Object.assign({}, constants.DEFAULT_CONFIG, data.payload))
