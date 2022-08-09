@@ -15,6 +15,7 @@ import { RootStore, StoreDef } from './store'
 import { Config, Message } from './typings'
 import { isIE } from './utils'
 import { initializeAnalytics, trackMessage, trackWebchatState } from './utils/analytics'
+import { postMessageToParent } from './utils/webchatEvents'
 
 export const DEFAULT_TYPING_DELAY = 1000
 
@@ -102,7 +103,7 @@ class Web extends React.Component<MainProps> {
     }
 
     if (this.config.containerWidth) {
-      this.postMessageToParent('setWidth', this.config.containerWidth)
+      postMessageToParent('setWidth', this.config.containerWidth, this.config.chatId)
     }
 
     await this.props.fetchBotInfo!()
@@ -112,10 +113,6 @@ class Web extends React.Component<MainProps> {
     }
 
     this.setupObserver()
-  }
-
-  postMessageToParent(type: string, value: any) {
-    window.parent?.postMessage({ type, value, chatId: this.config.chatId }, '*')
   }
 
   extractConfig(): Config {
@@ -150,7 +147,7 @@ class Web extends React.Component<MainProps> {
   setupObserver() {
     observe(this.props.dimensions!, 'container', (data) => {
       if (data.newValue) {
-        this.postMessageToParent('setWidth', data.newValue)
+        postMessageToParent('setWidth', data.newValue, this.config.chatId)
       }
     })
   }
@@ -170,6 +167,7 @@ class Web extends React.Component<MainProps> {
   }
 
   handleIframeApi = async ({ data }: IframeAPIData) => {
+    console.log('handleIframeApi', data)
     switch (data.action) {
       case 'configure':
         return this.props.updateConfig!(Object.assign({}, constants.DEFAULT_CONFIG, data.payload))
@@ -295,7 +293,7 @@ class Web extends React.Component<MainProps> {
     })
 
     if (this.parentClass !== parentClass) {
-      this.postMessageToParent('setClass', parentClass)
+      postMessageToParent('setClass', parentClass, this.config.chatId)
       this.parentClass = parentClass
     }
 

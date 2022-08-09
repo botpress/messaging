@@ -49,7 +49,13 @@ class MessageGroup extends React.Component<Props> {
       >
         {avatar}
         <div role="region" className={'bpw-message-container'}>
-          <div aria-live="assertive" role="log" className={'bpw-message-group'}>
+          <div
+            aria-live="assertive"
+            role="log"
+            className={classnames('bpw-message-group', {
+              'bpw-message-group-selected': !!this.props.messages.find((m) => m.id === this.props.selectedMessageId)
+            })}
+          >
             <span data-from={fromLabel} className="from hidden" aria-hidden="true">
               {fromLabel}
             </span>
@@ -96,7 +102,8 @@ class MessageGroup extends React.Component<Props> {
 export default inject(({ store }: { store: RootStore }) => ({
   store,
   sendFeedback: store.sendFeedback,
-  sendData: store.sendData
+  sendData: store.sendData,
+  selectedMessageId: store.selectedMessageId
 }))(MessageGroup)
 
 type Props = {
@@ -105,4 +112,4 @@ type Props = {
   messages: MessageDetails[]
   isLastGroup: boolean
   store?: RootStore
-} & Pick<StoreDef, 'sendFeedback' | 'sendData'>
+} & Pick<StoreDef, 'sendFeedback' | 'sendData' | 'selectedMessageId'>

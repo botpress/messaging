@@ -22,6 +22,7 @@ import {
 } from '../typings'
 import { downloadFile } from '../utils'
 import { trackMessage } from '../utils/analytics'
+import { postMessageToParent } from '../utils/webchatEvents'
 
 import ComposerStore from './composer'
 import ViewStore from './view'
@@ -40,6 +41,9 @@ class RootStore {
 
   @observable
   public currentConversation?: CurrentConversation
+
+  @observable
+  public selectedMessageId?: string
 
   @observable
   public botInfo!: BotInfo
@@ -86,6 +90,11 @@ class RootStore {
     this.api = new WebchatApi(socket)
   }
 
+  @action.bound
+  setSelectedMessage(messageId: string) {
+    this.selectedMessageId = messageId
+  }
+
   @computed
   get isConversationStarted(): boolean {
     return !!this.currentConversation?.messages.length
@@ -124,12 +133,6 @@ class RootStore {
   @computed
   get currentConversationId(): uuid | undefined {
     return this.currentConversation?.id
-  }
-
-  @action.bound
-  postMessage(name: string, payload?: any) {
-    const chatId = this.config.chatId
-    window.parent.postMessage({ name, chatId, payload }, '*')
   }
 
   @action.bound
@@ -217,7 +220,7 @@ class RootStore {
       await this.fetchConversation()
       runInAction('-> setInitialized', () => {
         this.isInitialized = true
-        this.postMessage('webchatReady')
+        postMessageToParent('webchatReady', undefined, this.config.chatId)
       })
     } catch (err) {
       console.error('Error while fetching data, creating new conversation...', err)
@@ -464,7 +467,7 @@ class RootStore {
 
   @action.bound
   publishConfigChanged() {
-    this.postMessage('configChanged', JSON.stringify(this.config, undefined, 2))
+    postMessageToParent('configChanged', { ...this.config }, this.config.chatId)
   }
 
   @action.bound

@@ -6,6 +6,7 @@ import { WrappedComponentProps, injectIntl } from 'react-intl'
 
 import { RootStore, StoreDef } from '../../store'
 import { Renderer } from '../../typings'
+import { postMessageToParent } from '../../utils/webchatEvents'
 
 class Message extends Component<MessageProps> {
   state = {
@@ -22,6 +23,22 @@ class Message extends Component<MessageProps> {
       <span className="bpw-message-timestamp">
         {this.props.store!.intl.formatTime(new Date(this.props.sentOn!), { hour: 'numeric', minute: 'numeric' })}
       </span>
+    )
+  }
+
+  onMessageClick = () => {
+    this.props.store?.setSelectedMessage(this.props.messageId!)
+
+    postMessageToParent(
+      'messageClicked',
+      {
+        id: this.props.messageId,
+        conversationId: this.props.store?.currentConversationId,
+        sentOn: this.props.sentOn,
+        payload: { ...this.props.payload },
+        from: this.props.isBotMessage ? 'bot' : 'user'
+      },
+      this.props.store?.config.chatId
     )
   }
 
@@ -64,9 +81,17 @@ class Message extends Component<MessageProps> {
 
     const additionalStyle = (this.props.payload && this.props.payload['web-style']) || {}
 
+    const messageSelectedClass = {
+      'bpw-message-selected': this.props.selectedMessageId === this.props.messageId
+    }
+
     if (this.props.noBubble || this.props.payload?.wrapped?.noBubble) {
       return (
-        <div className={classnames(this.props.className, wrappedClass)} style={additionalStyle}>
+        <div
+          className={classnames(this.props.className, wrappedClass, messageSelectedClass)}
+          style={additionalStyle}
+          onClick={this.onMessageClick}
+        >
           {rendered}
         </div>
       )
@@ -79,7 +104,11 @@ class Message extends Component<MessageProps> {
         tabIndex={-1}
         style={additionalStyle}
       >
-        <div tabIndex={-1} className="bpw-chat-bubble-content">
+        <div
+          tabIndex={-1}
+          className={classnames('bpw-chat-bubble-content', messageSelectedClass)}
+          onClick={this.onMessageClick}
+        >
           <span className="sr-only">
             {this.props.store!.intl.formatMessage({
               id: this.props.isBotMessage ? 'message.botSaid' : 'message.iSaid',
@@ -96,7 +125,8 @@ class Message extends Component<MessageProps> {
 }
 
 export default inject(({ store }: { store: RootStore }) => ({
-  intl: store.intl
+  intl: store.intl,
+  selectedMessageId: store.selectedMessageId
 }))(injectIntl(observer(Message)))
 
-type MessageProps = Renderer.Message & WrappedComponentProps & Pick<StoreDef, 'intl'>
+type MessageProps = Renderer.Message & WrappedComponentProps & Pick<StoreDef, 'intl' | 'selectedMessageId'>
