@@ -1,5 +1,6 @@
 import { Message, MessagingSocket, UserCredentials } from '@botpress/messaging-socket'
 import { Config } from '../typings'
+import { postMessageToParent } from '../utils/webchatEvents'
 
 export default class BpSocket {
   public socket: MessagingSocket
@@ -24,10 +25,6 @@ export default class BpSocket {
     return message
   }
 
-  public postToParent = (_type: string, payload: any) => {
-    window.parent?.postMessage({ ...payload, chatId: this.chatId }, '*')
-  }
-
   public async connect(): Promise<void> {
     const creds = this.getCreds()
     await this.socket.connect(creds)
@@ -36,7 +33,7 @@ export default class BpSocket {
       const userId = this.socket.userId!
       window.BP_STORAGE.set('creds', this.socket.creds)
 
-      this.postToParent('', { userId })
+      postMessageToParent('userConnected', { userId }, this.chatId)
     }
   }
 
