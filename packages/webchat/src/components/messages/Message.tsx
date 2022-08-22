@@ -30,7 +30,7 @@ class Message extends Component<MessageProps> {
     this.props.store?.setSelectedMessage(this.props.messageId!)
 
     postMessageToParent(
-      'messageClicked',
+      'MESSAGE.SELECTED',
       {
         id: this.props.messageId,
         conversationId: this.props.store?.currentConversationId,
@@ -38,7 +38,7 @@ class Message extends Component<MessageProps> {
         payload: { ...this.props.payload },
         from: this.props.isBotMessage ? 'bot' : 'user'
       },
-      this.props.store?.config.chatId
+      this.props.config!.chatId
     )
   }
 
@@ -126,7 +126,8 @@ class Message extends Component<MessageProps> {
 
 export default inject(({ store }: { store: RootStore }) => ({
   intl: store.intl,
+  config: store.config,
   selectedMessageId: store.selectedMessageId
 }))(injectIntl(observer(Message)))
 
-type MessageProps = Renderer.Message & WrappedComponentProps & Pick<StoreDef, 'intl' | 'selectedMessageId'>
+type MessageProps = Renderer.Message & WrappedComponentProps & Pick<StoreDef, 'intl' | 'selectedMessageId' | 'config'>

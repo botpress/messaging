@@ -220,7 +220,7 @@ class RootStore {
       await this.fetchConversation()
       runInAction('-> setInitialized', () => {
         this.isInitialized = true
-        postMessageToParent('webchatReady', undefined, this.config.chatId)
+        postMessageToParent('LIFECYCLE.READY', undefined, this.config.chatId)
       })
     } catch (err) {
       console.error('Error while fetching data, creating new conversation...', err)
@@ -302,24 +302,24 @@ class RootStore {
 
   /** Sends the specified message, or fetch the message in the composer */
   @action.bound
-  async sendMessage(message?: string): Promise<void> {
-    if (message) {
-      return this.sendData({ type: 'text', text: message })
-    }
-
-    const userMessage = this.composer.message
-    if (!userMessage || !userMessage.length) {
+  async sendMessage(textMessage?: string): Promise<void> {
+    textMessage = textMessage || this.composer.message
+    if (!textMessage) {
       return
     }
 
     this.composer.updateMessage('')
     try {
-      await this.sendData({ type: 'text', text: userMessage })
+      const message = await this.sendData({ type: 'text', text: textMessage })
       trackMessage('sent')
+      if (message) {
+        postMessageToParent('MESSAGE.SENT', message, this.config.chatId)
+      }
 
-      this.composer.addMessageToHistory(userMessage)
+      this.composer.addMessageToHistory(textMessage)
     } catch (e) {
-      this.composer.updateMessage(userMessage)
+      this.composer.updateMessage(textMessage)
+      console.error('Webchat cloud not send message')
       throw e
     }
   }
@@ -409,7 +409,7 @@ class RootStore {
 
   /** Sends an event or a message, depending on how the backend manages those types */
   @action.bound
-  async sendData(data: any): Promise<void> {
+  async sendData(data: any): Promise<Message | void> {
     if (!this.isInitialized || !this.currentConversationId) {
       console.warn('[webchat] Cannot send data until the webchat is ready')
       return
@@ -462,12 +462,7 @@ class RootStore {
     this.updateBotUILanguage(locale)
     document.documentElement.setAttribute('lang', locale)
 
-    this.publishConfigChanged()
-  }
-
-  @action.bound
-  publishConfigChanged() {
-    postMessageToParent('configChanged', { ...this.config }, this.config.chatId)
+    postMessageToParent('CONFIG.SET', { ...this.config }, this.config.chatId)
   }
 
   @action.bound

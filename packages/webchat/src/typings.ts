@@ -155,11 +155,34 @@ export interface StudioConnector {
   loadModuleView: any
 }
 
+export type WebchatEventType =
+  | 'LIFECYCLE.LOADED'
+  | 'LIFECYCLE.READY'
+  | 'UI.OPENED' // is this necessary ?
+  | 'UI.CLOSED' // is this necessary ?
+  | 'UI.RESIZE' // is this necessary ?
+  | 'CONFIG.SET'
+  | 'MESSAGE.SENT'
+  | 'MESSAGE.RECEIVED'
+  | 'MESSAGE.SELECTED'
+  | 'USER.CONNECTED'
+
+export interface WebchatEvent {
+  type: WebchatEventType
+  value: any
+  chatId: string
+}
+
 export interface Config {
   /** Url of the messaging server */
   messagingUrl: string
   /** Id of your messaging client */
   clientId: string
+  /**
+   * Refers to a specific webchat reference in parent window. Useful when using multiple chat window
+   * @default 'bp-web-widget'
+   */
+  chatId: string
   /**
    * Url of the Media File Service where we fetch the bot info
    * @default ''
@@ -270,22 +293,12 @@ export interface Config {
    * Experimental: expose the store to the parent frame for more control on the webchat's behavior
    * @default false
    */
-  exposeStore?: boolean
-  /**
-   * If true, Websocket is created when the Webchat is opened. Bot cannot be proactive.
-   * @default false
-   */
   lazySocket?: boolean
   /**
    * If true, chat will no longer play the notification sound for new messages.
    * @default false
    */
   disableNotificationSound?: boolean
-  /**
-   * Refers to a specific webchat reference in parent window. Useful when using multiple chat window
-   * @default ''
-   */
-  chatId?: string
   /**
    * CSS class to be applied to iframe
    * @default ''
