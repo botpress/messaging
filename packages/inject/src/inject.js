@@ -61,6 +61,15 @@ function _generateRandomString(length) {
   return str
 }
 
+// This is a map of all webchat reference in case of multiple instances
+// ts type:
+// interface ChatRefs Dic<{
+//   postMessage: (message:any, targetOrigin: string) => void
+//   eventListener?: {
+//     handler: (event: WebchatEvent) => void
+//     types: string[]
+//   }
+// }>
 const chatRefs = {}
 
 // provides proper chat reference
@@ -94,6 +103,16 @@ function mergeConfig(payload, chatId) {
   chatWindow.postMessage({ action: 'mergeConfig', payload: payload }, '*')
 }
 
+function onEvent(eventHandler, options) {
+  if (typeof eventHandler !== 'function') {
+    console.error('eventHandler is not a function')
+  }
+  const chatId = options.chatId || DEFAULT_CHAT_ID
+  const types = options.types || ['*']
+
+  chatRefs[chatId] = Object.assign(chatRefs[chatId] || {}, { eventListener: { handler: eventHandler, types: types } })
+}
+
 /**
  *
  * @param {object} config Configuration object you want to apply to your webchat instance
@@ -114,7 +133,7 @@ function init(config, targetSelector) {
   _injectDOMElement('div', targetSelector, { id: containerId, innerHTML: iframeHTML })
 
   const iframeRef = document.querySelector('#' + containerId + ' #' + iframeId).contentWindow
-  chatRefs[chatId] = iframeRef
+  chatRefs[chatId] = Object.assign(chatRefs[chatId] || {}, { postMessage: iframeRef.postMessage })
 }
 
 window.botpressWebChat = {
@@ -122,21 +141,32 @@ window.botpressWebChat = {
   configure: configure,
   sendEvent: sendEvent,
   mergeConfig: mergeConfig,
-  sendPayload: sendPayload
+  sendPayload: sendPayload,
+  onEvent: onEvent
 }
 
-window.addEventListener('message', function (payload) {
-  const data = payload.data
+window.addEventListener('message', function (message) {
+  const data = message.data
   if (!data || !data.type) {
     return
   }
+  const ref = _getChatRef(data.chatId)
 
   const iframeSelector = '#' + _getIframeId(data.chatId)
   if (data.type === 'setClass') {
     document.querySelector(iframeSelector).setAttribute('class', data.value)
   } else if (data.type === 'setWidth') {
     const width = typeof data.value === 'number' ? data.value + 'px' : data.value
-
     document.querySelector(iframeSelector).style.width = width
+  }
+
+  const shouldFireEvent =
+    ref.eventListener &&
+    ref.eventListener.types.some(function (t) {
+      return t === '*' || t === data.type
+    })
+
+  if (shouldFireEvent) {
+    ref.eventListener.handleEvent(data)
   }
 })
