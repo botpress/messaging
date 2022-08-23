@@ -260,7 +260,7 @@ class ViewStore {
 
     this._endAnimation('side')
 
-    postMessageToParent('UI.CLOSED', undefined, this.rootStore.config.chatId)
+    postMessageToParent('UI.OPENED', undefined, this.rootStore.config.chatId)
   }
 
   @action.bound
@@ -271,7 +271,7 @@ class ViewStore {
 
     if (this.disableAnimations) {
       this.activeView = 'widget'
-      postMessageToParent('UI.OPENED', undefined, this.rootStore.config.chatId)
+      postMessageToParent('UI.CLOSED', undefined, this.rootStore.config.chatId)
       return this._updateTransitions({ widgetTransition: undefined, sideTransition: undefined })
     }
 

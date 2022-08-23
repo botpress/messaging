@@ -184,6 +184,11 @@ export interface Config {
    */
   chatId: string
   /**
+   * Url where the webchat bundle is hosted
+   * @default: '/'
+   */
+  hostUrl?: string
+  /**
    * Url of the Media File Service where we fetch the bot info
    * @default ''
    */
