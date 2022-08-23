@@ -10,6 +10,12 @@
 
   <script src="http://localhost:8080/inject.js"></script>
   <script>
+    window.botpressWebChat.onEvent(
+      (event) => {
+        console.log('this is how we let users subscribe to different events', event)
+      },
+      ['LIFECYCLE.READY']
+    )
     window.botpressWebChat.init({
       hostUrl: 'http://localhost:8080',
       messagingUrl: 'http://localhost:3100',
