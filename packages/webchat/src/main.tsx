@@ -366,7 +366,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   resetConversation: store.resetConversation
 }))(injectIntl(observer(Web)))
 
-type MainProps = { store: RootStore } & WrappedComponentProps &
+type MainProps = { store?: RootStore } & WrappedComponentProps &
   Pick<
     StoreDef,
     | 'config'
