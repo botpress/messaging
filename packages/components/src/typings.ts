@@ -27,7 +27,7 @@ export interface MessageConfig {
   store?: LiteStore
   shouldPlay?: boolean // used for voice message only
   googleMapsAPIKey?: string
-  onSendData: (data: any) => Promise<void>
+  onSendData: (data: any) => Promise<any>
   onFileUpload: FileUploadHandler
   onAudioEnded?: (this: HTMLMediaElement, ev: HTMLMediaElementEventMap['ended']) => void
 }

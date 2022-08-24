@@ -416,8 +416,9 @@ class RootStore {
     }
 
     const message = await this.api.sendMessage(data, this.currentConversationId)
-
     this.updateLastMessage(this.currentConversationId, message)
+
+    return message
   }
 
   /** Sends a message of type voice */

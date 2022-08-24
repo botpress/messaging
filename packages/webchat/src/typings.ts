@@ -38,7 +38,7 @@ export namespace Renderer {
     sentOn?: Date
     inlineFeedback?: any
 
-    onSendData?: (data: any) => Promise<void>
+    onSendData?: (data: any) => Promise<Message | void>
     onFileUpload?: (label: string, payload: any, file: File) => Promise<void>
 
     /** Allows to autoplay voice messages coming from the bot */
