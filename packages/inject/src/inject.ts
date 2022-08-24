@@ -189,8 +189,11 @@ window.addEventListener('message', function ({ data }) {
   if (data.type === 'UI.RESIZE') {
     const width = typeof data.value === 'number' ? data.value + 'px' : data.value
     const iframeElement = _getIframeElement(_getContainerId(data.chatId), _getIframeId(data.chatId))
-
     iframeElement.style.width = width
+  }
+  if (data.type === 'UI.SET-CLASS') {
+    const iframeElement = _getIframeElement(_getContainerId(data.chatId), _getIframeId(data.chatId))
+    iframeElement.setAttribute('class', data.value)
   }
 
   const chatRef = _getChatRef(data.chatId)

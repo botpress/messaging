@@ -158,9 +158,10 @@ export interface StudioConnector {
 export type WebchatEventType =
   | 'LIFECYCLE.LOADED'
   | 'LIFECYCLE.READY'
-  | 'UI.OPENED' // is this necessary ?
-  | 'UI.CLOSED' // is this necessary ?
+  | 'UI.OPENED'
+  | 'UI.CLOSED'
   | 'UI.RESIZE' // is this necessary ?
+  | 'UI.SET-CLASS' // is this necessary ?
   | 'CONFIG.SET'
   | 'MESSAGE.SENT'
   | 'MESSAGE.RECEIVED'

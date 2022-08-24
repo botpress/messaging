@@ -291,6 +291,7 @@ class Web extends React.Component<MainProps> {
 
     if (this.parentClass !== parentClass) {
       this.parentClass = parentClass
+      postMessageToParent('UI.SET-CLASS', parentClass, this.config.chatId)
     }
 
     const stylesheet = this.props.config!.stylesheet

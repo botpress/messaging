@@ -1,3 +1,7 @@
+body {
+  height: 100vh;
+}
+
 .bp-widget-web {
   border: none;
   display: block;
