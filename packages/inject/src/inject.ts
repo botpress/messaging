@@ -3,7 +3,7 @@ import { Config, WebchatEvent, WebchatEventType } from '@botpress/webchat'
 require('./inject.css')
 
 interface WebchatRef {
-  postMessage: (message: any, targetOrigin: string) => void
+  iframeWindow: Window
   eventListener: {
     handler: (event: WebchatEvent) => void
     topics: WebchatEventHandlerTopics
@@ -78,7 +78,7 @@ function _makeChatRefProxy(chatId: string, target: Partial<WebchatRef>): Webchat
         return target[prop]
       }
 
-      if (prop === 'postMessage') {
+      if (prop === 'iframeWindow') {
         return () => {
           console.warn(
             `No webchat with id ${chatId} has been initialized. \n Please use window.botpressWebChat.init first.`
@@ -110,22 +110,22 @@ function _getIframeElement(containerId: string, iframeId: string): HTMLIFrameEle
 
 function sendEvent(payload: any, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'event', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'event', payload }, '*')
 }
 
 function sendPayload(payload: any, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'sendPayload', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'sendPayload', payload }, '*')
 }
 
 function configure(payload: Config, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'configure', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'configure', payload }, '*')
 }
 
 function mergeConfig(payload: Partial<Config>, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'mergeConfig', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'mergeConfig', payload }, '*')
 }
 
 function onEvent(handler: WebchatEventHandler, topics: WebchatEventHandlerTopics = [], chatId?: string) {
@@ -168,7 +168,7 @@ function init(config: Config, targetSelector: string) {
   _injectDOMElement('div', targetSelector, { id: containerId, innerHTML: iframeHTML })
 
   const iframeRef = _getIframeElement(containerId, iframeId)
-  const partialChatRef: Partial<WebchatRef> = { postMessage: iframeRef.contentWindow!.postMessage }
+  const partialChatRef: Partial<WebchatRef> = { iframeWindow: iframeRef.contentWindow! }
 
   if (CHAT_REFS[config.chatId]) {
     Object.assign(CHAT_REFS[config.chatId], partialChatRef)
