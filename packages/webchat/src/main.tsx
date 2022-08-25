@@ -224,6 +224,9 @@ class Web extends React.Component<MainProps> {
     if (this.props.currentConversation?.userId !== event.authorId) {
       trackMessage('received')
       postMessageToParent('MESSAGE.RECEIVED', event, this.props.config!.chatId)
+      if (event.id) {
+        this.props.store?.setSelectedMessage(event.id)
+      }
     }
 
     this.props.updateLastMessage!(event.conversationId, event)
