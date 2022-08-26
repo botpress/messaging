@@ -180,7 +180,7 @@ class ViewStore {
   @action.bound
   setLoadingCompleted() {
     this._isLoading = false
-    postMessageToParent('webchatLoaded', undefined, this.rootStore.config.chatId)
+    postMessageToParent('LIFECYCLE.LOADED', undefined, this.rootStore.config.chatId)
   }
 
   @action.bound
@@ -248,7 +248,7 @@ class ViewStore {
   showChat() {
     if (this.disableAnimations) {
       this.activeView = 'side'
-      postMessageToParent('webchatOpened', undefined, this.rootStore.config.chatId)
+      postMessageToParent('UI.OPENED', undefined, this.rootStore.config.chatId)
       return this._updateTransitions({ widgetTransition: undefined, sideTransition: 'none' })
     }
 
@@ -260,7 +260,7 @@ class ViewStore {
 
     this._endAnimation('side')
 
-    postMessageToParent('webchatOpened', undefined, this.rootStore.config.chatId)
+    postMessageToParent('UI.OPENED', undefined, this.rootStore.config.chatId)
   }
 
   @action.bound
@@ -271,7 +271,7 @@ class ViewStore {
 
     if (this.disableAnimations) {
       this.activeView = 'widget'
-      postMessageToParent('webchatClosed', undefined, this.rootStore.config.chatId)
+      postMessageToParent('UI.CLOSED', undefined, this.rootStore.config.chatId)
       return this._updateTransitions({ widgetTransition: undefined, sideTransition: undefined })
     }
 
@@ -285,7 +285,7 @@ class ViewStore {
 
     this._endAnimation('widget')
 
-    postMessageToParent('webchatClosed', undefined, this.rootStore.config.chatId)
+    postMessageToParent('UI.CLOSED', undefined, this.rootStore.config.chatId)
   }
 
   @action.bound

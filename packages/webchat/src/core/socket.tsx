@@ -4,7 +4,7 @@ import { postMessageToParent } from '../utils/webchatEvents'
 
 export default class BpSocket {
   public socket: MessagingSocket
-  private chatId: string | undefined
+  private chatId: string
 
   public onMessage!: (event: any) => void
 
@@ -33,7 +33,7 @@ export default class BpSocket {
       const userId = this.socket.userId!
       window.BP_STORAGE.set('creds', this.socket.creds)
 
-      postMessageToParent('userConnected', { userId }, this.chatId)
+      postMessageToParent('USER.CONNECTED', { userId }, this.chatId)
     }
   }
 

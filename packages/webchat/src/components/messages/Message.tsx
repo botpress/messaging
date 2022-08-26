@@ -1,5 +1,6 @@
 import ReactMessageRenderer from '@botpress/messaging-components'
 import classnames from 'classnames'
+import { cloneDeep } from 'lodash'
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
 import { WrappedComponentProps, injectIntl } from 'react-intl'
@@ -30,15 +31,15 @@ class Message extends Component<MessageProps> {
     this.props.store?.setSelectedMessage(this.props.messageId!)
 
     postMessageToParent(
-      'messageClicked',
+      'MESSAGE.SELECTED',
       {
         id: this.props.messageId,
         conversationId: this.props.store?.currentConversationId,
         sentOn: this.props.sentOn,
-        payload: { ...this.props.payload },
+        payload: cloneDeep(this.props.payload), //necessary because of potentially nested mobx proxy object isn't serializable
         from: this.props.isBotMessage ? 'bot' : 'user'
       },
-      this.props.store?.config.chatId
+      this.props.config!.chatId
     )
   }
 
@@ -126,7 +127,8 @@ class Message extends Component<MessageProps> {
 
 export default inject(({ store }: { store: RootStore }) => ({
   intl: store.intl,
+  config: store.config,
   selectedMessageId: store.selectedMessageId
 }))(injectIntl(observer(Message)))
 
-type MessageProps = Renderer.Message & WrappedComponentProps & Pick<StoreDef, 'intl' | 'selectedMessageId'>
+type MessageProps = Renderer.Message & WrappedComponentProps & Pick<StoreDef, 'intl' | 'selectedMessageId' | 'config'>

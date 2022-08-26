@@ -1,6 +1,5 @@
 import classnames from 'classnames'
 import debounce from 'lodash/debounce'
-import set from 'lodash/set'
 import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import queryString from 'query-string'
@@ -97,13 +96,9 @@ class Web extends React.Component<MainProps> {
     this.config = this.extractConfig()
     this.props.updateConfig!(this.config)
 
-    if (this.config.exposeStore) {
-      const storePath = this.config.chatId ? `${this.config.chatId}.webchat_store` : 'webchat_store'
-      set(window.parent, storePath, this.props.store)
-    }
-
+    // is this necessary ?
     if (this.config.containerWidth) {
-      postMessageToParent('setWidth', this.config.containerWidth, this.config.chatId)
+      postMessageToParent('UI.RESIZE', this.config.containerWidth, this.config.chatId)
     }
 
     await this.props.fetchBotInfo!()
@@ -147,7 +142,8 @@ class Web extends React.Component<MainProps> {
   setupObserver() {
     observe(this.props.dimensions!, 'container', (data) => {
       if (data.newValue) {
-        postMessageToParent('setWidth', data.newValue, this.config.chatId)
+        // is this necessary ?
+        postMessageToParent('UI.RESIZE', data.newValue, this.config.chatId)
       }
     })
   }
@@ -196,7 +192,6 @@ class Web extends React.Component<MainProps> {
           this.props.displayWidgetView ? this.props.showChat!() : this.props.hideChat!()
           trackWebchatState('toggle')
         } else if (type === 'message') {
-          trackMessage('sent')
           await this.props.sendMessage!(text)
         } else if (type === 'loadConversation') {
           await this.props.fetchConversation!(conversationId)
@@ -226,7 +221,16 @@ class Web extends React.Component<MainProps> {
       return
     }
 
-    trackMessage('received')
+    if (this.props.currentConversation?.userId !== event.authorId) {
+      trackMessage('received')
+      postMessageToParent('MESSAGE.RECEIVED', event, this.props.config!.chatId)
+
+      // This is to handle a special case for the emulator, setting the selected css class to the last message group
+      // This needs a rethinking
+      if (event.id) {
+        this.props.store?.setSelectedMessage(event.id)
+      }
+    }
 
     this.props.updateLastMessage!(event.conversationId, event)
     await this.props.addEventToConversation!(event)
@@ -292,8 +296,8 @@ class Web extends React.Component<MainProps> {
     })
 
     if (this.parentClass !== parentClass) {
-      postMessageToParent('setClass', parentClass, this.config.chatId)
       this.parentClass = parentClass
+      postMessageToParent('UI.SET-CLASS', parentClass, this.config.chatId)
     }
 
     const stylesheet = this.props.config!.stylesheet
@@ -363,6 +367,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   fetchConversation: store.fetchConversation,
   setIntlProvider: store.setIntlProvider,
   setSocket: store.setSocket,
+  currentConversation: store.currentConversation,
   currentConversationId: store.currentConversationId,
   resetConversation: store.resetConversation
 }))(injectIntl(observer(Web)))
@@ -403,5 +408,6 @@ type MainProps = { store?: RootStore } & WrappedComponentProps &
     | 'setIntlProvider'
     | 'setSocket'
     | 'currentConversationId'
+    | 'currentConversation'
     | 'resetConversation'
   >
