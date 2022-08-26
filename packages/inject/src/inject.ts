@@ -1,11 +1,11 @@
 import { Config, WebchatEvent, WebchatEventType } from '@botpress/webchat'
 
-require('./inject.css')
+import './inject.css'
 
 interface WebchatRef {
-  postMessage: (message: any, targetOrigin: string) => void
+  iframeWindow: Window
   eventListener: {
-    handler: (event: WebchatEvent) => void
+    handler: WebchatEventHandler
     topics: WebchatEventHandlerTopics
   }
 }
@@ -19,26 +19,26 @@ const DEFAULT_IFRAME_ID = 'bp-widget'
 
 const CHAT_REFS: { [chatId: string]: WebchatRef } = {}
 
-function _getContainerId(chatId?: string) {
+function _getContainerId(chatId?: string): string {
   return chatId ? `${chatId}-container` : DEFAULT_CHAT_ID
 }
 
-function _getIframeId(chatId: string) {
+function _getIframeId(chatId: string): string {
   return chatId || DEFAULT_IFRAME_ID
 }
 
 function _injectDOMElement(
-  tagName: string,
+  tagName: keyof HTMLElementTagNameMap,
   selector: string,
   options: { [key: string]: string } = {}
 ): HTMLElement | void {
   const element = document.createElement(tagName)
   // @ts-ignore
   Object.entries(options).forEach(([attrName, attrValue]) => (element[attrName] = attrValue))
+
   const parent = document.querySelector(selector)
   if (!parent) {
-    console.error(`No element correspond to ${selector}`)
-    return
+    throw new Error(`No element correspond to ${selector}`)
   }
   parent.appendChild(element)
   return element
@@ -78,7 +78,7 @@ function _makeChatRefProxy(chatId: string, target: Partial<WebchatRef>): Webchat
         return target[prop]
       }
 
-      if (prop === 'postMessage') {
+      if (prop === 'iframeWindow') {
         return () => {
           console.warn(
             `No webchat with id ${chatId} has been initialized. \n Please use window.botpressWebChat.init first.`
@@ -86,7 +86,7 @@ function _makeChatRefProxy(chatId: string, target: Partial<WebchatRef>): Webchat
         }
       } else if (prop === 'eventListener') {
         return {
-          handler: (evnt: WebchatEvent) => console.log('this is the default event handler', evnt),
+          handler: () => {},
           types: []
         }
       }
@@ -110,32 +110,30 @@ function _getIframeElement(containerId: string, iframeId: string): HTMLIFrameEle
 
 function sendEvent(payload: any, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'event', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'event', payload }, '*')
 }
 
 function sendPayload(payload: any, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'sendPayload', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'sendPayload', payload }, '*')
 }
 
 function configure(payload: Config, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'configure', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'configure', payload }, '*')
 }
 
 function mergeConfig(payload: Partial<Config>, chatId?: string) {
   const chatRef = _getChatRef(chatId)
-  chatRef.postMessage({ action: 'mergeConfig', payload }, '*')
+  chatRef.iframeWindow.postMessage({ action: 'mergeConfig', payload }, '*')
 }
 
 function onEvent(handler: WebchatEventHandler, topics: WebchatEventHandlerTopics = [], chatId?: string) {
   if (typeof handler !== 'function') {
-    console.error('eventHandler is not a function, please provide a function')
-    return
+    throw new Error('EventHandler is not a function, please provide a function')
   }
-  if (!topics || typeof topics !== 'object' || !topics.length) {
-    console.error('topics should be an array of supported event types')
-    return
+  if (!Array.isArray(topics)) {
+    throw new Error('Topics should be an array of supported event types')
   }
 
   chatId = chatId || DEFAULT_CHAT_ID
@@ -150,7 +148,7 @@ function onEvent(handler: WebchatEventHandler, topics: WebchatEventHandlerTopics
 
 /**
  *
- * @param {object} config Configuration object you want to apply to your webchat instance
+ * @param {Config} config Configuration object you want to apply to your webchat instance
  * @param {string} targetSelector css selector under which you want your webchat to be rendered
  */
 function init(config: Config, targetSelector: string) {
@@ -168,7 +166,7 @@ function init(config: Config, targetSelector: string) {
   _injectDOMElement('div', targetSelector, { id: containerId, innerHTML: iframeHTML })
 
   const iframeRef = _getIframeElement(containerId, iframeId)
-  const partialChatRef: Partial<WebchatRef> = { postMessage: iframeRef.contentWindow!.postMessage }
+  const partialChatRef: Partial<WebchatRef> = { iframeWindow: iframeRef.contentWindow! }
 
   if (CHAT_REFS[config.chatId]) {
     Object.assign(CHAT_REFS[config.chatId], partialChatRef)

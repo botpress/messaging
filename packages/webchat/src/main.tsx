@@ -224,6 +224,12 @@ class Web extends React.Component<MainProps> {
     if (this.props.currentConversation?.userId !== event.authorId) {
       trackMessage('received')
       postMessageToParent('MESSAGE.RECEIVED', event, this.props.config!.chatId)
+
+      // This is to handle a special case for the emulator, setting the selected css class to the last message group
+      // This needs a rethinking
+      if (event.id) {
+        this.props.store?.setSelectedMessage(event.id)
+      }
     }
 
     this.props.updateLastMessage!(event.conversationId, event)
