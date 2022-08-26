@@ -40,6 +40,7 @@ function _injectDOMElement(
   if (!parent) {
     throw new Error(`No element correspond to ${selector}`)
   }
+  parent.appendChild(element)
   return element
 }
 
