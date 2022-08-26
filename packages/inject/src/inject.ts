@@ -1,11 +1,11 @@
 import { Config, WebchatEvent, WebchatEventType } from '@botpress/webchat'
 
-require('./inject.css')
+import './inject.css'
 
 interface WebchatRef {
   iframeWindow: Window
   eventListener: {
-    handler: (event: WebchatEvent) => void
+    handler: WebchatEventHandler
     topics: WebchatEventHandlerTopics
   }
 }
@@ -19,28 +19,27 @@ const DEFAULT_IFRAME_ID = 'bp-widget'
 
 const CHAT_REFS: { [chatId: string]: WebchatRef } = {}
 
-function _getContainerId(chatId?: string) {
+function _getContainerId(chatId?: string): string {
   return chatId ? `${chatId}-container` : DEFAULT_CHAT_ID
 }
 
-function _getIframeId(chatId: string) {
+function _getIframeId(chatId: string): string {
   return chatId || DEFAULT_IFRAME_ID
 }
 
 function _injectDOMElement(
-  tagName: string,
+  tagName: keyof HTMLElementTagNameMap,
   selector: string,
   options: { [key: string]: string } = {}
 ): HTMLElement | void {
   const element = document.createElement(tagName)
   // @ts-ignore
   Object.entries(options).forEach(([attrName, attrValue]) => (element[attrName] = attrValue))
+
   const parent = document.querySelector(selector)
   if (!parent) {
-    console.error(`No element correspond to ${selector}`)
-    return
+    throw new Error(`No element correspond to ${selector}`)
   }
-  parent.appendChild(element)
   return element
 }
 
@@ -86,7 +85,7 @@ function _makeChatRefProxy(chatId: string, target: Partial<WebchatRef>): Webchat
         }
       } else if (prop === 'eventListener') {
         return {
-          handler: (evnt: WebchatEvent) => console.log('this is the default event handler', evnt),
+          handler: () => {},
           types: []
         }
       }
@@ -130,12 +129,10 @@ function mergeConfig(payload: Partial<Config>, chatId?: string) {
 
 function onEvent(handler: WebchatEventHandler, topics: WebchatEventHandlerTopics = [], chatId?: string) {
   if (typeof handler !== 'function') {
-    console.error('eventHandler is not a function, please provide a function')
-    return
+    throw new Error('EventHandler is not a function, please provide a function')
   }
-  if (!topics || typeof topics !== 'object' || !topics.length) {
-    console.error('topics should be an array of supported event types')
-    return
+  if (!Array.isArray(topics)) {
+    throw new Error('Topics should be an array of supported event types')
   }
 
   chatId = chatId || DEFAULT_CHAT_ID
@@ -150,7 +147,7 @@ function onEvent(handler: WebchatEventHandler, topics: WebchatEventHandlerTopics
 
 /**
  *
- * @param {object} config Configuration object you want to apply to your webchat instance
+ * @param {Config} config Configuration object you want to apply to your webchat instance
  * @param {string} targetSelector css selector under which you want your webchat to be rendered
  */
 function init(config: Config, targetSelector: string) {
