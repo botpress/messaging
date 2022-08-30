@@ -1,3 +1,4 @@
+import { UserCredentials } from '@botpress/messaging-socket'
 import { RootStore } from './store'
 import { BPStorage } from './utils/storage'
 
@@ -319,10 +320,7 @@ export interface Config {
   /**
    * Allows setting a custom user id
    */
-  customUser?: {
-    userId: string
-    userToken: string
-  }
+  customUser?: UserCredentials
 }
 
 export interface BotDetails {
