@@ -195,6 +195,8 @@ class Web extends React.Component<MainProps> {
           await this.props.sendMessage!(text)
         } else if (type === 'loadConversation') {
           await this.props.fetchConversation!(conversationId)
+        } else if (type === 'createConversation') {
+          await this.props.createConversation!()
         } else if (type === 'toggleBotInfo') {
           this.props.toggleBotInfo!()
         } else {
@@ -365,6 +367,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   sendFeedback: store.sendFeedback,
   updateLastMessage: store.updateLastMessage,
   fetchConversation: store.fetchConversation,
+  createConversation: store.createConversation,
   setIntlProvider: store.setIntlProvider,
   setSocket: store.setSocket,
   currentConversation: store.currentConversation,
@@ -405,6 +408,7 @@ type MainProps = { store?: RootStore } & WrappedComponentProps &
     | 'dimensions'
     | 'updateLastMessage'
     | 'fetchConversation'
+    | 'createConversation'
     | 'setIntlProvider'
     | 'setSocket'
     | 'currentConversationId'
