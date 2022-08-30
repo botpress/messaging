@@ -2153,7 +2153,7 @@ __metadata:
     "@botpress/messaging-base": 1.2.0
     "@botpress/messaging-client": 1.2.0
     "@botpress/messaging-socket": 1.2.0
-    "@botpress/webchat": 0.4.1
+    "@botpress/webchat": 0.5.0
     "@parcel/config-default": ^2.2.1
     "@parcel/transformer-typescript-tsc": ^2.2.1
     "@types/react": ^17.0.38
@@ -2496,7 +2496,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@botpress/webchat-inject@workspace:packages/inject"
   dependencies:
-    "@botpress/webchat": 0.4.1
+    "@botpress/webchat": 0.5.0
     "@parcel/config-default": ^2.2.1
     "@parcel/reporter-bundle-analyzer": 2.2.1
     "@parcel/transformer-typescript-tsc": ^2.2.1
@@ -2507,7 +2507,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/webchat@0.4.1, @botpress/webchat@workspace:packages/webchat":
+"@botpress/webchat@0.5.0, @botpress/webchat@workspace:packages/webchat":
   version: 0.0.0-use.local
   resolution: "@botpress/webchat@workspace:packages/webchat"
   dependencies:
