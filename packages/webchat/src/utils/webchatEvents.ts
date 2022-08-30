@@ -1,9 +1,8 @@
-import { cloneDeep } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 import { WebchatEvent, WebchatEventType } from '../typings'
 
 export const postMessageToParent = (type: WebchatEventType, value: any, chatId: string) => {
-  //necessary because of potentially nested mobx proxy object isn't serializable
-  value = cloneDeep(value)
-  const evt: WebchatEvent = { type, value, chatId }
+  //cloneDeep necessary because of potentially nested mobx proxy object isn't serializable
+  const evt: WebchatEvent = { type, value: cloneDeep(value), chatId }
   window.parent?.postMessage(evt, '*')
 }
