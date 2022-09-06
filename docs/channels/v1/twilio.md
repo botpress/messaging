@@ -37,11 +37,11 @@ Create a Twilio account and purchase a Twilio phone number
 
 To receive messages from Twilio, you will need to setup a webhook
 
-1. Click on **Explore Products** in the left pannel
+1. Click on **Explore Products** in the left panel
 1. Click on **Messaging**
-1. Click on **Services** in the left pannel
+1. Click on **Services** in the left panel
 1. Click on your service (if you haven't already created your service, create a messaging service and add your phone as a sender)
-1. Click on **Sender Pool** in the left pannel
+1. Click on **Sender Pool** in the left panel
 1. Click on your phone number
 1. Scroll down the phone number settings page
 1. Set **A Message Comes In** to `<EXTERNAL_URL>/api/v1/messaging/webhooks/v1/<YOUR_BOT_ID/twilio`.

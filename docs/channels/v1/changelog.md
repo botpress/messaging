@@ -56,14 +56,14 @@ Telegram upgraded its api version from v4.1 to v5.7 by bumping the version of th
 
 ## Slack
 
-Slack was upgraded by changing the packages we use. Instead of the deprecated @slack/events-api and @slack/interactive-messages, we use the new @slack/bolt package. We also had a dependency on an even older pacakge call @slack/rtm. This package was removed and the config to enable it `useRtm` was removed as well. Both webhooks are now configured on the same route (so no more `/slack/interactive` and `/slack/events`. Everything should point to `/slack`)
+Slack was upgraded by changing the packages we use. Instead of the deprecated @slack/events-api and @slack/interactive-messages, we use the new @slack/bolt package. We also had a dependency on an even older package call @slack/rtm. This package was removed and the config to enable it `useRtm` was removed as well. Both webhooks are now configured on the same route (so no more `/slack/interactive` and `/slack/events`. Everything should point to `/slack`)
 
 - Remove `useRtm` config
 - `/slack/interactive` and `/slack/events` route are now merged into one route `/slack`
 
 ## Vonage
 
-Vonage was upgraded from the beta v0.1 API to the v1 API. The official http client package was incomplete so a custom client was written from scratch to make requests to the vonage API. Some configs were removed to make the configuration of this channel easier. In particular there were some optional authorization settings that could be enabled on vonage that were mandatory in this channel config. We removed them as they don't offer much more security at the cost of a much more complex setup. They could be added back later as optional configs if someone really needs them. Webhook routes were also merge into a single route.
+Vonage was upgraded from the beta v0.1 API to the v1 API. The official http client package was incomplete so a custom client was written from scratch to make requests to the Vonage API. Some configs were removed to make the configuration of this channel easier. In particular there were some optional authorization settings that could be enabled on Vonage that were mandatory in this channel config. We removed them as they don't offer much more security at the cost of a much more complex setup. They could be added back later as optional configs if someone really needs them. Webhook routes were also merge into a single route.
 
 - API version v0.1 -> v1
 - Removed `applicationId` config
