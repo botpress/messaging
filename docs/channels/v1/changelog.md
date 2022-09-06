@@ -36,7 +36,7 @@ Messenger got a major version upgrade, as well as extra required configurations.
 - API version v3.2 -> v12.0
 - Added required `appId` and `pageId` configs
 - Removed `disabledActions`, `greeting`, `getStarted` and `persistentMenu` configs
-- As an extra step when configuring the channel, you neeed to select v12.0 as the API version on the facebook api dashboard (the default is still v10.0)
+- As an extra step when configuring the channel, you need to select v12.0 as the API version on the facebook api dashboard (the default is still v10.0)
 
 ## Smooch
 

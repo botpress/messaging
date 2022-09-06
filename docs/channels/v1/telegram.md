@@ -1,5 +1,3 @@
-# Telegram
-
 ## Requirements
 
 ### Create a Bot
@@ -20,4 +18,24 @@ If your existing token is compromised or you lost it for some reason, use the `/
 
 ### Bot Token
 
-Copy paste your telegram bot token into the **Bot Token** channel configuration and click **Save**. Webhooks will be created automatically
+Copy paste your telegram bot token into the **botToken** channel configuration and click **Save**. Webhooks will be created automatically
+
+1. Edit your bot config
+
+```json
+{
+  // ... other data
+  "messaging": {
+    "channels": {
+      "telegram": {
+        "version": "1.0.0",
+        "enabled": true,
+        "botToken": "your_bot_token"
+      }
+      // ... other channels can also be configured here
+    }
+  }
+}
+```
+
+2. Restart Botpress. Webhooks will be created automatically

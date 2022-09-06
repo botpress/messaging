@@ -13,6 +13,32 @@ The botpress messaging server provides a standardized messaging api to communica
 - Smooch
 - Vonage
 
-## Documentation
+## Getting started
 
-You can read the documentation [here](./docs/readme.md)
+### Prerequisites
+
+1.  Yarn v1+ (https://yarnpkg.com/)
+2.  Docker (https://www.docker.com/) and docker-compose (https://docs.docker.com/compose/)
+3.  Install recommended VSCode extensions
+
+### Commands
+
+To start the messaging server, simply run
+
+```sh
+> yarn dev
+```
+
+_To easily make API calls to the server, use the `misc/api.rest` file_
+
+To run tests
+
+```sh
+> yarn test
+```
+
+_Note: to run a specific test suite, add a colon followed by the name of the suite name to the command above (e.g. To run integration tests: `yarn test:int`)_
+
+## Internal Documentation
+
+You can read the internal documentation [here](./docs/readme.md)
