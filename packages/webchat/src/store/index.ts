@@ -115,6 +115,34 @@ class RootStore {
     return this.botInfo?.details?.avatarUrl || this.config?.avatarUrl || undefined
   }
 
+  get coverPictureUrl() {
+    return this.botInfo?.details?.coverPictureUrl ?? this.config?.coverPictureUrl
+  }
+
+  get description() {
+    return this.config?.botConversationDescription
+  }
+
+  get website() {
+    return this.botInfo?.details?.website ?? this.config?.website
+  }
+
+  get phoneNumber() {
+    return this.botInfo?.details?.phoneNumber ?? this.config?.phoneNumber
+  }
+
+  get termsConditions() {
+    return this.botInfo?.details?.termsConditions ?? this.config?.termsConditions
+  }
+
+  get privacyPolicy() {
+    return this.botInfo?.details?.privacyPolicy ?? this.config?.privacyPolicy
+  }
+
+  get emailAddress() {
+    return this.botInfo?.details?.emailAddress ?? this.config?.emailAddress
+  }
+
   @computed
   get rtl(): boolean {
     return isRTLLocale(this.preferredLanguage)
