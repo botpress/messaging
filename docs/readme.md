@@ -2,7 +2,7 @@
 
 ## Release
 
-- [Release](./release.md)
+- [Release Process](./release.md)
 
 ## Configs
 
