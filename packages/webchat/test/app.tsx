@@ -5,7 +5,8 @@ import { ExposedWebChat, Config } from '../src/index'
 export const Webchat: React.FC = () => {
   const [config, setConfig] = useState<Config>({
     messagingUrl: 'http://localhost:3100',
-    clientId: ''
+    clientId: '',
+    chatId: 'test'
   })
 
   const search = window.location.search
