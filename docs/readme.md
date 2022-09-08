@@ -1,5 +1,9 @@
 # Botpress Messaging Documentation
 
+## Release
+
+- [Release](./release.md)
+
 ## Configs
 
 - [Configurations](./configuration.md)
