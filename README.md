@@ -31,6 +31,7 @@ To start the messaging server, simply run
 
 _To easily make API calls to the server, use the `misc/api.rest` file_
 
+
 To create a binary of the Messaging server
 
 ```sh
