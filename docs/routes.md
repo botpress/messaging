@@ -5,7 +5,7 @@
 POST `/api/v1/sync`
 
 - `channels`: Dictionary of channel configurations
-- `webhooks`: List of webhoook configurations
+- `webhooks`: List of webhook configurations
 - `id` : `null` or the id of an existing client
 - `token` : `null` or the token of the provided client
 
@@ -66,7 +66,7 @@ const newConfig = {
 
 // This request won't create a new client because we gave it our previously obtained client id along with
 // the correct token. It will however update the configuration of our existing client. In this case the
-// twilio channel will be configured, and the slack channel will be unconfigured
+// twilio channel will be configured, and the slack channel will not be configured
 await axios.post('MESSAGING_URL/api/v1/sync', newConfig))
 
 router.post('/mycallbackroute', (req, req) => {})
