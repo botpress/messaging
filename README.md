@@ -21,7 +21,7 @@ The botpress messaging server provides a standardized messaging api to communica
 2.  Docker (https://www.docker.com/) and docker-compose (https://docs.docker.com/compose/)
 3.  Install recommended VSCode extensions
 
-### Commands
+### Useful Commands
 
 To start the messaging server, simply run
 
@@ -31,6 +31,13 @@ To start the messaging server, simply run
 
 _To easily make API calls to the server, use the `misc/api.rest` file_
 
+
+To create a binary of the Messaging server
+
+```sh
+> yarn package
+```
+
 To run tests
 
 ```sh
@@ -38,6 +45,30 @@ To run tests
 ```
 
 _Note: to run a specific test suite, add a colon followed by the name of the suite name to the command above (e.g. To run integration tests: `yarn test:int`)_
+
+To lint the codebase
+
+```sh
+> yarn eslint
+```
+
+To format the codebase
+
+```sh
+> yarn prettier
+```
+
+To reset the codebase to its initial state
+
+```sh
+> yarn reset
+```
+
+For all other commands, please refer to the `scripts` of the root `package.json`
+
+## Test Suites
+
+For more information about the different test suites, go [here](./test/README.md).
 
 ## Internal Documentation
 

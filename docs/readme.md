@@ -1,5 +1,13 @@
 # Botpress Messaging Documentation
 
+## Release
+
+- [Release Process](./release.md)
+
+## Branches
+
+- [Useful branches](./branches.md)
+
 ## Configs
 
 - [Configurations](./configuration.md)
