@@ -20,17 +20,32 @@ The botpress messaging server provides a standardized messaging api to communica
 1.  Yarn v1+ (https://yarnpkg.com/)
 2.  Docker (https://www.docker.com/) and docker-compose (https://docs.docker.com/compose/)
 3.  Install recommended VSCode extensions
+4.  Optionally install [tilt](https://tilt.dev)
 
 ### Useful Commands
 
-To start the messaging server, simply run
+The simplest way to run the setup locally would be with `tilt`.
+
+```sh
+> tilt up
+```
+
+Then open http://localhost:10350 to use the tilt UI. `Tilt` will start 4 processes:
+
+1. `messaging`: messaging server (port 3100)
+2. `inject-build`: inject script build that watches for changes
+3. `inject-serve`: serves the inject script built by the `inject-build` process (port 8080)
+4. `webchat`: serves a live version of the webchat that uses the `inject-serve` server (port 3543)
+
+Note: The messaging `client id` inside the file `packages/inject/example.html` needs to be provider manually for now.
+
+Otherwise, to start the messaging server, simply run
 
 ```sh
 > yarn dev
 ```
 
 _To easily make API calls to the server, use the `misc/api.rest` file_
-
 
 To create a binary of the Messaging server
 
