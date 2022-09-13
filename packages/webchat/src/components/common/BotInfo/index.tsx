@@ -70,7 +70,7 @@ class BotInfoPage extends React.Component<BotInfoProps> {
                   <i>
                     <PhoneIcon />
                   </i>
-                  <a target={'_blank'} href={`tel:${phoneNumber}`}>
+                  <a target={'_blank'} rel="noopener noreferrer" href={`tel:${phoneNumber}`}>
                     {phoneNumber}
                   </a>
                 </div>
@@ -80,7 +80,7 @@ class BotInfoPage extends React.Component<BotInfoProps> {
                   <i>
                     <WebsiteIcon />
                   </i>
-                  <a target={'_blank'} href={website}>
+                  <a target={'_blank'} rel="noopener noreferrer" href={website}>
                     {website}
                   </a>
                 </div>
@@ -90,7 +90,7 @@ class BotInfoPage extends React.Component<BotInfoProps> {
                   <i>
                     <EmailIcon />
                   </i>
-                  <a target={'_blank'} href={`mailto:${emailAddress}`}>
+                  <a target={'_blank'} rel="noopener noreferrer" href={`mailto:${emailAddress}`}>
                     {emailAddress}
                   </a>
                 </div>
@@ -98,14 +98,14 @@ class BotInfoPage extends React.Component<BotInfoProps> {
             </div>
             {termsConditions && (
               <div className={'bpw-botinfo-terms'}>
-                <a target={'_blank'} href={termsConditions}>
+                <a target={'_blank'} rel="noopener noreferrer" href={termsConditions}>
                   <FormattedMessage id={'botInfo.termsAndConditions'} />
                 </a>
               </div>
             )}
             {privacyPolicy && (
               <div className={'bpw-botinfo-terms'}>
-                <a target={'_blank'} href={privacyPolicy}>
+                <a target={'_blank'} rel="noopener noreferrer" href={privacyPolicy}>
                   <FormattedMessage id={'botInfo.privacyPolicy'} />
                 </a>
               </div>
