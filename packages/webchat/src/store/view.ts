@@ -69,7 +69,10 @@ class ViewStore {
 
   @computed
   get showBotInfoButton() {
-    return !this.isConversationsDisplayed && this.rootStore.botInfo && this.rootStore.botInfo.showBotInfoPage
+    return (
+      !this.isConversationsDisplayed &&
+      (this.rootStore.botInfo?.showBotInfoPage || !!this.rootStore.config.showBotInfoPage)
+    )
   }
 
   @computed
@@ -106,7 +109,7 @@ class ViewStore {
 
   @computed
   get isBotInfoDisplayed(): boolean {
-    return this._showBotInfo && this.rootStore.botInfo && this.rootStore.botInfo.showBotInfoPage
+    return this._showBotInfo && (this.rootStore.botInfo?.showBotInfoPage || !!this.rootStore.config.showBotInfoPage)
   }
 
   /** Returns the active transition for the side panel, like fade in or out */
