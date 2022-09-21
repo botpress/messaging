@@ -1,5 +1,6 @@
 require('@formatjs/intl-pluralrules/polyfill')
 require('@formatjs/intl-pluralrules/locale-data/ar')
+require('@formatjs/intl-pluralrules/locale-data/fa')
 require('@formatjs/intl-pluralrules/locale-data/de')
 require('@formatjs/intl-pluralrules/locale-data/en')
 require('@formatjs/intl-pluralrules/locale-data/es')
@@ -10,6 +11,7 @@ require('@formatjs/intl-pluralrules/locale-data/ru')
 require('@formatjs/intl-pluralrules/locale-data/uk')
 
 import ar from './ar.json'
+import fa from './fa.json'
 import de from './de.json'
 import en from './en.json'
 import es from './es.json'
@@ -23,7 +25,7 @@ type Locale = 'browser' | string
 
 const DEFAULT_LOCALE = 'en'
 const USER_LANG_STORAGE_KEY = 'user-lang'
-const translations: { [lang: string]: any } = { en, fr, pt, es, ar, ru, uk, de, it }
+const translations: { [lang: string]: any } = { en, fr, pt, es, ar, ru, uk, de, it, fa }
 
 const rtlLocales = [
   'ae' /* Avestan */,
@@ -44,6 +46,7 @@ const rtlLocales = [
   'sd' /* 'سنڌي', Sindhi */,
   'ug' /* 'Uyghurche / ئۇيغۇرچە', Uyghur */,
   'ur' /* 'اردو', Urdu */,
+  'fa' /* 'فارسی', Farsi */ ,
   'yi' /* 'ייִדיש', Yiddish */
 ]
 // 'en-US' becomes ['en', '-us'] 'en' becomes ['en']
