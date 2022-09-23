@@ -1,3 +1,22 @@
+## [1.2.6](https://github.com/botpress/messaging/compare/v1.2.2...v1.2.6) (2022-09-23)
+
+
+### Bug Fixes
+
+* **components:** fix dropdown not disappearing after selection ([#507](https://github.com/botpress/messaging/issues/507)) ([d3558f6](https://github.com/botpress/messaging/commit/d3558f6dab089a8c30526533844ff986181443a6))
+* **components:** focus composer when single choice btn is clicked ([#525](https://github.com/botpress/messaging/issues/525)) ([f467a13](https://github.com/botpress/messaging/commit/f467a13bf34d8bc06d80206f5eaada4df498b7a1))
+
+
+### Features
+
+* **messenger:** allow receiving file content elements ([#480](https://github.com/botpress/messaging/issues/480)) ([cfab6a1](https://github.com/botpress/messaging/commit/cfab6a175a36dbf1589e41cee804f43b17f79e2d))
+* **webchat:** added bot info page to webchat ([#537](https://github.com/botpress/messaging/issues/537)) ([bff1b2f](https://github.com/botpress/messaging/commit/bff1b2ffa4729c6805830c68b262298d20233248))
+* **webchat:** allow to react on message click ([#521](https://github.com/botpress/messaging/issues/521)) ([ace6d45](https://github.com/botpress/messaging/commit/ace6d454e63ad14096abe05dc0d33b278a2676d9))
+* **webchat:** allow users to subscribe to different webchat events ([#522](https://github.com/botpress/messaging/issues/522)) ([d41eb38](https://github.com/botpress/messaging/commit/d41eb389a135e0cfa9b1625a9de969bb40d80259)), closes [#523](https://github.com/botpress/messaging/issues/523)
+* **webchat:** create conversation from iframe api ([#524](https://github.com/botpress/messaging/issues/524)) ([39bc15e](https://github.com/botpress/messaging/commit/39bc15ee6e5f6bd1a8912f562f7d6bad30ba9d08))
+
+
+
 ## [1.2.5](https://github.com/botpress/messaging/compare/v1.2.4...v1.2.5) (2022-07-29)
 
 
