@@ -20,12 +20,16 @@ export class SingleChoice extends Component<MessageTypeHandlerProps<'single-choi
   }
 
   handleButtonClicked = (title: string, payload: any) => {
+    this.props.config.store?.view?.setFocus('convo')
+
     void this.props.config.onSendData?.({
       type: 'quick_reply',
       text: title,
       payload
     })
     this.props.config.store?.composer?.setLocked(false)
+    // Sets focus back to composer input
+    this.props.config.store?.view?.setFocus('input')
   }
 
   renderKeyboard(replies: ChoiceOption[]) {

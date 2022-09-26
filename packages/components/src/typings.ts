@@ -11,6 +11,9 @@ export interface LiteStore {
     setLocked: (locked: boolean) => void
     locked: boolean
   }
+  view: {
+    setFocus: (area: 'input' | 'header' | 'convo') => void
+  }
 }
 export interface MessageConfig {
   messageId: uuid

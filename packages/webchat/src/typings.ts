@@ -321,6 +321,34 @@ export interface Config {
    * Allows setting a custom user id
    */
   customUser?: UserCredentials
+  /**
+   * Displays the bot's website in the conversation page
+   */
+  website?: string
+  /**
+   * Displays the bot's contact phone number in the conversation page
+   */
+  phoneNumber?: string
+  /**
+   * Displays the bot's terms of service in the conversation page
+   */
+  termsConditions?: string
+  /**
+   * Displays the bot's privacy policy in the conversation page
+   */
+  privacyPolicy?: string
+  /**
+   * Displays the bot's email address in the conversation page
+   */
+  emailAddress?: string
+  /**
+   * Displays the bot's cover picture in the conversation page
+   */
+  coverPictureUrl?: string
+  /**
+   * Enables the bot's information page in the webchat
+   */
+  showBotInfoPage?: boolean
 }
 
 export interface BotDetails {

@@ -18,8 +18,8 @@ const Avatar = ({ name, avatarUrl, height, width }: AvatarProps) => {
 export default Avatar
 
 export interface AvatarProps {
-  name: string
-  avatarUrl: string
+  name?: string
+  avatarUrl?: string
   height: number
   width: number
 }
