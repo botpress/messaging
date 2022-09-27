@@ -59,12 +59,20 @@ export class MessagingChannel extends MessagingChannelApi {
 
       await this.emit('started', clientId, data)
     } else if (type === 'user.new') {
-      const { error } = Schemas.UserNew.validate(data)
+      const { error } = Schemas.UserCreated.validate(data)
       if (error) {
         return res.status(400).send(error.message)
       }
 
-      await this.emit('user', clientId, data)
+      await this.emit('user_created', clientId, data)
+      await this.emit('user', clientId, data) /** @deprecated */
+    } else if (type === 'user.fetched') {
+      const { error } = Schemas.UserFetched.validate(data)
+      if (error) {
+        return res.status(400).send(error.message)
+      }
+
+      await this.emit('user_fetched', clientId, data)
     } else if (type === 'message.feedback') {
       const { error } = Schemas.MessageFeedback.validate(data)
       if (error) {

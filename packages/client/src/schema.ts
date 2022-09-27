@@ -7,7 +7,14 @@ import joi from 'joi'
  * Schemas for the webhook events
  */
 export const Schemas = {
-  UserNew: joi
+  UserCreated: joi
+    .object({
+      userId: joi.string().uuid().required()
+    })
+    .required()
+    .options({ stripUnknown: true }) as any,
+
+  UserFetched: joi
     .object({
       userId: joi.string().uuid().required()
     })

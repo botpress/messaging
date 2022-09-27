@@ -57,7 +57,7 @@ export class UserService extends Service {
     return user
   }
 
-  public async fetch(id: uuid): Promise<User | undefined> {
+  public async fetch(id: uuid, emitEvent: boolean = false): Promise<User | undefined> {
     const cached = this.cache.get(id)
     if (cached) {
       return cached
@@ -69,6 +69,11 @@ export class UserService extends Service {
     if (rows?.length) {
       const user = rows[0] as User
       this.cache.set(id, user)
+
+      if (emitEvent) {
+        await this.emitter.emit(UserEvents.Fetched, { user })
+      }
+
       return user
     }
 

@@ -35,7 +35,12 @@ export interface MessageEvent extends ChannelEvent {
 /**
  * Webhook event that is triggered when a user is created
  */
-export interface UserNewEvent extends UserEvent {}
+export interface UserCreatedEvent extends UserEvent {}
+
+/**
+ * Webhook event that is triggered when an existing user is fetched
+ */
+export interface UserFetchedEvent extends UserEvent {}
 
 /**
  * Webhook event that is triggered when a new message is created

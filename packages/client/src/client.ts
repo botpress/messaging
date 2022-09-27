@@ -13,12 +13,15 @@ import { Router } from 'express'
 import { MessageFeedbackEvent } from '.'
 import { MessagingChannel } from './channel'
 import { ProtectedEmitter } from './emitter'
-import { ConversationStartedEvent, MessageNewEvent, UserNewEvent } from './events'
+import { ConversationStartedEvent, MessageNewEvent, UserCreatedEvent, UserFetchedEvent } from './events'
 import { Logger } from './logger'
 import { MessagingOptions } from './options'
 
 export class MessagingClient extends ProtectedEmitter<{
-  user: UserNewEvent
+  user_created: UserCreatedEvent
+  user_fetched: UserFetchedEvent
+  /** @deprecated */
+  user: UserCreatedEvent
   started: ConversationStartedEvent
   message: MessageNewEvent
   feedback: MessageFeedbackEvent
@@ -97,7 +100,9 @@ export class MessagingClient extends ProtectedEmitter<{
   constructor(options: MessagingOptions) {
     super()
     this.channel = new MessagingChannel(options)
-    this.channel.on('user', async (_, e) => this.emit('user', e))
+    this.channel.on('user_created', async (_, e) => this.emit('user_created', e))
+    this.channel.on('user_fetched', async (_, e) => this.emit('user_fetched', e))
+    this.channel.on('user', async (_, e) => this.emit('user', e)) /** @deprecated */
     this.channel.on('started', async (_, e) => this.emit('started', e))
     this.channel.on('message', async (_, e) => this.emit('message', e))
     this.channel.on('feedback', async (_, e) => this.emit('feedback', e))
