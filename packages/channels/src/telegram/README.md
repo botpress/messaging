@@ -24,8 +24,8 @@
 | Postback      |    ✅    |         |
 | Say Something |    ✅    |         |
 | Voice         |    ❌    |         |
-| Image         |    ❌    |         |
-| File          |    ❌    |         |
-| Audio         |    ❌    |         |
-| Video         |    ❌    |         |
+| Image         |    ✅    |         |
+| File          |    ✅    |         |
+| Audio         |    ✅    |         |
+| Video         |    ✅    |         |
 | Location      |    ❌    |         |

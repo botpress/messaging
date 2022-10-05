@@ -58,6 +58,22 @@ export class TelegramApi extends ChannelApi<TelegramService> {
   private async handleTelegrafMessage(scope: string, ctx: NarrowedContext<Context<Update>, Update.MessageUpdate>) {
     if ('text' in ctx.message) {
       await this.service.receive(scope, this.extractEndpoint(ctx), { type: 'text', text: ctx.message.text })
+    } else {
+      const type = Object.keys(ctx.message).find((i) => ['photo', 'document', 'video', 'audio'].includes(i))
+
+      if (!type) {
+        return
+      }
+
+      // @ts-ignore
+      // Get best photo
+      const item = type === 'photo' ? ctx.message.photo[ctx.message.photo.length - 1] : ctx.message[type]
+
+      await this.service.receive(scope, this.extractEndpoint(ctx), {
+        // Standardize types with messaging
+        type: type.replace('document', 'file').replace('photo', 'image'),
+        url: await ctx.telegram.getFileLink(item.file_id)
+      })
     }
   }
 
