@@ -349,6 +349,10 @@ export interface Config {
    * Enables the bot's information page in the webchat
    */
   showBotInfoPage?: boolean
+  /**
+   * Display's the webchat close button when the webchat is opened
+   */
+  showCloseButton?: boolean
 }
 
 export interface BotDetails {
