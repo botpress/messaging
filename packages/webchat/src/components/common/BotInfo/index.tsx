@@ -48,7 +48,6 @@ class BotInfoPage extends React.Component<BotInfoProps> {
       botInfo
     } = this.props
 
-    const onDismiss = this.props.isConversationStarted ? this.props.toggleBotInfo : this.props.startConversation
     return (
       <Fragment>
         <link rel="stylesheet" href="style.scss" />
@@ -127,13 +126,9 @@ class BotInfoPage extends React.Component<BotInfoProps> {
             tabIndex={1}
             ref={(el) => (this.btnEl = el!)}
             className={'bpw-botinfo-start-button'}
-            onClick={onDismiss!.bind(this, undefined)}
+            onClick={this.props.toggleBotInfo!.bind(this, undefined)}
           >
-            {this.props.isConversationStarted ? (
-              <FormattedMessage id={'botInfo.backToConversation'} />
-            ) : (
-              <FormattedMessage id={'botInfo.startConversation'} />
-            )}
+            <FormattedMessage id={'botInfo.backToConversation'} />
           </button>
         </div>
       </Fragment>
@@ -152,9 +147,7 @@ export default inject(({ store }: { store: RootStore }) => ({
   botName: store.botName,
   botInfo: store.botInfo,
   avatarUrl: store.botAvatarUrl,
-  startConversation: store.startConversation,
   toggleBotInfo: store.view.toggleBotInfo,
-  isConversationStarted: store.isConversationStarted,
   updatePreferredLanguage: store.updatePreferredLanguage,
   preferredLanguage: store.preferredLanguage,
   escapeHTML: store.escapeHTML,
@@ -175,8 +168,6 @@ type BotInfoProps = WrappedComponentProps &
     | 'botName'
     | 'avatarUrl'
     | 'toggleBotInfo'
-    | 'startConversation'
-    | 'isConversationStarted'
     | 'updatePreferredLanguage'
     | 'preferredLanguage'
     | 'escapeHTML'
