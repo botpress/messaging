@@ -89,7 +89,7 @@ class ViewStore {
 
   @computed
   get showCloseButton() {
-    return !this.isFullscreen
+    return (!this.isFullscreen && this.rootStore.config?.showCloseButton) ?? true
   }
 
   @computed
