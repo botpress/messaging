@@ -1,6 +1,7 @@
 import { Response } from 'express'
+import _ from 'lodash'
 import { Context, NarrowedContext } from 'telegraf'
-import { Update } from 'telegraf/typings/core/types/typegram'
+import { Update, Document, Video, Audio, Message } from 'telegraf/typings/core/types/typegram'
 import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { ChannelInitializeEvent, ChannelStartEvent, ChannelStopEvent } from '../base/service'
@@ -58,21 +59,35 @@ export class TelegramApi extends ChannelApi<TelegramService> {
   private async handleTelegrafMessage(scope: string, ctx: NarrowedContext<Context<Update>, Update.MessageUpdate>) {
     if ('text' in ctx.message) {
       await this.service.receive(scope, this.extractEndpoint(ctx), { type: 'text', text: ctx.message.text })
-    } else {
-      const type = Object.keys(ctx.message).find((i) => ['photo', 'document', 'video', 'audio'].includes(i))
+    } else if ('photo' in ctx.message) {
+      // Same photo in different sizes, get the last one since it
+      // has the best quality
+      const item = ctx.message.photo.pop()
 
-      if (!type) {
+      if (!item) {
         return
       }
 
-      // @ts-ignore
-      // Get best photo
-      const item = type === 'photo' ? ctx.message.photo[ctx.message.photo.length - 1] : ctx.message[type]
+      await this.service.receive(scope, this.extractEndpoint(ctx), {
+        type: this.mapTypeToStandardType('photo'),
+        url: await ctx.telegram.getFileLink(item.file_id),
+        title: ctx.message.caption
+      })
+    } else {
+      const message = ctx.message as Message.CaptionableMessage
+      const type = Object.keys(message).find((i) => ['document', 'video', 'audio'].includes(i))
+
+      if (!type) {
+        // Type not supported, swallow
+        return
+      }
+
+      const item = _.get(message, type) as Document | Video | Audio
 
       await this.service.receive(scope, this.extractEndpoint(ctx), {
-        // Standardize types with messaging
-        type: type.replace('document', 'file').replace('photo', 'image'),
-        url: await ctx.telegram.getFileLink(item.file_id)
+        type: this.mapTypeToStandardType(type),
+        url: await ctx.telegram.getFileLink(item.file_id),
+        title: message.caption
       })
     }
   }
@@ -118,5 +133,16 @@ export class TelegramApi extends ChannelApi<TelegramService> {
   private useWebhook() {
     // TODO: remove this dependency on server env vars
     return !yn(process.env.SPINNED) || yn(process.env.CLUSTER_ENABLED)
+  }
+
+  private mapTypeToStandardType(type: string) {
+    switch (type) {
+      case 'document':
+        return 'file'
+      case 'photo':
+        return 'image'
+      default:
+        return type
+    }
   }
 }
