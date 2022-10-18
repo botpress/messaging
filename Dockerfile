@@ -36,5 +36,5 @@ RUN yarn workspaces focus --all --production
 
 ENV NODE_ENV=production
 
-ENTRYPOINT [ "yarn", "node", "./packages/server/dist/index.js" ]
+ENTRYPOINT [ "yarn", "node", "-r", "@bpinternal/trail/init", "./packages/server/dist/index.js" ]
 CMD []

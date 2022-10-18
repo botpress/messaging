@@ -1,4 +1,5 @@
 import { Framework } from '@botpress/messaging-framework'
+import type { Express } from 'express'
 import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
 import { ConduitService } from './conduits/service'
@@ -8,6 +9,7 @@ import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
+import { MetricsService } from './metrics'
 import { ProviderService } from './providers/service'
 import { ProvisionService } from './provisions/service'
 import { SocketService } from './socket/service'
@@ -35,6 +37,7 @@ export class App extends Framework {
   health: HealthService
   sockets: SocketService
   billing: BillingService
+  metrics: MetricsService
 
   constructor() {
     super()
@@ -93,6 +96,11 @@ export class App extends Framework {
     )
     this.sockets = new SocketService(this.caching, this.users)
     this.billing = new BillingService(this.logger, this.conversations, this.messages)
+    this.metrics = new MetricsService(this.logger, this.conversations, this.messages)
+  }
+
+  init(app: Express) {
+    this.metrics.init(app)
   }
 
   async setup() {
@@ -112,6 +120,7 @@ export class App extends Framework {
     await this.instances.setup()
     await this.health.setup()
     await this.sockets.setup()
+    await this.metrics.setup()
   }
 
   async postSetup() {
@@ -130,5 +139,6 @@ export class App extends Framework {
     await super.destroy()
     await this.billing?.destroy()
     await this.instances?.destroy()
+    await this.metrics?.destroy()
   }
 }

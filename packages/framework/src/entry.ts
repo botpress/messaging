@@ -36,6 +36,7 @@ export abstract class Entry {
     this.routes = new Routes(this.router)
 
     this.app = new tapp()
+    this.app.init(this.router)
 
     const auth = new Auth(this.app.clientTokens)
     this.manager = new ApiManager(this.routes.router, auth)
@@ -82,7 +83,9 @@ export abstract class Entry {
   }
 }
 
-interface IApp extends Framework {}
+interface IApp extends Framework {
+  init: (app: Express) => void
+}
 
 interface IApi {
   setup(): Promise<void>

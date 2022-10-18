@@ -6,7 +6,7 @@
   "scripts": {
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
-    "start": "node ./dist/index.js",
+    "start": "node -r @bpinternal/trail/init ./dist/index.js",
     "dev": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts"
   },
   "devDependencies": {
@@ -26,7 +26,8 @@
     "@botpress/messaging-channels-legacy": "npm:@botpress/messaging-channels@0.1.6",
     "@botpress/messaging-engine": "1.2.0",
     "@botpress/messaging-framework": "1.2.0",
-    "@bpinternal/trail": "^0.0.1",
+    "@bpinternal/promex": "^0.5.0",
+    "@bpinternal/trail": "^0.1.0",
     "@opentelemetry/instrumentation-aws-sdk": "0.7.0",
     "@opentelemetry/instrumentation-express": "0.27.0",
     "@opentelemetry/instrumentation-http": "0.27.0",
