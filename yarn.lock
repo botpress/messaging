@@ -2386,6 +2386,7 @@ __metadata:
     "@opentelemetry/instrumentation-ioredis": 0.27.0
     "@opentelemetry/instrumentation-knex": 0.27.0
     "@opentelemetry/instrumentation-pg": 0.27.0
+    "@promster/types": ^3.2.4
     "@sentry/node": ^6.17.3
     "@types/cli-color": ^2.0.2
     "@types/cors": ^2.8.12
@@ -4833,6 +4834,15 @@ __metadata:
     "@promster/metrics": ^9.1.5
     tslib: 2.3.1
   checksum: 85e51d032d6fc324e6480747a6c239c5a443a8c56e0d1a120db38f231521d451ed64b45d4e0d4c7a484ae24a2b52d95f18099b96da6682c74dba383fea0f139d
+  languageName: node
+  linkType: hard
+
+"@promster/types@npm:^3.2.4":
+  version: 3.2.4
+  resolution: "@promster/types@npm:3.2.4"
+  peerDependencies:
+    prom-client: 13.x.x || 14.x
+  checksum: 1451c77d149e1397a13eb1a78025f44dab103d62a614a4ed501d18b89f0d31e455a49e5d59b8d7aac930fe807b73c6fe117e87f774fa14e73bcf25203e7b5990
   languageName: node
   linkType: hard
 
