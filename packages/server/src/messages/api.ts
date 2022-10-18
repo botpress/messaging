@@ -103,13 +103,13 @@ export class MessageApi {
   async list(req: ClientApiRequest, res: Response) {
     const conversationId = req.params.conversationId as uuid
     const limit = +(req.query.limit || 20)
+    const from = new Date((req.query.from as string) || Date.now())
 
     const conversation = await this.conversations.fetch(conversationId)
     if (!conversation || conversation.clientId !== req.clientId) {
       return res.sendStatus(404)
     }
-
-    const messages = await this.messages.listByConversationId(conversationId, limit)
+    const messages = await this.messages.listByConversationId(conversationId, limit, undefined, from)
     res.send(messages)
   }
 

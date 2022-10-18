@@ -227,8 +227,8 @@ export class MessagingClient extends ProtectedEmitter<{
    * @param limit max amount of messages to list (default 20)
    * @returns an array of conversations
    */
-  async listMessages(conversationId: uuid, limit?: number) {
-    return this.channel.listMessages(this.clientId, conversationId, limit)
+  async listMessages(conversationId: uuid, limit?: number, from?: Date) {
+    return this.channel.listMessages(this.clientId, conversationId, limit, from)
   }
 
   /**
