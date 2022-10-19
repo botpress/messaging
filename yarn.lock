@@ -2151,7 +2151,7 @@ __metadata:
   resolution: "@botpress/messaging-board@workspace:packages/board"
   dependencies:
     "@botpress/messaging-base": 1.2.0
-    "@botpress/messaging-client": 1.2.0
+    "@botpress/messaging-client": 1.2.1
     "@botpress/messaging-socket": 1.2.0
     "@botpress/webchat": 0.5.0
     "@parcel/config-default": ^2.2.1
@@ -2222,7 +2222,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-client@1.2.0, @botpress/messaging-client@workspace:packages/client":
+"@botpress/messaging-client@1.2.1, @botpress/messaging-client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-client@workspace:packages/client"
   dependencies:
