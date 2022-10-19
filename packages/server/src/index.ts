@@ -1,15 +1,11 @@
-/* eslint-disable import/order */
-import { init } from '@bpinternal/trail'
-init()
-
 import './rewire'
 import { Entry, start } from '@botpress/messaging-framework'
 import { Api } from './api'
 import { App } from './app'
+import { Interceptor } from './interceptor'
 import { Migrations } from './migrations'
 import { Socket } from './socket'
 import { Stream } from './stream'
-/* eslint-enable import/order */
 
 export class Root extends Entry {
   get name() {
@@ -29,7 +25,7 @@ export class Root extends Entry {
   }
 
   constructor() {
-    super(App, Api, Stream, Socket)
+    super(App, Api, Stream, Socket, Interceptor)
   }
 }
 

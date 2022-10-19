@@ -8,6 +8,7 @@ import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
+import { MetricsService } from './metrics/service'
 import { ProviderService } from './providers/service'
 import { ProvisionService } from './provisions/service'
 import { SocketService } from './socket/service'
@@ -35,6 +36,7 @@ export class App extends Framework {
   health: HealthService
   sockets: SocketService
   billing: BillingService
+  metrics: MetricsService
 
   constructor() {
     super()
@@ -93,6 +95,7 @@ export class App extends Framework {
     )
     this.sockets = new SocketService(this.caching, this.users)
     this.billing = new BillingService(this.logger, this.conversations, this.messages)
+    this.metrics = new MetricsService(this.conversations, this.messages)
   }
 
   async setup() {
@@ -112,6 +115,7 @@ export class App extends Framework {
     await this.instances.setup()
     await this.health.setup()
     await this.sockets.setup()
+    await this.metrics.setup()
   }
 
   async postSetup() {
@@ -130,5 +134,6 @@ export class App extends Framework {
     await super.destroy()
     await this.billing?.destroy()
     await this.instances?.destroy()
+    await this.metrics?.destroy()
   }
 }
