@@ -20,6 +20,7 @@ export abstract class Entry {
   api: IApi
   stream: IStream
   socket: ISocket
+  interceptor: IInterceptor
 
   manager: ApiManager
   adminManager: AdminApiManager
@@ -29,14 +30,15 @@ export abstract class Entry {
     tapp: { new (): IApp },
     tapi: { new (app: IApp & any, manager: ApiManager, adminManager: AdminApiManager, express: Express): IApi },
     tstream: { new (app: IApp & any): IStream },
-    tsocket: { new (app: IApp & any): ISocket }
+    tsocket: { new (app: IApp & any): ISocket },
+    tinterceptor: { new (app: IApp & any, express: Express): IInterceptor }
   ) {
     this.router = express()
     this.router.disable('x-powered-by')
     this.routes = new Routes(this.router)
 
     this.app = new tapp()
-    this.app.init(this.router)
+    this.interceptor = new tinterceptor(this.app, this.router)
 
     const auth = new Auth(this.app.clientTokens)
     this.manager = new ApiManager(this.routes.router, auth)
@@ -50,6 +52,8 @@ export abstract class Entry {
   }
 
   async setup() {
+    await this.interceptor.setup()
+
     await this.app.prepare(this.package, this.migrations)
     await this.app.setup()
     await this.app.postSetup()
@@ -83,9 +87,7 @@ export abstract class Entry {
   }
 }
 
-interface IApp extends Framework {
-  init: (app: Express) => void
-}
+interface IApp extends Framework {}
 
 interface IApi {
   setup(): Promise<void>
@@ -100,4 +102,8 @@ interface ISocket {
   setup(): Promise<void>
   start(server: Server): Promise<void>
   destroy(): Promise<void>
+}
+
+interface IInterceptor {
+  setup(): Promise<void>
 }

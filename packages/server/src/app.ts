@@ -1,5 +1,4 @@
 import { Framework } from '@botpress/messaging-framework'
-import type { Express } from 'express'
 import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
 import { ConduitService } from './conduits/service'
@@ -9,7 +8,7 @@ import { HealthService } from './health/service'
 import { InstanceService } from './instances/service'
 import { MappingService } from './mapping/service'
 import { MessageService } from './messages/service'
-import { MetricsService } from './metrics'
+import { MetricsService } from './metrics/service'
 import { ProviderService } from './providers/service'
 import { ProvisionService } from './provisions/service'
 import { SocketService } from './socket/service'
@@ -96,11 +95,7 @@ export class App extends Framework {
     )
     this.sockets = new SocketService(this.caching, this.users)
     this.billing = new BillingService(this.logger, this.conversations, this.messages)
-    this.metrics = new MetricsService(this.logger, this.conversations, this.messages)
-  }
-
-  init(app: Express) {
-    this.metrics.init(app)
+    this.metrics = new MetricsService(this.conversations, this.messages)
   }
 
   async setup() {
