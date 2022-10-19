@@ -1,3 +1,18 @@
+## [1.2.7](https://github.com/botpress/messaging/compare/v1.2.6...v1.2.7) (2022-10-19)
+
+
+### Bug Fixes
+
+* **webchat:** remove start conversion button ([#541](https://github.com/botpress/messaging/issues/541)) ([9d5b5e5](https://github.com/botpress/messaging/commit/9d5b5e59663b26711571e3796a077a50878aeadb))
+
+
+### Features
+
+* **server:** added prometheus metrics to messaging server ([#546](https://github.com/botpress/messaging/issues/546)) ([bf7fd94](https://github.com/botpress/messaging/commit/bf7fd9431232e504152d15d21f2fedc452445d1e))
+* **telegram:** allow receiving file/audio/video/image ([#543](https://github.com/botpress/messaging/issues/543)) ([ba628dd](https://github.com/botpress/messaging/commit/ba628dd33aaebc607ae802cc085a42da0be0a314))
+
+
+
 ## [1.2.6](https://github.com/botpress/messaging/compare/v1.2.2...v1.2.6) (2022-09-23)
 
 
