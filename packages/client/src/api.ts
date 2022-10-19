@@ -185,11 +185,11 @@ export abstract class MessagingChannelApi extends MessagingChannelBase {
    * @param limit max amount of messages to list (default 20)
    * @returns an array of conversations
    */
-  async listMessages(clientId: uuid, conversationId: uuid, limit?: number) {
+  async listMessages(clientId: uuid, conversationId: uuid, limit?: number, from?: Date) {
     return (
       await this.http.get<Message[]>(`/messages/conversation/${conversationId}`, {
         headers: this.headers[clientId],
-        params: { limit }
+        params: { limit, from: from?.toISOString() }
       })
     ).data.map((x) => this.deserializeMessage(x))
   }

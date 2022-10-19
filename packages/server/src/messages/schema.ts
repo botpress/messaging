@@ -31,7 +31,8 @@ const Api = {
       conversationId: Joi.string().guid().required()
     },
     query: {
-      limit: Joi.number().min(0).optional()
+      limit: Joi.number().min(0).optional(),
+      from: Joi.string().isoDate().optional()
     }
   }),
 

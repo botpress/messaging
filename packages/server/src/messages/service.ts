@@ -111,10 +111,19 @@ export class MessageService extends Service {
     return val
   }
 
-  public async listByConversationId(conversationId: uuid, limit?: number, offset?: number): Promise<Message[]> {
+  public async listByConversationId(
+    conversationId: uuid,
+    limit?: number,
+    offset?: number,
+    from?: Date
+  ): Promise<Message[]> {
     await this.batcher.flush()
 
     let query = this.query().where({ conversationId }).orderBy('sentOn', 'desc')
+
+    if (from) {
+      query = query.andWhere('sentOn', '<=', from.toISOString())
+    }
 
     if (limit) {
       query = query.limit(limit)
