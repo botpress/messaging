@@ -180,3 +180,4 @@ jobs:
       - name: Run tests
         run: |
           yarn test:chat --browser ${{ matrix.browser }}
+          yarn test:inject
