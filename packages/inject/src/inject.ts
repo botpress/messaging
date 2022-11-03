@@ -176,7 +176,7 @@ function init(config: Config, targetSelector: string) {
 }
 
 function isWebchatEvent(message: any): message is WebchatEvent {
-  return typeof message.data?.type === 'string' && typeof message.data?.chatId === 'string'
+  return message.data && typeof message.data.type === 'string' && typeof message.data.chatId === 'string'
 }
 
 window.addEventListener('message', function ({ data }) {
@@ -195,7 +195,7 @@ window.addEventListener('message', function ({ data }) {
   }
 
   const chatRef = _getChatRef(data.chatId)
-  const shouldFireEvent = chatRef.eventListener.topics.some((t) => t === '*' || t === data.type)
+  const shouldFireEvent = chatRef && chatRef.eventListener.topics.some((t) => t === '*' || t === data.type)
   if (shouldFireEvent) {
     chatRef.eventListener.handler(data)
   }
