@@ -209,3 +209,5 @@ window.botpressWebChat = {
   sendPayload,
   onEvent
 }
+
+export { isWebchatEvent }
