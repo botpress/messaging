@@ -176,7 +176,7 @@ function init(config: Config, targetSelector: string) {
 }
 
 function isWebchatEvent(message: any): message is WebchatEvent {
-  return message.data?.type !== ''
+  return typeof message.data?.type === 'string' && typeof message.data?.chatId === 'string'
 }
 
 window.addEventListener('message', function ({ data }) {
