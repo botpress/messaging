@@ -1,4 +1,4 @@
-import { Config, WebchatEvent, WebchatEventType } from '@botpress/webchat'
+import { Config, WebchatEvent, WebchatEventType } from '../../webchat/src/typings'
 
 import './inject.css'
 

@@ -1,4 +1,4 @@
-import { postMessageToParent } from '@botpress/webchat/src/utils/webchatEvents'
+import { postMessageToParent } from '../../webchat/src/utils/webchatEvents'
 import { isWebchatEvent } from './inject'
 
 describe('Test inject', () => {
