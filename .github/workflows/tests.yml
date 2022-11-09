@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ['chrome', 'firefox']
+        browser: ['chrome']
 
     steps:
       - name: Checkout code
@@ -180,3 +180,4 @@ jobs:
       - name: Run tests
         run: |
           yarn test:chat --browser ${{ matrix.browser }}
+          yarn test:inject

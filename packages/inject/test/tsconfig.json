@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.packages.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "paths": {
+      "@botpress/webchat": ["../../webchat/src/index.ts"]
+    }
+  },
+  "include": ["../test/**/*", "../src/**/*"]
+}
