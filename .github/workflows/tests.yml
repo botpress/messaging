@@ -177,7 +177,11 @@ jobs:
         run: |
           yarn --immutable
 
-      - name: Run tests
+      - name: Run e2e tests
         run: |
           yarn test:chat --browser ${{ matrix.browser }}
-          yarn test:inject
+
+      - name: Run unit tests
+      - working-directory: ./packages/inject
+        run: |
+          yarn test
