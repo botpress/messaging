@@ -49,7 +49,7 @@ const setup = async () => {
     },
     {
       debug,
-      command: `PORT=${port} yarn dev`,
+      command: `cross-env PORT=${port} yarn dev`,
       launchTimeout: 60000,
       protocol: 'http',
       host: '127.0.0.1',
@@ -65,7 +65,7 @@ const setup = async () => {
     // More on handling environment variables with Cypress:
     // https://docs.cypress.io/guides/guides/environment-variables#Option-3-CYPRESS_
     await execute(
-      `CYPRESS_MESSAGING_ENDPOINT=http://localhost:${port} yarn run cross-env HEIGHT=1080 WIDTH=1920 cypress run ${args}`,
+      `cross-env CYPRESS_MESSAGING_ENDPOINT=http://localhost:${port} yarn run cross-env HEIGHT=1080 WIDTH=1920 cypress run ${args}`,
       { debug: true }
     )
   } finally {

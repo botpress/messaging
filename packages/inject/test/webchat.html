@@ -4,22 +4,34 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <h1>Example website</h1>
-    <p>This website integrates the botpress webchat!</p>
+    <h1>Webchat Test</h1>
   </body>
 
-  <script src="http://localhost:8080/inject.js"></script>
+  <script src="HOST_URL/inject.js"></script>
   <script>
     window.botpressWebChat.onEvent(
       (event) => {
-        console.log('this is how we let users subscribe to different events', event)
+        console.log(event)
       },
-      ['LIFECYCLE.READY']
+      [
+        'LIFECYCLE.READY',
+        'LIFECYCLE.LOADED',
+        'UI.OPENED',
+        'UI.CLOSED',
+        'UI.RESIZE',
+        'UI.SET-CLASS',
+        'CONFIG.SET',
+        'MESSAGE.SENT',
+        'MESSAGE.RECEIVED',
+        'MESSAGE.SELECTED',
+        'USER.CONNECTED'
+      ]
     )
+
     window.botpressWebChat.init({
-      hostUrl: 'http://localhost:8080',
-      messagingUrl: 'http://localhost:3100',
-      clientId: '6ca928fc-7bb3-4509-8a6b-085cb4e218bc', // this needs to be updated manually for now
+      hostUrl: 'HOST_URL',
+      messagingUrl: 'MESSAGING_URL',
+      clientId: 'CLIENT_ID',
       botName: 'Test Bot',
       botConversationDescription: 'This is a test conversation',
       coverPictureUrl: 'https://i.imgur.com/8yYQY8m.png',
