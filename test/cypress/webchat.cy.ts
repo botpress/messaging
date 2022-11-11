@@ -13,13 +13,17 @@ describe('Webchat', () => {
       }
     })
 
-    cy.iframeBody().find('.bpw-widget-btn').click()
-    cy.iframeBody().find('.bpw-botinfo-start-button')
+    cy.openWebchat()
 
+    cy.log('CONFIG.SET')
     checkLifecycleEvent(0, 'CONFIG.SET')
+    cy.log('USER.CONNECTED')
     checkLifecycleEvent(1, 'USER.CONNECTED')
+    cy.log('LIFECYCLE.LOADED')
     checkLifecycleEvent(2, 'LIFECYCLE.LOADED')
+    cy.log('UI.OPENED')
     checkLifecycleEvent(4, 'UI.OPENED')
+    cy.log('LIFECYCLE.READY')
     checkLifecycleEvent(7, 'LIFECYCLE.READY')
   })
 
