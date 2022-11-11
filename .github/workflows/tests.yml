@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ['chrome', 'firefox', 'edge']
+        browser: ['chrome', 'firefox']
 
     steps:
       - name: Checkout code
@@ -180,7 +180,7 @@ jobs:
 
       - name: Run e2e tests
         run: |
-          yarn test:chat --browser ${{ matrix.browser }}
+          yarn test:chat:${{ matrix.browser }}
 
       - name: Run unit tests
         working-directory: ./packages/inject
