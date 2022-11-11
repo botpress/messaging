@@ -174,14 +174,11 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'yarn'
       - name: Fetch Node Packages
-        run: |
-          yarn --immutable
+        run: yarn --immutable
 
       - name: Run e2e tests
-        run: |
-          yarn test:chat --browser ${{ matrix.browser }}
+        run: yarn test:chat --browser ${{ matrix.browser }}
 
       - name: Run unit tests
       - working-directory: ./packages/inject
-        run: |
-          yarn test
+        run: yarn test
