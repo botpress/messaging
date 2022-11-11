@@ -176,6 +176,7 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --immutable
+          yarn build
 
       - name: Run e2e tests
         run: |
