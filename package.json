@@ -28,7 +28,7 @@
     "test:e2e:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.e2e.config.ts",
     "test:sec:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.security.config.ts",
     "test:mig:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.migration.config.ts",
-    "test:chat": "concurrently 'yarn start' 'wait-on http://localhost:3100/status && ts-node packages/inject/test/serve.ts' 'wait-on http://localhost:3700 && cypress run' --kill-others --success last",
+    "test:chat": "concurrently -k -s last 'yarn start' 'wait-on http://localhost:3100/status && ts-node packages/inject/test/serve.ts' 'wait-on http://localhost:3700 && cypress run' ",
     "cypress:open": "cypress open"
   },
   "bin": "./packages/server/dist/index.js",
