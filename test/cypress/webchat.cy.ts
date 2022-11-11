@@ -15,6 +15,7 @@ describe('Webchat', () => {
 
     cy.openWebchat()
 
+    cy.wait(500)
     checkLifecycleEvent(0, 'CONFIG.SET')
     checkLifecycleEvent(1, 'USER.CONNECTED')
     checkLifecycleEvent(2, 'LIFECYCLE.LOADED')
@@ -37,6 +38,7 @@ describe('Webchat', () => {
       cy.iframeBody().find('.bpw-from-user').should('contain', chatMsg.userMessage)
     })
 
+    cy.wait(500)
     checkLifecycleEvent(0, 'MESSAGE.SENT', 'sent')
   })
 
@@ -59,6 +61,7 @@ describe('Webchat', () => {
       cy.iframeBody().find('.bpw-from-bot').should('contain', chatMsg.botMessage)
     })
 
+    cy.wait(500)
     checkLifecycleEvent(0, 'MESSAGE.RECEIVED', 'received')
   })
 })
