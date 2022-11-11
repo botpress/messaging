@@ -15,15 +15,10 @@ describe('Webchat', () => {
 
     cy.openWebchat()
 
-    cy.log('CONFIG.SET')
     checkLifecycleEvent(0, 'CONFIG.SET')
-    cy.log('USER.CONNECTED')
     checkLifecycleEvent(1, 'USER.CONNECTED')
-    cy.log('LIFECYCLE.LOADED')
     checkLifecycleEvent(2, 'LIFECYCLE.LOADED')
-    cy.log('UI.OPENED')
-    checkLifecycleEvent(4, 'UI.OPENED')
-    cy.log('LIFECYCLE.READY')
+    // we don't really care about the order of the events between
     checkLifecycleEvent(7, 'LIFECYCLE.READY')
   })
 
