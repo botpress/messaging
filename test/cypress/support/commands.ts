@@ -21,5 +21,5 @@ Cypress.Commands.add('iframeWindow', { prevSubject: 'optional' }, (subject) => {
 
 Cypress.Commands.add('openWebchat', () => {
   cy.iframeBody().find('.bpw-widget-btn').click()
-  cy.iframeBody().contains('Back to Conversation').click()
+  cy.iframeBody().find('.bpw-botinfo-start-button').click()
 })

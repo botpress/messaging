@@ -14,7 +14,7 @@ describe('Webchat', () => {
     })
 
     cy.iframeBody().find('.bpw-widget-btn').click()
-    cy.iframeBody().contains('Back to Conversation')
+    cy.iframeBody().find('.bpw-botinfo-start-button')
 
     checkLifecycleEvent(0, 'CONFIG.SET')
     checkLifecycleEvent(1, 'USER.CONNECTED')
