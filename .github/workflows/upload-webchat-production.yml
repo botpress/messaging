@@ -31,6 +31,6 @@ jobs:
         with:
           aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
           source: ./packages/inject/dist
-          destination: s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
+          destination: s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}/webchat/v0
           cloudfront-distribution-id: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}
           cloudfront-invalidation-prefix: /webchat/v0/*
