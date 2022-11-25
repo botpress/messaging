@@ -36,9 +36,8 @@ jobs:
           yarn write:version
       - uses: botpress/gh-actions/deploy/s3@v2
         with:
-          source: ./packages/inject/dist
-          bucket: ${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}
           aws-role: ${{ secrets.AWS_WEBCHAT_UPLOAD_ROLE }}
-          cloudfront-distribution: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}
-          invalidate-cloudfront: 'true'
-          prefix: webchat/v0 # TODO: Change the version (for test purpose)
+          source: ./packages/inject/dist
+          destination: s3://${{ secrets.AWS_WEBCHAT_BUCKET_NAME }}/webchat/v0
+          cloudfront-distribution-id: ${{ secrets.AWS_WEBCHAT_CLOUDFRONT_DISTRIBUTION_ID }}
+          cloudfront-invalidation-prefix: /webchat/v0/*
