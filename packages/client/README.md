@@ -17,6 +17,9 @@ pnpm add @botpress/messaging-client
 Initialize the client and respond to messages
 
 ```ts
+// ensure your Express app has the json middleware
+app.use(express.json())
+
 // initialize client with your credentials
 const client = new MessagingClient({
   clientId: 'my-client-id',
