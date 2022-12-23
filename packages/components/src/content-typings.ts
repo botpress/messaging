@@ -12,6 +12,7 @@ export const messageTypes = [
   'carousel',
   'location',
   'single-choice',
+  'choice',
   'quick_reply',
   'login_prompt',
   'session_reset',
@@ -40,26 +41,31 @@ export interface TextContent extends BaseContent<'text'> {
 }
 
 export interface ImageContent extends BaseContent<'image'> {
-  image: string
+  image?: string
+  imageUrl?: string
   title?: string
 }
 
 export interface AudioContent extends BaseContent<'audio'> {
-  audio: string
+  audio?: string
+  audioUrl?: string
   title?: string
 }
 
 export interface VoiceContent extends BaseContent<'voice'> {
-  audio: string
+  audio?: string
+  audioUrl?: string
 }
 
 export interface VideoContent extends BaseContent<'video'> {
-  video: string
+  video?: string
+  videoUrl?: string
   title?: string
 }
 
 export interface FileContent extends BaseContent<'file'> {
-  file: string
+  file?: string
+  fileUrl?: string
   title?: string
 }
 
@@ -71,6 +77,7 @@ export interface CardContent extends BaseContent<'card'> {
   title: string
   subtitle?: string
   image?: string
+  imageUrl?: string
   actions?: ActionButton<ActionType>[]
 }
 
@@ -100,7 +107,13 @@ export type ActionButton<A extends ActionType> = {
     }
   : {})
 
-export interface ChoiceContent extends BaseContent<'single-choice'> {
+export interface SingleChoiceContent extends BaseContent<'single-choice'> {
+  text: string
+  disableFreeText?: boolean
+  choices: ChoiceOption[]
+}
+
+export interface ChoiceContent extends BaseContent<'choice'> {
   text: string
   disableFreeText?: boolean
   choices: ChoiceOption[]
@@ -159,8 +172,10 @@ export type Content<T extends MessageType> = T extends 'text'
   ? LocationContent
   : T extends 'dropdown'
   ? DropdownContent
-  : T extends 'single-choice'
+  : T extends 'choice'
   ? ChoiceContent
+  : T extends 'single-choice'
+  ? SingleChoiceContent
   : T extends 'quick_reply'
   ? QuickReplyContent
   : T extends 'login_prompt'
