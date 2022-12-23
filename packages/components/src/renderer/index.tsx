@@ -2,12 +2,13 @@ import React, { ReactElement } from 'react'
 import { MessageType } from '../content-typings'
 import { Message, MessageTypeHandlerProps } from '../typings'
 import { Carousel, Card } from './carousel'
-import { QuickReply, SingleChoice } from './choice'
+import { Choice } from './choice'
 import { Custom } from './custom'
 import { Dropdown } from './dropdown'
 import { Video, Audio, Image, File } from './file'
 import { Location } from './location'
 import { LoginPrompt } from './login'
+import { QuickReply, SingleChoice } from './single-choice'
 import { Text } from './text'
 import { TypingIndicator } from './typing'
 import { VoiceMessage } from './voice'
@@ -15,6 +16,7 @@ import { VoiceMessage } from './voice'
 export const defaultTypesRenderers = {
   text: Text,
   'single-choice': SingleChoice,
+  choice: Choice,
   quick_reply: QuickReply,
   login_prompt: LoginPrompt,
   carousel: Carousel,
@@ -98,6 +100,7 @@ export {
   Video,
   Audio,
   Text,
+  Choice,
   SingleChoice,
   QuickReply,
   LoginPrompt,

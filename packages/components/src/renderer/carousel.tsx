@@ -54,10 +54,18 @@ export class Carousel extends React.Component<MessageTypeHandlerProps<'carousel'
   }
 }
 
-export const Card: React.FC<MessageTypeHandlerProps<'card'>> = ({ image, title, subtitle, actions, config }) => {
+export const Card: React.FC<MessageTypeHandlerProps<'card'>> = ({
+  image,
+  imageUrl,
+  title,
+  subtitle,
+  actions,
+  config
+}) => {
+  const imgPath = imageUrl || image
   return (
     <div className={'bpw-card-container'}>
-      {image && <div className={'bpw-card-picture'} style={{ backgroundImage: `url("${image}")` }} />}
+      {imgPath && <div className={'bpw-card-picture'} style={{ backgroundImage: `url("${imgPath}")` }} />}
       <div>
         <div className={'bpw-card-header'}>
           <div className={'bpw-card-title'}>{title}</div>

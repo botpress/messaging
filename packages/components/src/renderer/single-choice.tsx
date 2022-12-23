@@ -8,7 +8,7 @@ import { Text } from './text'
 /**
  * Displays an array of button, and handle when they are clicked
  */
-export class Choice extends Component<MessageTypeHandlerProps<'choice'>> {
+export class SingleChoice extends Component<MessageTypeHandlerProps<'single-choice'>> {
   componentDidMount() {
     this.props.config.isLastGroup &&
       this.props.config.isLastOfGroup &&
