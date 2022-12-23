@@ -2276,37 +2276,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-components@npm:0.4.2":
-  version: 0.4.2
-  resolution: "@botpress/messaging-components@npm:0.4.2"
-  dependencies:
-    "@googlemaps/react-wrapper": ^1.1.26
-    html-truncate: ^1.2.2
-    mime: ^2.5.2
-    react-intl: ^3.12.1
-    react-linkify: ^0.2.2
-    react-select: ^5.2.1
-    react-slick: ^0.28.1
-    react-text-format: ^2.0.28
-    snarkdown: ^2.0.0
-  peerDependencies:
-    "@googlemaps/react-wrapper": ^1.1.26
-    html-truncate: ^1.2.2
-    mime: ^2.5.2
-    prop-types: ^15.7.2
-    react: ">=17.0.0"
-    react-dom: ">=17.0.0"
-    react-intl: ">=3.0.0"
-    react-linkify: ^0.2.2
-    react-select: ^5.2.1
-    react-slick: ">=0.24.0"
-    react-text-format: ^2.0.28
-    snarkdown: ^2.0.0
-  checksum: 485d33f2b0a2a39df0e372c7aef2cea6d6271fdce602475b8ce2dea1d7f23b108b33433c58489dbefe9cf5d82c6301a05f450ff3030a2d8ca004fb578272ebb1
-  languageName: node
-  linkType: hard
-
-"@botpress/messaging-components@workspace:packages/components":
+"@botpress/messaging-components@0.4.3, @botpress/messaging-components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-components@workspace:packages/components"
   dependencies:
@@ -2585,7 +2555,7 @@ __metadata:
   resolution: "@botpress/webchat@workspace:packages/webchat"
   dependencies:
     "@blueprintjs/core": ^3.23.1
-    "@botpress/messaging-components": 0.4.2
+    "@botpress/messaging-components": 0.4.3
     "@botpress/messaging-socket": 1.2.0
     "@formatjs/intl-pluralrules": ^4.1.6
     "@formatjs/intl-utils": ^3.8.4
