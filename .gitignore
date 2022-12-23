@@ -16,8 +16,9 @@ build/
 !.yarn/sdks
 !.yarn/versions
 .test-data
+
 test/cypress/videos
-test/cypress/fixtures
 test/cypress/screenshots
 test/cypress/downloads
+
 .DS_Store
