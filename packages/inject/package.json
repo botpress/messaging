@@ -8,7 +8,9 @@
     "watch": "yarn && yarn run -T parcel watch src/index.html src/inject.ts  --public-url ./",
     "dev": "yarn && yarn run -T parcel src/index.html src/inject.ts",
     "prepublish": "yarn run -T rimraf dist && yarn --immutable && yarn run -T parcel build src/index.html src/inject.ts --public-url ./ && yarn write:version",
-    "analyze": "yarn run -T parcel build src/index.html --public-url ./ --reporter @parcel/reporter-bundle-analyzer"
+    "analyze": "yarn run -T parcel build src/index.html --public-url ./ --reporter @parcel/reporter-bundle-analyzer",
+    "test": "jest -c ./jest.inject.config.ts",
+    "serve": "ts-node test/serve.ts"
   },
   "files": [
     "dist"
@@ -18,7 +20,10 @@
     "@parcel/reporter-bundle-analyzer": "2.2.1",
     "@parcel/transformer-typescript-tsc": "^2.2.1",
     "@types/react": "^17.0.38",
-    "@types/react-dom": "^17.0.11"
+    "@types/react-dom": "^17.0.11",
+    "express": "^4.18.2",
+    "jest": "^27.4.7",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "@botpress/webchat": "0.5.0",

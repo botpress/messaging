@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ['chrome']
+        browser: ['chrome', 'firefox']
 
     steps:
       - name: Checkout code
@@ -176,8 +176,13 @@ jobs:
       - name: Fetch Node Packages
         run: |
           yarn --immutable
+          yarn build
 
-      - name: Run tests
+      - name: Run e2e tests
         run: |
-          yarn test:chat --browser ${{ matrix.browser }}
-          yarn test:inject
+          yarn test:chat:${{ matrix.browser }}
+
+      - name: Run unit tests
+        working-directory: ./packages/inject
+        run: |
+          yarn test

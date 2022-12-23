@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "target": "es2019",
+    "noImplicitAny": false,
+    "noEmit": true,
+    "types": ["cypress", "node"]
+  },
+  "include": ["**/*.ts"]
+}

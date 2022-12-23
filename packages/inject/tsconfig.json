@@ -11,6 +11,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",
+    "resolveJsonModule": true,
     "tsBuildInfoFile": "dist/.tsbuildinfo",
 
     // Specific settings for npm package
@@ -21,6 +22,6 @@
     // We use react
     "jsx": "react"
   },
-  "include": ["src", "src/**/*.json"],
+  "include": ["src", "src/**/*.json", "serve.ts"],
   "exclude": ["dist", "node_modules"]
 }
