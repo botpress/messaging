@@ -1,9 +1,6 @@
 /* Old version IE 10 and 11 only */
 :root {
-  --main-bg-color: #ffffff;
-  --main-bg-color-hover: rgba(255, 255, 255, 0.9);
   --main-fg-color: #000000;
-  --main-fg-color-hover: rgba(0, 0, 0, 0.07);
 
   --seashell: #e2e2e2;
   --lighthouse: #f66f48;
@@ -28,28 +25,35 @@ body {
 }
 
 .bpw-from-user .bpw-chat-bubble .bpw-chat-bubble-content {
-  background-color: #000000;
+  background-color: #3276ea;
 }
 
 .bpw-from-bot .bpw-chat-bubble .bpw-chat-bubble-content {
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #e6edf9;
+  color: #003184;
 }
 
-.bpw-chat-bubble {
+.bp-emulator-history .bpw-chat-bubble {
   color: #000000;
   background: none;
   border: 0px;
   display: inline-block;
 }
 
-.bpw-bubble-carousel {
+.bp-emulator-history .bpw-bubble-carousel {
   display: block;
   margin-left: 30px;
 }
 
 .bpw-widget-btn {
-  background-color: #000000;
+  background-image: url(Vector.png);
+  background-size: cover;
+  width: 130px;
+  height: 80px;
+  box-shadow: none;
+  position: absolute;
+  right: 11px;
+  top: 11px;
 }
 
 .bpw-message-read-more {
@@ -63,30 +67,37 @@ body {
   padding: 0;
   text-align: left;
   text-decoration: underline;
+  transition: transform 1s ease;
+  overflow: hidden;
 }
 
 .bpw-widget-btn:focus,
 .bpw-widget-btn:hover {
-  background-color: #333;
+  transform: scale(1.2);
 }
 
 .bpw-chat-container {
-  background-color: #ffffff;
+  background-color: #f1f6fb;
   color: #000000;
+}
+
+a {
+  text-decoration: underline;
 }
 
 .bpw-layout {
   position: fixed;
-  bottom: 0;
-  right: 0;
-  height: 100%;
-  border-left: 1px solid #ccc;
+  bottom: 2.5em;
+  right: 2em;
+  width: 450px !important;
+  height: 75%;
   -webkit-box-orient: vertical;
   -ms-flex-direction: column;
   flex-direction: column;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  border-radius: 1em;
 }
 
 .bpw-layout-fullscreen {
@@ -97,27 +108,30 @@ body {
   margin-right: 5px;
 }
 
-.bpw-bot-avatar img,
-.bpw-bot-avatar svg {
-  border: solid 3px white;
-  border-radius: 50%;
-  background: #ccc;
-}
-
 .bpw-button {
   background-color: var(--main-bg-color);
-  font-size: 1rem;
   padding: 0.4rem 0.8rem;
   min-width: 5rem;
   min-height: 40px;
   text-align: center;
   border: 1px solid currentColor;
-  border-radius: 0px;
+  border-radius: 7px;
   cursor: pointer;
   margin: 3px 2px;
   text-transform: none;
   overflow: visible;
   align-items: flex-start;
+  background-color: #e6edf9;
+  color: #003184;
+}
+
+.bpw-button:hover {
+  background-color: #3276ea;
+  color: white;
+}
+
+.bpw-file-button {
+  padding: 0;
 }
 
 .bpw-button-alt {
@@ -126,10 +140,6 @@ body {
   padding: 0.4rem 0.8rem;
   min-width: 5rem;
   height: 40px;
-}
-
-.bpw-button:hover {
-  background-color: rgba(0, 0, 0, 0.07);
 }
 
 .bpw-input {
@@ -166,6 +176,24 @@ body {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding-bottom: 0.4em;
+  padding-left: 0.2em;
+}
+
+.bpw-message-username {
+  margin: 0 12px;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 1 auto;
+  flex: 0 1 auto;
+  padding: 0.3125rem 0;
+  font-size: 12px;
+  color: #9a9a9a;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -236,6 +264,7 @@ body {
     transform: rotate(360deg);
   }
 }
+
 @-webkit-keyframes spin {
   to {
     -webkit-transform: rotate(360deg);
@@ -269,6 +298,7 @@ body {
 
 .bpw-msg-list {
   padding: 0 0.5rem 0.5rem 0.5rem;
+  overflow-x: hidden;
 }
 
 .bpw-msg-list-follow {
@@ -318,6 +348,7 @@ body {
 .bpw-chat-bubble-content {
   border: 1px solid #f1f1f1;
   padding: 0.5rem 0.75rem;
+  border-radius: 0.5em;
 }
 
 .bpw-message-feedback {
@@ -357,36 +388,38 @@ body {
   justify-content: space-evenly;
 }
 
-.bpw-from-bot .bpw-chat-bubble-content {
+.bpw-from-bot .bpw-bubble-highlight .bpw-chat-bubble-content {
   background-color: rgba(255, 192, 114, 0.25);
 }
 
-.bpw-from-user .bpw-chat-bubble-content {
+.bpw-from-user .bpw-bubble-highlight .bpw-chat-bubble-content {
   background-color: #ffa73a;
 }
 
 .bpw-bubble-session_reset {
   border: none;
-  border-top: 1px solid red;
-  border-bottom: 1px solid red;
+  border-top: 1px solid #ffa7a7;
+  border-bottom: 1px solid #ffa7a7;
 }
 
 .bpw-bubble-session_reset .bpw-chat-bubble-content {
-  color: red;
+  color: #ffa7a7;
   background: none !important;
   padding: 0;
   margin: 5px 0;
+  border: 0;
 }
 
 .bpw-bubble-carousel {
   background: none;
   margin: 10px 0;
-  width: 100%;
+  width: 80%;
 }
 
 .bpw-bubble-file {
   padding: 0;
 }
+
 .bpw-bubble-file p {
   padding: 0.5rem 0.75rem;
 }
@@ -400,21 +433,15 @@ body {
   border-bottom-left-radius: inherit;
 }
 
-.bpw-bubble-image img,
+.bpw-bubble-image a img,
 .bpw-bubble-audio audio,
 .bpw-bubble-video video {
-  display: block;
   max-height: 240px;
   max-width: 100%;
   border-top-left-radius: inherit;
   border-top-right-radius: inherit;
   border-bottom-right-radius: inherit;
   border-bottom-left-radius: inherit;
-}
-
-.bpw-bubble-location #map {
-  width: 300px;
-  height: 300px;
 }
 
 .bpw-chat-bubble p {
@@ -431,11 +458,18 @@ body {
   border-bottom-left-radius: 0px;
 }
 
-.bpw-keyboard-single-choice {
-  background-color: #fbfbfb;
+.bpw-keyboard-quick_reply {
+  background-color: #f1f6fb;
   padding: 15px 20px;
   text-align: left;
-  border-top: 1px solid #dcdcdc;
+}
+
+.bpw-in-message-quick_reply {
+  padding-top: 10px;
+}
+
+.bpw-in-message-quick_reply > button {
+  margin: 2px;
 }
 
 /* CAROUSEL  */
@@ -449,9 +483,11 @@ body {
   color: #444;
   z-index: 1;
 }
+
 .slick-arrow:before {
   color: #444;
 }
+
 .slick-next {
   right: -23px;
 }
@@ -464,6 +500,7 @@ body {
   box-sizing: border-box;
   color: rgba(0, 0, 0, 1);
   line-height: 1.28em;
+  margin-right: 3px;
   min-height: 150px;
   max-height: 410px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -504,15 +541,13 @@ body {
 }
 
 /* Comment this element to hide the icon indicating an external website */
-/* TODO: doesn't work right now due to the external_icon image that doesn't exist
 .bpw-card-external-icon {
-  background: url(/assets/modules/channel-web/images/external_icon.png) no-repeat;
+  background: url(external_icon.png) no-repeat;
   width: 16px;
   height: 16px;
   display: inline-block;
   background-size: 100% 100%;
 }
-*/
 
 .bpw-card-picture {
   background-position: 50% 50%;
@@ -522,6 +557,9 @@ body {
 }
 
 /* Custom styling for the login form*/
+.bpw-form-container {
+}
+
 .bpw-form-container label {
   display: block;
 }
@@ -553,9 +591,11 @@ body {
   padding: 0;
   cursor: pointer;
 }
+
 .bpw-convo-add-btn:hover {
   background-color: rgba(0, 0, 0, 0.03);
 }
+
 .bpw-convo-item {
   padding-left: 15px;
   height: 4.7rem;
@@ -570,7 +610,7 @@ body {
 }
 
 .bpw-convo-item:hover {
-  background-color: #fafafa;
+  background-color: #def;
 }
 
 .bpw-convo-item .bpw-title {
@@ -612,19 +652,16 @@ body {
   color: #9a9a9a;
   position: absolute;
   right: 0;
+  top: 20px;
 }
 
-.bpw-keyboard-single-choice-dropdown {
+.bpw-keyboard-quick_reply-dropdown {
   margin: 0.2rem 0.5rem;
 }
 
 .bpw-composer {
-  border-top-width: 1px;
-  border-top-style: solid;
-  border-top-color: #aaaaaa;
   position: relative;
   padding: 0.5rem 0 0;
-  background: rgba(255, 255, 255, 0.9);
   transition: border 0.3s ease;
   outline: none;
   padding-bottom: 0.5rem;
@@ -635,6 +672,10 @@ body {
   padding: 5px;
 }
 
+.bpw-composer-textarea {
+  flex-grow: 2;
+}
+
 .bpw-composer textarea {
   font: inherit;
   background-color: transparent;
@@ -643,35 +684,33 @@ body {
   line-height: 1.2;
   height: 50px;
   border: none;
-  font-size: 1rem;
   padding: 0.75rem 1rem;
   padding-right: 60px;
 }
 
 .bpw-powered {
-  text-align: right;
-  border-top: 1px solid #aaaaaa;
-  padding: 2px 5px 2px 0;
+  text-align: center;
+  padding: 2px 5px 10px 0;
 }
 
 .bpw-send-buttons {
   display: flex;
-  align-items: center;
+  flex-direction: row;
 }
 
 .bpw-send-button {
   border: none;
   border-radius: 5px;
-  background: #fff;
   padding: 5px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
+  background-color: transparent;
 }
 
 .bpw-send-button:hover,
 .bpw-send-button:focus {
-  background: #d8d8d8;
+  background: #e6edf9;
 }
 
 /** HEADER STUFF */
@@ -690,9 +729,7 @@ body {
   flex-shrink: 0;
   height: 52px;
   font-weight: 500;
-  border-top: solid 1px #ccc;
-  border-bottom: 1px solid #ccc;
-  padding: 0 1rem;
+  padding: 2rem 0.5rem 1rem 0.5rem;
   overflow: hidden;
 }
 
@@ -776,7 +813,7 @@ body {
   padding: 0;
   margin: 0;
   color: #bbb;
-  margin-left: 12px;
+  margin-right: 0.5rem;
   text-align: right;
   vertical-align: middle;
   cursor: pointer;
@@ -800,7 +837,6 @@ body {
 
 .bpw-floating-button {
   float: right;
-  fill: rgb(255, 255, 255);
   cursor: pointer;
   outline: none;
 
@@ -813,7 +849,6 @@ body {
   height: 52px;
   cursor: pointer;
   border-radius: 0px;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
   overflow: hidden;
 
   padding: 0;
@@ -824,13 +859,15 @@ body {
 }
 
 .bpw-floating-button i {
-  transition: opacity 0.3s ease;
-  opacity: 1;
-  fill: inherit;
-  stroke: inherit;
-  width: 100%;
-  padding: 0;
-  line-height: 0;
+  display: none;
+}
+
+.bpw-floating-button:hover {
+  background-color: transparent;
+}
+
+.bpw-floating-button {
+  background-color: transparent;
 }
 
 .bpw-floating-button .bpw-floating-button-unread {
@@ -952,9 +989,11 @@ body {
   0% {
     transform: translateY(0px);
   }
+
   28% {
     transform: translateY(-6px);
   }
+
   44% {
     transform: translateY(0px);
   }
@@ -976,15 +1015,17 @@ body {
   white-space: pre-wrap;
   font-size: 16px;
   direction: ltr;
-  background-color: #000000;
+  background-color: #3276ea;
 }
 
 .bpw-typing-bubble:nth-child(1) {
   animation-delay: 200ms;
 }
+
 .bpw-typing-bubble:nth-child(2) {
   animation-delay: 300ms;
 }
+
 .bpw-typing-bubble:nth-child(3) {
   animation-delay: 400ms;
 }
@@ -1014,6 +1055,7 @@ body {
     visibility: visible;
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(0);
     visibility: visible;
@@ -1032,6 +1074,7 @@ body {
     transform: translateX(0);
     visibility: visible;
   }
+
   100% {
     visibility: hidden;
     transform: translateX(100%);
@@ -1043,6 +1086,7 @@ body {
     transform: translateX(0);
     visibility: visible;
   }
+
   100% {
     visibility: hidden;
     transform: translateX(100%);
@@ -1080,6 +1124,6 @@ body {
   direction: rtl;
 }
 
-.bpw-rtl .bpw-keyboard-single-choice-dropdown {
+.bpw-rtl .bpw-keyboard-quick_reply-dropdown {
   direction: rtl;
 }

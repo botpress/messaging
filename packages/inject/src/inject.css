@@ -1,8 +1,3 @@
-body {
-  margin: 0;
-  height: 100vh;
-}
-
 .bp-widget-web {
   border: none;
   display: block;
@@ -50,6 +45,11 @@ body {
   right: 0px;
   width: 480px;
   height: 100% !important;
+}
+
+.bp-widget-side.emulator {
+  height: calc(100% - 78px) !important;
+  top: 50px;
 }
 
 @media only screen and (max-device-width: 768px) {
