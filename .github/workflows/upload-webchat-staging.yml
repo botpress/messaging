@@ -1,5 +1,6 @@
 name: Upload Webchat Staging
 on:
+  workflow_dispatch: {}
   push:
     branches:
       - master
