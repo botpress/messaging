@@ -37,7 +37,8 @@ export class TeamsDropdownRenderer implements ChannelRenderer<TeamsContext> {
               })),
               id: 'text',
               placeholder: payload.placeholderText,
-              wrap: true
+              wrap: true,
+              isMultiSelect: payload.allowMultiple
             }
           ],
           actions: [
