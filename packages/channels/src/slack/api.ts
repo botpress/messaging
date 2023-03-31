@@ -111,11 +111,23 @@ export class SlackApi extends ChannelApi<SlackService> {
     }
 
     if ('user' in message) {
-      await this.service.receive(
-        scope,
-        { identity: '*', sender: message.user, thread: message.channel },
-        { type: 'text', text: message.text }
-      )
+      if (message.files && message.files.length > 0) {
+        for (const file of message.files) {
+          await this.service.receive(
+            scope,
+            { identity: '*', sender: message.user, thread: message.channel },
+            { type: this.mapMimeTypeToStandardType(file.mimetype), url: file.url_private, title: file.title }
+          )
+        }
+      }
+
+      if (message.text?.length) {
+        await this.service.receive(
+          scope,
+          { identity: '*', sender: message.user, thread: message.channel },
+          { type: 'text', text: message.text }
+        )
+      }
     }
   }
 
@@ -162,6 +174,18 @@ export class SlackApi extends ChannelApi<SlackService> {
       text: action.selected_option.text.text,
       payload: action.selected_option.value
     })
+  }
+
+  private mapMimeTypeToStandardType(mimeType: string) {
+    if (mimeType.startsWith('image/')) {
+      return 'image'
+    } else if (mimeType.startsWith('video/')) {
+      return 'video'
+    } else if (mimeType.startsWith('audio/')) {
+      return 'audio'
+    } else {
+      return 'file'
+    }
   }
 }
 
