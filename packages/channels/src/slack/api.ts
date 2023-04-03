@@ -111,7 +111,7 @@ export class SlackApi extends ChannelApi<SlackService> {
     }
 
     if ('user' in message) {
-      if (message.files && message.files.length > 0) {
+      if ('files' in message && message.files?.length) {
         for (const file of message.files) {
           await this.service.receive(
             scope,
@@ -177,11 +177,11 @@ export class SlackApi extends ChannelApi<SlackService> {
   }
 
   private mapMimeTypeToStandardType(mimeType: string) {
-    if (mimeType.startsWith('image/')) {
+    if (mimeType?.startsWith('image/')) {
       return 'image'
-    } else if (mimeType.startsWith('video/')) {
+    } else if (mimeType?.startsWith('video/')) {
       return 'video'
-    } else if (mimeType.startsWith('audio/')) {
+    } else if (mimeType?.startsWith('audio/')) {
       return 'audio'
     } else {
       return 'file'
