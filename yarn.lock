@@ -2259,7 +2259,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@botpress/messaging-client@1.2.1, @botpress/messaging-client@workspace:packages/client":
+"@botpress/messaging-client@npm:1.2.1":
+  version: 1.2.1
+  resolution: "@botpress/messaging-client@npm:1.2.1"
+  dependencies:
+    "@botpress/messaging-base": 1.2.0
+    axios: ^0.21.4
+    cookie: ^0.4.2
+    joi: ^17.6.0
+  checksum: 66d794d5183ed43a8b96b837100395b5da72ab8c0be99d510ef35c0280f3fd02152404f0d84bde8ead52898adcf511d0e149ec194bf4769707cdb2179eef3e89
+  languageName: node
+  linkType: hard
+
+"@botpress/messaging-client@workspace:packages/client":
   version: 0.0.0-use.local
   resolution: "@botpress/messaging-client@workspace:packages/client"
   dependencies:
@@ -2269,7 +2281,7 @@ __metadata:
     "@types/jest": ^27.4.0
     "@types/node": ^16.11.13
     "@types/uuid": ^8.3.4
-    axios: ^0.21.4
+    axios: ^0.27.2
     cookie: ^0.4.2
     joi: ^17.6.0
     uuid: ^8.3.2
@@ -8870,6 +8882,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:^0.27.2":
+  version: 0.27.2
+  resolution: "axios@npm:0.27.2"
+  dependencies:
+    follow-redirects: ^1.14.9
+    form-data: ^4.0.0
+  checksum: 38cb7540465fe8c4102850c4368053c21683af85c5fdf0ea619f9628abbcb59415d1e22ebc8a6390d2bbc9b58a9806c874f139767389c862ec9b772235f06854
+  languageName: node
+  linkType: hard
+
 "babel-jest@npm:^27.4.6":
   version: 27.4.6
   resolution: "babel-jest@npm:27.4.6"
@@ -13664,6 +13686,16 @@ __metadata:
     debug:
       optional: true
   checksum: f6d03e5e30877431065bca0d1b2e3db93949eb799d368a5c07ea8a4b71205f0349a3f8f0191bf13a07c93885522834dca1dc8e527dc99a772c6911fba24edc5f
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.14.9":
+  version: 1.15.2
+  resolution: "follow-redirects@npm:1.15.2"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: faa66059b66358ba65c234c2f2a37fcec029dc22775f35d9ad6abac56003268baf41e55f9ee645957b32c7d9f62baf1f0b906e68267276f54ec4b4c597c2b190
   languageName: node
   linkType: hard
 
