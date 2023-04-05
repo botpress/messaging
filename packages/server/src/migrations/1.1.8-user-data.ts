@@ -22,7 +22,7 @@ export class UserDataMigration extends Migration {
   }
 
   async down() {
-    await this.trx.schema.alterTable('msg_tunnels', (table) => {
+    await this.trx.schema.alterTable('msg_users', (table) => {
       table.dropColumn('data')
     })
   }
