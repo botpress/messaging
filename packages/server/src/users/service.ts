@@ -44,10 +44,11 @@ export class UserService extends Service {
     await this.query().insert(batch)
   }
 
-  async create(clientId: uuid): Promise<User> {
+  async create(clientId: uuid, data?: User['data']): Promise<User> {
     const user = {
       id: uuidv4(),
-      clientId
+      clientId,
+      data
     }
 
     await this.batcher.push(user)
@@ -55,6 +56,12 @@ export class UserService extends Service {
     await this.emitter.emit(UserEvents.Created, { user })
 
     return user
+  }
+
+  public async update(user: User) {
+    await this.query().where({ id: user.id }).update(user)
+    this.cache.set(user.id, user)
+    await this.emitter.emit(UserEvents.Updated, { user })
   }
 
   public async fetch(id: uuid): Promise<User | undefined> {

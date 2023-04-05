@@ -1,4 +1,4 @@
-import { UserCredentials } from '@botpress/messaging-socket'
+import { UserCredentials, UserData } from '@botpress/messaging-socket'
 import { RootStore } from './store'
 import { BPStorage } from './utils/storage'
 
@@ -321,6 +321,10 @@ export interface Config {
    * Allows setting a custom user id
    */
   customUser?: UserCredentials
+  /**
+   * Allows setting custom data to the user
+   */
+  userData?: UserData
   /**
    * Displays the bot's website in the conversation page
    */

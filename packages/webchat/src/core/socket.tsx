@@ -27,7 +27,8 @@ export default class BpSocket {
 
   public async connect(): Promise<void> {
     const creds = this.getCreds()
-    await this.socket.connect(creds)
+    const userData = this.getUserData()
+    await this.socket.connect(creds, userData)
 
     if (this.socket.userId) {
       const userId = this.socket.userId!
@@ -49,5 +50,9 @@ export default class BpSocket {
 
   private getCreds() {
     return this.config.customUser || window.BP_STORAGE.get<UserCredentials>('creds')
+  }
+
+  private getUserData() {
+    return this.config.userData
   }
 }

@@ -2,6 +2,8 @@ import { Conversation, Message, User, uuid } from '@botpress/messaging-base'
 import { SocketCom, SocketComEvents } from './com'
 import { SocketEmitter } from './emitter'
 
+export type UserData = Record<string, string>
+
 export class MessagingSocket extends SocketEmitter<{
   connect: UserCredentials
   disconnect: undefined
@@ -39,8 +41,11 @@ export class MessagingSocket extends SocketEmitter<{
     })
   }
 
-  async connect(creds?: UserCredentials): Promise<UserCredentials> {
-    const result = await this.com.connect({ clientId: this.clientId, creds })
+  async connect(creds?: UserCredentials, userData?: UserData): Promise<UserCredentials> {
+    const result = await this.com.connect(
+      { clientId: this.clientId, creds },
+      { userData: userData ? JSON.stringify(userData) : undefined }
+    )
 
     if (result.userId === creds?.userId && !result.userToken) {
       result.userToken = creds!.userToken
