@@ -5,15 +5,16 @@ import { WrappedComponentProps, injectIntl, FormattedMessage } from 'react-intl'
 
 import { RootStore, StoreDef } from '../store'
 import ToolTip from './common/ToolTip'
+import { ConditionalWrap } from './ConditionalWrap'
 
 import VoiceRecorder from './VoiceRecorder'
 
-class Composer extends React.Component<ComposerProps, { isRecording: boolean }> {
+class Composer extends React.Component<ComposerProps, { isRecording: boolean; isTabletOrMobile: boolean }> {
   private textInput: React.RefObject<HTMLTextAreaElement>
   constructor(props: ComposerProps) {
     super(props)
     this.textInput = React.createRef()
-    this.state = { isRecording: false }
+    this.state = { isRecording: false, isTabletOrMobile: 'ontouchstart' in window }
   }
 
   componentDidMount() {
@@ -115,12 +116,19 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
                 onNotAvailable={this.onVoiceNotAvailable}
               />
             )}
-            <ToolTip
-              childId="btn-send"
-              content={this.props.intl.formatMessage({
-                id: 'composer.sendMessage',
-                defaultMessage: 'Send Message'
-              })}
+            <ConditionalWrap
+              condition={!this.state.isTabletOrMobile} // Only display tooltip on desktop, because of this error https://www.reddit.com/r/reactjs/comments/arggf9/prevent_onmouseenter_event_from_firing_on_mobile/
+              wrap={(children) => (
+                <ToolTip
+                  childId="btn-send"
+                  content={this.props.intl.formatMessage({
+                    id: 'composer.sendMessage',
+                    defaultMessage: 'Send Message'
+                  })}
+                >
+                  {children}
+                </ToolTip>
+              )}
             >
               <button
                 className={'bpw-send-button'}
@@ -134,7 +142,7 @@ class Composer extends React.Component<ComposerProps, { isRecording: boolean }> 
               >
                 <FormattedMessage id={'composer.send'} />
               </button>
-            </ToolTip>
+            </ConditionalWrap>
           </div>
         </div>
       </div>
