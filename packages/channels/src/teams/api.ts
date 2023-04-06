@@ -41,14 +41,18 @@ export class TeamsApi extends ChannelApi<TeamsService> {
 
     if (text.startsWith(QUICK_REPLY_PREFIX)) {
       const selections = text.split(',')
-      let payload = ''
-      let title = ''
+      const payloads = []
+      const titles = []
       for (const selection of selections) {
         const [_prefix, _payload, _title] = selection.split('::')
-        payload += `${payload.length ? ',' : ''}${_payload}`
-        title += `${title.length ? ',' : ''}${_title}`
+        payloads.push(_payload)
+        titles.push(_title)
       }
-      await this.service.receive(scope, endpoint, { type: 'quick_reply', text: title, payload })
+      await this.service.receive(scope, endpoint, {
+        type: 'quick_reply',
+        text: titles.join(),
+        payload: payloads.join()
+      })
     } else if (text.startsWith(SAY_PREFIX)) {
       await this.service.receive(scope, endpoint, {
         type: 'say_something',
