@@ -2,6 +2,8 @@ import { Emitter, uuid } from '@botpress/messaging-base'
 import io, { Socket } from 'socket.io-client'
 import { UserCredentials } from './socket'
 
+type Query = NonNullable<Parameters<typeof io>[1]>['query']
+
 export class SocketCom {
   public readonly events: SocketComWatcher
 
@@ -14,14 +16,15 @@ export class SocketCom {
     this.events = this.emitter
   }
 
-  async connect(auth: { clientId: uuid; creds?: UserCredentials }): Promise<UserCredentials> {
+  async connect(auth: { clientId: uuid; creds?: UserCredentials }, query?: Query): Promise<UserCredentials> {
     return new Promise((resolve, reject) => {
       this.disconnect()
 
       this.socket = io(this.url, {
         transports: ['websocket'],
         auth,
-        autoConnect: false
+        autoConnect: false,
+        query
       })
 
       const timeout = setTimeout(() => {

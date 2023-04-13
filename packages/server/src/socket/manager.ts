@@ -4,6 +4,7 @@ import { ClientService } from '@botpress/messaging-framework'
 import clc from 'cli-color'
 import { Server } from 'http'
 import Joi from 'joi'
+import _ from 'lodash'
 import Socket from 'socket.io'
 import yn from 'yn'
 import { UserTokenService } from '../user-tokens/service'
@@ -95,6 +96,7 @@ export class SocketManager {
       if (!client) {
         return next(new Error('Client not found'))
       }
+      const userData = parseUserData(socket.handshake.query.userData)
 
       if (creds) {
         const user = await this.users.fetch(creds.userId)
@@ -102,11 +104,16 @@ export class SocketManager {
           socket.data.creds = creds
           // we don't need to send it back if it was already sent to us
           delete socket.data.creds.userToken
+
+          if (!_.isEqual(userData, user.data)) {
+            await this.users.update({ ...user, data: userData })
+          }
+
           return next()
         }
       }
 
-      const user = await this.users.create(clientId)
+      const user = await this.users.create(clientId, userData)
       const tokenRaw = await this.userTokens.generateToken()
       const userToken = await this.userTokens.create(user.id, tokenRaw, undefined)
       socket.data.creds = { userId: user.id, userToken: `${userToken.id}.${tokenRaw}` }
@@ -213,4 +220,36 @@ export class SocketRequest {
   public notFound(message: string) {
     this.manager.reply(this.socket, this.message, { error: true, message })
   }
+}
+
+export const userDataSchema = Joi.object<Record<string, string>>({}).pattern(Joi.string(), Joi.string())
+
+export function parseUserData(userDataQueryParam: string | string[] | undefined): Record<string, string> | undefined {
+  if (!userDataQueryParam) {
+    return
+  }
+
+  let toParse
+  if (typeof userDataQueryParam === 'string') {
+    toParse = userDataQueryParam
+  } else if (userDataQueryParam.length > 0) {
+    toParse = userDataQueryParam[0]
+  } else {
+    // userDataQueryParam is an empty array
+    return
+  }
+
+  let parsed
+  try {
+    parsed = JSON.parse(toParse)
+  } catch (e) {
+    return
+  }
+
+  const { value, error } = userDataSchema.validate(parsed)
+  if (error) {
+    return
+  }
+
+  return value
 }
