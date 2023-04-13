@@ -1,3 +1,22 @@
+## [1.2.8](https://github.com/botpress/messaging/compare/v1.2.7...v1.2.8) (2023-04-13)
+
+
+### Bug Fixes
+
+* **client:** better instructions ([#556](https://github.com/botpress/messaging/issues/556)) ([4fd1e81](https://github.com/botpress/messaging/commit/4fd1e81dd4cd4260b7f6c6f773946be6fac8fe23))
+* **messaging:** add new payloads ([#557](https://github.com/botpress/messaging/issues/557)) ([125b4ef](https://github.com/botpress/messaging/commit/125b4ef0b0ab9f884565965e9433d7159da37dcc))
+* **messaging:** fix inject error ([#551](https://github.com/botpress/messaging/issues/551)) ([87a8ef5](https://github.com/botpress/messaging/commit/87a8ef5529feed93915f5ce4306eb739192c38d9))
+* **webchat:** inconsistent scrolling behavior ([#550](https://github.com/botpress/messaging/issues/550)) ([799d051](https://github.com/botpress/messaging/commit/799d0515028ce9616a5fe32ce3af80216aa6a764))
+* **webchat:** only display send tooltip on desktop ([#578](https://github.com/botpress/messaging/issues/578)) ([c3ab0fb](https://github.com/botpress/messaging/commit/c3ab0fbc8c33c36a42d66c821be63d61bd2b920d))
+
+
+### Features
+
+* **gh-actions:** allow uploading webchat manually on staging ([#568](https://github.com/botpress/messaging/issues/568)) ([ae6d553](https://github.com/botpress/messaging/commit/ae6d553c360abba27a2ea926cd7fa53c1b631c2d))
+* **webchat:** add userData ([#576](https://github.com/botpress/messaging/issues/576)) ([cae0d2d](https://github.com/botpress/messaging/commit/cae0d2dc0e366a2708a1e4704f4d16a3956e9c56))
+
+
+
 ## [1.2.7](https://github.com/botpress/messaging/compare/v1.2.6...v1.2.7) (2022-10-19)
 
 
