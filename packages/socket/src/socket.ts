@@ -42,10 +42,8 @@ export class MessagingSocket extends SocketEmitter<{
   }
 
   async connect(creds?: UserCredentials, userData?: UserData): Promise<UserCredentials> {
-    const result = await this.com.connect(
-      { clientId: this.clientId, creds },
-      { userData: userData ? JSON.stringify(userData) : undefined }
-    )
+    const query = userData ? { userData: JSON.stringify(userData) } : undefined
+    const result = await this.com.connect({ clientId: this.clientId, creds }, query)
 
     if (result.userId === creds?.userId && !result.userToken) {
       result.userToken = creds!.userToken
