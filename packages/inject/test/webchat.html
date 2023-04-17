@@ -4,35 +4,18 @@
     <meta charset="utf-8" />
   </head>
   <body>
-    <h1>Webchat Test</h1>
+    <h1>Webchat Test1</h1>
   </body>
 
-  <script src="HOST_URL/inject.js"></script>
+  <!-- <script src="HOST_URL/inject.js"></script> -->
+  <script src="/inject.js"></script>
   <script>
-    window.botpressWebChat.onEvent(
-      (event) => {
-        console.log(event)
-      },
-      [
-        'LIFECYCLE.READY',
-        'LIFECYCLE.LOADED',
-        'UI.OPENED',
-        'UI.CLOSED',
-        'UI.RESIZE',
-        'UI.SET-CLASS',
-        'CONFIG.SET',
-        'MESSAGE.SENT',
-        'MESSAGE.RECEIVED',
-        'MESSAGE.SELECTED',
-        'USER.CONNECTED'
-      ]
-    )
-
     window.botpressWebChat.init({
-      hostUrl: 'HOST_URL',
-      messagingUrl: 'MESSAGING_URL',
-      clientId: 'CLIENT_ID',
-      botName: 'Test Bot',
+      // hostUrl: 'HOST_URL',
+      // hostUrl: 'https://ffd20a036200.ngrok.app',
+      // messagingUrl: 'MESSAGING_URL',
+      // clientId: 'CLIENT_ID',
+      // botName: 'Test Bot',
       botConversationDescription: 'This is a test conversation',
       coverPictureUrl: 'https://i.imgur.com/8yYQY8m.png',
       website: 'https://botpress.com',
@@ -40,7 +23,14 @@
       termsConditions: 'https://botpress.com/terms',
       privacyPolicy: 'https://botpress.com/privacy',
       emailAddress: 'test@botpress.com',
-      showBotInfoPage: true
+      // showBotInfoPage: true,
+      botId: '25930a11-9cba-41b9-904a-48b4096a35f5',
+      // hostUrl: 'https://cdn.botpress.dev/webchat/v0',
+      messagingUrl: 'http://127.0.0.1:3100',
+      // messagingUrl: 'https://a0321df55e57.ngrok.app',
+      clientId: '25930a11-9cba-41b9-904a-48b4096a35f5',
+      botName: 'unique-doctor',
+      userData: { email: 'bob@priceisright.com', firstName: 'marcel8', lastName: 'barker' }
     })
   </script>
 </html>

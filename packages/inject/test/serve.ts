@@ -15,7 +15,9 @@ const messagingUrl = process.env.MESSAGING_ENDPOINT || 'http://localhost:3100'
 
 const getMessagingClient = async () => {
   try {
-    const { data } = await axios.post(`${messagingUrl}/api/v1/admin/clients`)
+    const { data } = await axios.post(`${messagingUrl}/api/v1/admin/clients`, null, {
+      headers: { ['x-bp-messaging-admin-key']: 'abc123' }
+    })
     return data
   } catch (err) {
     if (axios.isAxiosError(err)) {

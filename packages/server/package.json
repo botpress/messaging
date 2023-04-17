@@ -7,7 +7,7 @@
     "build": "yarn && yarn run -T tsc --build",
     "watch": "yarn && yarn run -T tsc --build --watch",
     "start": "node -r @bpinternal/trail/init ./dist/index.js",
-    "dev": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts"
+    "dev": "yarn && yarn run -T ts-node-dev --debounce 500 --transpile-only ./src/index.ts --auto-migrate"
   },
   "devDependencies": {
     "@promster/types": "^3.2.4",
