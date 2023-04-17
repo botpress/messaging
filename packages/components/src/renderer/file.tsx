@@ -20,7 +20,6 @@ export const Audio: React.FC<MessageTypeHandlerProps<'audio'>> = ({ audio, audio
 export const File: React.FC<MessageTypeHandlerProps<'file'>> = ({ file, fileUrl, title }) => {
   return (
     <div>
-      <span>File: </span>
       <a href={fileUrl || file} target={'_blank'} rel="noopener noreferrer">
         {title || file}
       </a>
