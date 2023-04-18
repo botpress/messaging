@@ -106,6 +106,11 @@ export class SocketManager {
           delete socket.data.creds.userToken
 
           if (!_.isEqual(userData, user.data)) {
+            this.logger.debug(
+              `Updating user data for user ${user.id}: stored: ${JSON.stringify(user.data)}, new: ${JSON.stringify(
+                userData
+              )}`
+            )
             await this.users.update({ ...user, data: userData })
           }
 
