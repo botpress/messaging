@@ -24,7 +24,7 @@ To publish a new version of any of the different packages we have (e.g. Componen
 
 _Note: These steps requires you to have write access on the @botpress NPM org_
 
-1. Make sure you are logged into NPM with Yarn. Run `yarn npm login` if not.
+1. Make sure you are logged into NPM with Yarn. Run `yarn npm login --scope botpress` if not.
 1. In a terminal, go to the package you want to publish a new version of.
 1. Run `yarn version <patch|minor|major>` to bump the version of the package. _Note that this step is the easiest and most efficient way to bump the package and it's reference on dependent packages. E.g. if you run `yarn version patch` on the components package, it will also change the version of the dependency on the webchat as this package depends on components._
 1. Now that you are ready to publish the package, run `yarn npm publish --access public`.
