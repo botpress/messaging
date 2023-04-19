@@ -229,9 +229,9 @@ export class SocketRequest {
 
 export const userDataSchema = Joi.object<Record<string, string>>({}).pattern(Joi.string(), Joi.string())
 
-export function parseUserData(userDataQueryParam: string | string[] | undefined): Record<string, string> | undefined {
+export function parseUserData(userDataQueryParam: string | string[] | undefined): Record<string, string> | null {
   if (!userDataQueryParam) {
-    return
+    return null
   }
 
   let toParse
@@ -241,19 +241,19 @@ export function parseUserData(userDataQueryParam: string | string[] | undefined)
     toParse = userDataQueryParam[0]
   } else {
     // userDataQueryParam is an empty array
-    return
+    return null
   }
 
   let parsed
   try {
     parsed = JSON.parse(toParse)
   } catch (e) {
-    return
+    return null
   }
 
   const { value, error } = userDataSchema.validate(parsed)
   if (error) {
-    return
+    return null
   }
 
   return value

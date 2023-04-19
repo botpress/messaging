@@ -45,6 +45,10 @@ export class UserService extends Service {
   }
 
   async create(clientId: uuid, data?: User['data']): Promise<User> {
+    if (!data) {
+      data = null
+    }
+
     const user = {
       id: uuidv4(),
       clientId,
