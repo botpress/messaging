@@ -256,5 +256,9 @@ export function parseUserData(userDataQueryParam: string | string[] | undefined)
     return null
   }
 
+  if (!value) {
+    return null
+  }
+
   return value
 }
