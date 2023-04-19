@@ -2,10 +2,10 @@ import { userDataSchema, parseUserData } from '../../src/socket/manager'
 
 describe('parse userData', () => {
   test('parseUserData', async () => {
-    expect(parseUserData(undefined)).toBeNull()
-    expect(parseUserData([''])).toBeNull()
-    expect(parseUserData(['adfasd'])).toBeNull()
-    expect(parseUserData([])).toBeNull()
+    expect(parseUserData(undefined)).toBeUndefined()
+    expect(parseUserData([''])).toBeUndefined()
+    expect(parseUserData(['adfasd'])).toBeUndefined()
+    expect(parseUserData([])).toBeUndefined()
     expect(parseUserData([JSON.stringify({ a: '1' })])).toEqual({ a: '1' })
     expect(parseUserData([JSON.stringify({ a: '1' }), JSON.stringify({ a: '2' })])).toEqual({ a: '1' })
     expect(parseUserData(JSON.stringify({ a: '1' }))).toEqual({ a: '1' })
