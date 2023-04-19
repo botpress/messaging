@@ -105,7 +105,8 @@ export class SocketManager {
           // we don't need to send it back if it was already sent to us
           delete socket.data.creds.userToken
 
-          if (!_.isEqual(userData, user.data)) {
+          // ensure undefined is converted to null before comparing
+          if (!_.isEqual(userData ?? null, user.data ?? null)) {
             this.logger.debug(
               `Updating user data for user ${user.id}: stored: ${JSON.stringify(user.data)}, new: ${JSON.stringify(
                 userData
