@@ -23,7 +23,7 @@ class MessageList extends React.Component<MessageListProps, State> {
 
   componentDidMount() {
     observe(this.props.focusedArea!, (focus) => {
-      focus.newValue === 'convo' && this.messagesDiv.focus()
+      focus.newValue === 'convo' && this.messagesDiv?.focus()
     })
   }
 
