@@ -6,7 +6,7 @@ const Avatar = ({ name, avatarUrl, height, width }: AvatarProps) => {
       {avatarUrl && <img height={height} width={width} src={avatarUrl} />}
       {!avatarUrl && (
         <svg width={width} height={width}>
-          <text textAnchor={'middle'} x={'50%'} y={'50%'} dy={'0.35em'} fill={'#ffffff'} fontSize={15}>
+          <text textAnchor={'middle'} x={'50%'} y={'50%'} dy={'0.35em'} fill={'#ffffff'} fontSize={'1rem'}>
             {name && name[0]}
           </text>
         </svg>
