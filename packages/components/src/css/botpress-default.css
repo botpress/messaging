@@ -11,6 +11,10 @@
   --hover-lighthouse: #f39c82;
 }
 
+html {
+  font-size: 16px;
+}
+
 body {
   margin: 0;
   font-family: Roboto;
@@ -57,7 +61,7 @@ body {
   cursor: pointer;
   background: none;
   border: none;
-  font-size: 15px;
+  font-size: 1rem;
   line-height: 23px;
   margin: 5px 0 0;
   padding: 0;
@@ -102,6 +106,8 @@ body {
   border: solid 3px white;
   border-radius: 50%;
   background: #ccc;
+  width: 40px;
+  height: 40px;
 }
 
 .bpw-button {
@@ -141,7 +147,7 @@ body {
   width: 200px;
   text-align: center;
   margin: 10px;
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 
 .bpw-file-message {
@@ -269,6 +275,8 @@ body {
 
 .bpw-msg-list {
   padding: 0 0.5rem 0.5rem 0.5rem;
+  flex: auto;
+  overflow-y: auto;
 }
 
 .bpw-msg-list-follow {
@@ -278,7 +286,7 @@ body {
 .bpw-date-container {
   color: #666;
   text-align: center;
-  font-size: 12px;
+  font-size: 0.75rem;
   margin: 40px 0 20px;
 }
 
@@ -318,6 +326,7 @@ body {
 .bpw-chat-bubble-content {
   border: 1px solid #f1f1f1;
   padding: 0.5rem 0.75rem;
+  font-size: 1rem;
 }
 
 .bpw-message-feedback {
@@ -488,9 +497,8 @@ body {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.bpw-card-buttons {
-  /** The container of buttons*/
-}
+/** The container of buttons*/
+/* .bpw-card-buttons {} */
 
 .bpw-card-action {
   font-weight: 500;
@@ -664,7 +672,7 @@ body {
   border-radius: 5px;
   background: #fff;
   padding: 5px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
 }
@@ -688,11 +696,11 @@ body {
   align-items: center;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  height: 52px;
+  max-height: 120px;
   font-weight: 500;
   border-top: solid 1px #ccc;
   border-bottom: 1px solid #ccc;
-  padding: 0 1rem;
+  padding: 0.5rem 1rem;
   overflow: hidden;
 }
 
@@ -731,6 +739,10 @@ body {
   display: flex;
 }
 
+.bpw-header-name {
+  font-size: 1rem;
+}
+
 .bpw-header-subtitle {
   overflow: hidden;
   white-space: nowrap;
@@ -754,7 +766,7 @@ body {
   border-radius: 50%;
   line-height: 20px;
 
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #fff;
   background-color: #ff5d5d;
 }
@@ -874,7 +886,7 @@ body {
 
 .bpw-botinfo-container button,
 .bpw-botinfo-container a {
-  font-size: 0.9em;
+  font-size: 0.9rem;
   color: rgb(102, 102, 102);
   text-decoration: none;
 }
@@ -974,7 +986,7 @@ body {
   vertical-align: middle;
   width: 6px;
   white-space: pre-wrap;
-  font-size: 16px;
+  font-size: 1rem;
   direction: ltr;
   background-color: #000000;
 }
@@ -1082,4 +1094,26 @@ body {
 
 .bpw-rtl .bpw-keyboard-single-choice-dropdown {
   direction: rtl;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 48px;
+  }
+
+  .bpw-layout {
+    width: 100% !important;
+  }
+
+  .bpw-bot-avatar img,
+  .bpw-bot-avatar svg {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bpw-header-icon,
+  .bpw-header-icon svg {
+    width: 32px;
+    height: 32px;
+  }
 }
