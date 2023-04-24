@@ -53,7 +53,7 @@ const Fallback = ({
     <div>
       <p>{title}</p>
       <a href={link} target="_blank" rel="noopener">
-        {address}
+        {address ?? link}
       </a>
     </div>
   )
