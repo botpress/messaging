@@ -39,4 +39,5 @@ local_resource(
   serve_dir="packages/inject",
   serve_cmd="yarn serve",
   labels=["service"],
+  resource_deps=["messaging"],
 )
