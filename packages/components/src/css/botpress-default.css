@@ -1096,7 +1096,7 @@ body {
   direction: rtl;
 }
 
-@media (max-width: 768px) {
+@media (max-device-width: 768px) {
   html {
     font-size: 48px;
   }
