@@ -109,16 +109,6 @@ Header
   display: flex;
 }
 
-.bpw-header-title-container .bpw-bot-avatar {
-  width: 25px;
-  height: 25px;
-  margin: 0 var(--spacing-large) 0 0;
-}
-
-.bpw-header-title-container .bpw-bot-avatar svg {
-  zoom: 0.6;
-}
-
 .bpw-header-name {
   font-weight: 500;
   font-size: 0.875rem;
@@ -357,7 +347,6 @@ Footer
 }
 
 .bpw-bot-avatar {
-  margin-bottom: 5px;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -370,10 +359,12 @@ Footer
   justify-content: center;
 }
 
+.bpw-bot-avatar img,
 .bpw-bot-avatar svg {
+  width: 30px;
+  height: 30px;
   background: var(--zinc-900);
   border: none;
-  zoom: 0.75;
   border-radius: 50%;
 }
 
@@ -1200,4 +1191,17 @@ Footer
 
 .bpw-msg-hovering:hover {
   cursor: pointer;
+}
+
+@media (max-device-width: 768px) {
+  .bpw-bot-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .bpw-bot-avatar img,
+  .bpw-bot-avatar svg {
+    width: 80px;
+    height: 80px;
+  }
 }
