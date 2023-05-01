@@ -30,7 +30,7 @@ export interface MessengerCard {
   title: string
   image_url?: string
   subtitle?: string
-  buttons: MessengerButton[]
+  buttons?: MessengerButton[]
 }
 
 export interface MessengerButton {
