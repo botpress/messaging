@@ -1205,3 +1205,7 @@ Footer
     height: 80px;
   }
 }
+
+#react-select-2-listbox {
+  color: black;
+}
