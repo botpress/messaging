@@ -50,7 +50,6 @@ body {
   right: 0px;
   width: 480px;
   height: 100% !important;
-  pointer-events: none;
 }
 
 @media only screen and (max-device-width: 768px) {
