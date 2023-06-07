@@ -155,7 +155,7 @@ class RootStore {
 
   @computed
   get currentMessages(): Message[] {
-    return this.currentConversation?.messages || []
+    return (this.currentConversation?.messages || []).filter((x) => x.payload?.type !== 'trigger')
   }
 
   @computed
