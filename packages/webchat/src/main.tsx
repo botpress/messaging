@@ -239,8 +239,11 @@ class Web extends React.Component<MainProps> {
 
     // there's no focus on the actual conversation
     if (!document.hasFocus() || this.props.activeView !== 'side') {
-      await this.playSound()
-      this.props.incrementUnread!()
+      if (this.props.currentConversation?.userId !== event.authorId) {
+        // only increment unread if the message comes from the bot
+        await this.playSound()
+        this.props.incrementUnread!()
+      }
     }
 
     this.handleResetUnreadCount()
