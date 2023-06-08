@@ -195,9 +195,10 @@ window.addEventListener('message', function ({ data }) {
   }
 
   const chatRef = _getChatRef(data.chatId)
-  const shouldFireEvent = chatRef && chatRef.eventListener.topics.some((t) => t === '*' || t === data.type)
+
+  const shouldFireEvent = chatRef && chatRef.eventListener.topics?.some((t) => t === '*' || t === data.type)
   if (shouldFireEvent) {
-    chatRef.eventListener.handler(data)
+    chatRef.eventListener.handler?.(data)
   }
 })
 
