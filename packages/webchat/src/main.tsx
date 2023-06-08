@@ -74,21 +74,25 @@ class Web extends React.Component<MainProps> {
     }
   }
 
-  async initializeIfChatDisplayed() {
+  async initialize() {
     if (this.hasBeenInitialized) {
       return
     }
 
+    this.hasBeenInitialized = true
+
+    if (this.isLazySocket() || !this.socket) {
+      await this.initializeSocket()
+    }
+
+    await this.socket.connect()
+    this.props.setSocket!(this.socket)
+    await this.props.initializeChat!()
+  }
+
+  async initializeIfChatDisplayed() {
     if (this.props.activeView === 'side' || this.props.isFullscreen) {
-      this.hasBeenInitialized = true
-
-      if (this.isLazySocket() || !this.socket) {
-        await this.initializeSocket()
-      }
-
-      await this.socket.connect()
-      this.props.setSocket!(this.socket)
-      await this.props.initializeChat!()
+      this.initialize()
     }
   }
 
@@ -181,6 +185,8 @@ class Web extends React.Component<MainProps> {
         return this.props.sendData!(data.payload)
       case 'event':
         const { type, text, conversationId } = data.payload
+
+        await this.initialize()
 
         if (type === 'show') {
           this.props.showChat!()

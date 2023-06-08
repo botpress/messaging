@@ -296,6 +296,7 @@ export interface Config {
    * @default true
    */
   enablePersistHistory?: boolean
+
   /**
    * Experimental: expose the store to the parent frame for more control on the webchat's behavior
    * @default false
