@@ -265,7 +265,9 @@ class Web extends React.Component<MainProps> {
       return
     }
 
-    await this.audio.play()
+    try {
+      await this.audio.play()
+    } catch {}
   }, constants.MIN_TIME_BETWEEN_SOUNDS)
 
   isLazySocket() {
