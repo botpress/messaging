@@ -18,6 +18,22 @@ declare global {
   }
 }
 
+export namespace Trigger {
+  export interface WebchatVisibility {
+    type: 'webchat-visibility'
+    visibility: 'show' | 'hide' | 'toggle'
+  }
+
+  export interface WebchatConfig {
+    type: 'webchat-config'
+    config: Partial<Config>
+  }
+
+  export interface CustomEvent {
+    type: 'custom'
+  }
+}
+
 export namespace Renderer {
   export interface Message {
     type?: string
