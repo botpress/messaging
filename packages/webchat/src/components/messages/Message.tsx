@@ -88,7 +88,7 @@ class Message extends Component<MessageProps> {
     if (this.props.noBubble || this.props.payload?.wrapped?.noBubble) {
       return (
         <div
-          className={classnames(this.props.className, wrappedClass, messageSelectedClass)}
+          className={classnames(this.props.className, wrappedClass, messageSelectedClass, this.props.payload.className)}
           style={additionalStyle}
           onClick={this.onMessageClick}
         >
@@ -99,7 +99,13 @@ class Message extends Component<MessageProps> {
 
     return (
       <div
-        className={classnames(this.props.className, wrappedClass, 'bpw-chat-bubble', `bpw-bubble-${type}`)}
+        className={classnames(
+          this.props.className,
+          wrappedClass,
+          'bpw-chat-bubble',
+          `bpw-bubble-${type}`,
+          this.props.payload.className
+        )}
         data-from={this.props.fromLabel}
         tabIndex={-1}
         style={additionalStyle}

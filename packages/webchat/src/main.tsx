@@ -11,7 +11,7 @@ import constants from './core/constants'
 import BpSocket from './core/socket'
 import ChatIcon from './icons/Chat'
 import { RootStore, StoreDef } from './store'
-import { Config, Message } from './typings'
+import { Config, Message, Trigger } from './typings'
 import { isIE } from './utils'
 import { initializeAnalytics, trackMessage, trackWebchatState } from './utils/analytics'
 import { postMessageToParent } from './utils/webchatEvents'
@@ -229,9 +229,18 @@ class Web extends React.Component<MainProps> {
       return
     }
 
+    if (event.payload?.type === 'trigger') {
+      //
+      const { trigger } = event.payload
+      if (typeof trigger?.type === 'string') {
+        await this.handleTrigger(trigger)
+        return
+      }
+    }
+
     if (this.props.currentConversation?.userId !== event.authorId) {
       trackMessage('received')
-      postMessageToParent('MESSAGE.RECEIVED', event, this.props.config!.chatId)
+      postMessageToParent('MESSAGE.RECEIVED', event, this.config.chatId)
 
       // This is to handle a special case for the emulator, setting the selected css class to the last message group
       // This needs a rethinking
@@ -257,6 +266,28 @@ class Web extends React.Component<MainProps> {
 
   handleTyping = async (event: Message) => {
     await this.props.updateTyping!(event)
+  }
+
+  handleTrigger = async (trigger: Trigger.CustomEvent | Trigger.WebchatVisibility | Trigger.WebchatConfig) => {
+    if (trigger.type === 'webchat-visibility') {
+      if (trigger.visibility === 'hide') {
+        this.props.hideChat!()
+      } else if (trigger.visibility === 'show') {
+        this.props.showChat!()
+      } else if (trigger.visibility === 'toggle') {
+        this.props.displayWidgetView ? this.props.showChat!() : this.props.hideChat!()
+      }
+    }
+
+    if (trigger.type === 'webchat-config') {
+      await this.handleIframeApi({
+        data: { action: 'mergeConfig', payload: { ...this.config, ...(trigger.config ?? {}) } }
+      })
+    }
+
+    if (trigger.type === 'custom-event') {
+      postMessageToParent('TRIGGER', trigger.event, this.props.config!.chatId)
+    }
   }
 
   playSound = debounce(async () => {
