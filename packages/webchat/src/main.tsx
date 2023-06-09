@@ -219,6 +219,8 @@ class Web extends React.Component<MainProps> {
       return
     }
 
+    console.log('event received', event)
+
     if (event.authorId === undefined) {
       const value = (event.payload.type === 'typing' ? event.payload.value : undefined) || DEFAULT_TYPING_DELAY
       await this.handleTyping({ ...event, timeInMs: value })
