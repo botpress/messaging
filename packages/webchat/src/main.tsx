@@ -219,8 +219,6 @@ class Web extends React.Component<MainProps> {
       return
     }
 
-    console.log('event received', event)
-
     if (event.authorId === undefined) {
       const value = (event.payload.type === 'typing' ? event.payload.value : undefined) || DEFAULT_TYPING_DELAY
       await this.handleTyping({ ...event, timeInMs: value })
@@ -242,7 +240,7 @@ class Web extends React.Component<MainProps> {
 
     if (this.props.currentConversation?.userId !== event.authorId) {
       trackMessage('received')
-      postMessageToParent('MESSAGE.RECEIVED', event, this.props.config!.chatId)
+      postMessageToParent('MESSAGE.RECEIVED', event, this.config.chatId)
 
       // This is to handle a special case for the emulator, setting the selected css class to the last message group
       // This needs a rethinking
