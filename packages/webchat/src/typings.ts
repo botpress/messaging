@@ -30,7 +30,8 @@ export namespace Trigger {
   }
 
   export interface CustomEvent {
-    type: 'custom'
+    type: 'custom-event'
+    event: any
   }
 }
 
@@ -184,6 +185,7 @@ export type WebchatEventType =
   | 'MESSAGE.RECEIVED'
   | 'MESSAGE.SELECTED'
   | 'USER.CONNECTED'
+  | 'TRIGGER'
 
 export interface WebchatEvent {
   type: WebchatEventType

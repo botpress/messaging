@@ -287,8 +287,8 @@ class Web extends React.Component<MainProps> {
       })
     }
 
-    if (trigger.type === 'custom') {
-      //
+    if (trigger.type === 'custom-event') {
+      postMessageToParent('TRIGGER', trigger.event, this.props.config!.chatId)
     }
   }
 
