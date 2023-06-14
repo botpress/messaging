@@ -44,12 +44,13 @@ body {
 }
 
 .bp-widget-side {
-  top: 0px;
+  top: unset;
   left: auto;
-  bottom: 0px;
-  right: 0px;
-  width: 480px;
-  height: 100% !important;
+  bottom: 7px;
+  right: 7px;
+  width: 361px;
+  height: 80% !important;
+  z-index: 999;
 }
 
 @media only screen and (max-device-width: 768px) {
