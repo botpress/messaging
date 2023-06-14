@@ -1168,16 +1168,4 @@ body>div:nth-child(3) {
   .bpw-layout {
     width: 100% !important;
   }
-
-  .bpw-bot-avatar img,
-  .bpw-bot-avatar svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .bpw-header-icon,
-  .bpw-header-icon svg {
-    width: 20px;
-    height: 20px;
-  }
 }
