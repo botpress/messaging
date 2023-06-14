@@ -1163,7 +1163,7 @@ body>div:nth-child(3) {
   direction: rtl;
 }
 
-@media (max-device-width: 768px) {
+@media screen and (max-device-width: 768px) {
 
   .bpw-layout {
     width: 100% !important;
@@ -1171,8 +1171,8 @@ body>div:nth-child(3) {
 
   .bpw-bot-avatar img,
   .bpw-bot-avatar svg {
-    width: 80px;
-    height: 80px;
+    width: 20px;
+    height: 20px;
   }
 
   .bpw-header-icon,
