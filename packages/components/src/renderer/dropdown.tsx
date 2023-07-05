@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import Select from 'react-select'
 import Creatable from 'react-select/creatable'
 import { MessageTypeHandlerProps } from '../typings'
-import { renderUnsafeHTML } from '../utils'
+import { markdownToHtml } from '../utils'
 import { Prepend } from './keyboard'
 
 export const Dropdown = ({
@@ -79,7 +79,7 @@ export const Dropdown = ({
   const shouldDisplay = config.isLastGroup && config.isLastOfGroup
   let text: JSX.Element
   if (markdown) {
-    const html = renderUnsafeHTML(message, config.escapeHTML)
+    const html = markdownToHtml(message, config.escapeHTML)
     text = <div dangerouslySetInnerHTML={{ __html: html }} />
   } else {
     text = <p>{message}</p>

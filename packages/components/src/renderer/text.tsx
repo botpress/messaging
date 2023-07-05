@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactTextFormat from 'react-text-format'
 import { MessageTypeHandlerProps } from '../typings'
-import { renderUnsafeHTML } from '../utils'
+import { markdownToHtml } from '../utils'
 
 export const Text: React.FC<MessageTypeHandlerProps<'text'>> = ({ text, markdown, config }) => {
   const { escapeHTML } = config
 
   let message: React.ReactNode
   if (markdown) {
-    const html = renderUnsafeHTML(text, escapeHTML)
+    const html = markdownToHtml(text, escapeHTML)
     message = <div dangerouslySetInnerHTML={{ __html: html }} />
   } else {
     message = <p>{text}</p>
