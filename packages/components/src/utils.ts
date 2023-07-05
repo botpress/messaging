@@ -8,8 +8,8 @@ export const markdownToHtml = (message: string = '', escaped: boolean): string =
   }
 
   const md = new MarkdownIt({ linkify: true })
+  md.linkify.set({ fuzzyLink: false })
   const html = md.render(message)
-  md.linkify.set({ fuzzyLink: true })
   return html.replace(/<a href/gi, '<a target="_blank" href')
 }
 
