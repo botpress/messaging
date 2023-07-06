@@ -1,5 +1,5 @@
-import { createIntl } from 'react-intl'
 import MarkdownIt from 'markdown-it'
+import { createIntl } from 'react-intl'
 import { MessageConfig } from './typings'
 
 export const markdownToHtml = (message: string = '', escaped: boolean): string => {
@@ -8,7 +8,9 @@ export const markdownToHtml = (message: string = '', escaped: boolean): string =
   }
 
   const md = new MarkdownIt({ linkify: true })
-  md.linkify.set({ fuzzyLink: false })
+  md.linkify.set({
+    fuzzyLink: false // Only convert valid URLs to links.
+  })
   const html = md.render(message)
   return html.replace(/<a href/gi, '<a target="_blank" href')
 }
