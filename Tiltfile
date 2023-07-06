@@ -7,7 +7,7 @@ config.set_enabled_resources([
 
 webchat_port = 3543
 inject_port = 8080
-messaging_port = 3100
+messaging_port = 3101
 
 local_resource(
   name="messaging",
@@ -37,7 +37,11 @@ local_resource(
 local_resource(
   name="webchat",
   serve_dir="packages/inject",
-  serve_cmd="yarn serve",
+  cmd="mkdir -p dist && yarn copy:shareable",
+  serve_cmd="yarn serve", 
   labels=["service"],
   resource_deps=["messaging"],
+  serve_env={
+    'MESSAGING_ENDPOINT': 'http://localhost:%s' % messaging_port,
+  }
 )
