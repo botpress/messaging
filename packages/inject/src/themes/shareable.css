@@ -1206,6 +1206,6 @@ Footer
   }
 }
 
-#react-select-2-listbox {
-  color: black;
+div[id^='react-select-'] div[class$='-MenuList'] div[class$='-option'] {
+  color: black !important;
 }
