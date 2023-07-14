@@ -1206,6 +1206,6 @@ Footer
   }
 }
 
-div[id^='react-select-'] div[class$='-MenuList'] div[class$='-option'] {
+div[id^='react-select-'] div[class$='-option'] {
   color: black !important;
 }
