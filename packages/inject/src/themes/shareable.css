@@ -1193,18 +1193,6 @@ Footer
   cursor: pointer;
 }
 
-@media (max-device-width: 768px) {
-  .bpw-bot-avatar {
-    width: 80px;
-    height: 80px;
-  }
-
-  .bpw-bot-avatar img,
-  .bpw-bot-avatar svg {
-    width: 80px;
-    height: 80px;
-  }
-}
 
 div[id^='react-select-'] div[class$='-option'] {
   color: black !important;
