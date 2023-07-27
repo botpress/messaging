@@ -597,9 +597,6 @@ Footer
   border-bottom-left-radius: 0px;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
-
-  white-space: pre-wrap;
-  word-break: break-word;
 }
 
 .bpw-message-feedback {
@@ -685,6 +682,8 @@ Footer
 
 .bpw-chat-bubble p {
   margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .bpw-chat-bubble:first-of-type {
