@@ -328,9 +328,6 @@ body>div:nth-child(3) {
 */
 .bpw-chat-bubble {
   color: rgb(255, 255, 255);
-
-  white-space: pre-wrap;
-  word-break: break-word;
 }
 
 .bpw-chat-bubble-content {
@@ -485,6 +482,8 @@ body>div:nth-child(3) {
 
 .bpw-chat-bubble p {
   margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .bpw-chat-bubble:first-of-type {
