@@ -17,15 +17,15 @@
 
 ### Receiving
 
-| Channels      | Slack | Details |
-| ------------- | :---: | :------ |
-| Text          |  ✅   |         |
-| Quick Reply   |  ✅   |         |
-| Postback      |  ✅   |         |
-| Say Something |  ✅   |         |
-| Voice         |  ❌   |         |
-| Image         |  ❌   |         |
-| File          |  ❌   |         |
-| Audio         |  ❌   |         |
-| Video         |  ❌   |         |
-| Location      |  ❌   |         |
+| Channels      | Slack | Details     |
+| ------------- | :---: | :---------- |
+| Text          |  ✅   |             |
+| Quick Reply   |  ✅   |             |
+| Postback      |  ✅   |             |
+| Say Something |  ✅   |             |
+| Voice         |  ✅   | Private URL |
+| Image         |  ✅   | Private URL |
+| File          |  ✅   | Private URL |
+| Audio         |  ✅   | Private URL |
+| Video         |  ✅   | Private URL |
+| Location      |  ❌   |             |
