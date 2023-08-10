@@ -26,3 +26,9 @@ jobs:
         run: |
           yarn build
           yarn package
+
+      - name: Archive binaries
+        uses: actions/upload-artifact@v3
+        with:
+          name: messaging-bin
+          path: ./bin/messaging-v*
