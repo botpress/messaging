@@ -160,10 +160,17 @@ export class RedisSubservice implements DistributedSubservice {
   }
 
   async refresh(ressource: string) {
-    try {
-      await this.locks[ressource].lock.extend(DEFAULT_LOCK_TTL / 3)
+    const existingLock = this.locks[ressource]
 
-      this.locks[ressource].timeout = setTimeout(() => {
+    if (!existingLock?.lock) {
+      this.logger.warn(`No existing lock for resource ${ressource}. Cannot refresh.`)
+      return
+    }
+
+    try {
+      await existingLock.lock.extend(DEFAULT_LOCK_TTL / 3)
+
+      existingLock.timeout = setTimeout(() => {
         void this.refresh(ressource)
       }, DEFAULT_LOCK_TTL / 6)
     } catch (e) {
