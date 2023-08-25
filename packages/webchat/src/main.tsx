@@ -305,7 +305,7 @@ class Web extends React.Component<MainProps> {
     if (this.config.lazySocket !== undefined) {
       return this.config.lazySocket
     }
-    return this.props.botInfo?.lazySocket
+    return this.props.botInfo?.lazySocket !== false
   }
 
   handleResetUnreadCount = () => {
