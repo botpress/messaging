@@ -167,6 +167,7 @@ export class RedisSubservice implements DistributedSubservice {
         void this.refresh(ressource)
       }, DEFAULT_LOCK_TTL / 6)
     } catch (e) {
+      delete this.locks[ressource]
       this.logger.error(e, `Failed to extend lock ${ressource}`)
     }
   }
@@ -176,7 +177,10 @@ export class RedisSubservice implements DistributedSubservice {
       clearTimeout(lock.timeout)
     }
 
-    await this.redlock.release(lock.lock)
+    await this.redlock.release(lock.lock).catch((e: Error) => {
+      this.logger.error(e, `Failed to release lock ${lock.ressource}`)
+    })
+
     delete this.locks[lock.ressource]
   }
 
