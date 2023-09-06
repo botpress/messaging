@@ -1,4 +1,5 @@
 import '../../src/css/botpress-default.css'
+import '../../src/css/theme-light.css'
 import './custom.css'
 
 export const parameters = {

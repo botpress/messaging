@@ -13,6 +13,7 @@
   letter-spacing: 0;
   -webkit-font-smoothing: antialiased;
   padding: 0;
+  color-scheme: none;
 }
 
 .bp-widget-widget {
