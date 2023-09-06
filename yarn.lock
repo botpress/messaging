@@ -2376,7 +2376,7 @@ __metadata:
     pg: ^8.7.1
     redlock: ^4.2.0
     semver: ^7.3.5
-    sqlite3: ^5.0.8
+    sqlite3: ^5.0.2
     uuid: ^8.3.2
     yn: ^4.0.0
   languageName: unknown
@@ -3517,7 +3517,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mapbox/node-pre-gyp@npm:^1.0.0, @mapbox/node-pre-gyp@npm:^1.0.8":
+"@mapbox/node-pre-gyp@npm:^1.0.0":
+  version: 1.0.11
+  resolution: "@mapbox/node-pre-gyp@npm:1.0.11"
+  dependencies:
+    detect-libc: ^2.0.0
+    https-proxy-agent: ^5.0.0
+    make-dir: ^3.1.0
+    node-fetch: ^2.6.7
+    nopt: ^5.0.0
+    npmlog: ^5.0.1
+    rimraf: ^3.0.2
+    semver: ^7.3.5
+    tar: ^6.1.11
+  bin:
+    node-pre-gyp: bin/node-pre-gyp
+  checksum: b848f6abc531a11961d780db813cc510ca5a5b6bf3184d72134089c6875a91c44d571ba6c1879470020803f7803609e7b2e6e429651c026fe202facd11d444b8
+  languageName: node
+  linkType: hard
+
+"@mapbox/node-pre-gyp@npm:^1.0.8":
   version: 1.0.10
   resolution: "@mapbox/node-pre-gyp@npm:1.0.10"
   dependencies:
@@ -23283,7 +23302,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sqlite3@npm:^5.0.8":
+"sqlite3@npm:^5.0.2":
   version: 5.1.6
   resolution: "sqlite3@npm:5.1.6"
   dependencies:
