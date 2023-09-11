@@ -118,10 +118,10 @@ const Content = observer((props: MessageListProps) => {
     })
 
     if (props?.isBotTyping?.get()) {
-      if (lastSpeaker !== 'bot') {
-        currentGroup = []
-        groups.push(currentGroup)
-      }
+      // if (lastSpeaker !== 'bot') {
+      //   currentGroup = []
+      //   groups.push(currentGroup)
+      // }
 
       currentGroup!.push({
         sentOn: new Date(),
