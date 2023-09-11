@@ -339,6 +339,8 @@ class RootStore {
     this.composer.updateMessage('')
     try {
       this._startTypingTimer()
+      this.isBotTyping.set(true)
+      debugger
       const message = await this.sendData({ type: 'text', text: textMessage })
       trackMessage('sent')
       if (message) {
