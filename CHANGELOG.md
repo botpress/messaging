@@ -5,6 +5,42 @@
 
 * **css:** removed header icon size ([#612](https://github.com/botpress/messaging/issues/612)) ([2d26b69](https://github.com/botpress/messaging/commit/2d26b69fb54ee8ab1aca0d93062f4a7e55aa9d7a))
 * **css:** webchat text buttle white spaces ([#613](https://github.com/botpress/messaging/issues/613)) ([89db5ac](https://github.com/botpress/messaging/commit/89db5ac4c49e87135c9699d1fa676f0efd753d46))
+* **engine:** lock sqlite version ([#628](https://github.com/botpress/messaging/issues/628)) ([188e125](https://github.com/botpress/messaging/commit/188e1254846ff29bcee22423d8310c01796f1c8a))
+* **engine:** roll back sqlite version ([#621](https://github.com/botpress/messaging/issues/621)) ([003d79e](https://github.com/botpress/messaging/commit/003d79ebc78d36605669c10d647d80cdd0c9122a))
+* **inject:** change color of dropdown text ([#594](https://github.com/botpress/messaging/issues/594)) ([ba40961](https://github.com/botpress/messaging/commit/ba40961d7f0d59631993313368d5657b1069610d))
+* **lock:** delete redis subservice lock if the refresh or release failed ([#617](https://github.com/botpress/messaging/issues/617)) ([78f978a](https://github.com/botpress/messaging/commit/78f978a52d5793dcc1997479df6b87767d078e63))
+* **messaging-components:** display address link if the address label isn't available ([#587](https://github.com/botpress/messaging/issues/587)) ([03ce110](https://github.com/botpress/messaging/commit/03ce1106cadee1bdb48628de444282ce34f793c7))
+* **messenger:** allow buttonless card ([#579](https://github.com/botpress/messaging/issues/579)) ([adb389a](https://github.com/botpress/messaging/commit/adb389ad7e28d67d45a2f0d8a665bc0dc218c493))
+* **triggers:** hide triggers ([#597](https://github.com/botpress/messaging/issues/597)) ([1d40fee](https://github.com/botpress/messaging/commit/1d40feedd66335c3562a496baceff20fa63fd1fa))
+* **webchat/shareable:** fix shareable stylesheet to make it work with the mobile friendly media queries ([#592](https://github.com/botpress/messaging/issues/592)) ([1cdfceb](https://github.com/botpress/messaging/commit/1cdfceb9eb7cf33b9b2dea31bbeb334ffd31775a))
+* **webchat:** convert plain URLs to links in markdown messages ([#607](https://github.com/botpress/messaging/issues/607)) ([d341cf8](https://github.com/botpress/messaging/commit/d341cf8d55d520c56e1f5fbc03f0c1940f699f21))
+* **webchat:** correctly override color for all react-select dropdowns ([#608](https://github.com/botpress/messaging/issues/608)) ([74cb9f1](https://github.com/botpress/messaging/commit/74cb9f1c230a2cc26fe16015105a1d410e95a875))
+* **webchat:** default to lazy webchat ([#619](https://github.com/botpress/messaging/issues/619)) ([15546ec](https://github.com/botpress/messaging/commit/15546ec18dd2248a8ae75b5846a2261a8db3f5f0))
+* **webchat:** fix react-select color override ([#610](https://github.com/botpress/messaging/issues/610)) ([b487d9b](https://github.com/botpress/messaging/commit/b487d9b5f325de489db4335c30dfb04b23d0b73d))
+* **webchat:** fix single choice needs to be clicked twice for them to work ([#589](https://github.com/botpress/messaging/issues/589)) ([6afc1bc](https://github.com/botpress/messaging/commit/6afc1bc0102faf7d333ceea2100780823a4e57cb))
+* **webchat:** fix webchat responsiveness issue ([#590](https://github.com/botpress/messaging/issues/590)) ([7064861](https://github.com/botpress/messaging/commit/7064861eca975832c5fd628a467f5ea579fdcb3d))
+* **webchat:** fix webchat responsiveness issue ([#591](https://github.com/botpress/messaging/issues/591)) ([cc4421e](https://github.com/botpress/messaging/commit/cc4421e1c178797b5fb5ab73e092fe7564e5863d))
+* **webchat:** improved the mobile rendering of the webchat ([#588](https://github.com/botpress/messaging/issues/588)) ([3922a00](https://github.com/botpress/messaging/commit/3922a00ff854cac1513ebaeedd66b0dfe4abe6a9))
+* **webchat:** increase conversation history length ([#622](https://github.com/botpress/messaging/issues/622)) ([1e18a83](https://github.com/botpress/messaging/commit/1e18a83f96659f476a8f72bc00e03c2460414d91))
+* **webchat:** triggers pt2 ([#598](https://github.com/botpress/messaging/issues/598)) ([6699923](https://github.com/botpress/messaging/commit/6699923e45421505149a1000fe83ced1cdcd2b9d))
+* **webchat:** typing indicators on msg sent ([#625](https://github.com/botpress/messaging/issues/625)) ([efc004c](https://github.com/botpress/messaging/commit/efc004c014b533dd7f1b83a1df2db1208f15db06))
+
+
+### Features
+
+* **messaging:** single tenant option ([#615](https://github.com/botpress/messaging/issues/615)) ([c480db0](https://github.com/botpress/messaging/commit/c480db059bb6f8a57ea674ba43384d02ae490241))
+* **slack:** allow receiving file/audio/video/image ([#573](https://github.com/botpress/messaging/issues/573)) ([167a9c3](https://github.com/botpress/messaging/commit/167a9c34d97d205d966328ef9eab61af0599cf7d))
+* **webchat:** added new theme ([#616](https://github.com/botpress/messaging/issues/616)) ([c61d4c5](https://github.com/botpress/messaging/commit/c61d4c5fe0c84a5c0d42473d757a9255d4697cdf))
+
+
+
+## [1.2.11](https://github.com/botpress/messaging/compare/v1.2.10...v1.2.11) (2023-09-12)
+
+
+### Bug Fixes
+
+* **css:** removed header icon size ([#612](https://github.com/botpress/messaging/issues/612)) ([2d26b69](https://github.com/botpress/messaging/commit/2d26b69fb54ee8ab1aca0d93062f4a7e55aa9d7a))
+* **css:** webchat text buttle white spaces ([#613](https://github.com/botpress/messaging/issues/613)) ([89db5ac](https://github.com/botpress/messaging/commit/89db5ac4c49e87135c9699d1fa676f0efd753d46))
 * **engine:** roll back sqlite version ([#621](https://github.com/botpress/messaging/issues/621)) ([003d79e](https://github.com/botpress/messaging/commit/003d79ebc78d36605669c10d647d80cdd0c9122a))
 * **inject:** change color of dropdown text ([#594](https://github.com/botpress/messaging/issues/594)) ([ba40961](https://github.com/botpress/messaging/commit/ba40961d7f0d59631993313368d5657b1069610d))
 * **lock:** delete redis subservice lock if the refresh or release failed ([#617](https://github.com/botpress/messaging/issues/617)) ([78f978a](https://github.com/botpress/messaging/commit/78f978a52d5793dcc1997479df6b87767d078e63))
