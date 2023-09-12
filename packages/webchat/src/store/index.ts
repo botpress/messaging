@@ -338,6 +338,7 @@ class RootStore {
 
     this.composer.updateMessage('')
     try {
+      this.isBotTyping.set(true)
       const message = await this.sendData({ type: 'text', text: textMessage })
       trackMessage('sent')
       if (message) {
