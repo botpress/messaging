@@ -32,9 +32,11 @@ export class TeamsStream extends ChannelStream<TeamsService, TeamsContext> {
         grant_type: 'client_credentials',
         client_id: config.appId,
         client_secret: config.appPassword,
+        tenant_id: config.tenantId,
         scope: 'https://api.botframework.com/.default'
       })
-      await axios.post('https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token', params.toString())
+      const tenant = config.tenantId ?? 'botframework.com'
+      await axios.post(`https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`, params.toString())
     } catch (e) {
       throw new ChannelTestError(
         'unable to reach teams using the provided app id and app password combination',
