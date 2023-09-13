@@ -5,6 +5,7 @@
 
 * **css:** removed header icon size ([#612](https://github.com/botpress/messaging/issues/612)) ([2d26b69](https://github.com/botpress/messaging/commit/2d26b69fb54ee8ab1aca0d93062f4a7e55aa9d7a))
 * **css:** webchat text buttle white spaces ([#613](https://github.com/botpress/messaging/issues/613)) ([89db5ac](https://github.com/botpress/messaging/commit/89db5ac4c49e87135c9699d1fa676f0efd753d46))
+* **engine:** lock sqlite version ([#628](https://github.com/botpress/messaging/issues/628)) ([188e125](https://github.com/botpress/messaging/commit/188e1254846ff29bcee22423d8310c01796f1c8a))
 * **engine:** roll back sqlite version ([#621](https://github.com/botpress/messaging/issues/621)) ([003d79e](https://github.com/botpress/messaging/commit/003d79ebc78d36605669c10d647d80cdd0c9122a))
 * **inject:** change color of dropdown text ([#594](https://github.com/botpress/messaging/issues/594)) ([ba40961](https://github.com/botpress/messaging/commit/ba40961d7f0d59631993313368d5657b1069610d))
 * **lock:** delete redis subservice lock if the refresh or release failed ([#617](https://github.com/botpress/messaging/issues/617)) ([78f978a](https://github.com/botpress/messaging/commit/78f978a52d5793dcc1997479df6b87767d078e63))
@@ -22,6 +23,7 @@
 * **webchat:** improved the mobile rendering of the webchat ([#588](https://github.com/botpress/messaging/issues/588)) ([3922a00](https://github.com/botpress/messaging/commit/3922a00ff854cac1513ebaeedd66b0dfe4abe6a9))
 * **webchat:** increase conversation history length ([#622](https://github.com/botpress/messaging/issues/622)) ([1e18a83](https://github.com/botpress/messaging/commit/1e18a83f96659f476a8f72bc00e03c2460414d91))
 * **webchat:** triggers pt2 ([#598](https://github.com/botpress/messaging/issues/598)) ([6699923](https://github.com/botpress/messaging/commit/6699923e45421505149a1000fe83ced1cdcd2b9d))
+* **webchat:** typing indicators on msg sent ([#625](https://github.com/botpress/messaging/issues/625)) ([efc004c](https://github.com/botpress/messaging/commit/efc004c014b533dd7f1b83a1df2db1208f15db06))
 
 
 ### Features
@@ -29,6 +31,7 @@
 * **messaging:** single tenant option ([#615](https://github.com/botpress/messaging/issues/615)) ([c480db0](https://github.com/botpress/messaging/commit/c480db059bb6f8a57ea674ba43384d02ae490241))
 * **slack:** allow receiving file/audio/video/image ([#573](https://github.com/botpress/messaging/issues/573)) ([167a9c3](https://github.com/botpress/messaging/commit/167a9c34d97d205d966328ef9eab61af0599cf7d))
 * **webchat:** added new theme ([#616](https://github.com/botpress/messaging/issues/616)) ([c61d4c5](https://github.com/botpress/messaging/commit/c61d4c5fe0c84a5c0d42473d757a9255d4697cdf))
+
 
 
 ## [1.2.8](https://github.com/botpress/messaging/compare/v1.2.7...v1.2.8) (2023-04-13)
