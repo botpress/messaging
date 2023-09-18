@@ -9,7 +9,7 @@ import { SocketEvents, SocketUserEvent } from '../socket/events'
 import { SocketService } from '../socket/service'
 import { WebhookService } from '../webhooks/service'
 
-const MAX_ATTEMPTS = 10
+const MAX_ATTEMPTS = Number(process.env.WEBHOOKS_MAX_RETRIES) ?? 10
 
 export class Streamer {
   private logger = new Logger('Stream')

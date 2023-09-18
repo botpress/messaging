@@ -12,6 +12,7 @@ export type MessagingEnv = FrameworkEnv & {
   ENABLE_LEGACY_CHANNELS?: string
   METRICS_ENABLED?: string
   METRICS_PORT?: string
+  WEBHOOKS_MAX_RETRIES?: string
 }
 
 declare global {
