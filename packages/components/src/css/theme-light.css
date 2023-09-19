@@ -81,7 +81,7 @@
 }
 
 
-@media (max-width: 480px) {
+@media (min-width: 480px) {
   .bpw-layout {
     border-radius: 0px;
     margin-right: 0;
