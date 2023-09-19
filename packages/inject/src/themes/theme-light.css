@@ -75,7 +75,7 @@
   border-radius: 0;
 }
 
-@media (max-width: 480px) {
+@media (min-width: 480px) {
   .bpw-layout {
     margin-right: var(--space-from-corner);
     margin-bottom: var(--space-from-corner);
