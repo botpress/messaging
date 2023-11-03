@@ -7,6 +7,7 @@ export interface WhatsappConfig extends ChannelConfig {
   verifyToken: string
   accessToken: string
   phoneNumberId: string
+  markRead: boolean
 }
 
 export const WhatsappConfigSchema = {
@@ -14,5 +15,6 @@ export const WhatsappConfigSchema = {
   appSecret: Joi.string().required(),
   verifyToken: Joi.string().required(),
   accessToken: Joi.string().required(),
-  phoneNumberId: Joi.string().required()
+  phoneNumberId: Joi.string().required(),
+  markRead: Joi.boolean()
 }

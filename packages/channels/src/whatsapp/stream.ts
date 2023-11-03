@@ -51,7 +51,11 @@ export class WhatsappStream extends ChannelStream<WhatsappService, WhatsappConte
   }
 
   protected async handleReceive({ scope, endpoint, content }: ChannelReceiveEvent) {
-    await this.markRead(scope, endpoint, content)
+    const { config } = this.service.get(scope)
+
+    if (config.markRead) {
+      await this.markRead(scope, endpoint, content)
+    }
   }
 
   public async sendMessage(scope: string, endpoint: Endpoint, message: any) {
