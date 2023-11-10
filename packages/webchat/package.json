@@ -35,7 +35,7 @@
     "@formatjs/intl-pluralrules": "^4.1.6",
     "@formatjs/intl-utils": "^3.8.4",
     "@juggle/resize-observer": "^3.0.2",
-    "axios": "^0.25.0",
+    "axios": "^1.6.0",
     "classnames": "^2.3.1",
     "crypto-js": "^4.1.1",
     "date-fns": "^1.30.1",
