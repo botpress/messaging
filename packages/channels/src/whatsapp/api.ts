@@ -66,13 +66,26 @@ export class WhatsappApi extends ChannelApi<WhatsappService> {
   }
 
   private async receive(scope: string, message: WhatsappMessage) {
-    if (message) {
-      if (message.id && message.from) {
-        if (message.type === 'text' && message.text && message.text.body) {
+    if (message && message.id && message.type && message.from) {
+      if (message.type === 'text' && message.text && message.text.body) {
+        await this.service.receive(scope, this.extractEndpoint(message), {
+          id: message.id,
+          type: 'text',
+          text: message.text.body
+        })
+      } else if (message.type === 'interactive' && message.interactive) {
+        let payload
+        if (message.interactive.type === 'button_reply' && message.interactive.button_reply) {
+          payload = message.interactive.button_reply
+        } else if (message.interactive.type === 'list_reply' &&message.interactive.list_reply) {
+          payload = message.interactive.list_reply
+        }
+        if (payload?.id.startsWith('reply::')) {
           await this.service.receive(scope, this.extractEndpoint(message), {
             id: message.id,
-            type: 'text',
-            text: message.text.body
+            type: 'quick_reply',
+            text: payload.title,
+            payload: payload.id.replace('reply::', '')
           })
         }
       }

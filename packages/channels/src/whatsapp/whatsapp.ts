@@ -29,7 +29,6 @@ export interface WhatsappChange {
     }
     contacts: WhatsappContact[]
     messages?: WhatsappMessage[]
-    statuses?: WhatsappStatus[]
   }
   field: string
 }
@@ -46,29 +45,19 @@ export interface WhatsappMessage {
   id: string
   timestamp: string
   type: string
-  text?: WhatsappText
-}
-
-export interface WhatsappStatus {
-  id: string
-  status: string
-  timestamp: string
-  recipient_id: string
-  conversation?: {
-    id: string
-    expiration_timestamp: string
-    origin: {
-      type: string
+  text?: {
+    preview_url?: boolean
+    body: string
+  }
+  interactive?: {
+    type: string
+    button_reply?: {
+      id: string
+      title: string
+    }
+    list_reply?: {
+      id: string
+      title: string
     }
   }
-  pricing?: {
-    billable: boolean
-    pricing_model: string
-    category: string
-  }
-}
-
-export interface WhatsappText {
-  preview_url?: boolean
-  body: string
 }
