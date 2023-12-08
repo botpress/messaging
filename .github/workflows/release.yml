@@ -8,6 +8,8 @@ on:
 
 jobs:
   release_bin:
+    permissions:
+      contents: write
     if: "${{ startsWith(github.event.head_commit.message, 'chore(server): release v') == true || github.event_name == 'workflow_dispatch'  }}"
     name: Release Binaries
     runs-on: ubuntu-latest
