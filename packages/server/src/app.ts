@@ -92,7 +92,6 @@ export class App extends Framework {
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
-    this.billing = new BillingService(this.logger, this.conversations, this.messages)
     this.metrics = new MetricsService(this.conversations, this.messages)
   }
 
