@@ -35,6 +35,17 @@ export class TeamsApi extends ChannelApi<TeamsService> {
     const endpoint = { identity: '*', sender: activity.from.id, thread: convoRef.conversation!.id }
     const text: string | undefined = activity.value?.text || activity.text
 
+    if (activity?.attachments?.length) {
+      for (const attachment of activity.attachments) {
+        const { contentType, name, contentUrl } = attachment
+        await this.service.receive(scope, endpoint, {
+          type: this.mapMimeTypeToStandardType(contentType),
+          url: contentUrl,
+          title: name
+        })
+      }
+    }
+
     if (!text) {
       return
     }

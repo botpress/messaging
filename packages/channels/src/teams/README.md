@@ -23,9 +23,9 @@
 | Quick Reply   |  ✅   |         |
 | Postback      |  ✅   |         |
 | Say Something |  ✅   |         |
-| Voice         |  ❌   |         |
-| Image         |  ❌   |         |
-| File          |  ❌   |         |
-| Audio         |  ❌   |         |
-| Video         |  ❌   |         |
+| Voice         |  ✅   |         |
+| Image         |  ✅   |         |
+| File          |  ✅   |         |
+| Audio         |  ✅   |         |
+| Video         |  ✅   |         |
 | Location      |  ❌   |         |
