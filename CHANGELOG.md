@@ -1,3 +1,12 @@
+## [1.2.14](https://github.com/botpress/messaging/compare/v1.2.13...v1.2.14) (2024-02-07)
+
+
+### Features
+
+* **twilio:** add retry on message send fail ([#651](https://github.com/botpress/messaging/issues/651)) ([a40bc7b](https://github.com/botpress/messaging/commit/a40bc7b6e3953e5a9f9be0332e00d22215f944c9))
+
+
+
 ## [1.2.11](https://github.com/botpress/messaging/compare/v1.2.10...v1.2.11) (2023-09-12)
 
 
