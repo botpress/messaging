@@ -68,7 +68,7 @@ class Message extends Component<MessageProps> {
           onAudioEnded: this.props.onAudioEnded,
           shouldPlay: this.props.shouldPlay,
           intl: this.props.store!.intl,
-          escapeHTML: true,
+          escapeHTML: this.props.store!.config.escapeHtml === undefined ? true : this.props.store!.config.escapeHtml,
           showTimestamp: this.props.store!.config.showTimestamp!,
           googleMapsAPIKey: this.props.store!.config.googleMapsAPIKey
         }}
