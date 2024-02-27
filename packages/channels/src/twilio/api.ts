@@ -1,5 +1,8 @@
 import express, { Response } from 'express'
+import extName from 'ext-name'
+import path from 'path'
 import { validateRequest } from 'twilio'
+import urlUtil from 'url'
 import yn from 'yn'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { TwilioService } from './service'
@@ -25,15 +28,31 @@ export class TwilioApi extends ChannelApi<TwilioService> {
   }
 
   private async receive(scope: string, body: any) {
-    const botPhoneNumber = body.To
-    const userPhoneNumber = body.From
+    const { NumMedia, To: botPhoneNumber, From: userPhoneNumber } = body
+    const endpoint = { identity: botPhoneNumber, sender: userPhoneNumber, thread: '*' }
 
-    const index = Number(body.Body)
-    const content = this.service.handleIndexResponse(scope, index, botPhoneNumber, userPhoneNumber) || {
-      type: 'text',
-      text: body.Body
+    for (let i = 0; i < NumMedia; i++) {
+      const contentUrl = body[`MediaUrl${i}`]
+      const contentType = body[`MediaContentType${i}`]
+      const extension = extName.mime(contentType)[0].ext
+      const mediaSid = path.basename(urlUtil.parse(contentUrl).pathname as string)
+      const name = `${mediaSid}.${extension}`
+
+      await this.service.receive(scope, endpoint, {
+        type: this.mapMimeTypeToStandardType(contentType),
+        url: contentUrl,
+        title: name
+      })
     }
 
-    await this.service.receive(scope, { identity: botPhoneNumber, sender: userPhoneNumber, thread: '*' }, content)
+    if (body.Body.length > 0) {
+      const index = Number(body.Body)
+      const content = this.service.handleIndexResponse(scope, index, botPhoneNumber, userPhoneNumber) || {
+        type: 'text',
+        text: body.Body
+      }
+
+      await this.service.receive(scope, endpoint, content)
+    }
   }
 }
