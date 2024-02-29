@@ -1,3 +1,17 @@
+## [1.2.15](https://github.com/botpress/messaging/compare/v1.2.14...v1.2.15) (2024-02-29)
+
+
+### Bug Fixes
+
+* **webchat:** make html escaping configurable ([#654](https://github.com/botpress/messaging/issues/654)) ([b937a8a](https://github.com/botpress/messaging/commit/b937a8ac741ee734b7b61c4ce6e2df063d24b202))
+
+
+### Features
+
+* **twilio:** add file upload support ([#655](https://github.com/botpress/messaging/issues/655)) ([66361d0](https://github.com/botpress/messaging/commit/66361d0a05f993b09cb69aa2431c6373310efbef))
+
+
+
 ## [1.2.14](https://github.com/botpress/messaging/compare/v1.2.13...v1.2.14) (2024-02-07)
 
 
