@@ -38,7 +38,10 @@ const config: Config.InitialOptions = {
         }
       },
       clearMocks: true,
-      moduleNameMapper: pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
+      moduleNameMapper: {
+        '^ext-name$': '<rootDir>/../channels/src/typings/ext-name.d.ts',
+        ...pathsToModuleNameMapper(ServerConfig.compilerOptions.paths, { prefix: '<rootDir>/test/' })
+      }
     },
     {
       rootDir: 'packages/components',
