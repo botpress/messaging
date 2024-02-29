@@ -1,4 +1,5 @@
 import express, { Response } from 'express'
+// @ts-ignore
 import extName from 'ext-name'
 import path from 'path'
 import { validateRequest } from 'twilio'
