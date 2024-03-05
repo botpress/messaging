@@ -62,7 +62,7 @@ class Message extends Component<MessageProps> {
           isLastGroup: this.props.isLastGroup!,
           isBotMessage: this.props.isBotMessage!,
           sentOn: this.props.sentOn!,
-          onSendData: this.props.onSendData!,
+          onSendData: (payload) => this.props.onSendData!(payload, { showBotTyping: true }),
           onFileUpload: this.props.onFileUpload!,
           store: this.props.store,
           onAudioEnded: this.props.onAudioEnded,
