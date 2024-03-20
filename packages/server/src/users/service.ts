@@ -4,9 +4,11 @@ import {
   BatchingService,
   CachingService,
   DatabaseService,
+  Logger,
   ServerCache,
   Service
 } from '@botpress/messaging-engine'
+import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { UserEmitter, UserEvents, UserWatcher } from './events'
 import { UserTable } from './table'
@@ -18,6 +20,7 @@ export class UserService extends Service {
 
   public batcher!: Batcher<User>
 
+  private logger = new Logger('UserService')
   private emitter: UserEmitter
   private table: UserTable
   private cache!: ServerCache<uuid, User>
@@ -53,7 +56,13 @@ export class UserService extends Service {
 
     await this.batcher.push(user)
     this.cache.set(user.id, user)
-    await this.emitter.emit(UserEvents.Created, { user })
+
+    // This this is on purpose, we only send user created event if there is data in it.
+    // It crashes the bridge otherwise
+    if (!_.isEmpty(data)) {
+      this.logger.info(`User created with data: ${user.id} - ${JSON.stringify(data)}`)
+      await this.emitter.emit(UserEvents.Created, { user })
+    }
 
     return user
   }
