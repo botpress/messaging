@@ -99,7 +99,7 @@ export class SocketManager {
       const userData = parseUserData(socket.handshake.query.userData)
 
       if (creds) {
-        const user = await this.users.fetch(creds.userId)
+        const user = await this.users.fetch(creds.userId, true)
         if (user?.clientId === clientId && (await this.userTokens.verifyToken(user.id, creds.userToken))) {
           socket.data.creds = creds
           // we don't need to send it back if it was already sent to us
