@@ -64,9 +64,9 @@ export class UserService extends Service {
     await this.emitter.emit(UserEvents.Updated, { user })
   }
 
-  public async fetch(id: uuid, ignoreCache?: boolean): Promise<User | undefined> {
+  public async fetch(id: uuid, opts?: { ignoreCache?: boolean }): Promise<User | undefined> {
     const cached = this.cache.get(id)
-    if (cached && !ignoreCache) {
+    if (cached && !opts?.ignoreCache) {
       return cached
     }
 
