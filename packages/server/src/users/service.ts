@@ -60,7 +60,7 @@ export class UserService extends Service {
     // This this is on purpose, we only send user created event if there is data in it.
     // It crashes the bridge otherwise
     if (!_.isEmpty(data)) {
-      this.logger.info(`User created with data: ${user.id} - ${JSON.stringify(data)}`)
+      this.logger.info(`User created with data: ${user.id}`, data)
       await this.emitter.emit(UserEvents.Created, { user })
     }
 
