@@ -25,11 +25,8 @@ const getMessagingClient = async () => {
   }
 }
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
 const startServer = async () => {
   const app = express()
-  await sleep(2000)
   const client = await getMessagingClient()
 
   app.get<MessagingConfig>('/getConfig', async (req, res) => {
