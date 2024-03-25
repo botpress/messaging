@@ -19,7 +19,8 @@ describe('Webchat', () => {
     checkLifecycleEvent(0, 'CONFIG.SET')
     checkLifecycleEvent(1, 'LIFECYCLE.LOADED')
     checkLifecycleEvent(2, 'UI.SET-CLASS')
-    checkLifecycleEvent(3, 'USER.CONNECTED')
+    checkLifecycleEvent(3, 'UI.OPENED')
+    checkLifecycleEvent(4, 'USER.CONNECTED')
     // we don't really care about the order of the events between
     checkLifecycleEvent(7, 'LIFECYCLE.READY')
   })
