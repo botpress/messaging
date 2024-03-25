@@ -16,10 +16,16 @@ describe('Webchat', () => {
     cy.openWebchat()
 
     cy.wait(400)
+
+    cy.log('#### HELLO ###')
+
     checkLifecycleEvent(0, 'CONFIG.SET')
-    checkLifecycleEvent(1, 'USER.CONNECTED')
-    checkLifecycleEvent(2, 'LIFECYCLE.LOADED')
-    // we don't really care about the order of the events between
+    checkLifecycleEvent(1, 'LIFECYCLE.LOADED')
+    checkLifecycleEvent(2, 'UI.SET-CLASS')
+    checkLifecycleEvent(3, 'UI.OPENED')
+    // checkLifecycleEvent(4, 'UI.SET-CLASS')
+    checkLifecycleEvent(5, 'USER.CONNECTED')
+    // checkLifecycleEvent(6, 'USER.CONNECTED')
     checkLifecycleEvent(7, 'LIFECYCLE.READY')
   })
 
