@@ -1,3 +1,18 @@
+## [1.2.16](https://github.com/botpress/messaging/compare/v1.2.15...v1.2.16) (2024-03-27)
+
+
+### Bug Fixes
+
+* **messaging:** ignore cache when socket init ([#665](https://github.com/botpress/messaging/issues/665)) ([be85034](https://github.com/botpress/messaging/commit/be850343688a9e79c2c49a48b7ac50d8c5b9a3fc))
+* **messaging:** show bot typing from buttons ([#661](https://github.com/botpress/messaging/issues/661)) ([a47d33c](https://github.com/botpress/messaging/commit/a47d33c77d4f9ea62bcbfd2f4e8fc67bdce4ada8))
+
+
+### Features
+
+* **teams:** add support for quotes ([#663](https://github.com/botpress/messaging/issues/663)) ([0ad7c3c](https://github.com/botpress/messaging/commit/0ad7c3c9f05ea36036ed8022d823cc457179c60a))
+
+
+
 ## [1.2.15](https://github.com/botpress/messaging/compare/v1.2.14...v1.2.15) (2024-02-29)
 
 
