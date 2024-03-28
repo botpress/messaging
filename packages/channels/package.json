@@ -29,7 +29,7 @@
     "axios": "^0.25.0",
     "botbuilder": "^4.15.0",
     "cli-color": "^2.0.1",
-    "express": "^4.17.2",
+    "express": "^4.19.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
