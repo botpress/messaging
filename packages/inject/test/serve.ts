@@ -29,6 +29,10 @@ const startServer = async () => {
   const app = express()
   const client = await getMessagingClient()
 
+  app.get('/', async (req, res) => {
+    res.sendStatus(200)
+  })
+
   app.get<MessagingConfig>('/getConfig', async (req, res) => {
     res.json({ client, messagingUrl })
   })

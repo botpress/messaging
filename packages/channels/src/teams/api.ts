@@ -35,8 +35,14 @@ export class TeamsApi extends ChannelApi<TeamsService> {
     const endpoint = { identity: '*', sender: activity.from.id, thread: convoRef.conversation!.id }
     const text: string | undefined = activity.value?.text || activity.text
 
+    const quote = activity?.attachments?.find((attachment) => attachment?.content?.includes('</blockquote>'))?.content
+
     if (activity?.attachments?.length) {
       for (const attachment of activity.attachments) {
+        if (attachment.contentType === 'text/html' && attachment?.content?.length) {
+          continue
+        }
+
         const { contentType, name, contentUrl } = attachment
         await this.service.receive(scope, endpoint, {
           type: this.mapMimeTypeToStandardType(contentType),
@@ -75,7 +81,7 @@ export class TeamsApi extends ChannelApi<TeamsService> {
         payload: text.replace(POSTBACK_PREFIX, '')
       })
     } else {
-      await this.service.receive(scope, endpoint, { type: 'text', text })
+      await this.service.receive(scope, endpoint, { type: 'text', text, ...(quote && { quote }) })
     }
   }
 
