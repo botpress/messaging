@@ -1,3 +1,12 @@
+## [1.2.17](https://github.com/botpress/messaging/compare/v1.2.16...v1.2.17) (2024-04-29)
+
+
+### Bug Fixes
+
+* **telegram:** fix oneTime ([#671](https://github.com/botpress/messaging/issues/671)) ([6304846](https://github.com/botpress/messaging/commit/63048464e6f17c34097e856e872d4221cada7855))
+
+
+
 ## [1.2.16](https://github.com/botpress/messaging/compare/v1.2.15...v1.2.16) (2024-03-27)
 
 
