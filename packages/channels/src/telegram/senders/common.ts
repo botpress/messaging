@@ -1,3 +1,4 @@
+import { Markup } from 'telegraf'
 import { CommonSender } from '../../base/senders/common'
 import { TelegramContext } from '../context'
 
@@ -7,6 +8,9 @@ export class TelegramCommonSender extends CommonSender {
     const chatId = context.thread
 
     for (const message of context.messages) {
+      // Force remove keyboard -> oneTime() not working https://github.com/telegraf/telegraf/issues/167
+      message.extra = { ...Markup.removeKeyboard(), ...message.extra }
+
       if (message.action) {
         await telegram.sendChatAction(chatId, message.action)
       }
