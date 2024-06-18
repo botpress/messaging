@@ -338,8 +338,7 @@ class RootStore {
 
     this.composer.updateMessage('')
     try {
-      this.isBotTyping.set(true)
-      const message = await this.sendData({ type: 'text', text: textMessage })
+      const message = await this.sendData({ type: 'text', text: textMessage }, { showBotTyping: true })
       trackMessage('sent')
       if (message) {
         postMessageToParent('MESSAGE.SENT', message, this.config.chatId)
@@ -438,10 +437,14 @@ class RootStore {
 
   /** Sends an event or a message, depending on how the backend manages those types */
   @action.bound
-  async sendData(data: any): Promise<Message | void> {
+  async sendData(data: any, options?: { showBotTyping?: boolean }): Promise<Message | void> {
     if (!this.isInitialized || !this.currentConversationId) {
       console.warn('[webchat] Cannot send data until the webchat is ready')
       return
+    }
+
+    if (options?.showBotTyping) {
+      this.isBotTyping.set(true)
     }
 
     const message = await this.api.sendMessage(data, this.currentConversationId)

@@ -1,5 +1,4 @@
 import { Framework } from '@botpress/messaging-framework'
-import { BillingService } from './billing/service'
 import { ChannelService } from './channels/service'
 import { ConduitService } from './conduits/service'
 import { ConversationService } from './conversations/service'
@@ -35,7 +34,6 @@ export class App extends Framework {
   syncs: SyncService
   health: HealthService
   sockets: SocketService
-  billing: BillingService
   metrics: MetricsService
 
   constructor() {
@@ -94,7 +92,6 @@ export class App extends Framework {
       this.instances
     )
     this.sockets = new SocketService(this.caching, this.users)
-    this.billing = new BillingService(this.logger, this.conversations, this.messages)
     this.metrics = new MetricsService(this.conversations, this.messages)
   }
 
@@ -127,12 +124,10 @@ export class App extends Framework {
     await super.monitor()
     await this.syncs.setup()
     await this.instances.monitor()
-    await this.billing.setup()
   }
 
   async destroy() {
     await super.destroy()
-    await this.billing?.destroy()
     await this.instances?.destroy()
     await this.metrics?.destroy()
   }

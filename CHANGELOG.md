@@ -1,3 +1,50 @@
+## [1.2.17](https://github.com/botpress/messaging/compare/v1.2.16...v1.2.17) (2024-04-29)
+
+
+### Bug Fixes
+
+* **telegram:** fix oneTime ([#671](https://github.com/botpress/messaging/issues/671)) ([6304846](https://github.com/botpress/messaging/commit/63048464e6f17c34097e856e872d4221cada7855))
+
+
+
+## [1.2.16](https://github.com/botpress/messaging/compare/v1.2.15...v1.2.16) (2024-03-27)
+
+
+### Bug Fixes
+
+* **messaging:** ignore cache when socket init ([#665](https://github.com/botpress/messaging/issues/665)) ([be85034](https://github.com/botpress/messaging/commit/be850343688a9e79c2c49a48b7ac50d8c5b9a3fc))
+* **messaging:** show bot typing from buttons ([#661](https://github.com/botpress/messaging/issues/661)) ([a47d33c](https://github.com/botpress/messaging/commit/a47d33c77d4f9ea62bcbfd2f4e8fc67bdce4ada8))
+
+
+### Features
+
+* **teams:** add support for quotes ([#663](https://github.com/botpress/messaging/issues/663)) ([0ad7c3c](https://github.com/botpress/messaging/commit/0ad7c3c9f05ea36036ed8022d823cc457179c60a))
+
+
+
+## [1.2.15](https://github.com/botpress/messaging/compare/v1.2.14...v1.2.15) (2024-02-29)
+
+
+### Bug Fixes
+
+* **webchat:** make html escaping configurable ([#654](https://github.com/botpress/messaging/issues/654)) ([b937a8a](https://github.com/botpress/messaging/commit/b937a8ac741ee734b7b61c4ce6e2df063d24b202))
+
+
+### Features
+
+* **twilio:** add file upload support ([#655](https://github.com/botpress/messaging/issues/655)) ([66361d0](https://github.com/botpress/messaging/commit/66361d0a05f993b09cb69aa2431c6373310efbef))
+
+
+
+## [1.2.14](https://github.com/botpress/messaging/compare/v1.2.13...v1.2.14) (2024-02-07)
+
+
+### Features
+
+* **twilio:** add retry on message send fail ([#651](https://github.com/botpress/messaging/issues/651)) ([a40bc7b](https://github.com/botpress/messaging/commit/a40bc7b6e3953e5a9f9be0332e00d22215f944c9))
+
+
+
 ## [1.2.11](https://github.com/botpress/messaging/compare/v1.2.10...v1.2.11) (2023-09-12)
 
 

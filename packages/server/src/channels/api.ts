@@ -34,7 +34,7 @@ export class ChannelApi {
       channel.on('message', async (e) => this.handleChannelMessage(channel, e))
       channel.on('proactive', async (e) => this.handleChannelProactive(channel, e))
 
-      await channel.setup(router)
+      await channel.setup(router, channel.logger)
     }
   }
 

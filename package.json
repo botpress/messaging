@@ -1,6 +1,6 @@
 {
   "name": "@botpress/messaging",
-  "version": "1.2.12",
+  "version": "1.2.17",
   "description": "Botpress messaging repo",
   "author": "Botpress, Inc.",
   "license": "AGPL-3.0",
@@ -28,8 +28,8 @@
     "test:e2e:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.e2e.config.ts",
     "test:sec:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.security.config.ts",
     "test:mig:pg": "cross-env POSTGRESQL=true jest -c ./test/jest.migration.config.ts",
-    "test:chat:chrome": "start-test 'start' http://localhost:3100/status 'ts-node packages/inject/test/serve.ts' 3700 'cypress run --browser chrome'",
-    "test:chat:firefox": "start-test 'start' http://localhost:3100/status 'ts-node packages/inject/test/serve.ts' 3700 'cypress run --browser firefox'",
+    "test:chat:chrome": "start-test 'start' 'http://localhost:3100/status' 'ts-node packages/inject/test/serve.ts' '3700' 'cypress run --browser chrome'",
+    "test:chat:firefox": "start-test 'start' 'http://localhost:3100/status' 'ts-node packages/inject/test/serve.ts' '3700' 'cypress run --browser firefox'",
     "cypress:open": "cypress open"
   },
   "bin": "./packages/server/dist/index.js",

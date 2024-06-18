@@ -56,7 +56,7 @@ export namespace Renderer {
     sentOn?: Date
     inlineFeedback?: any
 
-    onSendData?: (data: any) => Promise<Message | void>
+    onSendData?: (data: any, options?: { showBotTyping?: boolean }) => Promise<Message | void>
     onFileUpload?: (label: string, payload: any, file: File) => Promise<void>
 
     /** Allows to autoplay voice messages coming from the bot */
@@ -376,6 +376,12 @@ export interface Config {
    * Display's the webchat close button when the webchat is opened
    */
   showCloseButton?: boolean
+  /**
+   * Replaces < and > with their HTML entities &lt; and &gt;.
+   * Setting it to false will let the markdown parser handle html itself
+   * @default true
+   */
+  escapeHtml?: boolean
 }
 
 export interface BotDetails {
