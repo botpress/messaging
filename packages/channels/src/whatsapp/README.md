@@ -2,7 +2,7 @@
 
 ### Sending
 
-| Channels | Messenger | Details                           |
+| Channels | Whatsapp  | Details                           |
 | -------- | :-------: | :-------------------------------- |
 | Text     |    ✅     |                                   |
 | Image    |    ✅     |                                   |
@@ -17,7 +17,7 @@
 
 ### Receiving
 
-| Channels      | Messenger | Details |
+| Channels      | Whatsapp  | Details |
 | ------------- | :-------: | :------ |
 | Text          |    ✅     |         |
 | Quick Reply   |    ✅     |         |
