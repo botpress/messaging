@@ -9,6 +9,7 @@
 - Telegram
 - Twilio
 - Vonage
+- Whatsapp
 
 ## Development
 

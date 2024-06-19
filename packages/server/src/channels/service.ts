@@ -7,7 +7,8 @@ import {
   TeamsChannel,
   TelegramChannel,
   TwilioChannel,
-  VonageChannel
+  VonageChannel,
+  WhatsappChannel
 } from '@botpress/messaging-channels'
 import {
   MessengerChannel as MessengerChannelLegacy,
@@ -43,7 +44,8 @@ export class ChannelService extends Service {
       new TelegramChannel(),
       new TwilioChannel(),
       new SmoochChannel(),
-      new VonageChannel()
+      new VonageChannel(),
+      new WhatsappChannel()
     ]
 
     if (yn(process.env.ENABLE_LEGACY_CHANNELS)) {
