@@ -3,7 +3,7 @@ import express, { Response, Request, NextFunction } from 'express'
 import { IncomingMessage } from 'http'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
 import { WhatsappService } from './service'
-import { WhatsappMessage, WhatsappPayload } from './whatsapp'
+import { WhatsappIncomingMessage, WhatsappPayload } from './whatsapp'
 
 export class WhatsappApi extends ChannelApi<WhatsappService> {
   async setup(router: ChannelApiManager) {
@@ -65,34 +65,31 @@ export class WhatsappApi extends ChannelApi<WhatsappService> {
     res.status(200).send('EVENT_RECEIVED')
   }
 
-  private async receive(scope: string, message: WhatsappMessage) {
+  private async receive(scope: string, message: WhatsappIncomingMessage) {
     if (message && message.id && message.type && message.from) {
+      let content: any
       if (message.type === 'text' && message.text && message.text.body) {
-        await this.service.receive(scope, this.extractEndpoint(message), {
-          id: message.id,
-          type: 'text',
-          text: message.text.body
-        })
+        content = {type: 'text', text: message.text.body}
       } else if (message.type === 'interactive' && message.interactive) {
-        let payload
-        if (message.interactive.type === 'button_reply' && message.interactive.button_reply) {
-          payload = message.interactive.button_reply
-        } else if (message.interactive.type === 'list_reply' &&message.interactive.list_reply) {
-          payload = message.interactive.list_reply
-        }
-        if (payload?.id.startsWith('reply::')) {
-          await this.service.receive(scope, this.extractEndpoint(message), {
-            id: message.id,
-            type: 'quick_reply',
-            text: payload.title,
-            payload: payload.id.replace('reply::', '')
-          })
+        const reply = message.interactive.button_reply || message.interactive.list_reply
+        if (reply) {
+          const [type, payload] = reply.id.split('::')
+          if (type === 'postback') {
+            content = {type, payload}
+          } else if (type === 'say_something') {
+            content = {type, text: payload}
+          } else if (type === 'quick_reply') {
+            content = {type, text: reply.title, payload}
+          } else if (type === 'open_url') {
+            content = {type: 'say_something', text: payload}
+          }
         }
       }
+      await this.service.receive(scope, this.extractEndpoint(message), content)
     }
   }
 
-  private extractEndpoint(message: WhatsappMessage) {
+  private extractEndpoint(message: WhatsappIncomingMessage) {
     return {
       identity: '*',
       sender: message.from,
