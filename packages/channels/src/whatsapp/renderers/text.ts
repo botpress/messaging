@@ -7,7 +7,7 @@ export class WhatsappTextRenderer extends TextRenderer {
     context.messages.push({
       type: 'text',
       text: {
-        preview_url: false,
+        preview_url: true,
         body: payload.text
       }
     })
