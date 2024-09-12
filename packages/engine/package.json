@@ -28,7 +28,7 @@
     "@botpress/messaging-base": "1.2.0",
     "bcryptjs": "^2.4.3",
     "cli-color": "^2.0.1",
-    "express": "^4.17.2",
+    "express": "^4.20.0",
     "ioredis": "^4.28.3",
     "joi": "^17.6.0",
     "knex": "^0.95.15",
