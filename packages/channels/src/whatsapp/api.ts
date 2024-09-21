@@ -2,6 +2,7 @@ import crypto from 'crypto'
 import express, { Response, Request, NextFunction } from 'express'
 import { IncomingMessage } from 'http'
 import { ChannelApi, ChannelApiManager, ChannelApiRequest } from '../base/api'
+import { IndexChoiceType } from '../base/context'
 import { WhatsappService } from './service'
 import { WhatsappIncomingMessage, WhatsappPayload } from './whatsapp'
 
@@ -67,25 +68,30 @@ export class WhatsappApi extends ChannelApi<WhatsappService> {
 
   private async receive(scope: string, message: WhatsappIncomingMessage) {
     if (message && message.id && message.type && message.from) {
+      const endpoint = this.extractEndpoint(message)
       let content: any
       if (message.type === 'text' && message.text && message.text.body) {
-        content = {type: 'text', text: message.text.body}
+        const index = Number(message.text.body)
+        content = this.service.handleIndexResponse(scope, index, endpoint.identity, endpoint.sender) || {
+          type: 'text',
+          text: message.text.body
+        }
       } else if (message.type === 'interactive' && message.interactive) {
         const reply = message.interactive.button_reply || message.interactive.list_reply
         if (reply) {
           const [type, payload] = reply.id.split('::')
-          if (type === 'postback') {
+          if (type === IndexChoiceType.PostBack) {
             content = {type, payload}
-          } else if (type === 'say_something') {
+          } else if (type === IndexChoiceType.SaySomething) {
             content = {type, text: payload}
-          } else if (type === 'quick_reply') {
+          } else if (type === IndexChoiceType.QuickReply) {
             content = {type, text: reply.title, payload}
-          } else if (type === 'open_url') {
-            content = {type: 'say_something', text: payload}
+          } else if (type === IndexChoiceType.OpenUrl) {
+            content = {type: IndexChoiceType.SaySomething, text: payload}
           }
         }
       }
-      await this.service.receive(scope, this.extractEndpoint(message), content)
+      await this.service.receive(scope, endpoint, content)
     }
   }
 
