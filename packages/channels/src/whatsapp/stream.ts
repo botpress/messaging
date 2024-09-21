@@ -69,24 +69,20 @@ export class WhatsappStream extends ChannelStream<WhatsappService, WhatsappConte
   private async post(scope: string, endpoint: Endpoint, data: any) {
     const { config } = this.service.get(scope)
 
-    try {
-      await axios.post(
-        `${GRAPH_URL}/${config.phoneNumberId}/messages`,
-        {
-          messaging_product: 'whatsapp',
-          recipient_type: 'individual',
-          to: endpoint.sender,
-          ...data.message
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${config.accessToken}`
-          }
+    await axios.post(
+      `${GRAPH_URL}/${config.phoneNumberId}/messages`,
+      {
+        messaging_product: 'whatsapp',
+        recipient_type: 'individual',
+        to: endpoint.sender,
+        ...data.message
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${config.accessToken}`
         }
-      )
-    } catch (error) {
-      console.error('Error while sending whatsapp message', error)
-    }
+      }
+    )
   }
 
   private async fetchPhoneNumberById(scope: string): Promise<any> {
@@ -109,8 +105,9 @@ export class WhatsappStream extends ChannelStream<WhatsappService, WhatsappConte
   protected async getContext(base: ChannelContext<any>): Promise<WhatsappContext> {
     return {
       ...base,
+      stream: this,
       messages: [],
-      stream: this
+      prepareIndexResponse: this.service.prepareIndexResponse.bind(this.service)
     }
   }
 }
