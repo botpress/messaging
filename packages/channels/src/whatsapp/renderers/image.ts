@@ -8,7 +8,7 @@ export class WhatsappImageRenderer extends ImageRenderer {
       type: 'image',
       image: {
         link: payload.image,
-        caption: payload.title
+        caption: payload.title ? payload.title.substring(0, 1024) : ''
       }
     })
   }

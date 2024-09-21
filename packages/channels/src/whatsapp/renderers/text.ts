@@ -8,7 +8,7 @@ export class WhatsappTextRenderer extends TextRenderer {
       type: 'text',
       text: {
         preview_url: true,
-        body: payload.text
+        body: payload.text.substring(0, 4096)
       }
     })
   }

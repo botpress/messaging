@@ -8,7 +8,7 @@ export class WhatsappFileRenderer extends FileRenderer {
       type: 'document',
       document: {
         link: payload.file,
-        caption: payload.title
+        caption: payload.title ? payload.title.substring(0, 1024) : ''
       }
     })
   }

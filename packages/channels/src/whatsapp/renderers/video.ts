@@ -8,7 +8,7 @@ export class WhatsappVideoRenderer extends VideoRenderer {
       type: 'video',
       video: {
         link: payload.video,
-        caption: payload.title
+        caption: payload.title ? payload.title.substring(0, 1024) : ''
       }
     })
   }
