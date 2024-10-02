@@ -11,6 +11,7 @@
 - [Telegram](./telegram.md)
 - [Twilio](./twilio.md)
 - [Vonage](./vonage.md)
+- [Whatsapp](./whatsapp.md)
 
 ## Development
 
