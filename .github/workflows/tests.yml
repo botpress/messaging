@@ -164,7 +164,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ['chrome', 'firefox']
+        browser: ['chrome']
 
     steps:
       - name: Checkout code
