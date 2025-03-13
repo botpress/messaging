@@ -48,6 +48,7 @@ export interface CardContent extends Content {
   subtitle?: string
   image?: string
   actions: ActionButton[]
+  markdown?: boolean
 }
 
 export interface LocationContent extends Content {

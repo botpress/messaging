@@ -30,7 +30,7 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
   }
 
   endRenderCard(context: Context, card: CardContent) {
-    const text = `*${card.title}*${card.subtitle ? '\n' + card.subtitle : ''}`
+    const text = `${card.title}${card.subtitle ? '\n' + card.subtitle : ''}`
 
     if (card.image) {
       context.channel.messages.push({ action: 'upload_photo' })
@@ -39,12 +39,16 @@ export class TelegramCarouselRenderer extends CarouselRenderer {
           url: card.image,
           filename: path.basename(card.image)
         },
-        extra: { caption: text, parse_mode: 'Markdown', ...Markup.inlineKeyboard(context.buttons) }
+        extra: {
+          caption: text,
+          ...(card.markdown && { parse_mode: 'Markdown' }),
+          ...Markup.inlineKeyboard(context.buttons)
+        }
       })
     } else {
       context.channel.messages.push({
         text,
-        extra: Markup.inlineKeyboard(context.buttons)
+        extra: { ...(card.markdown && { parse_mode: 'Markdown' }), ...Markup.inlineKeyboard(context.buttons) }
       })
     }
   }
