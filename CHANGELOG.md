@@ -1,3 +1,12 @@
+## [1.2.18](https://github.com/botpress/messaging/compare/v1.2.17...v1.2.18) (2025-03-13)
+
+
+### Bug Fixes
+
+* **telegram:** markdown not being correctly set and release ([#679](https://github.com/botpress/messaging/issues/679)) ([6893d90](https://github.com/botpress/messaging/commit/6893d902aaafdf8e751970af6f6809cf4e37529f))
+
+
+
 ## [1.2.17](https://github.com/botpress/messaging/compare/v1.2.16...v1.2.17) (2024-04-29)
 
 
