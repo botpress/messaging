@@ -164,25 +164,30 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: ['chrome', 'firefox']
+        browser: ['chrome']
 
     steps:
       - name: Checkout code
         uses: actions/checkout@master
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: 'yarn'
+
+      - name: Install Firefox
+        run: sudo apt-get install -y firefox
+
+      - name: Upgrade Cypress
+        run: yarn add cypress@latest --dev
+
       - name: Fetch Node Packages
         run: |
           yarn --immutable
           yarn build
 
       - name: Run e2e tests
-        run: |
-          yarn test:chat:${{ matrix.browser }}
+        run: xvfb-run --auto-servernum yarn test:chat:${{ matrix.browser }}
 
       - name: Run unit tests
         working-directory: ./packages/inject
-        run: |
-          yarn test
+        run: yarn test

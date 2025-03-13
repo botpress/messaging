@@ -10,6 +10,6 @@ export class TelegramChoicesRenderer extends ChoicesRenderer {
     }
 
     const buttons = payload.choices.map((x) => Markup.button.callback(x.title, x.value))
-    context.messages[0].extra = Markup.keyboard(buttons).oneTime()
+    context.messages[0].extra = { ...context.messages[0].extra, ...Markup.keyboard(buttons).oneTime() }
   }
 }
