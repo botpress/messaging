@@ -21,7 +21,8 @@
     "teams",
     "telegram",
     "twilio",
-    "vonage"
+    "vonage",
+    "whatsapp"
   ],
   "homepage": "https://botpress.com/docs",
   "scripts": {
